@@ -4,91 +4,91 @@
 
 ---
 
-1. **Инициализировать монорепозиторий (Laravel + admin SPA)**  
+1. **Инициализировать монорепозиторий (Laravel + admin SPA)** - ok
    **Детали:** создать корневой каталог `cms/` с подпапками `backend/` и `admin/`; инициализировать git, добавить базовый README и `.gitignore`.  
    **Критерии приёмки:** репо создано; `git status` чистый; README с описанием структуры.
 
-2. **Установить Laravel (PHP 8.2+)**  
+2. **Установить Laravel (PHP 8.2+)** - ok
    **Детали:** установить в `cms/backend`; настроить `composer.json`; проверить `artisan serve`.  
    **Критерии приёмки:** `php artisan --version` ок; домашняя страница Laravel открывается.
 
-3. **Базовый `.env` (local)**  
+3. **Базовый `.env` (local)** - ok
    **Детали:** заполнить `APP_KEY`, `APP_URL`, DSN БД; `FILESYSTEM_DISK=public`.  
    **Критерии приёмки:** `php artisan config:cache` без ошибок; `php artisan migrate` коннектится к БД.
 
-4. **Composer пакеты ядра**  
+4. **Composer пакеты ядра** - ok
    **Детали:** добавить `lcobucci/jwt`, `intervention/image`, клиент ES, `spatie/laravel-responsecache`; обновить автолоад.  
    **Критерии приёмки:** `composer install` успешен; пакеты видны в `composer show`.
 
-5. **Docker-compose (dev)**  
+5. **Docker-compose (dev)** - ok
    **Детали:** описать сервисы nginx/php-fpm/mysql/redis/node; пробросить порты; общий network/volume.  
    **Критерии приёмки:** `docker compose up` поднимает стек; backend доступен по `http://localhost`.
 
-6. **Redis для кэша/очередей**  
+6. **Redis для кэша/очередей** - ok
    **Детали:** подключить `predis`/ext-redis; прописать в `.env` драйверы; протестировать соединение.  
    **Критерии приёмки:** `php artisan queue:work` подключается к Redis; `CACHE_DRIVER=redis` работает.
 
-7. **Базовый Makefile/скрипты**  
+7. **Базовый Makefile/скрипты** - ok
    **Детали:** команды `make up/down`, `make seed`, `npm dev/build`; alias для artisan.  
    **Критерии приёмки:** команды исполняются без ручного ввода длинных строк.
 
-8. **Единый style-guide (PHP-CS-Fixer + EditorConfig)**  
+8. **Единый style-guide (PHP-CS-Fixer + EditorConfig)** - ok
    **Детали:** конфиги `.php-cs-fixer.php` и `.editorconfig`; добавить `composer fix`.  
    **Критерии приёмки:** `composer fix` не оставляет диффов на чистом коде.
 
-9. **Инициализировать фронтенд админки (React+TS+Vite)**  
+9. **Инициализировать фронтенд админки (React+TS+Vite)** - ok
    **Детали:** создать проект в `cms/admin`; установить MobX, Router; настроить абсолютный импорт `@/`.  
    **Критерии приёмки:** `npm run dev` поднимает SPA на 5173; базовый маршрут работает.
 
-10. **ESLint/Prettier для SPA**  
+10. **ESLint/Prettier для SPA** - ok
     **Детали:** настроить правила TS/React; добавить скрипт `npm run lint` и `format`.  
     **Критерии приёмки:** линтер проходит без ошибок; форматер выравнивает код.
 
--   11. **Миграция `post_types`**  
-        **Детали:** таблица с `slug unique`, `name`, `template`, `options_json`; timestamps.  
-        **Файлы миграций (MySQL):** [2025_11_06_000010_create_post_types_table.php](database/migrations/2025_11_06_000010_create_post_types_table.php)  
-        **Критерии приёмки:** `php artisan migrate` добавляет таблицу; unique проверяется.
+11. **Миграция `post_types`** - ok
+    **Детали:** таблица с `slug unique`, `name`, `template`, `options_json`; timestamps.  
+     **Файлы миграций (MySQL):** [2025_11_06_000010_create_post_types_table.php](database/migrations/2025_11_06_000010_create_post_types_table.php)  
+     **Критерии приёмки:** `php artisan migrate` добавляет таблицу; unique проверяется.
 
-12. **Миграция `entries` (soft deletes)**  
+12. **Миграция `entries` (soft deletes)** - ok
     **Детали:** поля и индексы как в плане; `softDeletes()`; unique `(post_type_id, slug)` (через генерируемую `is_active`).  
     **Файлы миграций (MySQL):** [2025_11_06_000020_create_entries_table.php](database/migrations/2025_11_06_000020_create_entries_table.php)  
     **Критерии приёмки:** схема совпадает; `deleted_at` присутствует; уникальность работает для активных строк.
 
-13. **Миграции таксономий**  
+13. **Миграции таксономий** - ok
     **Детали:** `taxonomies`, `terms` (soft delete + is_active), `term_tree` (closure), `entry_term` (pivot).  
     **Файлы миграций (MySQL):** [2025_11_06_000030_create_taxonomies_table.php](database/migrations/2025_11_06_000030_create_taxonomies_table.php), [2025_11_06_000031_create_terms_table.php](database/migrations/2025_11_06_000031_create_terms_table.php), [2025_11_06_000032_create_term_tree_table.php](database/migrations/2025_11_06_000032_create_term_tree_table.php), [2025_11_06_000033_create_entry_term_table.php](database/migrations/2025_11_06_000033_create_entry_term_table.php)  
     **Критерии приёмки:** связи работают; миграции проходят.
 
-14. **Миграция `media` (soft deletes)**  
+14. **Миграция `media` (soft deletes)** - ok
     **Детали:** `media` (soft delete, sha256, meta_json), `media_variants` (variant_key), `entry_media` (RESTRICT удаления).  
     **Файлы миграций (MySQL):** [2025_11_06_000040_create_media_table.php](database/migrations/2025_11_06_000040_create_media_table.php), [2025_11_06_000041_create_media_variants_table.php](database/migrations/2025_11_06_000041_create_media_variants_table.php), [2025_11_06_000042_create_entry_media_table.php](database/migrations/2025_11_06_000042_create_entry_media_table.php)  
     **Критерии приёмки:** таблицы созданы; soft delete активен; FK/индексы корректны.
 
-15. **Миграции `options` и `plugins`**  
+15. **Миграции `options` и `plugins`** - ok
     **Детали:** `options(namespace,key,value_json)` unique; `plugins` + `plugin_migrations` + `plugin_reserved`.  
     **Файлы миграций (MySQL):** [2025_11_06_000050_create_options_table.php](database/migrations/2025_11_06_000050_create_options_table.php), [2025_11_06_000060_create_plugins_tables.php](database/migrations/2025_11_06_000060_create_plugins_tables.php)  
     **Критерии приёмки:** обе таблицы есть; уникальные индексы работают.
 
-16. **Миграция `reserved_routes`**  
+16. **Миграция `reserved_routes`** - ok
     **Детали:** `path` unique, `kind('prefix'|'path')`, `source('core'|'plugin')`.  
     **Файлы миграций (MySQL):** [2025_11_06_000070_create_reserved_routes_table.php](database/migrations/2025_11_06_000070_create_reserved_routes_table.php)  
     **Критерии приёмки:** дубликаты запрещены; базовые пути будут сидиться отдельно.
 
-17. **Миграция `entry_slugs` (история слугов)**  
+17. **Миграция `entry_slugs` (история слугов)** - ok
     **Детали:** PK `(entry_id, slug)`, `is_current` + индекс `(entry_id,is_current)`; каскад при удалении Entry.  
     **Файлы миграций (MySQL):** [2025_11_06_000021_create_entry_slugs_table.php](database/migrations/2025_11_06_000021_create_entry_slugs_table.php)  
     **Критерии приёмки:** таблица есть; индексы корректны.
 
-18. **Сид `admin` пользователя**  
+18. **Сид `admin` пользователя** - ok
     **Детали:** наличие таблицы `users`, сид с email/паролем (bcrypt/argon2).  
     **Связанная миграция:** [2025_11_06_000001_create_users_table.php](database/migrations/2025_11_06_000001_create_users_table.php)  
     **Критерии приёмки:** сид выполнен; входные данные задокументированы; запись в БД присутствует.
 
-19. **Сид базовых PostTypes/Таксономий**  
+19. **Сид базовых PostTypes/Таксономий** - ok
     **Детали:** создать `page`; таксономии `categories(hierarchical=1)`, `tags(0)`.  
     **Критерии приёмки:** записи появились; айдишники фиксируются в сидере.
 
-20. **Модели Eloquent и связи**  
+20. **Модели Eloquent и связи** - ok
     **Детали:** модели для всех таблиц; `Entry->postType`, `Entry->terms`; softDeletes trait.  
     **Критерии приёмки:** тесты на связи зелёные; `Entry::with('terms')` работает.
 
@@ -409,6 +409,6 @@
     **Детали:** отображать при наличии auth cookie; ссылки «Редактировать», «К списку»; отключать кэш.  
     **Критерии приёмки:** гость панель не видит; у админа видна на страницах.
 
-100.    **Смоук-тесты и релиз v0.1.0**  
-        **Детали:** E2E сценарий: логин → создать Page → медиа → блоки → publish → фронт → поиск → смена slug → 301; оформить CHANGELOG и тег.  
-        **Критерии приёмки:** сценарий проходит; тег `v0.1.0` создан; README обновлён инструкциями запуска.
+100. **Смоук-тесты и релиз v0.1.0**  
+     **Детали:** E2E сценарий: логин → создать Page → медиа → блоки → publish → фронт → поиск → смена slug → 301; оформить CHANGELOG и тег.  
+     **Критерии приёмки:** сценарий проходит; тег `v0.1.0` создан; README обновлён инструкциями запуска.
