@@ -8,14 +8,16 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * Creates the refresh_tokens table for JWT token management.
+     * Tokens are signed with HS256 algorithm using a secret key.
      */
     public function up(): void
     {
         Schema::create('refresh_tokens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->char('jti', 36)->unique()->comment('JWT ID from claims');
-            $table->string('kid', 20)->comment('Key ID used for signing');
+            $table->char('jti', 36)->unique()->comment('JWT ID from claims (UUID)');
             $table->dateTime('expires_at')->comment('Token expiration time in UTC');
             $table->dateTime('used_at')->nullable()->comment('One-time use timestamp');
             $table->dateTime('revoked_at')->nullable()->comment('Revocation timestamp (logout/admin)');
@@ -37,3 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('refresh_tokens');
     }
 };
+

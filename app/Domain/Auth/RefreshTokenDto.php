@@ -16,7 +16,6 @@ final readonly class RefreshTokenDto
     public function __construct(
         public int $user_id,
         public string $jti,
-        public string $kid,
         public Carbon $expires_at,
         public ?Carbon $used_at,
         public ?Carbon $revoked_at,

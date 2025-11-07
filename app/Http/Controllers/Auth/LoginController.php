@@ -57,7 +57,6 @@ final class LoginController
         $this->repo->store([
             'user_id' => $user->getKey(),
             'jti' => $decoded['claims']['jti'],
-            'kid' => $decoded['kid'],
             'expires_at' => \Carbon\Carbon::createFromTimestampUTC($decoded['claims']['exp']),
             'parent_jti' => null,
         ]);

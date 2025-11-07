@@ -6,11 +6,11 @@ return [
     | JWT Algorithm
     |--------------------------------------------------------------------------
     |
-    | The algorithm used for signing JWTs. We use RS256 (RSA with SHA-256)
-    | for asymmetric cryptography.
+    | The algorithm used for signing JWTs. We use HS256 (HMAC with SHA-256)
+    | for symmetric cryptography.
     |
     */
-    'algo' => 'RS256',
+    'algo' => 'HS256',
 
     /*
     |--------------------------------------------------------------------------
@@ -39,35 +39,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Current Key ID
+    | JWT Secret Key
     |--------------------------------------------------------------------------
     |
-    | The current key id (kid) used for signing new tokens. This allows for
-    | key rotation without invalidating existing tokens.
+    | The secret key used for signing JWTs with HS256 algorithm.
+    | IMPORTANT: Keep this secret! Use a random 256-bit (32 bytes) string.
+    | Generate with: php artisan key:generate or openssl rand -base64 32
     |
     */
-    'current_kid' => env('JWT_CURRENT_KID', 'v1'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Key Pairs
-    |--------------------------------------------------------------------------
-    |
-    | Map of key IDs to their corresponding RSA key pair paths.
-    | Keys can be stored in files, environment variables, or secret managers.
-    |
-    */
-    'keys' => [
-        'v1' => [
-            'private_path' => storage_path('keys/jwt-v1-private.pem'),
-            'public_path' => storage_path('keys/jwt-v1-public.pem'),
-        ],
-        // Add additional key versions for rotation:
-        // 'v2' => [
-        //     'private_path' => storage_path('keys/jwt-v2-private.pem'),
-        //     'public_path' => storage_path('keys/jwt-v2-public.pem'),
-        // ],
-    ],
+    'secret' => env('JWT_SECRET', ''),
 
     /*
     |--------------------------------------------------------------------------

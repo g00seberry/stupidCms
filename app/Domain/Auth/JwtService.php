@@ -12,16 +12,10 @@ use UnexpectedValueException;
 /**
  * Service for issuing and verifying JWT access and refresh tokens.
  *
- * Uses RS256 (asymmetric RSA) algorithm with key rotation support via 'kid' header.
+ * Uses HS256 (HMAC with SHA-256) algorithm with a secret key.
  */
 final class JwtService
 {
-    /** @var array<string, string> Cached private keys by kid */
-    private array $privateKeys = [];
-
-    /** @var array<string, string> Cached public keys by kid */
-    private array $publicKeys = [];
-
     public function __construct(private array $config)
     {
     }
@@ -58,15 +52,16 @@ final class JwtService
      * @param int $ttl Time-to-live in seconds
      * @param array $extra Additional claims
      * @return string JWT token string
-     * @throws RuntimeException If the key ID is not configured
+     * @throws RuntimeException If the secret key is not configured
      */
     public function encode(int|string $userId, string $type, int $ttl, array $extra = []): string
     {
         $now = CarbonImmutable::now('UTC');
-        $kid = $this->config['current_kid'];
-        $private = $this->loadPrivateKey($kid);
+        $secret = $this->getSecret();
 
-        $payload = array_merge([
+        // Merge standard claims with extra claims
+        // Extra claims can override standard ones (e.g. 'aud' for admin tokens)
+        $standardClaims = [
             'iss' => $this->config['issuer'],
             'aud' => $this->config['audience'],
             'iat' => $now->getTimestamp(),
@@ -75,10 +70,11 @@ final class JwtService
             'jti' => (string) Str::uuid(),
             'sub' => (string) $userId,
             'typ' => $type,
-        ], $extra);
+        ];
+        
+        $payload = array_merge($standardClaims, $extra);
 
-        $headers = ['kid' => $kid, 'typ' => 'JWT'];
-        return JWT::encode($payload, $private, $this->config['algo'], null, $headers);
+        return JWT::encode($payload, $secret, $this->config['algo']);
     }
 
     /**
@@ -86,8 +82,8 @@ final class JwtService
      *
      * @param string $jwt The JWT token to verify
      * @param string|null $expectType Expected token type ('access' or 'refresh'), or null to skip type check
-     * @return array{claims: array, kid: string} Decoded claims and key ID
-     * @throws RuntimeException If the key ID is not configured
+     * @return array{claims: array} Decoded claims
+     * @throws RuntimeException If the secret key is not configured
      * @throws UnexpectedValueException If token type, issuer, or audience doesn't match expectations
      * @throws \Firebase\JWT\ExpiredException If the token has expired
      * @throws \Firebase\JWT\SignatureInvalidException If the signature is invalid
@@ -95,10 +91,9 @@ final class JwtService
      */
     public function verify(string $jwt, ?string $expectType = null): array
     {
-        $kid = $this->readKid($jwt) ?? $this->config['current_kid'];
-        $public = $this->loadPublicKey($kid);
+        $secret = $this->getSecret();
 
-        $decoded = JWT::decode($jwt, new Key($public, $this->config['algo']));
+        $decoded = JWT::decode($jwt, new Key($secret, $this->config['algo']));
         // Convert stdClass to array: json_encode/json_decode guarantees scalarization of types
         // (using (array)$decoded would break nested objects)
         $claims = json_decode(json_encode($decoded), true);
@@ -108,101 +103,32 @@ final class JwtService
             throw new UnexpectedValueException("Expected token type '{$expectType}', got '{$claims['typ']}'");
         }
 
-        // Verify issuer and audience
+        // Verify issuer (must match)
         if (($claims['iss'] ?? '') !== $this->config['issuer']) {
             throw new UnexpectedValueException("Invalid issuer: {$claims['iss']}");
         }
 
-        if (($claims['aud'] ?? '') !== $this->config['audience']) {
-            throw new UnexpectedValueException("Invalid audience: {$claims['aud']}");
-        }
+        // Note: We don't strictly validate audience here because admin tokens may have aud=admin
+        // instead of the default audience. Audience validation is left to middleware/controllers.
 
-        return ['claims' => $claims, 'kid' => $kid];
+        return ['claims' => $claims];
     }
 
     /**
-     * Extract the 'kid' (key ID) from a JWT header.
+     * Get the JWT secret key from configuration.
      *
-     * @param string $jwt The JWT token
-     * @return string|null The key ID, or null if not present
+     * @return string Secret key
+     * @throws RuntimeException If the secret key is not configured
      */
-    private function readKid(string $jwt): ?string
+    private function getSecret(): string
     {
-        $parts = explode('.', $jwt, 2);
-        if (count($parts) < 2) {
-            return null;
+        $secret = $this->config['secret'] ?? '';
+
+        if (empty($secret)) {
+            throw new RuntimeException('JWT secret key is not configured. Set JWT_SECRET in .env');
         }
 
-        [$header] = $parts;
-        $json = $this->b64urlDecode($header);
-        if ($json === false) {
-            return null;
-        }
-
-        $decoded = json_decode($json, true);
-        return $decoded['kid'] ?? null;
-    }
-
-    /**
-     * Decode base64url string with proper padding.
-     *
-     * @param string $s Base64url-encoded string
-     * @return string|false Decoded string or false on failure
-     */
-    private function b64urlDecode(string $s): string|false
-    {
-        $s = strtr($s, '-_', '+/');
-        $pad = strlen($s) % 4;
-        if ($pad) {
-            $s .= str_repeat('=', 4 - $pad);
-        }
-        return base64_decode($s);
-    }
-
-    /**
-     * Load and cache a private key for the given kid.
-     *
-     * @param string $kid Key ID
-     * @return string Private key content
-     * @throws RuntimeException If the key ID is not configured or cannot be read
-     */
-    private function loadPrivateKey(string $kid): string
-    {
-        if (isset($this->privateKeys[$kid])) {
-            return $this->privateKeys[$kid];
-        }
-
-        $paths = $this->config['keys'][$kid] ?? throw new RuntimeException("Unknown key ID: {$kid}");
-        $private = file_get_contents($paths['private_path']);
-
-        if ($private === false) {
-            throw new RuntimeException("Failed to read private key at: {$paths['private_path']}");
-        }
-
-        return $this->privateKeys[$kid] = $private;
-    }
-
-    /**
-     * Load and cache a public key for the given kid.
-     *
-     * @param string $kid Key ID
-     * @return string Public key content
-     * @throws RuntimeException If the key ID is not configured or cannot be read
-     */
-    private function loadPublicKey(string $kid): string
-    {
-        if (isset($this->publicKeys[$kid])) {
-            return $this->publicKeys[$kid];
-        }
-
-        $paths = $this->config['keys'][$kid] ?? throw new RuntimeException("Unknown key ID: {$kid}");
-        $public = file_get_contents($paths['public_path']);
-
-        if ($public === false) {
-            throw new RuntimeException("Failed to read public key at: {$paths['public_path']}");
-        }
-
-        return $this->publicKeys[$kid] = $public;
+        return $secret;
     }
 }
 

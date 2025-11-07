@@ -106,7 +106,6 @@ final class RefreshController
                 $this->repo->store([
                     'user_id' => $userId,
                     'jti' => $decoded['claims']['jti'],
-                    'kid' => $decoded['kid'],
                     'expires_at' => Carbon::createFromTimestampUTC($decoded['claims']['exp']),
                     'parent_jti' => $claims['jti'],
                 ]);

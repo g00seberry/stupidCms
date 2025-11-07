@@ -18,4 +18,45 @@ abstract class TestCase extends BaseTestCase
         // This prevents flaky tests when tokens are near expiration boundaries
         JWT::$leeway = 5; // 5 seconds tolerance
     }
+
+    /**
+     * Make a GET JSON request with an unencrypted cookie.
+     * Useful for JWT cookies that should not be encrypted.
+     *
+     * @param string $uri
+     * @param string $cookieName
+     * @param string $cookieValue
+     * @param array $headers
+     * @return \Illuminate\Testing\TestResponse
+     */
+    public function getJsonWithUnencryptedCookie(string $uri, string $cookieName, string $cookieValue, array $headers = []): \Illuminate\Testing\TestResponse
+    {
+        $server = $this->transformHeadersToServerVars(array_merge($headers, [
+            'CONTENT_TYPE' => 'application/json',
+            'Accept' => 'application/json',
+        ]));
+
+        return $this->call('GET', $uri, [], [$cookieName => $cookieValue], [], $server);
+    }
+
+    /**
+     * Make a POST JSON request with an unencrypted cookie.
+     * Useful for JWT cookies that should not be encrypted.
+     *
+     * @param string $uri
+     * @param string $cookieName
+     * @param string $cookieValue
+     * @param array $data
+     * @param array $headers
+     * @return \Illuminate\Testing\TestResponse
+     */
+    public function postJsonWithUnencryptedCookie(string $uri, string $cookieName, string $cookieValue, array $data = [], array $headers = []): \Illuminate\Testing\TestResponse
+    {
+        $server = $this->transformHeadersToServerVars(array_merge($headers, [
+            'CONTENT_TYPE' => 'application/json',
+            'Accept' => 'application/json',
+        ]));
+
+        return $this->call('POST', $uri, $data, [$cookieName => $cookieValue], [], $server, json_encode($data));
+    }
 }

@@ -15,40 +15,7 @@ class AuthRefreshTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Ensure JWT keys exist for tests
-        $this->ensureJwtKeysExist();
-    }
-
-    private function ensureJwtKeysExist(): void
-    {
-        $keysDir = storage_path('keys');
-        $privateKeyPath = "{$keysDir}/jwt-v1-private.pem";
-        $publicKeyPath = "{$keysDir}/jwt-v1-public.pem";
-
-        // Skip if keys already exist
-        if (file_exists($privateKeyPath) && file_exists($publicKeyPath)) {
-            return;
-        }
-
-        // Ensure directory exists
-        if (!is_dir($keysDir)) {
-            mkdir($keysDir, 0755, true);
-        }
-
-        // Try to generate keys using Artisan command
-        try {
-            $exitCode = \Artisan::call('cms:jwt:keys', [
-                'kid' => 'v1',
-                '--force' => true,
-            ]);
-
-            if ($exitCode !== 0) {
-                $this->markTestSkipped('Failed to generate JWT keys. OpenSSL might not be properly configured on this system.');
-            }
-        } catch (\Exception $e) {
-            $this->markTestSkipped('Failed to generate JWT keys: ' . $e->getMessage());
-        }
+        // No JWT key generation needed for HS256
     }
 
     public function test_refresh_with_valid_token_returns_new_tokens(): void

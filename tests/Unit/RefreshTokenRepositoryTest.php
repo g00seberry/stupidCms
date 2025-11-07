@@ -29,7 +29,6 @@ class RefreshTokenRepositoryTest extends TestCase
         $token = RefreshToken::create([
             'user_id' => $user->id,
             'jti' => 'test-jti-123',
-            'kid' => 'v1',
             'expires_at' => now('UTC')->addDays(7),
             'parent_jti' => null,
         ]);
@@ -39,7 +38,6 @@ class RefreshTokenRepositoryTest extends TestCase
         $this->assertInstanceOf(RefreshTokenDto::class, $dto);
         $this->assertEquals($token->user_id, $dto->user_id);
         $this->assertEquals($token->jti, $dto->jti);
-        $this->assertEquals($token->kid, $dto->kid);
         $this->assertInstanceOf(Carbon::class, $dto->expires_at);
         $this->assertNull($dto->used_at);
         $this->assertNull($dto->revoked_at);
@@ -60,7 +58,6 @@ class RefreshTokenRepositoryTest extends TestCase
         RefreshToken::create([
             'user_id' => $user->id,
             'jti' => 'test-jti-123',
-            'kid' => 'v1',
             'expires_at' => now('UTC')->addDays(7),
             'parent_jti' => null,
         ]);
@@ -81,7 +78,6 @@ class RefreshTokenRepositoryTest extends TestCase
         RefreshToken::create([
             'user_id' => $user->id,
             'jti' => 'test-jti-123',
-            'kid' => 'v1',
             'expires_at' => now('UTC')->addDays(7),
             'used_at' => now('UTC'),
             'parent_jti' => null,
@@ -99,7 +95,6 @@ class RefreshTokenRepositoryTest extends TestCase
         RefreshToken::create([
             'user_id' => $user->id,
             'jti' => 'test-jti-123',
-            'kid' => 'v1',
             'expires_at' => now('UTC')->addDays(7),
             'revoked_at' => now('UTC'),
             'parent_jti' => null,
@@ -117,7 +112,6 @@ class RefreshTokenRepositoryTest extends TestCase
         RefreshToken::create([
             'user_id' => $user->id,
             'jti' => 'test-jti-123',
-            'kid' => 'v1',
             'expires_at' => now('UTC')->subDay(), // Expired yesterday
             'parent_jti' => null,
         ]);
@@ -134,7 +128,6 @@ class RefreshTokenRepositoryTest extends TestCase
         RefreshToken::create([
             'user_id' => $user->id,
             'jti' => 'test-jti-123',
-            'kid' => 'v1',
             'expires_at' => now('UTC')->addDays(7),
             'parent_jti' => null,
         ]);
@@ -158,7 +151,6 @@ class RefreshTokenRepositoryTest extends TestCase
         $dto = new RefreshTokenDto(
             user_id: 1,
             jti: 'test-jti',
-            kid: 'v1',
             expires_at: now('UTC')->addDays(7),
             used_at: null,
             revoked_at: null,
@@ -176,7 +168,6 @@ class RefreshTokenRepositoryTest extends TestCase
         $dto = new RefreshTokenDto(
             user_id: 1,
             jti: 'test-jti',
-            kid: 'v1',
             expires_at: now('UTC')->addDays(7),
             used_at: now('UTC'),
             revoked_at: null,
@@ -194,7 +185,6 @@ class RefreshTokenRepositoryTest extends TestCase
         $dto = new RefreshTokenDto(
             user_id: 1,
             jti: 'test-jti',
-            kid: 'v1',
             expires_at: now('UTC')->addDays(7),
             used_at: null,
             revoked_at: now('UTC'),
@@ -212,7 +202,6 @@ class RefreshTokenRepositoryTest extends TestCase
         $dto = new RefreshTokenDto(
             user_id: 1,
             jti: 'test-jti',
-            kid: 'v1',
             expires_at: now('UTC')->subDay(),
             used_at: null,
             revoked_at: null,

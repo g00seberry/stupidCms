@@ -11,68 +11,28 @@ use UnexpectedValueException;
 /**
  * Unit tests for JwtService.
  *
- * Tests token encoding, verification, expiration, and key rotation.
+ * Tests token encoding, verification, expiration using HS256 algorithm.
  */
 class JwtServiceTest extends TestCase
 {
     private JwtService $service;
-    private string $testKid = 'test-v1';
-    private static bool $keysGenerated = false;
+    private string $testSecret = 'test-secret-key-for-hmac-256-algorithm-minimum-32-bytes';
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Generate test keys once for all tests
-        if (!self::$keysGenerated) {
-            $this->generateTestKeys();
-            self::$keysGenerated = true;
-        }
-
-        // Configure JWT service with test keys
+        // Configure JWT service with HS256 and secret key
         $config = [
-            'algo' => 'RS256',
+            'algo' => 'HS256',
             'access_ttl' => 15 * 60,
             'refresh_ttl' => 30 * 24 * 60 * 60,
-            'current_kid' => $this->testKid,
-            'keys' => [
-                $this->testKid => [
-                    'private_path' => storage_path("keys/jwt-{$this->testKid}-private.pem"),
-                    'public_path' => storage_path("keys/jwt-{$this->testKid}-public.pem"),
-                ],
-            ],
+            'secret' => $this->testSecret,
             'issuer' => 'https://test.stupidcms.local',
             'audience' => 'test-api',
         ];
 
         $this->service = new JwtService($config);
-    }
-
-    private function generateTestKeys(): void
-    {
-        $keysDir = storage_path('keys');
-        $privateKeyPath = "{$keysDir}/jwt-{$this->testKid}-private.pem";
-        $publicKeyPath = "{$keysDir}/jwt-{$this->testKid}-public.pem";
-
-        // Skip if keys already exist
-        if (file_exists($privateKeyPath) && file_exists($publicKeyPath)) {
-            return;
-        }
-
-        // Ensure directory exists
-        if (!is_dir($keysDir)) {
-            mkdir($keysDir, 0755, true);
-        }
-
-        // Use Artisan command to generate keys
-        $exitCode = \Artisan::call('cms:jwt:keys', [
-            'kid' => $this->testKid,
-            '--force' => true,
-        ]);
-
-        if ($exitCode !== 0) {
-            $this->markTestSkipped('Failed to generate JWT test keys. OpenSSL might not be properly configured on this system.');
-        }
     }
 
     public function test_issue_access_token_creates_valid_jwt(): void
@@ -108,7 +68,6 @@ class JwtServiceTest extends TestCase
         $result = $this->service->verify($jwt, 'access');
 
         $this->assertArrayHasKey('claims', $result);
-        $this->assertArrayHasKey('kid', $result);
 
         $claims = $result['claims'];
         $this->assertSame('789', $claims['sub']);
@@ -120,8 +79,6 @@ class JwtServiceTest extends TestCase
         $this->assertArrayHasKey('iat', $claims);
         $this->assertArrayHasKey('nbf', $claims);
         $this->assertArrayHasKey('exp', $claims);
-
-        $this->assertSame($this->testKid, $result['kid']);
     }
 
     public function test_refresh_token_encode_and_verify(): void
@@ -168,9 +125,7 @@ class JwtServiceTest extends TestCase
 
     public function test_token_with_future_nbf_fails(): void
     {
-        // Manually create a token with nbf (not before) in the future
-        // This is a bit tricky since encode sets nbf to now, so we'll need to use
-        // a different approach - we'll test that nbf is properly set to now
+        // Test that nbf is properly set to now
         $jwt = $this->service->issueAccessToken(444);
         $result = $this->service->verify($jwt);
 
@@ -183,34 +138,12 @@ class JwtServiceTest extends TestCase
 
     public function test_token_with_wrong_key_fails_verification(): void
     {
-        // Generate a different key pair using Artisan command
-        $wrongKid = 'test-wrong';
-        
-        $exitCode = \Artisan::call('cms:jwt:keys', [
-            'kid' => $wrongKid,
-            '--force' => true,
-        ]);
-
-        if ($exitCode !== 0) {
-            $this->markTestSkipped('Failed to generate wrong key pair for testing.');
-        }
-
-        $keysDir = storage_path('keys');
-        $wrongPrivatePath = "{$keysDir}/jwt-{$wrongKid}-private.pem";
-        $wrongPublicPath = "{$keysDir}/jwt-{$wrongKid}-public.pem";
-
-        // Create service with wrong key
+        // Create service with different secret
         $wrongConfig = [
-            'algo' => 'RS256',
+            'algo' => 'HS256',
             'access_ttl' => 15 * 60,
             'refresh_ttl' => 30 * 24 * 60 * 60,
-            'current_kid' => $wrongKid,
-            'keys' => [
-                $wrongKid => [
-                    'private_path' => $wrongPrivatePath,
-                    'public_path' => $wrongPublicPath,
-                ],
-            ],
+            'secret' => 'different-secret-key-that-should-fail-verification-minimum-32-bytes',
             'issuer' => 'https://test.stupidcms.local',
             'audience' => 'test-api',
         ];
@@ -220,13 +153,9 @@ class JwtServiceTest extends TestCase
         // Sign with wrong key
         $jwt = $wrongService->issueAccessToken(555);
 
-        // Try to verify with our service (different public key)
+        // Try to verify with our service (different secret)
         $this->expectException(SignatureInvalidException::class);
         $this->service->verify($jwt);
-
-        // Cleanup
-        @unlink($wrongPrivatePath);
-        @unlink($wrongPublicPath);
     }
 
     public function test_token_with_wrong_issuer_fails(): void
@@ -236,16 +165,10 @@ class JwtServiceTest extends TestCase
 
         // Create a service with different issuer
         $config = [
-            'algo' => 'RS256',
+            'algo' => 'HS256',
             'access_ttl' => 15 * 60,
             'refresh_ttl' => 30 * 24 * 60 * 60,
-            'current_kid' => $this->testKid,
-            'keys' => [
-                $this->testKid => [
-                    'private_path' => storage_path("keys/jwt-{$this->testKid}-private.pem"),
-                    'public_path' => storage_path("keys/jwt-{$this->testKid}-public.pem"),
-                ],
-            ],
+            'secret' => $this->testSecret,
             'issuer' => 'https://wrong-issuer.local',
             'audience' => 'test-api',
         ];
@@ -258,36 +181,20 @@ class JwtServiceTest extends TestCase
         $differentService->verify($jwt);
     }
 
-    public function test_token_with_wrong_audience_fails(): void
+    public function test_token_with_wrong_audience_is_allowed(): void
     {
-        // Create a token
-        $jwt = $this->service->issueAccessToken(777);
+        // Create a token with custom audience
+        $jwt = $this->service->issueAccessToken(777, ['aud' => 'custom-audience']);
 
-        // Create a service with different audience
-        $config = [
-            'algo' => 'RS256',
-            'access_ttl' => 15 * 60,
-            'refresh_ttl' => 30 * 24 * 60 * 60,
-            'current_kid' => $this->testKid,
-            'keys' => [
-                $this->testKid => [
-                    'private_path' => storage_path("keys/jwt-{$this->testKid}-private.pem"),
-                    'public_path' => storage_path("keys/jwt-{$this->testKid}-public.pem"),
-                ],
-            ],
-            'issuer' => 'https://test.stupidcms.local',
-            'audience' => 'wrong-audience',
-        ];
+        // Verify passes because audience validation is not strict in JwtService
+        // Audience validation is left to middleware/controllers
+        $result = $this->service->verify($jwt);
 
-        $differentService = new JwtService($config);
-
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Invalid audience');
-
-        $differentService->verify($jwt);
+        $this->assertSame('custom-audience', $result['claims']['aud']);
+        $this->assertSame('777', $result['claims']['sub']);
     }
 
-    public function test_token_includes_kid_in_header(): void
+    public function test_token_has_standard_jwt_header(): void
     {
         $jwt = $this->service->issueAccessToken(888);
 
@@ -296,8 +203,8 @@ class JwtServiceTest extends TestCase
         $headerJson = base64_decode(strtr($headerB64, '-_', '+/'));
         $header = json_decode($headerJson, true);
 
-        $this->assertArrayHasKey('kid', $header);
-        $this->assertSame($this->testKid, $header['kid']);
+        $this->assertArrayHasKey('alg', $header);
+        $this->assertSame('HS256', $header['alg']);
         $this->assertArrayHasKey('typ', $header);
         $this->assertSame('JWT', $header['typ']);
     }
@@ -330,61 +237,22 @@ class JwtServiceTest extends TestCase
         $this->assertSame('test@example.com', $claims['email']);
     }
 
-    public function test_key_rotation_backward_compatibility(): void
+    public function test_missing_secret_throws_runtime_exception(): void
     {
-        // Generate second key pair for rotation
-        $v2Kid = 'test-v2';
-        $exitCode = \Artisan::call('cms:jwt:keys', [
-            'kid' => $v2Kid,
-            '--force' => true,
-        ]);
-
-        if ($exitCode !== 0) {
-            $this->markTestSkipped('Failed to generate v2 key pair for rotation test.');
-        }
-
-        // Create token with v1 (current_kid)
-        $jwt = $this->service->issueAccessToken(2000);
-        $result = $this->service->verify($jwt);
-        $this->assertSame('2000', $result['claims']['sub']);
-        $this->assertSame($this->testKid, $result['kid']); // Should be v1
-
-        // Simulate key rotation: change current_kid to v2, but keep v1 in keys array
-        $rotatedConfig = [
-            'algo' => 'RS256',
+        $config = [
+            'algo' => 'HS256',
             'access_ttl' => 15 * 60,
             'refresh_ttl' => 30 * 24 * 60 * 60,
-            'current_kid' => $v2Kid, // New current key
-            'keys' => [
-                $this->testKid => [ // Old key still available
-                    'private_path' => storage_path("keys/jwt-{$this->testKid}-private.pem"),
-                    'public_path' => storage_path("keys/jwt-{$this->testKid}-public.pem"),
-                ],
-                $v2Kid => [ // New key
-                    'private_path' => storage_path("keys/jwt-{$v2Kid}-private.pem"),
-                    'public_path' => storage_path("keys/jwt-{$v2Kid}-public.pem"),
-                ],
-            ],
+            'secret' => '', // Empty secret
             'issuer' => 'https://test.stupidcms.local',
             'audience' => 'test-api',
         ];
 
-        $rotatedService = new JwtService($rotatedConfig);
+        $service = new JwtService($config);
 
-        // Old token signed with v1 should still be valid (backward compatibility)
-        $oldTokenResult = $rotatedService->verify($jwt);
-        $this->assertSame('2000', $oldTokenResult['claims']['sub']);
-        $this->assertSame($this->testKid, $oldTokenResult['kid']); // Still v1
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('JWT secret key is not configured');
 
-        // New tokens should be signed with v2
-        $newJwt = $rotatedService->issueAccessToken(2001);
-        $newTokenResult = $rotatedService->verify($newJwt);
-        $this->assertSame('2001', $newTokenResult['claims']['sub']);
-        $this->assertSame($v2Kid, $newTokenResult['kid']); // Should be v2
-
-        // Cleanup
-        @unlink(storage_path("keys/jwt-{$v2Kid}-private.pem"));
-        @unlink(storage_path("keys/jwt-{$v2Kid}-public.pem"));
+        $service->issueAccessToken(1234);
     }
 }
-

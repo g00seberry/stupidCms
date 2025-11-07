@@ -12,6 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Encrypt cookies (except JWT tokens)
+        $middleware->encryptCookies(except: [
+            'cms_at', // JWT access token cookie
+            'cms_rt', // JWT refresh token cookie
+        ]);
+        
         // Rate limiting для API (60 запросов в минуту)
         $middleware->throttleApi();
         

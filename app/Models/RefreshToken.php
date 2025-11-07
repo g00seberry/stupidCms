@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $user_id
  * @property string $jti
- * @property string $kid
  * @property \Illuminate\Support\Carbon $expires_at
  * @property \Illuminate\Support\Carbon|null $used_at
  * @property \Illuminate\Support\Carbon|null $revoked_at
@@ -24,7 +23,6 @@ class RefreshToken extends Model
     protected $fillable = [
         'user_id',
         'jti',
-        'kid',
         'expires_at',
         'used_at',
         'revoked_at',

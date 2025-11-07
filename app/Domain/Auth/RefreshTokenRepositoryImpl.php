@@ -96,7 +96,6 @@ final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
         return new RefreshTokenDto(
             user_id: $token->user_id,
             jti: $token->jti,
-            kid: $token->kid,
             expires_at: $token->expires_at,
             used_at: $token->used_at,
             revoked_at: $token->revoked_at,
