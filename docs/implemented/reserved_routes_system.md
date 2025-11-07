@@ -27,25 +27,29 @@ lang/ru/
 ### 1. ReservedRouteRegistry
 
 Центральный класс, который:
-- Загружает маршруты из **конфига** (`config/stupidcms.php`) и **БД** (таблица `reserved_routes`)
-- Кэширует результаты на 60 секунд
-- Нормализует пути (trim слэшей/пробелов, lowercase, NFC)
+
+-   Загружает маршруты из **конфига** (`config/stupidcms.php`) и **БД** (таблица `reserved_routes`)
+-   Кэширует результаты на 60 секунд
+-   Нормализует пути (trim слэшей/пробелов, lowercase, NFC)
 
 **Типы маршрутов:**
-- `paths` — точное совпадение (например, `admin` для `/admin`)
-- `prefixes` — префикс для подпутей (например, `api` для `/api/*`)
+
+-   `paths` — точное совпадение (например, `admin` для `/admin`)
+-   `prefixes` — префикс для подпутей (например, `api` для `/api/*`)
 
 **Методы:**
-- `isReservedPath(string $path): bool` — проверка точного совпадения
-- `isReservedPrefix(string $path): bool` — проверка префикса
-- `isReservedSlug(string $slug): bool` — проверка slug (первый сегмент), проверяет и `paths`, и `prefixes`
+
+-   `isReservedPath(string $path): bool` — проверка точного совпадения
+-   `isReservedPrefix(string $path): bool` — проверка префикса
+-   `isReservedSlug(string $slug): bool` — проверка slug (первый сегмент), проверяет и `paths`, и `prefixes`
 
 ### 2. NotReservedRoute
 
 Правило валидации Laravel, которое:
-- Использует `ReservedRouteRegistry` для проверки
-- Нормализует входной slug перед проверкой
-- Возвращает локализованное сообщение об ошибке
+
+-   Использует `ReservedRouteRegistry` для проверки
+-   Нормализует входной slug перед проверкой
+-   Возвращает локализованное сообщение об ошибке
 
 ### 3. Загрузка данных
 
@@ -104,46 +108,52 @@ $request->validate([
 ## Нормализация
 
 Все пути нормализуются одинаково:
+
 1. Trim слэшей, пробелов, табов (`trim($path, " \t\n\r\0\x0B/\\")`)
 2. NFC нормализация (если доступно расширение `intl`)
 3. Приведение к нижнему регистру (`mb_strtolower`)
 
 **Примеры:**
-- `"/admin"` → `"admin"`
-- `"Admin"` → `"admin"`
-- `" admin "` → `"admin"`
+
+-   `"/admin"` → `"admin"`
+-   `"Admin"` → `"admin"`
+-   `" admin "` → `"admin"`
 
 ## Формат ошибки
 
 При нарушении возвращается:
 
 **HTTP 422**
+
 ```json
 {
-  "message": "Данные не прошли валидацию.",
-  "errors": {
-    "slug": ["Значение поля slug конфликтует с зарезервированными маршрутами (например: admin, api)."]
-  }
+    "message": "Данные не прошли валидацию.",
+    "errors": {
+        "slug": [
+            "Значение поля slug конфликтует с зарезервированными маршрутами (например: admin, api)."
+        ]
+    }
 }
 ```
 
 ## Кэширование
 
-- Кэш хранится 60 секунд (константа `CACHE_TTL`)
-- Ключ: `reserved_routes_all`
-- Очистка: `$registry->clearCache()`
+-   Кэш хранится 60 секунд (константа `CACHE_TTL`)
+-   Ключ: `reserved_routes_all`
+-   Очистка: `$registry->clearCache()`
 
 **Важно:** После добавления маршрута в БД нужно очистить кэш, иначе изменения не применятся.
 
 ## Тестирование
 
 Unit-тесты:
-- `tests/Unit/NotReservedRouteRuleTest.php` — тесты правила валидации
-- `tests/Unit/ReservedRouteRegistryTest.php` — тесты реестра
+
+-   `tests/Unit/NotReservedRouteRuleTest.php` — тесты правила валидации
+-   `tests/Unit/ReservedRouteRegistryTest.php` — тесты реестра
 
 Покрытие:
-- Проверка зарезервированных slug'ов
-- Нормализация (case-insensitive, trim)
-- Загрузка из конфига и БД
-- Кэширование
 
+-   Проверка зарезервированных slug'ов
+-   Нормализация (case-insensitive, trim)
+-   Загрузка из конфига и БД
+-   Кэширование
