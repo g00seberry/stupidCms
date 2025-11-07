@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Models\Entry;
 use App\Models\ReservedRoute;
 use App\Support\EntrySlug\EntrySlugService;
@@ -23,11 +24,13 @@ class EntryObserver
         private Slugifier $slugifier,
         private UniqueSlugService $uniqueSlugService,
         private EntrySlugService $entrySlugService,
+        private RichTextSanitizer $sanitizer,
     ) {}
 
     public function creating(Entry $entry): void
     {
         $this->ensureSlug($entry);
+        $this->sanitizeRichTextFields($entry);
     }
 
     public function updating(Entry $entry): void
@@ -42,6 +45,11 @@ class EntryObserver
             if ($entry->exists) {
                 self::$oldSlugs[$entry->id] = $oldSlug;
             }
+        }
+
+        // Санитизируем richtext поля при изменении data_json
+        if ($entry->isDirty('data_json')) {
+            $this->sanitizeRichTextFields($entry);
         }
     }
 
@@ -118,6 +126,27 @@ class EntryObserver
                 return $exists || $reserved;
             }
         );
+    }
+
+    /**
+     * Санитизирует richtext поля (body_html, excerpt_html) из data_json
+     * и сохраняет очищенный HTML в body_html_sanitized/excerpt_html_sanitized
+     */
+    private function sanitizeRichTextFields(Entry $entry): void
+    {
+        $data = $entry->data_json ?? [];
+
+        // Санитизируем body_html
+        if (isset($data['body_html']) && is_string($data['body_html'])) {
+            $data['body_html_sanitized'] = $this->sanitizer->sanitize($data['body_html']);
+        }
+
+        // Санитизируем excerpt_html
+        if (isset($data['excerpt_html']) && is_string($data['excerpt_html'])) {
+            $data['excerpt_html_sanitized'] = $this->sanitizer->sanitize($data['excerpt_html']);
+        }
+
+        $entry->data_json = $data;
     }
 }
 

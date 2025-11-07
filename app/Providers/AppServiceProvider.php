@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Domain\Options\OptionsRepository;
+use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
@@ -32,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
                 typePrefix: config('view_templates.type_prefix', 'pages.types.'),
             );
         });
+
+        // Регистрация RichTextSanitizer
+        $this->app->singleton(RichTextSanitizer::class);
     }
 
     /**
@@ -40,5 +44,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Entry::observe(EntryObserver::class);
+        
+        // Создаем директорию для кэша HTMLPurifier (idempotent)
+        app('files')->ensureDirectoryExists(storage_path('app/purifier'));
     }
 }
