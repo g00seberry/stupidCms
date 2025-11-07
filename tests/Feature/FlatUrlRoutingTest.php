@@ -195,6 +195,7 @@ class FlatUrlRoutingTest extends TestCase
      * Примечание: после route:cache создаётся новый экземпляр приложения,
      * поэтому база данных может быть в другом состоянии. Проверяем только,
      * что маршрут зарегистрирован и regex паттерн работает.
+     * Middleware RejectReservedIfMatched обрабатывает отсутствие таблицы в тестах.
      */
     public function test_routing_works_after_route_cache(): void
     {
@@ -228,7 +229,7 @@ class FlatUrlRoutingTest extends TestCase
      * Динамически зарезервированный путь не попадает в PageController.
      * 
      * Примечание: динамические резервации из БД не попадают в regex паттерн
-     * при route:cache, но PageController дополнительно проверяет isReserved
+     * при route:cache, но middleware RejectReservedIfMatched проверяет isReserved
      * для защиты от ложных срабатываний.
      */
     public function test_dynamically_reserved_path_not_handled_by_page_controller(): void
@@ -253,11 +254,11 @@ class FlatUrlRoutingTest extends TestCase
             'seo_json' => null,
         ]);
 
-        // /shop должен обрабатываться PageController, но контроллер должен
-        // проверить isReserved и вернуть 404, даже если Entry существует
+        // /shop должен обрабатываться PageController, но middleware RejectReservedIfMatched
+        // должен проверить isReserved и вернуть 404, даже если Entry существует
         $response = $this->get('/shop');
         
-        // PageController должен проверить isReserved и вернуть 404
+        // Middleware должен проверить isReserved и вернуть 404
         $response->assertStatus(404);
     }
 

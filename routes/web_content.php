@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\CanonicalUrl;
+use App\Http\Middleware\RejectReservedIfMatched;
 use App\Routing\ReservedPattern;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,6 @@ use Illuminate\Support\Facades\Route;
 $slugPattern = ReservedPattern::slugRegex();
 Route::get('/{slug}', [PageController::class, 'show'])
     ->where('slug', $slugPattern)
+    ->middleware(RejectReservedIfMatched::class)
     ->name('page.show');
 

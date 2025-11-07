@@ -313,7 +313,8 @@ class BladeTemplateResolverTest extends TestCase
         ]);
 
         // Entry без загруженной связи postType
-        // Должен запросить slug из БД
+        // Должен запросить slug из БД через value('slug'), а не через lazy loading
+        // Это предотвращает N+1 запросы
         View::shouldReceive('exists')
             ->once()
             ->with('pages.overrides.test')
@@ -327,6 +328,95 @@ class BladeTemplateResolverTest extends TestCase
         $result = $this->resolver->forEntry($entry);
 
         $this->assertEquals('pages.show', $result);
+        
+        // Проверяем, что связь postType не была загружена (lazy loading не произошел)
+        // Если бы произошел lazy loading, $entry->postType был бы доступен
+        $this->assertFalse($entry->relationLoaded('postType'), 
+            'Связь postType не должна быть загружена через lazy loading');
+    }
+
+    public function test_handles_empty_slug_after_sanitization(): void
+    {
+        // Создаем Entry с slug, который после санитизации станет пустым
+        // Например, slug состоит только из недопустимых символов
+        $entry = Entry::create([
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test',
+            'slug' => '!!!@@@###', // Только знаки препинания, которые будут удалены
+            'status' => 'draft',
+            'data_json' => [],
+        ]);
+        $entry->load('postType');
+
+        // После санитизации slug станет пустым, поэтому проверка override должна быть пропущена
+        // (не должно быть вызова View::exists для override с пустым slug)
+        // Должен сразу перейти к проверке type template
+        
+        // НЕ должно быть вызова View::exists для override (так как slug пустой)
+        // Должен быть вызов только для type template
+        View::shouldReceive('exists')
+            ->once()
+            ->with('pages.types.page')
+            ->andReturn(true);
+
+        $result = $this->resolver->forEntry($entry);
+
+        // Должен вернуть type template, так как override был пропущен из-за пустого slug
+        $this->assertEquals('pages.types.page', $result);
+    }
+
+    public function test_handles_empty_slug_after_sanitization_falls_back_to_default(): void
+    {
+        // Аналогично предыдущему тесту, но type template не существует
+        $entry = Entry::create([
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test',
+            'slug' => '!!!@@@###', // Только знаки препинания
+            'status' => 'draft',
+            'data_json' => [],
+        ]);
+        $entry->load('postType');
+
+        // НЕ должно быть вызова View::exists для override (пустой slug)
+        // Должен быть вызов для type template
+        View::shouldReceive('exists')
+            ->once()
+            ->with('pages.types.page')
+            ->andReturn(false);
+
+        $result = $this->resolver->forEntry($entry);
+
+        // Должен вернуть default, так как override пропущен, а type не существует
+        $this->assertEquals('pages.show', $result);
+    }
+
+    public function test_override_wins_when_both_override_and_type_exist(): void
+    {
+        // Smoke-тест: проверяем, что при наличии и override, и type шаблона
+        // выигрывает override (приоритет выше)
+        $entry = Entry::create([
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test',
+            'slug' => 'special-page',
+            'status' => 'draft',
+            'data_json' => [],
+        ]);
+        $entry->load('postType');
+
+        // Мокаем, что оба шаблона существуют
+        // Override должен быть проверен первым и вернуться сразу
+        View::shouldReceive('exists')
+            ->once()
+            ->with('pages.overrides.special-page')
+            ->andReturn(true);
+
+        // НЕ должно быть вызова для type template, так как override уже найден
+        // Если бы был вызов для 'pages.types.page', тест упал бы из-за mock
+
+        $result = $this->resolver->forEntry($entry);
+
+        // Должен вернуть override, игнорируя type template
+        $this->assertEquals('pages.overrides.special-page', $result);
     }
 }
 
