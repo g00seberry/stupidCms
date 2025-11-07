@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Auth\JwtService;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
@@ -36,6 +37,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Регистрация RichTextSanitizer
         $this->app->singleton(RichTextSanitizer::class);
+
+        // Регистрация JwtService
+        $this->app->singleton(JwtService::class, function () {
+            return new JwtService(config('jwt'));
+        });
     }
 
     /**
@@ -47,5 +53,9 @@ class AppServiceProvider extends ServiceProvider
         
         // Создаем директорию для кэша HTMLPurifier (idempotent)
         app('files')->ensureDirectoryExists(storage_path('app/purifier'));
+
+        // Set JWT leeway to account for clock drift between server and client
+        // This ensures stable token verification when there are small time differences
+        \Firebase\JWT\JWT::$leeway = (int) config('jwt.leeway', 5); // Default: 5 seconds
     }
 }
