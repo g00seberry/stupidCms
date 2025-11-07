@@ -1,6 +1,15 @@
 <?php
 
 return [
+    'reserved_routes' => [
+        'paths' => [
+            'admin', // строгое совпадение для "/admin"
+        ],
+        'prefixes' => [
+            'admin', // префикс для "/admin/*"
+            'api',   // префикс для "/api/*"
+        ],
+    ],
     'slug' => [
         'default' => [
             'delimiter' => env('SLUG_DELIMITER', '-'),
