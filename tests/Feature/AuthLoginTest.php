@@ -21,6 +21,7 @@ class AuthLoginTest extends TestCase
     {
         $user = User::factory()->create(['password' => bcrypt('secretPass123')]);
 
+        // Login endpoint is excluded from CSRF verification
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => $user->email,
             'password' => 'secretPass123',
@@ -33,8 +34,8 @@ class AuthLoginTest extends TestCase
         $response->assertCookie(config('jwt.cookies.refresh'));
         
         // Проверка атрибутов cookies
-        $accessCookie = $response->getCookie(config('jwt.cookies.access'));
-        $refreshCookie = $response->getCookie(config('jwt.cookies.refresh'));
+        $accessCookie = $this->getUnencryptedCookie($response, config('jwt.cookies.access'));
+        $refreshCookie = $this->getUnencryptedCookie($response, config('jwt.cookies.refresh'));
         
         $this->assertTrue($accessCookie->isHttpOnly(), 'Access cookie must be HttpOnly');
         $this->assertTrue($refreshCookie->isHttpOnly(), 'Refresh cookie must be HttpOnly');

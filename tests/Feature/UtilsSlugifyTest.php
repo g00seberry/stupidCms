@@ -18,7 +18,7 @@ class UtilsSlugifyTest extends TestCase
         
         // Для базового случая (когда slug не занят) база не нужна
         // Просто проверяем, что эндпоинт возвращает правильную структуру
-        $response = $this->actingAs($admin, 'admin')->getJson('/api/v1/admin/utils/slugify?title=Страница&postType=page');
+        $response = $this->getJsonAsAdmin('/api/v1/admin/utils/slugify?title=Страница&postType=page', $admin);
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -44,7 +44,7 @@ class UtilsSlugifyTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
         
-        $response = $this->actingAs($admin, 'admin')->getJson('/api/v1/admin/utils/slugify?postType=page');
+        $response = $this->getJsonAsAdmin('/api/v1/admin/utils/slugify?postType=page', $admin);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['title']);

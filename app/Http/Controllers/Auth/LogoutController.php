@@ -7,7 +7,7 @@ use App\Domain\Auth\RefreshTokenRepository;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\RefreshToken;
 use App\Support\JwtCookies;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,15 +28,15 @@ final class LogoutController
      * Supports ?all=1 query parameter to revoke all refresh tokens for the user.
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      */
-    public function logout(Request $request): JsonResponse
+    public function logout(Request $request): Response
     {
         $rt = (string) $request->cookie(config('jwt.cookies.refresh'), '');
 
         if ($rt === '') {
             // No refresh token: just clear cookies (idempotent)
-            return response()->json(['message' => 'Logged out successfully.'])
+            return response()->noContent()
                 ->withCookie(JwtCookies::clearAccess())
                 ->withCookie(JwtCookies::clearRefresh());
         }
@@ -46,7 +46,7 @@ final class LogoutController
             $claims = $verified['claims']; // jti, sub
         } catch (\Throwable $e) {
             // Invalid RT: clear cookies (without 401, to not break UX logout)
-            return response()->json(['message' => 'Logged out successfully.'])
+            return response()->noContent()
                 ->withCookie(JwtCookies::clearAccess())
                 ->withCookie(JwtCookies::clearRefresh());
         }
@@ -62,7 +62,7 @@ final class LogoutController
             }
         });
 
-        return response()->json(['message' => 'Logged out successfully.'])
+        return response()->noContent()
             ->withCookie(JwtCookies::clearAccess())
             ->withCookie(JwtCookies::clearRefresh());
     }

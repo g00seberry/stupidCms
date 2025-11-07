@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class Rfc7807ErrorTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_validation_error_returns_422_problem_json(): void
     {
         $response = $this->postJson('/api/v1/auth/login', [
@@ -36,7 +38,7 @@ class Rfc7807ErrorTest extends TestCase
             'type' => 'about:blank',
             'title' => 'Not Found',
             'status' => 404,
-            'detail' => 'Route not found.',
+            'detail' => 'The requested resource was not found.',
         ]);
     }
 
@@ -90,15 +92,23 @@ class Rfc7807ErrorTest extends TestCase
         ]);
 
         $loginResponse->assertOk();
-        $accessCookie = $loginResponse->getCookie(config('jwt.cookies.access'));
+        $accessCookie = $this->getUnencryptedCookie($loginResponse, config('jwt.cookies.access'));
 
         // Try to access admin route with regular token
         \Route::middleware(['admin.auth'])->get('/test/admin', function () {
             return response()->json(['message' => 'OK']);
         });
 
-        $response = $this->withCookie($accessCookie->getName(), $accessCookie->getValue())
-            ->getJson('/test/admin');
+        $response = $this->postJsonWithCookies('/test/admin', [], [
+            $accessCookie->getName() => $accessCookie->getValue(),
+        ]);
+        
+        // Change to GET request
+        $response = $this->call('GET', '/test/admin', [], [
+            $accessCookie->getName() => $accessCookie->getValue(),
+        ], [], $this->transformHeadersToServerVars([
+            'Accept' => 'application/json',
+        ]));
 
         $response->assertStatus(403);
         $response->assertHeader('Content-Type', 'application/problem+json');

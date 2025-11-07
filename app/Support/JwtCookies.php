@@ -139,5 +139,27 @@ final class JwtCookies
     {
         return self::forgetRefresh();
     }
+
+    /**
+     * Create a CSRF token cookie (non-HttpOnly for JavaScript access).
+     *
+     * @param string $token The CSRF token
+     * @return Cookie
+     */
+    public static function csrf(string $token): Cookie
+    {
+        $csrfConfig = config('security.csrf');
+        $samesite = self::normalizeSameSite((string) $csrfConfig['samesite']);
+
+        // If SameSite=None, secure must be true
+        $secure = $samesite === Cookie::SAMESITE_NONE ? true : $csrfConfig['secure'];
+
+        return Cookie::create($csrfConfig['cookie_name'], $token, now()->addHours($csrfConfig['ttl_hours']))
+            ->withSecure($secure)
+            ->withHttpOnly(false) // Important: allow JavaScript access
+            ->withSameSite($samesite)
+            ->withPath($csrfConfig['path'])
+            ->withDomain($csrfConfig['domain']);
+    }
 }
 

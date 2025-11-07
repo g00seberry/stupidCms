@@ -19,14 +19,20 @@ class AuthLogoutTest extends TestCase
 
     public function test_logout_without_token_clears_cookies(): void
     {
-        $response = $this->postJson('/api/v1/auth/logout');
+        // Acquire CSRF token
+        $csrf = $this->getJson('/api/v1/auth/csrf');
+        $token = $csrf->json('csrf');
+        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
 
-        $response->assertOk();
-        $response->assertJson(['message' => 'Logged out successfully.']);
+        $response = $this->postJsonWithUnencryptedCookie('/api/v1/auth/logout', $cookieName, $token, [], [
+            'X-CSRF-Token' => $token,
+        ]);
+
+        $response->assertNoContent();
 
         // Verify cookies are cleared (expired)
-        $accessCookie = $response->getCookie(config('jwt.cookies.access'));
-        $refreshCookie = $response->getCookie(config('jwt.cookies.refresh'));
+        $accessCookie = $this->getUnencryptedCookie($response, config('jwt.cookies.access'));
+        $refreshCookie = $this->getUnencryptedCookie($response, config('jwt.cookies.refresh'));
 
         $this->assertNotNull($accessCookie);
         $this->assertNotNull($refreshCookie);
@@ -45,12 +51,13 @@ class AuthLogoutTest extends TestCase
         ]);
 
         $loginResponse->assertOk();
-        $refreshCookie = $loginResponse->getCookie(config('jwt.cookies.refresh'));
+        $refreshCookie = $this->getUnencryptedCookie($loginResponse, config('jwt.cookies.refresh'));
         $this->assertNotNull($refreshCookie);
 
         // Refresh once to create a token chain
-        $refreshResponse = $this->withCookie($refreshCookie->getName(), $refreshCookie->getValue())
-            ->postJson('/api/v1/auth/refresh');
+        $refreshResponse = $this->postJsonWithCookies('/api/v1/auth/refresh', [], [
+            $refreshCookie->getName() => $refreshCookie->getValue(),
+        ]);
 
         $refreshResponse->assertOk();
 
@@ -64,15 +71,24 @@ class AuthLogoutTest extends TestCase
         $this->assertNull($secondToken->revoked_at);
 
         // Logout
-        $logoutResponse = $this->withCookie($refreshCookie->getName(), $refreshCookie->getValue())
-            ->postJson('/api/v1/auth/logout');
+        // Acquire CSRF token
+        $csrf = $this->getJson('/api/v1/auth/csrf');
+        $token = $csrf->json('csrf');
+        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
 
-        $logoutResponse->assertOk();
-        $logoutResponse->assertJson(['message' => 'Logged out successfully.']);
+        // Send both refresh cookie and CSRF cookie/header
+        $logoutResponse = $this->postJsonWithCookies('/api/v1/auth/logout', [], [
+            $refreshCookie->getName() => $refreshCookie->getValue(),
+            $cookieName => $token,
+        ], [
+            'X-CSRF-Token' => $token,
+        ]);
+
+        $logoutResponse->assertNoContent();
 
         // Verify cookies are cleared
-        $accessCookie = $logoutResponse->getCookie(config('jwt.cookies.access'));
-        $refreshCookieCleared = $logoutResponse->getCookie(config('jwt.cookies.refresh'));
+        $accessCookie = $this->getUnencryptedCookie($logoutResponse, config('jwt.cookies.access'));
+        $refreshCookieCleared = $this->getUnencryptedCookie($logoutResponse, config('jwt.cookies.refresh'));
 
         $this->assertNotNull($accessCookie);
         $this->assertNotNull($refreshCookieCleared);
@@ -98,7 +114,7 @@ class AuthLogoutTest extends TestCase
         ]);
 
         $login1->assertOk();
-        $refreshCookie1 = $login1->getCookie(config('jwt.cookies.refresh'));
+        $refreshCookie1 = $this->getUnencryptedCookie($login1, config('jwt.cookies.refresh'));
 
         // Login again (simulate different device/session)
         $login2 = $this->postJson('/api/v1/auth/login', [
@@ -107,17 +123,26 @@ class AuthLogoutTest extends TestCase
         ]);
 
         $login2->assertOk();
-        $refreshCookie2 = $login2->getCookie(config('jwt.cookies.refresh'));
+        $refreshCookie2 = $this->getUnencryptedCookie($login2, config('jwt.cookies.refresh'));
 
         // Verify we have multiple tokens
         $userTokens = RefreshToken::where('user_id', $user->id)->get();
         $this->assertGreaterThanOrEqual(2, $userTokens->count());
 
         // Logout with ?all=1
-        $logoutResponse = $this->withCookie($refreshCookie1->getName(), $refreshCookie1->getValue())
-            ->postJson('/api/v1/auth/logout?all=1');
+        // Acquire CSRF token
+        $csrf = $this->getJson('/api/v1/auth/csrf');
+        $token = $csrf->json('csrf');
+        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
 
-        $logoutResponse->assertOk();
+        $logoutResponse = $this->postJsonWithCookies('/api/v1/auth/logout?all=1', [], [
+            $refreshCookie1->getName() => $refreshCookie1->getValue(),
+            $cookieName => $token,
+        ], [
+            'X-CSRF-Token' => $token,
+        ]);
+
+        $logoutResponse->assertNoContent();
 
         // Verify all tokens are revoked
         $userTokens->each->refresh();
@@ -129,15 +154,23 @@ class AuthLogoutTest extends TestCase
     public function test_logout_with_invalid_token_clears_cookies(): void
     {
         // Logout with invalid token should still clear cookies (idempotent)
-        $response = $this->withCookie(config('jwt.cookies.refresh'), 'invalid-token')
-            ->postJson('/api/v1/auth/logout');
+        // Acquire CSRF token
+        $csrf = $this->getJson('/api/v1/auth/csrf');
+        $token = $csrf->json('csrf');
+        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
 
-        $response->assertOk();
-        $response->assertJson(['message' => 'Logged out successfully.']);
+        $response = $this->postJsonWithCookies('/api/v1/auth/logout', [], [
+            config('jwt.cookies.refresh') => 'invalid-token',
+            $cookieName => $token,
+        ], [
+            'X-CSRF-Token' => $token,
+        ]);
+
+        $response->assertNoContent();
 
         // Verify cookies are cleared
-        $accessCookie = $response->getCookie(config('jwt.cookies.access'));
-        $refreshCookie = $response->getCookie(config('jwt.cookies.refresh'));
+        $accessCookie = $this->getUnencryptedCookie($response, config('jwt.cookies.access'));
+        $refreshCookie = $this->getUnencryptedCookie($response, config('jwt.cookies.refresh'));
 
         $this->assertNotNull($accessCookie);
         $this->assertNotNull($refreshCookie);

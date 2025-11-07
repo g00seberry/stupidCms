@@ -12,10 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Encrypt cookies (except JWT tokens)
+        // Encrypt cookies (except JWT tokens and CSRF token)
+        // Note: Using static values because config may not be available during bootstrap
         $middleware->encryptCookies(except: [
             'cms_at', // JWT access token cookie
             'cms_rt', // JWT refresh token cookie
+            'cms_csrf', // CSRF token cookie (non-HttpOnly, needs JS access)
         ]);
         
         // Rate limiting для API (60 запросов в минуту)
@@ -26,7 +28,14 @@ return Application::configure(basePath: dirname(__DIR__))
         // Внутри middleware есть фильтр для системных путей (admin, api, auth, ...)
         $middleware->prepend(\App\Http\Middleware\CanonicalUrl::class);
         
-        // Add Vary headers for API responses with cookies (after CORS middleware)
+        // Middleware order for API group: CORS → CSRF → Vary → Auth
+        // CORS must be first to handle preflight and set headers
+        // CSRF must be after CORS but before auth (headers/cookies must be available)
+        // AddCacheVary after CSRF (for proper cache headers)
+        // Verify CSRF token for state-changing API requests (after CORS, before auth)
+        $middleware->appendToGroup('api', \App\Http\Middleware\VerifyApiCsrf::class);
+        
+        // Add Vary headers for API responses with cookies (after CORS and CSRF)
         $middleware->appendToGroup('api', \App\Http\Middleware\AddCacheVary::class);
         
         // Register custom middleware aliases
@@ -82,7 +91,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'type' => 'about:blank',
                     'title' => 'Not Found',
                     'status' => 404,
-                    'detail' => 'Route not found.',
+                    'detail' => 'The requested resource was not found.',
                 ], 404)->header('Content-Type', 'application/problem+json');
             }
         });
@@ -96,6 +105,23 @@ return Application::configure(basePath: dirname(__DIR__))
                     'status' => 429,
                     'detail' => 'Rate limit exceeded.',
                 ], 429)->header('Content-Type', 'application/problem+json');
+            }
+        });
+
+        // 500 Internal Server Error - Database/Query exceptions
+        $exceptions->render(function (\Illuminate\Database\QueryException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                \Illuminate\Support\Facades\Log::error('Database error during API request', [
+                    'exception' => $e->getMessage(),
+                    'sql' => $e->getSql(),
+                ]);
+                
+                return response()->json([
+                    'type' => 'about:blank',
+                    'title' => 'Internal Server Error',
+                    'status' => 500,
+                    'detail' => 'Failed to refresh token due to server error.',
+                ], 500)->header('Content-Type', 'application/problem+json');
             }
         });
     })->create();
