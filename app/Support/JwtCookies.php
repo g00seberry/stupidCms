@@ -119,5 +119,25 @@ final class JwtCookies
             ->withPath($config['path'])
             ->withDomain($config['domain']);
     }
+
+    /**
+     * Alias for forgetAccess() - clears access token cookie.
+     *
+     * @return Cookie
+     */
+    public static function clearAccess(): Cookie
+    {
+        return self::forgetAccess();
+    }
+
+    /**
+     * Alias for forgetRefresh() - clears refresh token cookie.
+     *
+     * @return Cookie
+     */
+    public static function clearRefresh(): Cookie
+    {
+        return self::forgetRefresh();
+    }
 }
 

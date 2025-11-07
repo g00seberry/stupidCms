@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
  *   - CORS с credentials: true
  *   - CSRF токены для state-changing операций (если используется cookie-based auth)
  */
-Route::middleware(['auth:admin', 'throttle:api'])->group(function () {
+Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
     Route::get('/utils/slugify', [UtilsController::class, 'slugify']);
     
     // Path reservations

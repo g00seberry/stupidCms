@@ -36,6 +36,17 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($key);
         });
 
+        // Rate limiter для refresh (10 попыток в минуту по хэшу cookie+IP)
+        // Используем хэш cookie+IP для более точной идентификации клиента
+        // Это помогает избежать ложных блокировок за NAT и ловит автоматы
+        RateLimiter::for('refresh', function (Request $request) {
+            $refreshToken = (string) $request->cookie(config('jwt.cookies.refresh'), '');
+            // Fallback to sha256 if xxh128 is not available
+            $algo = in_array('xxh128', hash_algos(), true) ? 'xxh128' : 'sha256';
+            $key = hash($algo, $refreshToken . '|' . $request->ip());
+            return Limit::perMinute(10)->by($key);
+        });
+
         $this->routes(function () {
             // Порядок загрузки роутов (детерминированный):
             // 1) Core → 2) Public API → 3) Admin API → 4) Plugins → 5) Content → 6) Fallback

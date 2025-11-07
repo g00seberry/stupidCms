@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
+use App\Domain\Auth\RefreshTokenRepository;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Audit;
 use App\Models\User;
@@ -12,8 +13,10 @@ use Illuminate\Support\Facades\Hash;
 
 final class LoginController
 {
-    public function __construct(private JwtService $jwt)
-    {
+    public function __construct(
+        private JwtService $jwt,
+        private RefreshTokenRepository $repo,
+    ) {
     }
 
     /**
@@ -48,6 +51,16 @@ final class LoginController
         // Выпуск токенов
         $access = $this->jwt->issueAccessToken($user->getKey(), ['scp' => ['api']]);
         $refresh = $this->jwt->issueRefreshToken($user->getKey());
+
+        // Сохранить refresh token в БД (используем expires_at из claims['exp'])
+        $decoded = $this->jwt->verify($refresh, 'refresh');
+        $this->repo->store([
+            'user_id' => $user->getKey(),
+            'jti' => $decoded['claims']['jti'],
+            'kid' => $decoded['kid'],
+            'expires_at' => \Carbon\Carbon::createFromTimestampUTC($decoded['claims']['exp']),
+            'parent_jti' => null,
+        ]);
 
         // Ответ + cookies
         return response()->json([

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Domain\Auth\JwtService;
+use App\Domain\Auth\RefreshTokenRepository;
+use App\Domain\Auth\RefreshTokenRepositoryImpl;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
@@ -42,6 +44,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(JwtService::class, function () {
             return new JwtService(config('jwt'));
         });
+
+        // Регистрация RefreshTokenRepository
+        $this->app->singleton(RefreshTokenRepository::class, RefreshTokenRepositoryImpl::class);
     }
 
     /**
