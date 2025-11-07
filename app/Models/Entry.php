@@ -51,7 +51,7 @@ class Entry extends Model
     {
         return $q->where('status', 'published')
             ->whereNotNull('published_at')
-            ->where('published_at', '<=', Carbon::now());
+            ->where('published_at', '<=', Carbon::now('UTC'));
     }
 
     public function scopeOfType(Builder $q, string $postTypeSlug): Builder
