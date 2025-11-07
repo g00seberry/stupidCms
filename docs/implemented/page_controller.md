@@ -40,6 +40,34 @@
 -   **Узкий catch**: обрабатывает только кейс "table not found" (42S02/HY000), остальные ошибки логируются и пробрасываются
 -   **firstOrFail()**: использует `firstOrFail()` вместо `first() + abort(404)` для единообразия с Laravel-подходом
 
+**Пример ключевого кода:**
+
+```php
+// Узкий catch: только "table not found"
+try {
+    if ($this->pathReservationService->isReserved("/{$slug}")) {
+        abort(404);
+    }
+} catch (\Illuminate\Database\QueryException $e) {
+    $code = (string) $e->getCode();
+    if (!in_array($code, ['42S02', 'HY000'], true)) {
+        report($e); // Логируем неожиданные ошибки
+        throw $e;   // Пробрасываем дальше
+    }
+    if ($code === 'HY000' && !str_contains($e->getMessage(), 'no such table')) {
+        report($e);
+        throw $e;
+    }
+}
+
+// firstOrFail() автоматически выбрасывает 404
+$entry = Entry::published()
+    ->ofType('page')
+    ->where('slug', $slug)
+    ->with('postType')
+    ->firstOrFail();
+```
+
 ### 2. View
 
 **Файл:** `resources/views/pages/show.blade.php`
@@ -54,10 +82,23 @@
 @section('content')
   <article class="prose">
     <h1>{{ $entry->title }}</h1>
-    @if(isset($entry->data_json['content']))
-      {!! $entry->data_json['content'] !!}
-    @elseif(isset($entry->data_json['body_html']))
-      {!! $entry->data_json['body_html'] !!}
+    @php
+      // ВАЖНО: До включения санитайзера (задача 35) контент экранируется для безопасности
+      // После реализации санитайзера использовать body_html_sanitized и {!! !!}
+      $html = data_get($entry->data_json, 'body_html_sanitized');
+      $content = data_get($entry->data_json, 'content');
+      $bodyHtml = data_get($entry->data_json, 'body_html');
+    @endphp
+
+    @if($html !== null)
+      {{-- Санитизированный HTML из задачи 35 --}}
+      {!! $html !!}
+    @elseif($bodyHtml !== null)
+      {{-- Временно экранируем до включения санитайзера --}}
+      {{ $bodyHtml }}
+    @elseif($content !== null)
+      {{-- Текстовый контент (безопасен) --}}
+      {{ $content }}
     @endif
   </article>
 @endsection
@@ -96,7 +137,10 @@
 -   **Индекс по `slug`**: добавлен индекс `entries_slug_idx` для оптимизации поиска записей по slug
 -   **Составной индекс**: используется индекс `(status, published_at)` для оптимизации скоупа `published()`
 -   **Уникальность slug для Page**: реализована через триггеры в миграции `create_entries_table.php` (глобальная уникальность для активных записей типа 'page')
+    -   Триггеры `trg_entries_pages_slug_unique_before_ins` и `trg_entries_pages_slug_unique_before_upd` обеспечивают инвариант
+    -   Используется составной UNIQUE индекс `entries_unique_active_slug` на `(post_type_id, slug, is_active)`
 -   **Один запрос**: поиск Entry выполняется одним запросом без JOIN (при использовании истории slug'ов будет JOIN по `entry_slugs`)
+-   **Опциональная оптимизация**: при необходимости можно добавить составной индекс `(post_type_id, slug)` для частых фильтров скоупа
 
 ## Безопасность
 
