@@ -2,6 +2,13 @@
 
 @section('title', $entry->title)
 
+@push('meta')
+  @if(request()->routeIs('home'))
+    {{-- Канонизация: главная страница с записью должна указывать на её прямой URL --}}
+    <link rel="canonical" href="{{ url('/' . $entry->slug) }}">
+  @endif
+@endpush
+
 @section('content')
   <article class="prose">
     <h1>{{ $entry->title }}</h1>

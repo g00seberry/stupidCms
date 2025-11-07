@@ -5,7 +5,7 @@ use App\Models\Entry;
 use Illuminate\Support\Facades\Route;
 
 // Главная страница (должна быть в core, чтобы не перехватывалась контентным catch-all)
-Route::get('/', \App\Http\Controllers\HomeController::class);
+Route::get('/', \App\Http\Controllers\HomeController::class)->name('home');
 
 // Тестовый маршрут для проверки порядка роутинга (только для тестов)
 // Должен обрабатываться до fallback
