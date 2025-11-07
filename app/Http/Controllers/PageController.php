@@ -29,30 +29,45 @@ class PageController extends Controller
     {
         // Дополнительная защита: проверяем, не зарезервирован ли путь
         // (на случай, если список изменился после route:cache)
-        // Обрабатываем исключения на случай отсутствия таблицы в тестах
+        // Обрабатываем исключения только для кейса "table not found" в тестах/миграциях
         try {
             if ($this->pathReservationService->isReserved("/{$slug}")) {
                 abort(404);
             }
-          } catch (\Illuminate\Database\QueryException $e) {
-              // Если таблица reserved_routes не существует (например, в тестах),
-              // игнорируем проверку и продолжаем поиск Entry
-          } catch (\PDOException $e) {
-              // Если таблица reserved_routes не существует (например, в тестах),
-              // игнорируем проверку и продолжаем поиск Entry
-          }
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Разрешаем только кейс "table not found" (42S02 для MySQL, HY000 для SQLite)
+            // Остальные ошибки логируем и пробрасываем дальше
+            $code = (string) $e->getCode();
+            if (!in_array($code, ['42S02', 'HY000'], true)) {
+                report($e);
+                throw $e;
+            }
+            // Для SQLite также проверяем сообщение об ошибке
+            if ($code === 'HY000' && !str_contains($e->getMessage(), 'no such table')) {
+                report($e);
+                throw $e;
+            }
+        } catch (\PDOException $e) {
+            // Аналогично для PDOException
+            $code = (string) $e->getCode();
+            if (!in_array($code, ['42S02', 'HY000'], true)) {
+                report($e);
+                throw $e;
+            }
+            if ($code === 'HY000' && !str_contains($e->getMessage(), 'no such table')) {
+                report($e);
+                throw $e;
+            }
+        }
 
         // Ищем опубликованную страницу по slug
         // Используем скоупы для читабельности и единообразия со спецификацией
+        // firstOrFail() автоматически выбрасывает ModelNotFoundException (404)
         $entry = Entry::published()
             ->ofType('page')
             ->where('slug', $slug)
             ->with('postType')
-            ->first();
-
-        if (!$entry) {
-            abort(404);
-        }
+            ->firstOrFail();
 
         return view('pages.show', [
             'entry' => $entry,

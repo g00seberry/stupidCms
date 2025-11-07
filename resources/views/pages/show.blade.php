@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ $entry->title }}</title>
-</head>
-<body>
+@extends('layouts.public')
+
+@section('title', $entry->title)
+
+@section('content')
+  <article class="prose">
     <h1>{{ $entry->title }}</h1>
-</body>
-</html>
+    @php
+      // ВАЖНО: До включения санитайзера (задача 35) контент экранируется для безопасности
+      // После реализации санитайзера использовать body_html_sanitized и {!! !!}
+      $html = data_get($entry->data_json, 'body_html_sanitized');
+      $content = data_get($entry->data_json, 'content');
+      $bodyHtml = data_get($entry->data_json, 'body_html');
+    @endphp
+    
+    @if($html !== null)
+      {{-- Санитизированный HTML из задачи 35 --}}
+      {!! $html !!}
+    @elseif($bodyHtml !== null)
+      {{-- Временно экранируем до включения санитайзера --}}
+      {{ $bodyHtml }}
+    @elseif($content !== null)
+      {{-- Текстовый контент (безопасен) --}}
+      {{ $content }}
+    @endif
+  </article>
+@endsection
 
