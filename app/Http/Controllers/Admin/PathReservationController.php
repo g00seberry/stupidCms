@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DestroyPathReservationRequest;
 use App\Http\Requests\StorePathReservationRequest;
 use App\Models\Audit;
-use App\Models\RouteReservation;
+use App\Models\ReservedRoute;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -105,13 +105,13 @@ class PathReservationController extends Controller
      */
     public function index(): JsonResponse
     {
-        $reservations = RouteReservation::orderBy('path')->get();
+        $reservations = ReservedRoute::orderBy('path')->get();
 
         return response()->json([
             'data' => $reservations->map(fn($r) => [
                 'path' => $r->path,
+                'kind' => $r->kind,
                 'source' => $r->source,
-                'reason' => $r->reason,
                 'created_at' => $r->created_at->toIso8601String(),
             ]),
         ]);
@@ -151,12 +151,12 @@ class PathReservationController extends Controller
     {
         try {
             // Находим резервирование для получения ID
-            $reservation = RouteReservation::where('path', $path)->first();
+            $reservation = ReservedRoute::where('path', $path)->first();
             
             Audit::create([
                 'user_id' => auth()->id(),
                 'action' => $action,
-                'subject_type' => RouteReservation::class,
+                'subject_type' => ReservedRoute::class,
                 'subject_id' => $reservation?->id ?? 0, // 0 если не найдено (для release несуществующего)
                 'diff_json' => [
                     'path' => $path,

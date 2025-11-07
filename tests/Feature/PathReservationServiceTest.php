@@ -19,6 +19,7 @@ class PathReservationServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        \Illuminate\Support\Facades\Cache::forget('reserved:first-segments');
         $this->service = app(PathReservationService::class);
     }
 
@@ -26,10 +27,10 @@ class PathReservationServiceTest extends TestCase
     {
         $this->service->reservePath('/feed.xml', 'system:feeds', 'RSS feed');
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/feed.xml',
+            'kind' => 'path',
             'source' => 'system:feeds',
-            'reason' => 'RSS feed',
         ]);
     }
 
@@ -76,7 +77,7 @@ class PathReservationServiceTest extends TestCase
         $this->service->reservePath('/feed.xml', 'system:feeds');
         $this->service->releasePath('/feed.xml', 'system:feeds');
 
-        $this->assertDatabaseMissing('route_reservations', [
+        $this->assertDatabaseMissing('reserved_routes', [
             'path' => '/feed.xml',
         ]);
     }
@@ -100,13 +101,13 @@ class PathReservationServiceTest extends TestCase
         $count = $this->service->releaseBySource('plugin:shop');
 
         $this->assertEquals(2, $count);
-        $this->assertDatabaseMissing('route_reservations', [
+        $this->assertDatabaseMissing('reserved_routes', [
             'path' => '/shop',
         ]);
-        $this->assertDatabaseMissing('route_reservations', [
+        $this->assertDatabaseMissing('reserved_routes', [
             'path' => '/shop/cart',
         ]);
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/blog',
         ]);
     }
@@ -165,7 +166,7 @@ class PathReservationServiceTest extends TestCase
     {
         $this->service->reservePath('/test/', 'system:core');
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/test',
         ]);
     }
@@ -174,7 +175,7 @@ class PathReservationServiceTest extends TestCase
     {
         $this->service->reservePath('/', 'system:root');
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/',
         ]);
     }
@@ -183,7 +184,7 @@ class PathReservationServiceTest extends TestCase
     {
         $this->service->reservePath('/test?foo=bar#section', 'system:core');
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/test',
         ]);
     }
@@ -192,7 +193,7 @@ class PathReservationServiceTest extends TestCase
     {
         $this->service->reservePath('/test//path', 'system:core');
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/test/path',
         ]);
     }
@@ -201,7 +202,7 @@ class PathReservationServiceTest extends TestCase
     {
         $this->service->reservePath('/test/./path', 'system:core');
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/test/path',
         ]);
     }
@@ -211,6 +212,7 @@ class PathReservationServiceTest extends TestCase
         // Прямое создание модели должно нормализовать путь через мутатор
         $reservation = RouteReservation::create([
             'path' => '/Test//Path',
+            'kind' => 'path',
             'source' => 'system:core',
         ]);
 

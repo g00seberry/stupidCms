@@ -53,6 +53,8 @@ class RouteServiceProvider extends ServiceProvider
             // 4) Taxonomies & Content routes - загружаются четвёртыми
             // Включают: динамические контентные маршруты, таксономии
             // Catch-all маршруты должны быть здесь, а не в core
+            // Middleware CanonicalUrl применяется в глобальной web-группе (см. bootstrap/app.php)
+            // и выполняет 301 редиректы ДО роутинга
             Route::middleware('web')
                 ->group(base_path('routes/web_content.php'));
 

@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\RouteReservation;
+use App\Models\ReservedRoute;
 use App\Models\User;
 
 class RouteReservationPolicy
@@ -18,7 +18,7 @@ class RouteReservationPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, RouteReservation $routeReservation): bool
+    public function view(User $user, ReservedRoute $reservedRoute): bool
     {
         return false;
     }
@@ -34,7 +34,7 @@ class RouteReservationPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, RouteReservation $routeReservation): bool
+    public function update(User $user, ReservedRoute $reservedRoute): bool
     {
         return false;
     }
@@ -42,7 +42,7 @@ class RouteReservationPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, RouteReservation $routeReservation): bool
+    public function delete(User $user, ReservedRoute $reservedRoute): bool
     {
         return false;
     }

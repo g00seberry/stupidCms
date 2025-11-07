@@ -1,22 +1,23 @@
 <?php
 
+use App\Http\Controllers\PageController;
+use App\Http\Middleware\CanonicalUrl;
+use App\Routing\ReservedPattern;
 use Illuminate\Support\Facades\Route;
 
 // Taxonomies routes (пример - будет реализовано в будущих задачах)
 // Route::get('/tag/{slug}', [TagController::class, 'show']);
 // Route::get('/category/{slug}', [CategoryController::class, 'show']);
 
-// Content resolver - динамические контентные маршруты
-// Catch-all для контента, но не полный fallback (fallback идёт последним)
-// 
-// ВАЖНО: Catch-all должен игнорировать зарезервированные префиксы!
-// Используйте негативный lookahead для защиты от перехвата системных путей:
-// 
-// Route::get('{slug}', ContentController::class)
-//     ->where('slug', '^(?!(admin|api|auth|shop)(/|$))[A-Za-z0-9][A-Za-z0-9\-\/]*$');
-// 
-// Это дополнительно к проверке в ReservedRouteRegistry и PathReservationService.
-// Зарезервированные префиксы: admin, api, auth, shop (и другие из конфига).
-
-// Пока что файл пустой, так как контентные маршруты будут реализованы в задаче 33
+// Плоская маршрутизация для публичных страниц /{slug}
+// Обрабатывает только плоские slug без слешей (a-z0-9-)
+// Исключает зарезервированные пути через негативный lookahead в regex
+// Middleware CanonicalUrl применяется на уровне группы в RouteServiceProvider
+// и выполняет 301 редиректы для канонизации URL:
+// - /About → /about (lowercase)
+// - /about/ → /about (trailing slash)
+$slugPattern = ReservedPattern::slugRegex();
+Route::get('/{slug}', [PageController::class, 'show'])
+    ->where('slug', $slugPattern)
+    ->name('page.show');
 

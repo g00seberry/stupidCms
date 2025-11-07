@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
-use App\Models\RouteReservation;
+use App\Models\ReservedRoute;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -26,11 +26,11 @@ Route::middleware(['auth:admin', 'throttle:api'])->group(function () {
     
     // Path reservations
     Route::get('/reservations', [PathReservationController::class, 'index'])
-        ->middleware('can:viewAny,' . RouteReservation::class);
+        ->middleware('can:viewAny,' . ReservedRoute::class);
     Route::post('/reservations', [PathReservationController::class, 'store'])
-        ->middleware('can:create,' . RouteReservation::class);
+        ->middleware('can:create,' . ReservedRoute::class);
     Route::delete('/reservations/{path}', [PathReservationController::class, 'destroy'])
         ->where('path', '.*')
-        ->middleware('can:deleteAny,' . RouteReservation::class);
+        ->middleware('can:deleteAny,' . ReservedRoute::class);
 });
 

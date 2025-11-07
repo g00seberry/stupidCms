@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\{Entry, Term, Media, RouteReservation, User};
+use App\Models\{Entry, Term, Media, ReservedRoute, User};
 use App\Policies\{EntryPolicy, TermPolicy, MediaPolicy, RouteReservationPolicy};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         Entry::class => EntryPolicy::class,
         Term::class  => TermPolicy::class,
         Media::class => MediaPolicy::class,
-        RouteReservation::class => RouteReservationPolicy::class,
+        ReservedRoute::class => RouteReservationPolicy::class,
     ];
 
     /**

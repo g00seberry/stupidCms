@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Rate limiting для API (60 запросов в минуту)
         $middleware->throttleApi();
+        
+        // Канонизация URL применяется глобально ко всем HTTP-запросам
+        // Это гарантирует редирект /About → /about ДО роутинга, даже если путь не матчится ни одним роутом
+        // Внутри middleware есть фильтр для системных путей (admin, api, auth, ...)
+        $middleware->prepend(\App\Http\Middleware\CanonicalUrl::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Обработка ValidationException в формате RFC 7807

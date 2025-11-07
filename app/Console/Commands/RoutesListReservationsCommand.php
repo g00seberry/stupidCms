@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\RouteReservation;
+use App\Models\ReservedRoute;
 use Illuminate\Console\Command;
 
 class RoutesListReservationsCommand extends Command
@@ -26,7 +26,7 @@ class RoutesListReservationsCommand extends Command
      */
     public function handle(): int
     {
-        $reservations = RouteReservation::orderBy('path')->get();
+        $reservations = ReservedRoute::orderBy('path')->get();
 
         if ($reservations->isEmpty()) {
             $this->info('No path reservations found.');
@@ -34,11 +34,11 @@ class RoutesListReservationsCommand extends Command
         }
 
         $this->table(
-            ['Path', 'Source', 'Reason', 'Created At'],
+            ['Path', 'Kind', 'Source', 'Created At'],
             $reservations->map(fn($r) => [
                 $r->path,
+                $r->kind,
                 $r->source,
-                $r->reason ?? '-',
                 $r->created_at->format('Y-m-d H:i:s'),
             ])->toArray()
         );

@@ -29,22 +29,35 @@ class RoutingOrderTest extends TestCase
 
     /**
      * Тест: неизвестный путь должен обрабатываться fallback контроллером.
+     * 
+     * Примечание: пути, соответствующие regex паттерну плоской маршрутизации,
+     * обрабатываются PageController, который возвращает 404, если Entry не найден.
+     * Пути, не соответствующие паттерну (например, с заглавными буквами),
+     * обрабатываются fallback контроллером.
      */
     public function test_unknown_path_handled_by_fallback(): void
     {
-        $response = $this->get('/non-existent-xyz');
+        // Путь с несколькими сегментами не соответствует плоскому slug паттерну
+        // и должен обрабатываться fallback контроллером
+        $response = $this->get('/non-existent/xyz');
 
         $response->assertStatus(404);
         $response->assertViewIs('errors.404');
-        $response->assertViewHas('path', 'non-existent-xyz');
+        $response->assertViewHas('path', 'non-existent/xyz');
     }
 
     /**
      * Тест: fallback возвращает JSON для API запросов.
+     * 
+     * Примечание: пути, соответствующие regex паттерну плоской маршрутизации,
+     * обрабатываются PageController, который возвращает 404, если Entry не найден.
+     * Пути, не соответствующие паттерну, обрабатываются fallback контроллером.
      */
     public function test_fallback_returns_json_for_api_requests(): void
     {
-        $response = $this->getJson('/non-existent-xyz');
+        // Путь с несколькими сегментами не соответствует плоскому slug паттерну
+        // и должен обрабатываться fallback контроллером
+        $response = $this->getJson('/non-existent/xyz');
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');

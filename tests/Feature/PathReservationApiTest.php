@@ -26,7 +26,6 @@ class PathReservationApiTest extends TestCase
         $response = $this->actingAs($this->admin, 'admin')->postJson('/api/v1/admin/reservations', [
             'path' => '/feed.xml',
             'source' => 'system:feeds',
-            'reason' => 'RSS feed',
         ]);
 
         $response->assertStatus(201);
@@ -34,10 +33,9 @@ class PathReservationApiTest extends TestCase
             'message' => 'Path reserved successfully',
         ]);
 
-        $this->assertDatabaseHas('route_reservations', [
+        $this->assertDatabaseHas('reserved_routes', [
             'path' => '/feed.xml',
             'source' => 'system:feeds',
-            'reason' => 'RSS feed',
         ]);
     }
 
@@ -116,7 +114,7 @@ class PathReservationApiTest extends TestCase
             'message' => 'Path released successfully',
         ]);
 
-        $this->assertDatabaseMissing('route_reservations', [
+        $this->assertDatabaseMissing('reserved_routes', [
             'path' => '/feed.xml',
         ]);
     }
@@ -133,7 +131,7 @@ class PathReservationApiTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('route_reservations', [
+        $this->assertDatabaseMissing('reserved_routes', [
             'path' => '/blog/rss',
         ]);
     }
@@ -188,7 +186,6 @@ class PathReservationApiTest extends TestCase
         RouteReservation::create([
             'path' => '/feed.xml',
             'source' => 'system:feeds',
-            'reason' => 'RSS feed',
         ]);
         RouteReservation::create([
             'path' => '/sitemap.xml',
@@ -200,7 +197,7 @@ class PathReservationApiTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'data' => [
-                '*' => ['path', 'source', 'reason', 'created_at'],
+                '*' => ['path', 'kind', 'source', 'created_at'],
             ],
         ]);
         $response->assertJsonCount(2, 'data');

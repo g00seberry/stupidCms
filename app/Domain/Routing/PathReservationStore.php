@@ -2,7 +2,6 @@
 
 namespace App\Domain\Routing;
 
-use App\Models\RouteReservation;
 use Illuminate\Database\QueryException;
 use Throwable;
 
@@ -18,6 +17,13 @@ interface PathReservationStore
     public function deleteBySource(string $source): int;
     public function exists(string $path): bool;
     public function ownerOf(string $path): ?string;
+
+    /**
+     * Получает все зарезервированные пути из БД.
+     * 
+     * @return array<string>
+     */
+    public function getAllPaths(): array;
     public function isUniqueViolation(Throwable $e): bool;
 }
 

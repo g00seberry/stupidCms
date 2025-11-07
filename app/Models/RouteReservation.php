@@ -6,12 +6,18 @@ use App\Domain\Routing\PathNormalizer;
 use App\Domain\Routing\Exceptions\InvalidPathException;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @deprecated Используйте ReservedRoute вместо RouteReservation.
+ * Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.
+ */
 class RouteReservation extends Model
 {
+    protected $table = 'reserved_routes';
+
     protected $fillable = [
         'path',
+        'kind',
         'source',
-        'reason',
     ];
 
     protected $casts = [
