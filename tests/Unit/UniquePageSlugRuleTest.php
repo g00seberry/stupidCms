@@ -5,13 +5,13 @@ namespace Tests\Unit;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Domain\Pages\Validation\UniquePageSlug;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
 class UniquePageSlugRuleTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
