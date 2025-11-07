@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -29,9 +30,15 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Rate limiter для login (5 попыток в минуту на связку email+IP)
+        RateLimiter::for('login', function (Request $request) {
+            $key = 'login:'.Str::lower($request->input('email')).'|'.$request->ip();
+            return Limit::perMinute(5)->by($key);
+        });
+
         $this->routes(function () {
             // Порядок загрузки роутов (детерминированный):
-            // 1) Core → 2) Admin API → 3) Plugins → 4) Content → 5) Fallback
+            // 1) Core → 2) Public API → 3) Admin API → 4) Plugins → 5) Content → 6) Fallback
             
             // 1) System/Core routes - загружаются первыми
             // Включают: /, статические сервисные пути
@@ -39,18 +46,25 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web_core.php'));
 
-            // 2) Admin API routes - загружаются после core, но ДО плагинов
+            // 2) Public API routes - загружаются после core, но ДО admin API
+            // Включают: /api/v1/auth/login и другие публичные API endpoints
+            // Используют middleware('api') для stateless API без CSRF
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            // 3) Admin API routes - загружаются после public API, но ДО плагинов
             // КРИТИЧНО: должны быть до плагинов, чтобы /api/v1/admin/* не перехватывались catch-all
             // Используют middleware('api') для stateless API без CSRF
             Route::middleware('api')
                 ->prefix('api/v1/admin')
                 ->group(base_path('routes/api_admin.php'));
 
-            // 3) Plugin routes - загружаются третьими (детерминированный порядок)
+            // 4) Plugin routes - загружаются четвёртыми (детерминированный порядок)
             // В будущем будет сортировка по приоритету через PluginRegistry
             $this->mapPluginRoutes();
 
-            // 4) Taxonomies & Content routes - загружаются четвёртыми
+            // 5) Taxonomies & Content routes - загружаются пятыми
             // Включают: динамические контентные маршруты, таксономии
             // Catch-all маршруты должны быть здесь, а не в core
             // Middleware CanonicalUrl применяется в глобальной web-группе (см. bootstrap/app.php)
@@ -58,7 +72,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web_content.php'));
 
-            // 5) Fallback - строго последним
+            // 6) Fallback - строго последним
             // Обрабатывает все несовпавшие запросы (404) для ВСЕХ HTTP методов
             // ВАЖНО: Fallback НЕ должен быть под web middleware!
             // Иначе POST на несуществующий путь получит 419 CSRF вместо 404.
