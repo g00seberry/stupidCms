@@ -23,7 +23,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_store_creates_reservation(): void
     {
-        $response = $this->actingAs($this->admin)->postJson('/api/v1/admin/reservations', [
+        $response = $this->actingAs($this->admin, 'admin')->postJson('/api/v1/admin/reservations', [
             'path' => '/feed.xml',
             'source' => 'system:feeds',
             'reason' => 'RSS feed',
@@ -48,7 +48,7 @@ class PathReservationApiTest extends TestCase
             'source' => 'system:feeds',
         ]);
 
-        $response = $this->actingAs($this->admin)->postJson('/api/v1/admin/reservations', [
+        $response = $this->actingAs($this->admin, 'admin')->postJson('/api/v1/admin/reservations', [
             'path' => '/feed.xml',
             'source' => 'plugin:shop',
         ]);
@@ -72,7 +72,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_store_invalid_path_returns_422(): void
     {
-        $response = $this->actingAs($this->admin)->postJson('/api/v1/admin/reservations', [
+        $response = $this->actingAs($this->admin, 'admin')->postJson('/api/v1/admin/reservations', [
             'path' => '',
             'source' => 'system:feeds',
         ]);
@@ -92,7 +92,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_store_requires_admin_permissions(): void
     {
-        $response = $this->actingAs($this->regularUser)->postJson('/api/v1/admin/reservations', [
+        $response = $this->actingAs($this->regularUser, 'admin')->postJson('/api/v1/admin/reservations', [
             'path' => '/feed.xml',
             'source' => 'system:feeds',
         ]);
@@ -107,7 +107,7 @@ class PathReservationApiTest extends TestCase
             'source' => 'system:feeds',
         ]);
 
-        $response = $this->actingAs($this->admin)->deleteJson('/api/v1/admin/reservations/feed.xml', [
+        $response = $this->actingAs($this->admin, 'admin')->deleteJson('/api/v1/admin/reservations/feed.xml', [
             'source' => 'system:feeds',
         ]);
 
@@ -128,7 +128,7 @@ class PathReservationApiTest extends TestCase
             'source' => 'system:feeds',
         ]);
 
-        $response = $this->actingAs($this->admin)->deleteJson('/api/v1/admin/reservations/blog/rss', [
+        $response = $this->actingAs($this->admin, 'admin')->deleteJson('/api/v1/admin/reservations/blog/rss', [
             'source' => 'system:feeds',
         ]);
 
@@ -145,7 +145,7 @@ class PathReservationApiTest extends TestCase
             'source' => 'system:feeds',
         ]);
 
-        $response = $this->actingAs($this->admin)->deleteJson('/api/v1/admin/reservations/feed.xml', [
+        $response = $this->actingAs($this->admin, 'admin')->deleteJson('/api/v1/admin/reservations/feed.xml', [
             'source' => 'plugin:other',
         ]);
 
@@ -176,7 +176,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_destroy_requires_admin_permissions(): void
     {
-        $response = $this->actingAs($this->regularUser)->deleteJson('/api/v1/admin/reservations/feed.xml', [
+        $response = $this->actingAs($this->regularUser, 'admin')->deleteJson('/api/v1/admin/reservations/feed.xml', [
             'source' => 'system:feeds',
         ]);
 
@@ -195,7 +195,7 @@ class PathReservationApiTest extends TestCase
             'source' => 'system:sitemap',
         ]);
 
-        $response = $this->actingAs($this->admin)->getJson('/api/v1/admin/reservations');
+        $response = $this->actingAs($this->admin, 'admin')->getJson('/api/v1/admin/reservations');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -215,7 +215,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_index_requires_admin_permissions(): void
     {
-        $response = $this->actingAs($this->regularUser)->getJson('/api/v1/admin/reservations');
+        $response = $this->actingAs($this->regularUser, 'admin')->getJson('/api/v1/admin/reservations');
 
         $response->assertForbidden();
     }

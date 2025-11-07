@@ -939,21 +939,9 @@ class RouteReservationPolicy
 
 ## 11. Маршруты
 
-**Файл:** `routes/web.php` (добавлено)
+**Файл:** `routes/api_admin.php` (см. задачу 29)
 
-```php
-// Admin API routes
-Route::prefix('api/v1/admin')->middleware('auth')->group(function () {
-    // Path reservations
-    Route::get('/reservations', [\App\Http\Controllers\Admin\PathReservationController::class, 'index'])
-        ->middleware('can:viewAny,' . \App\Models\RouteReservation::class);
-    Route::post('/reservations', [\App\Http\Controllers\Admin\PathReservationController::class, 'store'])
-        ->middleware('can:create,' . \App\Models\RouteReservation::class);
-    Route::delete('/reservations/{path}', [\App\Http\Controllers\Admin\PathReservationController::class, 'destroy'])
-        ->where('path', '.*')
-        ->middleware('can:deleteAny,' . \App\Models\RouteReservation::class);
-});
-```
+Админские API маршруты вынесены в отдельный файл `routes/api_admin.php` с middleware('api') для stateless работы. Подробности см. в документации задачи 29.
 
 ---
 

@@ -4,15 +4,21 @@ namespace Tests\Feature;
 
 use App\Models\Entry;
 use App\Models\PostType;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UtilsSlugifyTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_slugify_endpoint_returns_base_and_unique(): void
     {
+        $admin = User::factory()->admin()->create();
+        
         // Для базового случая (когда slug не занят) база не нужна
         // Просто проверяем, что эндпоинт возвращает правильную структуру
-        $response = $this->getJson('/api/v1/admin/utils/slugify?title=Страница&postType=page');
+        $response = $this->actingAs($admin, 'admin')->getJson('/api/v1/admin/utils/slugify?title=Страница&postType=page');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -36,7 +42,9 @@ class UtilsSlugifyTest extends TestCase
 
     public function test_slugify_endpoint_validates_title_required(): void
     {
-        $response = $this->getJson('/api/v1/admin/utils/slugify?postType=page');
+        $admin = User::factory()->admin()->create();
+        
+        $response = $this->actingAs($admin, 'admin')->getJson('/api/v1/admin/utils/slugify?postType=page');
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['title']);
