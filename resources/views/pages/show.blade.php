@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ $entry->title }}</title>
+</head>
+<body>
+    <h1>{{ $entry->title }}</h1>
+</body>
+</html>
+
