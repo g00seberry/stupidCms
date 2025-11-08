@@ -1,0 +1,32 @@
+{
+    "entries": {
+        "properties": {
+            "id": {
+                "type": "long"
+            },
+            "title": {
+                "type": "text",
+                "analyzer": "russian"
+            },
+            "content": {
+                "type": "text",
+                "analyzer": "russian"
+            },
+            "slug": {
+                "type": "keyword"
+            },
+            "post_type": {
+                "type": "keyword"
+            },
+            "terms": {
+                "type": "keyword"
+            },
+            "published_at": {
+                "type": "date"
+            },
+            "status": {
+                "type": "keyword"
+            }
+        }
+    }
+}

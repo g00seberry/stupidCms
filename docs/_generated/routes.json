@@ -1,0 +1,156 @@
+[
+    {
+        "method": "GET|HEAD",
+        "uri": "up",
+        "name": null,
+        "action": "Closure",
+        "middleware": ""
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "/",
+        "name": "home",
+        "action": "App\\Http\\Controllers\\HomeController",
+        "middleware": "web"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/auth/login",
+        "name": "api.auth.login",
+        "action": "App\\Http\\Controllers\\Auth\\LoginController@login",
+        "middleware": "api, throttle:login, no-cache-auth"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/auth/refresh",
+        "name": "api.auth.refresh",
+        "action": "App\\Http\\Controllers\\Auth\\RefreshController@refresh",
+        "middleware": "api, throttle:refresh, no-cache-auth"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/auth/logout",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Auth\\LogoutController@logout",
+        "middleware": "api, throttle:login, no-cache-auth"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/auth/csrf",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Auth\\CsrfController@issue",
+        "middleware": "api, no-cache-auth"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/utils/slugify",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Admin\\UtilsController@slugify",
+        "middleware": "api, admin.auth, throttle:api"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/reservations",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Admin\\PathReservationController@index",
+        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\ReservedRoute"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/reservations",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Admin\\PathReservationController@store",
+        "middleware": "api, admin.auth, throttle:api, can:create,App\\Models\\ReservedRoute"
+    },
+    {
+        "method": "DELETE",
+        "uri": "api/v1/admin/reservations/{path}",
+        "name": null,
+        "action": "App\\Http\\Controllers\\Admin\\PathReservationController@destroy",
+        "middleware": "api, admin.auth, throttle:api, can:deleteAny,App\\Models\\ReservedRoute"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/post-types/{slug}",
+        "name": "admin.v1.post-types.show",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PostTypeController@show",
+        "middleware": "api, admin.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/post-types/{slug}",
+        "name": "admin.v1.post-types.update",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PostTypeController@update",
+        "middleware": "api, admin.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/entries",
+        "name": "admin.v1.entries.index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@index",
+        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Entry"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/entries",
+        "name": "admin.v1.entries.store",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@store",
+        "middleware": "api, admin.auth, throttle:api, can:create,App\\Models\\Entry"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/entries/{id}",
+        "name": "admin.v1.entries.show",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@show",
+        "middleware": "api, admin.auth, throttle:api"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/entries/{id}",
+        "name": "admin.v1.entries.update",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@update",
+        "middleware": "api, admin.auth, throttle:api"
+    },
+    {
+        "method": "DELETE",
+        "uri": "api/v1/admin/entries/{id}",
+        "name": "admin.v1.entries.destroy",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@destroy",
+        "middleware": "api, admin.auth, throttle:api"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/entries/{id}/restore",
+        "name": "admin.v1.entries.restore",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@restore",
+        "middleware": "api, admin.auth, throttle:api"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "{slug}",
+        "name": "page.show",
+        "action": "App\\Http\\Controllers\\PageController@show",
+        "middleware": "web, App\\Http\\Middleware\\RejectReservedIfMatched"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "{fallbackPlaceholder}",
+        "name": null,
+        "action": "App\\Http\\Controllers\\FallbackController",
+        "middleware": ""
+    },
+    {
+        "method": "POST|PUT|PATCH|DELETE|OPTIONS",
+        "uri": "{any?}",
+        "name": null,
+        "action": "App\\Http\\Controllers\\FallbackController",
+        "middleware": ""
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "storage/{path}",
+        "name": "storage.local",
+        "action": "Closure",
+        "middleware": ""
+    }
+]

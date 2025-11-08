@@ -1,0 +1,240 @@
+[
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "viewAny",
+        "description": "Determine whether the user can view any models.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "view",
+        "description": "Determine whether the user can view the model.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "create",
+        "description": "Determine whether the user can create models.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "update",
+        "description": "Determine whether the user can update the model.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "delete",
+        "description": "Determine whether the user can delete the model.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "restore",
+        "description": "Determine whether the user can restore the model.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "forceDelete",
+        "description": "Determine whether the user can permanently delete the model.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "publish",
+        "description": "Determine whether the user can publish\/unpublish the entry.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "attachMedia",
+        "description": "Determine whether the user can attach media to the entry.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "EntryPolicy",
+        "model": "Entry",
+        "ability": "manageTerms",
+        "description": "Determine whether the user can manage terms for the entry.",
+        "file": "app\/Policies\/EntryPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "viewAny",
+        "description": "Determine whether the user can view any models.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "view",
+        "description": "Determine whether the user can view the model.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "create",
+        "description": "Determine whether the user can create models.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "update",
+        "description": "Determine whether the user can update the model.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "delete",
+        "description": "Determine whether the user can delete the model.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "restore",
+        "description": "Determine whether the user can restore the model.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "forceDelete",
+        "description": "Determine whether the user can permanently delete the model.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "upload",
+        "description": "Determine whether the user can upload media.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "reprocess",
+        "description": "Determine whether the user can reprocess media variants.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "MediaPolicy",
+        "model": "Media",
+        "ability": "move",
+        "description": "Determine whether the user can move media between storages\/folders.",
+        "file": "app\/Policies\/MediaPolicy.php"
+    },
+    {
+        "policy": "RouteReservationPolicy",
+        "model": "RouteReservation",
+        "ability": "viewAny",
+        "description": "Determine whether the user can view any models.",
+        "file": "app\/Policies\/RouteReservationPolicy.php"
+    },
+    {
+        "policy": "RouteReservationPolicy",
+        "model": "RouteReservation",
+        "ability": "view",
+        "description": "Determine whether the user can view the model.",
+        "file": "app\/Policies\/RouteReservationPolicy.php"
+    },
+    {
+        "policy": "RouteReservationPolicy",
+        "model": "RouteReservation",
+        "ability": "create",
+        "description": "Determine whether the user can create models.",
+        "file": "app\/Policies\/RouteReservationPolicy.php"
+    },
+    {
+        "policy": "RouteReservationPolicy",
+        "model": "RouteReservation",
+        "ability": "update",
+        "description": "Determine whether the user can update the model.",
+        "file": "app\/Policies\/RouteReservationPolicy.php"
+    },
+    {
+        "policy": "RouteReservationPolicy",
+        "model": "RouteReservation",
+        "ability": "delete",
+        "description": "Determine whether the user can delete the model.",
+        "file": "app\/Policies\/RouteReservationPolicy.php"
+    },
+    {
+        "policy": "RouteReservationPolicy",
+        "model": "RouteReservation",
+        "ability": "deleteAny",
+        "description": "Determine whether the user can delete any model (for collection operations).",
+        "file": "app\/Policies\/RouteReservationPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "viewAny",
+        "description": "Determine whether the user can view any models.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "view",
+        "description": "Determine whether the user can view the model.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "create",
+        "description": "Determine whether the user can create models.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "update",
+        "description": "Determine whether the user can update the model.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "delete",
+        "description": "Determine whether the user can delete the model.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "restore",
+        "description": "Determine whether the user can restore the model.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "forceDelete",
+        "description": "Determine whether the user can permanently delete the model.",
+        "file": "app\/Policies\/TermPolicy.php"
+    },
+    {
+        "policy": "TermPolicy",
+        "model": "Term",
+        "ability": "attachEntry",
+        "description": "Determine whether the user can attach entries to the term.",
+        "file": "app\/Policies\/TermPolicy.php"
+    }
+]

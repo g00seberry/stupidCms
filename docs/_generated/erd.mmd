@@ -1,0 +1,269 @@
+erDiagram
+    audits {
+        bigint id
+        bigint user_id
+        varchar action
+        varchar subject_type
+        bigint subject_id
+        json diff_json
+        json meta
+        varchar ip
+        varchar ua
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    cache {
+        varchar key
+        mediumtext value
+        int expiration
+    }
+
+    cache_locks {
+        varchar key
+        varchar owner
+        int expiration
+    }
+
+    entries {
+        bigint id
+        bigint post_type_id
+        varchar title
+        varchar slug
+        enum status
+        timestamp published_at
+        bigint author_id
+        json data_json
+        json seo_json
+        varchar template_override
+        int version
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+        tinyint is_active
+    }
+
+    entry_media {
+        bigint entry_id
+        bigint media_id
+        varchar field_key
+    }
+
+    entry_slugs {
+        bigint entry_id
+        varchar slug
+        tinyint is_current
+        timestamp created_at
+    }
+
+    entry_term {
+        bigint entry_id
+        bigint term_id
+    }
+
+    failed_jobs {
+        bigint id
+        varchar uuid
+        text connection
+        text queue
+        longtext payload
+        longtext exception
+        timestamp failed_at
+    }
+
+    job_batches {
+        varchar id
+        varchar name
+        int total_jobs
+        int pending_jobs
+        int failed_jobs
+        longtext failed_job_ids
+        mediumtext options
+        int cancelled_at
+        int created_at
+        int finished_at
+    }
+
+    jobs {
+        bigint id
+        varchar queue
+        longtext payload
+        tinyint attempts
+        int reserved_at
+        int available_at
+        int created_at
+    }
+
+    media {
+        bigint id
+        varchar disk
+        varchar path
+        varchar original_name
+        varchar mime
+        bigint size
+        int width
+        int height
+        varchar alt
+        varchar sha256
+        json meta_json
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    media_variants {
+        bigint media_id
+        varchar variant_key
+        varchar path
+        int width
+        int height
+        bigint size
+    }
+
+    options {
+        bigint id
+        varchar namespace
+        varchar key
+        json value_json
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    outbox {
+        bigint id
+        varchar topic
+        json payload_json
+        enum status
+        int attempts
+        timestamp available_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    plugin_migrations {
+        bigint plugin_id
+        varchar migration
+        timestamp applied_at
+    }
+
+    plugin_reserved {
+        bigint plugin_id
+        varchar path
+        enum kind
+    }
+
+    plugins {
+        bigint id
+        varchar slug
+        varchar version
+        tinyint enabled
+        json manifest_json
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    post_types {
+        bigint id
+        varchar slug
+        varchar name
+        varchar template
+        json options_json
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    redirects {
+        bigint id
+        varchar from_path
+        varchar to_path
+        smallint code
+        bigint hit_count
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    refresh_tokens {
+        bigint id
+        bigint user_id
+        char jti
+        datetime expires_at
+        datetime used_at
+        datetime revoked_at
+        char parent_jti
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    reserved_routes {
+        bigint id
+        varchar path
+        enum kind
+        varchar source
+        timestamp created_at
+        timestamp updated_at
+        varchar path_norm
+    }
+
+    sessions {
+        varchar id
+        bigint user_id
+        varchar ip_address
+        text user_agent
+        longtext payload
+        int last_activity
+    }
+
+    taxonomies {
+        bigint id
+        varchar slug
+        varchar name
+        tinyint hierarchical
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    term_tree {
+        bigint ancestor_id
+        bigint descendant_id
+        int depth
+    }
+
+    terms {
+        bigint id
+        bigint taxonomy_id
+        varchar slug
+        varchar name
+        json meta_json
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+        tinyint is_active
+    }
+
+    users {
+        bigint id
+        varchar name
+        varchar email
+        timestamp email_verified_at
+        varchar password
+        tinyint is_admin
+        varchar remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    audits }o--|| users : ""
+    entries }o--|| users : ""
+    entries }o--|| post_types : ""
+    entry_media }o--|| entries : ""
+    entry_media }o--|| media : ""
+    entry_slugs }o--|| entries : ""
+    entry_term }o--|| entries : ""
+    entry_term }o--|| terms : ""
+    media_variants }o--|| media : ""
+    plugin_migrations }o--|| plugins : ""
+    plugin_reserved }o--|| plugins : ""
+    refresh_tokens }o--|| users : ""
+    term_tree }o--|| terms : ""
+    term_tree }o--|| terms : ""
+    terms }o--|| taxonomies : ""
