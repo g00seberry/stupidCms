@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:abilities` to update.
 
-_Last generated: 2025-11-08 11:05:03_
+_Last generated: 2025-11-08 11:30:22_
 
 ## Entry
 
@@ -33,6 +33,16 @@ _Last generated: 2025-11-08 11:05:03_
 | `upload` | _No description_ | `app/Policies/MediaPolicy.php` |
 | `reprocess` | _No description_ | `app/Policies/MediaPolicy.php` |
 | `move` | _No description_ | `app/Policies/MediaPolicy.php` |
+
+## Option
+
+| Ability | Description | Policy File |
+|---------|-------------|-------------|
+| `viewAny` | _No description_ | `app/Policies/OptionPolicy.php` |
+| `view` | _No description_ | `app/Policies/OptionPolicy.php` |
+| `write` | _No description_ | `app/Policies/OptionPolicy.php` |
+| `delete` | _No description_ | `app/Policies/OptionPolicy.php` |
+| `restore` | _No description_ | `app/Policies/OptionPolicy.php` |
 
 ## RouteReservation
 

@@ -5,6 +5,7 @@ namespace App\Domain\Options;
 use App\Events\OptionChanged;
 use App\Models\Option;
 use Illuminate\Contracts\Cache\Repository as CacheRepo;
+use Illuminate\Support\Facades\DB;
 
 final class OptionsRepository
 {
@@ -19,76 +20,121 @@ final class OptionsRepository
     public function get(string $ns, string $key, mixed $default = null): mixed
     {
         $ck = $this->cacheKey($ns, $key);
-        
-        // Проверяем, поддерживает ли кэш теги
+
         if ($this->supportsTags()) {
             return $this->cache->tags(['options', "options:{$ns}"])
-                ->rememberForever($ck, function() use ($ns, $key, $default) {
-                    return $this->fetchFromDatabase($ns, $key, $default);
-                });
+                ->rememberForever($ck, fn () => $this->fetchFromDatabase($ns, $key, $default));
         }
-        
-        // Fallback для драйверов без поддержки тегов (array, file)
-        return $this->cache->rememberForever($ck, function() use ($ns, $key, $default) {
-            return $this->fetchFromDatabase($ns, $key, $default);
-        });
+
+        return $this->cache->rememberForever($ck, fn () => $this->fetchFromDatabase($ns, $key, $default));
     }
 
     /** Сохраняет JSON-значение (примитив/массив/объект). */
-    public function set(string $ns, string $key, mixed $value): void
+    public function set(string $ns, string $key, mixed $value, ?string $description = null): Option
     {
-        \Illuminate\Support\Facades\DB::transaction(function () use ($ns, $key, $value) {
-            // Получаем старое значение из БД (до изменения)
-            $oldOption = Option::query()
+        return DB::transaction(function () use ($ns, $key, $value, $description) {
+            $option = Option::withTrashed()
                 ->where('namespace', $ns)
                 ->where('key', $key)
                 ->first();
-            $oldValue = $oldOption?->value_json;
-            
-            Option::query()->updateOrCreate(
-                ['namespace' => $ns, 'key' => $key],
-                ['value_json' => $value],
-            );
-            
-            // Инвалидация кэша опций и ответов
-            $ck = $this->cacheKey($ns, $key);
-            if ($this->supportsTags()) {
-                $this->cache->tags(['options', "options:{$ns}"])->forget($ck);
-            } else {
-                // Fallback: удаляем конкретный ключ
-                $this->cache->forget($ck);
+
+            $oldValue = $option?->value_json;
+
+            if (! $option) {
+                $option = new Option([
+                    'namespace' => $ns,
+                    'key' => $key,
+                ]);
             }
-            
-            // Диспатч события после коммита транзакции
-            \Illuminate\Support\Facades\DB::afterCommit(function () use ($ns, $key, $value, $oldValue) {
-                event(new \App\Events\OptionChanged($ns, $key, $value, $oldValue));
+
+            $option->value_json = $value;
+            $option->description = $description;
+            $option->deleted_at = null;
+            $option->save();
+
+            $this->flushCache($ns, $key);
+
+            DB::afterCommit(static function () use ($ns, $key, $value, $oldValue) {
+                event(new OptionChanged($ns, $key, $value, $oldValue));
             });
+
+            return $option;
+        });
+    }
+
+    public function delete(string $ns, string $key): bool
+    {
+        return DB::transaction(function () use ($ns, $key) {
+            $option = Option::query()
+                ->where('namespace', $ns)
+                ->where('key', $key)
+                ->first();
+
+            if (! $option) {
+                return false;
+            }
+
+            $option->delete();
+            $this->flushCache($ns, $key);
+
+            return true;
+        });
+    }
+
+    public function restore(string $ns, string $key): ?Option
+    {
+        return DB::transaction(function () use ($ns, $key) {
+            $option = Option::withTrashed()
+                ->where('namespace', $ns)
+                ->where('key', $key)
+                ->first();
+
+            if (! $option) {
+                return null;
+            }
+
+            $option->restore();
+            $this->flushCache($ns, $key);
+
+            return $option;
         });
     }
 
     private function supportsTags(): bool
     {
-        if (!method_exists($this->cache, 'getStore')) {
+        if (! method_exists($this->cache, 'getStore')) {
             return false;
         }
-        
+
         $store = $this->cache->getStore();
         return method_exists($store, 'tags');
     }
 
     private function fetchFromDatabase(string $ns, string $key, mixed $default): mixed
     {
-        $o = Option::query()
+        $option = Option::query()
             ->where('namespace', $ns)
             ->where('key', $key)
             ->first();
-        return $o?->value_json ?? $default;
+
+        return $option?->value_json ?? $default;
+    }
+
+    private function flushCache(string $ns, string $key): void
+    {
+        $ck = $this->cacheKey($ns, $key);
+
+        if ($this->supportsTags()) {
+            $this->cache->tags(['options', "options:{$ns}"])->forget($ck);
+            return;
+        }
+
+        $this->cache->forget($ck);
     }
 
     public function getInt(string $ns, string $key, ?int $default = null): ?int
     {
-        $v = $this->get($ns, $key, $default);
-        return is_null($v) ? null : (int) $v;
+        $value = $this->get($ns, $key, $default);
+        return $value === null ? null : (int) $value;
     }
 }
-

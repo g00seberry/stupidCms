@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-08 11:05:03_
+_Last generated: 2025-11-08 11:30:21_
 
 ## Web
 
@@ -57,4 +57,9 @@ _Last generated: 2025-11-08 11:05:03_
 | PUT | `api/v1/admin/media/{media}` | admin.v1.media.update | `MediaController@update` | api, admin.auth, throttle:api, throttle:20,1 |
 | DELETE | `api/v1/admin/media/{media}` | admin.v1.media.destroy | `MediaController@destroy` | api, admin.auth, throttle:api, throttle:20,1 |
 | POST | `api/v1/admin/media/{media}/restore` | admin.v1.media.restore | `MediaController@restore` | api, admin.auth, throttle:api, throttle:20,1 |
+| GET|HEAD | `api/v1/admin/options/{namespace}` | admin.v1.options.index | `OptionsController@index` | api, admin.auth, throttle:api, can:viewAny,App\Models\Option, can:options.read, throttle:120,1 |
+| GET|HEAD | `api/v1/admin/options/{namespace}/{key}` | admin.v1.options.show | `OptionsController@show` | api, admin.auth, throttle:api, can:options.read, throttle:120,1 |
+| PUT | `api/v1/admin/options/{namespace}/{key}` | admin.v1.options.upsert | `OptionsController@put` | api, admin.auth, throttle:api, can:options.write, throttle:30,1 |
+| DELETE | `api/v1/admin/options/{namespace}/{key}` | admin.v1.options.destroy | `OptionsController@destroy` | api, admin.auth, throttle:api, can:options.delete, throttle:30,1 |
+| POST | `api/v1/admin/options/{namespace}/{key}/restore` | admin.v1.options.restore | `OptionsController@restore` | api, admin.auth, throttle:api, can:options.restore, throttle:30,1 |
 

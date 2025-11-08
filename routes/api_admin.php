@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OptionsController;
 use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\V1\TermController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
 use App\Models\Media;
+use App\Models\Option;
 use App\Models\ReservedRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -132,5 +134,27 @@ Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
     Route::post('/media/{media}/restore', [MediaController::class, 'restore'])
         ->middleware('throttle:20,1')
         ->name('admin.v1.media.restore');
+
+    Route::prefix('/options')->group(function () {
+        Route::get('/{namespace}', [OptionsController::class, 'index'])
+            ->middleware(['can:viewAny,' . Option::class, 'can:options.read', 'throttle:120,1'])
+            ->name('admin.v1.options.index');
+
+        Route::get('/{namespace}/{key}', [OptionsController::class, 'show'])
+            ->middleware(['can:options.read', 'throttle:120,1'])
+            ->name('admin.v1.options.show');
+
+        Route::put('/{namespace}/{key}', [OptionsController::class, 'put'])
+            ->middleware(['can:options.write', 'throttle:30,1'])
+            ->name('admin.v1.options.upsert');
+
+        Route::delete('/{namespace}/{key}', [OptionsController::class, 'destroy'])
+            ->middleware(['can:options.delete', 'throttle:30,1'])
+            ->name('admin.v1.options.destroy');
+
+        Route::post('/{namespace}/{key}/restore', [OptionsController::class, 'restore'])
+            ->middleware(['can:options.restore', 'throttle:30,1'])
+            ->name('admin.v1.options.restore');
+    });
 });
 

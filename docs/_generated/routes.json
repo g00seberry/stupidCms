@@ -281,6 +281,41 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/options/{namespace}",
+        "name": "admin.v1.options.index",
+        "action": "App\\Http\\Controllers\\Admin\\OptionsController@index",
+        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Option, can:options.read, throttle:120,1"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/options/{namespace}/{key}",
+        "name": "admin.v1.options.show",
+        "action": "App\\Http\\Controllers\\Admin\\OptionsController@show",
+        "middleware": "api, admin.auth, throttle:api, can:options.read, throttle:120,1"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/options/{namespace}/{key}",
+        "name": "admin.v1.options.upsert",
+        "action": "App\\Http\\Controllers\\Admin\\OptionsController@put",
+        "middleware": "api, admin.auth, throttle:api, can:options.write, throttle:30,1"
+    },
+    {
+        "method": "DELETE",
+        "uri": "api/v1/admin/options/{namespace}/{key}",
+        "name": "admin.v1.options.destroy",
+        "action": "App\\Http\\Controllers\\Admin\\OptionsController@destroy",
+        "middleware": "api, admin.auth, throttle:api, can:options.delete, throttle:30,1"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/options/{namespace}/{key}/restore",
+        "name": "admin.v1.options.restore",
+        "action": "App\\Http\\Controllers\\Admin\\OptionsController@restore",
+        "middleware": "api, admin.auth, throttle:api, can:options.restore, throttle:30,1"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "{slug}",
         "name": "page.show",
         "action": "App\\Http\\Controllers\\PageController@show",

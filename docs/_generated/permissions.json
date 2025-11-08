@@ -140,6 +140,41 @@
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
+        "policy": "OptionPolicy",
+        "model": "Option",
+        "ability": "viewAny",
+        "description": "",
+        "file": "app\/Policies\/OptionPolicy.php"
+    },
+    {
+        "policy": "OptionPolicy",
+        "model": "Option",
+        "ability": "view",
+        "description": "",
+        "file": "app\/Policies\/OptionPolicy.php"
+    },
+    {
+        "policy": "OptionPolicy",
+        "model": "Option",
+        "ability": "write",
+        "description": "",
+        "file": "app\/Policies\/OptionPolicy.php"
+    },
+    {
+        "policy": "OptionPolicy",
+        "model": "Option",
+        "ability": "delete",
+        "description": "",
+        "file": "app\/Policies\/OptionPolicy.php"
+    },
+    {
+        "policy": "OptionPolicy",
+        "model": "Option",
+        "ability": "restore",
+        "description": "",
+        "file": "app\/Policies\/OptionPolicy.php"
+    },
+    {
         "policy": "RouteReservationPolicy",
         "model": "RouteReservation",
         "ability": "viewAny",

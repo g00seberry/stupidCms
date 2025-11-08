@@ -12,7 +12,7 @@ related_code:
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-_Last generated: 2025-11-08 11:05:06 UTC_
+_Last generated: 2025-11-08 11:30:25 UTC_
 
 ## Admin API (`/api/v1/admin/*`)
 
@@ -39,6 +39,14 @@ _Last generated: 2025-11-08 11:05:06 UTC_
 - `GET` `/api/v1/admin/media/{media}/download` — `admin.v1.media.download`
 - `GET` `/api/v1/admin/media/{media}/preview` — `admin.v1.media.preview`
 - `POST` `/api/v1/admin/media/{media}/restore` — `admin.v1.media.restore`
+
+### Options
+
+- `GET` `/api/v1/admin/options/{namespace}` — `admin.v1.options.index`
+- `GET` `/api/v1/admin/options/{namespace}/{key}` — `admin.v1.options.show`
+- `PUT` `/api/v1/admin/options/{namespace}/{key}` — `admin.v1.options.upsert`
+- `DELETE` `/api/v1/admin/options/{namespace}/{key}` — `admin.v1.options.destroy`
+- `POST` `/api/v1/admin/options/{namespace}/{key}/restore` — `admin.v1.options.restore`
 
 ### Post Types
 

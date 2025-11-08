@@ -16,6 +16,8 @@ return [
     'slug_reserved' => 'Значение поля :attribute конфликтует с зарезервированными маршрутами (например: admin, api).',
     'published_at_not_in_future' => 'Дата публикации не может быть в будущем для статуса "published"',
     'entry_not_found' => 'Запись с таким ID не найдена',
+    'invalid_json_value' => 'Поле :attribute должно содержать допустимое JSON-значение.',
+    'json_value_too_large' => 'Поле :attribute превышает допустимый размер :max байт после сериализации.',
 
 ];
 

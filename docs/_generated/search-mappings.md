@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:search` to update.
 
-_Last generated: 2025-11-08 11:05:05_
+_Last generated: 2025-11-08 11:30:24_
 
 ## Index: `entries`
 

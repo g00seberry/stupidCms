@@ -5,392 +5,251 @@ review_cycle_days: 60
 last_reviewed: 2025-11-08
 related_code:
   - "app/Models/Option.php"
+  - "app/Domain/Options/OptionsRepository.php"
+  - "app/Http/Controllers/Admin/OptionsController.php"
+  - "app/Http/Requests/Admin/Options/IndexOptionsRequest.php"
+  - "app/Http/Requests/Admin/Options/PutOptionRequest.php"
+  - "app/Http/Resources/Admin/OptionResource.php"
+  - "app/Policies/OptionPolicy.php"
   - "app/Helpers/options.php"
   - "config/options.php"
 ---
 
 # Options (настройки сайта)
 
-**Options** — это key-value хранилище для настроек сайта в stupidCms.
+**Options** — namespaced key-value хранилище JSON-значений для глобальных настроек stupidCms.
 
 ## Концепция
 
-### Зачем Options?
+Настройки, которые требуется менять через админку, а не через `.env` или код:
 
-Некоторые настройки нужно менять **через админку**, а не через `.env` или config файлы:
+- глобальные параметры сайта (title, домашняя запись и т.п.)
+- feature flags
+- системные интеграции (в зашифрованном виде)
 
-- Название сайта
-- Логотип
-- Контактная информация
-- Настройки интеграций (API ключи сторонних сервисов)
-- Feature flags
+Ключевые особенности:
 
-Options — это база данных для таких настроек.
+- адресация по `namespace/key`
+- хранение любого JSON-типа без трансформаций
+- soft delete + restore для audit-friendly операций
+- строгая валидация входных данных и контролируемый API
 
 ## Модель данных
 
-**Таблица**: `options`
+`database/migrations/*_create_options_table.php` создаёт таблицу `options`:
+
+| Поле        | Тип            | Описание                                    |
+|-------------|----------------|---------------------------------------------|
+| `id`        | ULID (PK)      | глобальный идентификатор                    |
+| `namespace` | string(64)     | `^[a-z0-9_][a-z0-9_.-]{1,63}$`              |
+| `key`       | string(64)     | `^[a-z0-9_][a-z0-9_.-]{1,63}$`              |
+| `value_json`| json (NOT NULL)| сериализуемое JSON-значение                 |
+| `description` | string(255) nullable | human-readable комментарий          |
+| timestamps  |                | `created_at`, `updated_at`                  |
+| soft deletes|                | `deleted_at`                                |
+
+Индексы:
+
+- `UNIQUE(namespace, key)`
+- `INDEX(namespace)`
+- `INDEX(deleted_at)`
 
 ```php
-Option {
-  key: string (PK)
-  value: json
-  autoload: boolean         // загружать при старте приложения
-  created_at: datetime
-  updated_at: datetime
-}
-```
-
-**Индексы**:
-- `key` (PK)
-- `autoload` — для быстрой загрузки
-
-**Файл**: `app/Models/Option.php`
-
-## Использование
-
-### Установка значения
-
-```php
-use App\Models\Option;
-
-Option::set('site_name', 'My Awesome CMS');
-Option::set('contact_email', 'hello@example.com');
-```
-
----
-
-### Получение значения
-
-```php
-$siteName = Option::get('site_name'); // 'My Awesome CMS'
-$email = Option::get('contact_email', 'default@example.com'); // с default
-```
-
-**Helper** (если создан в `app/Helpers/options.php`):
-
-```php
-$siteName = option('site_name');
-$email = option('contact_email', 'default@example.com');
-```
-
----
-
-### Удаление
-
-```php
-Option::forget('old_setting');
-```
-
----
-
-### Проверка существования
-
-```php
-if (Option::has('feature_enabled')) {
-    // ...
-}
-```
-
-## Автозагрузка (autoload)
-
-Options с `autoload = true` загружаются при старте приложения и кэшируются.
-
-### Установка autoload
-
-```php
-Option::set('site_name', 'My CMS', autoload: true);
-```
-
-### Загрузка в сервис-провайдере
-
-**Файл**: `app/Providers/AppServiceProvider.php`
-
-```php
-public function boot(): void
+class Option extends Model
 {
-    $autoloadOptions = Option::where('autoload', true)->get();
-    
-    foreach ($autoloadOptions as $option) {
-        config(["options.{$option->key}" => $option->value]);
-    }
+    use HasFactory, HasUlids, SoftDeletes;
+
+    protected $casts = [
+        'value_json' => \App\Casts\AsJsonValue::class,
+    ];
 }
 ```
 
-**Использование**:
-```php
-config('options.site_name'); // вместо Option::get()
-```
+## Доступ к значениям
 
-## JSON значения
+### Хелперы
 
-Options хранят значения как JSON, поэтому можно сохранять сложные структуры:
+- `options(string $namespace, string $key, mixed $default = null): mixed`
+- `option_set(string $namespace, string $key, mixed $value, ?string $description = null): void`
 
 ```php
-Option::set('social_links', [
-    'facebook' => 'https://facebook.com/mypage',
-    'twitter' => 'https://twitter.com/mypage',
-    'instagram' => 'https://instagram.com/mypage',
-]);
-
-$socials = Option::get('social_links');
-// ['facebook' => '...', 'twitter' => '...']
+$homeEntry = options('site', 'home_entry_id');
+option_set('features', 'new_editor', ['enabled' => true], description: 'Включаем новый редактор');
 ```
 
-## События
+### Репозиторий
 
-### OptionChanged
+`App\Domain\Options\OptionsRepository` централизует чтение/запись и кэширование (Cache tags `options`, `options:{namespace}`):
 
-Триггерится при изменении option:
+- `get(ns, key, default)`
+- `set(ns, key, value, description?)`
+- `delete(ns, key)` — soft delete
+- `restore(ns, key)`
+
+## JSON-валидация
+
+`App\Rules\JsonValue` проверяет сериализацию через `json_encode(JSON_THROW_ON_ERROR)` и ограничивает размер (по умолчанию ≤ 64 KB). При превышении или невалидном типе API отвечает `422 INVALID_JSON_VALUE` (RFC7807).
 
 ```php
-// app/Events/OptionChanged.php
-
-class OptionChanged
-{
-    public string $key;
-    public mixed $oldValue;
-    public mixed $newValue;
-}
+return [
+    'value' => ['required', new JsonValue(maxBytes: 65536)],
+];
 ```
 
-**Использование** (например, для инвалидации кэша):
+## События и кэш
 
-```php
-// app/Listeners/InvalidateConfigCache.php
+После `OptionsRepository::set()` диспатчится `App\Events\OptionChanged` с `namespace`, `key`, `value`, `oldValue`. Используйте его для инвалидации кэшей или побочных действий.
 
-public function handle(OptionChanged $event): void
-{
-    if ($event->key === 'site_name') {
-        Cache::forget('site_metadata');
-    }
-}
+## Админский API
+
+Контроллер: `app/Http/Controllers/Admin/OptionsController.php`  
+Политика: `app/Policies/OptionPolicy.php`
+
+| Method | Path                                              | Ability            | Throttle | Описание                         |
+|--------|---------------------------------------------------|--------------------|----------|----------------------------------|
+| GET    | `/api/v1/admin/options/{namespace}`               | `options.read`     | 120 rpm  | Список опций namespace           |
+| GET    | `/api/v1/admin/options/{namespace}/{key}`         | `options.read`     | 120 rpm  | Получить одну опцию              |
+| PUT    | `/api/v1/admin/options/{namespace}/{key}`         | `options.write`    | 30 rpm   | Upsert (создание/обновление)     |
+| DELETE | `/api/v1/admin/options/{namespace}/{key}`         | `options.delete`   | 30 rpm   | Soft delete                      |
+| POST   | `/api/v1/admin/options/{namespace}/{key}/restore` | `options.restore`  | 30 rpm   | Восстановление                   |
+
+- namespace/key валидируются regex `^[a-z0-9_][a-z0-9_.-]{1,63}$`
+- ответы и ошибки — RFC7807 (`application/problem+json`)
+- `OptionResource` возвращает исходный JSON без мутаций, включая `deleted_at`
+
+### Пример upsert
+
+```bash
+curl -X PUT \
+  https://cms.local/api/v1/admin/options/site/home_entry_id \
+  -H "Content-Type: application/json" \
+  -H "Cookie: jwt=..." \
+  -d '{"value":"01HXZPQ4GQ9E6BV0V8GWV3CEX9","description":"Домашняя запись"}'
 ```
 
-## API
+Ответ `201 Created` (при создании):
 
-### Получение публичных настроек
-
-**Endpoint**: `GET /api/options`
-
-**Response**:
 ```json
 {
   "data": {
-    "site_name": "My Awesome CMS",
-    "contact_email": "hello@example.com"
+    "id": "01HXZPQ4G5B7C0D1E2F3G4H5JK",
+    "namespace": "site",
+    "key": "home_entry_id",
+    "value": "01HXZPQ4GQ9E6BV0V8GWV3CEX9",
+    "description": "Домашняя запись",
+    "updated_at": "2025-11-08T11:30:00Z",
+    "deleted_at": null
   }
 }
 ```
 
-> ⚠️ **Безопасность**: Возвращайте только публичные options (не API ключи!).
+### Ошибки
 
-**Controller**:
-```php
-public function index()
-{
-    $public = ['site_name', 'contact_email', 'social_links'];
-    
-    $options = Option::whereIn('key', $public)->get()
-        ->pluck('value', 'key');
-    
-    return response()->json(['data' => $options]);
-}
-```
-
----
-
-### Обновление (admin)
-
-**Endpoint**: `PUT /api/admin/options/{key}`
-
-**Request**:
 ```json
 {
-  "value": "New Site Name"
-}
-```
-
-**Response**:
-```json
-{
-  "data": {
-    "key": "site_name",
-    "value": "New Site Name",
-    "updated_at": "2025-11-08T12:00:00Z"
+  "type": "https://stupidcms.dev/problems/invalid-option-identifier",
+  "title": "Validation error",
+  "status": 422,
+  "code": "INVALID_OPTION_IDENTIFIER",
+  "errors": {
+    "namespace": ["The selected namespace is invalid."]
   }
 }
 ```
 
-## Примеры использования
+## Примеры
 
 ### Feature Flags
 
 ```php
-Option::set('feature_new_editor', true);
+option_set('features', 'new_editor', true);
 
-// В коде
-if (option('feature_new_editor')) {
+if (options('features', 'new_editor', false)) {
     return view('admin.editor.new');
-} else {
-    return view('admin.editor.old');
 }
 ```
 
----
-
-### Настройки интеграций
+### Интеграции
 
 ```php
-Option::set('mailchimp_api_key', 'abc123...', autoload: false); // не autoload для безопасности
+option_set('integration', 'mailchimp', [
+    'api_key' => encrypt('abc123'),
+    'list_id' => 'foo',
+]);
 
-// В сервисе
-$apiKey = Option::get('mailchimp_api_key');
-$mailchimp = new MailchimpClient($apiKey);
+$cfg = options('integration', 'mailchimp');
+$mailchimp = new MailchimpClient(decrypt($cfg['api_key']));
 ```
-
----
 
 ### Настройки темы
 
 ```php
-Option::set('theme', [
+option_set('theme', 'ui', [
     'primary_color' => '#007bff',
     'font' => 'Inter',
     'logo_url' => '/media/logo.png',
 ]);
 
-$theme = option('theme');
-// ['primary_color' => '#007bff', ...]
-```
-
-## Группировка Options
-
-Для удобства можно группировать options по префиксу:
-
-```php
-Option::set('theme.primary_color', '#007bff');
-Option::set('theme.secondary_color', '#6c757d');
-Option::set('smtp.host', 'smtp.gmail.com');
-Option::set('smtp.port', 587);
-```
-
-**Получение группы**:
-
-```php
-$themeOptions = Option::where('key', 'LIKE', 'theme.%')->get();
-```
-
-Или создать метод в модели:
-
-```php
-// app/Models/Option.php
-
-public static function group(string $prefix): Collection
-{
-    return static::where('key', 'LIKE', "{$prefix}.%")
-        ->get()
-        ->mapWithKeys(fn($opt) => [
-            str_replace("{$prefix}.", '', $opt->key) => $opt->value
-        ]);
-}
-```
-
-Использование:
-
-```php
-$theme = Option::group('theme');
-// ['primary_color' => '#007bff', 'secondary_color' => '#6c757d']
+$theme = options('theme', 'ui', []);
 ```
 
 ## Кэширование
 
-### Кэш всех options
+OptionsRepository автоматически инвалидацирует кэш при `set/delete/restore`. Для точечного сброса используйте теги:
 
 ```php
-$options = Cache::remember('options', 3600, fn() =>
-    Option::all()->pluck('value', 'key')
-);
-```
-
-### Инвалидация при изменении
-
-```php
-// app/Observers/OptionObserver.php
-
-public function saved(Option $option): void
-{
-    Cache::forget('options');
-    event(new OptionChanged($option->key, $option->getOriginal('value'), $option->value));
-}
+Cache::tags(['options', 'options:site'])->forget('opt:site:home_entry_id');
 ```
 
 ## Безопасность
 
-### Не храните чувствительные данные
-
-❌ **Плохо**:
-```php
-Option::set('database_password', 'secret');
-```
-
-✅ **Хорошо**:
-```env
-DB_PASSWORD=secret  # в .env
-```
-
-### Шифрование (если необходимо)
-
-Для API ключей используйте Laravel Crypt:
+- Не храните секреты в открытом виде — шифруйте значения (`Crypt::encryptString`)
+- Не используйте options для данных конкретных сущностей — для этого `Entry.data_json`
+- Разрешённые ключи фиксируйте в `config/options.php` (allow-list)
 
 ```php
-use Illuminate\Support\Facades\Crypt;
+option_set('integration', 'stripe', [
+    'secret_key' => Crypt::encryptString($key),
+]);
 
-Option::set('stripe_secret_key', Crypt::encryptString($key));
-
-// Получение
-$key = Crypt::decryptString(Option::get('stripe_secret_key'));
+$secret = Crypt::decryptString(options('integration', 'stripe')['secret_key']);
 ```
 
 ## Best Practices
 
-### ✅ DO
+### ✅ Рекомендуется
 
-- Используйте `autoload: true` для часто используемых options
-- Группируйте options по префиксам (`theme.*`, `smtp.*`)
-- Кэшируйте options
-- Документируйте доступные options в коде или админке
+- использовать namespace для группировки (`site`, `features`, `integration`)
+- заполнять `description` для важных ключей
+- покрывать round-trip тестами (см. `tests/Feature/Admin/Options/OptionsApiTest.php`)
+- документировать новые ключи в `config/options.php` и /docs
 
-### ❌ DON'T
+### ❌ Избегайте
 
-- Не храните чувствительные данные в открытом виде
-- Не используйте options для данных, которые должны быть в БД (например, настройки конкретного entry)
-- Не создавайте десятки options — группируйте в JSON
+- прямой работы с моделью без репозитория/хелпера
+- хранения чувствительных данных без шифрования
+- физического удаления записей (используйте soft delete + restore)
 
-## Миграция значений
-
-Если нужно изменить структуру option:
+## Миграции значений
 
 ```php
-// database/migrations/2025_11_08_update_theme_option.php
-
-public function up()
+public function up(): void
 {
-    $theme = Option::get('theme');
-    
-    // Добавить новое поле
+    $theme = options('theme', 'ui', []);
     $theme['dark_mode'] = false;
-    
-    Option::set('theme', $theme);
+
+    option_set('theme', 'ui', $theme);
 }
 ```
 
-## Связанные страницы
+## Связанные материалы
 
-- [Config Reference](../30-reference/config.md) — конфигурация приложения
-- [Entries](entries.md) — для динамических данных используйте entries, а не options
+- `config/options.php` — allow-list namespace/key
+- `docs/30-reference/api.md` — описание `/api/v1/admin/options/*`
+- `docs/_generated/routes.md` и `docs/_generated/permissions.md` — артефакты после `composer docs:gen`
+- `docs/10-concepts/entries.md` — используйте entries вместо options для контента
 
 ---
 
-> 💡 **Tip**: Options — для глобальных настроек сайта. Для настроек конкретных entries используйте `Entry.data_json`.
+> 💡 **Tip**: Options — для глобальных настроек. Для настроек конкретных записей используйте `Entry.data_json`.
 

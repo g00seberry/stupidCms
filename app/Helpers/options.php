@@ -9,9 +9,9 @@ if (! function_exists('options')) {
 }
 
 if (! function_exists('option_set')) {
-    function option_set(string $ns, string $key, mixed $value): void
+    function option_set(string $ns, string $key, mixed $value, ?string $description = null): void
     {
-        app(\App\Domain\Options\OptionsRepository::class)->set($ns, $key, $value);
+        app(\App\Domain\Options\OptionsRepository::class)->set($ns, $key, $value, $description);
     }
 }
 
