@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\{Entry, Term, Media, Option, ReservedRoute, User};
-use App\Policies\{EntryPolicy, TermPolicy, MediaPolicy, OptionPolicy, RouteReservationPolicy};
+use App\Models\{Entry, Media, Option, Plugin, ReservedRoute, Term, User};
+use App\Policies\{EntryPolicy, MediaPolicy, OptionPolicy, PluginPolicy, RouteReservationPolicy, TermPolicy};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
         Media::class => MediaPolicy::class,
         Option::class => OptionPolicy::class,
         ReservedRoute::class => RouteReservationPolicy::class,
+        Plugin::class => PluginPolicy::class,
     ];
 
     /**
@@ -93,6 +94,18 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('options.restore', static function (User $user): bool {
             return $user->hasAdminPermission('options.restore');
+        });
+
+        Gate::define('plugins.read', static function (User $user): bool {
+            return $user->hasAdminPermission('plugins.read');
+        });
+
+        Gate::define('plugins.toggle', static function (User $user): bool {
+            return $user->hasAdminPermission('plugins.toggle');
+        });
+
+        Gate::define('plugins.sync', static function (User $user): bool {
+            return $user->hasAdminPermission('plugins.sync');
         });
     }
 }

@@ -45,8 +45,9 @@ erDiagram
 
     entry_media {
         bigint entry_id
-        bigint media_id
+        char media_id
         varchar field_key
+        int order
     }
 
     entry_slugs {
@@ -97,38 +98,47 @@ erDiagram
     }
 
     media {
-        bigint id
+        char id
         varchar disk
         varchar path
         varchar original_name
+        varchar ext
         varchar mime
-        bigint size
+        bigint size_bytes
         int width
         int height
+        int duration_ms
+        varchar checksum_sha256
+        json exif_json
+        varchar title
         varchar alt
-        varchar sha256
-        json meta_json
+        varchar collection
         timestamp created_at
         timestamp updated_at
         timestamp deleted_at
     }
 
     media_variants {
-        bigint media_id
-        varchar variant_key
+        char id
+        char media_id
+        varchar variant
         varchar path
         int width
         int height
-        bigint size
+        bigint size_bytes
+        timestamp created_at
+        timestamp updated_at
     }
 
     options {
-        bigint id
+        char id
         varchar namespace
         varchar key
         json value_json
+        varchar description
         timestamp created_at
         timestamp updated_at
+        timestamp deleted_at
     }
 
     outbox {
@@ -142,24 +152,16 @@ erDiagram
         timestamp updated_at
     }
 
-    plugin_migrations {
-        bigint plugin_id
-        varchar migration
-        timestamp applied_at
-    }
-
-    plugin_reserved {
-        bigint plugin_id
-        varchar path
-        enum kind
-    }
-
     plugins {
-        bigint id
+        char id
         varchar slug
+        varchar name
         varchar version
+        varchar provider_fqcn
+        varchar path
         tinyint enabled
-        json manifest_json
+        json meta_json
+        timestamp last_synced_at
         timestamp created_at
         timestamp updated_at
     }
@@ -265,8 +267,6 @@ erDiagram
     entry_term }o--|| entries : ""
     entry_term }o--|| terms : ""
     media_variants }o--|| media : ""
-    plugin_migrations }o--|| plugins : ""
-    plugin_reserved }o--|| plugins : ""
     refresh_tokens }o--|| users : ""
     term_tree }o--|| terms : ""
     term_tree }o--|| terms : ""

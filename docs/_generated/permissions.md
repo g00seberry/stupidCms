@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:abilities` to update.
 
-_Last generated: 2025-11-08 11:30:22_
+_Last generated: 2025-11-08 13:13:57_
 
 ## Entry
 
@@ -43,6 +43,14 @@ _Last generated: 2025-11-08 11:30:22_
 | `write` | _No description_ | `app/Policies/OptionPolicy.php` |
 | `delete` | _No description_ | `app/Policies/OptionPolicy.php` |
 | `restore` | _No description_ | `app/Policies/OptionPolicy.php` |
+
+## Plugin
+
+| Ability | Description | Policy File |
+|---------|-------------|-------------|
+| `viewAny` | _No description_ | `app/Policies/PluginPolicy.php` |
+| `toggle` | _No description_ | `app/Policies/PluginPolicy.php` |
+| `sync` | _No description_ | `app/Policies/PluginPolicy.php` |
 
 ## RouteReservation
 

@@ -48,8 +48,9 @@ entity "entries" as entries {
 
 entity "entry_media" as entry_media {
   entry_id : bigint <<PK>>
-  media_id : bigint <<PK>>
+  media_id : char <<PK>>
   field_key : varchar <<PK>>
+  order : int
 }
 
 entity "entry_slugs" as entry_slugs {
@@ -100,38 +101,47 @@ entity "jobs" as jobs {
 }
 
 entity "media" as media {
-  id : bigint <<PK>>
+  id : char <<PK>>
   disk : varchar
   path : varchar
-  original_name : varchar?
+  original_name : varchar
+  ext : varchar?
   mime : varchar
-  size : bigint
+  size_bytes : bigint
   width : int?
   height : int?
+  duration_ms : int?
+  checksum_sha256 : varchar?
+  exif_json : json?
+  title : varchar?
   alt : varchar?
-  sha256 : varchar?
-  meta_json : json?
+  collection : varchar?
   created_at : timestamp?
   updated_at : timestamp?
   deleted_at : timestamp?
 }
 
 entity "media_variants" as media_variants {
-  media_id : bigint <<PK>>
-  variant_key : varchar <<PK>>
+  id : char <<PK>>
+  media_id : char
+  variant : varchar
   path : varchar
   width : int?
   height : int?
-  size : bigint
+  size_bytes : bigint
+  created_at : timestamp?
+  updated_at : timestamp?
 }
 
 entity "options" as options {
-  id : bigint <<PK>>
+  id : char <<PK>>
   namespace : varchar
   key : varchar
-  value_json : json?
+  value_json : json
+  description : varchar?
   created_at : timestamp?
   updated_at : timestamp?
+  deleted_at : timestamp?
 }
 
 entity "outbox" as outbox {
@@ -145,24 +155,16 @@ entity "outbox" as outbox {
   updated_at : timestamp?
 }
 
-entity "plugin_migrations" as plugin_migrations {
-  plugin_id : bigint <<PK>>
-  migration : varchar <<PK>>
-  applied_at : timestamp
-}
-
-entity "plugin_reserved" as plugin_reserved {
-  plugin_id : bigint
-  path : varchar
-  kind : enum
-}
-
 entity "plugins" as plugins {
-  id : bigint <<PK>>
+  id : char <<PK>>
   slug : varchar
+  name : varchar
   version : varchar
+  provider_fqcn : varchar
+  path : varchar
   enabled : tinyint
-  manifest_json : json
+  meta_json : json?
+  last_synced_at : timestamp?
   created_at : timestamp?
   updated_at : timestamp?
 }
@@ -268,8 +270,6 @@ entry_slugs }o--|| entries
 entry_term }o--|| entries
 entry_term }o--|| terms
 media_variants }o--|| media
-plugin_migrations }o--|| plugins
-plugin_reserved }o--|| plugins
 refresh_tokens }o--|| users
 term_tree }o--|| terms
 term_tree }o--|| terms

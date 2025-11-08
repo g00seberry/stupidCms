@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-08 11:30:21_
+_Last generated: 2025-11-08 13:13:57_
 
 ## Web
 
@@ -24,6 +24,10 @@ _Last generated: 2025-11-08 11:30:21_
 | POST | `api/v1/auth/logout` | - | `LogoutController@logout` | api, throttle:login, no-cache-auth |
 | GET|HEAD | `api/v1/auth/csrf` | - | `CsrfController@issue` | api, no-cache-auth |
 | GET|HEAD | `api/v1/admin/utils/slugify` | - | `UtilsController@slugify` | api, admin.auth, throttle:api |
+| GET|HEAD | `api/v1/admin/plugins` | admin.v1.plugins.index | `PluginsController@index` | api, admin.auth, throttle:api, can:plugins.read, throttle:60,1 |
+| POST | `api/v1/admin/plugins/sync` | admin.v1.plugins.sync | `PluginsController@sync` | api, admin.auth, throttle:api, can:plugins.sync, throttle:10,1 |
+| POST | `api/v1/admin/plugins/{slug}/enable` | admin.v1.plugins.enable | `PluginsController@enable` | api, admin.auth, throttle:api, can:plugins.toggle, throttle:10,1 |
+| POST | `api/v1/admin/plugins/{slug}/disable` | admin.v1.plugins.disable | `PluginsController@disable` | api, admin.auth, throttle:api, can:plugins.toggle, throttle:10,1 |
 | GET|HEAD | `api/v1/admin/reservations` | - | `PathReservationController@index` | api, admin.auth, throttle:api, can:viewAny,App\Models\ReservedRoute |
 | POST | `api/v1/admin/reservations` | - | `PathReservationController@store` | api, admin.auth, throttle:api, can:create,App\Models\ReservedRoute |
 | DELETE | `api/v1/admin/reservations/{path}` | - | `PathReservationController@destroy` | api, admin.auth, throttle:api, can:deleteAny,App\Models\ReservedRoute |

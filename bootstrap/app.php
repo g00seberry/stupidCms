@@ -11,6 +11,26 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withCommands([
+        App\Console\Commands\BackfillEntrySlugsCommand::class,
+        App\Console\Commands\CleanupExpiredRefreshTokens::class,
+        App\Console\Commands\GenerateAbilitiesDoc::class,
+        App\Console\Commands\GenerateApiDoc::class,
+        App\Console\Commands\GenerateConfigDoc::class,
+        App\Console\Commands\GenerateErdDoc::class,
+        App\Console\Commands\GenerateErrorsDoc::class,
+        App\Console\Commands\GenerateJwtKeys::class,
+        App\Console\Commands\GenerateMediaPipelineDoc::class,
+        App\Console\Commands\GenerateRoutesDoc::class,
+        App\Console\Commands\GenerateSearchDoc::class,
+        App\Console\Commands\OptionsGetCommand::class,
+        App\Console\Commands\OptionsSetCommand::class,
+        App\Console\Commands\RoutesListReservationsCommand::class,
+        App\Console\Commands\RoutesReleaseCommand::class,
+        App\Console\Commands\RoutesReserveCommand::class,
+        App\Console\Commands\UserMakeAdminCommand::class,
+        App\Domain\Plugins\Commands\PluginsSyncCommand::class,
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         // Encrypt cookies (except JWT tokens and CSRF token)
         // Note: These values must match config/jwt.php and config/security.php

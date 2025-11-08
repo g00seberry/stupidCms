@@ -3,6 +3,7 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
+    App\Providers\PluginsServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     App\Providers\EntrySlugServiceProvider::class,
     App\Providers\PathReservationServiceProvider::class,

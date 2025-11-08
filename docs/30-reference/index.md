@@ -25,6 +25,7 @@ API спецификация всех endpoints stupidCms API (public & admin).
 
 #### Подразделы
 
+- [Admin API — Plugins](admin-api/plugins.md) — управление manifest-плагинами, синхронизация, enable/disable.
 - [Admin API — Taxonomies & Terms](admin-api/taxonomies-terms.md) — ручное описание CRUD и pivot операций для таксономий/терминов.
 
 ---

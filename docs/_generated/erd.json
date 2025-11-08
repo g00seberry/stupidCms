@@ -546,9 +546,9 @@
             },
             {
                 "name": "media_id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
+                "type_name": "char",
+                "type": "char(26)",
+                "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
                 "auto_increment": false,
@@ -562,6 +562,17 @@
                 "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "order",
+                "type_name": "int",
+                "type": "int unsigned",
+                "collation": null,
+                "nullable": false,
+                "default": "0",
                 "auto_increment": false,
                 "comment": null,
                 "generation": null
@@ -1140,22 +1151,22 @@
         "columns": [
             {
                 "name": "id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
+                "type_name": "char",
+                "type": "char(26)",
+                "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
-                "auto_increment": true,
+                "auto_increment": false,
                 "comment": null,
                 "generation": null
             },
             {
                 "name": "disk",
                 "type_name": "varchar",
-                "type": "varchar(255)",
+                "type": "varchar(32)",
                 "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
-                "default": "public",
+                "default": null,
                 "auto_increment": false,
                 "comment": null,
                 "generation": null
@@ -1176,6 +1187,17 @@
                 "type_name": "varchar",
                 "type": "varchar(255)",
                 "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "ext",
+                "type_name": "varchar",
+                "type": "varchar(16)",
+                "collation": "utf8mb4_unicode_ci",
                 "nullable": true,
                 "default": null,
                 "auto_increment": false,
@@ -1185,7 +1207,7 @@
             {
                 "name": "mime",
                 "type_name": "varchar",
-                "type": "varchar(100)",
+                "type": "varchar(120)",
                 "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
@@ -1194,12 +1216,12 @@
                 "generation": null
             },
             {
-                "name": "size",
+                "name": "size_bytes",
                 "type_name": "bigint",
                 "type": "bigint unsigned",
                 "collation": null,
                 "nullable": false,
-                "default": "0",
+                "default": null,
                 "auto_increment": false,
                 "comment": null,
                 "generation": null
@@ -1227,6 +1249,50 @@
                 "generation": null
             },
             {
+                "name": "duration_ms",
+                "type_name": "int",
+                "type": "int unsigned",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "checksum_sha256",
+                "type_name": "varchar",
+                "type": "varchar(64)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "exif_json",
+                "type_name": "json",
+                "type": "json",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "title",
+                "type_name": "varchar",
+                "type": "varchar(255)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
                 "name": "alt",
                 "type_name": "varchar",
                 "type": "varchar(255)",
@@ -1238,21 +1304,10 @@
                 "generation": null
             },
             {
-                "name": "sha256",
+                "name": "collection",
                 "type_name": "varchar",
                 "type": "varchar(64)",
                 "collation": "utf8mb4_unicode_ci",
-                "nullable": true,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "meta_json",
-                "type_name": "json",
-                "type": "json",
-                "collation": null,
                 "nullable": true,
                 "default": null,
                 "auto_increment": false,
@@ -1295,6 +1350,33 @@
         ],
         "indexes": [
             {
+                "name": "media_checksum_sha256_index",
+                "columns": [
+                    "checksum_sha256"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
+            {
+                "name": "media_collection_index",
+                "columns": [
+                    "collection"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
+            {
+                "name": "media_created_at_index",
+                "columns": [
+                    "created_at"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
+            {
                 "name": "media_deleted_at_index",
                 "columns": [
                     "deleted_at"
@@ -1322,15 +1404,6 @@
                 "primary": false
             },
             {
-                "name": "media_sha256_index",
-                "columns": [
-                    "sha256"
-                ],
-                "type": "btree",
-                "unique": false,
-                "primary": false
-            },
-            {
                 "name": "primary",
                 "columns": [
                     "id"
@@ -1346,10 +1419,10 @@
         "name": "media_variants",
         "columns": [
             {
-                "name": "media_id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
+                "name": "id",
+                "type_name": "char",
+                "type": "char(26)",
+                "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
                 "auto_increment": false,
@@ -1357,9 +1430,20 @@
                 "generation": null
             },
             {
-                "name": "variant_key",
+                "name": "media_id",
+                "type_name": "char",
+                "type": "char(26)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "variant",
                 "type_name": "varchar",
-                "type": "varchar(255)",
+                "type": "varchar(32)",
                 "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
@@ -1401,97 +1485,12 @@
                 "generation": null
             },
             {
-                "name": "size",
+                "name": "size_bytes",
                 "type_name": "bigint",
                 "type": "bigint unsigned",
                 "collation": null,
                 "nullable": false,
                 "default": "0",
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            }
-        ],
-        "indexes": [
-            {
-                "name": "media_variants_path_unique",
-                "columns": [
-                    "path"
-                ],
-                "type": "btree",
-                "unique": true,
-                "primary": false
-            },
-            {
-                "name": "primary",
-                "columns": [
-                    "media_id",
-                    "variant_key"
-                ],
-                "type": "btree",
-                "unique": true,
-                "primary": true
-            }
-        ],
-        "foreign_keys": [
-            {
-                "name": "media_variants_media_id_foreign",
-                "columns": [
-                    "media_id"
-                ],
-                "foreign_schema": "cakes3",
-                "foreign_table": "media",
-                "foreign_columns": [
-                    "id"
-                ],
-                "on_update": "no action",
-                "on_delete": "cascade"
-            }
-        ]
-    },
-    "options": {
-        "name": "options",
-        "columns": [
-            {
-                "name": "id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
-                "nullable": false,
-                "default": null,
-                "auto_increment": true,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "namespace",
-                "type_name": "varchar",
-                "type": "varchar(255)",
-                "collation": "utf8mb4_unicode_ci",
-                "nullable": false,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "key",
-                "type_name": "varchar",
-                "type": "varchar(255)",
-                "collation": "utf8mb4_unicode_ci",
-                "nullable": false,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "value_json",
-                "type_name": "json",
-                "type": "json",
-                "collation": null,
-                "nullable": true,
-                "default": null,
                 "auto_increment": false,
                 "comment": null,
                 "generation": null
@@ -1520,6 +1519,162 @@
             }
         ],
         "indexes": [
+            {
+                "name": "media_variants_media_id_variant_unique",
+                "columns": [
+                    "media_id",
+                    "variant"
+                ],
+                "type": "btree",
+                "unique": true,
+                "primary": false
+            },
+            {
+                "name": "media_variants_path_unique",
+                "columns": [
+                    "path"
+                ],
+                "type": "btree",
+                "unique": true,
+                "primary": false
+            },
+            {
+                "name": "primary",
+                "columns": [
+                    "id"
+                ],
+                "type": "btree",
+                "unique": true,
+                "primary": true
+            }
+        ],
+        "foreign_keys": [
+            {
+                "name": "media_variants_media_id_foreign",
+                "columns": [
+                    "media_id"
+                ],
+                "foreign_schema": "cakes3",
+                "foreign_table": "media",
+                "foreign_columns": [
+                    "id"
+                ],
+                "on_update": "no action",
+                "on_delete": "cascade"
+            }
+        ]
+    },
+    "options": {
+        "name": "options",
+        "columns": [
+            {
+                "name": "id",
+                "type_name": "char",
+                "type": "char(26)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "namespace",
+                "type_name": "varchar",
+                "type": "varchar(64)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "key",
+                "type_name": "varchar",
+                "type": "varchar(64)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "value_json",
+                "type_name": "json",
+                "type": "json",
+                "collation": null,
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "description",
+                "type_name": "varchar",
+                "type": "varchar(255)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "created_at",
+                "type_name": "timestamp",
+                "type": "timestamp",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "updated_at",
+                "type_name": "timestamp",
+                "type": "timestamp",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "deleted_at",
+                "type_name": "timestamp",
+                "type": "timestamp",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            }
+        ],
+        "indexes": [
+            {
+                "name": "options_deleted_at_index",
+                "columns": [
+                    "deleted_at"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
+            {
+                "name": "options_namespace_index",
+                "columns": [
+                    "namespace"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
             {
                 "name": "options_namespace_key_unique",
                 "columns": [
@@ -1657,162 +1812,35 @@
         ],
         "foreign_keys": []
     },
-    "plugin_migrations": {
-        "name": "plugin_migrations",
-        "columns": [
-            {
-                "name": "plugin_id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
-                "nullable": false,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "migration",
-                "type_name": "varchar",
-                "type": "varchar(255)",
-                "collation": "utf8mb4_unicode_ci",
-                "nullable": false,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "applied_at",
-                "type_name": "timestamp",
-                "type": "timestamp",
-                "collation": null,
-                "nullable": false,
-                "default": "CURRENT_TIMESTAMP",
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            }
-        ],
-        "indexes": [
-            {
-                "name": "primary",
-                "columns": [
-                    "plugin_id",
-                    "migration"
-                ],
-                "type": "btree",
-                "unique": true,
-                "primary": true
-            }
-        ],
-        "foreign_keys": [
-            {
-                "name": "plugin_migrations_plugin_id_foreign",
-                "columns": [
-                    "plugin_id"
-                ],
-                "foreign_schema": "cakes3",
-                "foreign_table": "plugins",
-                "foreign_columns": [
-                    "id"
-                ],
-                "on_update": "no action",
-                "on_delete": "cascade"
-            }
-        ]
-    },
-    "plugin_reserved": {
-        "name": "plugin_reserved",
-        "columns": [
-            {
-                "name": "plugin_id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
-                "nullable": false,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "path",
-                "type_name": "varchar",
-                "type": "varchar(255)",
-                "collation": "utf8mb4_unicode_ci",
-                "nullable": false,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
-                "name": "kind",
-                "type_name": "enum",
-                "type": "enum('prefix','path')",
-                "collation": "utf8mb4_unicode_ci",
-                "nullable": false,
-                "default": "path",
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            }
-        ],
-        "indexes": [
-            {
-                "name": "plugin_reserved_path_unique",
-                "columns": [
-                    "path"
-                ],
-                "type": "btree",
-                "unique": true,
-                "primary": false
-            },
-            {
-                "name": "plugin_reserved_plugin_id_foreign",
-                "columns": [
-                    "plugin_id"
-                ],
-                "type": "btree",
-                "unique": false,
-                "primary": false
-            }
-        ],
-        "foreign_keys": [
-            {
-                "name": "plugin_reserved_plugin_id_foreign",
-                "columns": [
-                    "plugin_id"
-                ],
-                "foreign_schema": "cakes3",
-                "foreign_table": "plugins",
-                "foreign_columns": [
-                    "id"
-                ],
-                "on_update": "no action",
-                "on_delete": "cascade"
-            }
-        ]
-    },
     "plugins": {
         "name": "plugins",
         "columns": [
             {
                 "name": "id",
-                "type_name": "bigint",
-                "type": "bigint unsigned",
-                "collation": null,
+                "type_name": "char",
+                "type": "char(26)",
+                "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
-                "auto_increment": true,
+                "auto_increment": false,
                 "comment": null,
                 "generation": null
             },
             {
                 "name": "slug",
                 "type_name": "varchar",
-                "type": "varchar(255)",
+                "type": "varchar(64)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "name",
+                "type_name": "varchar",
+                "type": "varchar(128)",
                 "collation": "utf8mb4_unicode_ci",
                 "nullable": false,
                 "default": null,
@@ -1822,6 +1850,28 @@
             },
             {
                 "name": "version",
+                "type_name": "varchar",
+                "type": "varchar(32)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "provider_fqcn",
+                "type_name": "varchar",
+                "type": "varchar(255)",
+                "collation": "utf8mb4_unicode_ci",
+                "nullable": false,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "path",
                 "type_name": "varchar",
                 "type": "varchar(255)",
                 "collation": "utf8mb4_unicode_ci",
@@ -1843,11 +1893,22 @@
                 "generation": null
             },
             {
-                "name": "manifest_json",
+                "name": "meta_json",
                 "type_name": "json",
                 "type": "json",
                 "collation": null,
-                "nullable": false,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "last_synced_at",
+                "type_name": "timestamp",
+                "type": "timestamp",
+                "collation": null,
+                "nullable": true,
                 "default": null,
                 "auto_increment": false,
                 "comment": null,
@@ -1877,6 +1938,24 @@
             }
         ],
         "indexes": [
+            {
+                "name": "plugins_enabled_index",
+                "columns": [
+                    "enabled"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
+            {
+                "name": "plugins_last_synced_at_index",
+                "columns": [
+                    "last_synced_at"
+                ],
+                "type": "btree",
+                "unique": false,
+                "primary": false
+            },
             {
                 "name": "plugins_slug_unique",
                 "columns": [

@@ -71,10 +71,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api/v1/admin')
                 ->group(base_path('routes/api_admin.php'));
 
-            // 4) Plugin routes - загружаются четвёртыми (детерминированный порядок)
-            // В будущем будет сортировка по приоритету через PluginRegistry
-            $this->mapPluginRoutes();
-
             // 5) Taxonomies & Content routes - загружаются пятыми
             // Включают: динамические контентные маршруты, таксономии
             // Catch-all маршруты должны быть здесь, а не в core
@@ -99,32 +95,5 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Загружает маршруты плагинов в детерминированном порядке.
-     * 
-     * Плагины сортируются по приоритету (если указан) или по имени для стабильности.
-     * Это гарантирует, что порядок загрузки роутов не меняется между запросами.
-     * 
-     * ВАЖНО: НЕ навешиваем middleware('web') сверху - пусть плагин сам решает,
-     * какие middleware группы использовать (web|api). Иначе получится микс web+api,
-     * что ломает семантику stateless API.
-     */
-    protected function mapPluginRoutes(): void
-    {
-        // Упрощённая версия: пока PluginRegistry не реализован, используем заглушку
-        // В будущем здесь будет:
-        // $plugins = app(\App\Domain\Plugins\PluginRegistry::class)->enabled();
-        // $plugins = collect($plugins)->sortBy('priority')->values();
-        // foreach ($plugins as $plugin) {
-        //     require $plugin->routesFile();
-        // }
-        
-        // Пока что просто проверяем наличие файла routes/plugins.php
-        // Если он существует, загружаем его (плагин сам объявляет нужные группы)
-        $pluginRoutesFile = base_path('routes/plugins.php');
-        if (file_exists($pluginRoutesFile)) {
-            require $pluginRoutesFile;
-        }
-    }
 }
 

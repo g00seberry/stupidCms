@@ -175,6 +175,27 @@
         "file": "app\/Policies\/OptionPolicy.php"
     },
     {
+        "policy": "PluginPolicy",
+        "model": "Plugin",
+        "ability": "viewAny",
+        "description": "",
+        "file": "app\/Policies\/PluginPolicy.php"
+    },
+    {
+        "policy": "PluginPolicy",
+        "model": "Plugin",
+        "ability": "toggle",
+        "description": "",
+        "file": "app\/Policies\/PluginPolicy.php"
+    },
+    {
+        "policy": "PluginPolicy",
+        "model": "Plugin",
+        "ability": "sync",
+        "description": "",
+        "file": "app\/Policies\/PluginPolicy.php"
+    },
+    {
         "policy": "RouteReservationPolicy",
         "model": "RouteReservation",
         "ability": "viewAny",

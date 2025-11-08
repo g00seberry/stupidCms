@@ -12,7 +12,7 @@ related_code:
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-_Last generated: 2025-11-08 11:30:25 UTC_
+_Last generated: 2025-11-08 13:14:01 UTC_
 
 ## Admin API (`/api/v1/admin/*`)
 
@@ -47,6 +47,13 @@ _Last generated: 2025-11-08 11:30:25 UTC_
 - `PUT` `/api/v1/admin/options/{namespace}/{key}` — `admin.v1.options.upsert`
 - `DELETE` `/api/v1/admin/options/{namespace}/{key}` — `admin.v1.options.destroy`
 - `POST` `/api/v1/admin/options/{namespace}/{key}/restore` — `admin.v1.options.restore`
+
+### Plugins
+
+- `GET` `/api/v1/admin/plugins` — `admin.v1.plugins.index`
+- `POST` `/api/v1/admin/plugins/sync` — `admin.v1.plugins.sync`
+- `POST` `/api/v1/admin/plugins/{slug}/disable` — `admin.v1.plugins.disable`
+- `POST` `/api/v1/admin/plugins/{slug}/enable` — `admin.v1.plugins.enable`
 
 ### Post Types
 

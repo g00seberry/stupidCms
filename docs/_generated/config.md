@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-08 11:30:23_
+_Last generated: 2025-11-08 13:13:58_
 
 ## app
 
@@ -49,11 +49,12 @@ _Last generated: 2025-11-08 11:30:23_
 | `providers.22` | `Illuminate\View\ViewServiceProvider` | string |
 | `providers.23` | `App\Providers\AppServiceProvider` | string |
 | `providers.24` | `App\Providers\AuthServiceProvider` | string |
-| `providers.25` | `App\Providers\RouteServiceProvider` | string |
-| `providers.26` | `App\Providers\EntrySlugServiceProvider` | string |
-| `providers.27` | `App\Providers\PathReservationServiceProvider` | string |
-| `providers.28` | `App\Providers\ReservedRoutesServiceProvider` | string |
-| `providers.29` | `App\Providers\SlugServiceProvider` | string |
+| `providers.25` | `App\Providers\PluginsServiceProvider` | string |
+| `providers.26` | `App\Providers\RouteServiceProvider` | string |
+| `providers.27` | `App\Providers\EntrySlugServiceProvider` | string |
+| `providers.28` | `App\Providers\PathReservationServiceProvider` | string |
+| `providers.29` | `App\Providers\ReservedRoutesServiceProvider` | string |
+| `providers.30` | `App\Providers\SlugServiceProvider` | string |
 | `aliases.App` | `Illuminate\Support\Facades\App` | string |
 | `aliases.Arr` | `Illuminate\Support\Arr` | string |
 | `aliases.Artisan` | `Illuminate\Support\Facades\Artisan` | string |
@@ -439,6 +440,17 @@ _Last generated: 2025-11-08 11:30:23_
 | Key | Value | Type |
 |-----|-------|------|
 | `allowed.site.0` | `home_entry_id` | string |
+
+## plugins
+
+**File**: `config/plugins.php`
+
+| Key | Value | Type |
+|-----|-------|------|
+| `path` | `C:\Users\dattebayo\Desktop\proj\stupidCms\plugins` | string |
+| `manifest.0` | `plugin.json` | string |
+| `manifest.1` | `composer.json` | string |
+| `auto_route_cache` | `false` | boolean |
 
 ## purifier
 

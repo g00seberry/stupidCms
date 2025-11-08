@@ -1,22 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Plugin extends Model
 {
+    use HasUlids;
+    use HasFactory;
+
     protected $guarded = [];
-    protected $casts = ['manifest_json' => 'array', 'enabled' => 'boolean'];
 
-    public function migrations()
-    {
-        return $this->hasMany(PluginMigration::class);
-    }
+    protected $casts = [
+        'enabled' => 'boolean',
+        'meta_json' => 'array',
+        'last_synced_at' => 'immutable_datetime',
+    ];
 
-    public function reserved()
-    {
-        return $this->hasMany(PluginReserved::class);
-    }
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 }
 

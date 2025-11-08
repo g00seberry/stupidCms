@@ -196,26 +196,31 @@
             "env": null
         },
         "providers.25": {
-            "value": "App\\Providers\\RouteServiceProvider",
+            "value": "App\\Providers\\PluginsServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.26": {
-            "value": "App\\Providers\\EntrySlugServiceProvider",
+            "value": "App\\Providers\\RouteServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.27": {
-            "value": "App\\Providers\\PathReservationServiceProvider",
+            "value": "App\\Providers\\EntrySlugServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.28": {
-            "value": "App\\Providers\\ReservedRoutesServiceProvider",
+            "value": "App\\Providers\\PathReservationServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.29": {
+            "value": "App\\Providers\\ReservedRoutesServiceProvider",
+            "type": "string",
+            "env": null
+        },
+        "providers.30": {
             "value": "App\\Providers\\SlugServiceProvider",
             "type": "string",
             "env": null
@@ -1813,6 +1818,28 @@
         "allowed.site.0": {
             "value": "home_entry_id",
             "type": "string",
+            "env": null
+        }
+    },
+    "plugins": {
+        "path": {
+            "value": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\plugins",
+            "type": "string",
+            "env": null
+        },
+        "manifest.0": {
+            "value": "plugin.json",
+            "type": "string",
+            "env": null
+        },
+        "manifest.1": {
+            "value": "composer.json",
+            "type": "string",
+            "env": null
+        },
+        "auto_route_cache": {
+            "value": false,
+            "type": "boolean",
             "env": null
         }
     },

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\OptionsController;
+use App\Http\Controllers\Admin\PluginsController;
 use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
@@ -36,6 +37,22 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
     Route::get('/utils/slugify', [UtilsController::class, 'slugify']);
     
+    Route::get('/plugins', [PluginsController::class, 'index'])
+        ->middleware(['can:plugins.read', 'throttle:60,1'])
+        ->name('admin.v1.plugins.index');
+
+    Route::post('/plugins/sync', [PluginsController::class, 'sync'])
+        ->middleware(['can:plugins.sync', 'throttle:10,1'])
+        ->name('admin.v1.plugins.sync');
+
+    Route::post('/plugins/{slug}/enable', [PluginsController::class, 'enable'])
+        ->middleware(['can:plugins.toggle', 'throttle:10,1'])
+        ->name('admin.v1.plugins.enable');
+
+    Route::post('/plugins/{slug}/disable', [PluginsController::class, 'disable'])
+        ->middleware(['can:plugins.toggle', 'throttle:10,1'])
+        ->name('admin.v1.plugins.disable');
+
     // Path reservations
     Route::get('/reservations', [PathReservationController::class, 'index'])
         ->middleware('can:viewAny,' . ReservedRoute::class);
