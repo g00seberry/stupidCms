@@ -41,5 +41,9 @@ class AuthServiceProvider extends ServiceProvider
             // Полный доступ администратору
             return $user->is_admin ? true : null; // null => продолжить обычные проверки
         });
+
+        Gate::define('manage.posttypes', static function (User $user): bool {
+            return $user->hasAdminPermission('manage.posttypes');
+        });
     }
 }

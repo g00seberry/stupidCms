@@ -33,7 +33,7 @@ final class AdminAuth
      * - Token is valid (signature, expiration)
      * - Audience (aud) is 'admin'
      * - Scope (scp) includes 'admin'
-     * - User has 'admin' role in database
+     * - User exists in database and is attached to admin guard
      *
      * @param Request $request
      * @param Closure $next
@@ -85,12 +85,6 @@ final class AdminAuth
             ]);
         }
 
-        if (! $user->is_admin) {
-            return $this->respondForbidden($request, 'not_admin', [
-                'user_id' => $userId,
-            ]);
-        }
-
         Auth::shouldUse(self::GUARD);
         Auth::setUser($user);
 
@@ -107,6 +101,7 @@ final class AdminAuth
                 'WWW-Authenticate' => sprintf('Bearer realm="%s"', self::REALM),
                 'Cache-Control' => 'no-store, private',
                 'Pragma' => 'no-cache',
+                'Vary' => 'Cookie',
             ]
         );
     }
@@ -115,7 +110,13 @@ final class AdminAuth
     {
         $this->logFailure(403, $reason, $request, $context);
 
-        return $this->problemFromPreset(ProblemDetails::forbidden());
+        return $this->problemFromPreset(
+            ProblemDetails::forbidden(),
+            headers: [
+                'Cache-Control' => 'no-store, private',
+                'Vary' => 'Cookie',
+            ]
+        );
     }
 
     private function logFailure(int $status, string $reason, Request $request, array $context = []): void

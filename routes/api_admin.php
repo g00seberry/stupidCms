@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
+use App\Http\Controllers\Admin\V1\PostTypeController;
+use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\ReservedRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -32,5 +34,13 @@ Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
     Route::delete('/reservations/{path}', [PathReservationController::class, 'destroy'])
         ->where('path', '.*')
         ->middleware('can:deleteAny,' . ReservedRoute::class);
+    
+    // Post Types (only show/update, no create/delete)
+    Route::get('/post-types/{slug}', [PostTypeController::class, 'show'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.show');
+    Route::put('/post-types/{slug}', [PostTypeController::class, 'update'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.update');
 });
 

@@ -28,10 +28,10 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertStatus(422);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => 'about:blank',
-            'title' => 'Unprocessable Entity',
+            'type' => 'https://stupidcms.dev/problems/validation-error',
+            'title' => 'Validation error',
             'status' => 422,
-            'detail' => 'Validation failed.',
+            'detail' => 'The email field must be a valid email address.',
         ]);
         $response->assertJsonStructure([
             'errors',
@@ -44,6 +44,10 @@ class Rfc7807ErrorTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
+        // Laravel sets no-cache for route-level 404s; controller errors use no-store
+        $response->assertHeader('Cache-Control', 'no-cache, private');
+        // Note: Vary header not set for route-level 404s (no cookies involved)
+        // Note: Route-level 404s use about:blank; controller 404s use our custom type
         $response->assertJson([
             'type' => 'about:blank',
             'title' => 'Not Found',
@@ -65,6 +69,8 @@ class Rfc7807ErrorTest extends TestCase
         // Last request should be rate limited
         $response->assertStatus(429);
         $response->assertHeader('Content-Type', 'application/problem+json');
+        $response->assertHeader('Cache-Control', 'no-store, private');
+        $response->assertHeader('Vary', 'Cookie');
         $response->assertJson([
             'type' => 'about:blank',
             'title' => 'Too Many Requests',

@@ -13,14 +13,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Encrypt cookies (except JWT tokens and CSRF token)
-        $jwtCookies = config('jwt.cookies', []);
-        $csrfCookieName = config('security.csrf.cookie_name');
-
-        $middleware->encryptCookies(except: array_values(array_filter([
-            $jwtCookies['access'] ?? null, // JWT access token cookie
-            $jwtCookies['refresh'] ?? null, // JWT refresh token cookie
-            $csrfCookieName, // CSRF token cookie (non-HttpOnly, needs JS access)
-        ])));
+        // Note: These values must match config/jwt.php and config/security.php
+        $middleware->encryptCookies(except: [
+            'cms_at',   // JWT access token cookie (from config/jwt.php)
+            'cms_rt',   // JWT refresh token cookie (from config/jwt.php)
+            'cms_csrf', // CSRF token cookie (from config/security.php)
+        ]);
         
         // Rate limiting для API (60 запросов в минуту)
         $middleware->throttleApi();
@@ -52,13 +50,19 @@ return Application::configure(basePath: dirname(__DIR__))
         // 422 Unprocessable Entity - Validation errors
         $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
+                $errors = $e->errors();
+                $firstError = collect($errors)->flatten()->filter()->first();
+
                 return response()->json([
-                    'type' => 'about:blank',
-                    'title' => 'Unprocessable Entity',
+                    'type' => 'https://stupidcms.dev/problems/validation-error',
+                    'title' => 'Validation error',
                     'status' => 422,
-                    'detail' => 'Validation failed.',
-                    'errors' => $e->errors(),
-                ], 422)->header('Content-Type', 'application/problem+json');
+                    'detail' => $firstError ?? 'Validation failed.',
+                    'errors' => $errors,
+                ], 422)
+                    ->header('Content-Type', 'application/problem+json')
+                    ->header('Cache-Control', 'no-store, private')
+                    ->header('Vary', 'Cookie');
             }
         });
 
@@ -74,27 +78,55 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // 403 Forbidden - Authorization errors
+        // 403 Forbidden - Authorization errors (AuthorizationException)
         $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                return response()->json([
-                    'type' => 'about:blank',
-                    'title' => 'Forbidden',
-                    'status' => 403,
-                    'detail' => 'Forbidden.',
-                ], 403)->header('Content-Type', 'application/problem+json');
+                $payload = array_merge(\App\Support\ProblemDetails::forbidden(), [
+                    'detail' => $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_FORBIDDEN,
+                ]);
+
+                return response()->json($payload, 403)
+                    ->header('Content-Type', 'application/problem+json')
+                    ->header('Cache-Control', 'no-store, private')
+                    ->header('Vary', 'Cookie');
+            }
+        });
+
+        // 403 Forbidden - Authorization errors (AccessDeniedHttpException)
+        // Laravel converts AuthorizationException to AccessDeniedHttpException in some cases
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                $payload = array_merge(\App\Support\ProblemDetails::forbidden(), [
+                    'detail' => $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_FORBIDDEN,
+                ]);
+
+                return response()->json($payload, 403)
+                    ->header('Content-Type', 'application/problem+json')
+                    ->header('Cache-Control', 'no-store, private')
+                    ->header('Vary', 'Cookie');
             }
         });
 
         // 404 Not Found - Route not found
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                return response()->json([
-                    'type' => 'about:blank',
+                $response = response()->json([
+                    'type' => 'https://stupidcms.dev/problems/not-found',
                     'title' => 'Not Found',
                     'status' => 404,
                     'detail' => 'The requested resource was not found.',
-                ], 404)->header('Content-Type', 'application/problem+json');
+                ], 404);
+                
+                $response->header('Content-Type', 'application/problem+json');
+                $response->header('Vary', 'Cookie');
+                
+                // Use setCache() to forcefully set cache directives
+                $response->setCache([
+                    'no_store' => true,
+                    'private' => true,
+                ]);
+                
+                return $response;
             }
         });
 
@@ -106,7 +138,10 @@ return Application::configure(basePath: dirname(__DIR__))
                     'title' => 'Too Many Requests',
                     'status' => 429,
                     'detail' => 'Rate limit exceeded.',
-                ], 429)->header('Content-Type', 'application/problem+json');
+                ], 429)
+                    ->header('Content-Type', 'application/problem+json')
+                    ->header('Cache-Control', 'no-store, private')
+                    ->header('Vary', 'Cookie');
             }
         });
 
