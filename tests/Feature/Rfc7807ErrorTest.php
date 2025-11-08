@@ -3,11 +3,21 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class Rfc7807ErrorTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware(['admin.auth'])->get('/test/protected', function () {
+            return response()->json(['message' => 'OK']);
+        });
+    }
     public function test_validation_error_returns_422_problem_json(): void
     {
         $response = $this->postJson('/api/v1/auth/login', [
@@ -65,19 +75,16 @@ class Rfc7807ErrorTest extends TestCase
 
     public function test_unauthorized_returns_401_problem_json(): void
     {
-        // Try to access protected route without token
-        \Route::middleware(['admin.auth'])->get('/test/protected', function () {
-            return response()->json(['message' => 'OK']);
-        });
-
         $response = $this->getJson('/test/protected');
 
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
+        $response->assertHeader('WWW-Authenticate', 'Bearer realm="admin"');
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
+            'detail' => 'Authentication is required to access this resource.',
         ]);
     }
 
@@ -94,17 +101,7 @@ class Rfc7807ErrorTest extends TestCase
         $loginResponse->assertOk();
         $accessCookie = $this->getUnencryptedCookie($loginResponse, config('jwt.cookies.access'));
 
-        // Try to access admin route with regular token
-        \Route::middleware(['admin.auth'])->get('/test/admin', function () {
-            return response()->json(['message' => 'OK']);
-        });
-
-        $response = $this->postJsonWithCookies('/test/admin', [], [
-            $accessCookie->getName() => $accessCookie->getValue(),
-        ]);
-        
-        // Change to GET request
-        $response = $this->call('GET', '/test/admin', [], [
+        $response = $this->call('GET', '/test/protected', [], [
             $accessCookie->getName() => $accessCookie->getValue(),
         ], [], $this->transformHeadersToServerVars([
             'Accept' => 'application/json',
@@ -113,9 +110,10 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertStatus(403);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/forbidden',
             'title' => 'Forbidden',
             'status' => 403,
+            'detail' => 'Admin privileges are required.',
         ]);
     }
 }

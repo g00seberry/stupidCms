@@ -88,7 +88,7 @@ class AuthRefreshTest extends TestCase
         $secondRefresh->assertStatus(401);
         $secondRefresh->assertHeader('Content-Type', 'application/problem+json');
         $secondRefresh->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
         ]);
@@ -120,7 +120,7 @@ class AuthRefreshTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
             'detail' => 'Missing refresh token.',
@@ -136,7 +136,7 @@ class AuthRefreshTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
         ]);
@@ -166,7 +166,7 @@ class AuthRefreshTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
             'detail' => 'Refresh token has expired.',
@@ -197,7 +197,7 @@ class AuthRefreshTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
             'detail' => 'Refresh token has been revoked or already used.',
@@ -578,7 +578,7 @@ class AuthRefreshTest extends TestCase
             $secondResponse->assertStatus(401);
             $secondResponse->assertHeader('Content-Type', 'application/problem+json');
             $secondResponse->assertJson([
-                'type' => 'about:blank',
+                'type' => 'https://stupidcms.dev/problems/unauthorized',
                 'title' => 'Unauthorized',
                 'status' => 401,
             ]);

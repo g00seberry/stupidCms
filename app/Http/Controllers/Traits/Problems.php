@@ -22,26 +22,71 @@ trait Problems
      * @param array<string, mixed> $ext Additional problem-specific extension fields
      * @return JsonResponse
      */
-    protected function problem(int $status, string $title, string $detail, array $ext = []): JsonResponse
+    protected function problem(int $status, string $title, string $detail, array $ext = [], array $headers = []): JsonResponse
     {
-        return response()->json(array_merge([
+        $payload = array_merge([
             'type' => 'about:blank',
             'title' => $title,
             'status' => $status,
             'detail' => $detail,
-        ], $ext), $status)->header('Content-Type', 'application/problem+json');
+        ], $ext);
+
+        $response = response()->json($payload, $status);
+        $response->headers->set('Content-Type', 'application/problem+json');
+
+        foreach ($headers as $name => $value) {
+            $response->headers->set($name, $value);
+        }
+
+        return $response;
     }
 
     /**
-     * Shorthand for 401 Unauthorized problem.
+     * Render a standardized problem response using a preset array.
      *
-     * @param string $detail
+     * @param array{type: string, title: string, detail: string, status: int} $preset
      * @param array<string, mixed> $ext
+     * @param array<string, string> $headers
+     */
+    protected function problemFromPreset(array $preset, array $ext = [], array $headers = []): JsonResponse
+    {
+        $extWithType = array_merge(['type' => $preset['type']], $ext);
+
+        return $this->problem(
+            $preset['status'],
+            $preset['title'],
+            $preset['detail'],
+            $extWithType,
+            $headers
+        );
+    }
+
+    /**
+     * Shorthand for 401 Unauthorized problem using centralized preset.
+     *
+     * @param string|null $detail
+     * @param array<string, mixed> $ext
+     * @param array<string, string> $headers
      * @return JsonResponse
      */
-    protected function unauthorized(string $detail, array $ext = []): JsonResponse
+    protected function unauthorized(?string $detail = null, array $ext = [], array $headers = []): JsonResponse
     {
-        return $this->problem(401, 'Unauthorized', $detail, $ext);
+        $preset = \App\Support\ProblemDetails::unauthorized($detail);
+        return $this->problemFromPreset($preset, $ext, $headers);
+    }
+
+    /**
+     * Shorthand for 403 Forbidden problem using centralized preset.
+     *
+     * @param string|null $detail
+     * @param array<string, mixed> $ext
+     * @param array<string, string> $headers
+     * @return JsonResponse
+     */
+    protected function forbidden(?string $detail = null, array $ext = [], array $headers = []): JsonResponse
+    {
+        $preset = \App\Support\ProblemDetails::forbidden($detail);
+        return $this->problemFromPreset($preset, $ext, $headers);
     }
 
     /**

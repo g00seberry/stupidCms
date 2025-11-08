@@ -1,3 +1,344 @@
+# Review: Admin Auth Middleware (Task 41)
+
+## app/Support/ProblemDetails.php
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Support;
+
+/**
+ * Centralized RFC7807 problem definitions used across the API layer.
+ */
+final class ProblemDetails
+{
+    public const TYPE_UNAUTHORIZED = 'https://stupidcms.dev/problems/unauthorized';
+    public const TYPE_FORBIDDEN = 'https://stupidcms.dev/problems/forbidden';
+
+    public const TITLE_UNAUTHORIZED = 'Unauthorized';
+    public const TITLE_FORBIDDEN = 'Forbidden';
+
+    public const DETAIL_UNAUTHORIZED = 'Authentication is required to access this resource.';
+    public const DETAIL_FORBIDDEN = 'Admin privileges are required.';
+
+    /**
+     * @return array{type: string, title: string, detail: string, status: int}
+     */
+    public static function unauthorized(?string $detail = null): array
+    {
+        return [
+            'type' => self::TYPE_UNAUTHORIZED,
+            'title' => self::TITLE_UNAUTHORIZED,
+            'status' => 401,
+            'detail' => $detail ?? self::DETAIL_UNAUTHORIZED,
+        ];
+    }
+
+    /**
+     * @return array{type: string, title: string, detail: string, status: int}
+     */
+    public static function forbidden(?string $detail = null): array
+    {
+        return [
+            'type' => self::TYPE_FORBIDDEN,
+            'title' => self::TITLE_FORBIDDEN,
+            'status' => 403,
+            'detail' => $detail ?? self::DETAIL_FORBIDDEN,
+        ];
+    }
+}
+```
+
+## app/Http/Controllers/Traits/Problems.php
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Traits;
+
+use Illuminate\Http\JsonResponse;
+
+/**
+ * RFC 7807 (Problem Details for HTTP APIs) helper trait.
+ *
+ * Provides unified error response formatting across all controllers.
+ */
+trait Problems
+{
+    /**
+     * Generate a standardized RFC 7807 problem+json response.
+     *
+     * @param int $status HTTP status code
+     * @param string $title Short, human-readable summary
+     * @param string $detail Human-readable explanation specific to this occurrence
+     * @param array<string, mixed> $ext Additional problem-specific extension fields
+     * @param array<string, string> $headers Additional headers to append to the response
+     * @return JsonResponse
+     */
+    protected function problem(int $status, string $title, string $detail, array $ext = [], array $headers = []): JsonResponse
+    {
+        $payload = array_merge([
+            'type' => 'about:blank',
+            'title' => $title,
+            'status' => $status,
+            'detail' => $detail,
+        ], $ext);
+
+        $response = response()->json($payload, $status);
+        $response->headers->set('Content-Type', 'application/problem+json');
+
+        foreach ($headers as $name => $value) {
+            $response->headers->set($name, $value);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Render a standardized problem response using a preset array.
+     *
+     * @param array{type: string, title: string, detail: string, status: int} $preset
+     * @param array<string, mixed> $ext
+     * @param array<string, string> $headers
+     */
+    protected function problemFromPreset(array $preset, array $ext = [], array $headers = []): JsonResponse
+    {
+        $extWithType = array_merge(['type' => $preset['type']], $ext);
+
+        return $this->problem(
+            $preset['status'],
+            $preset['title'],
+            $preset['detail'],
+            $extWithType,
+            $headers
+        );
+    }
+
+    /**
+     * Shorthand for 401 Unauthorized problem using centralized preset.
+     *
+     * @param string|null $detail
+     * @param array<string, mixed> $ext
+     * @param array<string, string> $headers
+     * @return JsonResponse
+     */
+    protected function unauthorized(?string $detail = null, array $ext = [], array $headers = []): JsonResponse
+    {
+        $preset = \App\Support\ProblemDetails::unauthorized($detail);
+        return $this->problemFromPreset($preset, $ext, $headers);
+    }
+
+    /**
+     * Shorthand for 403 Forbidden problem using centralized preset.
+     *
+     * @param string|null $detail
+     * @param array<string, mixed> $ext
+     * @param array<string, string> $headers
+     * @return JsonResponse
+     */
+    protected function forbidden(?string $detail = null, array $ext = [], array $headers = []): JsonResponse
+    {
+        $preset = \App\Support\ProblemDetails::forbidden($detail);
+        return $this->problemFromPreset($preset, $ext, $headers);
+    }
+
+    /**
+     * Shorthand for 500 Internal Server Error problem.
+     *
+     * @param string $detail
+     * @param array<string, mixed> $ext
+     * @return JsonResponse
+     */
+    protected function internalError(string $detail, array $ext = []): JsonResponse
+    {
+        return $this->problem(500, 'Internal Server Error', $detail, $ext);
+    }
+
+    /**
+     * Shorthand for 429 Too Many Requests problem.
+     *
+     * @param string $detail
+     * @param array<string, mixed> $ext
+     * @return JsonResponse
+     */
+    protected function tooManyRequests(string $detail, array $ext = []): JsonResponse
+    {
+        return $this->problem(429, 'Too Many Requests', $detail, $ext);
+    }
+}
+```
+
+## app/Http/Middleware/AdminAuth.php
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware;
+
+use App\Domain\Auth\JwtService;
+use App\Http\Controllers\Traits\Problems;
+use App\Models\User;
+use App\Support\ProblemDetails;
+use Illuminate\Http\JsonResponse;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+final class AdminAuth
+{
+    use Problems;
+
+    private const REALM = 'admin';
+    private const GUARD = 'admin';
+
+    public function __construct(
+        private JwtService $jwt
+    ) {
+    }
+
+    /**
+     * Handle an incoming request.
+     *
+     * Verifies JWT access token from cookie and checks:
+     * - Token is valid (signature, expiration)
+     * - Audience (aud) is 'admin'
+     * - Scope (scp) includes 'admin'
+     * - User has 'admin' role in database
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $accessToken = (string) $request->cookie(config('jwt.cookies.access'), '');
+
+        if ($accessToken === '') {
+            return $this->respondUnauthorized($request, 'missing_token');
+        }
+
+        try {
+            $verified = $this->jwt->verify($accessToken, 'access');
+            $claims = $verified['claims'];
+        } catch (\Throwable $e) {
+            return $this->respondUnauthorized($request, 'invalid_token', [
+                'exception' => $e::class,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        if (($claims['aud'] ?? null) !== 'admin') {
+            return $this->respondForbidden($request, 'invalid_audience');
+        }
+
+        $scopes = $claims['scp'] ?? [];
+        if (! is_array($scopes)) {
+            $scopes = (array) $scopes;
+        }
+
+        if (! in_array('admin', $scopes, true)) {
+            return $this->respondForbidden($request, 'missing_scope');
+        }
+
+        $subject = $claims['sub'] ?? null;
+        if (! $this->isValidSubject($subject)) {
+            return $this->respondUnauthorized($request, 'invalid_subject', [
+                'sub' => $subject,
+            ]);
+        }
+
+        $userId = (int) $subject;
+        $user = User::query()->find($userId);
+        if (! $user) {
+            return $this->respondUnauthorized($request, 'user_not_found', [
+                'user_id' => $userId,
+            ]);
+        }
+
+        if (! $user->is_admin) {
+            return $this->respondForbidden($request, 'not_admin', [
+                'user_id' => $userId,
+            ]);
+        }
+
+        Auth::shouldUse(self::GUARD);
+        Auth::setUser($user);
+
+        return $next($request);
+    }
+
+    private function respondUnauthorized(Request $request, string $reason, array $context = []): JsonResponse
+    {
+        $this->logFailure(401, $reason, $request, $context);
+
+        return $this->problemFromPreset(
+            ProblemDetails::unauthorized(),
+            headers: [
+                'WWW-Authenticate' => sprintf('Bearer realm="%s"', self::REALM),
+                'Cache-Control' => 'no-store, private',
+                'Pragma' => 'no-cache',
+            ]
+        );
+    }
+
+    private function respondForbidden(Request $request, string $reason, array $context = []): JsonResponse
+    {
+        $this->logFailure(403, $reason, $request, $context);
+
+        return $this->problemFromPreset(ProblemDetails::forbidden());
+    }
+
+    private function logFailure(int $status, string $reason, Request $request, array $context = []): void
+    {
+        $level = $status === 401 ? 'warning' : 'notice';
+
+        $logContext = [
+            'status' => $status,
+            'reason' => $reason,
+            'path' => $request->path(),
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ];
+
+        // Remove sensitive exception details in production
+        if (isset($context['exception'])) {
+            $logContext['exception_class'] = $context['exception'];
+            unset($context['exception'], $context['message']);
+        }
+
+        Log::log($level, sprintf('[AdminAuth] %s: %s', $status, $reason), array_merge($logContext, $context));
+    }
+
+    private function isValidSubject(mixed $subject): bool
+    {
+        if (! is_int($subject) && ! is_string($subject)) {
+            return false;
+        }
+
+        if (is_string($subject)) {
+            $subject = trim($subject);
+            if ($subject === '' || ! ctype_digit($subject)) {
+                return false;
+            }
+
+            $subject = (int) $subject;
+        }
+
+        return is_int($subject) && $subject > 0;
+    }
+}
+```
+
+## tests/Feature/AdminAuthTest.php
+
+```php
 <?php
 
 namespace Tests\Feature;
@@ -59,11 +400,9 @@ class AdminAuthTest extends TestCase
     {
         $user = User::factory()->create(['is_admin' => false]);
 
-        // Issue regular token directly (aud=api, no admin scope)
         $jwtService = app(\App\Domain\Auth\JwtService::class);
         $regularToken = $jwtService->issueAccessToken($user->id);
 
-        // Try to access admin route with regular token (missing aud=admin and scp=['admin'])
         $response = $this->getJsonWithUnencryptedCookie('/test/admin', config('jwt.cookies.access'), $regularToken);
 
         $response->assertStatus(403);
@@ -80,14 +419,12 @@ class AdminAuthTest extends TestCase
     {
         $user = User::factory()->create(['password' => bcrypt('password123'), 'is_admin' => false]);
 
-        // Issue admin token manually (aud=admin, scp=['admin'])
         $jwtService = app(\App\Domain\Auth\JwtService::class);
         $adminToken = $jwtService->issueAccessToken($user->id, [
             'aud' => 'admin',
             'scp' => ['admin'],
         ]);
 
-        // Try to access admin route with admin token but non-admin user
         $response = $this->getJsonWithUnencryptedCookie('/test/admin', config('jwt.cookies.access'), $adminToken);
 
         $response->assertStatus(403);
@@ -104,14 +441,12 @@ class AdminAuthTest extends TestCase
     {
         $adminUser = User::factory()->create(['password' => bcrypt('password123'), 'is_admin' => true]);
 
-        // Issue admin token manually (aud=admin, scp=['admin'])
         $jwtService = app(\App\Domain\Auth\JwtService::class);
         $adminToken = $jwtService->issueAccessToken($adminUser->id, [
             'aud' => 'admin',
             'scp' => ['admin'],
         ]);
 
-        // Access admin route with valid admin token
         $response = $this->getJsonWithUnencryptedCookie('/test/admin', config('jwt.cookies.access'), $adminToken);
 
         $response->assertOk();
@@ -384,4 +719,4 @@ class AdminAuthTest extends TestCase
             ->with('notice', \Mockery::pattern('/\[AdminAuth\] 403: invalid_audience/'), \Mockery::type('array'));
     }
 }
-
+```
