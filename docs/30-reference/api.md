@@ -12,9 +12,13 @@ related_code:
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-_Last generated: 2025-11-08 13:52:40 UTC_
+_Last generated: 2025-11-08 17:57:35 UTC_
 
 ## Public API (`/api/*`)
+
+### Oauth2 Callback
+
+- `GET` `/api/oauth2-callback` — `l5-swagger.default.oauth2_callback`
 
 ### Search
 

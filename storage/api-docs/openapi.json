@@ -1,0 +1,4097 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "stupidCms API",
+        "version": "1.0.0",
+        "description": "Автоматически сгенерированное описание всех маршрутов `\/api\/*`.\r\n\r\n> docs:gap — уточнить схемы запросов и ответов, добавить примеры."
+    },
+    "servers": [
+        {
+            "url": "http:\/\/localhost\/api",
+            "description": "Application base URL"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Public",
+            "description": "Публичные точки доступа"
+        },
+        {
+            "name": "Admin",
+            "description": "Административное API"
+        },
+        {
+            "name": "Auth",
+            "description": "Аутентификация и управление сессией"
+        }
+    ],
+    "paths": {
+        "\/api\/oauth2-callback": {
+            "get": {
+                "tags": [
+                    "Public"
+                ],
+                "operationId": "l5SwaggerDefaultOauth2Callback",
+                "summary": "L5 Swagger Default Oauth2 Callback",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "\/api\/v1\/admin\/entries": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesIndex",
+                "summary": "Admin V1 Entries Index",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesStore",
+                "summary": "Admin V1 Entries Store",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/entries\/{entry}\/terms": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesTermsIndex",
+                "summary": "Admin V1 Entries Terms Index",
+                "parameters": [
+                    {
+                        "name": "entry",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/entries\/{entry}\/terms\/attach": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesTermsAttach",
+                "summary": "Admin V1 Entries Terms Attach",
+                "parameters": [
+                    {
+                        "name": "entry",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/entries\/{entry}\/terms\/detach": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesTermsDetach",
+                "summary": "Admin V1 Entries Terms Detach",
+                "parameters": [
+                    {
+                        "name": "entry",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/entries\/{entry}\/terms\/sync": {
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesTermsSync",
+                "summary": "Admin V1 Entries Terms Sync",
+                "parameters": [
+                    {
+                        "name": "entry",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/entries\/{id}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesShow",
+                "summary": "Admin V1 Entries Show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesUpdate",
+                "summary": "Admin V1 Entries Update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesDestroy",
+                "summary": "Admin V1 Entries Destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/entries\/{id}\/restore": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1EntriesRestore",
+                "summary": "Admin V1 Entries Restore",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/media": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaIndex",
+                "summary": "Admin V1 Media Index",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaStore",
+                "summary": "Admin V1 Media Store",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/media\/{media}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaShow",
+                "summary": "Admin V1 Media Show",
+                "parameters": [
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaUpdate",
+                "summary": "Admin V1 Media Update",
+                "parameters": [
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaDestroy",
+                "summary": "Admin V1 Media Destroy",
+                "parameters": [
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/media\/{media}\/download": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaDownload",
+                "summary": "Admin V1 Media Download",
+                "parameters": [
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/media\/{media}\/preview": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaPreview",
+                "summary": "Admin V1 Media Preview",
+                "parameters": [
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/media\/{media}\/restore": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1MediaRestore",
+                "summary": "Admin V1 Media Restore",
+                "parameters": [
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/options\/{namespace}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1OptionsIndex",
+                "summary": "Admin V1 Options Index",
+                "parameters": [
+                    {
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/options\/{namespace}\/{key}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1OptionsShow",
+                "summary": "Admin V1 Options Show",
+                "parameters": [
+                    {
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1OptionsUpsert",
+                "summary": "Admin V1 Options Upsert",
+                "parameters": [
+                    {
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1OptionsDestroy",
+                "summary": "Admin V1 Options Destroy",
+                "parameters": [
+                    {
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/options\/{namespace}\/{key}\/restore": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1OptionsRestore",
+                "summary": "Admin V1 Options Restore",
+                "parameters": [
+                    {
+                        "name": "namespace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/plugins": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1PluginsIndex",
+                "summary": "Admin V1 Plugins Index",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/plugins\/sync": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1PluginsSync",
+                "summary": "Admin V1 Plugins Sync",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/plugins\/{slug}\/disable": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1PluginsDisable",
+                "summary": "Admin V1 Plugins Disable",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/plugins\/{slug}\/enable": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1PluginsEnable",
+                "summary": "Admin V1 Plugins Enable",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/post-types\/{slug}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1PostTypesShow",
+                "summary": "Admin V1 Post Types Show",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1PostTypesUpdate",
+                "summary": "Admin V1 Post Types Update",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/reservations": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "reservations_get",
+                "summary": "GET Reservations",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "reservations_post",
+                "summary": "POST Reservations",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/reservations\/{path}": {
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "reservations_delete",
+                "summary": "DELETE Reservations",
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/search\/reindex": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1SearchReindex",
+                "summary": "Admin V1 Search Reindex",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/taxonomies": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesIndex",
+                "summary": "Admin V1 Taxonomies Index",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesStore",
+                "summary": "Admin V1 Taxonomies Store",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/taxonomies\/{slug}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesShow",
+                "summary": "Admin V1 Taxonomies Show",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesUpdate",
+                "summary": "Admin V1 Taxonomies Update",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesDestroy",
+                "summary": "Admin V1 Taxonomies Destroy",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/taxonomies\/{taxonomy}\/terms": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesTermsIndex",
+                "summary": "Admin V1 Taxonomies Terms Index",
+                "parameters": [
+                    {
+                        "name": "taxonomy",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TaxonomiesTermsStore",
+                "summary": "Admin V1 Taxonomies Terms Store",
+                "parameters": [
+                    {
+                        "name": "taxonomy",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/admin\/terms\/{term}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TermsShow",
+                "summary": "Admin V1 Terms Show",
+                "parameters": [
+                    {
+                        "name": "term",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TermsUpdate",
+                "summary": "Admin V1 Terms Update",
+                "parameters": [
+                    {
+                        "name": "term",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "adminV1TermsDestroy",
+                "summary": "Admin V1 Terms Destroy",
+                "parameters": [
+                    {
+                        "name": "term",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/admin\/utils\/slugify": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "operationId": "utils_get",
+                "summary": "GET Utils",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "\/api\/v1\/auth\/csrf": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "csrf_get",
+                "summary": "GET Csrf",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "\/api\/v1\/auth\/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "apiAuthLogin",
+                "summary": "Api Auth Login",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/auth\/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "logout_post",
+                "summary": "POST Logout",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/auth\/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "apiAuthRefresh",
+                "summary": "Api Auth Refresh",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "docs:gap — описать структуру запроса."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/search": {
+            "get": {
+                "tags": [
+                    "Public"
+                ],
+                "operationId": "apiV1Search",
+                "summary": "Api V1 Search",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "docs:gap — добавить детальное описание схемы."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизовано",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Доступ запрещён",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application\/problem+json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Передайте access-токен в заголовке `Authorization: Bearer <token>`."
+            }
+        },
+        "schemas": {
+            "ProblemDetails": {
+                "type": "object",
+                "description": "RFC7807 Problem Details",
+                "required": [
+                    "type",
+                    "title",
+                    "status"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "detail": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "instance": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "nullable": true
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
+}

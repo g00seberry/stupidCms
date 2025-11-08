@@ -21,7 +21,7 @@ last_reviewed: 2025-11-08
 
 API спецификация всех endpoints stupidCms API (public & admin).
 
-**Источник**: Автоматически генерируется из контроллеров, Request классов и тестов.
+**Источник**: Автоматически генерируется из маршрутов (`php artisan docs:openapi`) и хранится в `storage/api-docs/openapi.json`. Для UI используйте `/docs/api`.
 
 #### Подразделы
 
@@ -112,6 +112,7 @@ php artisan docs:errors       # Ошибки
 php artisan docs:config       # Конфигурация
 php artisan docs:search       # Elasticsearch
 php artisan docs:media        # Media pipeline
+php artisan docs:openapi      # OpenAPI спецификация (/docs/api)
 ```
 
 ## CI интеграция

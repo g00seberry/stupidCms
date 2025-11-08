@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         App\Console\Commands\GenerateErrorsDoc::class,
         App\Console\Commands\GenerateJwtKeys::class,
         App\Console\Commands\GenerateMediaPipelineDoc::class,
+        App\Console\Commands\GenerateOpenApiSpec::class,
         App\Console\Commands\GenerateRoutesDoc::class,
         App\Console\Commands\GenerateSearchDoc::class,
         App\Console\Commands\OptionsGetCommand::class,

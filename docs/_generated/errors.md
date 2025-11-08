@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:errors` to update.
 
-_Last generated: 2025-11-08 13:52:37_
+_Last generated: 2025-11-08 17:57:32_
 
 stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7807) for error responses.
 

@@ -1,6 +1,34 @@
 [
     {
         "method": "GET|HEAD",
+        "uri": "docs/api",
+        "name": "l5-swagger.default.api",
+        "action": "\\L5Swagger\\Http\\Controllers\\SwaggerController@api",
+        "middleware": "L5Swagger\\Http\\Middleware\\Config"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "docs",
+        "name": "l5-swagger.default.docs",
+        "action": "\\L5Swagger\\Http\\Controllers\\SwaggerController@docs",
+        "middleware": "L5Swagger\\Http\\Middleware\\Config"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "docs/asset/{asset}",
+        "name": "l5-swagger.default.asset",
+        "action": "\\L5Swagger\\Http\\Controllers\\SwaggerAssetController@index",
+        "middleware": "L5Swagger\\Http\\Middleware\\Config"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/oauth2-callback",
+        "name": "l5-swagger.default.oauth2_callback",
+        "action": "\\L5Swagger\\Http\\Controllers\\SwaggerController@oauth2Callback",
+        "middleware": "L5Swagger\\Http\\Middleware\\Config"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "up",
         "name": null,
         "action": "Closure",
