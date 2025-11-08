@@ -58,15 +58,29 @@ final class VerifyApiCsrf
         if ($headerToken === '' || $cookieToken === '' || ! hash_equals($cookieToken, $headerToken)) {
             // Issue a new CSRF token on error to help client recover
             $newToken = Str::random(40);
-            
-            return response()->json([
+
+            $response = response()->json([
                 'type' => 'about:blank',
                 'title' => 'CSRF Token Mismatch',
                 'status' => 419,
                 'detail' => 'CSRF token mismatch.',
-            ], 419)
-                ->header('Content-Type', 'application/problem+json')
+            ], 419)->header('Content-Type', 'application/problem+json')
                 ->withCookie(JwtCookies::csrf($newToken));
+
+            // Ensure cache varies by Origin and Cookie even on early return
+            $existingVary = $response->headers->get('Vary', '');
+            $varyHeaders = array_filter(array_map('trim', explode(',', $existingVary)));
+
+            if (! in_array('Origin', $varyHeaders, true)) {
+                $varyHeaders[] = 'Origin';
+            }
+            if (! in_array('Cookie', $varyHeaders, true)) {
+                $varyHeaders[] = 'Cookie';
+            }
+
+            $response->headers->set('Vary', implode(', ', $varyHeaders));
+
+            return $response;
         }
 
         return $next($request);

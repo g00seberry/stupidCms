@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Route;
  * Public API routes.
  * 
  * Загружаются с middleware('api'), что обеспечивает:
- * - Отсутствие CSRF проверки (stateless API)
+ * - CSRF защиту для state-changing запросов (POST, PUT, PATCH, DELETE)
+ *   исключая api.auth.login и api.auth.refresh (проверяется через routeIs)
  * - Throttle для защиты от злоупотреблений
  * - Правильную обработку JSON запросов
  * 
  * Безопасность:
  * - Rate limiting настроен для каждого endpoint отдельно
+ * - CSRF токен требуется для всех state-changing операций (кроме login/refresh)
  * - Для кросс-сайтовых запросов (SPA на другом origin) требуется:
  *   - SameSite=None; Secure для cookies
  *   - CORS с credentials: true

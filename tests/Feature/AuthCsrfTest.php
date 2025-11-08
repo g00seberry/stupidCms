@@ -11,7 +11,7 @@ class AuthCsrfTest extends TestCase
 
     private function getCsrfCookieName(): string
     {
-        return config('security.csrf.cookie_name', 'cms_csrf');
+        return config('security.csrf.cookie_name');
     }
 
     public function test_csrf_endpoint_returns_token_and_cookie(): void
@@ -73,6 +73,23 @@ class AuthCsrfTest extends TestCase
         }
     }
 
+    public function test_csrf_endpoint_sets_vary_headers_for_cross_origin_requests(): void
+    {
+        $allowedOrigin = config('cors.allowed_origins')[0] ?? 'https://app.example.com';
+
+        $response = $this->withHeaders([
+            'Origin' => $allowedOrigin,
+            'Accept' => 'application/json',
+        ])->getJson('/api/v1/auth/csrf');
+
+        $response->assertOk();
+
+        $varyHeader = $response->headers->get('Vary');
+        $this->assertNotNull($varyHeader, 'Vary header should be present');
+        $this->assertStringContainsString('Origin', $varyHeader, 'Vary header should include Origin');
+        $this->assertStringContainsString('Cookie', $varyHeader, 'Vary header should include Cookie');
+    }
+
     public function test_post_without_csrf_token_returns_419_with_new_cookie(): void
     {
         // Попытка POST запроса без CSRF токена
@@ -94,6 +111,12 @@ class AuthCsrfTest extends TestCase
         $this->assertTrue($response->headers->has('Set-Cookie'), 'New CSRF cookie should be issued on 419');
         $setCookieHeader = $response->headers->get('Set-Cookie');
         $this->assertStringContainsString($cookieName . '=', $setCookieHeader, 'New CSRF cookie should be present');
+
+        // Проверка Vary заголовков для кэширования
+        $varyHeader = $response->headers->get('Vary');
+        $this->assertNotNull($varyHeader, 'Vary header should be present on CSRF mismatch');
+        $this->assertStringContainsString('Origin', $varyHeader, 'Vary header should include Origin');
+        $this->assertStringContainsString('Cookie', $varyHeader, 'Vary header should include Cookie');
     }
 
     public function test_post_with_valid_csrf_token_succeeds(): void

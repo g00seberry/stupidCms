@@ -56,7 +56,11 @@ class CorsTest extends TestCase
     {
         $user = \App\Models\User::factory()->create(['password' => bcrypt('password123')]);
 
-        $response = $this->postJson('/api/v1/auth/login', [
+        $origin = config('cors.allowed_origins')[0] ?? 'https://app.example.com';
+
+        $response = $this->withHeaders([
+            'Origin' => $origin,
+        ])->postJson('/api/v1/auth/login', [
             'email' => $user->email,
             'password' => 'password123',
         ]);

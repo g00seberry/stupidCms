@@ -22,7 +22,7 @@ class AuthLogoutTest extends TestCase
         // Acquire CSRF token
         $csrf = $this->getJson('/api/v1/auth/csrf');
         $token = $csrf->json('csrf');
-        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $cookieName = config('security.csrf.cookie_name');
 
         $response = $this->postJsonWithUnencryptedCookie('/api/v1/auth/logout', $cookieName, $token, [], [
             'X-CSRF-Token' => $token,
@@ -74,7 +74,7 @@ class AuthLogoutTest extends TestCase
         // Acquire CSRF token
         $csrf = $this->getJson('/api/v1/auth/csrf');
         $token = $csrf->json('csrf');
-        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $cookieName = config('security.csrf.cookie_name');
 
         // Send both refresh cookie and CSRF cookie/header
         $logoutResponse = $this->postJsonWithCookies('/api/v1/auth/logout', [], [
@@ -133,7 +133,7 @@ class AuthLogoutTest extends TestCase
         // Acquire CSRF token
         $csrf = $this->getJson('/api/v1/auth/csrf');
         $token = $csrf->json('csrf');
-        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $cookieName = config('security.csrf.cookie_name');
 
         $logoutResponse = $this->postJsonWithCookies('/api/v1/auth/logout?all=1', [], [
             $refreshCookie1->getName() => $refreshCookie1->getValue(),
@@ -157,7 +157,7 @@ class AuthLogoutTest extends TestCase
         // Acquire CSRF token
         $csrf = $this->getJson('/api/v1/auth/csrf');
         $token = $csrf->json('csrf');
-        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $cookieName = config('security.csrf.cookie_name');
 
         $response = $this->postJsonWithCookies('/api/v1/auth/logout', [], [
             config('jwt.cookies.refresh') => 'invalid-token',

@@ -165,7 +165,7 @@ abstract class TestCase extends BaseTestCase
         
         // Generate CSRF token
         $csrfToken = \Illuminate\Support\Str::random(40);
-        $csrfCookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $csrfCookieName = config('security.csrf.cookie_name');
         
         $cookies = [
             config('jwt.cookies.access') => $accessToken,
@@ -187,7 +187,7 @@ abstract class TestCase extends BaseTestCase
     private function getCsrfContext(): array
     {
         $csrfToken = \Illuminate\Support\Str::random(40);
-        $csrfCookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $csrfCookieName = config('security.csrf.cookie_name');
         
         $cookies = [
             $csrfCookieName => $csrfToken,

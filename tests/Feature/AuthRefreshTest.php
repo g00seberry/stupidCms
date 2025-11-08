@@ -509,7 +509,7 @@ class AuthRefreshTest extends TestCase
         // Test logout endpoint (requires CSRF)
         $csrf = $this->getJson('/api/v1/auth/csrf');
         $token = $csrf->json('csrf');
-        $cookieName = config('security.csrf.cookie_name', 'cms_csrf');
+        $cookieName = config('security.csrf.cookie_name');
         $logoutResponse = $this->postJsonWithCookies('/api/v1/auth/logout', [], [
             $refreshCookie->getName() => $refreshCookie->getValue(),
             $cookieName => $token,

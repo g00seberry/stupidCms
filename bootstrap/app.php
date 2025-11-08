@@ -13,12 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Encrypt cookies (except JWT tokens and CSRF token)
-        // Note: Using static values because config may not be available during bootstrap
-        $middleware->encryptCookies(except: [
-            'cms_at', // JWT access token cookie
-            'cms_rt', // JWT refresh token cookie
-            'cms_csrf', // CSRF token cookie (non-HttpOnly, needs JS access)
-        ]);
+        $jwtCookies = config('jwt.cookies', []);
+        $csrfCookieName = config('security.csrf.cookie_name');
+
+        $middleware->encryptCookies(except: array_values(array_filter([
+            $jwtCookies['access'] ?? null, // JWT access token cookie
+            $jwtCookies['refresh'] ?? null, // JWT refresh token cookie
+            $csrfCookieName, // CSRF token cookie (non-HttpOnly, needs JS access)
+        ])));
         
         // Rate limiting для API (60 запросов в минуту)
         $middleware->throttleApi();
