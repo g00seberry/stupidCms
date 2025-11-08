@@ -9,5 +9,9 @@ class EntryMedia extends Pivot
     public $timestamps = false;
     protected $table = 'entry_media';
     protected $guarded = [];
+
+    protected $casts = [
+        'order' => 'integer',
+    ];
 }
 

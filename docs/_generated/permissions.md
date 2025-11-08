@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:abilities` to update.
 
-_Last generated: 2025-11-08 10:19:15_
+_Last generated: 2025-11-08 11:05:03_
 
 ## Entry
 
@@ -23,16 +23,16 @@ _Last generated: 2025-11-08 10:19:15_
 
 | Ability | Description | Policy File |
 |---------|-------------|-------------|
-| `viewAny` | Determine whether the user can view any models. | `app/Policies/MediaPolicy.php` |
-| `view` | Determine whether the user can view the model. | `app/Policies/MediaPolicy.php` |
-| `create` | Determine whether the user can create models. | `app/Policies/MediaPolicy.php` |
-| `update` | Determine whether the user can update the model. | `app/Policies/MediaPolicy.php` |
-| `delete` | Determine whether the user can delete the model. | `app/Policies/MediaPolicy.php` |
-| `restore` | Determine whether the user can restore the model. | `app/Policies/MediaPolicy.php` |
-| `forceDelete` | Determine whether the user can permanently delete the model. | `app/Policies/MediaPolicy.php` |
-| `upload` | Determine whether the user can upload media. | `app/Policies/MediaPolicy.php` |
-| `reprocess` | Determine whether the user can reprocess media variants. | `app/Policies/MediaPolicy.php` |
-| `move` | Determine whether the user can move media between storages/folders. | `app/Policies/MediaPolicy.php` |
+| `viewAny` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `view` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `create` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `update` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `delete` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `restore` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `forceDelete` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `upload` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `reprocess` | _No description_ | `app/Policies/MediaPolicy.php` |
+| `move` | _No description_ | `app/Policies/MediaPolicy.php` |
 
 ## RouteReservation
 

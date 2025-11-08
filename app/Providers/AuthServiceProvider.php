@@ -57,5 +57,25 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage.terms', static function (User $user): bool {
             return $user->hasAdminPermission('manage.terms');
         });
+
+        Gate::define('media.read', static function (User $user): bool {
+            return $user->hasAdminPermission('media.read');
+        });
+
+        Gate::define('media.create', static function (User $user): bool {
+            return $user->hasAdminPermission('media.create');
+        });
+
+        Gate::define('media.update', static function (User $user): bool {
+            return $user->hasAdminPermission('media.update');
+        });
+
+        Gate::define('media.delete', static function (User $user): bool {
+            return $user->hasAdminPermission('media.delete');
+        });
+
+        Gate::define('media.restore', static function (User $user): bool {
+            return $user->hasAdminPermission('media.restore');
+        });
     }
 }

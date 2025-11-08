@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-08 10:19:15_
+_Last generated: 2025-11-08 11:05:03_
 
 ## Web
 
@@ -49,4 +49,12 @@ _Last generated: 2025-11-08 10:19:15_
 | POST | `api/v1/admin/entries/{entry}/terms/attach` | admin.v1.entries.terms.attach | `EntryTermsController@attach` | api, admin.auth, throttle:api, can:manage.terms |
 | POST | `api/v1/admin/entries/{entry}/terms/detach` | admin.v1.entries.terms.detach | `EntryTermsController@detach` | api, admin.auth, throttle:api, can:manage.terms |
 | PUT | `api/v1/admin/entries/{entry}/terms/sync` | admin.v1.entries.terms.sync | `EntryTermsController@sync` | api, admin.auth, throttle:api, can:manage.terms |
+| GET|HEAD | `api/v1/admin/media` | admin.v1.media.index | `MediaController@index` | api, admin.auth, throttle:api, can:viewAny,App\Models\Media, throttle:60,1 |
+| GET|HEAD | `api/v1/admin/media/{media}` | admin.v1.media.show | `MediaController@show` | api, admin.auth, throttle:api, can:viewAny,App\Models\Media, throttle:60,1 |
+| GET|HEAD | `api/v1/admin/media/{media}/preview` | admin.v1.media.preview | `MediaPreviewController@preview` | api, admin.auth, throttle:api, can:viewAny,App\Models\Media, throttle:60,1 |
+| GET|HEAD | `api/v1/admin/media/{media}/download` | admin.v1.media.download | `MediaPreviewController@download` | api, admin.auth, throttle:api, can:viewAny,App\Models\Media, throttle:60,1 |
+| POST | `api/v1/admin/media` | admin.v1.media.store | `MediaController@store` | api, admin.auth, throttle:api, can:create,App\Models\Media, throttle:20,1 |
+| PUT | `api/v1/admin/media/{media}` | admin.v1.media.update | `MediaController@update` | api, admin.auth, throttle:api, throttle:20,1 |
+| DELETE | `api/v1/admin/media/{media}` | admin.v1.media.destroy | `MediaController@destroy` | api, admin.auth, throttle:api, throttle:20,1 |
+| POST | `api/v1/admin/media/{media}/restore` | admin.v1.media.restore | `MediaController@restore` | api, admin.auth, throttle:api, throttle:20,1 |
 

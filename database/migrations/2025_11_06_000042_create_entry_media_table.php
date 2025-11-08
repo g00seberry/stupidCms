@@ -8,13 +8,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('entry_media', function (Blueprint $table) {
-            $table->unsignedBigInteger('entry_id');
-            $table->unsignedBigInteger('media_id');
+            $table->foreignId('entry_id')->constrained('entries')->cascadeOnDelete();
+            $table->foreignUlid('media_id')->constrained('media')->restrictOnDelete();
             $table->string('field_key');
+            $table->unsignedInteger('order')->default(0);
 
-            $table->primary(['entry_id','media_id','field_key']);
-            $table->foreign('entry_id')->references('id')->on('entries')->onDelete('cascade');
-            $table->foreign('media_id')->references('id')->on('media')->onDelete('restrict');
+            $table->primary(['entry_id', 'media_id', 'field_key']);
         });
     }
 

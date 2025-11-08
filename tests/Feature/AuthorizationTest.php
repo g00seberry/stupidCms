@@ -59,11 +59,15 @@ class AuthorizationTest extends TestCase
         ]);
 
         $this->media = Media::create([
+            'disk' => 'media',
             'path' => 'test/test.jpg',
             'original_name' => 'test.jpg',
+            'ext' => 'jpg',
             'mime' => 'image/jpeg',
-            'size' => 1024,
-            'meta_json' => [],
+            'size_bytes' => 1024,
+            'width' => 100,
+            'height' => 100,
+            'checksum_sha256' => null,
         ]);
     }
 

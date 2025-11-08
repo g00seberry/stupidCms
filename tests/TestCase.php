@@ -114,6 +114,27 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Make a multipart/form-data POST request as an admin.
+     *
+     * @param string $uri
+     * @param array<string, mixed> $data
+     * @param array<string, \Illuminate\Http\UploadedFile> $files
+     * @param \App\Models\User $user
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function postMultipartAsAdmin(string $uri, array $data, array $files, \App\Models\User $user): \Illuminate\Testing\TestResponse
+    {
+        [$cookies, $headers] = $this->getAdminAuthContext($user);
+
+        $server = $this->transformHeadersToServerVars(array_merge($headers, [
+            'CONTENT_TYPE' => 'multipart/form-data',
+            'Accept' => 'application/json',
+        ]));
+
+        return $this->call('POST', $uri, $data, $cookies, $files, $server);
+    }
+
+    /**
      * Make a GET JSON request as an admin with proper JWT and CSRF tokens.
      *
      * @param string $uri

@@ -46,7 +46,7 @@ class Entry extends Model
     {
         return $this->belongsToMany(Media::class, 'entry_media', 'entry_id', 'media_id')
             ->using(EntryMedia::class)
-            ->withPivot('field_key');
+            ->withPivot(['field_key', 'order']);
     }
 
     // Скоупы

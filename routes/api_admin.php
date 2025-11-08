@@ -4,11 +4,14 @@ use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
+use App\Http\Controllers\Admin\V1\MediaController;
+use App\Http\Controllers\Admin\V1\MediaPreviewController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
+use App\Models\Media;
 use App\Models\ReservedRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -98,5 +101,36 @@ Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
         Route::put('/entries/{entry}/terms/sync', [EntryTermsController::class, 'sync'])
             ->name('admin.v1.entries.terms.sync');
     });
+
+    Route::middleware('can:viewAny,' . Media::class)->group(function () {
+        Route::get('/media', [MediaController::class, 'index'])
+            ->middleware('throttle:60,1')
+            ->name('admin.v1.media.index');
+        Route::get('/media/{media}', [MediaController::class, 'show'])
+            ->middleware('throttle:60,1')
+            ->name('admin.v1.media.show');
+        Route::get('/media/{media}/preview', [MediaPreviewController::class, 'preview'])
+            ->middleware('throttle:60,1')
+            ->name('admin.v1.media.preview');
+        Route::get('/media/{media}/download', [MediaPreviewController::class, 'download'])
+            ->middleware('throttle:60,1')
+            ->name('admin.v1.media.download');
+    });
+
+    Route::post('/media', [MediaController::class, 'store'])
+        ->middleware(['can:create,' . Media::class, 'throttle:20,1'])
+        ->name('admin.v1.media.store');
+
+    Route::put('/media/{media}', [MediaController::class, 'update'])
+        ->middleware('throttle:20,1')
+        ->name('admin.v1.media.update');
+
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])
+        ->middleware('throttle:20,1')
+        ->name('admin.v1.media.destroy');
+
+    Route::post('/media/{media}/restore', [MediaController::class, 'restore'])
+        ->middleware('throttle:20,1')
+        ->name('admin.v1.media.restore');
 });
 

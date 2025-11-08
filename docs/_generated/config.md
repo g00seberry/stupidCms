@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-08 10:19:16_
+_Last generated: 2025-11-08 11:05:04_
 
 ## app
 
@@ -296,6 +296,12 @@ _Last generated: 2025-11-08 10:19:16_
 | `disks.s3.use_path_style_endpoint` | `false` | boolean |
 | `disks.s3.throw` | `false` | boolean |
 | `disks.s3.report` | `false` | boolean |
+| `disks.media.driver` | `local` | string |
+| `disks.media.root` | `C:\Users\dattebayo\Desktop\proj\stupidCms\stora...` | string |
+| `disks.media.url` | `http://localhost/storage/media` | string |
+| `disks.media.visibility` | `public` | string |
+| `disks.media.throw` | `false` | boolean |
+| `disks.media.report` | `false` | boolean |
 | `links.C:\Users\dattebayo\Desktop\proj\stupidCms\public\storage` | `C:\Users\dattebayo\Desktop\proj\stupidCms\stora...` | string |
 
 ## jwt
@@ -405,6 +411,26 @@ _Last generated: 2025-11-08 10:19:16_
 | `from.name` | `Laravel` | string |
 | `markdown.theme` | `default` | string |
 | `markdown.paths.0` | `C:\Users\dattebayo\Desktop\proj\stupidCms\resou...` | string |
+
+## media
+
+**File**: `config/media.php`
+
+| Key | Value | Type |
+|-----|-------|------|
+| `disk` | `media` | string |
+| `max_upload_mb` | `25` | integer |
+| `allowed_mimes.0` | `image/jpeg` | string |
+| `allowed_mimes.1` | `image/png` | string |
+| `allowed_mimes.2` | `image/webp` | string |
+| `allowed_mimes.3` | `image/gif` | string |
+| `allowed_mimes.4` | `video/mp4` | string |
+| `allowed_mimes.5` | `audio/mpeg` | string |
+| `allowed_mimes.6` | `application/pdf` | string |
+| `variants.thumbnail.max` | `320` | integer |
+| `variants.medium.max` | `1024` | integer |
+| `signed_ttl` | `300` | integer |
+| `path_strategy` | `by-date` | string |
 
 ## options
 

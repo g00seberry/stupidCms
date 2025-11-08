@@ -47,6 +47,15 @@ return [
             'report' => false,
         ],
 
+        'media' => [
+            'driver' => env('MEDIA_FILESYSTEM_DRIVER', 'local'),
+            'root' => env('MEDIA_LOCAL_ROOT', storage_path('app/public/media')),
+            'url' => env('MEDIA_URL', env('APP_URL').'/storage/media'),
+            'visibility' => env('MEDIA_VISIBILITY', 'public'),
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

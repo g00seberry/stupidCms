@@ -64,7 +64,7 @@ class GenerateAbilitiesDoc extends Command
                 $model = $this->extractModelFromPolicy($className);
                 $ability = $method->getName();
                 
-                $docComment = $method->getDocComment();
+                $docComment = $method->getDocComment() ?: null;
                 $description = $this->extractDescription($docComment);
 
                 $abilities[] = [

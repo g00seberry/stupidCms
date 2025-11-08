@@ -73,70 +73,70 @@
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "viewAny",
-        "description": "Determine whether the user can view any models.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "view",
-        "description": "Determine whether the user can view the model.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "create",
-        "description": "Determine whether the user can create models.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "update",
-        "description": "Determine whether the user can update the model.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "delete",
-        "description": "Determine whether the user can delete the model.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "restore",
-        "description": "Determine whether the user can restore the model.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "forceDelete",
-        "description": "Determine whether the user can permanently delete the model.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "upload",
-        "description": "Determine whether the user can upload media.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "reprocess",
-        "description": "Determine whether the user can reprocess media variants.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {
         "policy": "MediaPolicy",
         "model": "Media",
         "ability": "move",
-        "description": "Determine whether the user can move media between storages\/folders.",
+        "description": "",
         "file": "app\/Policies\/MediaPolicy.php"
     },
     {

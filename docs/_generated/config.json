@@ -1265,6 +1265,36 @@
             "type": "boolean",
             "env": null
         },
+        "disks.media.driver": {
+            "value": "local",
+            "type": "string",
+            "env": null
+        },
+        "disks.media.root": {
+            "value": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\storage\\app\/public\/media",
+            "type": "string",
+            "env": null
+        },
+        "disks.media.url": {
+            "value": "http:\/\/localhost\/storage\/media",
+            "type": "string",
+            "env": null
+        },
+        "disks.media.visibility": {
+            "value": "public",
+            "type": "string",
+            "env": null
+        },
+        "disks.media.throw": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "disks.media.report": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
         "links.C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\public\\storage": {
             "value": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\storage\\app\/public",
             "type": "string",
@@ -1708,6 +1738,73 @@
         },
         "markdown.paths.0": {
             "value": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources\\views\/vendor\/mail",
+            "type": "string",
+            "env": null
+        }
+    },
+    "media": {
+        "disk": {
+            "value": "media",
+            "type": "string",
+            "env": null
+        },
+        "max_upload_mb": {
+            "value": 25,
+            "type": "integer",
+            "env": null
+        },
+        "allowed_mimes.0": {
+            "value": "image\/jpeg",
+            "type": "string",
+            "env": null
+        },
+        "allowed_mimes.1": {
+            "value": "image\/png",
+            "type": "string",
+            "env": null
+        },
+        "allowed_mimes.2": {
+            "value": "image\/webp",
+            "type": "string",
+            "env": null
+        },
+        "allowed_mimes.3": {
+            "value": "image\/gif",
+            "type": "string",
+            "env": null
+        },
+        "allowed_mimes.4": {
+            "value": "video\/mp4",
+            "type": "string",
+            "env": null
+        },
+        "allowed_mimes.5": {
+            "value": "audio\/mpeg",
+            "type": "string",
+            "env": null
+        },
+        "allowed_mimes.6": {
+            "value": "application\/pdf",
+            "type": "string",
+            "env": null
+        },
+        "variants.thumbnail.max": {
+            "value": 320,
+            "type": "integer",
+            "env": null
+        },
+        "variants.medium.max": {
+            "value": 1024,
+            "type": "integer",
+            "env": null
+        },
+        "signed_ttl": {
+            "value": 300,
+            "type": "integer",
+            "env": null
+        },
+        "path_strategy": {
+            "value": "by-date",
             "type": "string",
             "env": null
         }
