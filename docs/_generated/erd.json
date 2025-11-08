@@ -728,6 +728,28 @@
                 "auto_increment": false,
                 "comment": null,
                 "generation": null
+            },
+            {
+                "name": "created_at",
+                "type_name": "timestamp",
+                "type": "timestamp",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
+                "name": "updated_at",
+                "type_name": "timestamp",
+                "type": "timestamp",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
             }
         ],
         "indexes": [
@@ -2522,6 +2544,17 @@
                 "generation": null
             },
             {
+                "name": "options_json",
+                "type_name": "json",
+                "type": "json",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": null,
+                "generation": null
+            },
+            {
                 "name": "created_at",
                 "type_name": "timestamp",
                 "type": "timestamp",
@@ -2864,6 +2897,17 @@
                 "default": "0",
                 "auto_increment": false,
                 "comment": null,
+                "generation": null
+            },
+            {
+                "name": "admin_permissions",
+                "type_name": "json",
+                "type": "json",
+                "collation": null,
+                "nullable": true,
+                "default": null,
+                "auto_increment": false,
+                "comment": "List of granted admin abilities",
                 "generation": null
             },
             {

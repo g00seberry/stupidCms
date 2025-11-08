@@ -23,6 +23,12 @@ API спецификация всех endpoints stupidCms API (public & admin).
 
 **Источник**: Автоматически генерируется из контроллеров, Request классов и тестов.
 
+#### Подразделы
+
+- [Admin API — Taxonomies & Terms](admin-api/taxonomies-terms.md) — ручное описание CRUD и pivot операций для таксономий/терминов.
+
+---
+
 ---
 
 ### [Database Schema (ERD)](erd.md)

@@ -62,6 +62,8 @@ entity "entry_slugs" as entry_slugs {
 entity "entry_term" as entry_term {
   entry_id : bigint <<PK>>
   term_id : bigint <<PK>>
+  created_at : timestamp?
+  updated_at : timestamp?
 }
 
 entity "failed_jobs" as failed_jobs {
@@ -221,6 +223,7 @@ entity "taxonomies" as taxonomies {
   slug : varchar
   name : varchar
   hierarchical : tinyint
+  options_json : json?
   created_at : timestamp?
   updated_at : timestamp?
 }
@@ -250,6 +253,7 @@ entity "users" as users {
   email_verified_at : timestamp?
   password : varchar
   is_admin : tinyint
+  admin_permissions : json?
   remember_token : varchar?
   created_at : timestamp?
   updated_at : timestamp?

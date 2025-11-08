@@ -10,266 +10,70 @@ related_code:
 
 # API Reference
 
-## Генерация
+> ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-```bash
-# через composer
-composer docs:gen
-```
+_Last generated: 2025-11-08 10:19:59 UTC_
 
-## Endpoints Overview
+## Admin API (`/api/v1/admin/*`)
 
-### Public API (`/api/*`)
+### Entries
 
-#### Entries
+-   `GET` `/api/v1/admin/entries` — `admin.v1.entries.index`
+-   `POST` `/api/v1/admin/entries` — `admin.v1.entries.store`
+-   `GET` `/api/v1/admin/entries/{entry}/terms` — `admin.v1.entries.terms.index`
+-   `POST` `/api/v1/admin/entries/{entry}/terms/attach` — `admin.v1.entries.terms.attach`
+-   `POST` `/api/v1/admin/entries/{entry}/terms/detach` — `admin.v1.entries.terms.detach`
+-   `PUT` `/api/v1/admin/entries/{entry}/terms/sync` — `admin.v1.entries.terms.sync`
+-   `GET` `/api/v1/admin/entries/{id}` — `admin.v1.entries.show`
+-   `PUT` `/api/v1/admin/entries/{id}` — `admin.v1.entries.update`
+-   `DELETE` `/api/v1/admin/entries/{id}` — `admin.v1.entries.destroy`
+-   `POST` `/api/v1/admin/entries/{id}/restore` — `admin.v1.entries.restore`
 
--   `GET /api/entries` — Список опубликованных entries
--   `GET /api/entries/{slug}` — Entry по slug
+### Post Types
 
-#### Post Types
+-   `GET` `/api/v1/admin/post-types/{slug}` — `admin.v1.post-types.show`
+-   `PUT` `/api/v1/admin/post-types/{slug}` — `admin.v1.post-types.update`
 
--   `GET /api/post-types` — Список типов контента
+### Reservations
 
-#### Taxonomies & Terms
+-   `GET` `/api/v1/admin/reservations` — _(unnamed)_
+-   `POST` `/api/v1/admin/reservations` — _(unnamed)_
+-   `DELETE` `/api/v1/admin/reservations/{path}` — _(unnamed)_
 
--   `GET /api/taxonomies` — Список таксономий
--   `GET /api/taxonomies/{slug}/terms` — Термины таксономии
--   `GET /api/terms/{id}` — Термин по ID
+### Taxonomies
 
-#### Search
+-   `GET` `/api/v1/admin/taxonomies` — `admin.v1.taxonomies.index`
+-   `POST` `/api/v1/admin/taxonomies` — `admin.v1.taxonomies.store`
+-   `GET` `/api/v1/admin/taxonomies/{slug}` — `admin.v1.taxonomies.show`
+-   `PUT` `/api/v1/admin/taxonomies/{slug}` — `admin.v1.taxonomies.update`
+-   `DELETE` `/api/v1/admin/taxonomies/{slug}` — `admin.v1.taxonomies.destroy`
+-   `GET` `/api/v1/admin/taxonomies/{taxonomy}/terms` — `admin.v1.taxonomies.terms.index`
+-   `POST` `/api/v1/admin/taxonomies/{taxonomy}/terms` — `admin.v1.taxonomies.terms.store`
 
--   `GET /api/search` — Полнотекстовый поиск
+### Terms
 
-#### Options
+-   `GET` `/api/v1/admin/terms/{term}` — `admin.v1.terms.show`
+-   `PUT` `/api/v1/admin/terms/{term}` — `admin.v1.terms.update`
+-   `DELETE` `/api/v1/admin/terms/{term}` — `admin.v1.terms.destroy`
 
--   `GET /api/options` — Публичные настройки сайта
+### Utils
 
----
+-   `GET` `/api/v1/admin/utils/slugify` — _(unnamed)_
 
-### Admin API (`/api/admin/*`)
+## Auth (`/api/auth/*`)
 
-> 🔒 **Требуется аутентификация** (JWT Bearer token)
+### Csrf
 
-#### Entries
+-   `GET` `/api/v1/auth/csrf` — _(unnamed)_
 
--   `POST /api/admin/entries` — Создать entry
--   `PUT /api/admin/entries/{id}` — Обновить entry
--   `DELETE /api/admin/entries/{id}` — Удалить entry
--   `GET /api/admin/entries/{id}/slugs` — История slugs
+### Login
 
-#### Media
+-   `POST` `/api/v1/auth/login` — `api.auth.login`
 
--   `POST /api/admin/media` — Загрузить медиафайл
--   `PUT /api/admin/media/{id}` — Обновить метаданные
--   `DELETE /api/admin/media/{id}` — Удалить медиафайл
--   `GET /api/admin/media` — Список медиа
+### Logout
 
-#### Terms
+-   `POST` `/api/v1/auth/logout` — _(unnamed)_
 
--   `POST /api/admin/terms` — Создать термин
--   `PUT /api/admin/terms/{id}` — Обновить термин
--   `DELETE /api/admin/terms/{id}` — Удалить термин
+### Refresh
 
-#### Post Types
-
--   `POST /api/admin/post-types` — Создать Post Type
--   `PUT /api/admin/post-types/{id}` — Обновить Post Type
-
-#### Options
-
--   `PUT /api/admin/options/{key}` — Обновить настройку
-
----
-
-### Auth (`/api/auth/*`)
-
--   `POST /api/auth/login` — Вход (получить JWT)
--   `POST /api/auth/refresh` — Обновить токен
--   `POST /api/auth/logout` — Выход
--   `GET /api/auth/me` — Информация о текущем пользователе
-
----
-
-## Authentication
-
-### JWT Bearer Token
-
-```http
-Authorization: Bearer <your-jwt-token>
-```
-
-### Получение токена
-
-```bash
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "admin@example.com",
-  "password": "password"
-}
-```
-
-**Response**:
-
-```json
-{
-    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-    "token_type": "bearer",
-    "expires_in": 3600,
-    "refresh_token": "def502..."
-}
-```
-
-### Обновление токена
-
-```bash
-POST /api/auth/refresh
-Cookie: refresh_token=def502...
-```
-
-Подробнее: [Security](../40-architecture/security.md)
-
----
-
-## Response Format
-
-### Success (200/201)
-
-```json
-{
-  "data": {
-    "id": 1,
-    "title": "Entry Title",
-    ...
-  }
-}
-```
-
-Для коллекций:
-
-```json
-{
-  "data": [
-    {"id": 1, ...},
-    {"id": 2, ...}
-  ],
-  "links": {
-    "first": "...",
-    "last": "...",
-    "prev": null,
-    "next": "..."
-  },
-  "meta": {
-    "current_page": 1,
-    "total": 100,
-    "per_page": 20
-  }
-}
-```
-
-### Error (4xx/5xx)
-
-RFC7807 Problem Details:
-
-```json
-{
-    "type": "https://api.stupidcms.local/errors/validation",
-    "title": "Validation Error",
-    "status": 422,
-    "detail": "The given data was invalid.",
-    "errors": {
-        "title": ["The title field is required."]
-    }
-}
-```
-
-Подробнее: [Errors Reference](errors.md)
-
----
-
-## Rate Limiting
-
--   **Public API**: 60 запросов/минуту
--   **Admin API**: 120 запросов/минуту (для авторизованных)
-
-При превышении: `429 Too Many Requests` с заголовком `Retry-After`.
-
----
-
-## Pagination
-
-Все list endpoints поддерживают пагинацию:
-
-```
-GET /api/entries?page=2&per_page=20
-```
-
-**Query параметры**:
-
--   `page` — номер страницы (default: 1)
--   `per_page` — результатов на страницу (default: 20, max: 100)
-
----
-
-## Filtering & Sorting
-
-### Фильтрация
-
-```
-GET /api/entries?post_type=article&term_id=5
-```
-
-### Сортировка
-
-```
-GET /api/entries?sort=-published_at
-```
-
--   Префикс `-` для DESC
--   Без префикса — ASC
-
----
-
-## CORS
-
-Настройки CORS в `config/cors.php`.
-
-Для локальной разработки:
-
-```env
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
-```
-
-Подробнее: [CORS & Cookies](../20-how-to/cors.md)
-
----
-
-## Testing API
-
-### cURL
-
-```bash
-curl -X GET https://api.stupidcms.local/api/entries \
-  -H "Accept: application/json"
-```
-
-### HTTPie
-
-```bash
-http GET https://api.stupidcms.local/api/entries \
-  Accept:application/json
-```
-
----
-
-## Linked Pages
-
--   [Errors Reference](errors.md) — коды ошибок
--   [Permissions](permissions.md) — права доступа
--   [How-to: CORS](../20-how-to/cors.md) — настройка CORS
--   [Security](../40-architecture/security.md) — аутентификация
-
----
-
-> 💡 **Актуальность**: API документация генерируется из кода. При изменении endpoints обновите через `composer docs:gen`.
+-   `POST` `/api/v1/auth/refresh` — `api.auth.refresh`

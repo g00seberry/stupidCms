@@ -38,7 +38,8 @@ class Entry extends Model
 
     public function terms()
     {
-        return $this->belongsToMany(Term::class, 'entry_term', 'entry_id', 'term_id');
+        return $this->belongsToMany(Term::class, 'entry_term', 'entry_id', 'term_id')
+            ->withTimestamps();
     }
 
     public function media()

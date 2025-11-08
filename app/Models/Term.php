@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use Database\Factories\TermFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 
 class Term extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     protected $guarded = [];
-    protected $casts = ['meta_json' => 'array'];
+
+    protected $casts = [
+        'meta_json' => 'array',
+    ];
 
     public function taxonomy()
     {
@@ -20,7 +26,8 @@ class Term extends Model
 
     public function entries()
     {
-        return $this->belongsToMany(Entry::class, 'entry_term', 'term_id', 'entry_id');
+        return $this->belongsToMany(Entry::class, 'entry_term', 'term_id', 'entry_id')
+            ->withTimestamps();
     }
 
     // Closure-table: предки/потомки
@@ -38,7 +45,12 @@ class Term extends Model
 
     public function scopeInTaxonomy(Builder $q, string $taxonomySlug): Builder
     {
-        return $q->whereHas('taxonomy', fn($qq) => $qq->where('slug', $taxonomySlug));
+        return $q->whereHas('taxonomy', fn ($qq) => $qq->where('slug', $taxonomySlug));
+    }
+
+    protected static function newFactory(): TermFactory
+    {
+        return TermFactory::new();
     }
 }
 

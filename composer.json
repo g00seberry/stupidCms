@@ -63,7 +63,8 @@
             "@php artisan docs:config",
             "@php artisan docs:erd",
             "@php artisan docs:search",
-            "@php artisan docs:media"
+            "@php artisan docs:media",
+            "@php artisan docs:api"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

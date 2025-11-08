@@ -3,7 +3,10 @@
 use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
+use App\Http\Controllers\Admin\V1\EntryTermsController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
+use App\Http\Controllers\Admin\V1\TaxonomyController;
+use App\Http\Controllers\Admin\V1\TermController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
 use App\Models\ReservedRoute;
@@ -60,5 +63,40 @@ Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
         ->name('admin.v1.entries.destroy');
     Route::post('/entries/{id}/restore', [EntryController::class, 'restore'])
         ->name('admin.v1.entries.restore');
+
+    Route::middleware('can:manage.taxonomies')->group(function () {
+        Route::get('/taxonomies', [TaxonomyController::class, 'index'])
+            ->name('admin.v1.taxonomies.index');
+        Route::post('/taxonomies', [TaxonomyController::class, 'store'])
+            ->name('admin.v1.taxonomies.store');
+        Route::get('/taxonomies/{slug}', [TaxonomyController::class, 'show'])
+            ->name('admin.v1.taxonomies.show');
+        Route::put('/taxonomies/{slug}', [TaxonomyController::class, 'update'])
+            ->name('admin.v1.taxonomies.update');
+        Route::delete('/taxonomies/{slug}', [TaxonomyController::class, 'destroy'])
+            ->name('admin.v1.taxonomies.destroy');
+    });
+
+    Route::middleware('can:manage.terms')->group(function () {
+        Route::get('/taxonomies/{taxonomy}/terms', [TermController::class, 'indexByTaxonomy'])
+            ->name('admin.v1.taxonomies.terms.index');
+        Route::post('/taxonomies/{taxonomy}/terms', [TermController::class, 'store'])
+            ->name('admin.v1.taxonomies.terms.store');
+        Route::get('/terms/{term}', [TermController::class, 'show'])
+            ->name('admin.v1.terms.show');
+        Route::put('/terms/{term}', [TermController::class, 'update'])
+            ->name('admin.v1.terms.update');
+        Route::delete('/terms/{term}', [TermController::class, 'destroy'])
+            ->name('admin.v1.terms.destroy');
+
+        Route::get('/entries/{entry}/terms', [EntryTermsController::class, 'index'])
+            ->name('admin.v1.entries.terms.index');
+        Route::post('/entries/{entry}/terms/attach', [EntryTermsController::class, 'attach'])
+            ->name('admin.v1.entries.terms.attach');
+        Route::post('/entries/{entry}/terms/detach', [EntryTermsController::class, 'detach'])
+            ->name('admin.v1.entries.terms.detach');
+        Route::put('/entries/{entry}/terms/sync', [EntryTermsController::class, 'sync'])
+            ->name('admin.v1.entries.terms.sync');
+    });
 });
 

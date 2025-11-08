@@ -1,0 +1,283 @@
+<?php
+
+namespace App\Http\Controllers\Admin\V1;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\Problems;
+use App\Http\Requests\Admin\IndexTaxonomiesRequest;
+use App\Http\Requests\Admin\StoreTaxonomyRequest;
+use App\Http\Requests\Admin\UpdateTaxonomyRequest;
+use App\Http\Resources\Admin\TaxonomyResource;
+use App\Models\Taxonomy;
+use App\Models\Term;
+use App\Support\Slug\Slugifier;
+use App\Support\Slug\UniqueSlugService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
+class TaxonomyController extends Controller
+{
+    use Problems;
+
+    public function __construct(
+        private readonly Slugifier $slugifier,
+        private readonly UniqueSlugService $uniqueSlugService
+    ) {
+    }
+
+    public function index(IndexTaxonomiesRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $query = Taxonomy::query();
+
+        if (! empty($validated['q'])) {
+            $search = $validated['q'];
+            $query->where(function ($q) use ($search) {
+                $like = '%' . $search . '%';
+                $q->where('slug', 'like', $like)
+                    ->orWhere('name', 'like', $like);
+            });
+        }
+
+        [$sortColumn, $sortDirection] = $this->resolveSort($validated['sort'] ?? 'created_at.desc');
+        $query->orderBy($sortColumn, $sortDirection);
+
+        $perPage = $validated['per_page'] ?? 15;
+        $perPage = max(10, min(100, $perPage));
+
+        $collection = TaxonomyResource::collection($query->paginate($perPage));
+
+        $response = $collection->response();
+        $response->headers->set('Cache-Control', 'no-store, private');
+        $response->headers->set('Vary', 'Cookie');
+
+        return $response;
+    }
+
+    public function store(StoreTaxonomyRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $label = trim((string) $validated['label']);
+        $hierarchical = (bool) ($validated['hierarchical'] ?? false);
+        $slugInput = $validated['slug'] ?? null;
+
+        $slug = $slugInput !== null && $slugInput !== ''
+            ? $this->sanitizeSlug($slugInput)
+            : $this->generateUniqueSlug($label);
+
+        $data = [
+            'slug' => $this->ensureUniqueSlug($slug),
+            'label' => $label,
+            'hierarchical' => $hierarchical,
+        ];
+
+        if (array_key_exists('options_json', $validated)) {
+            $data['options_json'] = $validated['options_json'];
+        }
+
+        /** @var Taxonomy $taxonomy */
+        $taxonomy = DB::transaction(function () use ($data) {
+            return Taxonomy::query()->create($data);
+        });
+
+        Log::info('Admin taxonomy created', [
+            'taxonomy_id' => $taxonomy->id,
+            'slug' => $taxonomy->slug,
+        ]);
+
+        $resource = new TaxonomyResource($taxonomy->fresh());
+        $response = $resource->response()->setStatusCode(201);
+        $response->headers->set('Cache-Control', 'no-store, private');
+        $response->headers->set('Vary', 'Cookie');
+
+        return $response;
+    }
+
+    public function show(string $slug): JsonResponse
+    {
+        $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
+
+        if (! $taxonomy) {
+            return $this->notFoundTaxonomy($slug);
+        }
+
+        $resource = new TaxonomyResource($taxonomy);
+        $response = $resource->toResponse(request());
+        $response->headers->set('Cache-Control', 'no-store, private');
+        $response->headers->set('Vary', 'Cookie');
+
+        return $response;
+    }
+
+    public function update(UpdateTaxonomyRequest $request, string $slug): JsonResponse
+    {
+        $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
+
+        if (! $taxonomy) {
+            return $this->notFoundTaxonomy($slug);
+        }
+
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($taxonomy, $validated) {
+            if (array_key_exists('label', $validated)) {
+                $taxonomy->label = trim((string) $validated['label']);
+            }
+
+            if (array_key_exists('hierarchical', $validated)) {
+                $taxonomy->hierarchical = (bool) $validated['hierarchical'];
+            }
+
+            if (array_key_exists('options_json', $validated)) {
+                $taxonomy->options_json = $validated['options_json'];
+            }
+
+            if (array_key_exists('slug', $validated)) {
+                $slugValue = $validated['slug'];
+                if ($slugValue === null || $slugValue === '') {
+                    $baseLabel = $validated['label'] ?? $taxonomy->label ?? 'taxonomy';
+                    $candidate = $this->slugifier->slugify($baseLabel);
+                    $slugToSet = $this->ensureUniqueSlug(
+                        $candidate !== '' ? $candidate : 'taxonomy',
+                        $taxonomy->id
+                    );
+                } else {
+                    $candidate = $this->sanitizeSlug($slugValue);
+                    $slugToSet = $this->ensureUniqueSlug($candidate, $taxonomy->id);
+                }
+
+                $taxonomy->slug = $slugToSet;
+            }
+
+            $taxonomy->save();
+        });
+
+        Log::info('Admin taxonomy updated', [
+            'taxonomy_id' => $taxonomy->id,
+            'slug' => $taxonomy->slug,
+        ]);
+
+        $resource = new TaxonomyResource($taxonomy->fresh());
+        $response = $resource->toResponse(request());
+        $response->headers->set('Cache-Control', 'no-store, private');
+        $response->headers->set('Vary', 'Cookie');
+
+        return $response;
+    }
+
+    public function destroy(Request $request, string $slug): JsonResponse
+    {
+        $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
+
+        if (! $taxonomy) {
+            return $this->notFoundTaxonomy($slug);
+        }
+
+        $force = $request->boolean('force');
+
+        $termsCount = $taxonomy->terms()->count();
+        if ($termsCount > 0 && ! $force) {
+            return $this->problem(
+                status: 409,
+                title: 'Taxonomy has terms',
+                detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
+                ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
+                headers: [
+                    'Cache-Control' => 'no-store, private',
+                    'Vary' => 'Cookie',
+                ]
+            );
+        }
+
+        DB::transaction(function () use ($taxonomy, $force) {
+            if ($force) {
+                $taxonomy->terms()->withTrashed()->get()->each(function (Term $term): void {
+                    $term->entries()->detach();
+                    $term->forceDelete();
+                });
+            }
+
+            $taxonomy->delete();
+        });
+
+        Log::info('Admin taxonomy deleted', [
+            'taxonomy_id' => $taxonomy->id,
+            'force' => $force,
+        ]);
+
+        return response()->json(null, 204)
+            ->header('Cache-Control', 'no-store, private')
+            ->header('Vary', 'Cookie');
+    }
+
+    private function resolveSort(string $sort): array
+    {
+        [$field, $direction] = array_pad(explode('.', $sort), 2, 'desc');
+        $fieldMap = [
+            'created_at' => 'created_at',
+            'slug' => 'slug',
+            'label' => 'name',
+        ];
+
+        $column = $fieldMap[$field] ?? 'created_at';
+        $dir = strtolower($direction) === 'asc' ? 'asc' : 'desc';
+
+        return [$column, $dir];
+    }
+
+    private function sanitizeSlug(string $value): string
+    {
+        $slug = $this->slugifier->slugify($value);
+
+        if ($slug === '') {
+            $slug = Str::slug($value, '-');
+        }
+
+        return $slug !== '' ? $slug : 'taxonomy';
+    }
+
+    private function generateUniqueSlug(string $label): string
+    {
+        $base = $this->slugifier->slugify($label);
+        if ($base === '') {
+            $base = 'taxonomy';
+        }
+
+        return $this->ensureUniqueSlug($base);
+    }
+
+    private function ensureUniqueSlug(string $base, ?int $ignoreId = null): string
+    {
+        $base = $base !== '' ? $base : 'taxonomy';
+
+        return $this->uniqueSlugService->ensureUnique($base, function (string $candidate) use ($ignoreId) {
+            $query = Taxonomy::query()->where('slug', $candidate);
+            if ($ignoreId) {
+                $query->where('id', '!=', $ignoreId);
+            }
+
+            return $query->exists();
+        });
+    }
+
+    private function notFoundTaxonomy(string $slug): JsonResponse
+    {
+        return $this->problem(
+            status: 404,
+            title: 'Taxonomy not found',
+            detail: "Taxonomy with slug {$slug} does not exist.",
+            ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+            headers: [
+                'Cache-Control' => 'no-store, private',
+                'Vary' => 'Cookie',
+            ]
+        );
+    }
+}
+
+

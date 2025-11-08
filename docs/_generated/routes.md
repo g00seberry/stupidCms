@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-08 09:12:41_
+_Last generated: 2025-11-08 10:19:15_
 
 ## Web
 
@@ -35,4 +35,18 @@ _Last generated: 2025-11-08 09:12:41_
 | PUT | `api/v1/admin/entries/{id}` | admin.v1.entries.update | `EntryController@update` | api, admin.auth, throttle:api |
 | DELETE | `api/v1/admin/entries/{id}` | admin.v1.entries.destroy | `EntryController@destroy` | api, admin.auth, throttle:api |
 | POST | `api/v1/admin/entries/{id}/restore` | admin.v1.entries.restore | `EntryController@restore` | api, admin.auth, throttle:api |
+| GET|HEAD | `api/v1/admin/taxonomies` | admin.v1.taxonomies.index | `TaxonomyController@index` | api, admin.auth, throttle:api, can:manage.taxonomies |
+| POST | `api/v1/admin/taxonomies` | admin.v1.taxonomies.store | `TaxonomyController@store` | api, admin.auth, throttle:api, can:manage.taxonomies |
+| GET|HEAD | `api/v1/admin/taxonomies/{slug}` | admin.v1.taxonomies.show | `TaxonomyController@show` | api, admin.auth, throttle:api, can:manage.taxonomies |
+| PUT | `api/v1/admin/taxonomies/{slug}` | admin.v1.taxonomies.update | `TaxonomyController@update` | api, admin.auth, throttle:api, can:manage.taxonomies |
+| DELETE | `api/v1/admin/taxonomies/{slug}` | admin.v1.taxonomies.destroy | `TaxonomyController@destroy` | api, admin.auth, throttle:api, can:manage.taxonomies |
+| GET|HEAD | `api/v1/admin/taxonomies/{taxonomy}/terms` | admin.v1.taxonomies.terms.index | `TermController@indexByTaxonomy` | api, admin.auth, throttle:api, can:manage.terms |
+| POST | `api/v1/admin/taxonomies/{taxonomy}/terms` | admin.v1.taxonomies.terms.store | `TermController@store` | api, admin.auth, throttle:api, can:manage.terms |
+| GET|HEAD | `api/v1/admin/terms/{term}` | admin.v1.terms.show | `TermController@show` | api, admin.auth, throttle:api, can:manage.terms |
+| PUT | `api/v1/admin/terms/{term}` | admin.v1.terms.update | `TermController@update` | api, admin.auth, throttle:api, can:manage.terms |
+| DELETE | `api/v1/admin/terms/{term}` | admin.v1.terms.destroy | `TermController@destroy` | api, admin.auth, throttle:api, can:manage.terms |
+| GET|HEAD | `api/v1/admin/entries/{entry}/terms` | admin.v1.entries.terms.index | `EntryTermsController@index` | api, admin.auth, throttle:api, can:manage.terms |
+| POST | `api/v1/admin/entries/{entry}/terms/attach` | admin.v1.entries.terms.attach | `EntryTermsController@attach` | api, admin.auth, throttle:api, can:manage.terms |
+| POST | `api/v1/admin/entries/{entry}/terms/detach` | admin.v1.entries.terms.detach | `EntryTermsController@detach` | api, admin.auth, throttle:api, can:manage.terms |
+| PUT | `api/v1/admin/entries/{entry}/terms/sync` | admin.v1.entries.terms.sync | `EntryTermsController@sync` | api, admin.auth, throttle:api, can:manage.terms |
 

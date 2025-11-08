@@ -127,6 +127,104 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/taxonomies",
+        "name": "admin.v1.taxonomies.index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@index",
+        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/taxonomies",
+        "name": "admin.v1.taxonomies.store",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@store",
+        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/taxonomies/{slug}",
+        "name": "admin.v1.taxonomies.show",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@show",
+        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/taxonomies/{slug}",
+        "name": "admin.v1.taxonomies.update",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@update",
+        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+    },
+    {
+        "method": "DELETE",
+        "uri": "api/v1/admin/taxonomies/{slug}",
+        "name": "admin.v1.taxonomies.destroy",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@destroy",
+        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/taxonomies/{taxonomy}/terms",
+        "name": "admin.v1.taxonomies.terms.index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@indexByTaxonomy",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/taxonomies/{taxonomy}/terms",
+        "name": "admin.v1.taxonomies.terms.store",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@store",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/terms/{term}",
+        "name": "admin.v1.terms.show",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@show",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/terms/{term}",
+        "name": "admin.v1.terms.update",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@update",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "DELETE",
+        "uri": "api/v1/admin/terms/{term}",
+        "name": "admin.v1.terms.destroy",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@destroy",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/entries/{entry}/terms",
+        "name": "admin.v1.entries.terms.index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@index",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/entries/{entry}/terms/attach",
+        "name": "admin.v1.entries.terms.attach",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@attach",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/entries/{entry}/terms/detach",
+        "name": "admin.v1.entries.terms.detach",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@detach",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/entries/{entry}/terms/sync",
+        "name": "admin.v1.entries.terms.sync",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@sync",
+        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "{slug}",
         "name": "page.show",
         "action": "App\\Http\\Controllers\\PageController@show",

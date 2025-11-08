@@ -59,6 +59,8 @@ erDiagram
     entry_term {
         bigint entry_id
         bigint term_id
+        timestamp created_at
+        timestamp updated_at
     }
 
     failed_jobs {
@@ -218,6 +220,7 @@ erDiagram
         varchar slug
         varchar name
         tinyint hierarchical
+        json options_json
         timestamp created_at
         timestamp updated_at
     }
@@ -247,6 +250,7 @@ erDiagram
         timestamp email_verified_at
         varchar password
         tinyint is_admin
+        json admin_permissions
         varchar remember_token
         timestamp created_at
         timestamp updated_at
