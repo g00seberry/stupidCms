@@ -1,25 +1,33 @@
 ---
-description: "Как искать и применять знания из локальной документации"
+description: 'Как искать и применять знания из локальной документации'
 globs:
-  - "docs/**/*.md"
-  - "docs/**/*.yml"
-  - "docs/**/*.yaml"
-  - "docs/**/*.json"
-  - "src/**/*"
+  - 'docs/src/content/docs/**/*.md'
+  - 'docs/**/*.yml'
+  - 'docs/**/*.yaml'
+  - 'docs/**/*.json'
+  - 'src/**/*'
 ---
 
 # Протокол поиска
-1) Определи сущности задачи: модуль, компонент, эндпоинт, событие.
-2) Сформируй *slug* модуля: `lowercase`, дефисы, без спецсимволов. Ищи в `docs/10-modules/<slug>.md`.
-3) Нет карточки — проверь `docs/refs/*.md` (справочник API) и исходники в `src/`.
-4) Для компонентов — `docs/30-components/*.md`. Для HTTP/событий — `docs/20-apis/*`.
-5) Если документация и код расходятся — см. правило `15-code-alignment.mdc`.
+
+1. Определи сущности задачи: модуль, компонент, эндпоинт, событие.
+2. Сформируй slug модуля: `lowercase`, дефисы, без спецсимволов. Ищи карточку в `docs/src/content/docs/10-modules/<slug>.md`.
+3. Нет карточки — смотри `docs/src/content/docs/refs/<slug>.md` (справочник API) и исходники в `src/`.
+4. Для компонентов используй `docs/src/content/docs/30-components/*.md` и выгрузку `tmp/react.json` (react-docgen).
+5. Для HTTP/событий обрати внимание на `docs/src/content/docs/20-apis/*` (если спецификации присутствуют).
+6. Навигацию смотри в `docs/_sidebar.yml` — файл обновляется автоматически скриптом `docgen`.
+7. Если документация и код расходятся — следуй правилу `15-code-alignment.mdc`.
 
 # Извлечение фактов (LLM-friendly)
-- Используй заголовки строго: **Summary**, **Inputs**, **Outputs**, **Entrypoints**, **Errors**.
-- Типы/сигнатуры — из `docs/refs/`; примеры — из карточек модулей.
-- Для путей указывай точные импорты/экспорты.
+
+- Заголовки карточек модулей стандартизированы: **Summary**, **Inputs**, **Outputs**, **Side effects**, **Dependencies**, **Entrypoints**, **Errors**, **Examples**.
+- Типы/сигнатуры подтягивай из `docs/src/content/docs/refs/`.
+- Примеры и описание поведения — из карточек модулей (`10-modules/`).
+- Пути и импорты сверяй с реальными файлами `src/`.
+- Отмечай отсутствие `summary`: doc coverage должен быть ≥ 80%, иначе требуется обновление кода.
 
 # Примеры
-- Модуль `UserService` → slug `user-service` → `docs/10-modules/user-service.md`.
-- Экспорт `getUserById` → ищем сигнатуру в `docs/refs/user-service.md`.
+
+- Модуль `ExampleStore` → slug `examplestore` → `docs/src/content/docs/10-modules/examplestore.md`.
+- Экспорт `ExampleStore` → сигнатура в `docs/src/content/docs/refs/examplestore.md`.
+- React-компонент `Layout` → пропсы в `docs/src/content/docs/30-components/layout.md` (если присутствует) + исходник `src/components/Layout.tsx`.

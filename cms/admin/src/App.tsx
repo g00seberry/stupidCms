@@ -1,8 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
-import Layout from '@/components/Layout';
-import Home from '@/pages/Home';
+import { Layout } from '@/components/Layout';
+import { Home } from '@/pages/Home';
 
-function App() {
+/**
+ * Корневой компонент admin-приложения, отвечающий за маршрутизацию и базовый Layout.
+ */
+export function App() {
   return (
     <Layout>
       <Routes>

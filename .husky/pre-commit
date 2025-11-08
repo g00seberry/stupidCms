@@ -1,0 +1,7 @@
+set -e
+
+cd "$(dirname "$0")/../cms/admin"
+
+npm run docs:gen
+npm run docs:check
+npm run lint-staged

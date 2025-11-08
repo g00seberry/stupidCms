@@ -1,7 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { exampleStore } from '@/stores/exampleStore';
 
-const Home = observer(() => {
+/**
+ * Главная страница панели управления с демонстрацией MobX-состояния.
+ */
+export const Home = observer(() => {
   return (
     <div>
       <h2 className="text-3xl font-bold mb-4">Welcome to CMS Admin</h2>

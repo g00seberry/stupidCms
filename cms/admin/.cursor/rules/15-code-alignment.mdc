@@ -15,7 +15,7 @@ globs:
 - Что нужно обновить в доке (карточка/refs/спецификация).
 
 # Пример формулировки
-> Документация `docs/10-modules/user-service.md#Outputs` утверждает, что поле `role` строка. В коде (`src/user/getUser.ts#L42`) возвращается `roleId: number`. Следую коду. Требуется обновление docs.
+> Документация `docs/src/content/docs/10-modules/example.md#Outputs` утверждает, что поле `role` строка. В коде (`src/domain/user/getUser.ts`, метод `mapRole`) возвращается `roleId: number`. Следую коду. Требуется обновление docs.
 
 # Sources
 - Приводи **оба** источника: файл доки и файл кода.

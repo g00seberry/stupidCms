@@ -1,10 +1,16 @@
 import type { ReactNode } from 'react';
 
-interface LayoutProps {
+/**
+ * Свойства каркасного компонента Layout.
+ */
+export interface LayoutProps {
   children: ReactNode;
 }
 
-function Layout({ children }: LayoutProps) {
+/**
+ * Базовый Layout admin-панели с заголовком и основной областью контента.
+ */
+export function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
