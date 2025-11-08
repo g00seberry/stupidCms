@@ -173,27 +173,27 @@
     **Детали:** эндпоинт выдаёт `cms_csrf`; проверка `X-CSRF-Token` на защищённых путях.  
     **Критерии приёмки:** POST без токена → 419/403; с токеном → 200.
 
-41. **Админ middleware `admin.auth`**  - ok
+41. **Админ middleware `admin.auth`** - ok
     **Детали:** извлечение access из cookie; отказ при невалидном.  
     **Критерии приёмки:** `/api/v1/admin/*` закрыт без логина.
 
-42. **Вариации CORS/headers**  - later
+42. **Вариации CORS/headers** - later
     **Детали:** настроить CORS (если другой origin); `Vary: Cookie` на фронте.  
     **Критерии приёмки:** preflight успешен; toolbar не кэшируется.
 
-43. **REST каркас `/api/v1`**  - later
+43. **REST каркас `/api/v1`** - later
     **Детали:** префикс версионирования; формат ошибок RFC7807; базовый контроллер.  
     **Критерии приёмки:** 404/422 возвращают JSON с типом/деталями.
 
-44. **ETag/Last-Modified middleware**  - later
+44. **ETag/Last-Modified middleware** - later
     **Детали:** генерировать `ETag` по хэшу ответа; поддержать 304.  
     **Критерии приёмки:** повторный GET → 304 без тела.
 
-45. **Response Cache с тэгами**  - later
+45. **Response Cache с тэгами** - later
     **Детали:** интеграция spatie/responsecache; теги по entry/postType/term; skip при auth cookie.  
     **Критерии приёмки:** кэш сбрасывается при изменении данных; авторизованный не кэшируется.
 
-46. **Admin API: PostTypes (read/update)**  
+46. **Admin API: PostTypes (read/update)** - ok
     **Детали:** эндпоинты чтения/обновления `options_json`; без delete/create для `page`.  
     **Критерии приёмки:** `GET/PUT /api/v1/admin/post-types/page` работают.
 
