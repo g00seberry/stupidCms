@@ -11,35 +11,6 @@ class UpdatePostTypeTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Helper method to make PUT request as admin.
-     */
-    private function putJsonAsAdmin(string $uri, array $data, User $user): \Illuminate\Testing\TestResponse
-    {
-        // Generate JWT token for the admin user
-        $jwtService = app(\App\Domain\Auth\JwtService::class);
-        $accessToken = $jwtService->issueAccessToken($user->id, ['scp' => ['admin'], 'aud' => 'admin']);
-        
-        // Generate CSRF token
-        $csrfToken = \Illuminate\Support\Str::random(40);
-        $csrfCookieName = config('security.csrf.cookie_name');
-        
-        $cookies = [
-            config('jwt.cookies.access') => $accessToken,
-            $csrfCookieName => $csrfToken,
-        ];
-        
-        $headers = [
-            'X-CSRF-Token' => $csrfToken,
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
-
-        $server = $this->transformHeadersToServerVars($headers);
-
-        return $this->call('PUT', $uri, $data, $cookies, [], $server, json_encode($data));
-    }
-
     public function test_update_post_type_returns_200_and_updates_options(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);

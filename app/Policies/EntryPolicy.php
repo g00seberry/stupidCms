@@ -13,7 +13,7 @@ class EntryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -21,7 +21,7 @@ class EntryPolicy
      */
     public function view(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -29,7 +29,7 @@ class EntryPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -37,7 +37,7 @@ class EntryPolicy
      */
     public function update(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -45,7 +45,7 @@ class EntryPolicy
      */
     public function delete(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -53,7 +53,7 @@ class EntryPolicy
      */
     public function restore(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -61,7 +61,7 @@ class EntryPolicy
      */
     public function forceDelete(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     // Кастомные abilities
@@ -70,7 +70,7 @@ class EntryPolicy
      */
     public function publish(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -78,7 +78,7 @@ class EntryPolicy
      */
     public function attachMedia(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 
     /**
@@ -86,6 +86,6 @@ class EntryPolicy
      */
     public function manageTerms(User $user, Entry $entry): bool
     {
-        return false;
+        return $user->hasAdminPermission('manage.entries');
     }
 }

@@ -132,6 +132,26 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Make a PUT JSON request as an admin with proper JWT and CSRF tokens.
+     *
+     * @param string $uri
+     * @param array $data
+     * @param \App\Models\User $user
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function putJsonAsAdmin(string $uri, array $data, \App\Models\User $user): \Illuminate\Testing\TestResponse
+    {
+        [$cookies, $headers] = $this->getAdminAuthContext($user);
+        
+        $server = $this->transformHeadersToServerVars(array_merge($headers, [
+            'CONTENT_TYPE' => 'application/json',
+            'Accept' => 'application/json',
+        ]));
+
+        return $this->call('PUT', $uri, $data, $cookies, [], $server, json_encode($data));
+    }
+
+    /**
      * Make a DELETE JSON request as an admin with proper JWT and CSRF tokens.
      *
      * @param string $uri

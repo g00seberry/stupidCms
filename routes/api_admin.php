@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\PathReservationController;
 use App\Http\Controllers\Admin\UtilsController;
+use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
+use App\Models\Entry;
 use App\Models\ReservedRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -42,5 +44,21 @@ Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
     Route::put('/post-types/{slug}', [PostTypeController::class, 'update'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.update');
+    
+    // Entries (full CRUD + soft-delete/restore)
+    Route::get('/entries', [EntryController::class, 'index'])
+        ->middleware('can:viewAny,' . Entry::class)
+        ->name('admin.v1.entries.index');
+    Route::post('/entries', [EntryController::class, 'store'])
+        ->middleware('can:create,' . Entry::class)
+        ->name('admin.v1.entries.store');
+    Route::get('/entries/{id}', [EntryController::class, 'show'])
+        ->name('admin.v1.entries.show');
+    Route::put('/entries/{id}', [EntryController::class, 'update'])
+        ->name('admin.v1.entries.update');
+    Route::delete('/entries/{id}', [EntryController::class, 'destroy'])
+        ->name('admin.v1.entries.destroy');
+    Route::post('/entries/{id}/restore', [EntryController::class, 'restore'])
+        ->name('admin.v1.entries.restore');
 });
 

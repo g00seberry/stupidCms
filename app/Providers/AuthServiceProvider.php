@@ -45,5 +45,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage.posttypes', static function (User $user): bool {
             return $user->hasAdminPermission('manage.posttypes');
         });
+
+        Gate::define('manage.entries', static function (User $user): bool {
+            return $user->hasAdminPermission('manage.entries');
+        });
     }
 }

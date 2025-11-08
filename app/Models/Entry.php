@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\EntryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,7 +11,7 @@ use Illuminate\Support\Carbon;
 
 class Entry extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
     protected $casts = [
@@ -65,6 +67,14 @@ class Entry extends Model
         $slug = $this->slug;
         $type = $this->relationLoaded('postType') ? $this->postType->slug : $this->postType()->value('slug');
         return $type === 'page' ? "/{$slug}" : sprintf('/%s/%s', $type, $slug);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): EntryFactory
+    {
+        return EntryFactory::new();
     }
 }
 
