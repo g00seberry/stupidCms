@@ -1,0 +1,20 @@
+---
+description: "Правила для React/компонентов: пропсы, события, примеры"
+globs:
+  - "src/**/*.tsx"
+  - "docs/30-components/**/*.md"
+---
+
+# Извлечение
+- Истина по пропсам/событиям — страницы в `docs/30-components/*.md` и выгрузка react-docgen.
+- Не придумывай пропсы. Если чего-то не хватает — отметь, какой файл нужен.
+
+# Пример (минимальный)
+```tsx
+import { UserCard } from "@/components/UserCard";
+
+export function Example() {
+  return <UserCard userId="123" onSelect={() => {}} />;
+}
+```
+- Импорты должны соответствовать реальным путям репозитория.

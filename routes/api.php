@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\CsrfController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RefreshController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -39,5 +40,9 @@ Route::prefix('v1')->group(function () {
     // CSRF token endpoint
     Route::get('/auth/csrf', [CsrfController::class, 'issue'])
         ->middleware('no-cache-auth');
+
+    Route::get('/search', [SearchController::class, 'index'])
+        ->middleware('throttle:search-public')
+        ->name('api.v1.search');
 });
 

@@ -2,30 +2,42 @@
     "entries": {
         "properties": {
             "id": {
-                "type": "long"
-            },
-            "title": {
-                "type": "text",
-                "analyzer": "russian"
-            },
-            "content": {
-                "type": "text",
-                "analyzer": "russian"
-            },
-            "slug": {
                 "type": "keyword"
             },
             "post_type": {
                 "type": "keyword"
             },
-            "terms": {
+            "slug": {
                 "type": "keyword"
+            },
+            "title": {
+                "type": "text",
+                "analyzer": "ru_en"
+            },
+            "excerpt": {
+                "type": "text",
+                "analyzer": "ru_en"
+            },
+            "body_plain": {
+                "type": "text",
+                "analyzer": "ru_en"
+            },
+            "terms": {
+                "type": "nested",
+                "properties": {
+                    "taxonomy": {
+                        "type": "keyword"
+                    },
+                    "slug": {
+                        "type": "keyword"
+                    }
+                }
             },
             "published_at": {
                 "type": "date"
             },
-            "status": {
-                "type": "keyword"
+            "boost": {
+                "type": "float"
             }
         }
     }

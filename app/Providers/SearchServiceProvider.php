@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use App\Domain\Search\Clients\ElasticsearchSearchClient;
+use App\Domain\Search\Clients\NullSearchClient;
+use App\Domain\Search\IndexManager;
+use App\Domain\Search\SearchClientInterface;
+use App\Domain\Search\SearchService;
+use App\Domain\Search\Transformers\EntryToSearchDoc;
+use Illuminate\Http\Client\Factory as HttpFactory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\ServiceProvider;
+
+final class SearchServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     */
+    public function register(): void
+    {
+        $this->app->singleton(SearchClientInterface::class, function ($app) {
+            $config = config('search');
+            $enabled = (bool) ($config['enabled'] ?? false);
+
+            if (! $enabled) {
+                return new NullSearchClient();
+            }
+
+            /** @var HttpFactory $http */
+            $http = $app->make(HttpFactory::class);
+
+            return new ElasticsearchSearchClient($http, $config['client'] ?? []);
+        });
+
+        $this->app->singleton(EntryToSearchDoc::class);
+
+        $this->app->singleton(IndexManager::class, function ($app) {
+            $config = config('search');
+
+            return new IndexManager(
+                client: $app->make(SearchClientInterface::class),
+                transformer: $app->make(EntryToSearchDoc::class),
+                enabled: (bool) ($config['enabled'] ?? false),
+                config: $config
+            );
+        });
+
+        $this->app->singleton(SearchService::class, function ($app) {
+            $config = config('search');
+            $indexConfig = Arr::get($config, 'indexes.entries', []);
+            $readAlias = (string) Arr::get($indexConfig, 'read_alias', 'entries_read');
+
+            return new SearchService(
+                client: $app->make(SearchClientInterface::class),
+                enabled: (bool) ($config['enabled'] ?? false),
+                readAlias: $readAlias
+            );
+        });
+    }
+}
+
+

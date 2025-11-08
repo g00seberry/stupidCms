@@ -201,26 +201,31 @@
             "env": null
         },
         "providers.26": {
-            "value": "App\\Providers\\RouteServiceProvider",
+            "value": "App\\Providers\\SearchServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.27": {
-            "value": "App\\Providers\\EntrySlugServiceProvider",
+            "value": "App\\Providers\\RouteServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.28": {
-            "value": "App\\Providers\\PathReservationServiceProvider",
+            "value": "App\\Providers\\EntrySlugServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.29": {
-            "value": "App\\Providers\\ReservedRoutesServiceProvider",
+            "value": "App\\Providers\\PathReservationServiceProvider",
             "type": "string",
             "env": null
         },
         "providers.30": {
+            "value": "App\\Providers\\ReservedRoutesServiceProvider",
+            "type": "string",
+            "env": null
+        },
+        "providers.31": {
             "value": "App\\Providers\\SlugServiceProvider",
             "type": "string",
             "env": null
@@ -2374,6 +2379,283 @@
         "failed.table": {
             "value": "failed_jobs",
             "type": "string",
+            "env": null
+        }
+    },
+    "search": {
+        "enabled": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "client.hosts.0": {
+            "value": "http:\/\/127.0.0.1:9200",
+            "type": "string",
+            "env": null
+        },
+        "client.username": {
+            "value": null,
+            "type": "NULL",
+            "env": null
+        },
+        "client.password": {
+            "value": null,
+            "type": "NULL",
+            "env": null
+        },
+        "client.verify_ssl": {
+            "value": true,
+            "type": "boolean",
+            "env": null
+        },
+        "client.timeout": {
+            "value": 2.5,
+            "type": "double",
+            "env": null
+        },
+        "indexes.entries.read_alias": {
+            "value": "entries_read",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.write_alias": {
+            "value": "entries_write",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.name_prefix": {
+            "value": "entries",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.number_of_shards": {
+            "value": 1,
+            "type": "integer",
+            "env": null
+        },
+        "indexes.entries.settings.number_of_replicas": {
+            "value": 0,
+            "type": "integer",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.filter.ru_stop.type": {
+            "value": "stop",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.filter.ru_stop.stopwords": {
+            "value": "_russian_",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.filter.ru_stemmer.type": {
+            "value": "stemmer",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.filter.ru_stemmer.language": {
+            "value": "russian",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.filter.en_stemmer.type": {
+            "value": "stemmer",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.filter.en_stemmer.language": {
+            "value": "english",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.analyzer.ru_en.type": {
+            "value": "custom",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.analyzer.ru_en.tokenizer": {
+            "value": "standard",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.analyzer.ru_en.filter.0": {
+            "value": "lowercase",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.analyzer.ru_en.filter.1": {
+            "value": "ru_stop",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.analyzer.ru_en.filter.2": {
+            "value": "ru_stemmer",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.settings.analysis.analyzer.ru_en.filter.3": {
+            "value": "en_stemmer",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.dynamic": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.id.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.post_type.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.slug.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.title.type": {
+            "value": "text",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.title.analyzer": {
+            "value": "ru_en",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.excerpt.type": {
+            "value": "text",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.excerpt.analyzer": {
+            "value": "ru_en",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.body_plain.type": {
+            "value": "text",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.body_plain.analyzer": {
+            "value": "ru_en",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.terms.type": {
+            "value": "nested",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.terms.properties.taxonomy.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.terms.properties.slug.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.published_at.type": {
+            "value": "date",
+            "type": "string",
+            "env": null
+        },
+        "indexes.entries.mappings.properties.boost.type": {
+            "value": "float",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.id.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.post_type.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.slug.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.title.type": {
+            "value": "text",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.title.analyzer": {
+            "value": "ru_en",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.excerpt.type": {
+            "value": "text",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.excerpt.analyzer": {
+            "value": "ru_en",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.body_plain.type": {
+            "value": "text",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.body_plain.analyzer": {
+            "value": "ru_en",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.terms.type": {
+            "value": "nested",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.terms.properties.taxonomy.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.terms.properties.slug.type": {
+            "value": "keyword",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.published_at.type": {
+            "value": "date",
+            "type": "string",
+            "env": null
+        },
+        "mappings.entries.properties.boost.type": {
+            "value": "float",
+            "type": "string",
+            "env": null
+        },
+        "batch.size": {
+            "value": 500,
+            "type": "integer",
+            "env": null
+        },
+        "pagination.per_page": {
+            "value": 20,
+            "type": "integer",
+            "env": null
+        },
+        "pagination.max_per_page": {
+            "value": 100,
+            "type": "integer",
             "env": null
         }
     },

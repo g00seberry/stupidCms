@@ -47,6 +47,15 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($key);
         });
 
+        RateLimiter::for('search-public', function (Request $request) {
+            return Limit::perMinute(120)->by($request->ip());
+        });
+
+        RateLimiter::for('search-reindex', function (Request $request) {
+            $identifier = $request->user()?->getAuthIdentifier();
+            return Limit::perMinute(5)->by($identifier ?: $request->ip());
+        });
+
         $this->routes(function () {
             // Порядок загрузки роутов (детерминированный):
             // 1) Core → 2) Public API → 3) Admin API → 4) Plugins → 5) Content → 6) Fallback

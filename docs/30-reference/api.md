@@ -12,7 +12,13 @@ related_code:
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-_Last generated: 2025-11-08 13:14:01 UTC_
+_Last generated: 2025-11-08 13:52:40 UTC_
+
+## Public API (`/api/*`)
+
+### Search
+
+- `GET` `/api/v1/search` — `api.v1.search`
 
 ## Admin API (`/api/v1/admin/*`)
 
@@ -65,6 +71,10 @@ _Last generated: 2025-11-08 13:14:01 UTC_
 - `GET` `/api/v1/admin/reservations` — _(unnamed)_
 - `POST` `/api/v1/admin/reservations` — _(unnamed)_
 - `DELETE` `/api/v1/admin/reservations/{path}` — _(unnamed)_
+
+### Search
+
+- `POST` `/api/v1/admin/search/reindex` — `admin.v1.search.reindex`
 
 ### Taxonomies
 

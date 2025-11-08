@@ -2,20 +2,21 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:search` to update.
 
-_Last generated: 2025-11-08 13:14:00_
+_Last generated: 2025-11-08 13:52:39_
 
 ## Index: `entries`
 
 | Field | Type | Analyzer | Description |
 |-------|------|----------|-------------|
-| `id` | long | - | Entry ID |
-| `title` | text | russian | Entry title (searchable) |
-| `content` | text | russian | Entry content (searchable) |
-| `slug` | keyword | - | Entry slug (exact match) |
+| `id` | keyword | - | Entry ID |
 | `post_type` | keyword | - | Post type slug (filter) |
-| `terms` | keyword | - | Associated term slugs (filter) |
+| `slug` | keyword | - | Entry slug (exact match) |
+| `title` | text | ru_en | Entry title (searchable) |
+| `excerpt` | text | ru_en |  |
+| `body_plain` | text | ru_en |  |
+| `terms` | nested | - | Associated term slugs (filter) |
 | `published_at` | date | - | Publication date (sort) |
-| `status` | keyword | - | Entry status (filter) |
+| `boost` | float | - |  |
 
 ## Index Settings
 

@@ -43,6 +43,13 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/search",
+        "name": "api.v1.search",
+        "action": "App\\Http\\Controllers\\SearchController@index",
+        "middleware": "api, throttle:search-public"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "api/v1/admin/utils/slugify",
         "name": null,
         "action": "App\\Http\\Controllers\\Admin\\UtilsController@slugify",
@@ -341,6 +348,13 @@
         "name": "admin.v1.options.restore",
         "action": "App\\Http\\Controllers\\Admin\\OptionsController@restore",
         "middleware": "api, admin.auth, throttle:api, can:options.restore, throttle:30,1"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/search/reindex",
+        "name": "admin.v1.search.reindex",
+        "action": "App\\Http\\Controllers\\Admin\\SearchAdminController@reindex",
+        "middleware": "api, admin.auth, throttle:api, can:search.reindex, throttle:search-reindex"
     },
     {
         "method": "GET|HEAD",

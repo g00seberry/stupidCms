@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         App\Console\Commands\RoutesReserveCommand::class,
         App\Console\Commands\UserMakeAdminCommand::class,
         App\Domain\Plugins\Commands\PluginsSyncCommand::class,
+        App\Domain\Search\Commands\SearchReindexCommand::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         // Encrypt cookies (except JWT tokens and CSRF token)
@@ -179,6 +180,20 @@ return Application::configure(basePath: dirname(__DIR__))
                     'status' => 500,
                     'detail' => 'Failed to refresh token due to server error.',
                 ], 500)->header('Content-Type', 'application/problem+json');
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                $detail = $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_SERVICE_UNAVAILABLE;
+
+                return response()->json(
+                    \App\Support\ProblemDetails::serviceUnavailable($detail),
+                    503
+                )
+                    ->header('Content-Type', 'application/problem+json')
+                    ->header('Cache-Control', 'no-store, private')
+                    ->header('Vary', 'Cookie');
             }
         });
     })->create();

@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-08 13:13:58_
+_Last generated: 2025-11-08 13:52:37_
 
 ## app
 
@@ -50,11 +50,12 @@ _Last generated: 2025-11-08 13:13:58_
 | `providers.23` | `App\Providers\AppServiceProvider` | string |
 | `providers.24` | `App\Providers\AuthServiceProvider` | string |
 | `providers.25` | `App\Providers\PluginsServiceProvider` | string |
-| `providers.26` | `App\Providers\RouteServiceProvider` | string |
-| `providers.27` | `App\Providers\EntrySlugServiceProvider` | string |
-| `providers.28` | `App\Providers\PathReservationServiceProvider` | string |
-| `providers.29` | `App\Providers\ReservedRoutesServiceProvider` | string |
-| `providers.30` | `App\Providers\SlugServiceProvider` | string |
+| `providers.26` | `App\Providers\SearchServiceProvider` | string |
+| `providers.27` | `App\Providers\RouteServiceProvider` | string |
+| `providers.28` | `App\Providers\EntrySlugServiceProvider` | string |
+| `providers.29` | `App\Providers\PathReservationServiceProvider` | string |
+| `providers.30` | `App\Providers\ReservedRoutesServiceProvider` | string |
+| `providers.31` | `App\Providers\SlugServiceProvider` | string |
 | `aliases.App` | `Illuminate\Support\Facades\App` | string |
 | `aliases.Arr` | `Illuminate\Support\Arr` | string |
 | `aliases.Artisan` | `Illuminate\Support\Facades\Artisan` | string |
@@ -571,6 +572,68 @@ _Last generated: 2025-11-08 13:13:58_
 | `failed.driver` | `database-uuids` | string |
 | `failed.database` | `mysql` | string |
 | `failed.table` | `failed_jobs` | string |
+
+## search
+
+**File**: `config/search.php`
+
+| Key | Value | Type |
+|-----|-------|------|
+| `enabled` | `false` | boolean |
+| `client.hosts.0` | `http://127.0.0.1:9200` | string |
+| `client.username` | _null_ | NULL |
+| `client.password` | _null_ | NULL |
+| `client.verify_ssl` | `true` | boolean |
+| `client.timeout` | `2.5` | double |
+| `indexes.entries.read_alias` | `entries_read` | string |
+| `indexes.entries.write_alias` | `entries_write` | string |
+| `indexes.entries.name_prefix` | `entries` | string |
+| `indexes.entries.settings.number_of_shards` | `1` | integer |
+| `indexes.entries.settings.number_of_replicas` | `0` | integer |
+| `indexes.entries.settings.analysis.filter.ru_stop.type` | `stop` | string |
+| `indexes.entries.settings.analysis.filter.ru_stop.stopwords` | `_russian_` | string |
+| `indexes.entries.settings.analysis.filter.ru_stemmer.type` | `stemmer` | string |
+| `indexes.entries.settings.analysis.filter.ru_stemmer.language` | `russian` | string |
+| `indexes.entries.settings.analysis.filter.en_stemmer.type` | `stemmer` | string |
+| `indexes.entries.settings.analysis.filter.en_stemmer.language` | `english` | string |
+| `indexes.entries.settings.analysis.analyzer.ru_en.type` | `custom` | string |
+| `indexes.entries.settings.analysis.analyzer.ru_en.tokenizer` | `standard` | string |
+| `indexes.entries.settings.analysis.analyzer.ru_en.filter.0` | `lowercase` | string |
+| `indexes.entries.settings.analysis.analyzer.ru_en.filter.1` | `ru_stop` | string |
+| `indexes.entries.settings.analysis.analyzer.ru_en.filter.2` | `ru_stemmer` | string |
+| `indexes.entries.settings.analysis.analyzer.ru_en.filter.3` | `en_stemmer` | string |
+| `indexes.entries.mappings.dynamic` | `false` | boolean |
+| `indexes.entries.mappings.properties.id.type` | `keyword` | string |
+| `indexes.entries.mappings.properties.post_type.type` | `keyword` | string |
+| `indexes.entries.mappings.properties.slug.type` | `keyword` | string |
+| `indexes.entries.mappings.properties.title.type` | `text` | string |
+| `indexes.entries.mappings.properties.title.analyzer` | `ru_en` | string |
+| `indexes.entries.mappings.properties.excerpt.type` | `text` | string |
+| `indexes.entries.mappings.properties.excerpt.analyzer` | `ru_en` | string |
+| `indexes.entries.mappings.properties.body_plain.type` | `text` | string |
+| `indexes.entries.mappings.properties.body_plain.analyzer` | `ru_en` | string |
+| `indexes.entries.mappings.properties.terms.type` | `nested` | string |
+| `indexes.entries.mappings.properties.terms.properties.taxonomy.type` | `keyword` | string |
+| `indexes.entries.mappings.properties.terms.properties.slug.type` | `keyword` | string |
+| `indexes.entries.mappings.properties.published_at.type` | `date` | string |
+| `indexes.entries.mappings.properties.boost.type` | `float` | string |
+| `mappings.entries.properties.id.type` | `keyword` | string |
+| `mappings.entries.properties.post_type.type` | `keyword` | string |
+| `mappings.entries.properties.slug.type` | `keyword` | string |
+| `mappings.entries.properties.title.type` | `text` | string |
+| `mappings.entries.properties.title.analyzer` | `ru_en` | string |
+| `mappings.entries.properties.excerpt.type` | `text` | string |
+| `mappings.entries.properties.excerpt.analyzer` | `ru_en` | string |
+| `mappings.entries.properties.body_plain.type` | `text` | string |
+| `mappings.entries.properties.body_plain.analyzer` | `ru_en` | string |
+| `mappings.entries.properties.terms.type` | `nested` | string |
+| `mappings.entries.properties.terms.properties.taxonomy.type` | `keyword` | string |
+| `mappings.entries.properties.terms.properties.slug.type` | `keyword` | string |
+| `mappings.entries.properties.published_at.type` | `date` | string |
+| `mappings.entries.properties.boost.type` | `float` | string |
+| `batch.size` | `500` | integer |
+| `pagination.per_page` | `20` | integer |
+| `pagination.max_per_page` | `100` | integer |
 
 ## security
 

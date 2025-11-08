@@ -107,5 +107,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('plugins.sync', static function (User $user): bool {
             return $user->hasAdminPermission('plugins.sync');
         });
+
+        Gate::define('search.reindex', static function (User $user): bool {
+            return $user->hasAdminPermission('search.reindex');
+        });
     }
 }

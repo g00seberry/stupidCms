@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-08 13:13:57_
+_Last generated: 2025-11-08 13:52:35_
 
 ## Web
 
@@ -23,6 +23,7 @@ _Last generated: 2025-11-08 13:13:57_
 | POST | `api/v1/auth/refresh` | api.auth.refresh | `RefreshController@refresh` | api, throttle:refresh, no-cache-auth |
 | POST | `api/v1/auth/logout` | - | `LogoutController@logout` | api, throttle:login, no-cache-auth |
 | GET|HEAD | `api/v1/auth/csrf` | - | `CsrfController@issue` | api, no-cache-auth |
+| GET|HEAD | `api/v1/search` | api.v1.search | `SearchController@index` | api, throttle:search-public |
 | GET|HEAD | `api/v1/admin/utils/slugify` | - | `UtilsController@slugify` | api, admin.auth, throttle:api |
 | GET|HEAD | `api/v1/admin/plugins` | admin.v1.plugins.index | `PluginsController@index` | api, admin.auth, throttle:api, can:plugins.read, throttle:60,1 |
 | POST | `api/v1/admin/plugins/sync` | admin.v1.plugins.sync | `PluginsController@sync` | api, admin.auth, throttle:api, can:plugins.sync, throttle:10,1 |
@@ -66,4 +67,5 @@ _Last generated: 2025-11-08 13:13:57_
 | PUT | `api/v1/admin/options/{namespace}/{key}` | admin.v1.options.upsert | `OptionsController@put` | api, admin.auth, throttle:api, can:options.write, throttle:30,1 |
 | DELETE | `api/v1/admin/options/{namespace}/{key}` | admin.v1.options.destroy | `OptionsController@destroy` | api, admin.auth, throttle:api, can:options.delete, throttle:30,1 |
 | POST | `api/v1/admin/options/{namespace}/{key}/restore` | admin.v1.options.restore | `OptionsController@restore` | api, admin.auth, throttle:api, can:options.restore, throttle:30,1 |
+| POST | `api/v1/admin/search/reindex` | admin.v1.search.reindex | `SearchAdminController@reindex` | api, admin.auth, throttle:api, can:search.reindex, throttle:search-reindex |
 

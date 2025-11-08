@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\OptionsController;
 use App\Http\Controllers\Admin\PluginsController;
 use App\Http\Controllers\Admin\PathReservationController;
+use App\Http\Controllers\Admin\SearchAdminController;
 use App\Http\Controllers\Admin\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
@@ -173,5 +174,9 @@ Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
             ->middleware(['can:options.restore', 'throttle:30,1'])
             ->name('admin.v1.options.restore');
     });
+
+    Route::post('/search/reindex', [SearchAdminController::class, 'reindex'])
+        ->middleware(['can:search.reindex', 'throttle:search-reindex'])
+        ->name('admin.v1.search.reindex');
 });
 
