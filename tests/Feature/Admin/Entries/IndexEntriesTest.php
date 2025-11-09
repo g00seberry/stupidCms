@@ -198,7 +198,7 @@ class IndexEntriesTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertHeader('WWW-Authenticate', 'Bearer realm="admin"');
+        $response->assertHeader('WWW-Authenticate', 'Bearer');
     }
 
     public function test_index_returns_403_for_non_admin_user(): void

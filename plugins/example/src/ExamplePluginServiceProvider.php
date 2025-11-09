@@ -16,7 +16,7 @@ final class ExamplePluginServiceProvider extends ServiceProvider
 
     private function registerRoutes(): void
     {
-        Route::middleware(['api', 'admin.auth'])
+        Route::middleware(['api', 'jwt.auth'])
             ->prefix('api/v1')
             ->group(__DIR__ . '/../routes/plugin.php');
     }

@@ -202,7 +202,7 @@ abstract class TestCase extends BaseTestCase
     {
         // Generate JWT tokens for the admin user
         $jwtService = app(\App\Domain\Auth\JwtService::class);
-        $accessToken = $jwtService->issueAccessToken($user->id, ['scp' => ['admin'], 'aud' => 'admin']);
+        $accessToken = $jwtService->issueAccessToken($user->id);
         
         // Generate CSRF token
         $csrfToken = \Illuminate\Support\Str::random(40);

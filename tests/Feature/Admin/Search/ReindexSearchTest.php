@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\Search;
 
 use App\Domain\Search\Jobs\ReindexSearchJob;
-use App\Http\Middleware\AdminAuth;
+use App\Http\Middleware\JwtAuth;
 use App\Http\Middleware\VerifyApiCsrf;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,14 +24,14 @@ final class ReindexSearchTest extends TestCase
 
         Bus::fake();
         Config::set('search.enabled', true);
-        $this->withoutMiddleware([AdminAuth::class, VerifyApiCsrf::class]);
+        $this->withoutMiddleware([JwtAuth::class, VerifyApiCsrf::class]);
     }
 
     public function test_requires_permission_for_reindex(): void
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user, guard: 'admin');
+        $this->actingAs($user, guard: 'api');
 
         $response = $this->postJson('/api/v1/admin/search/reindex');
 
@@ -45,7 +45,7 @@ final class ReindexSearchTest extends TestCase
         $user->grantAdminPermissions('search.reindex');
         $user->save();
 
-        $this->actingAs($user, guard: 'admin');
+        $this->actingAs($user, guard: 'api');
 
         $response = $this->postJson('/api/v1/admin/search/reindex');
 
@@ -69,7 +69,7 @@ final class ReindexSearchTest extends TestCase
         $user->grantAdminPermissions('search.reindex');
         $user->save();
 
-        $this->actingAs($user, guard: 'admin');
+        $this->actingAs($user, guard: 'api');
 
         $response = $this->postJson('/api/v1/admin/search/reindex');
 

@@ -14,8 +14,12 @@ class Rfc7807ErrorTest extends TestCase
     {
         parent::setUp();
 
-        Route::middleware(['admin.auth'])->get('/test/protected', function () {
+        Route::middleware(['jwt.auth'])->get('/test/protected', function () {
             return response()->json(['message' => 'OK']);
+        });
+
+        Route::middleware(['jwt.auth', 'can:plugins.sync'])->get('/test/forbidden', function () {
+            return response()->json(['message' => 'FORBIDDEN ROUTE']);
         });
     }
     public function test_validation_error_returns_422_problem_json(): void
@@ -85,7 +89,7 @@ class Rfc7807ErrorTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertHeader('WWW-Authenticate', 'Bearer realm="admin"');
+        $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertJson([
             'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
@@ -107,7 +111,7 @@ class Rfc7807ErrorTest extends TestCase
         $loginResponse->assertOk();
         $accessCookie = $this->getUnencryptedCookie($loginResponse, config('jwt.cookies.access'));
 
-        $response = $this->call('GET', '/test/protected', [], [
+        $response = $this->call('GET', '/test/forbidden', [], [
             $accessCookie->getName() => $accessCookie->getValue(),
         ], [], $this->transformHeadersToServerVars([
             'Accept' => 'application/json',
@@ -119,7 +123,7 @@ class Rfc7807ErrorTest extends TestCase
             'type' => 'https://stupidcms.dev/problems/forbidden',
             'title' => 'Forbidden',
             'status' => 403,
-            'detail' => 'Admin privileges are required.',
+            'detail' => 'This action is unauthorized.',
         ]);
     }
 }

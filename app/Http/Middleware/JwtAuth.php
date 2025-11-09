@@ -80,6 +80,7 @@ final class JwtAuth
             headers: [
                 'WWW-Authenticate' => 'Bearer',
                 'Cache-Control' => 'no-store, private',
+                'Pragma' => 'no-cache',
                 'Vary' => 'Cookie',
             ]
         );

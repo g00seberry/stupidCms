@@ -247,7 +247,7 @@ class UpdatePostTypeTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertHeader('WWW-Authenticate', 'Bearer realm="admin"');
+        $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertHeader('Cache-Control', 'no-store, private');
         
         $response->assertJson([
