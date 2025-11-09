@@ -370,7 +370,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-09T16:01:15'
+                  example: '2025-11-09T19:18:32'
                   nullable: true
                 date_to:
                   type: string
@@ -388,7 +388,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.asc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2044,7 +2044,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: audio
                   nullable: true
                   enum:
                     - image
@@ -2064,7 +2064,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -2081,7 +2081,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -4254,7 +4254,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: slug
                   nullable: true
                   enum:
                     - name
@@ -5880,7 +5880,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.desc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -6841,6 +6841,59 @@ paths:
       tags:
         - Auth
       security: []
+  /api/v1/admin/auth/current:
+    get:
+      summary: 'Получить данные текущего авторизованного пользователя.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  email: admin@stupidcms.dev
+                  name: Admin
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  email:
+                    type: string
+                    example: admin@stupidcms.dev
+                  name:
+                    type: string
+                    example: Admin
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'about:blank'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication required.'
+                properties:
+                  type:
+                    type: string
+                    example: 'about:blank'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication required.'
+      tags:
+        - Auth
   /api/v1/search:
     get:
       summary: 'Поиск опубликованного контента с фильтрами.'
@@ -7038,7 +7091,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-09T16:01:14'
+                  example: '2025-11-09T19:18:31'
                   nullable: true
                 to:
                   type: string

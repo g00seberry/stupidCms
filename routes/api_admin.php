@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\V1\MediaPreviewController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
+use App\Http\Controllers\Auth\CurrentUserController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
 use App\Models\Media;
@@ -36,6 +37,10 @@ use Illuminate\Support\Facades\Route;
  *   - CSRF токены для state-changing операций (если используется cookie-based auth)
  */
 Route::middleware(['admin.auth', 'throttle:api'])->group(function () {
+    Route::get('/auth/current', [CurrentUserController::class, 'show'])
+        ->middleware('no-cache-auth')
+        ->name('admin.v1.auth.current');
+    
     Route::get('/utils/slugify', [UtilsController::class, 'slugify']);
     
     Route::get('/plugins', [PluginsController::class, 'index'])

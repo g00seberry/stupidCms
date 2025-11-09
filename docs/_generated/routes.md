@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-09 16:01:11_
+_Last generated: 2025-11-09 19:18:12_
 
 ## Web
 
@@ -24,6 +24,7 @@ _Last generated: 2025-11-09 16:01:11_
 | POST | `api/v1/auth/logout` | - | `LogoutController@logout` | api, throttle:login, no-cache-auth |
 | GET|HEAD | `api/v1/auth/csrf` | - | `CsrfController@issue` | api, no-cache-auth |
 | GET|HEAD | `api/v1/search` | api.v1.search | `SearchController@index` | api, throttle:search-public |
+| GET|HEAD | `api/v1/admin/auth/current` | admin.v1.auth.current | `CurrentUserController@show` | api, admin.auth, throttle:api, no-cache-auth |
 | GET|HEAD | `api/v1/admin/utils/slugify` | - | `UtilsController@slugify` | api, admin.auth, throttle:api |
 | GET|HEAD | `api/v1/admin/plugins` | admin.v1.plugins.index | `PluginsController@index` | api, admin.auth, throttle:api, can:plugins.read, throttle:60,1 |
 | POST | `api/v1/admin/plugins/sync` | admin.v1.plugins.sync | `PluginsController@sync` | api, admin.auth, throttle:api, can:plugins.sync, throttle:10,1 |

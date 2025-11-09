@@ -50,6 +50,13 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/auth/current",
+        "name": "admin.v1.auth.current",
+        "action": "App\\Http\\Controllers\\Auth\\CurrentUserController@show",
+        "middleware": "api, admin.auth, throttle:api, no-cache-auth"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "api/v1/admin/utils/slugify",
         "name": null,
         "action": "App\\Http\\Controllers\\Admin\\V1\\UtilsController@slugify",
