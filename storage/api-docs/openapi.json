@@ -3,7 +3,7 @@
     "info": {
         "title": "stupidCms API",
         "version": "1.0.0",
-        "description": "Автоматически сгенерированное описание всех маршрутов `\/api\/*`.\r\n\r\n> docs:gap — уточнить схемы запросов и ответов, добавить примеры."
+        "description": "Автоматически сгенерированное описание всех маршрутов `\/api\/*`.\n\n> docs:gap — уточнить схемы запросов и ответов, добавить примеры."
     },
     "servers": [
         {
@@ -41,8 +41,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -105,9 +104,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/EntryCollection"
                                 }
                             }
                         }
@@ -172,9 +169,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/EntryResource"
                                 }
                             }
                         }
@@ -263,8 +258,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -341,8 +335,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -431,8 +424,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -521,8 +513,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -610,9 +601,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/EntryResource"
                                 }
                             }
                         }
@@ -686,9 +675,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/EntryResource"
                                 }
                             }
                         }
@@ -769,17 +756,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Успешный ответ",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Ресурс успешно удалён"
                     },
                     "401": {
                         "description": "Неавторизовано",
@@ -852,9 +830,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/EntryResource"
                                 }
                             }
                         }
@@ -933,9 +909,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/MediaResource"
                                 }
                             }
                         }
@@ -1000,9 +974,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/MediaResource"
                                 }
                             }
                         }
@@ -1090,9 +1062,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/MediaResource"
                                 }
                             }
                         }
@@ -1166,9 +1136,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/MediaResource"
                                 }
                             }
                         }
@@ -1249,17 +1217,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Успешный ответ",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Ресурс успешно удалён"
                     },
                     "401": {
                         "description": "Неавторизовано",
@@ -1333,8 +1292,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -1411,8 +1369,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -1488,9 +1445,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/MediaResource"
                                 }
                             }
                         }
@@ -1578,9 +1533,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/OptionCollection"
                                 }
                             }
                         }
@@ -1664,9 +1617,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/OptionResource"
                                 }
                             }
                         }
@@ -1748,9 +1699,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/OptionResource"
                                 }
                             }
                         }
@@ -1839,17 +1788,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Успешный ответ",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Ресурс успешно удалён"
                     },
                     "401": {
                         "description": "Неавторизовано",
@@ -1930,9 +1870,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/OptionResource"
                                 }
                             }
                         }
@@ -2011,9 +1949,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/ResourceCollection"
                                 }
                             }
                         }
@@ -2081,8 +2017,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -2170,9 +2105,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/PluginResource"
                                 }
                             }
                         }
@@ -2260,9 +2193,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/PluginResource"
                                 }
                             }
                         }
@@ -2350,9 +2281,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/PostTypeResource"
                                 }
                             }
                         }
@@ -2426,9 +2355,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/PostTypeResource"
                                 }
                             }
                         }
@@ -2508,8 +2435,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -2575,8 +2501,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -2659,17 +2584,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Успешный ответ",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Ресурс успешно удалён"
                     },
                     "401": {
                         "description": "Неавторизовано",
@@ -2734,8 +2650,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -2814,9 +2729,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TaxonomyResource"
                                 }
                             }
                         }
@@ -2881,9 +2794,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TaxonomyResource"
                                 }
                             }
                         }
@@ -2971,9 +2882,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TaxonomyResource"
                                 }
                             }
                         }
@@ -3047,9 +2956,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TaxonomyResource"
                                 }
                             }
                         }
@@ -3130,17 +3037,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Успешный ответ",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Ресурс успешно удалён"
                     },
                     "401": {
                         "description": "Неавторизовано",
@@ -3213,9 +3111,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TermCollection"
                                 }
                             }
                         }
@@ -3289,9 +3185,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TermResource"
                                 }
                             }
                         }
@@ -3379,9 +3273,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TermResource"
                                 }
                             }
                         }
@@ -3455,9 +3347,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/TermResource"
                                 }
                             }
                         }
@@ -3538,17 +3428,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Успешный ответ",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Ресурс успешно удалён"
                     },
                     "401": {
                         "description": "Неавторизовано",
@@ -3613,8 +3494,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -3682,8 +3562,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -3747,8 +3626,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -3824,8 +3702,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -3905,8 +3782,7 @@
                             "application\/json": {
                                 "schema": {
                                     "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "additionalProperties": true
                                 }
                             }
                         }
@@ -3985,9 +3861,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "docs:gap — добавить детальное описание схемы."
+                                    "$ref": "#\/components\/schemas\/SearchHitResource"
                                 }
                             }
                         }
@@ -4086,6 +3960,469 @@
                         "nullable": true
                     }
                 }
+            },
+            "EntryResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "post_type": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "content_json": {
+                        "type": "object"
+                    },
+                    "meta_json": {
+                        "type": "object"
+                    },
+                    "is_published": {
+                        "type": "boolean"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "template_override": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "oneOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "terms": {
+                        "oneOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "taxonomy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из EntryResource",
+                "required": [
+                    "id",
+                    "title",
+                    "slug",
+                    "status",
+                    "content_json",
+                    "meta_json",
+                    "is_published",
+                    "template_override",
+                    "name"
+                ]
+            },
+            "EntryCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/EntryResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из EntryCollection"
+            },
+            "MediaResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "kind": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "ext": {
+                        "type": "string"
+                    },
+                    "mime": {
+                        "type": "string"
+                    },
+                    "size_bytes": {
+                        "type": "string"
+                    },
+                    "width": {
+                        "type": "string"
+                    },
+                    "height": {
+                        "type": "string"
+                    },
+                    "duration_ms": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "alt": {
+                        "type": "string"
+                    },
+                    "collection": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "preview_urls": {
+                        "type": "string"
+                    },
+                    "download_url": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "description": "Схема из MediaResource",
+                "required": [
+                    "id",
+                    "kind",
+                    "name",
+                    "ext",
+                    "mime",
+                    "size_bytes",
+                    "width",
+                    "height",
+                    "duration_ms",
+                    "title",
+                    "alt",
+                    "collection",
+                    "preview_urls",
+                    "download_url"
+                ]
+            },
+            "OptionResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "namespace": {
+                        "type": "string"
+                    },
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из OptionResource",
+                "required": [
+                    "id",
+                    "namespace",
+                    "key",
+                    "value",
+                    "description"
+                ]
+            },
+            "OptionCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/OptionResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из OptionCollection"
+            },
+            "ResourceCollection": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Схема из ResourceCollection"
+            },
+            "PluginResource": {
+                "type": "object",
+                "properties": {
+                    "slug": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "provider": {
+                        "type": "string"
+                    },
+                    "routes_active": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "last_synced_at": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из PluginResource",
+                "required": [
+                    "slug",
+                    "name",
+                    "version",
+                    "enabled",
+                    "provider"
+                ]
+            },
+            "PostTypeResource": {
+                "type": "object",
+                "properties": {
+                    "slug": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "options_json": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "description": "Схема из PostTypeResource",
+                "required": [
+                    "slug",
+                    "options_json",
+                    "updated_at"
+                ]
+            },
+            "TaxonomyResource": {
+                "type": "object",
+                "properties": {
+                    "slug": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hierarchical": {
+                        "type": "string"
+                    },
+                    "options_json": {
+                        "type": "object"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из TaxonomyResource",
+                "required": [
+                    "slug",
+                    "hierarchical",
+                    "options_json"
+                ]
+            },
+            "TermResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "taxonomy": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "meta_json": {
+                        "type": "object"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из TermResource",
+                "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "meta_json"
+                ]
+            },
+            "TermCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/TermResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из TermCollection"
+            },
+            "SearchHitResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "post_type": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "excerpt": {
+                        "type": "string"
+                    },
+                    "score": {
+                        "type": "string"
+                    },
+                    "highlight": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из SearchHitResource",
+                "required": [
+                    "id",
+                    "post_type",
+                    "slug",
+                    "title",
+                    "excerpt",
+                    "score",
+                    "highlight"
+                ]
             }
         }
     },

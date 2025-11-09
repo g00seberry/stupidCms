@@ -12,7 +12,7 @@ related_code:
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-_Last generated: 2025-11-08 17:57:35 UTC_
+_Last generated: 2025-11-08 20:42:48 UTC_
 
 ## Public API (`/api/*`)
 

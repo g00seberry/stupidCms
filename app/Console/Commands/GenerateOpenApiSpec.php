@@ -5,15 +5,26 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionNamedType;
 
 class GenerateOpenApiSpec extends Command
 {
     protected $signature = 'docs:openapi {--format=json : Формат экспорта (json|yaml)}';
     protected $description = 'Generate OpenAPI specification from registered API routes';
+
+    /** @var array<string, array<string, mixed>> Кеш распарсенных Resource-классов */
+    private array $resourceSchemaCache = [];
 
     public function handle(): int
     {
@@ -131,42 +142,45 @@ MD,
                         'description' => 'Передайте access-токен в заголовке `Authorization: Bearer <token>`.',
                     ],
                 ],
-                'schemas' => [
-                    'ProblemDetails' => [
-                        'type' => 'object',
-                        'description' => 'RFC7807 Problem Details',
-                        'required' => ['type', 'title', 'status'],
-                        'properties' => [
-                            'type' => [
-                                'type' => 'string',
-                                'format' => 'uri',
-                            ],
-                            'title' => [
-                                'type' => 'string',
-                            ],
-                            'status' => [
-                                'type' => 'integer',
-                                'format' => 'int32',
-                            ],
-                            'detail' => [
-                                'type' => 'string',
-                                'nullable' => true,
-                            ],
-                            'instance' => [
-                                'type' => 'string',
-                                'nullable' => true,
-                            ],
-                            'errors' => [
-                                'type' => 'object',
-                                'additionalProperties' => [
-                                    'type' => 'array',
-                                    'items' => ['type' => 'string'],
+                'schemas' => array_merge(
+                    [
+                        'ProblemDetails' => [
+                            'type' => 'object',
+                            'description' => 'RFC7807 Problem Details',
+                            'required' => ['type', 'title', 'status'],
+                            'properties' => [
+                                'type' => [
+                                    'type' => 'string',
+                                    'format' => 'uri',
                                 ],
-                                'nullable' => true,
+                                'title' => [
+                                    'type' => 'string',
+                                ],
+                                'status' => [
+                                    'type' => 'integer',
+                                    'format' => 'int32',
+                                ],
+                                'detail' => [
+                                    'type' => 'string',
+                                    'nullable' => true,
+                                ],
+                                'instance' => [
+                                    'type' => 'string',
+                                    'nullable' => true,
+                                ],
+                                'errors' => [
+                                    'type' => 'object',
+                                    'additionalProperties' => [
+                                        'type' => 'array',
+                                        'items' => ['type' => 'string'],
+                                    ],
+                                    'nullable' => true,
+                                ],
                             ],
                         ],
                     ],
-                ],
+                    $this->resourceSchemaCache
+                ),
             ],
             'security' => [
                 ['bearerAuth' => []],
@@ -192,12 +206,16 @@ MD,
             ? Str::of($routeDefinition['name'])->replace('.', '_')->camel()
             : Str::of($routeDefinition['resource'])->slug('_') . '_' . $httpMethod;
 
+        // Пытаемся извлечь Resource из контроллера
+        $resourceClass = $this->resolveResourceClass($route);
+        $responses = $this->buildResponses($route, $httpMethod, $resourceClass);
+
         $operation = [
             'tags' => [$tag],
             'operationId' => (string) $operationId,
             'summary' => $this->buildSummary($routeDefinition, $httpMethod),
             'parameters' => $this->buildPathParameters($route),
-            'responses' => $this->defaultResponses(),
+            'responses' => $responses,
         ];
 
         if ($tag === 'Admin' || ($tag === 'Auth' && $this->shouldSecureAuthRoute($routeDefinition['uri']))) {
@@ -220,54 +238,88 @@ MD,
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function defaultResponses(): array
+    /**
+     * Строит responses с учетом Resource класса
+     *
+     * @return array<string, mixed>
+     */
+    private function buildResponses(Route $route, string $httpMethod, ?string $resourceClass): array
     {
-        return [
-            '200' => [
-                'description' => 'Успешный ответ',
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            'type' => 'object',
-                            'additionalProperties' => true,
-                            'description' => 'docs:gap — добавить детальное описание схемы.',
+        $responses = [];
+
+        // Для DELETE обычно 204
+        if ($httpMethod === 'delete') {
+            $responses['204'] = [
+                'description' => 'Ресурс успешно удалён',
+            ];
+        } else {
+            // Строим 200 ответ
+            if ($resourceClass !== null) {
+                $schemaName = class_basename($resourceClass);
+                $this->ensureResourceSchema($resourceClass, $schemaName);
+
+                $responses['200'] = [
+                    'description' => 'Успешный ответ',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => ['$ref' => "#/components/schemas/{$schemaName}"],
                         ],
                     ],
-                ],
-            ],
-            '401' => [
-                'description' => 'Неавторизовано',
-                'content' => [
-                    'application/problem+json' => [
-                        'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
+                ];
+            } else {
+                // Дефолтный ответ если Resource не найден
+                $responses['200'] = [
+                    'description' => 'Успешный ответ',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'additionalProperties' => true,
+                            ],
+                        ],
                     ],
-                ],
-            ],
-            '403' => [
-                'description' => 'Доступ запрещён',
-                'content' => [
-                    'application/problem+json' => [
-                        'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
-                    ],
-                ],
-            ],
-            '422' => [
-                'description' => 'Ошибка валидации',
-                'content' => [
-                    'application/problem+json' => [
-                        'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
-                    ],
-                ],
-            ],
-            '500' => [
-                'description' => 'Внутренняя ошибка сервера',
-                'content' => [
-                    'application/problem+json' => [
-                        'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
-                    ],
+                ];
+            }
+        }
+
+        // Стандартные коды ошибок
+        $responses['401'] = [
+            'description' => 'Неавторизовано',
+            'content' => [
+                'application/problem+json' => [
+                    'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
                 ],
             ],
         ];
+        
+        $responses['403'] = [
+            'description' => 'Доступ запрещён',
+            'content' => [
+                'application/problem+json' => [
+                    'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
+                ],
+            ],
+        ];
+        
+        $responses['422'] = [
+            'description' => 'Ошибка валидации',
+            'content' => [
+                'application/problem+json' => [
+                    'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
+                ],
+            ],
+        ];
+        
+        $responses['500'] = [
+            'description' => 'Внутренняя ошибка сервера',
+            'content' => [
+                'application/problem+json' => [
+                    'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
+                ],
+            ],
+        ];
+
+        return $responses;
     }
 
     /**
@@ -454,6 +506,379 @@ MD,
             $value === null => 'null',
             default => (string) $value,
         };
+    }
+
+    /**
+     * Извлекает Resource класс из контроллера
+     */
+    private function resolveResourceClass(Route $route): ?string
+    {
+        $action = $route->getActionName();
+
+        if (! is_string($action) || ! Str::contains($action, '@')) {
+            return null;
+        }
+
+        [$class, $method] = Str::parseCallback($action);
+
+        if (! $class || ! $method || ! class_exists($class) || ! method_exists($class, $method)) {
+            return null;
+        }
+
+        $reflection = new ReflectionMethod($class, $method);
+        $returnType = $reflection->getReturnType();
+
+        // Проверяем return type
+        if ($returnType instanceof ReflectionNamedType) {
+            $returnClass = $returnType->getName();
+
+            if (is_subclass_of($returnClass, JsonResource::class) || is_subclass_of($returnClass, ResourceCollection::class)) {
+                return $returnClass;
+            }
+        }
+
+        // Парсим код метода для поиска Resource
+        try {
+            $source = file_get_contents($reflection->getFileName());
+            $methodSource = $this->extractMethodSource($source, $reflection);
+
+            // Паттерн: return new SomeResource(...) или (new SomeResource(...))->...
+            if (preg_match('/return\s+\(?new\s+([A-Z]\w+(?:Resource|Collection))\s*\(/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && (is_subclass_of($resourceClass, JsonResource::class) || is_subclass_of($resourceClass, ResourceCollection::class))) {
+                    return $resourceClass;
+                }
+            }
+
+            // Паттерн: return SomeResource::collection(...) или SomeResource::make(...)
+            if (preg_match('/return\s+([A-Z]\w+Resource)::(collection|make)\s*\(/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && is_subclass_of($resourceClass, JsonResource::class)) {
+                    return $resourceClass;
+                }
+            }
+
+            // Паттерн: return (new SomeResource(...))->toResponse(...) или ->response()->...
+            if (preg_match('/return\s+\(new\s+([A-Z]\w+(?:Resource|Collection))\s*\([^)]*\)\s*\)->/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && (is_subclass_of($resourceClass, JsonResource::class) || is_subclass_of($resourceClass, ResourceCollection::class))) {
+                    return $resourceClass;
+                }
+            }
+
+            // Паттерн: $var = new SomeResource(...); ... return $var->...
+            if (preg_match('/\$\w+\s*=\s*new\s+([A-Z]\w+(?:Resource|Collection))\s*\(/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && (is_subclass_of($resourceClass, JsonResource::class) || is_subclass_of($resourceClass, ResourceCollection::class))) {
+                    return $resourceClass;
+                }
+            }
+
+            // Паттерн: $var = SomeResource::collection(...); ... return $var
+            if (preg_match('/\$\w+\s*=\s*([A-Z]\w+Resource)::collection\s*\(/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && is_subclass_of($resourceClass, JsonResource::class)) {
+                    return $resourceClass;
+                }
+            }
+
+            // Паттерн: $response = SomeResource::collection(...)->response();
+            if (preg_match('/\$\w+\s*=\s*([A-Z]\w+Resource)::collection\([^)]+\)->response\(\)/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && is_subclass_of($resourceClass, JsonResource::class)) {
+                    return $resourceClass;
+                }
+            }
+
+            // Fallback: ищем любое упоминание Resource/Collection в теле метода
+            if (preg_match('/(?:new|::)\s*([A-Z]\w+(?:Resource|Collection))(?:\s*\(|::)/s', $methodSource, $matches)) {
+                $resourceClass = $this->resolveFullClassName($matches[1], $class);
+                if ($resourceClass && (is_subclass_of($resourceClass, JsonResource::class) || is_subclass_of($resourceClass, ResourceCollection::class))) {
+                    return $resourceClass;
+                }
+            }
+        } catch (\Throwable) {
+            // Игнорируем ошибки парсинга
+        }
+
+        return null;
+    }
+
+    /**
+     * Извлекает метод из исходника файла
+     */
+    private function extractMethodSource(string $fileSource, ReflectionMethod $method): string
+    {
+        $lines = explode("\n", $fileSource);
+        $start = $method->getStartLine() - 1;
+        $end = $method->getEndLine();
+
+        return implode("\n", array_slice($lines, $start, $end - $start));
+    }
+
+    /**
+     * Разрешает полное имя класса из короткого имени
+     */
+    private function resolveFullClassName(string $shortName, string $contextClass): ?string
+    {
+        $reflection = new ReflectionClass($contextClass);
+        $namespace = $reflection->getNamespaceName();
+
+        // Пробуем в том же namespace
+        $candidate = $namespace . '\\' . $shortName;
+        if (class_exists($candidate)) {
+            return $candidate;
+        }
+
+        // Пробуем в App\Http\Resources
+        $candidate = 'App\\Http\\Resources\\' . $shortName;
+        if (class_exists($candidate)) {
+            return $candidate;
+        }
+
+        // Пробуем в App\Http\Resources\Admin
+        $candidate = 'App\\Http\\Resources\\Admin\\' . $shortName;
+        if (class_exists($candidate)) {
+            return $candidate;
+        }
+
+        return null;
+    }
+
+    /**
+     * Гарантирует наличие схемы Resource в кеше
+     */
+    private function ensureResourceSchema(string $resourceClass, string $schemaName): void
+    {
+        if (isset($this->resourceSchemaCache[$schemaName])) {
+            return;
+        }
+
+        try {
+            $reflection = new ReflectionClass($resourceClass);
+            
+            // Специальная обработка для ResourceCollection
+            if ($reflection->isSubclassOf(ResourceCollection::class)) {
+                $schema = $this->parseResourceCollection($reflection, $resourceClass);
+                if ($schema !== null) {
+                    $this->resourceSchemaCache[$schemaName] = $schema;
+                    return;
+                }
+            }
+            
+            if (! $reflection->hasMethod('toArray')) {
+                throw new \Exception('No toArray method');
+            }
+
+            $toArrayMethod = $reflection->getMethod('toArray');
+            $source = file_get_contents($toArrayMethod->getFileName());
+            $methodSource = $this->extractMethodSource($source, $toArrayMethod);
+
+            $schema = $this->parseResourceToArray($methodSource, $resourceClass);
+
+            if ($schema !== null) {
+                $this->resourceSchemaCache[$schemaName] = $schema;
+                return;
+            }
+        } catch (\Throwable) {
+            // Fallback
+        }
+
+        // Если не смогли распарсить — дефолтная схема
+        $this->resourceSchemaCache[$schemaName] = [
+            'type' => 'object',
+            'additionalProperties' => true,
+            'description' => 'Схема из ' . class_basename($resourceClass),
+        ];
+    }
+
+    /**
+     * Парсит ResourceCollection используя $collects property
+     *
+     * @return array<string, mixed>|null
+     */
+    private function parseResourceCollection(ReflectionClass $reflection, string $resourceClass): ?array
+    {
+        // Ищем public $collects property
+        if ($reflection->hasProperty('collects')) {
+            $collectsProperty = $reflection->getProperty('collects');
+            $collectsProperty->setAccessible(true);
+            
+            $defaultValue = $collectsProperty->getDefaultValue();
+            
+            if ($defaultValue && is_string($defaultValue) && class_exists($defaultValue)) {
+                // Гарантируем что схема для вложенного Resource есть
+                $itemSchemaName = class_basename($defaultValue);
+                $this->ensureResourceSchema($defaultValue, $itemSchemaName);
+                
+                return [
+                    'type' => 'object',
+                    'properties' => [
+                        'data' => [
+                            'type' => 'array',
+                            'items' => [
+                                '$ref' => "#/components/schemas/{$itemSchemaName}",
+                            ],
+                        ],
+                        'links' => [
+                            'type' => 'object',
+                            'description' => 'Pagination links',
+                        ],
+                        'meta' => [
+                            'type' => 'object',
+                            'description' => 'Pagination metadata',
+                        ],
+                    ],
+                    'required' => ['data'],
+                    'description' => 'Paginated collection из ' . class_basename($resourceClass),
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Парсит метод toArray из Resource класса
+     *
+     * @return array<string, mixed>|null
+     */
+    private function parseResourceToArray(string $methodSource, string $resourceClass): ?array
+    {
+        // Ищем return [ ... ];
+        if (! preg_match('/return\s+\[(.*)\];/s', $methodSource, $matches)) {
+            return null;
+        }
+
+        $arrayContent = $matches[1];
+        $properties = [];
+        $required = [];
+        
+        // Разбиваем по строкам
+        $lines = preg_split('/\r?\n/', $arrayContent);
+        
+        foreach ($lines as $line) {
+            $line = trim($line);
+            
+            if ($line === '' || str_starts_with($line, '//') || str_starts_with($line, '*')) {
+                continue;
+            }
+
+            // Паттерн: 'key' => выражение
+            if (preg_match("/^['\"](\w+)['\"]\s*=>\s*(.+?)(?:,\s*|\s*)$/s", $line, $keyMatch)) {
+                $key = $keyMatch[1];
+                $expression = isset($keyMatch[2]) ? trim($keyMatch[2], ', ') : '';
+                
+                $property = $this->inferTypeFromExpression($expression, $line);
+                
+                // Если нет nullable и нет when() — считаем required
+                if (! isset($property['nullable']) && ! isset($property['oneOf']) && ! str_contains($line, '$this->when')) {
+                    $required[] = $key;
+                }
+                
+                $properties[$key] = $property;
+            }
+        }
+
+        if ($properties === []) {
+            return null;
+        }
+
+        $schema = [
+            'type' => 'object',
+            'properties' => $properties,
+            'description' => 'Схема из ' . class_basename($resourceClass),
+        ];
+
+        if ($required !== []) {
+            $schema['required'] = array_values(array_unique($required));
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Определяет тип поля из выражения в Resource
+     *
+     * @return array<string, mixed>
+     */
+    private function inferTypeFromExpression(string $expression, string $fullLine): array
+    {
+        $expr = trim($expression);
+
+        // Nullable: ->field?->... или ?? 
+        $nullable = str_contains($expr, '?->') || str_contains($expr, '??');
+
+        // ID поля
+        if (preg_match('/\bid\b|_id\b/i', $fullLine) || str_contains($expr, '->id')) {
+            $schema = ['type' => 'integer', 'format' => 'int64'];
+            if ($nullable) {
+                $schema['nullable'] = true;
+            }
+            return $schema;
+        }
+
+        // Email
+        if (preg_match('/\bemail\b/i', $fullLine)) {
+            $schema = ['type' => 'string', 'format' => 'email'];
+            if ($nullable) {
+                $schema['nullable'] = true;
+            }
+            return $schema;
+        }
+
+        // Timestamps
+        if (preg_match('/\b(created_at|updated_at|published_at|deleted_at|scheduled_at)\b/i', $fullLine)) {
+            $schema = ['type' => 'string', 'format' => 'date-time'];
+            if ($nullable) {
+                $schema['nullable'] = true;
+            }
+            return $schema;
+        }
+
+        // Boolean (is_, has_, enabled, published или сравнения)
+        if (preg_match('/\b(is_|has_|enabled|published)\w*/i', $fullLine) || str_contains($expr, '===') || str_contains($expr, '!==')) {
+            return ['type' => 'boolean'];
+        }
+
+        // Arrays/Collections: ->map(), ->pluck(), ->toArray()
+        if (str_contains($expr, '->map(') || str_contains($expr, '->pluck(') || str_contains($expr, '->toArray()')) {
+            return [
+                'type' => 'array',
+                'items' => ['type' => 'object'],
+            ];
+        }
+
+        // Objects (new \stdClass, transformJson)
+        if (str_contains($expr, 'new \\stdClass') || str_contains($expr, 'transformJson')) {
+            return ['type' => 'object'];
+        }
+
+        // when() — может быть null
+        if (str_contains($expr, '$this->when(')) {
+            return [
+                'oneOf' => [
+                    ['type' => 'object'],
+                    ['type' => 'null'],
+                ],
+            ];
+        }
+
+        // URL/slug/path
+        if (preg_match('/\b(url|slug|path|link)\b/i', $fullLine)) {
+            $schema = ['type' => 'string'];
+            if ($nullable) {
+                $schema['nullable'] = true;
+            }
+            return $schema;
+        }
+
+        // Дефолт: string
+        $schema = ['type' => 'string'];
+        if ($nullable) {
+            $schema['nullable'] = true;
+        }
+        return $schema;
     }
 }
 

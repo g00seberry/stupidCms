@@ -1,30 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
-use App\Domain\Routing\PathReservationService;
 use App\Domain\Routing\Exceptions\ForbiddenReservationRelease;
 use App\Domain\Routing\Exceptions\InvalidPathException;
 use App\Domain\Routing\Exceptions\PathAlreadyReservedException;
+use App\Domain\Routing\PathReservationService;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\DestroyPathReservationRequest;
 use App\Http\Requests\StorePathReservationRequest;
+use App\Http\Resources\Admin\PathReservationCollection;
+use App\Http\Resources\Admin\PathReservationMessageResource;
 use App\Models\Audit;
 use App\Models\ReservedRoute;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class PathReservationController extends Controller
 {
+    use Problems;
+
     public function __construct(
-        private PathReservationService $service
+        private readonly PathReservationService $service
     ) {}
 
     /**
      * POST /api/v1/admin/reservations
      */
-    public function store(StorePathReservationRequest $request): JsonResponse
+    public function store(StorePathReservationRequest $request): PathReservationMessageResource
     {
         $validated = $request->validated();
 
@@ -34,114 +41,91 @@ class PathReservationController extends Controller
                 $validated['source'],
                 $validated['reason'] ?? null
             );
-
-            // Аудит: логируем резервирование
-            $this->logAudit('reserve', $validated['path'], [
-                'source' => $validated['source'],
-                'reason' => $validated['reason'] ?? null,
-            ]);
-
-            return response()->json([
-                'message' => 'Path reserved successfully',
-            ], Response::HTTP_CREATED);
         } catch (InvalidPathException $e) {
-            return $this->errorResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'Unprocessable Entity',
+                    $e->getMessage()
+                )
+            );
         } catch (PathAlreadyReservedException $e) {
-            return $this->errorResponse(
-                $e->getMessage(),
-                Response::HTTP_CONFLICT,
-                [
-                    'path' => $e->path,
-                    'owner' => $e->owner,
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_CONFLICT,
+                    'Conflict',
+                    $e->getMessage(),
+                    [
+                        'path' => $e->path,
+                        'owner' => $e->owner,
+                    ]
+                )
             );
         }
+
+        // Аудит: логируем резервирование
+        $this->logAudit('reserve', $validated['path'], [
+            'source' => $validated['source'],
+            'reason' => $validated['reason'] ?? null,
+        ]);
+
+        return new PathReservationMessageResource('Path reserved successfully', Response::HTTP_CREATED);
     }
 
     /**
      * DELETE /api/v1/admin/reservations/{path}
-     * 
+     *
      * Поддерживает path как в URL параметре, так и в JSON body (для экзотических URL-encode кейсов).
      */
-    public function destroy(string $path, DestroyPathReservationRequest $request): JsonResponse
+    public function destroy(string $path, DestroyPathReservationRequest $request): PathReservationMessageResource
     {
         $validated = $request->validated();
-        
+
         // Если path не в URL (пустой или невалидный), берём из body
         $actualPath = $request->getPath();
         if (empty($actualPath)) {
-            return $this->errorResponse(
-                'Path is required either in URL parameter or request body.',
-                Response::HTTP_UNPROCESSABLE_ENTITY
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'Validation error',
+                    'Path is required either in URL parameter or request body.'
+                )
             );
         }
 
         try {
             $this->service->releasePath($actualPath, $validated['source']);
-
-            // Аудит: логируем освобождение
-            $this->logAudit('release', $actualPath, [
-                'source' => $validated['source'],
-            ]);
-
-            return response()->json([
-                'message' => 'Path released successfully',
-            ], Response::HTTP_OK);
         } catch (ForbiddenReservationRelease $e) {
-            return $this->errorResponse(
-                $e->getMessage(),
-                Response::HTTP_FORBIDDEN,
-                [
-                    'path' => $e->path,
-                    'owner' => $e->owner,
-                    'attempted_source' => $e->attemptedSource,
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_FORBIDDEN,
+                    'Forbidden',
+                    $e->getMessage(),
+                    [
+                        'path' => $e->path,
+                        'owner' => $e->owner,
+                        'attempted_source' => $e->attemptedSource,
+                    ]
+                )
             );
         }
+
+        // Аудит: логируем освобождение
+        $this->logAudit('release', $actualPath, [
+            'source' => $validated['source'],
+        ]);
+
+        return new PathReservationMessageResource('Path released successfully', Response::HTTP_OK);
     }
 
     /**
      * GET /api/v1/admin/reservations
      */
-    public function index(): JsonResponse
+    public function index(): PathReservationCollection
     {
         $reservations = ReservedRoute::orderBy('path')->get();
 
-        return response()->json([
-            'data' => $reservations->map(fn($r) => [
-                'path' => $r->path,
-                'kind' => $r->kind,
-                'source' => $r->source,
-                'created_at' => $r->created_at->toIso8601String(),
-            ]),
-        ]);
-    }
-
-    /**
-     * Форматирует ошибку в формате RFC 7807
-     */
-    private function errorResponse(
-        string $detail,
-        int $status,
-        array $extensions = []
-    ): JsonResponse {
-        $response = [
-            'type' => 'about:blank',
-            'title' => match($status) {
-                409 => 'Conflict',
-                422 => 'Unprocessable Entity',
-                403 => 'Forbidden',
-                default => 'Error',
-            },
-            'status' => $status,
-            'detail' => $detail,
-        ];
-
-        if (!empty($extensions)) {
-            $response = array_merge($response, $extensions);
-        }
-
-        return response()->json($response, $status);
+        return new PathReservationCollection($reservations);
     }
 
     /**
@@ -152,7 +136,7 @@ class PathReservationController extends Controller
         try {
             // Находим резервирование для получения ID
             $reservation = ReservedRoute::where('path', $path)->first();
-            
+
             Audit::create([
                 'user_id' => auth()->id(),
                 'action' => $action,

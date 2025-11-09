@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Options\OptionsRepository;
@@ -10,8 +12,10 @@ use App\Http\Requests\Admin\Options\PutOptionRequest;
 use App\Http\Resources\Admin\OptionCollection;
 use App\Http\Resources\Admin\OptionResource;
 use App\Models\Option;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 class OptionsController extends Controller
@@ -25,11 +29,9 @@ class OptionsController extends Controller
     {
     }
 
-    public function index(IndexOptionsRequest $request, string $namespace): JsonResponse
+    public function index(IndexOptionsRequest $request, string $namespace): OptionCollection
     {
-        if ($response = $this->validateRouteParameters($namespace)) {
-            return $response;
-        }
+        $this->assertValidRouteParameters($namespace);
 
         $validated = $request->validated();
 
@@ -57,14 +59,12 @@ class OptionsController extends Controller
             ->orderBy('key')
             ->paginate($perPage);
 
-        return (new OptionCollection($options))->toResponse($request);
+        return new OptionCollection($options);
     }
 
-    public function show(string $namespace, string $key): JsonResponse
+    public function show(string $namespace, string $key): OptionResource
     {
-        if ($response = $this->validateRouteParameters($namespace, $key)) {
-            return $response;
-        }
+        $this->assertValidRouteParameters($namespace, $key);
 
         $option = Option::query()
             ->where('namespace', $namespace)
@@ -72,15 +72,15 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            return $this->optionNotFoundProblem($namespace, $key);
+            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
         }
 
         $this->authorize('view', $option);
 
-        return (new OptionResource($option))->toResponse(request());
+        return new OptionResource($option);
     }
 
-    public function put(PutOptionRequest $request, string $namespace, string $key): JsonResponse
+    public function put(PutOptionRequest $request, string $namespace, string $key): OptionResource
     {
         $validated = $request->validated();
 
@@ -98,18 +98,12 @@ class OptionsController extends Controller
             $description
         );
 
-        $status = $saved->wasRecentlyCreated ? 201 : 200;
-
-        return (new OptionResource($saved))
-            ->response()
-            ->setStatusCode($status);
+        return new OptionResource($saved);
     }
 
-    public function destroy(string $namespace, string $key): JsonResponse
+    public function destroy(string $namespace, string $key): Response
     {
-        if ($response = $this->validateRouteParameters($namespace, $key)) {
-            return $response;
-        }
+        $this->assertValidRouteParameters($namespace, $key);
 
         $option = Option::query()
             ->where('namespace', $namespace)
@@ -117,7 +111,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            return $this->optionNotFoundProblem($namespace, $key);
+            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
         }
 
         $this->authorize('delete', $option);
@@ -125,21 +119,18 @@ class OptionsController extends Controller
         $deleted = $this->repository->delete($namespace, $key);
 
         if (! $deleted) {
-            return $this->optionNotFoundProblem($namespace, $key);
+            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
         }
 
-        $response = response()->json(null, 204);
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
-
-        return $response;
+        return response()
+            ->noContent()
+            ->header('Cache-Control', 'no-store, private')
+            ->header('Vary', 'Cookie');
     }
 
-    public function restore(string $namespace, string $key): JsonResponse
+    public function restore(string $namespace, string $key): OptionResource
     {
-        if ($response = $this->validateRouteParameters($namespace, $key)) {
-            return $response;
-        }
+        $this->assertValidRouteParameters($namespace, $key);
 
         $option = Option::withTrashed()
             ->where('namespace', $namespace)
@@ -147,7 +138,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            return $this->optionNotFoundProblem($namespace, $key);
+            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
         }
 
         $this->authorize('restore', $option);
@@ -157,13 +148,13 @@ class OptionsController extends Controller
             : $option;
 
         if (! $restored) {
-            return $this->optionNotFoundProblem($namespace, $key);
+            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
         }
 
-        return (new OptionResource($restored))->toResponse(request());
+        return new OptionResource($restored);
     }
 
-    private function validateRouteParameters(string $namespace, ?string $key = null): ?JsonResponse
+    private function assertValidRouteParameters(string $namespace, ?string $key = null): void
     {
         $data = ['namespace' => $namespace];
         $rules = ['namespace' => ['required', 'string', 'regex:' . self::KEY_PATTERN]];
@@ -176,10 +167,10 @@ class OptionsController extends Controller
         $validator = Validator::make($data, $rules);
 
         if (! $validator->fails()) {
-            return null;
+            return;
         }
 
-        return $this->problem(
+        throw new HttpResponseException($this->problem(
             422,
             'Validation error',
             'The provided option namespace/key is invalid.',
@@ -188,7 +179,7 @@ class OptionsController extends Controller
                 'code' => 'INVALID_OPTION_IDENTIFIER',
                 'errors' => $validator->errors()->toArray(),
             ]
-        );
+        ));
     }
 
     private function optionNotFoundProblem(string $namespace, string $key): JsonResponse
