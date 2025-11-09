@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Domain\Pages\Validation\NotReservedRoute;
-use App\Support\ReservedRoutes\ReservedRouteRegistry;
+use App\Domain\Routing\ReservedRouteRegistry;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;

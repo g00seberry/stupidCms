@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Plugins\Exceptions\InvalidPluginManifest;
 use App\Domain\Plugins\Exceptions\PluginAlreadyDisabledException;

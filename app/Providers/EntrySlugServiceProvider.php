@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Support\EntrySlug\DefaultEntrySlugService;
-use App\Support\EntrySlug\EntrySlugService;
+use App\Domain\Entries\DefaultEntrySlugService;
+use App\Domain\Entries\EntrySlugService;
 use Illuminate\Support\ServiceProvider;
 
 class EntrySlugServiceProvider extends ServiceProvider

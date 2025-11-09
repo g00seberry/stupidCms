@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Admin\OptionsController;
-use App\Http\Controllers\Admin\PluginsController;
-use App\Http\Controllers\Admin\PathReservationController;
-use App\Http\Controllers\Admin\SearchAdminController;
-use App\Http\Controllers\Admin\UtilsController;
+use App\Http\Controllers\Admin\V1\OptionsController;
+use App\Http\Controllers\Admin\V1\PathReservationController;
+use App\Http\Controllers\Admin\V1\PluginsController;
+use App\Http\Controllers\Admin\V1\SearchAdminController;
+use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
 use App\Http\Controllers\Admin\V1\MediaController;

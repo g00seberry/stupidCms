@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Entry;
+use App\Domain\Entries\EntrySlugService;
 use App\Models\EntrySlug;
-use App\Support\EntrySlug\EntrySlugService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

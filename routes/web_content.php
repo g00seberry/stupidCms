@@ -1,9 +1,9 @@
 <?php
 
+use App\Domain\Routing\ReservedPattern;
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\CanonicalUrl;
 use App\Http\Middleware\RejectReservedIfMatched;
-use App\Routing\ReservedPattern;
 use Illuminate\Support\Facades\Route;
 
 // Taxonomies routes (пример - будет реализовано в будущих задачах)

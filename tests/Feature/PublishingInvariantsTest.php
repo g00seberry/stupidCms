@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Entry;
+use App\Domain\Entries\PublishingService;
 use App\Models\PostType;
-use App\Support\Publishing\PublishingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;

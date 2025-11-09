@@ -4,8 +4,8 @@ namespace App\Observers;
 
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Models\Entry;
+use App\Domain\Entries\EntrySlugService;
 use App\Models\ReservedRoute;
-use App\Support\EntrySlug\EntrySlugService;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\SlugOptions;
 use App\Support\Slug\UniqueSlugService;

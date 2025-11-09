@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Publishing;
+namespace App\Domain\Entries;
 
 use App\Models\Entry;
 use Illuminate\Support\Carbon;

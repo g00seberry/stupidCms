@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\ReservedRoutes;
+namespace App\Domain\Routing;
 
 use App\Models\ReservedRoute;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;

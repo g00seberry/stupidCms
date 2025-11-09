@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\EntrySlug;
+namespace App\Domain\Entries;
 
 use App\Models\Entry;
 

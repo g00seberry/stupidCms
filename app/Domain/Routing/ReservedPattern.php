@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Routing;
+namespace App\Domain\Routing;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

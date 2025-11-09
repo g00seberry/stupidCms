@@ -2,7 +2,7 @@
 
 namespace App\Domain\Pages\Validation;
 
-use App\Support\ReservedRoutes\ReservedRouteRegistry;
+use App\Domain\Routing\ReservedRouteRegistry;
 use Illuminate\Contracts\Validation\Rule;
 
 class NotReservedRoute implements Rule

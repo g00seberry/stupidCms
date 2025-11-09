@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Domain\Routing\ReservedRouteRegistry;
 use App\Models\ReservedRoute;
-use App\Support\ReservedRoutes\ReservedRouteRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;

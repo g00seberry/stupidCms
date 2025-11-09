@@ -52,56 +52,56 @@
         "method": "GET|HEAD",
         "uri": "api/v1/admin/utils/slugify",
         "name": null,
-        "action": "App\\Http\\Controllers\\Admin\\UtilsController@slugify",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\UtilsController@slugify",
         "middleware": "api, admin.auth, throttle:api"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/plugins",
         "name": "admin.v1.plugins.index",
-        "action": "App\\Http\\Controllers\\Admin\\PluginsController@index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@index",
         "middleware": "api, admin.auth, throttle:api, can:plugins.read, throttle:60,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/plugins/sync",
         "name": "admin.v1.plugins.sync",
-        "action": "App\\Http\\Controllers\\Admin\\PluginsController@sync",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@sync",
         "middleware": "api, admin.auth, throttle:api, can:plugins.sync, throttle:10,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/plugins/{slug}/enable",
         "name": "admin.v1.plugins.enable",
-        "action": "App\\Http\\Controllers\\Admin\\PluginsController@enable",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@enable",
         "middleware": "api, admin.auth, throttle:api, can:plugins.toggle, throttle:10,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/plugins/{slug}/disable",
         "name": "admin.v1.plugins.disable",
-        "action": "App\\Http\\Controllers\\Admin\\PluginsController@disable",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@disable",
         "middleware": "api, admin.auth, throttle:api, can:plugins.toggle, throttle:10,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/reservations",
         "name": null,
-        "action": "App\\Http\\Controllers\\Admin\\PathReservationController@index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PathReservationController@index",
         "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\ReservedRoute"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/reservations",
         "name": null,
-        "action": "App\\Http\\Controllers\\Admin\\PathReservationController@store",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PathReservationController@store",
         "middleware": "api, admin.auth, throttle:api, can:create,App\\Models\\ReservedRoute"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/reservations/{path}",
         "name": null,
-        "action": "App\\Http\\Controllers\\Admin\\PathReservationController@destroy",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PathReservationController@destroy",
         "middleware": "api, admin.auth, throttle:api, can:deleteAny,App\\Models\\ReservedRoute"
     },
     {
@@ -318,42 +318,42 @@
         "method": "GET|HEAD",
         "uri": "api/v1/admin/options/{namespace}",
         "name": "admin.v1.options.index",
-        "action": "App\\Http\\Controllers\\Admin\\OptionsController@index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@index",
         "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Option, can:options.read, throttle:120,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/options/{namespace}/{key}",
         "name": "admin.v1.options.show",
-        "action": "App\\Http\\Controllers\\Admin\\OptionsController@show",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@show",
         "middleware": "api, admin.auth, throttle:api, can:options.read, throttle:120,1"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/options/{namespace}/{key}",
         "name": "admin.v1.options.upsert",
-        "action": "App\\Http\\Controllers\\Admin\\OptionsController@put",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@put",
         "middleware": "api, admin.auth, throttle:api, can:options.write, throttle:30,1"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/options/{namespace}/{key}",
         "name": "admin.v1.options.destroy",
-        "action": "App\\Http\\Controllers\\Admin\\OptionsController@destroy",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@destroy",
         "middleware": "api, admin.auth, throttle:api, can:options.delete, throttle:30,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/options/{namespace}/{key}/restore",
         "name": "admin.v1.options.restore",
-        "action": "App\\Http\\Controllers\\Admin\\OptionsController@restore",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@restore",
         "middleware": "api, admin.auth, throttle:api, can:options.restore, throttle:30,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/search/reindex",
         "name": "admin.v1.search.reindex",
-        "action": "App\\Http\\Controllers\\Admin\\SearchAdminController@reindex",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\SearchAdminController@reindex",
         "middleware": "api, admin.auth, throttle:api, can:search.reindex, throttle:search-reindex"
     },
     {

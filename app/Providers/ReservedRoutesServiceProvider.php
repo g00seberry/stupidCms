@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Support\ReservedRoutes\ReservedRouteRegistry;
+use App\Domain\Routing\ReservedRouteRegistry;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\ServiceProvider;
 
