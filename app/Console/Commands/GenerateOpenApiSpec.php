@@ -720,22 +720,121 @@ MD,
                                 '$ref' => "#/components/schemas/{$itemSchemaName}",
                             ],
                         ],
-                        'links' => [
-                            'type' => 'object',
-                            'description' => 'Pagination links',
-                        ],
-                        'meta' => [
-                            'type' => 'object',
-                            'description' => 'Pagination metadata',
-                        ],
+                        'links' => $this->paginationLinksSchema(),
+                        'meta' => $this->paginationMetaSchema(),
                     ],
-                    'required' => ['data'],
+                    'required' => ['data', 'links', 'meta'],
                     'description' => 'Paginated collection из ' . class_basename($resourceClass),
                 ];
             }
         }
 
         return null;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function paginationLinksSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'Pagination links',
+            'properties' => [
+                'first' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                    'nullable' => true,
+                ],
+                'last' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                    'nullable' => true,
+                ],
+                'prev' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                    'nullable' => true,
+                ],
+                'next' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                    'nullable' => true,
+                ],
+            ],
+            'additionalProperties' => false,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function paginationMetaSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'Pagination metadata',
+            'properties' => [
+                'current_page' => [
+                    'type' => 'integer',
+                    'format' => 'int32',
+                ],
+                'from' => [
+                    'type' => 'integer',
+                    'format' => 'int32',
+                    'nullable' => true,
+                ],
+                'last_page' => [
+                    'type' => 'integer',
+                    'format' => 'int32',
+                ],
+                'path' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                ],
+                'per_page' => [
+                    'type' => 'integer',
+                    'format' => 'int32',
+                ],
+                'to' => [
+                    'type' => 'integer',
+                    'format' => 'int32',
+                    'nullable' => true,
+                ],
+                'total' => [
+                    'type' => 'integer',
+                    'format' => 'int32',
+                ],
+                'links' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'url' => [
+                                'type' => 'string',
+                                'format' => 'uri',
+                                'nullable' => true,
+                            ],
+                            'label' => [
+                                'type' => 'string',
+                            ],
+                            'page' => [
+                                'type' => 'integer',
+                                'format' => 'int32',
+                                'nullable' => true,
+                            ],
+                            'active' => [
+                                'type' => 'boolean',
+                            ],
+                        ],
+                        'required' => ['label', 'active'],
+                        'additionalProperties' => false,
+                    ],
+                ],
+            ],
+            'required' => ['current_page', 'last_page', 'path', 'per_page', 'total', 'links'],
+            'additionalProperties' => false,
+        ];
     }
 
     /**
