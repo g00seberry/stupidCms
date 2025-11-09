@@ -127,13 +127,12 @@ class OptionsApiTest extends TestCase
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
         $this->assertSame('tagline', $response->json('data.0.key'));
-        $response->assertJson([
-            'meta' => [
-                'page' => 1,
-                'per_page' => 1,
-                'total' => 2,
-            ],
-        ]);
+        $response->assertJsonPath('meta.current_page', 1);
+        $response->assertJsonPath('meta.from', 1);
+        $response->assertJsonPath('meta.to', 1);
+        $response->assertJsonPath('meta.last_page', 2);
+        $response->assertJsonPath('meta.per_page', 1);
+        $response->assertJsonPath('meta.total', 2);
     }
 
     public function test_it_soft_deletes_and_restores_option(): void
