@@ -26,6 +26,31 @@ final class LoginController
     ) {
     }
 
+    /**
+     * Аутентификация администратора и выдача JWT.
+     *
+     * @group Auth
+     * @subgroup Sessions
+     * @name Login
+     * @unauthenticated
+     * @bodyParam email string required RFC 5322 email в нижнем регистре. Example: admin@stupidcms.dev
+     * @bodyParam password string required 8-200 символов. Example: Secret123!
+     * @responseHeader Set-Cookie "access=...; Path=/; HttpOnly; Secure"
+     * @responseHeader Set-Cookie "refresh=...; Path=/; HttpOnly; Secure"
+     * @response status=200 {
+     *   "user": {
+     *     "id": 1,
+     *     "email": "admin@stupidcms.dev",
+     *     "name": "Admin"
+     *   }
+     * }
+     * @response status=401 {
+     *   "type": "about:blank",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Invalid credentials."
+     * }
+     */
     public function login(LoginRequest $request): LoginResource
     {
         $email = strtolower($request->input('email'));

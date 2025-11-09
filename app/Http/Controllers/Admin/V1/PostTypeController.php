@@ -17,7 +17,26 @@ class PostTypeController extends Controller
     use Problems;
 
     /**
-     * Display the specified post type.
+     * Получение настроек типа записи.
+     *
+     * @group Admin ▸ Post types
+     * @name Show post type
+     * @authenticated
+     * @urlParam slug string required Slug PostType. Example: article
+     * @response status=200 {
+     *   "data": {
+     *     "slug": "article",
+     *     "label": "Articles",
+     *     "options_json": {},
+     *     "updated_at": "2025-01-10T12:45:00+00:00"
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "PostType not found",
+     *   "status": 404,
+     *   "detail": "Unknown post type slug: article"
+     * }
      */
     public function show(string $slug): PostTypeResource
     {
@@ -31,7 +50,41 @@ class PostTypeController extends Controller
     }
 
     /**
-     * Update the specified post type.
+     * Обновление настроек типа записи.
+     *
+     * @group Admin ▸ Post types
+     * @name Update post type
+     * @authenticated
+     * @urlParam slug string required Slug PostType. Example: article
+     * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
+     * @response status=200 {
+     *   "data": {
+     *     "slug": "article",
+     *     "label": "Articles",
+     *     "options_json": {
+     *       "fields": {
+     *         "hero": {
+     *           "type": "image"
+     *         }
+     *       }
+     *     },
+     *     "updated_at": "2025-01-10T12:45:00+00:00"
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "PostType not found",
+     *   "status": 404,
+     *   "detail": "Unknown post type slug: article"
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "options_json": [
+     *       "The options_json field is required."
+     *     ]
+     *   }
+     * }
      */
     public function update(UpdatePostTypeRequest $request, string $slug): PostTypeResource
     {

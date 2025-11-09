@@ -29,7 +29,31 @@ class PathReservationController extends Controller
     ) {}
 
     /**
-     * POST /api/v1/admin/reservations
+     * Создание резервирования пути.
+     *
+     * @group Admin ▸ Path reservations
+     * @name Reserve path
+     * @authenticated
+     * @bodyParam path string required Путь или префикс (<=255). Example: blog/*
+     * @bodyParam source string required Идентификатор источника (<=100). Example: marketing
+     * @bodyParam reason string Причина (<=255). Example: Landing redesign freeze
+     * @response status=201 {
+     *   "message": "Path reserved successfully"
+     * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/conflict",
+     *   "title": "Conflict",
+     *   "status": 409,
+     *   "detail": "Path already reserved.",
+     *   "path": "/promo",
+     *   "owner": "marketing"
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Unprocessable Entity",
+     *   "status": 422,
+     *   "detail": "The path field is required."
+     * }
      */
     public function store(StorePathReservationRequest $request): PathReservationMessageResource
     {
@@ -73,9 +97,34 @@ class PathReservationController extends Controller
     }
 
     /**
-     * DELETE /api/v1/admin/reservations/{path}
+     * Удаление резервирования пути.
      *
-     * Поддерживает path как в URL параметре, так и в JSON body (для экзотических URL-encode кейсов).
+     * Поддерживает path как в URL параметре, так и в теле запроса.
+     *
+     * @group Admin ▸ Path reservations
+     * @name Release path
+     * @authenticated
+     * @urlParam path string required URL-кодированный путь. Example: blog%2F*
+     * @bodyParam source string required Текущий владелец резервирования. Example: marketing
+     * @bodyParam path string Альтернативный путь (если сложный URL). Example: blog/*
+     * @response status=200 {
+     *   "message": "Path released successfully"
+     * }
+     * @response status=403 {
+     *   "type": "https://stupidcms.dev/problems/forbidden",
+     *   "title": "Forbidden",
+     *   "status": 403,
+     *   "detail": "Only owner marketing may release this path.",
+     *   "path": "/promo",
+     *   "owner": "marketing",
+     *   "attempted_source": "editorial"
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation error",
+     *   "status": 422,
+     *   "detail": "Path is required either in URL parameter or request body."
+     * }
      */
     public function destroy(string $path, DestroyPathReservationRequest $request): PathReservationMessageResource
     {
@@ -119,7 +168,21 @@ class PathReservationController extends Controller
     }
 
     /**
-     * GET /api/v1/admin/reservations
+     * Список зарезервированных путей.
+     *
+     * @group Admin ▸ Path reservations
+     * @name List reservations
+     * @authenticated
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "path": "/promo",
+     *       "kind": "exact",
+     *       "source": "marketing",
+     *       "created_at": "2025-01-10T12:00:00+00:00"
+     *     }
+     *   ]
+     * }
      */
     public function index(): PathReservationCollection
     {

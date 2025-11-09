@@ -35,6 +35,36 @@ class TermController extends Controller
     ) {
     }
 
+    /**
+     * Список термов внутри таксономии.
+     *
+     * @group Admin ▸ Terms
+     * @name List terms
+     * @authenticated
+     * @urlParam taxonomy string required Slug таксономии. Example: category
+     * @queryParam q string Поиск по имени/slug (<=255). Example: guides
+     * @queryParam sort string Сортировка. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.
+     * @queryParam per_page int Размер страницы (10-100). Default: 15.
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": 3,
+     *       "taxonomy": "category",
+     *       "name": "Guides",
+     *       "slug": "guides",
+     *       "meta_json": {},
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00"
+     *     }
+     *   ]
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Taxonomy not found",
+     *   "status": 404,
+     *   "detail": "Taxonomy with slug category does not exist."
+     * }
+     */
     public function indexByTaxonomy(IndexTermsRequest $request, string $taxonomy): TermCollection
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
@@ -69,6 +99,46 @@ class TermController extends Controller
         return $collection;
     }
 
+    /**
+     * Создание терма.
+     *
+     * @group Admin ▸ Terms
+     * @name Create term
+     * @authenticated
+     * @urlParam taxonomy string required Slug таксономии. Example: category
+     * @bodyParam name string required Название (<=255). Example: Guides
+     * @bodyParam slug string Уникальный slug (а-z0-9_-). Генерируется из name, если не указан. Example: guides
+     * @bodyParam meta_json object Мета-данные. Example: {"color":"#ffcc00"}
+     * @bodyParam attach_entry_id int Привязать к записи (ID) сразу после создания. Example: 42
+     * @response status=201 {
+     *   "data": {
+     *     "id": 3,
+     *     "taxonomy": "category",
+     *     "name": "Guides",
+     *     "slug": "guides",
+     *     "meta_json": {},
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00"
+     *   }
+     * }
+     * @response status=201 scenario="attach_entry" {
+     *   "data": { "...": "..." },
+     *   "entry_terms": {
+     *     "entry_id": 42,
+     *     "terms": [
+     *       { "id": 3, "name": "Guides", "slug": "guides", "taxonomy": "category" }
+     *     ]
+     *   }
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "name": [
+     *       "The name field is required."
+     *     ]
+     *   }
+     * }
+     */
     public function store(StoreTermRequest $request, string $taxonomy): TermResource
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
@@ -127,6 +197,32 @@ class TermController extends Controller
         return $resource;
     }
 
+    /**
+     * Получение терма по ID.
+     *
+     * @group Admin ▸ Terms
+     * @name Show term
+     * @authenticated
+     * @urlParam term int required ID терма. Example: 3
+     * @response status=200 {
+     *   "data": {
+     *     "id": 3,
+     *     "taxonomy": "category",
+     *     "name": "Guides",
+     *     "slug": "guides",
+     *     "meta_json": {},
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Term not found",
+     *   "status": 404,
+     *   "detail": "Term with ID 3 does not exist."
+     * }
+     */
     public function show(int $term): TermResource
     {
         $termModel = Term::query()
@@ -140,6 +236,42 @@ class TermController extends Controller
         return new TermResource($termModel);
     }
 
+    /**
+     * Обновление терма.
+     *
+     * @group Admin ▸ Terms
+     * @name Update term
+     * @authenticated
+     * @urlParam term int required ID терма. Example: 3
+     * @bodyParam name string Новое название (<=255). Example: Tutorials
+     * @bodyParam slug string Новый slug (а-z0-9_-). Example: tutorials
+     * @bodyParam meta_json object Обновлённые мета-данные. Example: {"color":"#3366ff"}
+     * @response status=200 {
+     *   "data": {
+     *     "id": 3,
+     *     "taxonomy": "category",
+     *     "name": "Tutorials",
+     *     "slug": "tutorials",
+     *     "meta_json": {
+     *       "color": "#3366ff"
+     *     }
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Term not found",
+     *   "status": 404,
+     *   "detail": "Term with ID 3 does not exist."
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "slug": [
+     *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
+     *     ]
+     *   }
+     * }
+     */
     public function update(UpdateTermRequest $request, int $term): TermResource
     {
         $termModel = Term::query()
@@ -188,6 +320,28 @@ class TermController extends Controller
         return new TermResource($termModel);
     }
 
+    /**
+     * Удаление терма.
+     *
+     * @group Admin ▸ Terms
+     * @name Delete term
+     * @authenticated
+     * @urlParam term int required ID терма. Example: 3
+     * @queryParam forceDetach boolean Автоматически отвязать терм от записей. Example: true
+     * @response status=204 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Term not found",
+     *   "status": 404,
+     *   "detail": "Term with ID 3 does not exist."
+     * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/conflict",
+     *   "title": "Term still attached",
+     *   "status": 409,
+     *   "detail": "Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically."
+     * }
+     */
     public function destroy(Request $request, int $term): Response
     {
         $termModel = Term::query()->find($term);

@@ -28,6 +28,31 @@ final class RefreshController
     ) {
     }
 
+    /**
+     * Ротация refresh токена и выдача новой пары JWT.
+     *
+     * @group Auth
+     * @subgroup Sessions
+     * @name Refresh token
+     * @unauthenticated
+     * @responseHeader Set-Cookie "access=...; Path=/; HttpOnly; Secure"
+     * @responseHeader Set-Cookie "refresh=...; Path=/; HttpOnly; Secure"
+     * @response status=200 {
+     *   "message": "Tokens refreshed successfully."
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Missing refresh token."
+     * }
+     * @response status=500 {
+     *   "type": "about:blank",
+     *   "title": "Internal Server Error",
+     *   "status": 500,
+     *   "detail": "Failed to refresh token due to server error."
+     * }
+     */
     public function refresh(RefreshRequest $request): TokenRefreshResource
     {
         $rt = (string) $request->cookie(config('jwt.cookies.refresh'), '');

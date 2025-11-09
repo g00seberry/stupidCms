@@ -26,6 +26,35 @@ class MediaPreviewController extends Controller
     ) {
     }
 
+    /**
+     * Генерация временного предпросмотра для изображения.
+     *
+     * @group Admin ▸ Media
+     * @name Preview media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @queryParam variant string Вариант изображения. Default: thumbnail.
+     * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
+     * @response status=302 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Invalid variant",
+     *   "status": 422,
+     *   "detail": "Variant foo is not configured."
+     * }
+     * @response status=500 {
+     *   "type": "https://stupidcms.dev/problems/media-variant-error",
+     *   "title": "Internal Server Error",
+     *   "status": 500,
+     *   "detail": "Failed to generate media variant."
+     * }
+     */
     public function preview(Request $request, string $mediaId): RedirectResponse
     {
         $variant = $request->query('variant', 'thumbnail');
@@ -71,6 +100,28 @@ class MediaPreviewController extends Controller
         return redirect()->away($url);
     }
 
+    /**
+     * Получение временной ссылки на оригинал.
+     *
+     * @group Admin ▸ Media
+     * @name Download media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
+     * @response status=302 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     * @response status=500 {
+     *   "type": "https://stupidcms.dev/problems/media-download-error",
+     *   "title": "Internal Server Error",
+     *   "status": 500,
+     *   "detail": "Failed to generate download URL."
+     * }
+     */
     public function download(string $mediaId): RedirectResponse
     {
         $media = Media::withTrashed()->find($mediaId);

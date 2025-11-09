@@ -18,7 +18,25 @@ class UtilsController extends Controller
     ) {}
 
     /**
-     * GET /api/v1/admin/utils/slugify?title=...&postType=page
+     * Генерация slug предпросмотра.
+     *
+     * @group Admin ▸ Utils
+     * @name Slugify preview
+     * @authenticated
+     * @queryParam title string required Заголовок (<=500). Example: New landing page
+     * @queryParam postType string Slug типа записи (для проверки уникальности). Default: page. Example: article
+     * @response status=200 {
+     *   "base": "new-landing-page",
+     *   "unique": "new-landing-page-2"
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "title": [
+     *       "The title field is required."
+     *     ]
+     *   }
+     * }
      */
     public function slugify(Request $request): SlugifyPreviewResource
     {

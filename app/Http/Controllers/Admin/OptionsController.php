@@ -29,6 +29,53 @@ class OptionsController extends Controller
     {
     }
 
+    /**
+     * Список опций по namespace.
+     *
+     * @group Admin ▸ Options
+     * @name List options
+     * @authenticated
+     * @urlParam namespace string required Пространство опций (a-z0-9_.-). Example: site
+     * @queryParam q string Поиск по ключу/описанию (<=255). Example: hero
+     * @queryParam deleted string Управление soft-deleted. Values: with,only.
+     * @queryParam per_page int Размер страницы (1-100). Default: 20.
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": 10,
+     *       "namespace": "site",
+     *       "key": "hero.title",
+     *       "value": "Launch the future",
+     *       "description": "Hero headline",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null
+     *     }
+     *   ],
+     *   "links": {
+     *     "first": "…",
+     *     "last": "…",
+     *     "prev": null,
+     *     "next": null
+     *   },
+     *   "meta": {
+     *     "current_page": 1,
+     *     "last_page": 1,
+     *     "per_page": 20,
+     *     "total": 1
+     *   }
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/invalid-option-identifier",
+     *   "title": "Validation error",
+     *   "status": 422,
+     *   "detail": "The provided option namespace/key is invalid.",
+     *   "errors": {
+     *     "namespace": [
+     *       "The namespace format is invalid."
+     *     ]
+     *   }
+     * }
+     */
     public function index(IndexOptionsRequest $request, string $namespace): OptionCollection
     {
         $this->assertValidRouteParameters($namespace);
@@ -62,6 +109,31 @@ class OptionsController extends Controller
         return new OptionCollection($options);
     }
 
+    /**
+     * Получение значения опции.
+     *
+     * @group Admin ▸ Options
+     * @name Show option
+     * @authenticated
+     * @urlParam namespace string required Пространство опций. Example: site
+     * @urlParam key string required Ключ опции. Example: hero.title
+     * @response status=200 {
+     *   "data": {
+     *     "id": 10,
+     *     "namespace": "site",
+     *     "key": "hero.title",
+     *     "value": "Launch the future",
+     *     "description": "Hero headline",
+     *     "updated_at": "2025-01-10T12:00:00+00:00"
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Option not found",
+     *   "status": 404,
+     *   "detail": "Option \"site/hero.title\" was not found."
+     * }
+     */
     public function show(string $namespace, string $key): OptionResource
     {
         $this->assertValidRouteParameters($namespace, $key);
@@ -80,6 +152,38 @@ class OptionsController extends Controller
         return new OptionResource($option);
     }
 
+    /**
+     * Создание/обновление опции.
+     *
+     * @group Admin ▸ Options
+     * @name Upsert option
+     * @authenticated
+     * @urlParam namespace string required Пространство. Example: site
+     * @urlParam key string required Ключ (a-z0-9_.-). Example: hero.title
+     * @bodyParam value mixed required JSON-значение (до 64KB). Example: {"title":"Launch"}
+     * @bodyParam description string Описание (<=255). Example: Hero headline
+     * @response status=200 {
+     *   "data": {
+     *     "namespace": "site",
+     *     "key": "hero.title",
+     *     "value": {
+     *       "title": "Launch"
+     *     },
+     *     "description": "Hero headline"
+     *   }
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation error",
+     *   "status": 422,
+     *   "detail": "Invalid option payload.",
+     *   "errors": {
+     *     "value": [
+     *       "The value must be valid JSON."
+     *     ]
+     *   }
+     * }
+     */
     public function put(PutOptionRequest $request, string $namespace, string $key): OptionResource
     {
         $validated = $request->validated();
@@ -101,6 +205,22 @@ class OptionsController extends Controller
         return new OptionResource($saved);
     }
 
+    /**
+     * Удаление опции (soft delete).
+     *
+     * @group Admin ▸ Options
+     * @name Delete option
+     * @authenticated
+     * @urlParam namespace string required Пространство. Example: site
+     * @urlParam key string required Ключ. Example: hero.title
+     * @response status=204 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Option not found",
+     *   "status": 404,
+     *   "detail": "Option \"site/hero.title\" was not found."
+     * }
+     */
     public function destroy(string $namespace, string $key): Response
     {
         $this->assertValidRouteParameters($namespace, $key);
@@ -128,6 +248,28 @@ class OptionsController extends Controller
             ->header('Vary', 'Cookie');
     }
 
+    /**
+     * Восстановление удалённой опции.
+     *
+     * @group Admin ▸ Options
+     * @name Restore option
+     * @authenticated
+     * @urlParam namespace string required Пространство. Example: site
+     * @urlParam key string required Ключ. Example: hero.title
+     * @response status=200 {
+     *   "data": {
+     *     "namespace": "site",
+     *     "key": "hero.title",
+     *     "deleted_at": null
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Option not found",
+     *   "status": 404,
+     *   "detail": "Option \"site/hero.title\" was not found."
+     * }
+     */
     public function restore(string $namespace, string $key): OptionResource
     {
         $this->assertValidRouteParameters($namespace, $key);

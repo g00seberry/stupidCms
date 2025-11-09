@@ -2382,6 +2382,318 @@
             "env": null
         }
     },
+    "scribe": {
+        "title": {
+            "value": "Laravel API",
+            "type": "string",
+            "env": null
+        },
+        "description": {
+            "value": "Headless content platform: entries, taxonomies, media, auth.",
+            "type": "string",
+            "env": null
+        },
+        "intro_text": {
+            "value": "    <p><strong>stupidCms<\/strong> — headless CMS API. Все public\/admin endpoints документируются автоматически на основе PHPDoc, FormRequest и Resource-описаний.<\/p>\n    <p>Подробности по домену и ограничениям см. в <code>docs\/10-concepts\/*<\/code>.<\/p>",
+            "type": "string",
+            "env": null
+        },
+        "base_url": {
+            "value": "http:\/\/localhost\/api\/v1",
+            "type": "string",
+            "env": null
+        },
+        "routes.0.match.prefixes.0": {
+            "value": "api\/*",
+            "type": "string",
+            "env": null
+        },
+        "routes.0.match.domains.0": {
+            "value": "*",
+            "type": "string",
+            "env": null
+        },
+        "type": {
+            "value": "static",
+            "type": "string",
+            "env": null
+        },
+        "theme": {
+            "value": "default",
+            "type": "string",
+            "env": null
+        },
+        "static.output_path": {
+            "value": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\docs\/_generated\/api-docs",
+            "type": "string",
+            "env": null
+        },
+        "laravel.add_routes": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "laravel.docs_url": {
+            "value": "\/docs",
+            "type": "string",
+            "env": null
+        },
+        "laravel.assets_directory": {
+            "value": null,
+            "type": "NULL",
+            "env": null
+        },
+        "try_it_out.enabled": {
+            "value": true,
+            "type": "boolean",
+            "env": null
+        },
+        "try_it_out.base_url": {
+            "value": "http:\/\/localhost\/api\/v1",
+            "type": "string",
+            "env": null
+        },
+        "try_it_out.use_csrf": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "try_it_out.csrf_url": {
+            "value": "\/sanctum\/csrf-cookie",
+            "type": "string",
+            "env": null
+        },
+        "auth.enabled": {
+            "value": true,
+            "type": "boolean",
+            "env": null
+        },
+        "auth.default": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "auth.in": {
+            "value": "bearer",
+            "type": "string",
+            "env": null
+        },
+        "auth.name": {
+            "value": "Authorization",
+            "type": "string",
+            "env": null
+        },
+        "auth.use_value": {
+            "value": null,
+            "type": "NULL",
+            "env": null
+        },
+        "auth.placeholder": {
+            "value": "Bearer {JWT}",
+            "type": "string",
+            "env": null
+        },
+        "auth.extra_info": {
+            "value": "Получите JWT через <code>POST \/api\/v1\/auth\/login<\/code> или используйте refresh endpoint.",
+            "type": "string",
+            "env": null
+        },
+        "example_languages.0": {
+            "value": "bash",
+            "type": "string",
+            "env": null
+        },
+        "example_languages.1": {
+            "value": "javascript",
+            "type": "string",
+            "env": null
+        },
+        "example_languages.2": {
+            "value": "php",
+            "type": "string",
+            "env": null
+        },
+        "postman.enabled": {
+            "value": true,
+            "type": "boolean",
+            "env": null
+        },
+        "openapi.enabled": {
+            "value": true,
+            "type": "boolean",
+            "env": null
+        },
+        "groups.default": {
+            "value": "Endpoints",
+            "type": "string",
+            "env": null
+        },
+        "logo": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "last_updated": {
+            "value": "Last updated: {date:Y-m-d H:i}",
+            "type": "string",
+            "env": null
+        },
+        "examples.faker_seed": {
+            "value": 1234,
+            "type": "integer",
+            "env": null
+        },
+        "examples.models_source.0": {
+            "value": "factoryCreate",
+            "type": "string",
+            "env": null
+        },
+        "examples.models_source.1": {
+            "value": "factoryMake",
+            "type": "string",
+            "env": null
+        },
+        "examples.models_source.2": {
+            "value": "databaseFirst",
+            "type": "string",
+            "env": null
+        },
+        "strategies.metadata.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Metadata\\GetFromDocBlocks",
+            "type": "string",
+            "env": null
+        },
+        "strategies.metadata.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Metadata\\GetFromMetadataAttributes",
+            "type": "string",
+            "env": null
+        },
+        "strategies.headers.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Headers\\GetFromHeaderAttribute",
+            "type": "string",
+            "env": null
+        },
+        "strategies.headers.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Headers\\GetFromHeaderTag",
+            "type": "string",
+            "env": null
+        },
+        "strategies.headers.2.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\StaticData",
+            "type": "string",
+            "env": null
+        },
+        "strategies.headers.2.1.data.Content-Type": {
+            "value": "application\/json",
+            "type": "string",
+            "env": null
+        },
+        "strategies.headers.2.1.data.Accept": {
+            "value": "application\/json",
+            "type": "string",
+            "env": null
+        },
+        "strategies.urlParameters.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\UrlParameters\\GetFromLaravelAPI",
+            "type": "string",
+            "env": null
+        },
+        "strategies.urlParameters.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\UrlParameters\\GetFromUrlParamAttribute",
+            "type": "string",
+            "env": null
+        },
+        "strategies.urlParameters.2": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\UrlParameters\\GetFromUrlParamTag",
+            "type": "string",
+            "env": null
+        },
+        "strategies.queryParameters.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\QueryParameters\\GetFromFormRequest",
+            "type": "string",
+            "env": null
+        },
+        "strategies.queryParameters.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\QueryParameters\\GetFromInlineValidator",
+            "type": "string",
+            "env": null
+        },
+        "strategies.queryParameters.2": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\QueryParameters\\GetFromQueryParamAttribute",
+            "type": "string",
+            "env": null
+        },
+        "strategies.queryParameters.3": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\QueryParameters\\GetFromQueryParamTag",
+            "type": "string",
+            "env": null
+        },
+        "strategies.bodyParameters.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\BodyParameters\\GetFromFormRequest",
+            "type": "string",
+            "env": null
+        },
+        "strategies.bodyParameters.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\BodyParameters\\GetFromInlineValidator",
+            "type": "string",
+            "env": null
+        },
+        "strategies.bodyParameters.2": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\BodyParameters\\GetFromBodyParamAttribute",
+            "type": "string",
+            "env": null
+        },
+        "strategies.bodyParameters.3": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\BodyParameters\\GetFromBodyParamTag",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responses.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\UseResponseAttributes",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responses.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\UseTransformerTags",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responses.2": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\UseApiResourceTags",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responses.3": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\UseResponseTag",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responses.4": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\UseResponseFileTag",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responseFields.0": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\ResponseFields\\GetFromResponseFieldAttribute",
+            "type": "string",
+            "env": null
+        },
+        "strategies.responseFields.1": {
+            "value": "Knuckles\\Scribe\\Extracting\\Strategies\\ResponseFields\\GetFromResponseFieldTag",
+            "type": "string",
+            "env": null
+        },
+        "database_connections_to_transact.0": {
+            "value": "mysql",
+            "type": "string",
+            "env": null
+        },
+        "fractal.serializer": {
+            "value": null,
+            "type": "NULL",
+            "env": null
+        }
+    },
     "search": {
         "enabled": {
             "value": false,

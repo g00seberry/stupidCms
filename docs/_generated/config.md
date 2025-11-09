@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-09 14:31:19_
+_Last generated: 2025-11-09 15:23:38_
 
 ## app
 
@@ -572,6 +572,75 @@ _Last generated: 2025-11-09 14:31:19_
 | `failed.driver` | `database-uuids` | string |
 | `failed.database` | `mysql` | string |
 | `failed.table` | `failed_jobs` | string |
+
+## scribe
+
+**File**: `config/scribe.php`
+
+| Key | Value | Type |
+|-----|-------|------|
+| `title` | `Laravel API` | string |
+| `description` | `Headless content platform: entries, taxonomies,...` | string |
+| `intro_text` | `    <p><strong>stupidCms</strong> — headless ...` | string |
+| `base_url` | `http://localhost/api/v1` | string |
+| `routes.0.match.prefixes.0` | `api/*` | string |
+| `routes.0.match.domains.0` | `*` | string |
+| `type` | `static` | string |
+| `theme` | `default` | string |
+| `static.output_path` | `C:\Users\dattebayo\Desktop\proj\stupidCms\docs/...` | string |
+| `laravel.add_routes` | `false` | boolean |
+| `laravel.docs_url` | `/docs` | string |
+| `laravel.assets_directory` | _null_ | NULL |
+| `try_it_out.enabled` | `true` | boolean |
+| `try_it_out.base_url` | `http://localhost/api/v1` | string |
+| `try_it_out.use_csrf` | `false` | boolean |
+| `try_it_out.csrf_url` | `/sanctum/csrf-cookie` | string |
+| `auth.enabled` | `true` | boolean |
+| `auth.default` | `false` | boolean |
+| `auth.in` | `bearer` | string |
+| `auth.name` | `Authorization` | string |
+| `auth.use_value` | _null_ | NULL |
+| `auth.placeholder` | `Bearer {JWT}` | string |
+| `auth.extra_info` | `Получите JWT через <code>POST /api...` | string |
+| `example_languages.0` | `bash` | string |
+| `example_languages.1` | `javascript` | string |
+| `example_languages.2` | `php` | string |
+| `postman.enabled` | `true` | boolean |
+| `openapi.enabled` | `true` | boolean |
+| `groups.default` | `Endpoints` | string |
+| `logo` | `false` | boolean |
+| `last_updated` | `Last updated: {date:Y-m-d H:i}` | string |
+| `examples.faker_seed` | `1234` | integer |
+| `examples.models_source.0` | `factoryCreate` | string |
+| `examples.models_source.1` | `factoryMake` | string |
+| `examples.models_source.2` | `databaseFirst` | string |
+| `strategies.metadata.0` | `Knuckles\Scribe\Extracting\Strategies\Metadata\...` | string |
+| `strategies.metadata.1` | `Knuckles\Scribe\Extracting\Strategies\Metadata\...` | string |
+| `strategies.headers.0` | `Knuckles\Scribe\Extracting\Strategies\Headers\G...` | string |
+| `strategies.headers.1` | `Knuckles\Scribe\Extracting\Strategies\Headers\G...` | string |
+| `strategies.headers.2.0` | `Knuckles\Scribe\Extracting\Strategies\StaticData` | string |
+| `strategies.headers.2.1.data.Content-Type` | `application/json` | string |
+| `strategies.headers.2.1.data.Accept` | `application/json` | string |
+| `strategies.urlParameters.0` | `Knuckles\Scribe\Extracting\Strategies\UrlParame...` | string |
+| `strategies.urlParameters.1` | `Knuckles\Scribe\Extracting\Strategies\UrlParame...` | string |
+| `strategies.urlParameters.2` | `Knuckles\Scribe\Extracting\Strategies\UrlParame...` | string |
+| `strategies.queryParameters.0` | `Knuckles\Scribe\Extracting\Strategies\QueryPara...` | string |
+| `strategies.queryParameters.1` | `Knuckles\Scribe\Extracting\Strategies\QueryPara...` | string |
+| `strategies.queryParameters.2` | `Knuckles\Scribe\Extracting\Strategies\QueryPara...` | string |
+| `strategies.queryParameters.3` | `Knuckles\Scribe\Extracting\Strategies\QueryPara...` | string |
+| `strategies.bodyParameters.0` | `Knuckles\Scribe\Extracting\Strategies\BodyParam...` | string |
+| `strategies.bodyParameters.1` | `Knuckles\Scribe\Extracting\Strategies\BodyParam...` | string |
+| `strategies.bodyParameters.2` | `Knuckles\Scribe\Extracting\Strategies\BodyParam...` | string |
+| `strategies.bodyParameters.3` | `Knuckles\Scribe\Extracting\Strategies\BodyParam...` | string |
+| `strategies.responses.0` | `Knuckles\Scribe\Extracting\Strategies\Responses...` | string |
+| `strategies.responses.1` | `Knuckles\Scribe\Extracting\Strategies\Responses...` | string |
+| `strategies.responses.2` | `Knuckles\Scribe\Extracting\Strategies\Responses...` | string |
+| `strategies.responses.3` | `Knuckles\Scribe\Extracting\Strategies\Responses...` | string |
+| `strategies.responses.4` | `Knuckles\Scribe\Extracting\Strategies\Responses...` | string |
+| `strategies.responseFields.0` | `Knuckles\Scribe\Extracting\Strategies\ResponseF...` | string |
+| `strategies.responseFields.1` | `Knuckles\Scribe\Extracting\Strategies\ResponseF...` | string |
+| `database_connections_to_transact.0` | `mysql` | string |
+| `fractal.serializer` | _null_ | NULL |
 
 ## search
 

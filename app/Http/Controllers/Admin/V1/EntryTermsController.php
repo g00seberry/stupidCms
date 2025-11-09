@@ -21,6 +21,42 @@ class EntryTermsController extends Controller
     use Problems;
     use ManagesEntryTerms;
 
+    /**
+     * Получение термов записи.
+     *
+     * @group Admin ▸ Entry terms
+     * @name List entry terms
+     * @authenticated
+     * @urlParam entry int required ID записи. Example: 42
+     * @response status=200 {
+     *   "data": {
+     *     "entry_id": 42,
+     *     "terms": [
+     *       {
+     *         "id": 3,
+     *         "name": "Guides",
+     *         "slug": "guides",
+     *         "taxonomy": "category"
+     *       }
+     *     ],
+     *     "terms_by_taxonomy": {
+     *       "category": [
+     *         {
+     *           "id": 3,
+     *           "name": "Guides",
+     *           "slug": "guides"
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Entry not found",
+     *   "status": 404,
+     *   "detail": "Entry with ID 42 does not exist."
+     * }
+     */
     public function index(int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
@@ -32,6 +68,45 @@ class EntryTermsController extends Controller
         return $this->entryTermsResource($entryModel);
     }
 
+    /**
+     * Привязка термов к записи (без детача существующих).
+     *
+     * @group Admin ▸ Entry terms
+     * @name Attach entry terms
+     * @authenticated
+     * @urlParam entry int required ID записи. Example: 42
+     * @bodyParam term_ids int[] required Список ID термов (>=1). Example: [3,8]
+     * @response status=200 {
+     *   "data": {
+     *     "entry_id": 42,
+     *     "terms": [
+     *       {
+     *         "id": 3,
+     *         "name": "Guides",
+     *         "slug": "guides",
+     *         "taxonomy": "category"
+     *       }
+     *     ],
+     *     "terms_by_taxonomy": {
+     *       "category": [
+     *         {
+     *           "id": 3,
+     *           "name": "Guides",
+     *           "slug": "guides"
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "term_ids": [
+     *       "Taxonomy 'tags' is not allowed for the entry post type."
+     *     ]
+     *   }
+     * }
+     */
     public function attach(AttachTermsRequest $request, int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
@@ -62,6 +137,21 @@ class EntryTermsController extends Controller
         return $this->entryTermsResource($entryModel->fresh());
     }
 
+    /**
+     * Отвязка выбранных термов.
+     *
+     * @group Admin ▸ Entry terms
+     * @name Detach entry terms
+     * @authenticated
+     * @urlParam entry int required ID записи. Example: 42
+     * @bodyParam term_ids int[] required Список ID термов (>=1). Example: [3,8]
+     * @response status=200 {
+     *   "data": {
+     *     "entry_id": 42,
+     *     "terms": []
+     *   }
+     * }
+     */
     public function detach(AttachTermsRequest $request, int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
@@ -85,6 +175,36 @@ class EntryTermsController extends Controller
         return $this->entryTermsResource($entryModel->fresh());
     }
 
+    /**
+     * Полная синхронизация термов (detach + attach).
+     *
+     * @group Admin ▸ Entry terms
+     * @name Sync entry terms
+     * @authenticated
+     * @urlParam entry int required ID записи. Example: 42
+     * @bodyParam term_ids int[] required Список ID термов (может быть пустым для очистки). Example: [3,8]
+     * @response status=200 {
+     *   "data": {
+     *     "entry_id": 42,
+     *     "terms": [
+     *       {
+     *         "id": 8,
+     *         "name": "Announcements",
+     *         "slug": "announcements",
+     *         "taxonomy": "category"
+     *       }
+     *     ]
+     *   }
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "term_ids": [
+     *       "Taxonomy 'tags' is not allowed for the entry post type."
+     *     ]
+     *   }
+     * }
+     */
     public function sync(SyncTermsRequest $request, int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);

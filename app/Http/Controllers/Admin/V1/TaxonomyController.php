@@ -32,6 +32,28 @@ class TaxonomyController extends Controller
     ) {
     }
 
+    /**
+     * Список таксономий.
+     *
+     * @group Admin ▸ Taxonomies
+     * @name List taxonomies
+     * @authenticated
+     * @queryParam q string Поиск по slug/label (<=255 символов). Example: category
+     * @queryParam sort string Сортировка. Values: created_at.desc,created_at.asc,slug.asc,slug.desc,label.asc,label.desc. Default: created_at.desc.
+     * @queryParam per_page int Размер страницы (10-100). Default: 15.
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "slug": "category",
+     *       "label": "Categories",
+     *       "hierarchical": true,
+     *       "options_json": {},
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00"
+     *     }
+     *   ]
+     * }
+     */
     public function index(IndexTaxonomiesRequest $request): TaxonomyCollection
     {
         $validated = $request->validated();
@@ -58,6 +80,35 @@ class TaxonomyController extends Controller
         return new TaxonomyCollection($collection);
     }
 
+    /**
+     * Создание таксономии.
+     *
+     * @group Admin ▸ Taxonomies
+     * @name Create taxonomy
+     * @authenticated
+     * @bodyParam label string required Человекочитаемое название (<=255). Example: Categories
+     * @bodyParam slug string Уникальный slug (а-z0-9_-). Генерируется из label, если не указан. Example: category
+     * @bodyParam hierarchical boolean Иерархическая ли таксономия. Default: false.
+     * @bodyParam options_json object Дополнительные настройки. Example: {"color":"#ffcc00"}
+     * @response status=201 {
+     *   "data": {
+     *     "slug": "category",
+     *     "label": "Categories",
+     *     "hierarchical": true,
+     *     "options_json": {},
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00"
+     *   }
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "slug": [
+     *       "The slug has already been taken."
+     *     ]
+     *   }
+     * }
+     */
     public function store(StoreTaxonomyRequest $request): TaxonomyResource
     {
         $validated = $request->validated();
@@ -93,6 +144,28 @@ class TaxonomyController extends Controller
         return new TaxonomyResource($taxonomy->fresh(), true);
     }
 
+    /**
+     * Получение таксономии.
+     *
+     * @group Admin ▸ Taxonomies
+     * @name Show taxonomy
+     * @authenticated
+     * @urlParam slug string required Slug таксономии. Example: category
+     * @response status=200 {
+     *   "data": {
+     *     "slug": "category",
+     *     "label": "Categories",
+     *     "hierarchical": true,
+     *     "options_json": {}
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Taxonomy not found",
+     *   "status": 404,
+     *   "detail": "Taxonomy with slug category does not exist."
+     * }
+     */
     public function show(string $slug): TaxonomyResource
     {
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
@@ -104,6 +177,42 @@ class TaxonomyController extends Controller
         return new TaxonomyResource($taxonomy);
     }
 
+    /**
+     * Обновление таксономии.
+     *
+     * @group Admin ▸ Taxonomies
+     * @name Update taxonomy
+     * @authenticated
+     * @urlParam slug string required Slug таксономии. Example: category
+     * @bodyParam label string Новое название (<=255). Example: Categories
+     * @bodyParam slug string Новый slug (а-z0-9_-). Example: categories
+     * @bodyParam hierarchical boolean Иерархическая ли таксономия.
+     * @bodyParam options_json object Дополнительные настройки. Example: {"color":"#ffcc00"}
+     * @response status=200 {
+     *   "data": {
+     *     "slug": "categories",
+     *     "label": "Categories",
+     *     "hierarchical": true,
+     *     "options_json": {
+     *       "color": "#ffcc00"
+     *     }
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Taxonomy not found",
+     *   "status": 404,
+     *   "detail": "Taxonomy with slug category does not exist."
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "slug": [
+     *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
+     *     ]
+     *   }
+     * }
+     */
     public function update(UpdateTaxonomyRequest $request, string $slug): TaxonomyResource
     {
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
@@ -155,6 +264,29 @@ class TaxonomyController extends Controller
         return new TaxonomyResource($taxonomy->fresh());
     }
 
+    /**
+     * Удаление таксономии.
+     *
+     * @group Admin ▸ Taxonomies
+     * @name Delete taxonomy
+     * @authenticated
+     * @urlParam slug string required Slug таксономии. Example: category
+     * @queryParam force boolean Каскадно удалить термы и связи. Example: true
+     * @response status=204 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Taxonomy not found",
+     *   "status": 404,
+     *   "detail": "Taxonomy with slug category does not exist."
+     * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/conflict",
+     *   "title": "Taxonomy has terms",
+     *   "status": 409,
+     *   "detail": "Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.",
+     *   "path": "/api/v1/admin/taxonomies/category"
+     * }
+     */
     public function destroy(Request $request, string $slug): Response
     {
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();

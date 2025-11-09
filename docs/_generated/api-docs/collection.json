@@ -10,507 +10,84 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "8603f157-4d40-46ef-ace6-25106aa87490",
+        "_postman_id": "f2895469-12ca-4bf0-b333-56efa76cd4af",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
         {
-            "name": "Endpoints",
+            "name": "Admin \u25b8 Entries",
             "description": "",
             "item": [
                 {
-                    "name": "POST api\/v1\/auth\/login",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/auth\/login",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/auth\/login"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"email\":\"qkunze@example.com\",\"password\":\"Z5ij-e\\\/dl4m{o,\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/v1\/auth\/refresh",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/auth\/refresh",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/auth\/refresh"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/v1\/auth\/logout",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/auth\/logout",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/auth\/logout"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"all\":false}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Issue a CSRF token cookie.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/auth\/csrf",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/auth\/csrf"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Returns a CSRF token in the response body and sets a non-HttpOnly cookie\nso that JavaScript can read it and include it in subsequent requests.",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/search",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/search",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/search"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-09T14:41:55\",\"to\":\"2106-12-09\",\"page\":45,\"per_page\":16}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET \/api\/v1\/admin\/utils\/slugify?title=.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/utils\/slugify",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/utils\/slugify"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"title\":\"vmqeopfuudtdsufvyvddq\",\"postType\":\"consequatur\"}"
-                        },
-                        "description": "..&postType=page",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/admin\/plugins",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/plugins",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"any\",\"page\":2,\"per_page\":13,\"sort\":\"slug\",\"order\":\"asc\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/v1\/admin\/plugins\/sync",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/plugins\/sync",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins\/sync"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/v1\/admin\/plugins\/{slug}\/enable",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/plugins\/:slug\/enable",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins\/:slug\/enable",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "consequatur",
-                                    "description": "The slug of the plugin."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/v1\/admin\/plugins\/{slug}\/disable",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/plugins\/:slug\/disable",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins\/:slug\/disable",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "consequatur",
-                                    "description": "The slug of the plugin."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET \/api\/v1\/admin\/reservations",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/reservations",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/reservations"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST \/api\/v1\/admin\/reservations",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/reservations",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/reservations"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"path\":\"vmqeopfuudtdsufvyvddq\",\"source\":\"amniihfqcoynlazghdtqt\",\"reason\":\"qxbajwbpilpmufinllwlo\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "DELETE \/api\/v1\/admin\/reservations\/{path}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/reservations\/:path",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/reservations\/:path",
-                            "variable": [
-                                {
-                                    "id": "path",
-                                    "key": "path",
-                                    "value": "2UZ5i",
-                                    "description": ""
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"source\":\"vmqeopfuudtdsufvyvddq\",\"path\":\"amniihfqcoynlazghdtqt\"}"
-                        },
-                        "description": "\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 path \u043a\u0430\u043a \u0432 URL \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0435, \u0442\u0430\u043a \u0438 \u0432 JSON body (\u0434\u043b\u044f \u044d\u043a\u0437\u043e\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0445 URL-encode \u043a\u0435\u0439\u0441\u043e\u0432).",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Display the specified post type.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/post-types\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/post-types\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "consequatur",
-                                    "description": "The slug of the post type."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Update the specified post type.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/post-types\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/post-types\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "consequatur",
-                                    "description": "The slug of the post type."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Display a listing of entries with filters.",
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0437\u0430\u043f\u0438\u0441\u0435\u0439 \u0441 \u0444\u0438\u043b\u044c\u0442\u0440\u0430\u043c\u0438 \u0438 \u043f\u0430\u0433\u0438\u043d\u0430\u0446\u0438\u0435\u0439.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/v1\/admin\/entries",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/entries"
+                            "query": [
+                                {
+                                    "key": "post_type",
+                                    "value": "article",
+                                    "description": "\u0424\u0438\u043b\u044c\u0442\u0440 \u043f\u043e slug PostType.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "consequatur",
+                                    "description": "\u0424\u0438\u043b\u044c\u0442\u0440 \u043f\u043e \u0441\u0442\u0430\u0442\u0443\u0441\u0443. Values: all,draft,published,scheduled,trashed. Default: all.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "q",
+                                    "value": "landing",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044e\/slug (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "author_id",
+                                    "value": "7",
+                                    "description": "ID \u0430\u0432\u0442\u043e\u0440\u0430.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "term%5B%5D",
+                                    "value": "",
+                                    "description": "ID \u0442\u0435\u0440\u043c\u043e\u0432 (\u043c\u043d\u043e\u0436\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u0444\u0438\u043b\u044c\u0442\u0440).",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "date_field",
+                                    "value": "consequatur",
+                                    "description": "\u041f\u043e\u043b\u0435 \u0434\u0430\u0442\u044b \u0434\u043b\u044f \u0434\u0438\u0430\u043f\u0430\u0437\u043e\u043d\u0430. Values: updated,published. Default: updated.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_from",
+                                    "value": "2025-01-01",
+                                    "description": "date \u041d\u0430\u0447\u0430\u043b\u044c\u043d\u0430\u044f \u0434\u0430\u0442\u0430 (ISO 8601).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_to",
+                                    "value": "2025-01-31",
+                                    "description": "date \u041a\u043e\u043d\u0435\u0447\u043d\u0430\u044f \u0434\u0430\u0442\u0430 (>= date_from).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "consequatur",
+                                    "description": "\u041f\u043e\u043b\u0435 \u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0438. Values: updated_at.desc,updated_at.asc,published_at.desc,published_at.asc,title.asc,title.desc. Default: updated_at.desc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "17",
+                                    "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432 \u043d\u0430 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 (10-100). Default: 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/entries?post_type=article&status=consequatur&q=landing&author_id=7&term%5B%5D=&date_field=consequatur&date_from=2025-01-01&date_to=2025-01-31&sort=consequatur&per_page=17"
                         },
                         "method": "GET",
                         "header": [
@@ -525,17 +102,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-09T14:41:55\",\"date_to\":\"2106-12-09\",\"date_field\":\"updated\",\"sort\":\"updated_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"trashed\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-09T15:25:00\",\"date_to\":\"2106-12-09\",\"date_field\":\"published\",\"sort\":\"published_at.desc\",\"per_page\":13}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": 42,\n      \"post_type\": \"article\",\n      \"title\": \"Headless CMS launch checklist\",\n      \"slug\": \"launch-checklist\",\n      \"status\": \"draft\",\n      \"is_published\": false,\n      \"published_at\": null\n    }\n  ],\n  \"links\": {\n    \"first\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/entries?page=1\",\n    \"last\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/entries?page=5\",\n    \"prev\": null,\n    \"next\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/entries?page=2\"\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 5,\n    \"per_page\": 15,\n    \"total\": 74\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"detail\": \"Admin privileges are required.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Store a newly created entry.",
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -556,17 +143,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"title\":\"mqeopfuudtdsufvyvddqa\",\"slug\":\"mniihfqcoynlazghdtqtq\",\"is_published\":false,\"published_at\":\"2025-11-09T14:41:55\",\"template_override\":\"xbajwbpilpmufinllwloa\",\"term_ids\":[17]}"
+                            "raw": "{\"post_type\":\"article\",\"title\":\"Headless CMS launch checklist\",\"slug\":\"launch-checklist\",\"content_json\":{\"hero\":{\"title\":\"Launch\"}},\"meta_json\":{\"title\":\"Launch\",\"description\":\"Checklist\"},\"is_published\":false,\"published_at\":\"2025-02-10T08:00:00Z\",\"template_override\":\"templates.landing\",\"term_ids\":[3,8]}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {\n      \"hero\": {\n        \"title\": \"Launch\"\n      }\n    },\n    \"meta_json\": {\n      \"title\": \"Launch\"\n    },\n    \"template_override\": \"templates.landing\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"post_type\": [\n      \"The specified post type does not exist.\"\n    ],\n    \"slug\": [\n      \"The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Display the specified entry.",
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438 \u043f\u043e ID (\u0432\u043a\u043b\u044e\u0447\u0430\u044f \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u044b\u0435).",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -577,8 +174,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "17",
-                                    "description": "The ID of the entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -594,15 +191,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {},\n    \"meta_json\": {},\n    \"author\": {\n      \"id\": 7,\n      \"name\": \"Admin User\"\n    },\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"created_at\": \"2025-02-09T10:15:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Update the specified entry.",
+                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -613,8 +220,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "17",
-                                    "description": "The ID of the entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -629,16 +236,35 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"Updated checklist\",\"slug\":\"launch-checklist\",\"content_json\":{\"body\":{\"blocks\":[]}},\"meta_json\":{\"description\":\"Updated\"},\"is_published\":false,\"published_at\":\"consequatur\",\"template_override\":\"templates.landing\",\"term_ids\":[17]}"
+                        },
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"title\": \"Updated checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"draft\",\n    \"is_published\": false,\n    \"published_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"slug\": [\n      \"The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Soft delete the specified entry.",
+                    "name": "\u041c\u044f\u0433\u043a\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -649,8 +275,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "17",
-                                    "description": "The ID of the entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -666,15 +292,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "Restore a soft-deleted entry.",
+                    "name": "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043c\u044f\u0433\u043a\u043e \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u043e\u0439 \u0437\u0430\u043f\u0438\u0441\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -685,8 +321,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "17",
-                                    "description": "The ID of the entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -702,377 +338,31 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/admin\/taxonomies",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies"
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"status\": \"draft\",\n    \"deleted_at\": null\n  }\n}",
+                            "name": ""
                         },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Trashed entry with ID 42 does not exist.\"\n}",
+                            "name": ""
                         }
-                    },
-                    "response": []
-                },
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Entry terms",
+            "description": "",
+            "item": [
                 {
-                    "name": "POST api\/v1\/admin\/taxonomies",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"slug\":\"amniihfqcoynlazghdtqt\",\"hierarchical\":false}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/admin\/taxonomies\/{slug}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "consequatur",
-                                    "description": "The slug of the taxonomy."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "PUT api\/v1\/admin\/taxonomies\/{slug}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "consequatur",
-                                    "description": "The slug of the taxonomy."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"slug\":\"amniihfqcoynlazghdtqt\",\"hierarchical\":true}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "DELETE api\/v1\/admin\/taxonomies\/{slug}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "17",
-                                    "description": "The slug of the taxonomy."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/admin\/taxonomies\/{taxonomy_id}\/terms",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "variable": [
-                                {
-                                    "id": "taxonomy_id",
-                                    "key": "taxonomy_id",
-                                    "value": "17",
-                                    "description": "The ID of the taxonomy."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/v1\/admin\/taxonomies\/{taxonomy_id}\/terms",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "variable": [
-                                {
-                                    "id": "taxonomy_id",
-                                    "key": "taxonomy_id",
-                                    "value": "17",
-                                    "description": "The ID of the taxonomy."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"vmqeopfuudtdsufvyvddq\",\"slug\":\"amniihfqcoynlazghdtqt\",\"attach_entry_id\":17}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/admin\/terms\/{id}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/terms\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/terms\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "consequatur",
-                                    "description": "The ID of the term."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "PUT api\/v1\/admin\/terms\/{id}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/terms\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/terms\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "consequatur",
-                                    "description": "The ID of the term."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"vmqeopfuudtdsufvyvddq\",\"slug\":\"amniihfqcoynlazghdtqt\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "DELETE api\/v1\/admin\/terms\/{id}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/terms\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/terms\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "17",
-                                    "description": "The ID of the term."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "GET api\/v1\/admin\/entries\/{entry_id}\/terms",
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u043e\u0432 \u0437\u0430\u043f\u0438\u0441\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1085,6 +375,12 @@
                                     "key": "entry_id",
                                     "value": "17",
                                     "description": "The ID of the entry."
+                                },
+                                {
+                                    "id": "entry",
+                                    "key": "entry",
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -1100,15 +396,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"category\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\",\n          \"slug\": \"guides\"\n        }\n      ]\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/v1\/admin\/entries\/{entry}\/terms\/attach",
+                    "name": "\u041f\u0440\u0438\u0432\u044f\u0437\u043a\u0430 \u0442\u0435\u0440\u043c\u043e\u0432 \u043a \u0437\u0430\u043f\u0438\u0441\u0438 (\u0431\u0435\u0437 \u0434\u0435\u0442\u0430\u0447\u0430 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044e\u0449\u0438\u0445).",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1119,8 +425,8 @@
                                 {
                                     "id": "entry",
                                     "key": "entry",
-                                    "value": "17",
-                                    "description": "The entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -1137,17 +443,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"term_ids\":[17]}"
+                            "raw": "{\"term_ids\":[3,8]}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"category\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\",\n          \"slug\": \"guides\"\n        }\n      ]\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"term_ids\": [\n      \"Taxonomy 'tags' is not allowed for the entry post type.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/v1\/admin\/entries\/{entry}\/terms\/detach",
+                    "name": "\u041e\u0442\u0432\u044f\u0437\u043a\u0430 \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445 \u0442\u0435\u0440\u043c\u043e\u0432.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1158,8 +474,8 @@
                                 {
                                     "id": "entry",
                                     "key": "entry",
-                                    "value": "17",
-                                    "description": "The entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -1176,17 +492,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"term_ids\":[17]}"
+                            "raw": "{\"term_ids\":[3,8]}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": []\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "PUT api\/v1\/admin\/entries\/{entry}\/terms\/sync",
+                    "name": "\u041f\u043e\u043b\u043d\u0430\u044f \u0441\u0438\u043d\u0445\u0440\u043e\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u0442\u0435\u0440\u043c\u043e\u0432 (detach + attach).",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1197,8 +517,8 @@
                                 {
                                     "id": "entry",
                                     "key": "entry",
-                                    "value": "17",
-                                    "description": "The entry."
+                                    "value": "42",
+                                    "description": "ID \u0437\u0430\u043f\u0438\u0441\u0438."
                                 }
                             ]
                         },
@@ -1215,23 +535,88 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"term_ids\":[17]}"
+                            "raw": "{\"term_ids\":[3,8]}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
-                },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 8,\n        \"name\": \"Announcements\",\n        \"slug\": \"announcements\",\n        \"taxonomy\": \"category\"\n      }\n    ]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"term_ids\": [\n      \"Taxonomy 'tags' is not allowed for the entry post type.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Media",
+            "description": "",
+            "item": [
                 {
-                    "name": "GET api\/v1\/admin\/media",
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u043c\u0435\u0434\u0438\u0430\u0444\u0430\u0439\u043b\u043e\u0432 \u0441 \u0444\u0438\u043b\u044c\u0442\u0440\u0430\u043c\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/v1\/admin\/media",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media"
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "hero",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044e \u0438 \u0438\u0441\u0445\u043e\u0434\u043d\u043e\u043c\u0443 \u0438\u043c\u0435\u043d\u0438 (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "kind",
+                                    "value": "consequatur",
+                                    "description": "\u0424\u0438\u043b\u044c\u0442\u0440 \u043f\u043e \u0442\u0438\u043f\u0443. Values: image,video,audio,document.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "mime",
+                                    "value": "image%2Fpng",
+                                    "description": "\u0424\u0438\u043b\u044c\u0442\u0440 \u043f\u043e MIME (prefix match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "collection",
+                                    "value": "uploads",
+                                    "description": "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044f (slug, \u0434\u043e 64 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "deleted",
+                                    "value": "consequatur",
+                                    "description": "\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 soft-deleted. Values: with,only.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "consequatur",
+                                    "description": "\u041f\u043e\u043b\u0435 \u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0438. Values: created_at,size_bytes,mime. Default: created_at.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "consequatur",
+                                    "description": "\u041d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0438. Values: asc,desc. Default: desc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "17",
+                                    "description": "\u0420\u0430\u0437\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (1-100). Default: 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media?q=hero&kind=consequatur&mime=image%2Fpng&collection=uploads&deleted=consequatur&sort=consequatur&order=consequatur&per_page=17"
                         },
                         "method": "GET",
                         "header": [
@@ -1246,17 +631,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"created_at\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"audio\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"created_at\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid-media\",\n      \"kind\": \"image\",\n      \"name\": \"hero.jpg\",\n      \"mime\": \"image\/jpeg\",\n      \"size_bytes\": 235678,\n      \"preview_urls\": {\n        \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n      },\n      \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 15,\n    \"total\": 1\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/v1\/admin\/media\/{media}",
+                    "name": "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438 \u043e \u043c\u0435\u0434\u0438\u0430\u0444\u0430\u0439\u043b\u0435.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1267,8 +656,8 @@
                                 {
                                     "id": "media",
                                     "key": "media",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "uuid-media",
+                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
                                 }
                             ]
                         },
@@ -1284,27 +673,44 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"deleted_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/v1\/admin\/media\/{media}\/preview",
+                    "name": "\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e\u0433\u043e \u043f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430 \u0434\u043b\u044f \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/v1\/admin\/media\/:media\/preview",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/:media\/preview",
+                            "query": [
+                                {
+                                    "key": "variant",
+                                    "value": "consequatur",
+                                    "description": "\u0412\u0430\u0440\u0438\u0430\u043d\u0442 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f. Default: thumbnail.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/:media\/preview?variant=consequatur",
                             "variable": [
                                 {
                                     "id": "media",
                                     "key": "media",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "uuid-media",
+                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
                                 }
                             ]
                         },
@@ -1320,15 +726,37 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Invalid variant\",\n  \"status\": 422,\n  \"detail\": \"Variant foo is not configured.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/media-variant-error\",\n  \"title\": \"Internal Server Error\",\n  \"status\": 500,\n  \"detail\": \"Failed to generate media variant.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/v1\/admin\/media\/{media}\/download",
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e\u0439 \u0441\u0441\u044b\u043b\u043a\u0438 \u043d\u0430 \u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1339,8 +767,8 @@
                                 {
                                     "id": "media",
                                     "key": "media",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "uuid-media",
+                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
                                 }
                             ]
                         },
@@ -1356,15 +784,31 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/media-download-error\",\n  \"title\": \"Internal Server Error\",\n  \"status\": 500,\n  \"detail\": \"Failed to generate download URL.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/v1\/admin\/media",
+                    "name": "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043d\u043e\u0432\u043e\u0433\u043e \u043c\u0435\u0434\u0438\u0430\u0444\u0430\u0439\u043b\u0430.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1388,21 +832,21 @@
                             "formdata": [
                                 {
                                     "key": "title",
-                                    "value": "vmqeopfuudtdsufvyvddq",
+                                    "value": "Hero image",
                                     "type": "text",
-                                    "description": "Must not be greater than 255 characters."
+                                    "description": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u0441\u043a\u0438\u0439 \u0437\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a."
                                 },
                                 {
                                     "key": "alt",
-                                    "value": "amniihfqcoynlazghdtqt",
+                                    "value": "Hero cover",
                                     "type": "text",
-                                    "description": "Must not be greater than 255 characters."
+                                    "description": "Alt-\u0442\u0435\u043a\u0441\u0442 \u0434\u043b\u044f \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0439."
                                 },
                                 {
                                     "key": "collection",
-                                    "value": "qxbajwbpilpmufinllwlo",
+                                    "value": "uploads",
                                     "type": "text",
-                                    "description": "Must match the regex \/^[a-z0-9-_.]+$\/i. Must not be greater than 64 characters."
+                                    "description": "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044f (slug)."
                                 },
                                 {
                                     "key": "file",
@@ -1411,15 +855,25 @@
                                 }
                             ]
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"title\": \"Hero image\",\n    \"alt\": \"Hero cover\",\n    \"collection\": \"uploads\",\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation error\",\n  \"status\": 422,\n  \"detail\": \"The media payload failed validation constraints.\",\n  \"errors\": {\n    \"file\": [\n      \"The file field is required.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "PUT api\/v1\/admin\/media\/{media}",
+                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0442\u0430\u0434\u0430\u043d\u043d\u044b\u0445 \u043c\u0435\u0434\u0438\u0430.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1430,8 +884,8 @@
                                 {
                                     "id": "media",
                                     "key": "media",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "uuid-media",
+                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
                                 }
                             ]
                         },
@@ -1448,17 +902,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\":\"vmqeopfuudtdsufvyvddq\",\"alt\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\"}"
+                            "raw": "{\"title\":\"Updated hero image\",\"alt\":\"Updated hero cover\",\"collection\":\"uploads\"}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"title\": \"Updated hero image\",\n    \"alt\": \"Updated hero cover\",\n    \"collection\": \"uploads\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "DELETE api\/v1\/admin\/media\/{media}",
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430 (soft delete).",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1469,8 +933,8 @@
                                 {
                                     "id": "media",
                                     "key": "media",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "uuid-media",
+                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
                                 }
                             ]
                         },
@@ -1486,15 +950,31 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/media-in-use\",\n  \"title\": \"Media in use\",\n  \"status\": 409,\n  \"detail\": \"Media is referenced by content and cannot be deleted.\",\n  \"references\": [\n    {\n      \"entry_id\": 42,\n      \"title\": \"Landing page\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/v1\/admin\/media\/{media}\/restore",
+                    "name": "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u043e\u0433\u043e \u043c\u0435\u0434\u0438\u0430.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1505,8 +985,8 @@
                                 {
                                     "id": "media",
                                     "key": "media",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "uuid-media",
+                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
                                 }
                             ]
                         },
@@ -1522,27 +1002,62 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
-                },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"deleted_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Deleted media with ID uuid-media does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Options",
+            "description": "",
+            "item": [
                 {
-                    "name": "GET api\/v1\/admin\/options\/{namespace}",
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u043e\u043f\u0446\u0438\u0439 \u043f\u043e namespace.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/v1\/admin\/options\/:namespace",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/options\/:namespace",
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "hero",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u043a\u043b\u044e\u0447\u0443\/\u043e\u043f\u0438\u0441\u0430\u043d\u0438\u044e (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "deleted",
+                                    "value": "consequatur",
+                                    "description": "\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 soft-deleted. Values: with,only.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "17",
+                                    "description": "\u0420\u0430\u0437\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (1-100). Default: 20.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/options\/:namespace?q=hero&deleted=consequatur&per_page=17",
                             "variable": [
                                 {
                                     "id": "namespace",
                                     "key": "namespace",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "site",
+                                    "description": "\u041f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043e\u043f\u0446\u0438\u0439 (a-z0-9_.-)."
                                 }
                             ]
                         },
@@ -1559,17 +1074,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"with\",\"page\":87,\"per_page\":4}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"only\",\"page\":87,\"per_page\":4}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": 10,\n      \"namespace\": \"site\",\n      \"key\": \"hero.title\",\n      \"value\": \"Launch the future\",\n      \"description\": \"Hero headline\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n      \"deleted_at\": null\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 20,\n    \"total\": 1\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/invalid-option-identifier\",\n  \"title\": \"Validation error\",\n  \"status\": 422,\n  \"detail\": \"The provided option namespace\/key is invalid.\",\n  \"errors\": {\n    \"namespace\": [\n      \"The namespace format is invalid.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/v1\/admin\/options\/{namespace}\/{key}",
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u043e\u043f\u0446\u0438\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1580,14 +1105,14 @@
                                 {
                                     "id": "namespace",
                                     "key": "namespace",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "site",
+                                    "description": "\u041f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u043e\u043f\u0446\u0438\u0439."
                                 },
                                 {
                                     "id": "key",
                                     "key": "key",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "hero.title",
+                                    "description": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438."
                                 }
                             ]
                         },
@@ -1603,15 +1128,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": 10,\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"value\": \"Launch the future\",\n    \"description\": \"Hero headline\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "PUT api\/v1\/admin\/options\/{namespace}\/{key}",
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\/\u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1622,14 +1157,14 @@
                                 {
                                     "id": "namespace",
                                     "key": "namespace",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "site",
+                                    "description": "\u041f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e."
                                 },
                                 {
                                     "id": "key",
                                     "key": "key",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "hero.title",
+                                    "description": "\u041a\u043b\u044e\u0447 (a-z0-9_.-)."
                                 }
                             ]
                         },
@@ -1646,17 +1181,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"key\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"value\":\"consequatur\",\"description\":\"Dolorum amet iste laborum eius est dolor.\"}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"key\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"value\":\"{\\\"title\\\":\\\"Launch\\\"}\",\"description\":\"Hero headline\"}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"value\": {\n      \"title\": \"Launch\"\n    },\n    \"description\": \"Hero headline\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation error\",\n  \"status\": 422,\n  \"detail\": \"Invalid option payload.\",\n  \"errors\": {\n    \"value\": [\n      \"The value must be valid JSON.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "DELETE api\/v1\/admin\/options\/{namespace}\/{key}",
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438 (soft delete).",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1667,14 +1212,14 @@
                                 {
                                     "id": "namespace",
                                     "key": "namespace",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "site",
+                                    "description": "\u041f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e."
                                 },
                                 {
                                     "id": "key",
                                     "key": "key",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "hero.title",
+                                    "description": "\u041a\u043b\u044e\u0447."
                                 }
                             ]
                         },
@@ -1690,15 +1235,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/v1\/admin\/options\/{namespace}\/{key}\/restore",
+                    "name": "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u043e\u0439 \u043e\u043f\u0446\u0438\u0438.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1709,14 +1264,14 @@
                                 {
                                     "id": "namespace",
                                     "key": "namespace",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "site",
+                                    "description": "\u041f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e."
                                 },
                                 {
                                     "id": "key",
                                     "key": "key",
-                                    "value": "consequatur",
-                                    "description": ""
+                                    "value": "hero.title",
+                                    "description": "\u041a\u043b\u044e\u0447."
                                 }
                             ]
                         },
@@ -1732,15 +1287,510 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"deleted_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Path reservations",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0437\u0430\u0440\u0435\u0437\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0445 \u043f\u0443\u0442\u0435\u0439.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/reservations",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/reservations"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"path\": \"\/promo\",\n      \"kind\": \"exact\",\n      \"source\": \"marketing\",\n      \"created_at\": \"2025-01-10T12:00:00+00:00\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/v1\/admin\/search\/reindex",
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0440\u0435\u0437\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u043f\u0443\u0442\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/reservations",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/reservations"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"path\":\"blog\\\/*\",\"source\":\"marketing\",\"reason\":\"Landing redesign freeze\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Path reserved successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/conflict\",\n  \"title\": \"Conflict\",\n  \"status\": 409,\n  \"detail\": \"Path already reserved.\",\n  \"path\": \"\/promo\",\n  \"owner\": \"marketing\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Unprocessable Entity\",\n  \"status\": 422,\n  \"detail\": \"The path field is required.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0440\u0435\u0437\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u043f\u0443\u0442\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/reservations\/:path",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/reservations\/:path",
+                            "variable": [
+                                {
+                                    "id": "path",
+                                    "key": "path",
+                                    "value": "blog%252F%2A",
+                                    "description": "URL-\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u043f\u0443\u0442\u044c."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"source\":\"marketing\",\"path\":\"blog\\\/*\"}"
+                        },
+                        "description": "\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 path \u043a\u0430\u043a \u0432 URL \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0435, \u0442\u0430\u043a \u0438 \u0432 \u0442\u0435\u043b\u0435 \u0437\u0430\u043f\u0440\u043e\u0441\u0430."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Path released successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"detail\": \"Only owner marketing may release this path.\",\n  \"path\": \"\/promo\",\n  \"owner\": \"marketing\",\n  \"attempted_source\": \"editorial\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation error\",\n  \"status\": 422,\n  \"detail\": \"Path is required either in URL parameter or request body.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Plugins",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u043f\u043b\u0430\u0433\u0438\u043d\u043e\u0432.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/plugins",
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "seo",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e slug\/name (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "enabled",
+                                    "value": "consequatur",
+                                    "description": "\u0424\u0438\u043b\u044c\u0442\u0440 \u043f\u043e \u0441\u0442\u0430\u0442\u0443\u0441\u0443. Values: true,false,any. Default: any.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "consequatur",
+                                    "description": "\u041f\u043e\u043b\u0435 \u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0438. Values: name,slug,version,updated_at. Default: name.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "consequatur",
+                                    "description": "\u041d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0438. Values: asc,desc. Default: asc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "17",
+                                    "description": "\u0420\u0430\u0437\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (1-100). Default: 25.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins?q=seo&enabled=consequatur&sort=consequatur&order=consequatur&per_page=17"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"desc\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"slug\": \"seo-tools\",\n      \"name\": \"SEO Tools\",\n      \"version\": \"1.2.0\",\n      \"enabled\": true,\n      \"provider\": \"Plugins\\\\SeoTools\\\\ServiceProvider\",\n      \"routes_active\": true,\n      \"last_synced_at\": \"2025-01-10T12:00:00+00:00\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 25,\n    \"total\": 1\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0421\u0438\u043d\u0445\u0440\u043e\u043d\u0438\u0437\u0430\u0446\u0438\u044f \u043c\u0435\u0442\u0430\u0434\u0430\u043d\u043d\u044b\u0445 \u043f\u043b\u0430\u0433\u0438\u043d\u043e\u0432.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/plugins\/sync",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins\/sync"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 202,
+                            "body": "{\n  \"status\": \"accepted\",\n  \"summary\": {\n    \"added\": [\"analytics\"],\n    \"updated\": [\"seo-tools\"],\n    \"removed\": [],\n    \"providers\": [\"Plugins\\\\SeoTools\\\\ServiceProvider\"]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/invalid-plugin-manifest\",\n  \"title\": \"Invalid plugin manifest\",\n  \"status\": 422,\n  \"detail\": \"Plugin manifest is invalid.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/routes-reload-failed\",\n  \"title\": \"Failed to reload plugin routes\",\n  \"status\": 500,\n  \"detail\": \"Failed to reload plugin routes\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0410\u043a\u0442\u0438\u0432\u0430\u0446\u0438\u044f \u043f\u043b\u0430\u0433\u0438\u043d\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/plugins\/:slug\/enable",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins\/:slug\/enable",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "seo-tools",
+                                    "description": "Slug \u043f\u043b\u0430\u0433\u0438\u043d\u0430."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"slug\": \"seo-tools\",\n  \"name\": \"SEO Tools\",\n  \"enabled\": true,\n  \"routes_active\": true\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-not-found\",\n  \"title\": \"Plugin not found\",\n  \"status\": 404,\n  \"detail\": \"Plugin with slug \\\"seo-tools\\\" was not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-already-enabled\",\n  \"title\": \"Plugin already enabled\",\n  \"status\": 409,\n  \"detail\": \"Plugin seo-tools is already enabled.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/routes-reload-failed\",\n  \"title\": \"Failed to reload plugin routes\",\n  \"status\": 500,\n  \"detail\": \"Failed to reload plugin routes\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0414\u0435\u0430\u043a\u0442\u0438\u0432\u0430\u0446\u0438\u044f \u043f\u043b\u0430\u0433\u0438\u043d\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/plugins\/:slug\/disable",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/plugins\/:slug\/disable",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "seo-tools",
+                                    "description": "Slug \u043f\u043b\u0430\u0433\u0438\u043d\u0430."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"slug\": \"seo-tools\",\n  \"enabled\": false\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-not-found\",\n  \"title\": \"Plugin not found\",\n  \"status\": 404,\n  \"detail\": \"Plugin with slug \\\"seo-tools\\\" was not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-already-disabled\",\n  \"title\": \"Plugin already disabled\",\n  \"status\": 409,\n  \"detail\": \"Plugin seo-tools is already disabled.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/routes-reload-failed\",\n  \"title\": \"Failed to reload plugin routes\",\n  \"status\": 500,\n  \"detail\": \"Failed to reload plugin routes\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Post types",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043a \u0442\u0438\u043f\u0430 \u0437\u0430\u043f\u0438\u0441\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/post-types\/:slug",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/post-types\/:slug",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "article",
+                                    "description": "Slug PostType."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"slug\": \"article\",\n    \"label\": \"Articles\",\n    \"options_json\": {},\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"detail\": \"Unknown post type slug: article\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043a \u0442\u0438\u043f\u0430 \u0437\u0430\u043f\u0438\u0441\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/post-types\/:slug",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/post-types\/:slug",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "article",
+                                    "description": "Slug PostType."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"options_json\":{\"fields\":{\"hero\":{\"type\":\"image\"}}}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"slug\": \"article\",\n    \"label\": \"Articles\",\n    \"options_json\": {\n      \"fields\": {\n        \"hero\": {\n          \"type\": \"image\"\n        }\n      }\n    },\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"detail\": \"Unknown post type slug: article\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"options_json\": [\n      \"The options_json field is required.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Search",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0417\u0430\u043f\u0443\u0441\u043a \u0444\u043e\u043d\u043e\u0432\u043e\u0439 \u043f\u0435\u0440\u0435\u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438 \u043f\u043e\u0438\u0441\u043a\u0430.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1760,12 +1810,931 @@
                             }
                         ],
                         "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 202,
+                            "body": "{\n  \"job_id\": \"01HZYQNGQK74ZP6YVZ6E7SFJ2D\",\n  \"batch_size\": 500,\n  \"estimated_total\": 320\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 503,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/service-unavailable\",\n  \"title\": \"Service Unavailable\",\n  \"status\": 503,\n  \"detail\": \"Search service is temporarily unavailable.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Taxonomies",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0439.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies",
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "category",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e slug\/label (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "consequatur",
+                                    "description": "\u0421\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0430. Values: created_at.desc,created_at.asc,slug.asc,slug.desc,label.asc,label.desc. Default: created_at.desc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "17",
+                                    "description": "\u0420\u0430\u0437\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (10-100). Default: 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies?q=category&sort=consequatur&per_page=17"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.asc\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"slug\": \"category\",\n      \"label\": \"Categories\",\n      \"hierarchical\": true,\n      \"options_json\": {},\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"label\":\"Categories\",\"slug\":\"category\",\"hierarchical\":false,\"options_json\":{\"color\":\"#ffcc00\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": {\n    \"slug\": \"category\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"slug\": [\n      \"The slug has already been taken.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:slug",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "category",
+                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"slug\": \"category\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {}\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:slug",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "category",
+                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"label\":\"Categories\",\"slug\":\"categories\",\"hierarchical\":false,\"options_json\":{\"color\":\"#ffcc00\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"slug\": \"categories\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {\n      \"color\": \"#ffcc00\"\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"slug\": [\n      \"The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:slug",
+                            "query": [
+                                {
+                                    "key": "force",
+                                    "value": "1",
+                                    "description": "\u041a\u0430\u0441\u043a\u0430\u0434\u043d\u043e \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0442\u0435\u0440\u043c\u044b \u0438 \u0441\u0432\u044f\u0437\u0438.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug?force=1",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "category",
+                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/conflict\",\n  \"title\": \"Taxonomy has terms\",\n  \"status\": 409,\n  \"detail\": \"Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.\",\n  \"path\": \"\/api\/v1\/admin\/taxonomies\/category\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Terms",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0442\u0435\u0440\u043c\u043e\u0432 \u0432\u043d\u0443\u0442\u0440\u0438 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "guides",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u0438\u043c\u0435\u043d\u0438\/slug (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "consequatur",
+                                    "description": "\u0421\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0430. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "17",
+                                    "description": "\u0420\u0430\u0437\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (10-100). Default: 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms?q=guides&sort=consequatur&per_page=17",
+                            "variable": [
+                                {
+                                    "id": "taxonomy_id",
+                                    "key": "taxonomy_id",
+                                    "value": "17",
+                                    "description": "The ID of the taxonomy."
+                                },
+                                {
+                                    "id": "taxonomy",
+                                    "key": "taxonomy",
+                                    "value": "category",
+                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.desc\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": 3,\n      \"taxonomy\": \"category\",\n      \"name\": \"Guides\",\n      \"slug\": \"guides\",\n      \"meta_json\": {},\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "variable": [
+                                {
+                                    "id": "taxonomy_id",
+                                    "key": "taxonomy_id",
+                                    "value": "17",
+                                    "description": "The ID of the taxonomy."
+                                },
+                                {
+                                    "id": "taxonomy",
+                                    "key": "taxonomy",
+                                    "value": "category",
+                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Guides\",\"slug\":\"guides\",\"meta_json\":{\"color\":\"#ffcc00\"},\"attach_entry_id\":42}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Guides\",\n    \"slug\": \"guides\",\n    \"meta_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": { \"...\": \"...\" },\n  \"entry_terms\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      { \"id\": 3, \"name\": \"Guides\", \"slug\": \"guides\", \"taxonomy\": \"category\" }\n    ]\n  }\n}",
+                            "name": "attach_entry"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"name\": [\n      \"The name field is required.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430 \u043f\u043e ID.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/terms\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/terms\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "The ID of the term."
+                                },
+                                {
+                                    "id": "term",
+                                    "key": "term",
+                                    "value": "3",
+                                    "description": "ID \u0442\u0435\u0440\u043c\u0430."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Guides\",\n    \"slug\": \"guides\",\n    \"meta_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/terms\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/terms\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "The ID of the term."
+                                },
+                                {
+                                    "id": "term",
+                                    "key": "term",
+                                    "value": "3",
+                                    "description": "ID \u0442\u0435\u0440\u043c\u0430."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Tutorials\",\"slug\":\"tutorials\",\"meta_json\":{\"color\":\"#3366ff\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Tutorials\",\n    \"slug\": \"tutorials\",\n    \"meta_json\": {\n      \"color\": \"#3366ff\"\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"slug\": [\n      \"The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/terms\/:id",
+                            "query": [
+                                {
+                                    "key": "forceDetach",
+                                    "value": "1",
+                                    "description": "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u043e\u0442\u0432\u044f\u0437\u0430\u0442\u044c \u0442\u0435\u0440\u043c \u043e\u0442 \u0437\u0430\u043f\u0438\u0441\u0435\u0439.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/terms\/:id?forceDetach=1",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "17",
+                                    "description": "The ID of the term."
+                                },
+                                {
+                                    "id": "term",
+                                    "key": "term",
+                                    "value": "3",
+                                    "description": "ID \u0442\u0435\u0440\u043c\u0430."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/conflict\",\n  \"title\": \"Term still attached\",\n  \"status\": 409,\n  \"detail\": \"Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin \u25b8 Utils",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f slug \u043f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/utils\/slugify",
+                            "query": [
+                                {
+                                    "key": "title",
+                                    "value": "New+landing+page",
+                                    "description": "\u0417\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a (",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "postType",
+                                    "value": "article",
+                                    "description": "Slug \u0442\u0438\u043f\u0430 \u0437\u0430\u043f\u0438\u0441\u0438 (\u0434\u043b\u044f \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438). Default: page.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/utils\/slugify?title=New+landing+page&postType=article"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"vmqeopfuudtdsufvyvddq\",\"postType\":\"consequatur\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"base\": \"new-landing-page\",\n  \"unique\": \"new-landing-page-2\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"title\": [\n      \"The title field is required.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Auth",
+            "description": "",
+            "item": [
+                {
+                    "name": "Sessions",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "\u0410\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0446\u0438\u044f \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0430 \u0438 \u0432\u044b\u0434\u0430\u0447\u0430 JWT.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/v1\/auth\/login",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/v1\/auth\/login"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"email\":\"admin@stupidcms.dev\",\"password\":\"Secret123!\"}"
+                                },
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"email\": \"admin@stupidcms.dev\",\n    \"name\": \"Admin\"\n  }\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Invalid credentials.\"\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "\u0420\u043e\u0442\u0430\u0446\u0438\u044f refresh \u0442\u043e\u043a\u0435\u043d\u0430 \u0438 \u0432\u044b\u0434\u0430\u0447\u0430 \u043d\u043e\u0432\u043e\u0439 \u043f\u0430\u0440\u044b JWT.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/v1\/auth\/refresh",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/v1\/auth\/refresh"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"message\": \"Tokens refreshed successfully.\"\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Missing refresh token.\"\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 500,
+                                    "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Internal Server Error\",\n  \"status\": 500,\n  \"detail\": \"Failed to refresh token due to server error.\"\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u0435 \u0441\u0435\u0441\u0441\u0438\u0438 \u0438 \u043e\u0442\u0437\u044b\u0432 refresh \u0442\u043e\u043a\u0435\u043d\u043e\u0432.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/v1\/auth\/logout",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/v1\/auth\/logout"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"all\":true}"
+                                },
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "{}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "CSRF",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Issue a CSRF token cookie.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/v1\/auth\/csrf",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/v1\/auth\/csrf"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Returns a CSRF token in the response body and sets a non-HttpOnly cookie\nso that JavaScript can read it and include it in subsequent requests.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"csrf\": \"bTg3bE7MbY0xI2p4Qz9Vc1FkSmRnT2p5a1NDbGhp\"\n}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Search",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u041f\u043e\u0438\u0441\u043a \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d\u043d\u043e\u0433\u043e \u043a\u043e\u043d\u0442\u0435\u043d\u0442\u0430 \u0441 \u0444\u0438\u043b\u044c\u0442\u0440\u0430\u043c\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/search",
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "headless+cms",
+                                    "description": "\u041f\u043e\u0438\u0441\u043a\u043e\u0432\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 (2-200 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "post_type%5B%5D",
+                                    "value": "%5B%22article%22%2C%22event%22%5D",
+                                    "description": "\u0421\u043f\u0438\u0441\u043e\u043a slug \u0442\u0438\u043f\u043e\u0432 \u0437\u0430\u043f\u0438\u0441\u0435\u0439 (\u0434\u043e 10).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "term%5B%5D",
+                                    "value": "%5B%22category%3Aguides%22%5D",
+                                    "description": "\u0424\u0438\u043b\u044c\u0442\u0440 \u043f\u043e \u0442\u0435\u0440\u043c\u0430\u043c \u0432 \u0444\u043e\u0440\u043c\u0430\u0442\u0435 taxonomy:term (\u0434\u043e 20 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "from",
+                                    "value": "2025-01-01",
+                                    "description": "date \u0414\u0430\u0442\u0430 \u043f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u0438 c (ISO 8601).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "to",
+                                    "value": "2025-12-31",
+                                    "description": "date \u0414\u0430\u0442\u0430 \u043f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u0438 \u0434\u043e (>= from).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "17",
+                                    "description": "\u041d\u043e\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (>=1). Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432 \u043d\u0430 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435 (1-100, \u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e config('search.pagination.per_page')).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/search?q=headless+cms&post_type%5B%5D=%5B%22article%22%2C%22event%22%5D&term%5B%5D=%5B%22category%3Aguides%22%5D&from=2025-01-01&to=2025-12-31&page=17&per_page=20"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-09T15:25:00\",\"to\":\"2106-12-09\",\"page\":45,\"per_page\":16}"
+                        },
                         "description": "",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"entries:42\",\n      \"post_type\": \"article\",\n      \"slug\": \"how-to-headless\",\n      \"title\": \"How to build a headless CMS\",\n      \"excerpt\": \"Step-by-step launch guide...\",\n      \"score\": 12.45,\n      \"highlight\": {\n        \"title\": [\"<em>headless<\/em> CMS\"]\n      }\n    }\n  ],\n  \"meta\": {\n    \"total\": 120,\n    \"page\": 1,\n    \"per_page\": 20,\n    \"took_ms\": 18\n  }\n}",
+                            "name": ""
+                        }
+                    ]
                 }
             ]
         }

@@ -29,6 +29,48 @@ class MediaController extends Controller
     ) {
     }
 
+    /**
+     * Список медиафайлов с фильтрами.
+     *
+     * @group Admin ▸ Media
+     * @name List media
+     * @authenticated
+     * @queryParam q string Поиск по названию и исходному имени (<=255). Example: hero
+     * @queryParam kind string Фильтр по типу. Values: image,video,audio,document.
+     * @queryParam mime string Фильтр по MIME (prefix match). Example: image/png
+     * @queryParam collection string Коллекция (slug, до 64 символов). Example: uploads
+     * @queryParam deleted string Управление soft-deleted. Values: with,only.
+     * @queryParam sort string Поле сортировки. Values: created_at,size_bytes,mime. Default: created_at.
+     * @queryParam order string Направление сортировки. Values: asc,desc. Default: desc.
+     * @queryParam per_page int Размер страницы (1-100). Default: 15.
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": "uuid-media",
+     *       "kind": "image",
+     *       "name": "hero.jpg",
+     *       "mime": "image/jpeg",
+     *       "size_bytes": 235678,
+     *       "preview_urls": {
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       },
+     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     }
+     *   ],
+     *   "links": {
+     *     "first": "…",
+     *     "last": "…",
+     *     "prev": null,
+     *     "next": null
+     *   },
+     *   "meta": {
+     *     "current_page": 1,
+     *     "last_page": 1,
+     *     "per_page": 15,
+     *     "total": 1
+     *   }
+     * }
+     */
     public function index(IndexMediaRequest $request): MediaCollection
     {
         $this->authorize('viewAny', Media::class);
@@ -93,6 +135,46 @@ class MediaController extends Controller
         return new MediaCollection($paginator);
     }
 
+    /**
+     * Загрузка нового медиафайла.
+     *
+     * @group Admin ▸ Media
+     * @name Upload media
+     * @authenticated
+     * @bodyParam file file required Файл (mimetype из `config('media.allowed_mimes')`). Example: storage/app/scribe/examples/media-upload.png
+     * @bodyParam title string Пользовательский заголовок. Example: Hero image
+     * @bodyParam alt string Alt-текст для изображений. Example: Hero cover
+     * @bodyParam collection string Коллекция (slug). Example: uploads
+     * @responseHeader Cache-Control "no-store, private"
+     * @responseHeader Vary "Cookie"
+     * @response status=201 {
+     *   "data": {
+     *     "id": "uuid-media",
+     *     "kind": "image",
+     *     "name": "hero.jpg",
+     *     "mime": "image/jpeg",
+     *     "size_bytes": 235678,
+     *     "title": "Hero image",
+     *     "alt": "Hero cover",
+     *     "collection": "uploads",
+     *     "preview_urls": {
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *     },
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *   }
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation error",
+     *   "status": 422,
+     *   "detail": "The media payload failed validation constraints.",
+     *   "errors": {
+     *     "file": [
+     *       "The file field is required."
+     *     ]
+     *   }
+     * }
+     */
     public function store(StoreMediaRequest $request): MediaResource
     {
         $this->authorize('create', Media::class);
@@ -119,6 +201,29 @@ class MediaController extends Controller
         return new MediaResource($media);
     }
 
+    /**
+     * Просмотр информации о медиафайле.
+     *
+     * @group Admin ▸ Media
+     * @name Show media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @response status=200 {
+     *   "data": {
+     *     "id": "uuid-media",
+     *     "kind": "image",
+     *     "name": "hero.jpg",
+     *     "mime": "image/jpeg",
+     *     "deleted_at": null
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     */
     public function show(string $mediaId): MediaResource
     {
         $media = Media::withTrashed()->find($mediaId);
@@ -132,6 +237,31 @@ class MediaController extends Controller
         return new MediaResource($media);
     }
 
+    /**
+     * Обновление метаданных медиа.
+     *
+     * @group Admin ▸ Media
+     * @name Update media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @bodyParam title string Новый заголовок. Example: Updated hero image
+     * @bodyParam alt string Alt-текст. Example: Updated hero cover
+     * @bodyParam collection string Коллекция. Example: uploads
+     * @response status=200 {
+     *   "data": {
+     *     "id": "uuid-media",
+     *     "title": "Updated hero image",
+     *     "alt": "Updated hero cover",
+     *     "collection": "uploads"
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     */
     public function update(UpdateMediaRequest $request, string $mediaId): MediaResource
     {
         $media = Media::withTrashed()->find($mediaId);
@@ -148,6 +278,33 @@ class MediaController extends Controller
         return new MediaResource($media->fresh());
     }
 
+    /**
+     * Удаление медиа (soft delete).
+     *
+     * @group Admin ▸ Media
+     * @name Delete media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @response status=204 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/media-in-use",
+     *   "title": "Media in use",
+     *   "status": 409,
+     *   "detail": "Media is referenced by content and cannot be deleted.",
+     *   "references": [
+     *     {
+     *       "entry_id": 42,
+     *       "title": "Landing page"
+     *     }
+     *   ]
+     * }
+     */
     public function destroy(Request $request, string $mediaId): HttpResponse
     {
         $media = Media::query()->find($mediaId);
@@ -189,6 +346,26 @@ class MediaController extends Controller
             ->header('Vary', 'Cookie');
     }
 
+    /**
+     * Восстановление удалённого медиа.
+     *
+     * @group Admin ▸ Media
+     * @name Restore media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @response status=200 {
+     *   "data": {
+     *     "id": "uuid-media",
+     *     "deleted_at": null
+     *   }
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "detail": "Deleted media with ID uuid-media does not exist."
+     * }
+     */
     public function restore(Request $request, string $mediaId): MediaResource
     {
         $media = Media::onlyTrashed()->find($mediaId);

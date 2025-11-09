@@ -24,6 +24,18 @@ final class LogoutController
     ) {
     }
 
+    /**
+     * Завершение сессии и отзыв refresh токенов.
+     *
+     * @group Auth
+     * @subgroup Sessions
+     * @name Logout
+     * @unauthenticated
+     * @bodyParam all boolean Отозвать все refresh токены пользователя (значение true). Example: true
+     * @responseHeader Set-Cookie "access=; Path=/; HttpOnly; Secure; Max-Age=0"
+     * @responseHeader Set-Cookie "refresh=; Path=/; HttpOnly; Secure; Max-Age=0"
+     * @response status=204 {}
+     */
     public function logout(LogoutRequest $request): LogoutResource
     {
         $cookies = $this->clearCookies();

@@ -19,6 +19,24 @@ final class SearchAdminController extends Controller
 {
     use Problems;
 
+    /**
+     * Запуск фоновой переиндексации поиска.
+     *
+     * @group Admin ▸ Search
+     * @name Reindex search
+     * @authenticated
+     * @response status=202 {
+     *   "job_id": "01HZYQNGQK74ZP6YVZ6E7SFJ2D",
+     *   "batch_size": 500,
+     *   "estimated_total": 320
+     * }
+     * @response status=503 {
+     *   "type": "https://stupidcms.dev/problems/service-unavailable",
+     *   "title": "Service Unavailable",
+     *   "status": 503,
+     *   "detail": "Search service is temporarily unavailable."
+     * }
+     */
     public function reindex(): SearchReindexAcceptedResource
     {
         if (! config('search.enabled')) {

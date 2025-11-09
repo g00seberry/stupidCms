@@ -16,6 +16,43 @@ final class SearchController extends Controller
     ) {
     }
 
+    /**
+     * Поиск опубликованного контента с фильтрами.
+     *
+     * @group Search
+     * @name Search entries
+     * @unauthenticated
+     * @queryParam q string Поисковая строка (2-200 символов). Example: headless cms
+     * @queryParam post_type[] string Список slug типов записей (до 10). Example: ["article","event"]
+     * @queryParam term[] string Фильтр по термам в формате taxonomy:term (до 20 значений). Example: ["category:guides"]
+     * @queryParam from date Дата публикации c (ISO 8601). Example: 2025-01-01
+     * @queryParam to date Дата публикации до (>= from). Example: 2025-12-31
+     * @queryParam page int Номер страницы (>=1). Default: 1.
+     * @queryParam per_page int Количество элементов на странице (1-100, по умолчанию config('search.pagination.per_page')). Example: 20
+     * @responseHeader Cache-Control "public, max-age=30"
+     * @responseHeader ETag W/"{sha256}"
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": "entries:42",
+     *       "post_type": "article",
+     *       "slug": "how-to-headless",
+     *       "title": "How to build a headless CMS",
+     *       "excerpt": "Step-by-step launch guide...",
+     *       "score": 12.45,
+     *       "highlight": {
+     *         "title": ["<em>headless</em> CMS"]
+     *       }
+     *     }
+     *   ],
+     *   "meta": {
+     *     "total": 120,
+     *     "page": 1,
+     *     "per_page": 20,
+     *     "took_ms": 18
+     *   }
+     * }
+     */
     public function index(QuerySearchRequest $request): JsonResponse
     {
         $query = $request->toSearchQuery();
