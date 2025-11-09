@@ -30,6 +30,15 @@ final class SearchAdminController extends Controller
      *   "batch_size": 500,
      *   "estimated_total": 320
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
+     * }
      * @response status=503 {
      *   "type": "https://stupidcms.dev/problems/service-unavailable",
      *   "title": "Service Unavailable",

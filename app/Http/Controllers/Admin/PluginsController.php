@@ -64,6 +64,15 @@ final class PluginsController extends Controller
      *     "total": 1
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
+     * }
      */
     public function index(IndexPluginsRequest $request): PluginCollection
     {
@@ -114,6 +123,12 @@ final class PluginsController extends Controller
      *   "enabled": true,
      *   "routes_active": true
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/plugin-not-found",
      *   "title": "Plugin not found",
@@ -131,6 +146,9 @@ final class PluginsController extends Controller
      *   "title": "Failed to reload plugin routes",
      *   "status": 500,
      *   "detail": "Failed to reload plugin routes"
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function enable(string $slug, PluginActivator $activator): PluginResource
@@ -175,6 +193,12 @@ final class PluginsController extends Controller
      *   "slug": "seo-tools",
      *   "enabled": false
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/plugin-not-found",
      *   "title": "Plugin not found",
@@ -192,6 +216,9 @@ final class PluginsController extends Controller
      *   "title": "Failed to reload plugin routes",
      *   "status": 500,
      *   "detail": "Failed to reload plugin routes"
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function disable(string $slug, PluginActivator $activator): PluginResource
@@ -240,6 +267,12 @@ final class PluginsController extends Controller
      *     "providers": ["Plugins\\SeoTools\\ServiceProvider"]
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/invalid-plugin-manifest",
      *   "title": "Invalid plugin manifest",
@@ -251,6 +284,9 @@ final class PluginsController extends Controller
      *   "title": "Failed to reload plugin routes",
      *   "status": 500,
      *   "detail": "Failed to reload plugin routes"
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function sync(PluginsSynchronizer $synchronizer): PluginSyncResource

@@ -29,6 +29,12 @@ class UtilsController extends Controller
      *   "base": "new-landing-page",
      *   "unique": "new-landing-page-2"
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -36,6 +42,9 @@ class UtilsController extends Controller
      *       "The title field is required."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function slugify(Request $request): SlugifyPreviewResource

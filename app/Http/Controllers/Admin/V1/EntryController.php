@@ -74,11 +74,20 @@ class EntryController extends Controller
      *     "total": 74
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=403 {
      *   "type": "https://stupidcms.dev/problems/forbidden",
      *   "title": "Forbidden",
      *   "status": 403,
      *   "detail": "Admin privileges are required."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function index(IndexEntriesRequest $request): EntryCollection
@@ -192,11 +201,20 @@ class EntryController extends Controller
      *     "deleted_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Entry not found",
      *   "status": 404,
      *   "detail": "Entry with ID 42 does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function show(int $id): EntryResource
@@ -250,6 +268,12 @@ class EntryController extends Controller
      *     "template_override": "templates.landing"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -260,6 +284,9 @@ class EntryController extends Controller
      *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function store(StoreEntryRequest $request): EntryResource
@@ -353,6 +380,12 @@ class EntryController extends Controller
      *     "published_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Entry not found",
@@ -366,6 +399,9 @@ class EntryController extends Controller
      *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function update(UpdateEntryRequest $request, int $id): EntryResource
@@ -443,11 +479,20 @@ class EntryController extends Controller
      * @authenticated
      * @urlParam id int required ID записи. Example: 42
      * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Entry not found",
      *   "status": 404,
      *   "detail": "Entry with ID 42 does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function destroy(int $id): Response
@@ -482,11 +527,20 @@ class EntryController extends Controller
      *     "deleted_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Entry not found",
      *   "status": 404,
      *   "detail": "Trashed entry with ID 42 does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function restore(Request $request, int $id): EntryResource

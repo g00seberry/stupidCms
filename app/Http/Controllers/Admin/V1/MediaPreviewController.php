@@ -36,6 +36,12 @@ class MediaPreviewController extends Controller
      * @queryParam variant string Вариант изображения. Default: thumbnail.
      * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
      * @response status=302 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
@@ -53,6 +59,9 @@ class MediaPreviewController extends Controller
      *   "title": "Internal Server Error",
      *   "status": 500,
      *   "detail": "Failed to generate media variant."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function preview(Request $request, string $mediaId): RedirectResponse
@@ -109,6 +118,12 @@ class MediaPreviewController extends Controller
      * @urlParam media string required UUID медиа. Example: uuid-media
      * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
      * @response status=302 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
@@ -120,6 +135,9 @@ class MediaPreviewController extends Controller
      *   "title": "Internal Server Error",
      *   "status": 500,
      *   "detail": "Failed to generate download URL."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function download(string $mediaId): RedirectResponse

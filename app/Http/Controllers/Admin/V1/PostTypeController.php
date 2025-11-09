@@ -31,11 +31,20 @@ class PostTypeController extends Controller
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "PostType not found",
      *   "status": 404,
      *   "detail": "Unknown post type slug: article"
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function show(string $slug): PostTypeResource
@@ -71,6 +80,12 @@ class PostTypeController extends Controller
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "PostType not found",
@@ -84,6 +99,9 @@ class PostTypeController extends Controller
      *       "The options_json field is required."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function update(UpdatePostTypeRequest $request, string $slug): PostTypeResource

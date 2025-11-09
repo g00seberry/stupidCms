@@ -325,7 +325,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-09 15:25</li>
+        <li>Last updated: 2025-11-09 15:39</li>
     </ul>
 </div>
 
@@ -369,16 +369,16 @@
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"trashed\",
+    \"status\": \"scheduled\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-09T15:25:00\",
+    \"date_from\": \"2025-11-09T15:39:20\",
     \"date_to\": \"2106-12-09\",
     \"date_field\": \"published\",
-    \"sort\": \"published_at.desc\",
+    \"sort\": \"title.asc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -412,16 +412,16 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "trashed",
+    "status": "scheduled",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-09T15:25:00",
+    "date_from": "2025-11-09T15:39:20",
     "date_to": "2106-12-09",
     "date_field": "published",
-    "sort": "published_at.desc",
+    "sort": "title.asc",
     "per_page": 13
 };
 
@@ -457,16 +457,16 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'trashed',
+            'status' =&gt; 'scheduled',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-09T15:25:00',
+            'date_from' =&gt; '2025-11-09T15:39:20',
             'date_to' =&gt; '2106-12-09',
             'date_field' =&gt; 'published',
-            'sort' =&gt; 'published_at.desc',
+            'sort' =&gt; 'title.asc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -509,6 +509,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (403):</p>
         </blockquote>
                 <pre>
@@ -518,6 +530,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Forbidden&quot;,
     &quot;status&quot;: 403,
     &quot;detail&quot;: &quot;Admin privileges are required.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -745,10 +766,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="trashed"
+               value="scheduled"
                data-component="body">
     <br>
-<p>Example: <code>trashed</code></p>
+<p>Example: <code>scheduled</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -797,10 +818,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-09T15:25:00"
+               value="2025-11-09T15:39:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-09T15:25:00</code></p>
+<p>Must be a valid date. Example: <code>2025-11-09T15:39:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -835,10 +856,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="published_at.desc"
+               value="title.asc"
                data-component="body">
     <br>
-<p>Example: <code>published_at.desc</code></p>
+<p>Example: <code>title.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -1005,6 +1026,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -1019,6 +1052,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -1319,6 +1361,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -1328,6 +1382,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -1559,6 +1622,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -1582,6 +1657,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -1855,6 +1939,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code>Empty response</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -1864,6 +1960,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -2035,6 +2140,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -2044,6 +2161,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Trashed entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -2234,6 +2360,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -2243,6 +2381,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -2462,6 +2609,30 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;Entry not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -2473,6 +2644,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -2676,6 +2856,53 @@ print_r(json_decode((string) $body));</code></pre></div>
         &quot;entry_id&quot;: 42,
         &quot;terms&quot;: []
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;Entry not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The given data was invalid.&quot;,
+    &quot;errors&quot;: {
+        &quot;term_ids&quot;: [
+            &quot;The term_ids field is required.&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -2889,6 +3116,30 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;Entry not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -2900,6 +3151,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -3040,12 +3300,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"audio\",
+    \"kind\": \"image\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
-    \"deleted\": \"only\",
+    \"deleted\": \"with\",
     \"sort\": \"created_at\",
-    \"order\": \"asc\",
+    \"order\": \"desc\",
     \"page\": 3,
     \"per_page\": 21
 }"
@@ -3078,12 +3338,12 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "audio",
+    "kind": "image",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
-    "deleted": "only",
+    "deleted": "with",
     "sort": "created_at",
-    "order": "asc",
+    "order": "desc",
     "page": 3,
     "per_page": 21
 };
@@ -3118,12 +3378,12 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'audio',
+            'kind' =&gt; 'image',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
-            'deleted' =&gt; 'only',
+            'deleted' =&gt; 'with',
             'sort' =&gt; 'created_at',
-            'order' =&gt; 'asc',
+            'order' =&gt; 'desc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
         ],
@@ -3166,6 +3426,27 @@ print_r(json_decode((string) $body));</code></pre></div>
         &quot;per_page&quot;: 15,
         &quot;total&quot;: 1
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -3369,10 +3650,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="audio"
+               value="image"
                data-component="body">
     <br>
-<p>Example: <code>audio</code></p>
+<p>Example: <code>image</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -3407,10 +3688,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-media"
-               value="only"
+               value="with"
                data-component="body">
     <br>
-<p>Example: <code>only</code></p>
+<p>Example: <code>with</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -3435,10 +3716,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-media"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -3540,6 +3821,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -3549,6 +3842,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -3723,6 +4025,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code class="language-json" style="max-height: 300px;">{}</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -3744,6 +4058,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Invalid variant&quot;,
     &quot;status&quot;: 422,
     &quot;detail&quot;: &quot;Variant foo is not configured.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3934,6 +4257,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code class="language-json" style="max-height: 300px;">{}</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -3943,6 +4278,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4164,6 +4508,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -4178,6 +4534,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The file field is required.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -4404,6 +4769,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -4413,6 +4790,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -4614,6 +5000,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code>Empty response</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -4641,6 +5039,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;title&quot;: &quot;Landing page&quot;
         }
     ]
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -4811,6 +5218,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -4820,6 +5239,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Deleted media with ID uuid-media does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -4946,7 +5374,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"namespace\": \"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",
     \"q\": \"bajwbpilpmufinllwloau\",
-    \"deleted\": \"only\",
+    \"deleted\": \"with\",
     \"page\": 87,
     \"per_page\": 4
 }"
@@ -4975,7 +5403,7 @@ const headers = {
 let body = {
     "namespace": "gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8",
     "q": "bajwbpilpmufinllwloau",
-    "deleted": "only",
+    "deleted": "with",
     "page": 87,
     "per_page": 4
 };
@@ -5006,7 +5434,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'namespace' =&gt; 'gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8',
             'q' =&gt; 'bajwbpilpmufinllwloau',
-            'deleted' =&gt; 'only',
+            'deleted' =&gt; 'with',
             'page' =&gt; 87,
             'per_page' =&gt; 4,
         ],
@@ -5050,6 +5478,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -5064,6 +5504,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The namespace format is invalid.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -5232,10 +5681,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-options--namespace-"
-               value="only"
+               value="with"
                data-component="body">
     <br>
-<p>Example: <code>only</code></p>
+<p>Example: <code>with</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -5338,6 +5787,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -5347,6 +5808,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Option not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -5554,6 +6024,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -5568,6 +6050,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The value must be valid JSON.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -5793,6 +6284,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code>Empty response</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -5802,6 +6305,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Option not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -5985,6 +6497,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -5994,6 +6518,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Option not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -6183,6 +6716,27 @@ print_r(json_decode((string) $body));</code></pre></div>
     ]
 }</code>
  </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+}</code>
+ </pre>
     </span>
 <span id="execution-results-GETapi-v1-admin-reservations" hidden>
     <blockquote>Received response<span
@@ -6353,6 +6907,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (409):</p>
         </blockquote>
                 <pre>
@@ -6376,6 +6942,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unprocessable Entity&quot;,
     &quot;status&quot;: 422,
     &quot;detail&quot;: &quot;The path field is required.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -6582,6 +7157,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (403):</p>
         </blockquote>
                 <pre>
@@ -6606,6 +7193,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Validation error&quot;,
     &quot;status&quot;: 422,
     &quot;detail&quot;: &quot;Path is required either in URL parameter or request body.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -6756,10 +7352,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"false\",
+    \"enabled\": \"any\",
     \"page\": 2,
     \"per_page\": 13,
-    \"sort\": \"version\",
+    \"sort\": \"slug\",
     \"order\": \"desc\"
 }"
 </code></pre></div>
@@ -6788,10 +7384,10 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "false",
+    "enabled": "any",
     "page": 2,
     "per_page": 13,
-    "sort": "version",
+    "sort": "slug",
     "order": "desc"
 };
 
@@ -6822,10 +7418,10 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'false',
+            'enabled' =&gt; 'any',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
-            'sort' =&gt; 'version',
+            'sort' =&gt; 'slug',
             'order' =&gt; 'desc',
         ],
     ]
@@ -6865,6 +7461,27 @@ print_r(json_decode((string) $body));</code></pre></div>
         &quot;per_page&quot;: 25,
         &quot;total&quot;: 1
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -7032,10 +7649,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="false"
+               value="any"
                data-component="body">
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>any</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -7070,10 +7687,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-plugins"
-               value="version"
+               value="slug"
                data-component="body">
     <br>
-<p>Example: <code>version</code></p>
+<p>Example: <code>slug</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>slug</code></li> <li><code>version</code></li> <li><code>updated_at</code></li></ul>
         </div>
@@ -7171,6 +7788,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -7180,6 +7809,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Invalid plugin manifest&quot;,
     &quot;status&quot;: 422,
     &quot;detail&quot;: &quot;Plugin manifest is invalid.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7349,6 +7987,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -7370,6 +8020,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Plugin already enabled&quot;,
     &quot;status&quot;: 409,
     &quot;detail&quot;: &quot;Plugin seo-tools is already enabled.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7550,6 +8209,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -7571,6 +8242,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Plugin already disabled&quot;,
     &quot;status&quot;: 409,
     &quot;detail&quot;: &quot;Plugin seo-tools is already disabled.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7759,6 +8439,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -7768,6 +8460,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;PostType not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Unknown post type slug: article&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -7976,6 +8677,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -7999,6 +8712,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The options_json field is required.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -8185,6 +8907,27 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (503):</p>
         </blockquote>
                 <pre>
@@ -8307,7 +9050,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.asc\"
+    \"sort\": \"slug.desc\"
 }"
 </code></pre></div>
 
@@ -8334,7 +9077,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.asc"
+    "sort": "slug.desc"
 };
 
 fetch(url, {
@@ -8363,7 +9106,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.asc',
+            'sort' =&gt; 'slug.desc',
         ],
     ]
 );
@@ -8389,6 +9132,27 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;updated_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;
         }
     ]
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -8544,10 +9308,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="slug.asc"
+               value="slug.desc"
                data-component="body">
     <br>
-<p>Example: <code>slug.asc</code></p>
+<p>Example: <code>slug.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
@@ -8653,6 +9417,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -8664,6 +9440,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The slug has already been taken.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -8882,6 +9667,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -8891,6 +9688,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -9092,6 +9898,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -9115,6 +9933,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -9347,6 +10174,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code>Empty response</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -9369,6 +10208,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;status&quot;: 409,
     &quot;detail&quot;: &quot;Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.&quot;,
     &quot;path&quot;: &quot;/api/v1/admin/taxonomies/category&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -9518,7 +10366,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.desc\"
+    \"sort\": \"slug.asc\"
 }"
 </code></pre></div>
 
@@ -9545,7 +10393,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.desc"
+    "sort": "slug.asc"
 };
 
 fetch(url, {
@@ -9574,7 +10422,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.desc',
+            'sort' =&gt; 'slug.asc',
         ],
     ]
 );
@@ -9604,6 +10452,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -9613,6 +10473,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -9793,10 +10662,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="slug.desc"
+               value="slug.asc"
                data-component="body">
     <br>
-<p>Example: <code>slug.desc</code></p>
+<p>Example: <code>slug.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li></ul>
         </div>
@@ -9925,6 +10794,30 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;Taxonomy not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -9936,6 +10829,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The name field is required.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -10173,6 +11075,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -10182,6 +11096,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Term not found&quot;,
     &quot;status&quot;: 404,
     &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -10393,6 +11316,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -10416,6 +11351,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -10638,6 +11582,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 <code>Empty response</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404):</p>
         </blockquote>
                 <pre>
@@ -10659,6 +11615,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Term still attached&quot;,
     &quot;status&quot;: 409,
     &quot;detail&quot;: &quot;Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -10892,6 +11857,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (422):</p>
         </blockquote>
                 <pre>
@@ -10903,6 +11880,15 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;The title field is required.&quot;
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Too Many Attempts.&quot;
 }</code>
  </pre>
     </span>
@@ -11728,7 +12714,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"vxi4:4$\\/i\"
     ],
-    \"from\": \"2025-11-09T15:25:00\",
+    \"from\": \"2025-11-09T15:39:20\",
     \"to\": \"2106-12-09\",
     \"page\": 45,
     \"per_page\": 16
@@ -11766,7 +12752,7 @@ let body = {
     "term": [
         "vxi4:4$\/i"
     ],
-    "from": "2025-11-09T15:25:00",
+    "from": "2025-11-09T15:39:20",
     "to": "2106-12-09",
     "page": 45,
     "per_page": 16
@@ -11806,7 +12792,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 'vxi4:4$/i',
             ],
-            'from' =&gt; '2025-11-09T15:25:00',
+            'from' =&gt; '2025-11-09T15:39:20',
             'to' =&gt; '2106-12-09',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -12053,10 +13039,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-09T15:25:00"
+               value="2025-11-09T15:39:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-09T15:25:00</code></p>
+<p>Must be a valid date. Example: <code>2025-11-09T15:39:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

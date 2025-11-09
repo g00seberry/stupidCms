@@ -70,6 +70,15 @@ class MediaController extends Controller
      *     "total": 1
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
+     * }
      */
     public function index(IndexMediaRequest $request): MediaCollection
     {
@@ -163,6 +172,12 @@ class MediaController extends Controller
      *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
      *   "title": "Validation error",
@@ -173,6 +188,9 @@ class MediaController extends Controller
      *       "The file field is required."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function store(StoreMediaRequest $request): MediaResource
@@ -217,11 +235,20 @@ class MediaController extends Controller
      *     "deleted_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
      *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function show(string $mediaId): MediaResource
@@ -255,11 +282,20 @@ class MediaController extends Controller
      *     "collection": "uploads"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
      *   "detail": "Media with ID uuid-media does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function update(UpdateMediaRequest $request, string $mediaId): MediaResource
@@ -286,6 +322,12 @@ class MediaController extends Controller
      * @authenticated
      * @urlParam media string required UUID медиа. Example: uuid-media
      * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
@@ -303,6 +345,9 @@ class MediaController extends Controller
      *       "title": "Landing page"
      *     }
      *   ]
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function destroy(Request $request, string $mediaId): HttpResponse
@@ -359,11 +404,20 @@ class MediaController extends Controller
      *     "deleted_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
      *   "detail": "Deleted media with ID uuid-media does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function restore(Request $request, string $mediaId): MediaResource

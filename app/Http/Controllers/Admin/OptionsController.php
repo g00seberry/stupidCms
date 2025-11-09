@@ -64,6 +64,12 @@ class OptionsController extends Controller
      *     "total": 1
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/invalid-option-identifier",
      *   "title": "Validation error",
@@ -74,6 +80,9 @@ class OptionsController extends Controller
      *       "The namespace format is invalid."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function index(IndexOptionsRequest $request, string $namespace): OptionCollection
@@ -127,11 +136,20 @@ class OptionsController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Option not found",
      *   "status": 404,
      *   "detail": "Option \"site/hero.title\" was not found."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function show(string $namespace, string $key): OptionResource
@@ -172,6 +190,12 @@ class OptionsController extends Controller
      *     "description": "Hero headline"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
      *   "title": "Validation error",
@@ -182,6 +206,9 @@ class OptionsController extends Controller
      *       "The value must be valid JSON."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function put(PutOptionRequest $request, string $namespace, string $key): OptionResource
@@ -214,11 +241,20 @@ class OptionsController extends Controller
      * @urlParam namespace string required Пространство. Example: site
      * @urlParam key string required Ключ. Example: hero.title
      * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Option not found",
      *   "status": 404,
      *   "detail": "Option \"site/hero.title\" was not found."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function destroy(string $namespace, string $key): Response
@@ -263,11 +299,20 @@ class OptionsController extends Controller
      *     "deleted_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Option not found",
      *   "status": 404,
      *   "detail": "Option \"site/hero.title\" was not found."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function restore(string $namespace, string $key): OptionResource

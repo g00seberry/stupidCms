@@ -265,6 +265,30 @@ paths:
                       total:
                         type: integer
                         example: 74
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         403:
           description: ''
           content:
@@ -289,6 +313,18 @@ paths:
                   detail:
                     type: string
                     example: 'Admin privileges are required.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entries'
       requestBody:
@@ -306,7 +342,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: scheduled
                   nullable: true
                   enum:
                     - all
@@ -334,7 +370,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-09T15:25:00'
+                  example: '2025-11-09T15:39:20'
                   nullable: true
                 date_to:
                   type: string
@@ -352,7 +388,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.desc
+                  example: title.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -436,6 +472,30 @@ paths:
                       template_override:
                         type: string
                         example: templates.landing
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -468,6 +528,18 @@ paths:
                           - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entries'
       requestBody:
@@ -642,6 +714,30 @@ paths:
                       deleted_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -666,6 +762,18 @@ paths:
                   detail:
                     type: string
                     example: 'Entry with ID 42 does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entries'
     put:
@@ -710,6 +818,30 @@ paths:
                       published_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -758,6 +890,18 @@ paths:
                           - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entries'
       requestBody:
@@ -828,6 +972,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -852,6 +1020,18 @@ paths:
                   detail:
                     type: string
                     example: 'Entry with ID 42 does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entries'
     parameters:
@@ -894,6 +1074,30 @@ paths:
                       deleted_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -918,6 +1122,18 @@ paths:
                   detail:
                     type: string
                     example: 'Trashed entry with ID 42 does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entries'
     parameters:
@@ -1009,6 +1225,30 @@ paths:
                                 slug:
                                   type: string
                                   example: guides
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -1033,6 +1273,18 @@ paths:
                   detail:
                     type: string
                     example: 'Entry with ID 42 does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entry terms'
     parameters:
@@ -1132,6 +1384,54 @@ paths:
                                 slug:
                                   type: string
                                   example: guides
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Entry not found'
+                  status: 404
+                  detail: 'Entry with ID 42 does not exist.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Entry not found'
+                  status:
+                    type: integer
+                    example: 404
+                  detail:
+                    type: string
+                    example: 'Entry with ID 42 does not exist.'
         422:
           description: ''
           content:
@@ -1156,6 +1456,18 @@ paths:
                           - "Taxonomy 'tags' is not allowed for the entry post type."
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entry terms'
       requestBody:
@@ -1211,6 +1523,90 @@ paths:
                       terms:
                         type: array
                         example: []
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Entry not found'
+                  status: 404
+                  detail: 'Entry with ID 42 does not exist.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Entry not found'
+                  status:
+                    type: integer
+                    example: 404
+                  detail:
+                    type: string
+                    example: 'Entry with ID 42 does not exist.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    term_ids:
+                      - 'The term_ids field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      term_ids:
+                        type: array
+                        example:
+                          - 'The term_ids field is required.'
+                        items:
+                          type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entry terms'
       requestBody:
@@ -1291,6 +1687,54 @@ paths:
                             taxonomy:
                               type: string
                               example: category
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Entry not found'
+                  status: 404
+                  detail: 'Entry with ID 42 does not exist.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Entry not found'
+                  status:
+                    type: integer
+                    example: 404
+                  detail:
+                    type: string
+                    example: 'Entry with ID 42 does not exist.'
         422:
           description: ''
           content:
@@ -1315,6 +1759,18 @@ paths:
                           - "Taxonomy 'tags' is not allowed for the entry post type."
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Entry terms'
       requestBody:
@@ -1535,6 +1991,42 @@ paths:
                       total:
                         type: integer
                         example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Media'
       requestBody:
@@ -1552,7 +2044,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -1572,7 +2064,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -1589,7 +2081,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -1666,6 +2158,30 @@ paths:
                       download_url:
                         type: string
                         example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -1702,6 +2218,18 @@ paths:
                           - 'The file field is required.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Media'
       requestBody:
@@ -1772,6 +2300,30 @@ paths:
                       deleted_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -1796,6 +2348,18 @@ paths:
                   detail:
                     type: string
                     example: 'Media with ID uuid-media does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Media'
     put:
@@ -1832,6 +2396,30 @@ paths:
                       collection:
                         type: string
                         example: uploads
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -1856,6 +2444,18 @@ paths:
                   detail:
                     type: string
                     example: 'Media with ID uuid-media does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Media'
       requestBody:
@@ -1894,6 +2494,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -1961,6 +2585,18 @@ paths:
                         title:
                           type: string
                           example: 'Landing page'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Media'
     parameters:
@@ -1998,6 +2634,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -2046,6 +2706,18 @@ paths:
                   detail:
                     type: string
                     example: 'Variant foo is not configured.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
         500:
           description: ''
           content:
@@ -2096,6 +2768,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -2120,6 +2816,18 @@ paths:
                   detail:
                     type: string
                     example: 'Media with ID uuid-media does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
         500:
           description: ''
           content:
@@ -2182,6 +2890,30 @@ paths:
                       deleted_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -2206,6 +2938,18 @@ paths:
                   detail:
                     type: string
                     example: 'Deleted media with ID uuid-media does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Media'
     parameters:
@@ -2349,6 +3093,30 @@ paths:
                       total:
                         type: integer
                         example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -2385,6 +3153,18 @@ paths:
                           - 'The namespace format is invalid.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Options'
       requestBody:
@@ -2407,7 +3187,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -2476,6 +3256,30 @@ paths:
                       updated_at:
                         type: string
                         example: '2025-01-10T12:00:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -2500,6 +3304,18 @@ paths:
                   detail:
                     type: string
                     example: 'Option "site/hero.title" was not found.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Options'
     put:
@@ -2540,6 +3356,30 @@ paths:
                       description:
                         type: string
                         example: 'Hero headline'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -2576,6 +3416,18 @@ paths:
                           - 'The value must be valid JSON.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Options'
       requestBody:
@@ -2623,6 +3475,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -2647,6 +3523,18 @@ paths:
                   detail:
                     type: string
                     example: 'Option "site/hero.title" was not found.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Options'
     parameters:
@@ -2697,6 +3585,30 @@ paths:
                       deleted_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -2721,6 +3633,18 @@ paths:
                   detail:
                     type: string
                     example: 'Option "site/hero.title" was not found.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Options'
     parameters:
@@ -2784,6 +3708,42 @@ paths:
                         created_at:
                           type: string
                           example: '2025-01-10T12:00:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Path reservations'
     post:
@@ -2804,6 +3764,30 @@ paths:
                   message:
                     type: string
                     example: 'Path reserved successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         409:
           description: ''
           content:
@@ -2860,6 +3844,18 @@ paths:
                   detail:
                     type: string
                     example: 'The path field is required.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Path reservations'
       requestBody:
@@ -2906,6 +3902,30 @@ paths:
                   message:
                     type: string
                     example: 'Path released successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         403:
           description: ''
           content:
@@ -2966,6 +3986,18 @@ paths:
                   detail:
                     type: string
                     example: 'Path is required either in URL parameter or request body.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Path reservations'
       requestBody:
@@ -3150,6 +4182,42 @@ paths:
                       total:
                         type: integer
                         example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Plugins'
       requestBody:
@@ -3167,7 +4235,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -3186,7 +4254,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: slug
                   nullable: true
                   enum:
                     - name
@@ -3252,6 +4320,30 @@ paths:
                           - Plugins\SeoTools\ServiceProvider
                         items:
                           type: string
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -3276,6 +4368,18 @@ paths:
                   detail:
                     type: string
                     example: 'Plugin manifest is invalid.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
         500:
           description: ''
           content:
@@ -3333,6 +4437,30 @@ paths:
                   routes_active:
                     type: boolean
                     example: true
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -3381,6 +4509,18 @@ paths:
                   detail:
                     type: string
                     example: 'Plugin seo-tools is already enabled.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
         500:
           description: ''
           content:
@@ -3439,6 +4579,30 @@ paths:
                   enabled:
                     type: boolean
                     example: false
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -3487,6 +4651,18 @@ paths:
                   detail:
                     type: string
                     example: 'Plugin seo-tools is already disabled.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
         500:
           description: ''
           content:
@@ -3557,6 +4733,30 @@ paths:
                       updated_at:
                         type: string
                         example: '2025-01-10T12:45:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -3581,6 +4781,18 @@ paths:
                   detail:
                     type: string
                     example: 'Unknown post type slug: article'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Post types'
     put:
@@ -3629,6 +4841,30 @@ paths:
                       updated_at:
                         type: string
                         example: '2025-01-10T12:45:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -3677,6 +4913,18 @@ paths:
                           - 'The options_json field is required.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Post types'
       requestBody:
@@ -3733,6 +4981,42 @@ paths:
                   estimated_total:
                     type: integer
                     example: 320
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
         503:
           description: ''
           content:
@@ -3846,6 +5130,42 @@ paths:
                         updated_at:
                           type: string
                           example: '2025-01-10T12:00:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Taxonomies'
       requestBody:
@@ -3868,7 +5188,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: slug.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -3919,6 +5239,30 @@ paths:
                       updated_at:
                         type: string
                         example: '2025-01-10T12:00:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -3943,6 +5287,18 @@ paths:
                           - 'The slug has already been taken.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Taxonomies'
       requestBody:
@@ -4011,6 +5367,30 @@ paths:
                       options_json:
                         type: object
                         properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4035,6 +5415,18 @@ paths:
                   detail:
                     type: string
                     example: 'Taxonomy with slug category does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Taxonomies'
     put:
@@ -4075,6 +5467,30 @@ paths:
                           color:
                             type: string
                             example: '#ffcc00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4123,6 +5539,18 @@ paths:
                           - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Taxonomies'
       requestBody:
@@ -4179,6 +5607,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4231,6 +5683,18 @@ paths:
                   path:
                     type: string
                     example: /api/v1/admin/taxonomies/category
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Taxonomies'
     parameters:
@@ -4334,6 +5798,30 @@ paths:
                         updated_at:
                           type: string
                           example: '2025-01-10T12:00:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4358,6 +5846,18 @@ paths:
                   detail:
                     type: string
                     example: 'Taxonomy with slug category does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Terms'
       requestBody:
@@ -4380,7 +5880,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.desc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -4488,6 +5988,54 @@ paths:
                                 taxonomy:
                                   type: string
                                   example: category
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Taxonomy not found'
+                  status: 404
+                  detail: 'Taxonomy with slug category does not exist.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Taxonomy not found'
+                  status:
+                    type: integer
+                    example: 404
+                  detail:
+                    type: string
+                    example: 'Taxonomy with slug category does not exist.'
         422:
           description: ''
           content:
@@ -4512,6 +6060,18 @@ paths:
                           - 'The name field is required.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Terms'
       requestBody:
@@ -4613,6 +6173,30 @@ paths:
                       deleted_at:
                         type: string
                         example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4637,6 +6221,18 @@ paths:
                   detail:
                     type: string
                     example: 'Term with ID 3 does not exist.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Terms'
     put:
@@ -4681,6 +6277,30 @@ paths:
                           color:
                             type: string
                             example: '#3366ff'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4729,6 +6349,18 @@ paths:
                           - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Terms'
       requestBody:
@@ -4780,6 +6412,30 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         404:
           description: ''
           content:
@@ -4828,6 +6484,18 @@ paths:
                   detail:
                     type: string
                     example: 'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Terms'
     parameters:
@@ -4892,6 +6560,30 @@ paths:
                   unique:
                     type: string
                     example: new-landing-page-2
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
         422:
           description: ''
           content:
@@ -4916,6 +6608,18 @@ paths:
                           - 'The title field is required.'
                         items:
                           type: string
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too Many Attempts.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Too Many Attempts.'
       tags:
         - 'Admin ▸ Utils'
       requestBody:
@@ -5334,7 +7038,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-09T15:25:00'
+                  example: '2025-11-09T15:39:20'
                   nullable: true
                 to:
                   type: string

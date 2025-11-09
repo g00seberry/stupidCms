@@ -53,6 +53,15 @@ class TaxonomyController extends Controller
      *     }
      *   ]
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
+     * }
      */
     public function index(IndexTaxonomiesRequest $request): TaxonomyCollection
     {
@@ -100,6 +109,12 @@ class TaxonomyController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00"
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -107,6 +122,9 @@ class TaxonomyController extends Controller
      *       "The slug has already been taken."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function store(StoreTaxonomyRequest $request): TaxonomyResource
@@ -159,11 +177,20 @@ class TaxonomyController extends Controller
      *     "options_json": {}
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "detail": "Taxonomy with slug category does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function show(string $slug): TaxonomyResource
@@ -198,6 +225,12 @@ class TaxonomyController extends Controller
      *     }
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
@@ -211,6 +244,9 @@ class TaxonomyController extends Controller
      *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function update(UpdateTaxonomyRequest $request, string $slug): TaxonomyResource
@@ -273,6 +309,12 @@ class TaxonomyController extends Controller
      * @urlParam slug string required Slug таксономии. Example: category
      * @queryParam force boolean Каскадно удалить термы и связи. Example: true
      * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
@@ -285,6 +327,9 @@ class TaxonomyController extends Controller
      *   "status": 409,
      *   "detail": "Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.",
      *   "path": "/api/v1/admin/taxonomies/category"
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function destroy(Request $request, string $slug): Response

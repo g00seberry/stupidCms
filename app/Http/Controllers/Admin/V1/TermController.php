@@ -58,11 +58,20 @@ class TermController extends Controller
      *     }
      *   ]
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "detail": "Taxonomy with slug category does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function indexByTaxonomy(IndexTermsRequest $request, string $taxonomy): TermCollection
@@ -130,6 +139,18 @@ class TermController extends Controller
      *     ]
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Taxonomy not found",
+     *   "status": 404,
+     *   "detail": "Taxonomy with slug category does not exist."
+     * }
      * @response status=422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -137,6 +158,9 @@ class TermController extends Controller
      *       "The name field is required."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function store(StoreTermRequest $request, string $taxonomy): TermResource
@@ -216,11 +240,20 @@ class TermController extends Controller
      *     "deleted_at": null
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Term not found",
      *   "status": 404,
      *   "detail": "Term with ID 3 does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function show(int $term): TermResource
@@ -257,6 +290,12 @@ class TermController extends Controller
      *     }
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Term not found",
@@ -270,6 +309,9 @@ class TermController extends Controller
      *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function update(UpdateTermRequest $request, int $term): TermResource
@@ -329,6 +371,12 @@ class TermController extends Controller
      * @urlParam term int required ID терма. Example: 3
      * @queryParam forceDetach boolean Автоматически отвязать терм от записей. Example: true
      * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Term not found",
@@ -340,6 +388,9 @@ class TermController extends Controller
      *   "title": "Term still attached",
      *   "status": 409,
      *   "detail": "Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function destroy(Request $request, int $term): Response

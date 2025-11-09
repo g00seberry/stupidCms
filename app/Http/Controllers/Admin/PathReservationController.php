@@ -40,6 +40,12 @@ class PathReservationController extends Controller
      * @response status=201 {
      *   "message": "Path reserved successfully"
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/conflict",
      *   "title": "Conflict",
@@ -53,6 +59,9 @@ class PathReservationController extends Controller
      *   "title": "Unprocessable Entity",
      *   "status": 422,
      *   "detail": "The path field is required."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function store(StorePathReservationRequest $request): PathReservationMessageResource
@@ -110,6 +119,12 @@ class PathReservationController extends Controller
      * @response status=200 {
      *   "message": "Path released successfully"
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=403 {
      *   "type": "https://stupidcms.dev/problems/forbidden",
      *   "title": "Forbidden",
@@ -124,6 +139,9 @@ class PathReservationController extends Controller
      *   "title": "Validation error",
      *   "status": 422,
      *   "detail": "Path is required either in URL parameter or request body."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function destroy(string $path, DestroyPathReservationRequest $request): PathReservationMessageResource
@@ -182,6 +200,15 @@ class PathReservationController extends Controller
      *       "created_at": "2025-01-10T12:00:00+00:00"
      *     }
      *   ]
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function index(): PathReservationCollection

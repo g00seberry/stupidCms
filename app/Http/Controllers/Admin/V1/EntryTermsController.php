@@ -50,11 +50,20 @@ class EntryTermsController extends Controller
      *     }
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Entry not found",
      *   "status": 404,
      *   "detail": "Entry with ID 42 does not exist."
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function index(int $entry): EntryTermsResource
@@ -98,6 +107,18 @@ class EntryTermsController extends Controller
      *     }
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Entry not found",
+     *   "status": 404,
+     *   "detail": "Entry with ID 42 does not exist."
+     * }
      * @response status=422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -105,6 +126,9 @@ class EntryTermsController extends Controller
      *       "Taxonomy 'tags' is not allowed for the entry post type."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function attach(AttachTermsRequest $request, int $entry): EntryTermsResource
@@ -151,6 +175,29 @@ class EntryTermsController extends Controller
      *     "terms": []
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Entry not found",
+     *   "status": 404,
+     *   "detail": "Entry with ID 42 does not exist."
+     * }
+     * @response status=422 {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "term_ids": [
+     *       "The term_ids field is required."
+     *     ]
+     *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
+     * }
      */
     public function detach(AttachTermsRequest $request, int $entry): EntryTermsResource
     {
@@ -196,6 +243,18 @@ class EntryTermsController extends Controller
      *     ]
      *   }
      * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "detail": "Authentication is required to access this resource."
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Entry not found",
+     *   "status": 404,
+     *   "detail": "Entry with ID 42 does not exist."
+     * }
      * @response status=422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -203,6 +262,9 @@ class EntryTermsController extends Controller
      *       "Taxonomy 'tags' is not allowed for the entry post type."
      *     ]
      *   }
+     * }
+     * @response status=429 {
+     *   "message": "Too Many Attempts."
      * }
      */
     public function sync(SyncTermsRequest $request, int $entry): EntryTermsResource
