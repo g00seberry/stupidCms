@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * Compares the X-CSRF-Token or X-XSRF-TOKEN header with the CSRF cookie value.
  * Only applies to POST, PUT, PATCH, DELETE methods.
- * Excludes api.auth.login and api.auth.refresh routes from verification.
+ * Excludes api.auth.login, api.auth.refresh, and api.auth.logout routes from verification.
  * 
  * On 419 error, issues a new CSRF token cookie to help client recover.
  */
@@ -38,8 +38,10 @@ final class VerifyApiCsrf
             return $next($request);
         }
 
-        // Exclude login and refresh endpoints by route name (they don't require CSRF)
-        if ($request->routeIs('api.auth.login', 'api.auth.refresh')) {
+        // Exclude login, refresh, and logout endpoints by route name
+        // - login/refresh: don't require CSRF (credentials-based, not cookie-based state)
+        // - logout: uses JWT auth middleware, CSRF redundant
+        if ($request->routeIs('api.auth.login', 'api.auth.refresh', 'api.auth.logout')) {
             return $next($request);
         }
 

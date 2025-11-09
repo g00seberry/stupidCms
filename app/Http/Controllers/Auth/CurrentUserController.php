@@ -12,10 +12,13 @@ final class CurrentUserController
     /**
      * Получить данные текущего авторизованного пользователя.
      *
+     * Также выдает CSRF токен в cookie для последующих state-changing запросов.
+     *
      * @group Auth
      * @subgroup Sessions
      * @name Current User
      * @authenticated
+     * @responseHeader Set-Cookie "cms_csrf=...; Path=/; Secure"
      * @response status=200 {
      *   "id": 1,
      *   "email": "admin@stupidcms.dev",

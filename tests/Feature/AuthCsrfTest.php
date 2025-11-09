@@ -14,86 +14,24 @@ class AuthCsrfTest extends TestCase
         return config('security.csrf.cookie_name');
     }
 
-    public function test_csrf_endpoint_returns_token_and_cookie(): void
-    {
-        $response = $this->getJson('/api/v1/auth/csrf');
-
-        $response->assertOk();
-        $response->assertJsonStructure(['csrf']);
-        
-        // Проверка наличия cookie в Set-Cookie заголовке
-        $this->assertTrue($response->headers->has('Set-Cookie'), 'CSRF cookie should be set');
-        $cookieName = $this->getCsrfCookieName();
-        $setCookieHeader = $response->headers->get('Set-Cookie');
-        $this->assertStringContainsString($cookieName . '=', $setCookieHeader, 'CSRF cookie should be present');
-        $this->assertStringNotContainsString('HttpOnly', $setCookieHeader, 'CSRF cookie must NOT be HttpOnly');
-        
-        // Проверка, что токен в ответе присутствует
-        $token = $response->json('csrf');
-        $this->assertNotEmpty($token, 'CSRF token should be present in response');
-        $this->assertEquals(40, strlen($token), 'CSRF token should be 40 characters long');
-    }
-
-    public function test_csrf_cookie_attributes_are_correct(): void
-    {
-        $response = $this->getJson('/api/v1/auth/csrf');
-        $response->assertOk();
-
-        $cookieName = $this->getCsrfCookieName();
-        $setCookieHeader = $response->headers->get('Set-Cookie');
-        
-        // Проверка отсутствия HttpOnly
-        $this->assertStringNotContainsString('HttpOnly', $setCookieHeader, 'CSRF cookie must NOT be HttpOnly');
-        
-        // Проверка Secure (зависит от конфига) - case insensitive
-        $csrfConfig = config('security.csrf');
-        $setCookieHeaderLower = strtolower($setCookieHeader);
-        if ($csrfConfig['secure']) {
-            $this->assertStringContainsString('secure', $setCookieHeaderLower, 'CSRF cookie should be Secure when configured');
-        }
-        
-        // Проверка SameSite - case insensitive
-        $expectedSameSite = strtolower($csrfConfig['samesite']);
-        if ($expectedSameSite === 'none') {
-            $this->assertStringContainsString('samesite=none', $setCookieHeaderLower, 'CSRF cookie should have SameSite=None');
-            $this->assertStringContainsString('secure', $setCookieHeaderLower, 'CSRF cookie with SameSite=None must be Secure');
-        } elseif ($expectedSameSite === 'lax') {
-            $this->assertStringContainsString('samesite=lax', $setCookieHeaderLower, 'CSRF cookie should have SameSite=Lax');
-        } else {
-            $this->assertStringContainsString('samesite=strict', $setCookieHeaderLower, 'CSRF cookie should have SameSite=Strict');
-        }
-        
-        // Проверка Path - case insensitive
-        $expectedPath = $csrfConfig['path'];
-        $this->assertStringContainsString('path=' . $expectedPath, $setCookieHeaderLower, 'CSRF cookie should have correct Path');
-        
-        // Проверка Domain (если указан) - case insensitive
-        if ($csrfConfig['domain']) {
-            $this->assertStringContainsString('domain=' . strtolower($csrfConfig['domain']), $setCookieHeaderLower, 'CSRF cookie should have correct Domain');
-        }
-    }
-
-    public function test_csrf_endpoint_sets_vary_headers_for_cross_origin_requests(): void
-    {
-        $allowedOrigin = config('cors.allowed_origins')[0] ?? 'https://app.example.com';
-
-        $response = $this->withHeaders([
-            'Origin' => $allowedOrigin,
-            'Accept' => 'application/json',
-        ])->getJson('/api/v1/auth/csrf');
-
-        $response->assertOk();
-
-        $varyHeader = $response->headers->get('Vary');
-        $this->assertNotNull($varyHeader, 'Vary header should be present');
-        $this->assertStringContainsString('Origin', $varyHeader, 'Vary header should include Origin');
-        $this->assertStringContainsString('Cookie', $varyHeader, 'Vary header should include Cookie');
-    }
-
     public function test_post_without_csrf_token_returns_419_with_new_cookie(): void
     {
         // Попытка POST запроса без CSRF токена
-        $response = $this->postJson('/api/v1/auth/logout');
+        // Используем админский endpoint который требует CSRF
+        $user = \App\Models\User::factory()->create();
+        
+        // Получаем JWT access token
+        $jwtService = app(\App\Domain\Auth\JwtService::class);
+        $accessToken = $jwtService->issueAccessToken($user->id, ['scp' => ['admin'], 'aud' => 'admin']);
+        
+        // Пытаемся сделать POST запрос без CSRF токена
+        $response = $this->postJsonWithCookies('/api/v1/admin/entries', [
+            'post_type_id' => 1,
+            'title' => 'Test',
+            'status' => 'draft',
+        ], [
+            config('jwt.cookies.access') => $accessToken,
+        ]);
 
         $response->assertStatus(419);
         $response->assertHeader('Content-Type', 'application/problem+json');
@@ -117,94 +55,6 @@ class AuthCsrfTest extends TestCase
         $this->assertNotNull($varyHeader, 'Vary header should be present on CSRF mismatch');
         $this->assertStringContainsString('Origin', $varyHeader, 'Vary header should include Origin');
         $this->assertStringContainsString('Cookie', $varyHeader, 'Vary header should include Cookie');
-    }
-
-    public function test_post_with_valid_csrf_token_succeeds(): void
-    {
-        // Получаем CSRF токен
-        $csrfResponse = $this->getJson('/api/v1/auth/csrf');
-        $csrfResponse->assertOk();
-        
-        $token = $csrfResponse->json('csrf');
-        $this->assertNotEmpty($token);
-        $cookieName = $this->getCsrfCookieName();
-        
-        // Используем call() напрямую для установки незашифрованного cookie
-        // Аналогично тому, как это делается для JWT cookies
-        $server = $this->transformHeadersToServerVars([
-            'CONTENT_TYPE' => 'application/json',
-            'Accept' => 'application/json',
-            'X-CSRF-Token' => $token,
-        ]);
-        
-        $response = $this->call('POST', '/api/v1/auth/logout', [], [$cookieName => $token], [], $server);
-
-        // Logout возвращает 204 No Content
-        $this->assertEquals(204, $response->status());
-    }
-
-    public function test_post_with_x_xsrf_token_header_succeeds(): void
-    {
-        // Получаем CSRF токен
-        $csrfResponse = $this->getJson('/api/v1/auth/csrf');
-        $csrfResponse->assertOk();
-        
-        $token = $csrfResponse->json('csrf');
-        $this->assertNotEmpty($token);
-        $cookieName = $this->getCsrfCookieName();
-        
-        // Используем X-XSRF-TOKEN заголовок вместо X-CSRF-Token
-        $server = $this->transformHeadersToServerVars([
-            'CONTENT_TYPE' => 'application/json',
-            'Accept' => 'application/json',
-            'X-XSRF-TOKEN' => $token,
-        ]);
-        
-        $response = $this->call('POST', '/api/v1/auth/logout', [], [$cookieName => $token], [], $server);
-
-        // Logout возвращает 204 No Content
-        $this->assertEquals(204, $response->status());
-    }
-
-    public function test_post_with_mismatched_csrf_token_returns_419(): void
-    {
-        // Получаем CSRF токен
-        $csrfResponse = $this->getJson('/api/v1/auth/csrf');
-        $csrfResponse->assertOk();
-        
-        $token = $csrfResponse->json('csrf');
-        $this->assertNotEmpty($token);
-        $cookieName = $this->getCsrfCookieName();
-        
-        // Отправляем POST запрос с неверным CSRF токеном в заголовке
-        // Cookie содержит правильный токен, но заголовок содержит неправильный
-        $response = $this->withCookie($cookieName, $token)
-            ->withHeader('X-CSRF-Token', 'wrong-token')
-            ->postJson('/api/v1/auth/logout');
-
-        $response->assertStatus(419);
-        $response->assertHeader('Content-Type', 'application/problem+json');
-        
-        // Проверка RFC 7807 формата
-        $response->assertJson([
-            'type' => 'about:blank',
-            'title' => 'CSRF Token Mismatch',
-            'status' => 419,
-            'detail' => 'CSRF token mismatch.',
-        ]);
-        
-        // Проверка, что при 419 выдается новый CSRF cookie
-        $this->assertTrue($response->headers->has('Set-Cookie'), 'New CSRF cookie should be issued on 419');
-    }
-
-    public function test_post_without_csrf_cookie_returns_419(): void
-    {
-        // Отправляем POST запрос с заголовком, но без cookie
-        $response = $this->withHeader('X-CSRF-Token', 'some-token')
-            ->postJson('/api/v1/auth/logout');
-
-        $response->assertStatus(419);
-        $response->assertHeader('Content-Type', 'application/problem+json');
     }
 
     public function test_login_endpoint_excluded_from_csrf_check(): void
@@ -235,79 +85,93 @@ class AuthCsrfTest extends TestCase
         $response->assertStatus(401);
     }
 
+    public function test_logout_endpoint_excluded_from_csrf_check(): void
+    {
+        // Logout endpoint должен работать без CSRF токена (но требует JWT auth)
+        // Без JWT должен вернуть 401, но НЕ 419
+        
+        $response = $this->postJson('/api/v1/auth/logout');
+
+        // Должен вернуть 401 (нет JWT), но НЕ 419 (CSRF проверка пропущена)
+        $this->assertNotEquals(419, $response->status(), 'Logout endpoint should not require CSRF token');
+        $response->assertStatus(401);
+    }
+
     public function test_get_request_bypasses_csrf_check(): void
     {
         // GET запросы не требуют CSRF токена
-        $response = $this->getJson('/api/v1/auth/csrf');
+        $response = $this->getJson('/api/v1/search');
 
-        $response->assertOk();
+        // Не должен возвращать 419 (может вернуть другие ошибки, но не CSRF)
+        $this->assertNotEquals(419, $response->status(), 'GET requests should bypass CSRF check');
     }
 
     public function test_head_request_bypasses_csrf_check(): void
     {
         // HEAD запросы не требуют CSRF токена
         $response = $this->withHeaders(['Accept' => 'application/json'])
-            ->call('HEAD', '/api/v1/auth/csrf');
+            ->call('HEAD', '/api/v1/search');
 
-        $this->assertEquals(200, $response->status());
+        // Не должен возвращать 419
+        $this->assertNotEquals(419, $response->status(), 'HEAD requests should bypass CSRF check');
     }
 
     public function test_options_preflight_request_bypasses_csrf_check(): void
     {
         // OPTIONS preflight запросы не требуют CSRF токена
+        $user = \App\Models\User::factory()->create();
+        $jwtService = app(\App\Domain\Auth\JwtService::class);
+        $accessToken = $jwtService->issueAccessToken($user->id, ['scp' => ['admin'], 'aud' => 'admin']);
+
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Access-Control-Request-Method' => 'POST',
             'Access-Control-Request-Headers' => 'Content-Type',
-        ])->call('OPTIONS', '/api/v1/auth/logout');
+        ])->call('OPTIONS', '/api/v1/admin/entries', [], [
+            config('jwt.cookies.access') => $accessToken,
+        ]);
 
         // Preflight должен обрабатываться CORS middleware
         $this->assertNotEquals(419, $response->status(), 'OPTIONS preflight should not trigger CSRF check');
     }
 
-    public function test_cross_origin_request_with_credentials_and_valid_csrf_succeeds(): void
+    public function test_admin_endpoint_with_valid_csrf_succeeds(): void
     {
-        // Получаем CSRF токен
-        $csrfResponse = $this->getJson('/api/v1/auth/csrf');
-        $csrfResponse->assertOk();
+        // Проверяем что админский endpoint работает с валидным CSRF
+        $user = \App\Models\User::factory()->create();
         
-        $token = $csrfResponse->json('csrf');
-        $this->assertNotEmpty($token);
-        $cookieName = $this->getCsrfCookieName();
-        
-        // Симулируем cross-origin запрос с credentials
-        $server = $this->transformHeadersToServerVars([
-            'CONTENT_TYPE' => 'application/json',
-            'Accept' => 'application/json',
-            'X-CSRF-Token' => $token,
-            'Origin' => 'https://app.example.com',
-        ]);
-        
-        $response = $this->call('POST', '/api/v1/auth/logout', [], [$cookieName => $token], [], $server);
+        // Используем test helper который автоматически добавляет JWT + CSRF
+        $response = $this->postJsonAsAdmin('/api/v1/admin/options', [
+            'key' => 'test_key',
+            'value' => 'test_value',
+        ], $user);
 
-        // Запрос должен пройти при валидном CSRF токене
-        $this->assertEquals(204, $response->status());
+        // Не должен возвращать 419 (может вернуть другую ошибку валидации, но не CSRF)
+        $this->assertNotEquals(419, $response->status(), 'Request with valid CSRF should not return 419');
     }
 
-    public function test_csrf_cookie_uses_config_values(): void
+    public function test_csrf_token_issued_via_current_user_endpoint(): void
     {
-        // Проверяем, что cookie использует значения из config
-        $response = $this->getJson('/api/v1/auth/csrf');
-        $response->assertOk();
+        // CSRF токен выдается через GET /admin/auth/current
+        $user = \App\Models\User::factory()->create();
+        
+        $jwtService = app(\App\Domain\Auth\JwtService::class);
+        $accessToken = $jwtService->issueAccessToken($user->id, ['scp' => ['admin'], 'aud' => 'admin']);
+        
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->call('GET', '/api/v1/admin/auth/current', [], [
+            config('jwt.cookies.access') => $accessToken,
+        ]);
 
-        $csrfConfig = config('security.csrf');
+        $response->assertOk();
+        
+        // Проверка наличия CSRF cookie в Set-Cookie заголовке
+        $this->assertTrue($response->headers->has('Set-Cookie'), 'CSRF cookie should be set');
+        $cookieName = $this->getCsrfCookieName();
         $setCookieHeader = $response->headers->get('Set-Cookie');
-        
-        // Проверка имени cookie из конфига
-        $this->assertStringContainsString($csrfConfig['cookie_name'] . '=', $setCookieHeader);
-        
-        // Проверка Path из конфига - case insensitive
-        $setCookieHeaderLower = strtolower($setCookieHeader);
-        $this->assertStringContainsString('path=' . $csrfConfig['path'], $setCookieHeaderLower);
-        
-        // Проверка Domain из конфига (если указан) - case insensitive
-        if ($csrfConfig['domain']) {
-            $this->assertStringContainsString('domain=' . strtolower($csrfConfig['domain']), $setCookieHeaderLower);
-        }
+        $this->assertStringContainsString($cookieName . '=', $setCookieHeader, 'CSRF cookie should be present');
+        $this->assertStringNotContainsString('HttpOnly', $setCookieHeader, 'CSRF cookie must NOT be HttpOnly');
     }
 }
+

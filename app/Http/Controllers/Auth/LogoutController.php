@@ -27,10 +27,13 @@ final class LogoutController
     /**
      * Завершение сессии и отзыв refresh токенов.
      *
+     * Требует валидный JWT access token. CSRF защита не требуется,
+     * так как JWT guard проверяет токен из HttpOnly cookie.
+     *
      * @group Auth
      * @subgroup Sessions
      * @name Logout
-     * @unauthenticated
+     * @authenticated
      * @bodyParam all boolean Отозвать все refresh токены пользователя (значение true). Example: true
      * @responseHeader Set-Cookie "access=; Path=/; HttpOnly; Secure; Max-Age=0"
      * @responseHeader Set-Cookie "refresh=; Path=/; HttpOnly; Secure; Max-Age=0"

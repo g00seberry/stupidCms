@@ -22,7 +22,11 @@ final class AuthCurrentUserTest extends TestCase
         $response = $this->getJsonAsAdmin('/api/v1/admin/auth/current', $user);
 
         $response->assertOk();
-        $response->assertHeader('Vary', 'Cookie');
+        
+        // Check Vary header includes Cookie (may include other values like Origin)
+        $varyHeader = $response->headers->get('Vary');
+        $this->assertNotNull($varyHeader, 'Vary header should be present');
+        $this->assertStringContainsString('Cookie', $varyHeader, 'Vary header should include Cookie');
         
         // Check Cache-Control contains required directives
         $cacheControl = $response->headers->get('Cache-Control');

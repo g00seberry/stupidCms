@@ -506,15 +506,14 @@ class AuthRefreshTest extends TestCase
         $this->assertStringContainsString('no-store', $cacheControl);
         $this->assertStringContainsString('no-cache', $cacheControl);
 
-        // Test logout endpoint (requires CSRF)
-        $csrf = $this->getJson('/api/v1/auth/csrf');
-        $token = $csrf->json('csrf');
-        $cookieName = config('security.csrf.cookie_name');
+        // Get new access token from refresh response
+        $newAccessCookie = $this->getUnencryptedCookie($refreshResponse, config('jwt.cookies.access'));
+        $newRefreshCookie = $this->getUnencryptedCookie($refreshResponse, config('jwt.cookies.refresh'));
+
+        // Test logout endpoint (requires JWT auth, not CSRF)
         $logoutResponse = $this->postJsonWithCookies('/api/v1/auth/logout', [], [
-            $refreshCookie->getName() => $refreshCookie->getValue(),
-            $cookieName => $token,
-        ], [
-            'X-CSRF-Token' => $token,
+            $newAccessCookie->getName() => $newAccessCookie->getValue(),
+            $newRefreshCookie->getName() => $newRefreshCookie->getValue(),
         ]);
 
         $logoutResponse->assertNoContent();

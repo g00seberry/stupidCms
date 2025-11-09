@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\CsrfController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RefreshController;
@@ -12,13 +11,14 @@ use Illuminate\Support\Facades\Route;
  * 
  * Загружаются с middleware('api'), что обеспечивает:
  * - CSRF защиту для state-changing запросов (POST, PUT, PATCH, DELETE)
- *   исключая api.auth.login и api.auth.refresh (проверяется через routeIs)
+ *   исключая api.auth.login, api.auth.refresh, api.auth.logout (проверяется через routeIs)
  * - Throttle для защиты от злоупотреблений
  * - Правильную обработку JSON запросов
  * 
  * Безопасность:
  * - Rate limiting настроен для каждого endpoint отдельно
- * - CSRF токен требуется для всех state-changing операций (кроме login/refresh)
+ * - Все публичные state-changing операции либо excluded из CSRF (auth endpoints),
+ *   либо защищены JWT auth (админские endpoints в routes/api_admin.php)
  * - Для кросс-сайтовых запросов (SPA на другом origin) требуется:
  *   - SameSite=None; Secure для cookies
  *   - CORS с credentials: true
@@ -34,12 +34,10 @@ Route::prefix('v1')->group(function () {
         ->name('api.auth.refresh')
         ->middleware(['throttle:refresh', 'no-cache-auth']);
 
+    // Logout requires authentication - CSRF not needed with JWT guard
     Route::post('/auth/logout', [LogoutController::class, 'logout'])
-        ->middleware(['throttle:login', 'no-cache-auth']); // 5/min is sufficient
-
-    // CSRF token endpoint
-    Route::get('/auth/csrf', [CsrfController::class, 'issue'])
-        ->middleware('no-cache-auth');
+        ->name('api.auth.logout')
+        ->middleware(['jwt.auth', 'throttle:login', 'no-cache-auth']);
 
     Route::get('/search', [SearchController::class, 'index'])
         ->middleware('throttle:search-public')

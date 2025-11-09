@@ -35,7 +35,20 @@ final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
     {
         // Wrap in transaction to ensure atomicity
         return DB::transaction(function () use ($jti) {
-            // Recursively revoke the token and all its descendants
+            // Find the root of the family (token with parent_jti = null)
+            $current = RefreshToken::where('jti', $jti)->first();
+            if (!$current) {
+                return 0;
+            }
+
+            // Traverse up to find the root
+            $rootJti = $jti;
+            while ($current && $current->parent_jti) {
+                $rootJti = $current->parent_jti;
+                $current = RefreshToken::where('jti', $rootJti)->first();
+            }
+
+            // Now revoke the root and all its descendants
             // 
             // Current implementation: iterative approach (N+1 queries)
             // This is acceptable for rare reuse attacks, but can be optimized for high-load scenarios.
@@ -51,7 +64,7 @@ final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
             // WHERE jti IN (SELECT jti FROM fam) AND revoked_at IS NULL;
             
             $revoked = 0;
-            $tokensToRevoke = [$jti];
+            $tokensToRevoke = [$rootJti];
             $processed = [];
 
             while (!empty($tokensToRevoke)) {
