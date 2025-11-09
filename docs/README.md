@@ -65,9 +65,8 @@ docs/
 │   ├── monitoring.md
 │   └── feature-flags.md
 │
-├── 60-admin/           # Admin UI
-│   ├── scenarios.md
-│   └── roles.md
+├── 60-admin/           # Админка (Blade)
+│   └── index.md
 │
 ├── 70-glossary/        # Глоссарий
 │   └── index.md

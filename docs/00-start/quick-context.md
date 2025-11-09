@@ -2,7 +2,7 @@
 owner: "@backend-team"
 system_of_record: "narrative"
 review_cycle_days: 30
-last_reviewed: 2025-11-08
+last_reviewed: 2025-11-09
 related_code:
     - "app/Models/*.php"
     - "routes/*.php"
@@ -176,7 +176,7 @@ docs/
 -   `config/stupidcms.php` — основные настройки CMS
 -   `config/filesystems.php` — хранилище медиа
 -   `config/auth.php`, `config/jwt.php` — аутентификация
--   `config/cors.php` — CORS для SPA
+-   `config/cors.php` — CORS для внешних frontend
 
 **Подробнее**: [Config Reference](../30-reference/config.md)
 

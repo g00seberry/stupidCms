@@ -32,6 +32,7 @@ ADR документируют важные архитектурные реше�
 - [ADR-0002: Entry Slugs as Separate Entity](0002-entry-slugs-separate.md)
 - [ADR-0003: Use Elasticsearch for Search](0003-elasticsearch-search.md)
 - [ADR-0004: Closure Table for Term Hierarchy](0004-closure-table-terms.md)
+- [ADR-0005: Use Blade for Admin Panel (Not SPA)](0005-blade-admin-panel.md)
 
 ### Infrastructure
 

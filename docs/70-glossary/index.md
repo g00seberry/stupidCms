@@ -2,7 +2,7 @@
 owner: "@backend-team"
 system_of_record: "narrative"
 review_cycle_days: 90
-last_reviewed: 2025-11-08
+last_reviewed: 2025-11-09
 ---
 
 # Глоссарий
@@ -83,7 +83,7 @@ YAML-метаданные в начале markdown-файлов. Содержи�
 
 ### Headless CMS
 
-CMS без frontend. stupidCms предоставляет API, а frontend — отдельное приложение (React, Vue, Next.js).
+CMS без жёстко связанного frontend. stupidCms предоставляет API для любых клиентов (React, Vue, Next.js, мобильные приложения). Встроенная админка на Blade — лишь один из возможных клиентов.
 
 ## J
 
@@ -189,7 +189,7 @@ URL-часть записи. Например, `my-article` в `/articles/my-art
 | **REST**   | Representational State Transfer      |
 | **RFC**    | Request for Comments (стандарт IETF) |
 | **SEO**    | Search Engine Optimization           |
-| **SPA**    | Single Page Application              |
+| **SPA**    | Single Page Application (внешний фронтенд может быть SPA) |
 | **SQL**    | Structured Query Language            |
 | **URI**    | Uniform Resource Identifier          |
 | **URL**    | Uniform Resource Locator             |

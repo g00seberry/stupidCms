@@ -2,7 +2,7 @@
 owner: "@devops-team"
 system_of_record: "narrative"
 review_cycle_days: 60
-last_reviewed: 2025-11-08
+last_reviewed: 2025-11-09
 related_code:
     - ".env.example"
     - "composer.json"
@@ -18,7 +18,6 @@ related_code:
 -   **PHP**: 8.2 или выше
 -   **Composer**: 2.x
 -   **База данных**: MySQL 8.0+ или PostgreSQL 15+ или SQLite 3.35+
--   **Node.js**: 18+ (для admin UI)
 -   **Elasticsearch**: 8.x (опционально, для поиска)
 
 ### Расширения PHP
@@ -45,11 +44,6 @@ cd stupidcms
 ```bash
 # PHP зависимости
 composer install
-
-# Node.js зависимости (для admin UI)
-cd cms/admin
-npm install
-cd ../..
 ```
 
 ### 3. Настройка окружения
@@ -106,16 +100,12 @@ php artisan migrate:fresh --seed
 ```bash
 # Laravel сервер
 php artisan serve
-
-# В другом терминале: Admin UI dev server
-cd cms/admin
-npm run dev
 ```
 
 Откройте в браузере:
 
 -   **API**: http://localhost:8000
--   **Admin UI**: http://localhost:5173
+-   **Админка**: http://localhost:8000/admin
 
 ## Продвинутая установка
 
@@ -196,7 +186,7 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 
 ### Настройка CORS
 
-Для SPA фронтенда настройте CORS:
+Для внешнего фронтенда (если используется) настройте CORS:
 
 ```env
 # .env
@@ -207,6 +197,8 @@ CORS_EXPOSED_HEADERS=
 CORS_MAX_AGE=3600
 CORS_SUPPORTS_CREDENTIALS=true
 ```
+
+**Примечание**: Админка на Blade работает на том же домене, поэтому CORS не требуется для неё.
 
 Подробнее: [CORS & Cookies](../20-how-to/cors.md)
 
@@ -242,7 +234,7 @@ php artisan test --coverage-html coverage/
 
 ### 3. Вход в админку
 
-1. Откройте http://localhost:5173
+1. Откройте http://localhost:8000/admin
 2. Войдите как:
     - Email: `admin@example.com`
     - Password: `password`
@@ -286,13 +278,12 @@ chown -R www-data:www-data storage bootstrap/cache
 chmod -R 777 storage bootstrap/cache
 ```
 
-### Admin UI не запускается
+### Ошибка 404 на /admin
+
+Проверьте, что web-роуты загружены:
 
 ```bash
-cd cms/admin
-rm -rf node_modules package-lock.json
-npm install
-npm run dev
+php artisan route:list --path=admin
 ```
 
 ## Следующие шаги
@@ -316,13 +307,11 @@ php artisan view:clear
 # Сгенерировать документацию
 composer docs:gen
 
-# Собрать frontend
-cd cms/admin && npm run build
-
 # Запустить всё в production режиме
 php artisan optimize
 php artisan config:cache
 php artisan route:cache
+php artisan view:cache
 ```
 
 ## Docker (альтернатива)
