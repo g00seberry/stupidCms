@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-08 20:42:46_
+_Last generated: 2025-11-09 14:31:19_
 
 ## app
 
@@ -325,47 +325,6 @@ _Last generated: 2025-11-08 20:42:46_
 | `cookies.secure` | `false` | boolean |
 | `cookies.samesite` | `Strict` | string |
 | `cookies.path` | `/` | string |
-
-## l5-swagger
-
-**File**: `config/l5-swagger.php`
-
-| Key | Value | Type |
-|-----|-------|------|
-| `default` | `default` | string |
-| `documentations.default.api.title` | `stupidCms API` | string |
-| `documentations.default.routes.api` | `docs/api` | string |
-| `documentations.default.paths.use_absolute_path` | `true` | boolean |
-| `documentations.default.paths.swagger_ui_assets_path` | `vendor/swagger-api/swagger-ui/dist/` | string |
-| `documentations.default.paths.docs_json` | `openapi.json` | string |
-| `documentations.default.paths.docs_yaml` | `openapi.yaml` | string |
-| `documentations.default.paths.format_to_use_for_docs` | `json` | string |
-| `documentations.default.paths.annotations.0` | `C:\Users\dattebayo\Desktop\proj\stupidCms\app/O...` | string |
-| `defaults.routes.docs` | `docs` | string |
-| `defaults.routes.oauth2_callback` | `api/oauth2-callback` | string |
-| `defaults.paths.docs` | `C:\Users\dattebayo\Desktop\proj\stupidCms\stora...` | string |
-| `defaults.paths.views` | `C:\Users\dattebayo\Desktop\proj\stupidCms\resou...` | string |
-| `defaults.paths.base` | `/api` | string |
-| `defaults.scanOptions.analyser` | _null_ | NULL |
-| `defaults.scanOptions.analysis` | _null_ | NULL |
-| `defaults.scanOptions.pattern` | _null_ | NULL |
-| `defaults.scanOptions.open_api_spec_version` | `3.0.0` | string |
-| `defaults.securityDefinitions.securitySchemes.bearerAuth.type` | `http` | string |
-| `defaults.securityDefinitions.securitySchemes.bearerAuth.scheme` | `bearer` | string |
-| `defaults.securityDefinitions.securitySchemes.bearerAuth.bearerFormat` | `JWT` | string |
-| `defaults.securityDefinitions.securitySchemes.bearerAuth.description` | `Передавайте access-токен в з�...` | string |
-| `defaults.generate_always` | `false` | boolean |
-| `defaults.generate_yaml_copy` | `false` | boolean |
-| `defaults.proxy` | `false` | boolean |
-| `defaults.additional_config_url` | _null_ | NULL |
-| `defaults.operations_sort` | _null_ | NULL |
-| `defaults.validator_url` | _null_ | NULL |
-| `defaults.ui.display.dark_mode` | `false` | boolean |
-| `defaults.ui.display.doc_expansion` | `none` | string |
-| `defaults.ui.display.filter` | `true` | boolean |
-| `defaults.ui.authorization.persist_authorization` | `false` | boolean |
-| `defaults.ui.authorization.oauth2.use_pkce_with_authorization_code_grant` | `false` | boolean |
-| `defaults.constants.L5_SWAGGER_CONST_HOST` | `http://localhost/api` | string |
 
 ## logging
 

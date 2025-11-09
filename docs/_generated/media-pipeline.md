@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:media` to update.
 
-_Last generated: 2025-11-08 20:42:47_
+_Last generated: 2025-11-09 14:31:21_
 
 ## Storage Configuration
 

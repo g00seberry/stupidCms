@@ -2,15 +2,12 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-08 20:42:45_
+_Last generated: 2025-11-09 14:31:18_
 
 ## Web
 
 | Method | URI | Name | Action | Middleware |
 |--------|-----|------|--------|------------|
-| GET|HEAD | `docs/api` | l5-swagger.default.api | `SwaggerController@api` | L5Swagger\Http\Middleware\Config |
-| GET|HEAD | `docs` | l5-swagger.default.docs | `SwaggerController@docs` | L5Swagger\Http\Middleware\Config |
-| GET|HEAD | `docs/asset/{asset}` | l5-swagger.default.asset | `SwaggerAssetController@index` | L5Swagger\Http\Middleware\Config |
 | GET|HEAD | `up` | - | _Closure_ | - |
 | GET|HEAD | `/` | home | `App\Http\Controllers\HomeController` | web |
 | GET|HEAD | `{slug}` | page.show | `PageController@show` | web, App\Http\Middleware\RejectReservedIfMatched |
@@ -22,7 +19,6 @@ _Last generated: 2025-11-08 20:42:45_
 
 | Method | URI | Name | Action | Middleware |
 |--------|-----|------|--------|------------|
-| GET|HEAD | `api/oauth2-callback` | l5-swagger.default.oauth2_callback | `SwaggerController@oauth2Callback` | L5Swagger\Http\Middleware\Config |
 | POST | `api/v1/auth/login` | api.auth.login | `LoginController@login` | api, throttle:login, no-cache-auth |
 | POST | `api/v1/auth/refresh` | api.auth.refresh | `RefreshController@refresh` | api, throttle:refresh, no-cache-auth |
 | POST | `api/v1/auth/logout` | - | `LogoutController@logout` | api, throttle:login, no-cache-auth |

@@ -21,12 +21,12 @@ last_reviewed: 2025-11-08
 
 API спецификация всех endpoints stupidCms API (public & admin).
 
-**Источник**: Автоматически генерируется из маршрутов (`php artisan docs:openapi`) и хранится в `storage/api-docs/openapi.json`. Для UI используйте `/docs/api`.
+**Источник**: Автоматически генерируется из маршрутов (`php artisan docs:api`).
 
 #### Подразделы
 
-- [Admin API — Plugins](admin-api/plugins.md) — управление manifest-плагинами, синхронизация, enable/disable.
-- [Admin API — Taxonomies & Terms](admin-api/taxonomies-terms.md) — ручное описание CRUD и pivot операций для таксономий/терминов.
+-   [Admin API — Plugins](admin-api/plugins.md) — управление manifest-плагинами, синхронизация, enable/disable.
+-   [Admin API — Taxonomies & Terms](admin-api/taxonomies-terms.md) — ручное описание CRUD и pivot операций для таксономий/терминов.
 
 ---
 
@@ -112,7 +112,6 @@ php artisan docs:errors       # Ошибки
 php artisan docs:config       # Конфигурация
 php artisan docs:search       # Elasticsearch
 php artisan docs:media        # Media pipeline
-php artisan docs:openapi      # OpenAPI спецификация (/docs/api)
 ```
 
 ## CI интеграция
