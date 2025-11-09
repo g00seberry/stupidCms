@@ -31,7 +31,7 @@ last_reviewed: 2025-11-08
 
 ### Разработчикам
 
--   **[API Reference](../30-reference/api.md)** — API спецификация
+-   **Scribe API Reference** (`../_generated/api-docs/index.html`) — API спецификация
 -   **[Database Schema](../30-reference/erd.md)** — ERD диаграмма
 -   **[Permissions](../30-reference/permissions.md)** — права доступа
 -   **[How-to Guides](../20-how-to/index.md)** — пошаговые инструкции

@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "knuckleswtf/scribe": "^5.5",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
@@ -64,7 +65,7 @@
             "@php artisan docs:erd",
             "@php artisan docs:search",
             "@php artisan docs:media",
-            "@php artisan docs:api"
+            "@php artisan scribe:generate --force --no-interaction"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

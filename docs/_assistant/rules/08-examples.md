@@ -2,7 +2,7 @@
 
 ### A) «Как получить посты по таксономии?»
 
-1. Открой `/docs/30-reference/api.md`.
+1. Открой Scribe: `docs/_generated/api-docs/index.html`.
 2. Найди endpoint `/api/v1/entries?term=...`.
 3. Ответи: метод, путь, query, 200/404, пример JSON. Пометь `requires: docs:gen`.
 

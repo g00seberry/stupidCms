@@ -1,0 +1,1426 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API'
+  description: 'Headless content platform: entries, taxonomies, media, auth.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost/api/v1'
+tags:
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Получите JWT через <code>POST /api/v1/auth/login</code> или используйте refresh endpoint.'
+security:
+  -
+    default: []
+paths:
+  /api/v1/auth/login:
+    post:
+      summary: ''
+      operationId: postApiV1AuthLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 254 characters.'
+                  example: qkunze@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters. Must not be greater than 200 characters.'
+                  example: 'Z5ij-e/dl4m{o,'
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /api/v1/auth/refresh:
+    post:
+      summary: ''
+      operationId: postApiV1AuthRefresh
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/v1/auth/logout:
+    post:
+      summary: ''
+      operationId: postApiV1AuthLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                all:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: false
+      security: []
+  /api/v1/auth/csrf:
+    get:
+      summary: 'Issue a CSRF token cookie.'
+      operationId: issueACSRFTokenCookie
+      description: "Returns a CSRF token in the response body and sets a non-HttpOnly cookie\nso that JavaScript can read it and include it in subsequent requests."
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/v1/search:
+    get:
+      summary: ''
+      operationId: getApiV1Search
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: 'Must be at least 2 characters. Must not be greater than 200 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                post_type:
+                  type: array
+                  description: 'Must not be greater than 64 characters.'
+                  example:
+                    - amniihfqcoynlazghdtqt
+                  items:
+                    type: string
+                term:
+                  type: array
+                  description: 'Must match the regex /^[a-z0-9_.-]+:[a-z0-9_.-]+$/i.'
+                  example:
+                    - 'vxi4:4$/i'
+                  items:
+                    type: string
+                from:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2025-11-09T14:41:55'
+                  nullable: true
+                to:
+                  type: string
+                  description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
+                  example: '2106-12-09'
+                  nullable: true
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 45
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 16
+                  nullable: true
+      security: []
+  /api/v1/admin/utils/slugify:
+    get:
+      summary: 'GET /api/v1/admin/utils/slugify?title=.'
+      operationId: gETapiv1adminutilsslugifytitle
+      description: '..&postType=page'
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 500 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                postType:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+              required:
+                - title
+      security: []
+  /api/v1/admin/plugins:
+    get:
+      summary: ''
+      operationId: getApiV1AdminPlugins
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: 'Must not be greater than 128 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                enabled:
+                  type: string
+                  description: ''
+                  example: any
+                  nullable: true
+                  enum:
+                    - 'true'
+                    - 'false'
+                    - any
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 2
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 13
+                  nullable: true
+                sort:
+                  type: string
+                  description: ''
+                  example: slug
+                  nullable: true
+                  enum:
+                    - name
+                    - slug
+                    - version
+                    - updated_at
+                order:
+                  type: string
+                  description: ''
+                  example: asc
+                  nullable: true
+                  enum:
+                    - asc
+                    - desc
+      security: []
+  /api/v1/admin/plugins/sync:
+    post:
+      summary: ''
+      operationId: postApiV1AdminPluginsSync
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/v1/admin/plugins/{slug}/enable':
+    post:
+      summary: ''
+      operationId: postApiV1AdminPluginsSlugEnable
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the plugin.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/plugins/{slug}/disable':
+    post:
+      summary: ''
+      operationId: postApiV1AdminPluginsSlugDisable
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the plugin.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/v1/admin/reservations:
+    get:
+      summary: 'GET /api/v1/admin/reservations'
+      operationId: gETapiv1adminreservations
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST /api/v1/admin/reservations'
+      operationId: pOSTapiv1adminreservations
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                source:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: false
+                reason:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: qxbajwbpilpmufinllwlo
+                  nullable: true
+              required:
+                - path
+                - source
+      security: []
+  '/api/v1/admin/reservations/{path}':
+    delete:
+      summary: 'DELETE /api/v1/admin/reservations/{path}'
+      operationId: dELETEapiv1adminreservationspath
+      description: 'Поддерживает path как в URL параметре, так и в JSON body (для экзотических URL-encode кейсов).'
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                path:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+              required:
+                - source
+      security: []
+    parameters:
+      -
+        in: path
+        name: path
+        description: ''
+        example: 2UZ5i
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/post-types/{slug}':
+    get:
+      summary: 'Display the specified post type.'
+      operationId: displayTheSpecifiedPostType
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Update the specified post type.'
+      operationId: updateTheSpecifiedPostType
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                options_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: false
+                  properties: {  }
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the post type.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/v1/admin/entries:
+    get:
+      summary: 'Display a listing of entries with filters.'
+      operationId: displayAListingOfEntriesWithFilters
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post_type:
+                  type: string
+                  description: 'The <code>slug</code> of an existing record in the post_types table.'
+                  example: consequatur
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: published
+                  nullable: true
+                  enum:
+                    - all
+                    - draft
+                    - published
+                    - scheduled
+                    - trashed
+                q:
+                  type: string
+                  description: 'Must not be greater than 500 characters.'
+                  example: mqeopfuudtdsufvyvddqa
+                  nullable: true
+                author_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 17
+                  nullable: true
+                term:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the terms table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+                date_from:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2025-11-09T14:41:55'
+                  nullable: true
+                date_to:
+                  type: string
+                  description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
+                  example: '2106-12-09'
+                  nullable: true
+                date_field:
+                  type: string
+                  description: ''
+                  example: updated
+                  nullable: true
+                  enum:
+                    - updated
+                    - published
+                sort:
+                  type: string
+                  description: ''
+                  example: updated_at.asc
+                  nullable: true
+                  enum:
+                    - updated_at.desc
+                    - updated_at.asc
+                    - published_at.desc
+                    - published_at.asc
+                    - title.asc
+                    - title.desc
+                per_page:
+                  type: integer
+                  description: 'Must be at least 10. Must not be greater than 100.'
+                  example: 13
+                  nullable: true
+      security: []
+    post:
+      summary: 'Store a newly created entry.'
+      operationId: storeANewlyCreatedEntry
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post_type:
+                  type: string
+                  description: 'The <code>slug</code> of an existing record in the post_types table.'
+                  example: consequatur
+                  nullable: false
+                title:
+                  type: string
+                  description: 'Must not be greater than 500 characters.'
+                  example: mqeopfuudtdsufvyvddqa
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/. Must not be greater than 255 characters.'
+                  example: mniihfqcoynlazghdtqtq
+                  nullable: true
+                content_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                meta_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                is_published:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: false
+                published_at:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2025-11-09T14:41:55'
+                  nullable: true
+                template_override:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: xbajwbpilpmufinllwloa
+                  nullable: true
+                term_ids:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the terms table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+              required:
+                - post_type
+                - title
+      security: []
+  '/api/v1/admin/entries/{id}':
+    get:
+      summary: 'Display the specified entry.'
+      operationId: displayTheSpecifiedEntry
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Update the specified entry.'
+      operationId: updateTheSpecifiedEntry
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'Soft delete the specified entry.'
+      operationId: softDeleteTheSpecifiedEntry
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the entry.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/entries/{id}/restore':
+    post:
+      summary: 'Restore a soft-deleted entry.'
+      operationId: restoreASoftDeletedEntry
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the entry.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  /api/v1/admin/taxonomies:
+    get:
+      summary: ''
+      operationId: getApiV1AdminTaxonomies
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                per_page:
+                  type: integer
+                  description: 'Must be at least 10. Must not be greater than 100.'
+                  example: 1
+                  nullable: false
+                sort:
+                  type: string
+                  description: ''
+                  example: created_at.asc
+                  nullable: false
+                  enum:
+                    - created_at.desc
+                    - created_at.asc
+                    - slug.asc
+                    - slug.desc
+                    - label.asc
+                    - label.desc
+      security: []
+    post:
+      summary: ''
+      operationId: postApiV1AdminTaxonomies
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 64 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                hierarchical:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: false
+                options_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: false
+                  properties: {  }
+              required:
+                - label
+      security: []
+  '/api/v1/admin/taxonomies/{slug}':
+    get:
+      summary: ''
+      operationId: getApiV1AdminTaxonomiesSlug
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiV1AdminTaxonomiesSlug
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 64 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                hierarchical:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: false
+                options_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: false
+                  properties: {  }
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiV1AdminTaxonomiesSlug
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the taxonomy.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/taxonomies/{taxonomy_id}/terms':
+    get:
+      summary: ''
+      operationId: getApiV1AdminTaxonomiesTaxonomy_idTerms
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                per_page:
+                  type: integer
+                  description: 'Must be at least 10. Must not be greater than 100.'
+                  example: 1
+                  nullable: false
+                sort:
+                  type: string
+                  description: ''
+                  example: created_at.asc
+                  nullable: false
+                  enum:
+                    - created_at.desc
+                    - created_at.asc
+                    - name.asc
+                    - name.desc
+                    - slug.asc
+                    - slug.desc
+      security: []
+    post:
+      summary: ''
+      operationId: postApiV1AdminTaxonomiesTaxonomy_idTerms
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9][a-z0-9_-]*$/. Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                meta_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                attach_entry_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the entries table.'
+                  example: 17
+                  nullable: true
+              required:
+                - name
+      security: []
+    parameters:
+      -
+        in: path
+        name: taxonomy_id
+        description: 'The ID of the taxonomy.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/terms/{id}':
+    get:
+      summary: ''
+      operationId: getApiV1AdminTermsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiV1AdminTermsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9][a-z0-9_-]*$/. Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                meta_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiV1AdminTermsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the term.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/entries/{entry_id}/terms':
+    get:
+      summary: ''
+      operationId: getApiV1AdminEntriesEntry_idTerms
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: entry_id
+        description: 'The ID of the entry.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/entries/{entry}/terms/attach':
+    post:
+      summary: ''
+      operationId: postApiV1AdminEntriesEntryTermsAttach
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                term_ids:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the terms table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+      security: []
+    parameters:
+      -
+        in: path
+        name: entry
+        description: 'The entry.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/entries/{entry}/terms/detach':
+    post:
+      summary: ''
+      operationId: postApiV1AdminEntriesEntryTermsDetach
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                term_ids:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the terms table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+      security: []
+    parameters:
+      -
+        in: path
+        name: entry
+        description: 'The entry.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/entries/{entry}/terms/sync':
+    put:
+      summary: ''
+      operationId: putApiV1AdminEntriesEntryTermsSync
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                term_ids:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the terms table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+      security: []
+    parameters:
+      -
+        in: path
+        name: entry
+        description: 'The entry.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  /api/v1/admin/media:
+    get:
+      summary: ''
+      operationId: getApiV1AdminMedia
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                kind:
+                  type: string
+                  description: ''
+                  example: document
+                  nullable: true
+                  enum:
+                    - image
+                    - video
+                    - audio
+                    - document
+                mime:
+                  type: string
+                  description: 'Must not be greater than 120 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                collection:
+                  type: string
+                  description: 'Must not be greater than 64 characters.'
+                  example: qxbajwbpilpmufinllwlo
+                  nullable: true
+                deleted:
+                  type: string
+                  description: ''
+                  example: only
+                  nullable: true
+                  enum:
+                    - with
+                    - only
+                sort:
+                  type: string
+                  description: ''
+                  example: created_at
+                  nullable: true
+                  enum:
+                    - created_at
+                    - size_bytes
+                    - mime
+                order:
+                  type: string
+                  description: ''
+                  example: desc
+                  nullable: true
+                  enum:
+                    - asc
+                    - desc
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 3
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 21
+                  nullable: true
+      security: []
+    post:
+      summary: ''
+      operationId: postApiV1AdminMedia
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 25600 kilobytes.'
+                  nullable: false
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                alt:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                collection:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9-_.]+$/i. Must not be greater than 64 characters.'
+                  example: qxbajwbpilpmufinllwlo
+                  nullable: true
+              required:
+                - file
+      security: []
+  '/api/v1/admin/media/{media}':
+    get:
+      summary: ''
+      operationId: getApiV1AdminMediaMedia
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiV1AdminMediaMedia
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                alt:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                collection:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9-_.]+$/i. Must not be greater than 64 characters.'
+                  example: qxbajwbpilpmufinllwlo
+                  nullable: true
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiV1AdminMediaMedia
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/media/{media}/preview':
+    get:
+      summary: ''
+      operationId: getApiV1AdminMediaMediaPreview
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/media/{media}/download':
+    get:
+      summary: ''
+      operationId: getApiV1AdminMediaMediaDownload
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/media/{media}/restore':
+    post:
+      summary: ''
+      operationId: postApiV1AdminMediaMediaRestore
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/options/{namespace}':
+    get:
+      summary: ''
+      operationId: getApiV1AdminOptionsNamespace
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namespace:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_][a-z0-9_.-]{1,63}$/.'
+                  example: gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8
+                  nullable: false
+                q:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: bajwbpilpmufinllwloau
+                  nullable: true
+                deleted:
+                  type: string
+                  description: ''
+                  example: with
+                  nullable: true
+                  enum:
+                    - with
+                    - only
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 87
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 4
+                  nullable: true
+              required:
+                - namespace
+      security: []
+    parameters:
+      -
+        in: path
+        name: namespace
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/options/{namespace}/{key}':
+    get:
+      summary: ''
+      operationId: getApiV1AdminOptionsNamespaceKey
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiV1AdminOptionsNamespaceKey
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namespace:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_][a-z0-9_.-]{1,63}$/.'
+                  example: gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8
+                  nullable: false
+                key:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_][a-z0-9_.-]{1,63}$/.'
+                  example: gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8
+                  nullable: false
+                value:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: false
+                description:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'Dolorum amet iste laborum eius est dolor.'
+                  nullable: true
+              required:
+                - namespace
+                - key
+                - value
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiV1AdminOptionsNamespaceKey
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: namespace
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: key
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/options/{namespace}/{key}/restore':
+    post:
+      summary: ''
+      operationId: postApiV1AdminOptionsNamespaceKeyRestore
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: namespace
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: key
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/v1/admin/search/reindex:
+    post:
+      summary: ''
+      operationId: postApiV1AdminSearchReindex
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []

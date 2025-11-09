@@ -467,7 +467,7 @@ $categoriesTree = Cache::remember('categories_tree', 3600, function () {
 
 - [Entries](entries.md) — привязка терминов к записям
 - [Post Types](post-types.md) — настройка таксономий для типов
-- [API Reference](../30-reference/api.md) — endpoints
+- Scribe API Reference (`../_generated/api-docs/index.html`) — endpoints
 
 ---
 

@@ -137,7 +137,7 @@ docs/
 -   `DELETE /api/admin/entries/{id}` — удалить
 -   `POST /api/admin/media` — загрузить медиа
 
-**Подробнее**: [API Reference](../30-reference/api.md)
+**Подробнее**: Scribe (`docs/_generated/api-docs/index.html`)
 
 ## 🗄️ База данных
 
@@ -218,7 +218,7 @@ php artisan serve
 ## 🔗 Связанные страницы
 
 -   [Модель данных](../10-concepts/domain-model.md) — подробная схема
--   [API Reference](../30-reference/api.md) — полное описание endpoints
+-   Scribe API Reference (`docs/_generated/api-docs/index.html`) — полное описание endpoints
 -   [How-to Guides](../20-how-to/index.md) — практические инструкции
 -   [Глоссарий](../70-glossary/index.md) — термины проекта
 
@@ -227,7 +227,7 @@ php artisan serve
 При работе с кодом:
 
 1. **Сначала читай docs** — `/docs/10-concepts/*` для понимания домена
-2. **API** — `/docs/30-reference/api.md`
+2. **API** — `docs/_generated/api-docs/index.html`
 3. **Данные** — `/docs/_generated/erd.svg` + миграции
 4. **Слаги** — `/docs/10-concepts/slugs.md` + `app/Support/Slug/*`
 5. **Права** — `/docs/_generated/permissions.md` + `app/Policies/*`

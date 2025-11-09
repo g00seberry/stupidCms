@@ -17,11 +17,11 @@ last_reviewed: 2025-11-08
 
 ## Содержание
 
-### [API Reference](api.md)
+### API Reference (Scribe)
 
-API спецификация всех endpoints stupidCms API (public & admin).
+Интерактивная документация для всех public/admin endpoints доступна в `docs/_generated/api-docs/index.html`.
 
-**Источник**: Автоматически генерируется из маршрутов (`php artisan docs:api`).
+**Источник**: `php artisan scribe:generate --force --no-interaction`.
 
 #### Подразделы
 

@@ -301,7 +301,7 @@ npm run dev
 
 1. **Изучите концепции**: [Domain Model](../10-concepts/domain-model.md)
 2. **Создайте первый Post Type**: [How-to Guide](../20-how-to/add-post-type.md)
-3. **Изучите API**: [API Reference](../30-reference/api.md)
+3. **Изучите API**: Scribe (`../_generated/api-docs/index.html`)
 4. **Настройте development**: [Local Development](#) _(TODO)_
 
 ## Полезные команды

@@ -368,7 +368,7 @@ PostType **нельзя удалить**, если есть связанные e
 
 -   [Entries](entries.md) — работа с записями
 -   [Модель данных](domain-model.md) — полная схема
--   [API Reference](../30-reference/api.md) — endpoints
+-   Scribe API Reference (`../_generated/api-docs/index.html`) — endpoints
 
 ---
 

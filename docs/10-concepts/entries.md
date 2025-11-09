@@ -520,7 +520,7 @@ Entry::with(['postType', 'author', 'terms', 'media'])
 - [Slugs & 301](slugs.md) — маршрутизация
 - [Taxonomy](taxonomy.md) — категоризация
 - [Media](media.md) — медиатека
-- [API Reference](../30-reference/api.md) — endpoints
+- Scribe API Reference (`../_generated/api-docs/index.html`) — endpoints
 
 ---
 

@@ -15,7 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
         App\Console\Commands\BackfillEntrySlugsCommand::class,
         App\Console\Commands\CleanupExpiredRefreshTokens::class,
         App\Console\Commands\GenerateAbilitiesDoc::class,
-        App\Console\Commands\GenerateApiDoc::class,
         App\Console\Commands\GenerateConfigDoc::class,
         App\Console\Commands\GenerateErdDoc::class,
         App\Console\Commands\GenerateErrorsDoc::class,
