@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Media\Actions\MediaStoreAction;
@@ -8,12 +10,14 @@ use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
+use App\Http\Resources\Admin\MediaCollection;
 use App\Http\Resources\MediaResource;
 use App\Models\Entry;
 use App\Models\Media;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class MediaController extends Controller
 {
@@ -25,7 +29,7 @@ class MediaController extends Controller
     ) {
     }
 
-    public function index(IndexMediaRequest $request): JsonResponse
+    public function index(IndexMediaRequest $request): MediaCollection
     {
         $this->authorize('viewAny', Media::class);
 
@@ -86,14 +90,10 @@ class MediaController extends Controller
 
         $paginator = $query->paginate($perPage)->appends($validated);
 
-        $response = MediaResource::collection($paginator)->response();
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new MediaCollection($paginator);
     }
 
-    public function store(StoreMediaRequest $request): JsonResponse
+    public function store(StoreMediaRequest $request): MediaResource
     {
         $this->authorize('create', Media::class);
 
@@ -101,43 +101,43 @@ class MediaController extends Controller
         $file = $request->file('file');
 
         if (! $file) {
-            return $this->problem(
-                422,
-                'Validation error',
-                'File payload is missing.',
-                [
-                    'type' => 'https://stupidcms.dev/problems/validation-error',
-                    'errors' => ['file' => ['File payload is required.']],
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    422,
+                    'Validation error',
+                    'File payload is missing.',
+                    [
+                        'type' => 'https://stupidcms.dev/problems/validation-error',
+                        'errors' => ['file' => ['File payload is required.']],
+                    ]
+                )
             );
         }
 
         $media = $this->storeAction->execute($file, $validated);
 
-        return (new MediaResource($media))
-            ->response()
-            ->setStatusCode(201);
+        return new MediaResource($media);
     }
 
-    public function show(string $mediaId): JsonResponse
+    public function show(string $mediaId): MediaResource
     {
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            return $this->notFound($mediaId);
+            $this->notFound($mediaId);
         }
 
         $this->authorize('view', $media);
 
-        return (new MediaResource($media))->response();
+        return new MediaResource($media);
     }
 
-    public function update(UpdateMediaRequest $request, string $mediaId): JsonResponse
+    public function update(UpdateMediaRequest $request, string $mediaId): MediaResource
     {
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            return $this->notFound($mediaId);
+            $this->notFound($mediaId);
         }
 
         $this->authorize('update', $media);
@@ -145,15 +145,15 @@ class MediaController extends Controller
         $media->fill($request->validated());
         $media->save();
 
-        return (new MediaResource($media->fresh()))->response();
+        return new MediaResource($media->fresh());
     }
 
-    public function destroy(Request $request, string $mediaId): JsonResponse
+    public function destroy(Request $request, string $mediaId): HttpResponse
     {
         $media = Media::query()->find($mediaId);
 
         if (! $media) {
-            return $this->notFound($mediaId);
+            $this->notFound($mediaId);
         }
 
         $this->authorize('delete', $media);
@@ -184,21 +184,23 @@ class MediaController extends Controller
         $media->delete();
 
         return response()
-            ->json(null, 204)
+            ->noContent()
             ->header('Cache-Control', 'no-store, private')
             ->header('Vary', 'Cookie');
     }
 
-    public function restore(Request $request, string $mediaId): JsonResponse
+    public function restore(Request $request, string $mediaId): MediaResource
     {
         $media = Media::onlyTrashed()->find($mediaId);
 
         if (! $media) {
-            return $this->problem(
-                404,
-                'Media not found',
-                "Deleted media with ID {$mediaId} does not exist.",
-                ['type' => 'https://stupidcms.dev/problems/not-found']
+            throw new HttpResponseException(
+                $this->problem(
+                    404,
+                    'Media not found',
+                    "Deleted media with ID {$mediaId} does not exist.",
+                    ['type' => 'https://stupidcms.dev/problems/not-found']
+                )
             );
         }
 
@@ -207,16 +209,18 @@ class MediaController extends Controller
         $media->restore();
         $media->refresh();
 
-        return (new MediaResource($media))->response();
+        return new MediaResource($media);
     }
 
-    private function notFound(string $mediaId): JsonResponse
+    private function notFound(string $mediaId): never
     {
-        return $this->problem(
-            404,
-            'Media not found',
-            "Media with ID {$mediaId} does not exist.",
-            ['type' => 'https://stupidcms.dev/problems/not-found']
+        throw new HttpResponseException(
+            $this->problem(
+                404,
+                'Media not found',
+                "Media with ID {$mediaId} does not exist.",
+                ['type' => 'https://stupidcms.dev/problems/not-found']
+            )
         );
     }
 }

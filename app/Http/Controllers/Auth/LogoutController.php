@@ -1,70 +1,67 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
 use App\Http\Controllers\Traits\Problems;
+use App\Http\Requests\Auth\LogoutRequest;
+use App\Http\Resources\Admin\LogoutResource;
 use App\Models\RefreshToken;
 use App\Support\JwtCookies;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Cookie;
 
 final class LogoutController
 {
     use Problems;
 
     public function __construct(
-        private JwtService $jwt,
-        private RefreshTokenRepository $repo,
+        private readonly JwtService $jwt,
+        private readonly RefreshTokenRepository $repo,
     ) {
     }
 
-    /**
-     * Handle a logout request.
-     *
-     * Revokes the refresh token family (to prevent reuse attacks) and clears cookies.
-     * Supports ?all=1 query parameter to revoke all refresh tokens for the user.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function logout(Request $request): Response
+    public function logout(LogoutRequest $request): LogoutResource
     {
+        $cookies = $this->clearCookies();
+
         $rt = (string) $request->cookie(config('jwt.cookies.refresh'), '');
 
         if ($rt === '') {
-            // No refresh token: just clear cookies (idempotent)
-            return response()->noContent()
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+            return new LogoutResource($cookies);
         }
 
         try {
             $verified = $this->jwt->verify($rt, 'refresh');
-            $claims = $verified['claims']; // jti, sub
-        } catch (\Throwable $e) {
-            // Invalid RT: clear cookies (without 401, to not break UX logout)
-            return response()->noContent()
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+            $claims = $verified['claims'];
+        } catch (\Throwable) {
+            return new LogoutResource($cookies);
         }
 
-        // Standard logout: revokeFamily(jti) to prevent reuse attacks
-        DB::transaction(function () use ($claims, $request) {
+        DB::transaction(function () use ($claims, $request): void {
             $this->repo->revokeFamily($claims['jti']);
 
-            // Optional: support logout_all (by user) via query ?all=1
             if ($request->boolean('all')) {
                 RefreshToken::where('user_id', (int) $claims['sub'])
                     ->update(['revoked_at' => now('UTC')]);
             }
         });
 
-        return response()->noContent()
-            ->withCookie(JwtCookies::clearAccess())
-            ->withCookie(JwtCookies::clearRefresh());
+        return new LogoutResource($cookies);
+    }
+
+    /**
+     * @return array<int, Cookie>
+     */
+    private function clearCookies(): array
+    {
+        return [
+            JwtCookies::clearAccess(),
+            JwtCookies::clearRefresh(),
+        ];
     }
 }
 

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Admin;
 
-class PathReservationCollection extends AdminResourceCollection
+use App\Http\Resources\MediaResource;
+
+class MediaCollection extends AdminResourceCollection
 {
     /**
-     * @var class-string<PathReservationResource>
+     * @var class-string<MediaResource>
      */
-    public $collects = PathReservationResource::class;
+    public $collects = MediaResource::class;
 
     /**
      * @return array<string, mixed>

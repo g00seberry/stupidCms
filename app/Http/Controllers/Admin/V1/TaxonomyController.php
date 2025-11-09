@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
@@ -7,16 +9,18 @@ use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\IndexTaxonomiesRequest;
 use App\Http\Requests\Admin\StoreTaxonomyRequest;
 use App\Http\Requests\Admin\UpdateTaxonomyRequest;
+use App\Http\Resources\Admin\TaxonomyCollection;
 use App\Http\Resources\Admin\TaxonomyResource;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaxonomyController extends Controller
 {
@@ -28,7 +32,7 @@ class TaxonomyController extends Controller
     ) {
     }
 
-    public function index(IndexTaxonomiesRequest $request): JsonResponse
+    public function index(IndexTaxonomiesRequest $request): TaxonomyCollection
     {
         $validated = $request->validated();
 
@@ -49,16 +53,12 @@ class TaxonomyController extends Controller
         $perPage = $validated['per_page'] ?? 15;
         $perPage = max(10, min(100, $perPage));
 
-        $collection = TaxonomyResource::collection($query->paginate($perPage));
+        $collection = $query->paginate($perPage);
 
-        $response = $collection->response();
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new TaxonomyCollection($collection);
     }
 
-    public function store(StoreTaxonomyRequest $request): JsonResponse
+    public function store(StoreTaxonomyRequest $request): TaxonomyResource
     {
         $validated = $request->validated();
 
@@ -90,36 +90,26 @@ class TaxonomyController extends Controller
             'slug' => $taxonomy->slug,
         ]);
 
-        $resource = new TaxonomyResource($taxonomy->fresh());
-        $response = $resource->response()->setStatusCode(201);
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new TaxonomyResource($taxonomy->fresh(), true);
     }
 
-    public function show(string $slug): JsonResponse
+    public function show(string $slug): TaxonomyResource
     {
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         if (! $taxonomy) {
-            return $this->notFoundTaxonomy($slug);
+            $this->throwNotFound($slug);
         }
 
-        $resource = new TaxonomyResource($taxonomy);
-        $response = $resource->toResponse(request());
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new TaxonomyResource($taxonomy);
     }
 
-    public function update(UpdateTaxonomyRequest $request, string $slug): JsonResponse
+    public function update(UpdateTaxonomyRequest $request, string $slug): TaxonomyResource
     {
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         if (! $taxonomy) {
-            return $this->notFoundTaxonomy($slug);
+            $this->throwNotFound($slug);
         }
 
         $validated = $request->validated();
@@ -162,35 +152,32 @@ class TaxonomyController extends Controller
             'slug' => $taxonomy->slug,
         ]);
 
-        $resource = new TaxonomyResource($taxonomy->fresh());
-        $response = $resource->toResponse(request());
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new TaxonomyResource($taxonomy->fresh());
     }
 
-    public function destroy(Request $request, string $slug): JsonResponse
+    public function destroy(Request $request, string $slug): Response
     {
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         if (! $taxonomy) {
-            return $this->notFoundTaxonomy($slug);
+            $this->throwNotFound($slug);
         }
 
         $force = $request->boolean('force');
 
         $termsCount = $taxonomy->terms()->count();
         if ($termsCount > 0 && ! $force) {
-            return $this->problem(
-                status: 409,
-                title: 'Taxonomy has terms',
-                detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
-                ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    status: 409,
+                    title: 'Taxonomy has terms',
+                    detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
+                    ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
+                    headers: [
+                        'Cache-Control' => 'no-store, private',
+                        'Vary' => 'Cookie',
+                    ]
+                )
             );
         }
 
@@ -210,7 +197,8 @@ class TaxonomyController extends Controller
             'force' => $force,
         ]);
 
-        return response()->json(null, 204)
+        return response()
+            ->noContent()
             ->header('Cache-Control', 'no-store, private')
             ->header('Vary', 'Cookie');
     }
@@ -265,17 +253,19 @@ class TaxonomyController extends Controller
         });
     }
 
-    private function notFoundTaxonomy(string $slug): JsonResponse
+    private function throwNotFound(string $slug): never
     {
-        return $this->problem(
-            status: 404,
-            title: 'Taxonomy not found',
-            detail: "Taxonomy with slug {$slug} does not exist.",
-            ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-            headers: [
-                'Cache-Control' => 'no-store, private',
-                'Vary' => 'Cookie',
-            ]
+        throw new HttpResponseException(
+            $this->problem(
+                status: 404,
+                title: 'Taxonomy not found',
+                detail: "Taxonomy with slug {$slug} does not exist.",
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+                headers: [
+                    'Cache-Control' => 'no-store, private',
+                    'Vary' => 'Cookie',
+                ]
+            )
         );
     }
 }

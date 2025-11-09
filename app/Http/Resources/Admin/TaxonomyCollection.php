@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Admin;
 
-class PathReservationCollection extends AdminResourceCollection
+class TaxonomyCollection extends AdminResourceCollection
 {
     /**
-     * @var class-string<PathReservationResource>
+     * @var class-string<TaxonomyResource>
      */
-    public $collects = PathReservationResource::class;
+    public $collects = TaxonomyResource::class;
 
     /**
      * @return array<string, mixed>

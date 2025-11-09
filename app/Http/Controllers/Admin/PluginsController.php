@@ -13,12 +13,13 @@ use App\Domain\Plugins\Services\PluginsSynchronizer;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\Plugins\IndexPluginsRequest;
+use App\Http\Resources\PluginCollection;
 use App\Http\Resources\PluginResource;
+use App\Http\Resources\PluginSyncResource;
 use App\Models\Plugin;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,7 @@ final class PluginsController extends Controller
 {
     use Problems;
 
-    public function index(IndexPluginsRequest $request): ResourceCollection
+    public function index(IndexPluginsRequest $request): PluginCollection
     {
         $validated = $request->validated();
 
@@ -60,116 +61,114 @@ final class PluginsController extends Controller
         $paginator = $query->paginate($perPage);
         $paginator->appends($request->query());
 
-        return PluginResource::collection($paginator);
+        return new PluginCollection($paginator);
     }
 
-    public function enable(string $slug, PluginActivator $activator): JsonResponse
+    public function enable(string $slug, PluginActivator $activator): PluginResource
     {
-        try {
-            $plugin = Plugin::query()->where('slug', $slug)->firstOrFail();
-        } catch (ModelNotFoundException) {
-            return $this->problem(
-                Response::HTTP_NOT_FOUND,
-                'Plugin not found',
-                sprintf('Plugin with slug "%s" was not found.', $slug),
-                ['type' => 'https://stupidcms.dev/problems/plugin-not-found']
-            );
-        }
+        $plugin = $this->findPluginOrFail($slug);
 
         Gate::authorize('toggle', $plugin);
 
         try {
             $plugin = $activator->enable($plugin);
         } catch (PluginAlreadyEnabledException $exception) {
-            return $this->problem(
-                Response::HTTP_CONFLICT,
-                'Plugin already enabled',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/plugin-already-enabled']
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_CONFLICT,
+                    'Plugin already enabled',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/plugin-already-enabled']
+                )
             );
         } catch (RoutesReloadFailed $exception) {
-            return $this->problem(
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Failed to reload plugin routes',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                    'Failed to reload plugin routes',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+                )
             );
         }
 
-        return (new PluginResource($plugin))
-            ->response()
-            ->setStatusCode(Response::HTTP_OK);
+        return new PluginResource($plugin);
     }
 
-    public function disable(string $slug, PluginActivator $activator): JsonResponse
+    public function disable(string $slug, PluginActivator $activator): PluginResource
     {
-        try {
-            $plugin = Plugin::query()->where('slug', $slug)->firstOrFail();
-        } catch (ModelNotFoundException) {
-            return $this->problem(
-                Response::HTTP_NOT_FOUND,
-                'Plugin not found',
-                sprintf('Plugin with slug "%s" was not found.', $slug),
-                ['type' => 'https://stupidcms.dev/problems/plugin-not-found']
-            );
-        }
+        $plugin = $this->findPluginOrFail($slug);
 
         Gate::authorize('toggle', $plugin);
 
         try {
             $plugin = $activator->disable($plugin);
         } catch (PluginAlreadyDisabledException $exception) {
-            return $this->problem(
-                Response::HTTP_CONFLICT,
-                'Plugin already disabled',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/plugin-already-disabled']
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_CONFLICT,
+                    'Plugin already disabled',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/plugin-already-disabled']
+                )
             );
         } catch (RoutesReloadFailed $exception) {
-            return $this->problem(
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Failed to reload plugin routes',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                    'Failed to reload plugin routes',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+                )
             );
         }
 
-        return (new PluginResource($plugin))
-            ->response()
-            ->setStatusCode(Response::HTTP_OK);
+        return new PluginResource($plugin);
     }
 
-    public function sync(PluginsSynchronizer $synchronizer): JsonResponse
+    public function sync(PluginsSynchronizer $synchronizer): PluginSyncResource
     {
         Gate::authorize('sync', Plugin::class);
 
         try {
             $summary = $synchronizer->sync();
         } catch (InvalidPluginManifest $exception) {
-            return $this->problem(
-                Response::HTTP_UNPROCESSABLE_ENTITY,
-                'Invalid plugin manifest',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/invalid-plugin-manifest']
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'Invalid plugin manifest',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/invalid-plugin-manifest']
+                )
             );
         } catch (RoutesReloadFailed $exception) {
-            return $this->problem(
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Failed to reload plugin routes',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                    'Failed to reload plugin routes',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+                )
             );
         }
 
-        return response()->json([
-            'status' => 'accepted',
-            'summary' => [
-                'added' => $summary['added'],
-                'updated' => $summary['updated'],
-                'removed' => $summary['removed'],
-                'providers' => $summary['providers'],
-            ],
-        ], Response::HTTP_ACCEPTED);
+        return new PluginSyncResource($summary);
+    }
+
+    private function findPluginOrFail(string $slug): Plugin
+    {
+        try {
+            return Plugin::query()->where('slug', $slug)->firstOrFail();
+        } catch (ModelNotFoundException) {
+            throw new HttpResponseException(
+                $this->problem(
+                    Response::HTTP_NOT_FOUND,
+                    'Plugin not found',
+                    sprintf('Plugin with slug "%s" was not found.', $slug),
+                    ['type' => 'https://stupidcms.dev/problems/plugin-not-found']
+                )
+            );
+        }
     }
 }
 

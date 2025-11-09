@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Pagination\AbstractPaginator;
 
-class TermCollection extends ResourceCollection
+class TermCollection extends AdminResourceCollection
 {
     public $collects = TermResource::class;
 
@@ -14,12 +15,6 @@ class TermCollection extends ResourceCollection
         return [
             'data' => $this->collection,
         ];
-    }
-
-    public function withResponse($request, $response): void
-    {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
     }
 
     public function paginationInformation($request, $paginated, $default): array

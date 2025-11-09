@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Pagination\AbstractPaginator;
 
-class EntryCollection extends ResourceCollection
+class EntryCollection extends AdminResourceCollection
 {
     /**
      * The resource that this resource collects.
@@ -25,15 +24,6 @@ class EntryCollection extends ResourceCollection
         return [
             'data' => $this->collection,
         ];
-    }
-
-    /**
-     * Customize the response after transformation.
-     */
-    public function withResponse($request, $response): void
-    {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
     }
 
     /**

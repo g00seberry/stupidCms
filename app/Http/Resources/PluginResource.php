@@ -12,6 +12,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 final class PluginResource extends JsonResource
 {
     /**
+     * @var string|null
+     */
+    public static $wrap = null;
+
+    /**
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
@@ -29,6 +34,12 @@ final class PluginResource extends JsonResource
             'routes_active' => (bool) ($loadedProviders[$plugin->provider_fqcn] ?? false),
             'last_synced_at' => $plugin->last_synced_at?->toAtomString(),
         ];
+    }
+
+    public function withResponse($request, $response): void
+    {
+        $response->header('Cache-Control', 'no-store, private');
+        $response->header('Vary', 'Cookie');
     }
 }
 

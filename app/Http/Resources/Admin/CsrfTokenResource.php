@@ -4,37 +4,34 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Request;
+use App\Support\JwtCookies;
 use Symfony\Component\HttpFoundation\Response;
 
-class PathReservationMessageResource extends AdminJsonResource
+class CsrfTokenResource extends AdminJsonResource
 {
     /**
      * @var string|null
      */
     public static $wrap = null;
 
-    public function __construct(
-        private readonly string $message,
-        private readonly int $status
-    ) {
+    public function __construct(private readonly string $token)
+    {
         parent::__construct(null);
     }
 
     /**
-     * @param Request $request
-     * @return array<string, string>
+     * @return array{csrf: string}
      */
     public function toArray($request): array
     {
         return [
-            'message' => $this->message,
+            'csrf' => $this->token,
         ];
     }
 
     protected function prepareAdminResponse($request, Response $response): void
     {
-        $response->setStatusCode($this->status);
+        $response->headers->setCookie(JwtCookies::csrf($this->token));
 
         parent::prepareAdminResponse($request, $response);
     }

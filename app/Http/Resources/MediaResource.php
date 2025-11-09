@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
+use App\Models\Media;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class MediaResource extends JsonResource
 {
@@ -37,6 +41,10 @@ class MediaResource extends JsonResource
 
     public function withResponse($request, $response): void
     {
+        if ($this->resource instanceof Media && $this->resource->wasRecentlyCreated) {
+            $response->setStatusCode(Response::HTTP_CREATED);
+        }
+
         $response->header('Cache-Control', 'no-store, private');
         $response->header('Vary', 'Cookie');
     }

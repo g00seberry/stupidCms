@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Media\Services\OnDemandVariantService;
@@ -7,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\Media;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,18 +26,20 @@ class MediaPreviewController extends Controller
     ) {
     }
 
-    public function preview(Request $request, string $mediaId): JsonResponse|RedirectResponse
+    public function preview(Request $request, string $mediaId): RedirectResponse
     {
         $variant = $request->query('variant', 'thumbnail');
 
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            return $this->problem(
-                404,
-                'Media not found',
-                "Media with ID {$mediaId} does not exist.",
-                ['type' => 'https://stupidcms.dev/problems/not-found']
+            throw new HttpResponseException(
+                $this->problem(
+                    404,
+                    'Media not found',
+                    "Media with ID {$mediaId} does not exist.",
+                    ['type' => 'https://stupidcms.dev/problems/not-found']
+                )
             );
         }
 
@@ -44,18 +48,22 @@ class MediaPreviewController extends Controller
         try {
             $variantModel = $this->variantService->ensureVariant($media, $variant);
         } catch (InvalidArgumentException $exception) {
-            return $this->problem(
-                422,
-                'Invalid variant',
-                $exception->getMessage(),
-                ['type' => 'https://stupidcms.dev/problems/validation-error']
+            throw new HttpResponseException(
+                $this->problem(
+                    422,
+                    'Invalid variant',
+                    $exception->getMessage(),
+                    ['type' => 'https://stupidcms.dev/problems/validation-error']
+                )
             );
         } catch (Throwable $exception) {
             report($exception);
 
-            return $this->internalError('Failed to generate media variant.', [
-                'type' => 'https://stupidcms.dev/problems/media-variant-error',
-            ]);
+            throw new HttpResponseException(
+                $this->internalError('Failed to generate media variant.', [
+                    'type' => 'https://stupidcms.dev/problems/media-variant-error',
+                ])
+            );
         }
 
         $url = $this->temporaryUrl($media->disk, $variantModel->path);
@@ -63,16 +71,18 @@ class MediaPreviewController extends Controller
         return redirect()->away($url);
     }
 
-    public function download(string $mediaId): JsonResponse|RedirectResponse
+    public function download(string $mediaId): RedirectResponse
     {
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            return $this->problem(
-                404,
-                'Media not found',
-                "Media with ID {$mediaId} does not exist.",
-                ['type' => 'https://stupidcms.dev/problems/not-found']
+            throw new HttpResponseException(
+                $this->problem(
+                    404,
+                    'Media not found',
+                    "Media with ID {$mediaId} does not exist.",
+                    ['type' => 'https://stupidcms.dev/problems/not-found']
+                )
             );
         }
 
@@ -83,9 +93,11 @@ class MediaPreviewController extends Controller
         } catch (Throwable $exception) {
             report($exception);
 
-            return $this->internalError('Failed to generate download URL.', [
-                'type' => 'https://stupidcms.dev/problems/media-download-error',
-            ]);
+            throw new HttpResponseException(
+                $this->internalError('Failed to generate download URL.', [
+                    'type' => 'https://stupidcms.dev/problems/media-download-error',
+                ])
+            );
         }
 
         return redirect()->away($url);

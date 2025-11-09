@@ -1,11 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Symfony\Component\HttpFoundation\Response;
 
-class TermResource extends JsonResource
+class TermResource extends AdminJsonResource
 {
+    private bool $created;
+
+    public function __construct($resource, bool $created = false)
+    {
+        parent::__construct($resource);
+        $this->created = $created;
+    }
+
     public function toArray($request): array
     {
         return [
@@ -20,10 +30,13 @@ class TermResource extends JsonResource
         ];
     }
 
-    public function withResponse($request, $response): void
+    protected function prepareAdminResponse($request, Response $response): void
     {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
+        if ($this->created) {
+            $response->setStatusCode(Response::HTTP_CREATED);
+        }
+
+        parent::prepareAdminResponse($request, $response);
     }
 
     private function transformJson(mixed $value): mixed

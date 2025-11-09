@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\SlugifyPreviewResource;
 use App\Models\Entry;
 use App\Models\ReservedRoute;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UtilsController extends Controller
@@ -20,7 +20,7 @@ class UtilsController extends Controller
     /**
      * GET /api/v1/admin/utils/slugify?title=...&postType=page
      */
-    public function slugify(Request $request): JsonResponse
+    public function slugify(Request $request): SlugifyPreviewResource
     {
         $request->validate([
             'title' => 'required|string|max:500',
@@ -34,10 +34,7 @@ class UtilsController extends Controller
         $base = $this->slugifier->slugify($title);
 
         if (empty($base)) {
-            return response()->json([
-                'base' => '',
-                'unique' => '',
-            ]);
+            return new SlugifyPreviewResource('', '');
         }
 
         // Проверяем уникальность
@@ -68,10 +65,7 @@ class UtilsController extends Controller
             }
         );
 
-        return response()->json([
-            'base' => $base,
-            'unique' => $unique,
-        ]);
+        return new SlugifyPreviewResource($base, $unique);
     }
 }
 

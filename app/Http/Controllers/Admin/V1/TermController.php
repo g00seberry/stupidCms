@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Admin\V1\Concerns\ManagesEntryTerms;
@@ -15,11 +17,12 @@ use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class TermController extends Controller
 {
@@ -32,12 +35,12 @@ class TermController extends Controller
     ) {
     }
 
-    public function indexByTaxonomy(IndexTermsRequest $request, string $taxonomy): JsonResponse
+    public function indexByTaxonomy(IndexTermsRequest $request, string $taxonomy): TermCollection
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
 
         if (! $taxonomyModel) {
-            return $this->taxonomyNotFound($taxonomy);
+            $this->throwTaxonomyNotFound($taxonomy);
         }
 
         $validated = $request->validated();
@@ -62,19 +65,16 @@ class TermController extends Controller
         $perPage = max(10, min(100, $perPage));
 
         $collection = new TermCollection($query->paginate($perPage));
-        $response = $collection->response();
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
 
-        return $response;
+        return $collection;
     }
 
-    public function store(StoreTermRequest $request, string $taxonomy): JsonResponse
+    public function store(StoreTermRequest $request, string $taxonomy): TermResource
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
 
         if (! $taxonomyModel) {
-            return $this->taxonomyNotFound($taxonomy);
+            $this->throwTaxonomyNotFound($taxonomy);
         }
 
         $validated = $request->validated();
@@ -113,7 +113,7 @@ class TermController extends Controller
             'taxonomy_id' => $taxonomyModel->id,
         ]);
 
-        $resource = new TermResource($term);
+        $resource = new TermResource($term, true);
 
         if ($attachEntryId) {
             $entry = Entry::query()->with(['terms.taxonomy', 'postType'])->find($attachEntryId);
@@ -124,39 +124,30 @@ class TermController extends Controller
             }
         }
 
-        $response = $resource->response()->setStatusCode(201);
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return $resource;
     }
 
-    public function show(int $term): JsonResponse
+    public function show(int $term): TermResource
     {
         $termModel = Term::query()
             ->with('taxonomy')
             ->find($term);
 
         if (! $termModel) {
-            return $this->termNotFound($term);
+            $this->throwTermNotFound($term);
         }
 
-        $resource = new TermResource($termModel);
-        $response = $resource->toResponse(request());
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new TermResource($termModel);
     }
 
-    public function update(UpdateTermRequest $request, int $term): JsonResponse
+    public function update(UpdateTermRequest $request, int $term): TermResource
     {
         $termModel = Term::query()
             ->with('taxonomy')
             ->find($term);
 
         if (! $termModel) {
-            return $this->termNotFound($term);
+            $this->throwTermNotFound($term);
         }
 
         $validated = $request->validated();
@@ -194,35 +185,32 @@ class TermController extends Controller
 
         $termModel->refresh()->load('taxonomy');
 
-        $resource = new TermResource($termModel);
-        $response = $resource->toResponse(request());
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Vary', 'Cookie');
-
-        return $response;
+        return new TermResource($termModel);
     }
 
-    public function destroy(Request $request, int $term): JsonResponse
+    public function destroy(Request $request, int $term): Response
     {
         $termModel = Term::query()->find($term);
 
         if (! $termModel) {
-            return $this->termNotFound($term);
+            $this->throwTermNotFound($term);
         }
 
         $forceDetach = $request->boolean('forceDetach');
 
         $hasEntries = $termModel->entries()->exists();
         if ($hasEntries && ! $forceDetach) {
-            return $this->problem(
-                status: 409,
-                title: 'Term still attached',
-                detail: 'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.',
-                ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    status: 409,
+                    title: 'Term still attached',
+                    detail: 'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.',
+                    ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
+                    headers: [
+                        'Cache-Control' => 'no-store, private',
+                        'Vary' => 'Cookie',
+                    ]
+                )
             );
         }
 
@@ -239,7 +227,8 @@ class TermController extends Controller
             'force_detach' => $forceDetach,
         ]);
 
-        return response()->json(null, 204)
+        return response()
+            ->noContent()
             ->header('Cache-Control', 'no-store, private')
             ->header('Vary', 'Cookie');
     }
@@ -304,31 +293,35 @@ class TermController extends Controller
         $entry->terms()->syncWithoutDetaching([$term->id]);
     }
 
-    private function taxonomyNotFound(string $slug): JsonResponse
+    private function throwTaxonomyNotFound(string $slug): never
     {
-        return $this->problem(
-            status: 404,
-            title: 'Taxonomy not found',
-            detail: "Taxonomy with slug {$slug} does not exist.",
-            ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-            headers: [
-                'Cache-Control' => 'no-store, private',
-                'Vary' => 'Cookie',
-            ]
+        throw new HttpResponseException(
+            $this->problem(
+                status: 404,
+                title: 'Taxonomy not found',
+                detail: "Taxonomy with slug {$slug} does not exist.",
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+                headers: [
+                    'Cache-Control' => 'no-store, private',
+                    'Vary' => 'Cookie',
+                ]
+            )
         );
     }
 
-    private function termNotFound(int $termId): JsonResponse
+    private function throwTermNotFound(int $termId): never
     {
-        return $this->problem(
-            status: 404,
-            title: 'Term not found',
-            detail: "Term with ID {$termId} does not exist.",
-            ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-            headers: [
-                'Cache-Control' => 'no-store, private',
-                'Vary' => 'Cookie',
-            ]
+        throw new HttpResponseException(
+            $this->problem(
+                status: 404,
+                title: 'Term not found',
+                detail: "Term with ID {$termId} does not exist.",
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+                headers: [
+                    'Cache-Control' => 'no-store, private',
+                    'Vary' => 'Cookie',
+                ]
+            )
         );
     }
 }

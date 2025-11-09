@@ -6,10 +6,9 @@ namespace App\Http\Resources\Admin;
 
 use App\Models\Option;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class OptionResource extends JsonResource
+class OptionResource extends AdminJsonResource
 {
     /**
      * @param Request $request
@@ -28,14 +27,13 @@ class OptionResource extends JsonResource
         ];
     }
 
-    public function withResponse($request, $response): void
+    protected function prepareAdminResponse($request, Response $response): void
     {
         if ($this->resource instanceof Option && $this->resource->wasRecentlyCreated) {
             $response->setStatusCode(Response::HTTP_CREATED);
         }
 
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
+        parent::prepareAdminResponse($request, $response);
     }
 }
 

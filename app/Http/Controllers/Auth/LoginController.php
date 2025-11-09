@@ -1,85 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
+use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\Admin\LoginResource;
 use App\Models\Audit;
 use App\Models\User;
-use App\Support\JwtCookies;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 final class LoginController
 {
+    use Problems;
+
     public function __construct(
-        private JwtService $jwt,
-        private RefreshTokenRepository $repo,
+        private readonly JwtService $jwt,
+        private readonly RefreshTokenRepository $repo,
     ) {
     }
 
-    /**
-     * Handle a login request.
-     *
-     * @param LoginRequest $request
-     * @return JsonResponse
-     */
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): LoginResource
     {
         $email = strtolower($request->input('email'));
         $password = (string) $request->input('password');
 
-        // Case-insensitive email search
         $user = User::query()->whereRaw('LOWER(email) = ?', [$email])->first();
         if (! $user || ! Hash::check($password, $user->password)) {
-            // Аудит неуспешного входа
             $this->logAudit('login_failed', null, $request);
 
-            // RFC 7807: problem+json для ошибок аутентификации
-            return response()->json([
-                'type' => 'about:blank',
-                'title' => 'Unauthorized',
-                'status' => 401,
-                'detail' => 'Invalid credentials.',
-            ], 401)->header('Content-Type', 'application/problem+json');
+            throw new HttpResponseException(
+                $this->problem(
+                    401,
+                    'Unauthorized',
+                    'Invalid credentials.',
+                    headers: [
+                        'Cache-Control' => 'no-store, private',
+                        'Vary' => 'Cookie',
+                    ]
+                )
+            );
         }
 
-        // Аудит успешного входа
-        $this->logAudit('login', $user->id, $request);
+        $this->logAudit('login', (int) $user->id, $request);
 
-        // Выпуск токенов
         $access = $this->jwt->issueAccessToken($user->getKey(), ['scp' => ['api']]);
         $refresh = $this->jwt->issueRefreshToken($user->getKey());
 
-        // Сохранить refresh token в БД (используем expires_at из claims['exp'])
         $decoded = $this->jwt->verify($refresh, 'refresh');
         $this->repo->store([
             'user_id' => $user->getKey(),
             'jti' => $decoded['claims']['jti'],
-            'expires_at' => \Carbon\Carbon::createFromTimestampUTC($decoded['claims']['exp']),
+            'expires_at' => Carbon::createFromTimestampUTC($decoded['claims']['exp']),
             'parent_jti' => null,
         ]);
 
-        // Ответ + cookies
-        return response()->json([
-            'user' => [
-                'id' => (int) $user->id,
-                'email' => $user->email,
-                'name' => $user->name,
-            ],
-        ])->withCookie(JwtCookies::access($access))
-          ->withCookie(JwtCookies::refresh($refresh));
+        return new LoginResource($user, $access, $refresh);
     }
 
-    /**
-     * Логирует действие входа в таблицу audits.
-     *
-     * @param string $action 'login' или 'login_failed'
-     * @param int|null $userId ID пользователя (null для неуспешного входа)
-     * @param \Illuminate\Http\Request $request
-     */
-    private function logAudit(string $action, ?int $userId, $request): void
+    private function logAudit(string $action, ?int $userId, Request $request): void
     {
         try {
             Audit::create([
@@ -90,9 +75,8 @@ final class LoginController
                 'ip' => $request->ip(),
                 'ua' => $request->userAgent(),
             ]);
-        } catch (\Exception $e) {
-            // Не прерываем выполнение при ошибке аудита
-            // В production можно логировать в отдельный канал
+        } catch (\Throwable) {
+            // Игнорируем ошибки аудита: безопасность важнее логирования
         }
     }
 }

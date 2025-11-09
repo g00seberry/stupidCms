@@ -257,8 +257,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/EntryTermsResource"
                                 }
                             }
                         }
@@ -334,8 +333,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/EntryTermsResource"
                                 }
                             }
                         }
@@ -423,8 +421,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/EntryTermsResource"
                                 }
                             }
                         }
@@ -512,8 +509,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/EntryTermsResource"
                                 }
                             }
                         }
@@ -909,7 +905,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "$ref": "#\/components\/schemas\/MediaResource"
+                                    "$ref": "#\/components\/schemas\/MediaCollection"
                                 }
                             }
                         }
@@ -1949,7 +1945,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "$ref": "#\/components\/schemas\/ResourceCollection"
+                                    "$ref": "#\/components\/schemas\/PluginCollection"
                                 }
                             }
                         }
@@ -2016,8 +2012,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/PluginSyncResource"
                                 }
                             }
                         }
@@ -2434,8 +2429,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/PathReservationCollection"
                                 }
                             }
                         }
@@ -2500,8 +2494,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/PathReservationMessageResource"
                                 }
                             }
                         }
@@ -2649,8 +2642,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/SearchReindexAcceptedResource"
                                 }
                             }
                         }
@@ -2729,7 +2721,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "$ref": "#\/components\/schemas\/TaxonomyResource"
+                                    "$ref": "#\/components\/schemas\/TaxonomyCollection"
                                 }
                             }
                         }
@@ -3493,8 +3485,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/SlugifyPreviewResource"
                                 }
                             }
                         }
@@ -3561,8 +3552,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/CsrfTokenResource"
                                 }
                             }
                         }
@@ -3625,8 +3615,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/LoginResource"
                                 }
                             }
                         }
@@ -3701,8 +3690,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/LogoutResource"
                                 }
                             }
                         }
@@ -3781,8 +3769,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
+                                    "$ref": "#\/components\/schemas\/TokenRefreshResource"
                                 }
                             }
                         }
@@ -4077,6 +4064,11 @@
                 ],
                 "description": "Paginated collection из EntryCollection"
             },
+            "EntryTermsResource": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Схема из EntryTermsResource"
+            },
             "MediaResource": {
                 "type": "object",
                 "properties": {
@@ -4158,6 +4150,29 @@
                     "download_url"
                 ]
             },
+            "MediaCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/MediaResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из MediaCollection"
+            },
             "OptionResource": {
                 "type": "object",
                 "properties": {
@@ -4220,11 +4235,6 @@
                 ],
                 "description": "Paginated collection из OptionCollection"
             },
-            "ResourceCollection": {
-                "type": "object",
-                "additionalProperties": true,
-                "description": "Схема из ResourceCollection"
-            },
             "PluginResource": {
                 "type": "object",
                 "properties": {
@@ -4261,6 +4271,61 @@
                     "provider"
                 ]
             },
+            "PluginCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/PluginResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из PluginCollection"
+            },
+            "PluginSyncResource": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "summary": {
+                        "type": "string"
+                    },
+                    "added": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "updated": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "removed": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "providers": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из PluginSyncResource",
+                "required": [
+                    "status",
+                    "summary"
+                ]
+            },
             "PostTypeResource": {
                 "type": "object",
                 "properties": {
@@ -4284,6 +4349,87 @@
                     "slug",
                     "options_json",
                     "updated_at"
+                ]
+            },
+            "PathReservationResource": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    },
+                    "kind": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "description": "Схема из PathReservationResource",
+                "required": [
+                    "path",
+                    "kind",
+                    "source"
+                ]
+            },
+            "PathReservationCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/PathReservationResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из PathReservationCollection"
+            },
+            "PathReservationMessageResource": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из PathReservationMessageResource",
+                "required": [
+                    "message"
+                ]
+            },
+            "SearchReindexAcceptedResource": {
+                "type": "object",
+                "properties": {
+                    "job_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "batch_size": {
+                        "type": "string"
+                    },
+                    "estimated_total": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из SearchReindexAcceptedResource",
+                "required": [
+                    "job_id",
+                    "batch_size",
+                    "estimated_total"
                 ]
             },
             "TaxonomyResource": {
@@ -4319,6 +4465,29 @@
                     "hierarchical",
                     "options_json"
                 ]
+            },
+            "TaxonomyCollection": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#\/components\/schemas\/TaxonomyResource"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "description": "Pagination links"
+                    },
+                    "meta": {
+                        "type": "object",
+                        "description": "Pagination metadata"
+                    }
+                },
+                "required": [
+                    "data"
+                ],
+                "description": "Paginated collection из TaxonomyCollection"
             },
             "TermResource": {
                 "type": "object",
@@ -4386,6 +4555,77 @@
                     "data"
                 ],
                 "description": "Paginated collection из TermCollection"
+            },
+            "SlugifyPreviewResource": {
+                "type": "object",
+                "properties": {
+                    "base": {
+                        "type": "string"
+                    },
+                    "unique": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из SlugifyPreviewResource",
+                "required": [
+                    "base",
+                    "unique"
+                ]
+            },
+            "CsrfTokenResource": {
+                "type": "object",
+                "properties": {
+                    "csrf": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из CsrfTokenResource",
+                "required": [
+                    "csrf"
+                ]
+            },
+            "LoginResource": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из LoginResource",
+                "required": [
+                    "user",
+                    "id",
+                    "email",
+                    "name"
+                ]
+            },
+            "LogoutResource": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Схема из LogoutResource"
+            },
+            "TokenRefreshResource": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "description": "Схема из TokenRefreshResource",
+                "required": [
+                    "message"
+                ]
             },
             "SearchHitResource": {
                 "type": "object",

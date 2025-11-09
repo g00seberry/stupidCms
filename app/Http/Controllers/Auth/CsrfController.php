@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
-use App\Support\JwtCookies;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\Admin\CsrfTokenResource;
 use Illuminate\Support\Str;
 
 final class CsrfController
@@ -13,14 +14,11 @@ final class CsrfController
      *
      * Returns a CSRF token in the response body and sets a non-HttpOnly cookie
      * so that JavaScript can read it and include it in subsequent requests.
-     *
-     * @return JsonResponse
      */
-    public function issue(): JsonResponse
+    public function issue(): CsrfTokenResource
     {
         $token = Str::random(40);
 
-        return response()->json(['csrf' => $token])
-            ->withCookie(JwtCookies::csrf($token));
+        return new CsrfTokenResource($token);
     }
 }

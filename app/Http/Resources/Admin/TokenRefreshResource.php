@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Request;
+use App\Support\JwtCookies;
 use Symfony\Component\HttpFoundation\Response;
 
-class PathReservationMessageResource extends AdminJsonResource
+final class TokenRefreshResource extends AdminJsonResource
 {
     /**
      * @var string|null
@@ -15,29 +15,27 @@ class PathReservationMessageResource extends AdminJsonResource
     public static $wrap = null;
 
     public function __construct(
-        private readonly string $message,
-        private readonly int $status
+        private readonly string $accessToken,
+        private readonly string $refreshToken
     ) {
         parent::__construct(null);
     }
 
     /**
-     * @param Request $request
      * @return array<string, string>
      */
     public function toArray($request): array
     {
         return [
-            'message' => $this->message,
+            'message' => 'Tokens refreshed successfully.',
         ];
     }
 
     protected function prepareAdminResponse($request, Response $response): void
     {
-        $response->setStatusCode($this->status);
+        $response->headers->setCookie(JwtCookies::access($this->accessToken));
+        $response->headers->setCookie(JwtCookies::refresh($this->refreshToken));
 
         parent::prepareAdminResponse($request, $response);
     }
 }
-
-

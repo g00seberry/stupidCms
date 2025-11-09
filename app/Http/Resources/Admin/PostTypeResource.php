@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class PostTypeResource extends JsonResource
+class PostTypeResource extends AdminJsonResource
 {
     /**
      * Transform the resource into an array.

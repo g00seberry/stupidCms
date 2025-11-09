@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class PathReservationResource extends JsonResource
+class PathReservationResource extends AdminJsonResource
 {
     /**
      * @param Request $request
@@ -21,12 +20,6 @@ class PathReservationResource extends JsonResource
             'source' => $this->source,
             'created_at' => $this->created_at?->toIso8601String(),
         ];
-    }
-
-    public function withResponse($request, $response): void
-    {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
     }
 }
 

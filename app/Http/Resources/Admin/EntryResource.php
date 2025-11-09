@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Admin;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Entry;
+use Symfony\Component\HttpFoundation\Response;
 
-class EntryResource extends JsonResource
+class EntryResource extends AdminJsonResource
 {
     /**
      * Transform the resource into an array.
@@ -72,13 +75,13 @@ class EntryResource extends JsonResource
         return $object;
     }
 
-    /**
-     * Customize the response after transformation.
-     */
-    public function withResponse($request, $response): void
+    protected function prepareAdminResponse($request, Response $response): void
     {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
+        if ($this->resource instanceof Entry && $this->resource->wasRecentlyCreated) {
+            $response->setStatusCode(Response::HTTP_CREATED);
+        }
+
+        parent::prepareAdminResponse($request, $response);
     }
 }
 

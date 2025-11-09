@@ -2,7 +2,7 @@
 owner: "@backend-team"
 system_of_record: "generated"
 review_cycle_days: 14
-last_reviewed: 2025-11-08
+last_reviewed: 2025-11-09
 related_code:
     - "app/Http/Controllers/*.php"
     - "app/Http/Requests/*.php"
@@ -12,7 +12,7 @@ related_code:
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `composer docs:gen` or `php artisan docs:api`.
 
-_Last generated: 2025-11-08 20:42:48 UTC_
+_Last generated: 2025-11-09 12:57:14 UTC_
 
 ## Public API (`/api/*`)
 

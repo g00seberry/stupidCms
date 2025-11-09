@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Admin\V1\Concerns\ManagesEntryTerms;
@@ -7,9 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\AttachTermsRequest;
 use App\Http\Requests\Admin\SyncTermsRequest;
+use App\Http\Resources\Admin\EntryTermsResource;
 use App\Models\Entry;
 use App\Models\Term;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -18,23 +21,23 @@ class EntryTermsController extends Controller
     use Problems;
     use ManagesEntryTerms;
 
-    public function index(int $entry): JsonResponse
+    public function index(int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
 
         if (! $entryModel) {
-            return $this->entryNotFound($entry);
+            $this->throwEntryNotFound($entry);
         }
 
-        return $this->entryTermsResponse($entryModel);
+        return $this->entryTermsResource($entryModel);
     }
 
-    public function attach(AttachTermsRequest $request, int $entry): JsonResponse
+    public function attach(AttachTermsRequest $request, int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
 
         if (! $entryModel) {
-            return $this->entryNotFound($entry);
+            $this->throwEntryNotFound($entry);
         }
 
         $validated = $request->validated();
@@ -56,15 +59,15 @@ class EntryTermsController extends Controller
             'term_ids' => $termIds,
         ]);
 
-        return $this->entryTermsResponse($entryModel->fresh());
+        return $this->entryTermsResource($entryModel->fresh());
     }
 
-    public function detach(AttachTermsRequest $request, int $entry): JsonResponse
+    public function detach(AttachTermsRequest $request, int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
 
         if (! $entryModel) {
-            return $this->entryNotFound($entry);
+            $this->throwEntryNotFound($entry);
         }
 
         $validated = $request->validated();
@@ -79,15 +82,15 @@ class EntryTermsController extends Controller
             'term_ids' => $termIds,
         ]);
 
-        return $this->entryTermsResponse($entryModel->fresh());
+        return $this->entryTermsResource($entryModel->fresh());
     }
 
-    public function sync(SyncTermsRequest $request, int $entry): JsonResponse
+    public function sync(SyncTermsRequest $request, int $entry): EntryTermsResource
     {
         $entryModel = $this->findEntry($entry);
 
         if (! $entryModel) {
-            return $this->entryNotFound($entry);
+            $this->throwEntryNotFound($entry);
         }
 
         $validated = $request->validated();
@@ -111,16 +114,14 @@ class EntryTermsController extends Controller
             'term_ids' => $termIds,
         ]);
 
-        return $this->entryTermsResponse($entryModel->fresh());
+        return $this->entryTermsResource($entryModel->fresh());
     }
 
-    private function entryTermsResponse(Entry $entry, int $status = 200): JsonResponse
+    private function entryTermsResource(Entry $entry): EntryTermsResource
     {
         $payload = $this->buildEntryTermsPayload($entry);
 
-        return response()->json(['data' => $payload], $status)
-            ->header('Cache-Control', 'no-store, private')
-            ->header('Vary', 'Cookie');
+        return new EntryTermsResource($payload);
     }
 
     private function findEntry(int $entryId): ?Entry
@@ -132,19 +133,20 @@ class EntryTermsController extends Controller
             ->first();
     }
 
-    private function entryNotFound(int $entryId): JsonResponse
+    private function throwEntryNotFound(int $entryId): never
     {
-        return $this->problem(
-            status: 404,
-            title: 'Entry not found',
-            detail: "Entry with ID {$entryId} does not exist.",
-            ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-            headers: [
-                'Cache-Control' => 'no-store, private',
-                'Vary' => 'Cookie',
-            ]
+        throw new HttpResponseException(
+            $this->problem(
+                status: 404,
+                title: 'Entry not found',
+                detail: "Entry with ID {$entryId} does not exist.",
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+                headers: [
+                    'Cache-Control' => 'no-store, private',
+                    'Vary' => 'Cookie',
+                ]
+            )
         );
     }
 }
-
 

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\Admin\IndexEntriesRequest;
 use App\Http\Requests\Admin\StoreEntryRequest;
 use App\Http\Requests\Admin\UpdateEntryRequest;
@@ -14,8 +15,10 @@ use App\Models\Entry;
 use App\Models\PostType;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +36,7 @@ class EntryController extends Controller
     /**
      * Display a listing of entries with filters.
      */
-    public function index(IndexEntriesRequest $request): JsonResponse
+    public function index(IndexEntriesRequest $request): EntryCollection
     {
         $validated = $request->validated();
 
@@ -106,13 +109,13 @@ class EntryController extends Controller
 
         $entries = $query->paginate($perPage);
 
-        return (new EntryCollection($entries))->toResponse($request);
+        return new EntryCollection($entries);
     }
 
     /**
      * Display the specified entry.
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id): EntryResource
     {
         $entry = Entry::query()
             ->with(['postType', 'author', 'terms.taxonomy'])
@@ -120,28 +123,18 @@ class EntryController extends Controller
             ->find($id);
 
         if (! $entry) {
-            return $this->problem(
-                status: 404,
-                title: 'Entry not found',
-                detail: "Entry with ID {$id} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
-            );
+            $this->throwEntryNotFound($id);
         }
 
         $this->authorize('view', $entry);
 
-        $resource = new EntryResource($entry);
-        return $resource->toResponse(request());
+        return new EntryResource($entry);
     }
 
     /**
      * Store a newly created entry.
      */
-    public function store(StoreEntryRequest $request): JsonResponse
+    public function store(StoreEntryRequest $request): EntryResource
     {
         $validated = $request->validated();
 
@@ -149,18 +142,20 @@ class EntryController extends Controller
         $postType = PostType::query()->where('slug', $validated['post_type'])->first();
         
         if (! $postType) {
-            return $this->problem(
-                status: 422,
-                title: 'Validation error',
-                detail: 'The specified post type does not exist.',
-                ext: [
-                    'type' => 'https://stupidcms.dev/problems/validation-error',
-                    'errors' => ['post_type' => ['The specified post type does not exist.']],
-                ],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    status: 422,
+                    title: 'Validation error',
+                    detail: 'The specified post type does not exist.',
+                    ext: [
+                        'type' => 'https://stupidcms.dev/problems/validation-error',
+                        'errors' => ['post_type' => ['The specified post type does not exist.']],
+                    ],
+                    headers: [
+                        'Cache-Control' => 'no-store, private',
+                        'Vary' => 'Cookie',
+                    ]
+                )
             );
         }
 
@@ -202,28 +197,18 @@ class EntryController extends Controller
 
         $entry->load(['postType', 'author', 'terms.taxonomy']);
 
-        $resource = new EntryResource($entry);
-        return $resource->toResponse(request())->setStatusCode(201);
+        return new EntryResource($entry);
     }
 
     /**
      * Update the specified entry.
      */
-    public function update(UpdateEntryRequest $request, int $id): JsonResponse
+    public function update(UpdateEntryRequest $request, int $id): EntryResource
     {
         $entry = Entry::query()->withTrashed()->find($id);
 
         if (! $entry) {
-            return $this->problem(
-                status: 404,
-                title: 'Entry not found',
-                detail: "Entry with ID {$id} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
-            );
+            $this->throwEntryNotFound($id);
         }
 
         $this->authorize('update', $entry);
@@ -282,35 +267,26 @@ class EntryController extends Controller
         $entry->refresh();
         $entry->load(['postType', 'author', 'terms.taxonomy']);
 
-        $resource = new EntryResource($entry);
-        return $resource->toResponse(request());
+        return new EntryResource($entry);
     }
 
     /**
      * Soft delete the specified entry.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id): Response
     {
         $entry = Entry::query()->find($id);
 
         if (! $entry) {
-            return $this->problem(
-                status: 404,
-                title: 'Entry not found',
-                detail: "Entry with ID {$id} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
-            );
+            $this->throwEntryNotFound($id);
         }
 
         $this->authorize('delete', $entry);
 
         $entry->delete();
 
-        return response()->json(null, 204)
+        return response()
+            ->noContent()
             ->header('Cache-Control', 'no-store, private')
             ->header('Vary', 'Cookie');
     }
@@ -318,20 +294,22 @@ class EntryController extends Controller
     /**
      * Restore a soft-deleted entry.
      */
-    public function restore(Request $request, int $id): JsonResponse
+    public function restore(Request $request, int $id): EntryResource
     {
         $entry = Entry::query()->onlyTrashed()->find($id);
 
         if (! $entry) {
-            return $this->problem(
-                status: 404,
-                title: 'Entry not found',
-                detail: "Trashed entry with ID {$id} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+            throw new HttpResponseException(
+                $this->problem(
+                    status: 404,
+                    title: 'Entry not found',
+                    detail: "Trashed entry with ID {$id} does not exist.",
+                    ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+                    headers: [
+                        'Cache-Control' => 'no-store, private',
+                        'Vary' => 'Cookie',
+                    ]
+                )
             );
         }
 
@@ -340,8 +318,7 @@ class EntryController extends Controller
         $entry->restore();
         $entry->load(['postType', 'author', 'terms.taxonomy']);
 
-        $resource = new EntryResource($entry);
-        return $resource->toResponse($request);
+        return new EntryResource($entry);
     }
 
     /**
@@ -370,6 +347,22 @@ class EntryController extends Controller
                     ->where('slug', $slug)
                     ->exists();
             }
+        );
+    }
+
+    private function throwEntryNotFound(int $id): never
+    {
+        throw new HttpResponseException(
+            $this->problem(
+                status: 404,
+                title: 'Entry not found',
+                detail: "Entry with ID {$id} does not exist.",
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
+                headers: [
+                    'Cache-Control' => 'no-store, private',
+                    'Vary' => 'Cookie',
+                ]
+            )
         );
     }
 }

@@ -9,7 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\Entry;
 use App\Support\ProblemDetails;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\Admin\SearchReindexAcceptedResource;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,15 +19,17 @@ final class SearchAdminController extends Controller
 {
     use Problems;
 
-    public function reindex(): JsonResponse
+    public function reindex(): SearchReindexAcceptedResource
     {
         if (! config('search.enabled')) {
-            return $this->problemFromPreset(
-                ProblemDetails::serviceUnavailable(),
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+            throw new HttpResponseException(
+                $this->problemFromPreset(
+                    ProblemDetails::serviceUnavailable(),
+                    headers: [
+                        'Cache-Control' => 'no-store, private',
+                        'Vary' => 'Cookie',
+                    ]
+                )
             );
         }
 
@@ -35,14 +38,11 @@ final class SearchAdminController extends Controller
 
         $estimatedTotal = Entry::query()->published()->count();
 
-        return response()->json([
-            'job_id' => $trackingId,
-            'batch_size' => (int) config('search.batch.size', 500),
-            'estimated_total' => $estimatedTotal,
-        ], Response::HTTP_ACCEPTED, [
-            'Cache-Control' => 'no-store, private',
-            'Vary' => 'Cookie',
-        ]);
+        return new SearchReindexAcceptedResource(
+            $trackingId,
+            (int) config('search.batch.size', 500),
+            $estimatedTotal
+        );
     }
 }
 

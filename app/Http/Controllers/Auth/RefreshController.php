@@ -1,108 +1,82 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
 use App\Http\Controllers\Traits\Problems;
+use App\Http\Requests\Auth\RefreshRequest;
+use App\Http\Resources\Admin\TokenRefreshResource;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
 use App\Support\JwtCookies;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use DomainException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Cookie;
 use Throwable;
 
 final class RefreshController
 {
     use Problems;
     public function __construct(
-        private JwtService $jwt,
-        private RefreshTokenRepository $repo,
+        private readonly JwtService $jwt,
+        private readonly RefreshTokenRepository $repo,
     ) {
     }
 
-    /**
-     * Handle a token refresh request.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function refresh(Request $request): JsonResponse
+    public function refresh(RefreshRequest $request): TokenRefreshResource
     {
-        // Получить refresh token из cookie
         $rt = (string) $request->cookie(config('jwt.cookies.refresh'), '');
+
         if ($rt === '') {
-            return $this->unauthorized('Missing refresh token.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+            $this->throwUnauthorized('Missing refresh token.');
         }
 
-        // Верифицировать JWT токен
         try {
             $verified = $this->jwt->verify($rt, 'refresh');
             $claims = $verified['claims'];
-        } catch (Throwable $e) {
-            return $this->unauthorized('Invalid or expired refresh token.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+        } catch (Throwable) {
+            $this->throwUnauthorized('Invalid or expired refresh token.');
         }
 
-        // Проверить токен в БД
         $tokenDto = $this->repo->find($claims['jti']);
         if (! $tokenDto) {
-            return $this->unauthorized('Refresh token not found.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+            $this->throwUnauthorized('Refresh token not found.');
         }
 
-        // Проверить соответствие user_id
         if ($tokenDto->user_id !== (int) $claims['sub']) {
-            return $this->unauthorized('Token user mismatch.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+            $this->throwUnauthorized('Token user mismatch.');
         }
 
-        // Проверить, что токен не использован, не отозван и не истёк
         if ($tokenDto->used_at || $tokenDto->revoked_at) {
-            // Попытка повторного использования - возможна атака
-            $this->handleReuseAttack($userId = (int) $claims['sub'], $claims['jti'], $request);
-            return $this->unauthorized('Refresh token has been revoked or already used.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+            $this->handleReuseAttack((int) $claims['sub'], $claims['jti'], $request);
+            $this->throwUnauthorized('Refresh token has been revoked or already used.');
         }
 
-        if (now('UTC')->gte($tokenDto->expires_at)) {
-            return $this->unauthorized('Refresh token has expired.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+        if (Carbon::now('UTC')->gte($tokenDto->expires_at)) {
+            $this->throwUnauthorized('Refresh token has expired.');
         }
 
-        // Транзакция для атомарности: условно пометить старый токен + создать новый
         try {
-            return DB::transaction(function () use ($claims, $request) {
+            [$accessToken, $refreshToken] = DB::transaction(function () use ($claims, $request): array {
                 $userId = (int) $claims['sub'];
-                
-                // Условное обновление: пометить как использованный только если ещё валиден
+
                 $updated = $this->repo->markUsedConditionally($claims['jti']);
-                
+
                 if ($updated !== 1) {
-                    // Токен уже был использован/отозван между проверкой и обновлением (race condition)
-                    // Или истёк - это тоже reuse-атака
                     $this->handleReuseAttack($userId, $claims['jti'], $request);
-                    throw new \DomainException('Replay/invalid refresh token');
+                    throw new DomainException('Replay/invalid refresh token');
                 }
 
-                // Выпустить новую пару токенов
                 $access = $this->jwt->issueAccessToken($userId, ['scp' => ['api']]);
                 $newRefresh = $this->jwt->issueRefreshToken($userId, ['parent_jti' => $claims['jti']]);
 
-                // Верифицировать новый refresh токен для получения claims
                 $decoded = $this->jwt->verify($newRefresh, 'refresh');
 
-                // Сохранить новый refresh token в БД (используем expires_at из claims['exp'])
                 $this->repo->store([
                     'user_id' => $userId,
                     'jti' => $decoded['claims']['jti'],
@@ -110,24 +84,55 @@ final class RefreshController
                     'parent_jti' => $claims['jti'],
                 ]);
 
-                // Логировать успешный refresh
                 $this->logAudit($userId, $request);
 
-                // Вернуть успешный ответ с новыми cookies
-                return response()->json(['message' => 'Tokens refreshed successfully.'])
-                    ->withCookie(JwtCookies::access($access))
-                    ->withCookie(JwtCookies::refresh($newRefresh));
+                return [$access, $newRefresh];
             });
-        } catch (\DomainException $e) {
-            // Replay/invalid token (domain-level error) - уже обработано в handleReuseAttack
-            return $this->unauthorized('Refresh token has been revoked or already used.')
-                ->withCookie(JwtCookies::clearAccess())
-                ->withCookie(JwtCookies::clearRefresh());
+        } catch (DomainException) {
+            $this->throwUnauthorized('Refresh token has been revoked or already used.');
         } catch (Throwable $e) {
-            // Infrastructure errors (DB/IO) - внутренняя ошибка сервера
             report($e);
-            return $this->internalError('Failed to refresh token due to server error.');
+
+            $response = $this->internalError('Failed to refresh token due to server error.');
+            $response->header('Cache-Control', 'no-store, private');
+            $response->header('Vary', 'Cookie');
+
+            throw new HttpResponseException($response);
         }
+
+        return new TokenRefreshResource($accessToken, $refreshToken);
+    }
+
+    /**
+     * @return never
+     */
+    private function throwUnauthorized(string $detail): never
+    {
+        $response = $this->unauthorized(
+            $detail,
+            [],
+            [
+                'Cache-Control' => 'no-store, private',
+                'Vary' => 'Cookie',
+            ]
+        );
+
+        foreach ($this->clearCookies() as $cookie) {
+            $response->headers->setCookie($cookie);
+        }
+
+        throw new HttpResponseException($response);
+    }
+
+    /**
+     * @return array<int, Cookie>
+     */
+    private function clearCookies(): array
+    {
+        return [
+            JwtCookies::clearAccess(),
+            JwtCookies::clearRefresh(),
+        ];
     }
 
     /**
@@ -135,10 +140,10 @@ final class RefreshController
      *
      * @param int $userId User ID
      * @param string $jti JWT ID of the reused token
-     * @param Request $request HTTP request
+     * @param RefreshRequest $request HTTP request
      * @return void
      */
-    private function handleReuseAttack(int $userId, string $jti, Request $request): void
+    private function handleReuseAttack(int $userId, string $jti, RefreshRequest $request): void
     {
         // Calculate chain depth (distance from root token)
         $chainDepth = $this->calculateChainDepth($jti);
@@ -159,7 +164,7 @@ final class RefreshController
                     'jti' => $jti,
                     'chain_depth' => $chainDepth,
                     'revoked_count' => $revokedCount,
-                    'timestamp' => now('UTC')->toIso8601String(),
+                    'timestamp' => Carbon::now('UTC')->toIso8601String(),
                 ],
             ]);
         } catch (\Exception $e) {
@@ -205,10 +210,10 @@ final class RefreshController
      * Log audit event for refresh operation.
      *
      * @param int $userId User ID
-     * @param Request $request HTTP request
+     * @param RefreshRequest $request HTTP request
      * @return void
      */
-    private function logAudit(int $userId, Request $request): void
+    private function logAudit(int $userId, RefreshRequest $request): void
     {
         try {
             Audit::create([

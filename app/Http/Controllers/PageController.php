@@ -1,45 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Domain\View\TemplateResolver;
+use App\Http\Requests\PageShowRequest;
 use App\Models\Entry;
-use Illuminate\Http\Response;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Контроллер для отображения публичных страниц по плоскому URL /{slug}.
- * 
+ *
  * Обрабатывает только опубликованные страницы типа 'page'.
  * Зарезервированные пути исключаются на уровне роутинга через ReservedPattern.
  */
-class PageController extends Controller
+final class PageController extends Controller
 {
     public function __construct(
-        private TemplateResolver $templateResolver,
-    ) {}
+        private readonly TemplateResolver $templateResolver,
+        private readonly ViewFactory $view,
+    ) {
+    }
 
-    /**
-     * Отображает опубликованную страницу по slug.
-     * 
-     * @param string $slug Плоский slug страницы (без слешей)
-     * @return Response|View
-     */
-    public function show(string $slug): Response|View
+    public function show(PageShowRequest $request, string $slug): View
     {
-        // Ищем опубликованную страницу по slug
-        // Используем скоупы для читабельности и единообразия со спецификацией
-        // firstOrFail() автоматически выбрасывает ModelNotFoundException (404)
         $entry = Entry::published()
             ->ofType('page')
             ->where('slug', $slug)
             ->with('postType')
-            ->firstOrFail();
+            ->first();
 
-        // Используем сервис для выбора шаблона по приоритету
+        if ($entry === null) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+
         $template = $this->templateResolver->forEntry($entry);
-        
-        return view($template, [
+
+        return $this->view->make($template, [
             'entry' => $entry,
         ]);
     }
