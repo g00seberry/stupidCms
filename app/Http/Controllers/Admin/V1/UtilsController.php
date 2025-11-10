@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\SlugifyPreviewResource;
 use App\Models\Entry;
 use App\Models\ReservedRoute;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\HttpErrorException;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 
 class UtilsController extends Controller
 {
@@ -49,10 +53,23 @@ class UtilsController extends Controller
      */
     public function slugify(Request $request): SlugifyPreviewResource
     {
-        $request->validate([
+        /** @var Validator $validator */
+        $validator = validator($request->all(), [
             'title' => 'required|string|max:500',
             'postType' => 'nullable|string',
         ]);
+
+        if ($validator->fails()) {
+            /** @var ErrorFactory $factory */
+            $factory = app(ErrorFactory::class);
+
+            $payload = $factory->for(ErrorCode::VALIDATION_ERROR)
+                ->detail('The given data was invalid.')
+                ->meta(['errors' => $validator->errors()->toArray()])
+                ->build();
+
+            throw new HttpErrorException($payload);
+        }
 
         $title = $request->input('title');
         $postType = $request->input('postType', 'page');

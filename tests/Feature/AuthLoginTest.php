@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Audit;
 use App\Models\User;
-use App\Support\Http\ProblemType;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -86,12 +86,7 @@ class AuthLoginTest extends TestCase
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertCookieMissing(config('jwt.cookies.access'));
         $response->assertCookieMissing(config('jwt.cookies.refresh'));
-        
-        // Проверка RFC 7807 формата
-        $response->assertJson([
-            'type' => ProblemType::UNAUTHORIZED->value,
-            'title' => 'Unauthorized',
-            'status' => 401,
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Invalid credentials.',
         ]);
         
@@ -117,12 +112,7 @@ class AuthLoginTest extends TestCase
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertCookieMissing(config('jwt.cookies.access'));
         $response->assertCookieMissing(config('jwt.cookies.refresh'));
-        
-        // Проверка RFC 7807 формата
-        $response->assertJson([
-            'type' => ProblemType::UNAUTHORIZED->value,
-            'title' => 'Unauthorized',
-            'status' => 401,
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Invalid credentials.',
         ]);
         
@@ -142,7 +132,8 @@ class AuthLoginTest extends TestCase
         ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['email']);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['email']);
     }
 
     public function test_login_validation_requires_password(): void
@@ -152,7 +143,8 @@ class AuthLoginTest extends TestCase
         ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['password']);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['password']);
     }
 
     public function test_login_validation_email_must_be_valid(): void
@@ -163,7 +155,8 @@ class AuthLoginTest extends TestCase
         ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['email']);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['email']);
     }
 
     public function test_login_validation_password_min_length(): void
@@ -174,7 +167,8 @@ class AuthLoginTest extends TestCase
         ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['password']);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['password']);
     }
 
     public function test_login_email_is_case_insensitive(): void
@@ -191,6 +185,11 @@ class AuthLoginTest extends TestCase
 
         $response->assertOk();
         $response->assertCookie(config('jwt.cookies.access'));
+    }
+
+    private function typeUri(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.uri');
     }
 }
 

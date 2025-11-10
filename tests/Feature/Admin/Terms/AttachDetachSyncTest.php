@@ -7,6 +7,7 @@ use App\Models\PostType;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -66,7 +67,10 @@ class AttachDetachSyncTest extends TestCase
         ], $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.term_ids.0', "Taxonomy 'regions' is not allowed for the entry post type.");
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, [
+            'term_ids' => "Taxonomy 'regions' is not allowed for the entry post type.",
+        ]);
         $this->assertDatabaseMissing('entry_term', ['entry_id' => $entry->id, 'term_id' => $allowedTerm->id]);
     }
 }

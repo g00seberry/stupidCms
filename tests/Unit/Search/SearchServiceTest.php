@@ -8,6 +8,7 @@ use App\Domain\Search\SearchClientInterface;
 use App\Domain\Search\SearchQuery;
 use App\Domain\Search\SearchService;
 use App\Domain\Search\ValueObjects\SearchTermFilter;
+use App\Support\Errors\ErrorFactory;
 use Carbon\CarbonImmutable;
 use Mockery as m;
 use Tests\TestCase;
@@ -25,7 +26,7 @@ final class SearchServiceTest extends TestCase
         $client = m::mock(SearchClientInterface::class);
         $client->shouldNotReceive('search');
 
-        $service = new SearchService($client, false, 'entries_read');
+        $service = new SearchService($client, false, 'entries_read', app(ErrorFactory::class));
 
         $query = new SearchQuery('about', [], [], null, null, 1, 20);
         $result = $service->search($query);
@@ -68,7 +69,7 @@ final class SearchServiceTest extends TestCase
                 ],
             ]);
 
-        $service = new SearchService($client, true, 'entries_read');
+        $service = new SearchService($client, true, 'entries_read', app(ErrorFactory::class));
 
         $query = new SearchQuery(
             query: 'about',

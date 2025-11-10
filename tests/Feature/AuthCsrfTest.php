@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Support\Http\ProblemType;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -36,14 +36,8 @@ class AuthCsrfTest extends TestCase
 
         $response->assertStatus(419);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        
-        // Проверка RFC 7807 формата
-        $response->assertJson([
-            'type' => ProblemType::CSRF_MISMATCH->value,
-            'title' => 'CSRF Token Mismatch',
-            'status' => 419,
+        $this->assertErrorResponse($response, ErrorCode::CSRF_TOKEN_MISMATCH, [
             'detail' => 'CSRF token mismatch.',
-            'code' => ProblemType::CSRF_MISMATCH->defaultCode(),
         ]);
         
         // Проверка, что при 419 выдается новый CSRF cookie
@@ -174,6 +168,16 @@ class AuthCsrfTest extends TestCase
         $setCookieHeader = $response->headers->get('Set-Cookie');
         $this->assertStringContainsString($cookieName . '=', $setCookieHeader, 'CSRF cookie should be present');
         $this->assertStringNotContainsString('HttpOnly', $setCookieHeader, 'CSRF cookie must NOT be HttpOnly');
+    }
+
+    private function typeUri(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.uri');
+    }
+
+    private function title(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.title');
     }
 }
 

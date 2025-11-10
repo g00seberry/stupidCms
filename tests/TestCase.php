@@ -3,7 +3,9 @@
 namespace Tests;
 
 use Firebase\JWT\JWT;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Testing\TestResponse;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -97,6 +99,51 @@ abstract class TestCase extends BaseTestCase
         ]));
 
         return $this->call('POST', $uri, $data, $cookies, [], $server, json_encode($data));
+    }
+
+    protected function assertErrorResponse(TestResponse $response, ErrorCode $code, array $overrides = []): void
+    {
+        $config = config('errors.types.' . $code->value);
+
+        $title = $overrides['title'] ?? $config['title'];
+        $status = $overrides['status'] ?? $config['status'];
+        $codeValue = $overrides['code'] ?? $code->value;
+
+        unset($overrides['title'], $overrides['status'], $overrides['code']);
+
+        $response->assertHeader('Content-Type', 'application/problem+json');
+        $response->assertJsonPath('type', $config['uri']);
+        $response->assertJsonPath('title', $title);
+        $response->assertJsonPath('status', $status);
+        $response->assertJsonPath('code', $codeValue);
+
+        foreach ($overrides as $path => $value) {
+            $response->assertJsonPath($path, $value);
+        }
+    }
+
+    protected function assertValidationErrors(TestResponse $response, array $fields): void
+    {
+        $data = $response->json();
+
+        foreach ($fields as $field => $expected) {
+            if (is_int($field)) {
+                $fieldName = $expected;
+                $expectedMessage = null;
+            } else {
+                $fieldName = $field;
+                $expectedMessage = $expected;
+            }
+
+            $path = "meta.errors.{$fieldName}.0";
+            $message = data_get($data, $path);
+
+            $this->assertNotNull($message, sprintf('Failed asserting that validation error exists for [%s].', $fieldName));
+
+            if ($expectedMessage !== null) {
+                $this->assertSame($expectedMessage, $message, sprintf('Validation message mismatch for [%s].', $fieldName));
+            }
+        }
     }
 
     /**

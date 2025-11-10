@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\PostType;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -80,11 +81,9 @@ class ShowPostTypeTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
         
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/not-found',
-            'title' => 'PostType not found',
-            'status' => 404,
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
             'detail' => 'Unknown post type slug: nonexistent',
+            'meta.slug' => 'nonexistent',
         ]);
     }
 

@@ -136,6 +136,12 @@ final class ErrorKernel
             return $closure;
         }
 
+        $reflection = new \ReflectionFunction($closure);
+
+        if ($reflection->isStatic()) {
+            return $closure;
+        }
+
         return $closure->bindTo($container, $container);
     }
 

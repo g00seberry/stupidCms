@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\RouteReservation;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -52,19 +53,10 @@ class PathReservationApiTest extends TestCase
         ], $this->admin);
 
         $response->assertStatus(409);
-        $response->assertJsonStructure([
-            'type',
-            'title',
-            'status',
-            'detail',
-            'path',
-            'owner',
-        ]);
-        $response->assertJson([
+        $this->assertErrorResponse($response, ErrorCode::CONFLICT, [
             'status' => 409,
-            'title' => 'Conflict',
-            'path' => '/feed.xml',
-            'owner' => 'system:feeds',
+            'meta.path' => '/feed.xml',
+            'meta.owner' => 'system:feeds',
         ]);
     }
 
@@ -148,18 +140,11 @@ class PathReservationApiTest extends TestCase
         ], $this->admin);
 
         $response->assertStatus(403);
-        $response->assertJsonStructure([
-            'type',
-            'title',
-            'status',
-            'detail',
-            'path',
-            'owner',
-            'attempted_source',
-        ]);
-        $response->assertJson([
+        $this->assertErrorResponse($response, ErrorCode::FORBIDDEN, [
             'status' => 403,
-            'title' => 'Forbidden',
+            'meta.path' => '/feed.xml',
+            'meta.owner' => 'system:feeds',
+            'meta.attempted_source' => 'plugin:other',
         ]);
     }
 

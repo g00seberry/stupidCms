@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -45,11 +46,7 @@ final class AuthCurrentUserTest extends TestCase
         $response = $this->getJson('/api/v1/admin/auth/current');
 
         $response->assertStatus(401);
-        $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
+        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
             'detail' => 'Authentication is required to access this resource.',
         ]);
     }
@@ -65,6 +62,9 @@ final class AuthCurrentUserTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertHeader('WWW-Authenticate', 'Bearer');
+        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_INVALID, [
+            'meta.reason' => 'invalid_token',
+        ]);
     }
 }
 

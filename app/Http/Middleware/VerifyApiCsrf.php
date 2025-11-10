@@ -73,7 +73,7 @@ final class VerifyApiCsrf
             throw new HttpErrorException(
                 $payload,
                 static function (JsonResponse $response) use ($newToken): JsonResponse {
-                    $response->headers->set('Vary', 'Origin');
+                    $response->headers->set('Vary', 'Origin, Cookie');
                     $response->headers->setCookie(JwtCookies::csrf($newToken));
 
                     return $response;

@@ -19,12 +19,12 @@ use InvalidArgumentException;
 final class ErrorCatalog
 {
     /**
-     * @var array<ErrorCode, ErrorType>
+     * @var array<string, ErrorType>
      */
     private array $types;
 
     /**
-     * @param array<ErrorCode, ErrorType> $types
+     * @param array<string, ErrorType> $types
      */
     private function __construct(array $types)
     {
@@ -41,7 +41,7 @@ final class ErrorCatalog
         foreach ($config as $code => $definition) {
             $enum = self::codeFromString($code);
 
-            $types[$enum] = new ErrorType(
+            $types[$enum->value] = new ErrorType(
                 code: $enum,
                 uri: $definition['uri'],
                 title: $definition['title'],
@@ -55,19 +55,19 @@ final class ErrorCatalog
 
     public function get(ErrorCode $code): ErrorType
     {
-        if (! isset($this->types[$code])) {
+        if (! isset($this->types[$code->value])) {
             throw new InvalidArgumentException(sprintf(
                 'Error type for code "%s" is not defined.',
                 $code->value,
             ));
         }
 
-        return $this->types[$code];
+        return $this->types[$code->value];
     }
 
     public function has(ErrorCode $code): bool
     {
-        return isset($this->types[$code]);
+        return isset($this->types[$code->value]);
     }
 
     public function all(): array

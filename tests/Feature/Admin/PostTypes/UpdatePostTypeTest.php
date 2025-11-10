@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\PostType;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -106,20 +107,16 @@ class UpdatePostTypeTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/nonexistent', [
-            'options_json' => ['key' => 'value'],
-        ], $admin);
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/nonexistent', ['options_json' => ['foo' => 'bar']], $admin);
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
         
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/not-found',
-            'title' => 'PostType not found',
-            'status' => 404,
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
             'detail' => 'Unknown post type slug: nonexistent',
+            'meta.slug' => 'nonexistent',
         ]);
     }
 
@@ -136,12 +133,10 @@ class UpdatePostTypeTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
         
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/validation-error',
-            'title' => 'Validation error',
-            'status' => 422,
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR, [
             'detail' => 'The options_json field is required.',
         ]);
+        $this->assertValidationErrors($response, ['options_json' => 'The options_json field is required.']);
 
         $response->assertJsonPath('errors.options_json', ['The options_json field is required.']);
     }
@@ -161,12 +156,10 @@ class UpdatePostTypeTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
         
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/validation-error',
-            'title' => 'Validation error',
-            'status' => 422,
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR, [
             'detail' => 'The options_json field must be an object.',
         ]);
+        $this->assertValidationErrors($response, ['options_json' => 'The options_json field must be an object.']);
 
         $response->assertJsonPath('errors.options_json', ['The options_json field must be an object.']);
     }
@@ -181,12 +174,10 @@ class UpdatePostTypeTest extends TestCase
         ], $admin);
 
         $response->assertStatus(422);
-        $response->assertHeader('Cache-Control', 'no-store, private');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/validation-error',
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR, [
             'detail' => 'The options_json field must be an object.',
         ]);
-        $response->assertJsonPath('errors.options_json', ['The options_json field must be an object.']);
+        $this->assertValidationErrors($response, ['options_json' => 'The options_json field must be an object.']);
     }
 
     public function test_update_post_type_returns_empty_object_when_payload_is_empty_array(): void

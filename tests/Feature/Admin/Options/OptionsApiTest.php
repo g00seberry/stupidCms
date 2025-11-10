@@ -4,7 +4,7 @@ namespace Tests\Feature\Admin\Options;
 
 use App\Models\Option;
 use App\Models\User;
-use App\Support\Http\ProblemType;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -92,8 +92,8 @@ class OptionsApiTest extends TestCase
         );
 
         $response->assertStatus(422);
-        $this->assertSame('INVALID_JSON_VALUE', $response->json('code'));
-        $this->assertArrayHasKey('value', $response->json('errors', []));
+        $this->assertErrorResponse($response, ErrorCode::INVALID_JSON_VALUE);
+        $this->assertValidationErrors($response, ['value']);
     }
 
     public function test_it_lists_namespace_with_filters_and_pagination(): void
@@ -195,11 +195,10 @@ class OptionsApiTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => ProblemType::NOT_FOUND->value,
-            'title' => 'Option not found',
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
             'detail' => 'Option "site/missing" was not found.',
-            'code' => 'NOT_FOUND',
+            'meta.namespace' => 'site',
+            'meta.key' => 'missing',
         ]);
     }
 
@@ -225,6 +224,11 @@ class OptionsApiTest extends TestCase
         $user->save();
 
         return $user;
+    }
+
+    private function typeUri(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.uri');
     }
 }
 

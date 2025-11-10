@@ -6,6 +6,7 @@ use App\Models\Entry;
 use App\Models\PostType;
 use App\Models\ReservedRoute;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -30,7 +31,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.']);
     }
 
     public function test_slug_must_be_unique_within_post_type(): void
@@ -49,7 +51,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug is already taken for this post type.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug is already taken for this post type.']);
     }
 
     public function test_slug_uniqueness_includes_soft_deleted_entries(): void
@@ -69,7 +72,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug is already taken for this post type.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug is already taken for this post type.']);
     }
 
     public function test_slug_can_be_reused_across_different_post_types(): void
@@ -104,7 +108,8 @@ class SlugPublishValidationTest extends TestCase
         ], $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug is already taken for this post type.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug is already taken for this post type.']);
     }
 
     public function test_update_allows_keeping_same_slug(): void
@@ -143,7 +148,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug conflicts with a reserved route.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug conflicts with a reserved route.']);
     }
 
     public function test_slug_cannot_start_with_reserved_prefix(): void
@@ -166,7 +172,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug conflicts with a reserved route.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug conflicts with a reserved route.']);
     }
 
     public function test_reserved_route_check_is_case_insensitive(): void
@@ -189,7 +196,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'The slug conflicts with a reserved route.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'The slug conflicts with a reserved route.']);
     }
 
     // === PUBLISH VALIDATION ===
@@ -209,7 +217,8 @@ class SlugPublishValidationTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'A valid slug is required when publishing an entry.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'A valid slug is required when publishing an entry.']);
     }
 
     public function test_publishing_with_auto_generated_slug_succeeds(): void
@@ -314,7 +323,8 @@ class SlugPublishValidationTest extends TestCase
         ], $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.slug.0', 'A valid slug is required when publishing an entry.');
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['slug' => 'A valid slug is required when publishing an entry.']);
     }
 }
 

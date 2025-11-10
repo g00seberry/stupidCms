@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorPayload;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
@@ -13,7 +14,6 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Throwable;
 
 return [
     'kernel' => [
@@ -274,14 +274,13 @@ return [
         ],
         QueryException::class => [
             'builder' => static function (QueryException $exception, ErrorFactory $factory): ErrorPayload {
-                $detail = $exception->getMessage();
+                $previous = $exception->getPrevious();
 
-                if (trim($detail) === '') {
-                    $detail = 'An unexpected error occurred.';
+                if ($previous instanceof HttpErrorException) {
+                    return $previous->payload();
                 }
 
                 return $factory->for(ErrorCode::INTERNAL_SERVER_ERROR)
-                    ->detail($detail)
                     ->meta([
                         'sql' => $exception->getSql(),
                         'bindings' => $exception->getBindings(),
@@ -322,7 +321,7 @@ return [
     ],
 
     'fallback' => [
-        'builder' => static function (Throwable $throwable, ErrorFactory $factory): ErrorPayload {
+        'builder' => static function (\Throwable $throwable, ErrorFactory $factory): ErrorPayload {
             return $factory->for(ErrorCode::INTERNAL_SERVER_ERROR)->build();
         },
         'report' => [

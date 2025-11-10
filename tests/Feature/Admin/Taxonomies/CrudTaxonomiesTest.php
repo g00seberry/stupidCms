@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin\Taxonomies;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -82,7 +83,10 @@ class CrudTaxonomiesTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJsonPath('title', 'Taxonomy not found');
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
+            'detail' => 'Taxonomy with slug missing does not exist.',
+            'meta.slug' => 'missing',
+        ]);
     }
 
     public function test_update_modifies_taxonomy_fields(): void
@@ -111,6 +115,10 @@ class CrudTaxonomiesTest extends TestCase
 
         $response->assertStatus(409);
         $response->assertHeader('Content-Type', 'application/problem+json');
+        $this->assertErrorResponse($response, ErrorCode::CONFLICT, [
+            'detail' => 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
+            'meta.terms_count' => 1,
+        ]);
         $this->assertDatabaseHas('taxonomies', ['slug' => 'topics']);
     }
 

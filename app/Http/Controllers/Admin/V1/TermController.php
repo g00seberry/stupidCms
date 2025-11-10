@@ -506,5 +506,21 @@ class TermController extends Controller
     private function validateTermBelongsToTaxonomy(Term $term, Taxonomy $taxonomy): void
     {
         if ($term->taxonomy_id !== $taxonomy->id) {
+            throw ValidationException::withMessages([
+                'term_id' => [
+                    sprintf('Term %d does not belong to taxonomy %s.', $term->id, $taxonomy->slug),
+                ],
+            ]);
+        }
+    }
+
+    private function throwTermStillAttached(): never
+    {
+        $this->throwError(
+            ErrorCode::CONFLICT,
+            'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.',
+        );
+    }
+}
 
 

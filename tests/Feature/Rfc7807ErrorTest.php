@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
+use App\Support\Errors\ErrorCode;
 use Tests\TestCase;
 
 class Rfc7807ErrorTest extends TestCase
@@ -30,15 +31,12 @@ class Rfc7807ErrorTest extends TestCase
         ]);
 
         $response->assertStatus(422);
-        $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/validation-error',
-            'title' => 'Validation error',
-            'status' => 422,
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR, [
             'detail' => 'The email field must be a valid email address.',
         ]);
-        $response->assertJsonStructure([
-            'errors',
+        $this->assertValidationErrors($response, [
+            'email' => 'The email field must be a valid email address.',
+            'password' => 'The password field is required.',
         ]);
     }
 
@@ -48,14 +46,8 @@ class Rfc7807ErrorTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        // Laravel sets no-cache for route-level 404s; controller errors use no-store
         $response->assertHeader('Cache-Control', 'no-store, private');
-        // Note: Vary header not set for route-level 404s (no cookies involved)
-        // Note: Route-level 404s use about:blank; controller 404s use our custom type
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/not-found',
-            'title' => 'Not Found',
-            'status' => 404,
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
             'detail' => 'The requested resource was not found.',
         ]);
     }
@@ -75,10 +67,7 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/rate-limit-exceeded',
-            'title' => 'Too Many Requests',
-            'status' => 429,
+        $this->assertErrorResponse($response, ErrorCode::RATE_LIMIT_EXCEEDED, [
             'detail' => 'Rate limit exceeded.',
         ]);
     }
@@ -90,11 +79,9 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertHeader('WWW-Authenticate', 'Bearer');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
+        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
             'detail' => 'Authentication is required to access this resource.',
+            'meta.reason' => 'missing_token',
         ]);
     }
 
@@ -119,10 +106,7 @@ class Rfc7807ErrorTest extends TestCase
 
         $response->assertStatus(403);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/forbidden',
-            'title' => 'Forbidden',
-            'status' => 403,
+        $this->assertErrorResponse($response, ErrorCode::FORBIDDEN, [
             'detail' => 'This action is unauthorized.',
         ]);
     }

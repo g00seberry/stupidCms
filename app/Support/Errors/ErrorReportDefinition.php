@@ -38,8 +38,12 @@ final class ErrorReportDefinition
             return $this;
         }
 
-        /** @var Closure $closure */
-        $closure = $this->contextResolver->bindTo($container, $container);
+        $closure = $this->contextResolver;
+        $reflection = new \ReflectionFunction($closure);
+
+        if (! $reflection->isStatic()) {
+            $closure = $closure->bindTo($container, $container);
+        }
 
         return new self(
             throwableClass: $this->throwableClass,

@@ -7,7 +7,7 @@ use App\Models\Media;
 use App\Models\MediaVariant;
 use App\Models\PostType;
 use App\Models\User;
-use App\Support\Http\ProblemType;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -72,8 +72,9 @@ class MediaApiTest extends TestCase
         $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [], ['file' => $file], $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('type', 'https://stupidcms.dev/problems/validation-error');
-        $response->assertJsonStructure(['errors' => ['file']]);
+        $response->assertJsonPath('type', $this->typeUri(ErrorCode::VALIDATION_ERROR));
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['file']);
         $this->assertDatabaseCount('media', 0);
     }
 
@@ -161,7 +162,8 @@ class MediaApiTest extends TestCase
         $response->assertStatus(409);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/media-in-use',
+            'type' => $this->typeUri(ErrorCode::MEDIA_IN_USE),
+            'code' => ErrorCode::MEDIA_IN_USE->value,
             'status' => 409,
         ]);
     }
@@ -193,8 +195,8 @@ class MediaApiTest extends TestCase
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => ProblemType::NOT_FOUND->value,
-            'title' => 'Media not found',
+            'type' => $this->typeUri(ErrorCode::NOT_FOUND),
+            'code' => ErrorCode::NOT_FOUND->value,
             'detail' => 'Deleted media with ID missing-id does not exist.',
         ]);
     }
@@ -233,6 +235,11 @@ class MediaApiTest extends TestCase
         return User::factory()->create([
             'admin_permissions' => $permissions,
         ]);
+    }
+
+    private function typeUri(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.uri');
     }
 }
 

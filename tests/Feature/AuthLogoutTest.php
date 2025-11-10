@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\RefreshToken;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -23,9 +24,8 @@ class AuthLogoutTest extends TestCase
         $response = $this->postJson('/api/v1/auth/logout');
 
         $response->assertStatus(401);
-        $response->assertJson([
-            'status' => 401,
-            'title' => 'Unauthorized',
+        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
+            'meta.reason' => 'missing_token',
         ]);
     }
 
@@ -139,9 +139,8 @@ class AuthLogoutTest extends TestCase
         ]);
 
         $response->assertStatus(401);
-        $response->assertJson([
-            'status' => 401,
-            'title' => 'Unauthorized',
+        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_INVALID, [
+            'meta.reason' => 'invalid_token',
         ]);
     }
 }

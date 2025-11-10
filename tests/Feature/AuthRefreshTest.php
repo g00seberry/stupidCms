@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
-use App\Support\Http\ProblemType;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -88,11 +88,7 @@ class AuthRefreshTest extends TestCase
 
         $secondRefresh->assertStatus(401);
         $secondRefresh->assertHeader('Content-Type', 'application/problem+json');
-        $secondRefresh->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'code' => 'UNAUTHORIZED',
+        $this->assertErrorResponse($secondRefresh, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Refresh token has been revoked or already used.',
         ]);
 
@@ -122,11 +118,7 @@ class AuthRefreshTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'code' => 'UNAUTHORIZED',
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Missing refresh token.',
         ]);
     }
@@ -139,11 +131,7 @@ class AuthRefreshTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'code' => 'UNAUTHORIZED',
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Invalid or expired refresh token.',
         ]);
     }
@@ -171,11 +159,7 @@ class AuthRefreshTest extends TestCase
         ]);
 
         $response->assertStatus(401);
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'code' => 'UNAUTHORIZED',
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Refresh token has expired.',
         ]);
     }
@@ -203,11 +187,7 @@ class AuthRefreshTest extends TestCase
         ]);
 
         $response->assertStatus(401);
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'code' => 'UNAUTHORIZED',
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Refresh token has been revoked or already used.',
         ]);
     }
@@ -277,6 +257,21 @@ class AuthRefreshTest extends TestCase
             'subject_type' => User::class,
             'subject_id' => $user->id,
         ]);
+    }
+
+    private function typeUri(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.uri');
+    }
+
+    private function title(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.title');
+    }
+
+    private function errorDetail(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.detail');
     }
 
     public function test_refresh_uses_expires_at_from_claims(): void
@@ -386,12 +381,9 @@ class AuthRefreshTest extends TestCase
 
         $refreshResponse->assertStatus(500);
         $refreshResponse->assertHeader('Content-Type', 'application/problem+json');
-        $refreshResponse->assertJson([
-            'type' => ProblemType::INTERNAL_ERROR->value,
-            'title' => 'Internal Server Error',
-            'status' => 500,
+        $this->assertErrorResponse($refreshResponse, ErrorCode::INTERNAL_SERVER_ERROR, [
+            'detail' => $this->errorDetail(ErrorCode::INTERNAL_SERVER_ERROR),
         ]);
-        $refreshResponse->assertJsonFragment(['detail' => 'Failed to refresh token due to server error.']);
     }
 
     public function test_refresh_cookies_have_correct_security_attributes(): void
@@ -571,6 +563,7 @@ class AuthRefreshTest extends TestCase
             $failureCount++;
             $firstResponse->assertStatus(401);
             $firstResponse->assertHeader('Content-Type', 'application/problem+json');
+            $this->assertErrorResponse($firstResponse, ErrorCode::UNAUTHORIZED);
         }
 
         // Second request with the same token - should fail (token already used)
@@ -584,11 +577,7 @@ class AuthRefreshTest extends TestCase
             $failureCount++;
             $secondResponse->assertStatus(401);
             $secondResponse->assertHeader('Content-Type', 'application/problem+json');
-            $secondResponse->assertJson([
-                'type' => 'https://stupidcms.dev/problems/unauthorized',
-                'title' => 'Unauthorized',
-                'status' => 401,
-            ]);
+            $this->assertErrorResponse($secondResponse, ErrorCode::UNAUTHORIZED);
         }
 
         // Verify exactly one request succeeded

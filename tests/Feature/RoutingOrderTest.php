@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Support\Http\ProblemType;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -62,17 +62,9 @@ class RoutingOrderTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJsonStructure([
-            'type',
-            'title',
-            'status',
-            'detail',
-            'path',
-        ]);
-        $response->assertJson([
-            'type' => ProblemType::NOT_FOUND->value,
-            'title' => 'Not Found',
-            'status' => 404,
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
+            'detail' => 'The requested resource was not found.',
+            'meta.path' => 'non-existent/xyz',
         ]);
     }
 
@@ -159,6 +151,10 @@ class RoutingOrderTest extends TestCase
         $response = $this->postJson('/totally-unknown');
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
+            'detail' => 'The requested resource was not found.',
+            'meta.path' => 'totally-unknown',
+        ]);
     }
 
     /**
@@ -172,10 +168,9 @@ class RoutingOrderTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => ProblemType::NOT_FOUND->value,
-            'title' => 'Not Found',
-            'status' => 404,
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
+            'detail' => 'The requested resource was not found.',
+            'meta.path' => 'api/v1/not-found-abc',
         ]);
     }
 
@@ -198,10 +193,9 @@ class RoutingOrderTest extends TestCase
         // fallback должен сработать
         if ($response->status() === 404) {
             $response->assertHeader('Content-Type', 'application/problem+json');
-            $response->assertJson([
-                'type' => ProblemType::NOT_FOUND->value,
-                'title' => 'Not Found',
-                'status' => 404,
+            $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
+                'detail' => 'The requested resource was not found.',
+                'meta.path' => 'api/v1/some-unknown',
             ]);
         } else {
             // Если Laravel обработал OPTIONS автоматически (204), это тоже нормально
@@ -209,7 +203,16 @@ class RoutingOrderTest extends TestCase
             $getResponse = $this->get('/api/v1/some-unknown');
             $getResponse->assertStatus(404);
             $getResponse->assertHeader('Content-Type', 'application/problem+json');
+            $this->assertErrorResponse($getResponse, ErrorCode::NOT_FOUND, [
+                'detail' => 'The requested resource was not found.',
+                'meta.path' => 'api/v1/some-unknown',
+            ]);
         }
+    }
+
+    private function typeUri(ErrorCode $code): string
+    {
+        return config('errors.types.' . $code->value . '.uri');
     }
 }
 

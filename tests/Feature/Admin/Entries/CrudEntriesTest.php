@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin\Entries;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -47,10 +49,10 @@ class CrudEntriesTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => 'https://stupidcms.dev/problems/not-found',
-            'title' => 'Entry not found',
-            'status' => 404,
+        $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
+            'detail' => 'Entry with ID 99999 does not exist.',
+            'meta.entry_id' => 99999,
+            'meta.trashed' => false,
         ]);
     }
 
@@ -145,7 +147,8 @@ class CrudEntriesTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.post_type', ['The post type field is required.']);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['post_type' => 'The post type field is required.']);
     }
 
     public function test_store_requires_title(): void
@@ -160,7 +163,8 @@ class CrudEntriesTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/entries', $data, $admin);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.title', ['The title field is required.']);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['title' => 'The title field is required.']);
     }
 
     // === UPDATE ===

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Models\User;
+use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -45,9 +46,10 @@ class UtilsSlugifyTest extends TestCase
         $admin = User::factory()->admin()->create();
         
         $response = $this->getJsonAsAdmin('/api/v1/admin/utils/slugify?postType=page', $admin);
-
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['title']);
+ 
+         $response->assertStatus(422);
+        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
+        $this->assertValidationErrors($response, ['title']);
     }
 }
 
