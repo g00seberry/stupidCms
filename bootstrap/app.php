@@ -2,7 +2,6 @@
 
 use App\Contracts\ProblemConvertible;
 use App\Support\Http\HttpProblemException;
-use App\Support\Http\ProblemDetailResolver;
 use App\Support\Http\ProblemResponseFactory;
 use App\Support\Http\ProblemType;
 use App\Support\Logging\ProblemReporter;
@@ -88,69 +87,59 @@ return Application::configure(basePath: dirname(__DIR__))
                 return ProblemResponseFactory::make($e->toProblem());
             }
 
-            if ($e instanceof \Illuminate\Validation\ValidationException) {
-                $errors = $e->errors();
-                $firstError = collect($errors)->flatten()->filter()->first();
+            $registry = config('problems.handlers', []);
 
-                $problem = Problem::of(ProblemType::VALIDATION_ERROR)
-                    ->detail($firstError ?? ProblemType::VALIDATION_ERROR->defaultDetail())
-                    ->extensions(['errors' => $errors]);
+            foreach ($registry as $class => $definition) {
+                if (! is_a($e, $class)) {
+                    continue;
+                }
 
-                return ProblemResponseFactory::make($problem);
-            }
+                $factory = $definition['factory'] ?? null;
 
-            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
-                $problem = Problem::of(ProblemType::UNAUTHORIZED)
-                    ->detail($e->getMessage() ?: ProblemType::UNAUTHORIZED->defaultDetail());
+                if (! is_callable($factory)) {
+                    continue;
+                }
 
-                return ProblemResponseFactory::make($problem);
-            }
+                $problem = $factory($e);
 
-            if ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
-                $problem = Problem::of(ProblemType::FORBIDDEN)
-                    ->detail($e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail());
+                if (! $problem instanceof Problem) {
+                    continue;
+                }
 
-                return ProblemResponseFactory::make($problem);
-            }
+                $status = $definition['status'] ?? null;
 
-            if ($e instanceof \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException) {
-                $problem = Problem::of(ProblemType::FORBIDDEN)
-                    ->detail($e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail());
+                if ($status !== null) {
+                    if (is_callable($status)) {
+                        $status = $status($e, $problem);
+                    }
 
-                return ProblemResponseFactory::make($problem);
-            }
+                    if (is_int($status)) {
+                        $problem = $problem->status($status);
+                    }
+                }
 
-            if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-                $problem = Problem::of(ProblemType::NOT_FOUND)
-                    ->detail('The requested resource was not found.');
+                $reportDefinition = $definition['report'] ?? null;
 
-                return ProblemResponseFactory::make($problem);
-            }
+                if ($reportDefinition !== null) {
+                    $reportType = $reportDefinition['type'] ?? null;
 
-            if ($e instanceof \Illuminate\Http\Exceptions\ThrottleRequestsException) {
-                $problem = Problem::of(ProblemType::RATE_LIMIT_EXCEEDED)
-                    ->detail('Rate limit exceeded.');
+                    if (! $reportType instanceof ProblemType) {
+                        $reportType = $problem->type();
+                    }
 
-                return ProblemResponseFactory::make($problem);
-            }
+                    $message = $reportDefinition['message'] ?? $reportType->defaultDetail();
 
-            if ($e instanceof \Illuminate\Database\QueryException) {
-                ProblemReporter::report($e, ProblemType::INTERNAL_ERROR, 'Database error during API request', [
-                    'sql' => $e->getSql(),
-                    'bindings' => $e->getBindings(),
-                ]);
+                    $contextDefinition = $reportDefinition['context'] ?? [];
+                    $context = [];
 
-                $problem = Problem::of(ProblemType::INTERNAL_ERROR)
-                    ->detail(ProblemDetailResolver::resolve($e, ProblemType::INTERNAL_ERROR));
+                    if (is_callable($contextDefinition)) {
+                        $context = (array) $contextDefinition($e, $problem);
+                    } elseif (is_array($contextDefinition)) {
+                        $context = $contextDefinition;
+                    }
 
-                return ProblemResponseFactory::make($problem);
-            }
-
-            if ($e instanceof \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException) {
-                ProblemReporter::report($e, ProblemType::SERVICE_UNAVAILABLE, 'Service unavailable during API request');
-
-                $problem = Problem::of(ProblemType::SERVICE_UNAVAILABLE)
-                    ->detail(ProblemDetailResolver::resolve($e, ProblemType::SERVICE_UNAVAILABLE, allowMessage: true));
+                    ProblemReporter::report($e, $reportType, $message, $context);
+                }
 
                 return ProblemResponseFactory::make($problem);
             }
