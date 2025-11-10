@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Admin\AdminJsonResource;
 use App\Models\Plugin;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin Plugin */
-final class PluginResource extends JsonResource
+final class PluginResource extends AdminJsonResource
 {
     /**
      * @var string|null
@@ -19,7 +18,7 @@ final class PluginResource extends JsonResource
     /**
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
         $plugin = $this->resource;
 
@@ -36,10 +35,6 @@ final class PluginResource extends JsonResource
         ];
     }
 
-    public function withResponse($request, $response): void
-    {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
-    }
+    // AdminJsonResource already добавляет Cache-Control/Vary
 }
 

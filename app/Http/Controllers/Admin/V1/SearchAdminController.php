@@ -51,11 +51,7 @@ final class SearchAdminController extends Controller
         if (! config('search.enabled')) {
             throw new HttpResponseException(
                 $this->problemFromPreset(
-                    ProblemDetails::serviceUnavailable(),
-                    headers: [
-                        'Cache-Control' => 'no-store, private',
-                        'Vary' => 'Cookie',
-                    ]
+                    ProblemDetails::serviceUnavailable()
                 )
             );
         }

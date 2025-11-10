@@ -17,6 +17,7 @@ use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
+use App\Support\Http\AdminResponse;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -410,11 +411,7 @@ class TermController extends Controller
                     status: 409,
                     title: 'Term still attached',
                     detail: 'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.',
-                    ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
-                    headers: [
-                        'Cache-Control' => 'no-store, private',
-                        'Vary' => 'Cookie',
-                    ]
+                    ext: ['type' => 'https://stupidcms.dev/problems/conflict']
                 )
             );
         }
@@ -432,10 +429,7 @@ class TermController extends Controller
             'force_detach' => $forceDetach,
         ]);
 
-        return response()
-            ->noContent()
-            ->header('Cache-Control', 'no-store, private')
-            ->header('Vary', 'Cookie');
+        return AdminResponse::noContent();
     }
 
     private function resolveSort(string $sort): array
@@ -505,11 +499,7 @@ class TermController extends Controller
                 status: 404,
                 title: 'Taxonomy not found',
                 detail: "Taxonomy with slug {$slug} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
             )
         );
     }
@@ -521,11 +511,7 @@ class TermController extends Controller
                 status: 404,
                 title: 'Term not found',
                 detail: "Term with ID {$termId} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
             )
         );
     }

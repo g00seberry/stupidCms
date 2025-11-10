@@ -14,6 +14,7 @@ use App\Http\Resources\Admin\MediaCollection;
 use App\Http\Resources\MediaResource;
 use App\Models\Entry;
 use App\Models\Media;
+use App\Support\Http\AdminResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
@@ -385,10 +386,7 @@ class MediaController extends Controller
 
         $media->delete();
 
-        return response()
-            ->noContent()
-            ->header('Cache-Control', 'no-store, private')
-            ->header('Vary', 'Cookie');
+        return AdminResponse::noContent();
     }
 
     /**

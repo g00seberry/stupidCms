@@ -64,11 +64,7 @@ final class LoginController
                 $this->problem(
                     401,
                     'Unauthorized',
-                    'Invalid credentials.',
-                    headers: [
-                        'Cache-Control' => 'no-store, private',
-                        'Vary' => 'Cookie',
-                    ]
+                    'Invalid credentials.'
                 )
             );
         }

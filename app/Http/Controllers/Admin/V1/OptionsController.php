@@ -12,6 +12,7 @@ use App\Http\Requests\Admin\Options\PutOptionRequest;
 use App\Http\Resources\Admin\OptionCollection;
 use App\Http\Resources\Admin\OptionResource;
 use App\Models\Option;
+use App\Support\Http\AdminResponse;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
@@ -278,10 +279,7 @@ class OptionsController extends Controller
             throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
         }
 
-        return response()
-            ->noContent()
-            ->header('Cache-Control', 'no-store, private')
-            ->header('Vary', 'Cookie');
+        return AdminResponse::noContent();
     }
 
     /**

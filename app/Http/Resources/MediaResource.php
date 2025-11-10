@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Admin\AdminJsonResource;
 use App\Models\Media;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class MediaResource extends JsonResource
+class MediaResource extends AdminJsonResource
 {
     /**
      * @param \Illuminate\Http\Request $request
@@ -45,8 +45,7 @@ class MediaResource extends JsonResource
             $response->setStatusCode(Response::HTTP_CREATED);
         }
 
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
+        parent::prepareAdminResponse($request, $response);
     }
 
     /**

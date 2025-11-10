@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-09 19:18:19_
+_Last generated: 2025-11-10 05:11:37_
 
 ## app
 
@@ -115,6 +115,8 @@ _Last generated: 2025-11-09 19:18:19_
 | `guards.web.provider` | `users` | string |
 | `guards.admin.driver` | `session` | string |
 | `guards.admin.provider` | `users` | string |
+| `guards.api.driver` | `session` | string |
+| `guards.api.provider` | `users` | string |
 | `providers.users.driver` | `eloquent` | string |
 | `providers.users.model` | `App\Models\User` | string |
 | `passwords.users.provider` | `users` | string |

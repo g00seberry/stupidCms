@@ -118,11 +118,9 @@ final class RefreshController
         } catch (Throwable $e) {
             report($e);
 
-            $response = $this->internalError('Failed to refresh token due to server error.');
-            $response->header('Cache-Control', 'no-store, private');
-            $response->header('Vary', 'Cookie');
-
-            throw new HttpResponseException($response);
+            throw new HttpResponseException(
+                $this->internalError('Failed to refresh token due to server error.')
+            );
         }
 
         return new TokenRefreshResource($accessToken, $refreshToken);
@@ -133,14 +131,7 @@ final class RefreshController
      */
     private function throwUnauthorized(string $detail): never
     {
-        $response = $this->unauthorized(
-            $detail,
-            [],
-            [
-                'Cache-Control' => 'no-store, private',
-                'Vary' => 'Cookie',
-            ]
-        );
+        $response = $this->unauthorized($detail);
 
         foreach ($this->clearCookies() as $cookie) {
             $response->headers->setCookie($cookie);

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "056609ab-6d72-425a-888e-26970cc51ae3",
+        "_postman_id": "71089e40-9f1c-4748-8762-f667e4fe8fb3",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -102,7 +102,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-09T19:18:32\",\"date_to\":\"2106-12-09\",\"date_field\":\"published\",\"sort\":\"updated_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-10T05:11:40\",\"date_to\":\"2106-12-09\",\"date_field\":\"published\",\"sort\":\"title.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -1314,7 +1314,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"with\",\"page\":87,\"per_page\":4}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"only\",\"page\":87,\"per_page\":4}"
                         },
                         "description": ""
                     },
@@ -1839,7 +1839,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"slug\",\"order\":\"asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -2294,7 +2294,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.desc\"}"
                         },
                         "description": ""
                     },
@@ -2629,7 +2629,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.asc\"}"
                         },
                         "description": ""
                     },
@@ -3150,10 +3150,7 @@
                                     "mode": "raw",
                                     "raw": "{\"all\":true}"
                                 },
-                                "description": "",
-                                "auth": {
-                                    "type": "noauth"
-                                }
+                                "description": "\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u0430\u043b\u0438\u0434\u043d\u044b\u0439 JWT access token. CSRF \u0437\u0430\u0449\u0438\u0442\u0430 \u043d\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f,\n\u0442\u0430\u043a \u043a\u0430\u043a JWT guard \u043f\u0440\u043e\u0432\u0435\u0440\u044f\u0435\u0442 \u0442\u043e\u043a\u0435\u043d \u0438\u0437 HttpOnly cookie."
                             },
                             "response": [
                                 {
@@ -3185,7 +3182,7 @@
                                     }
                                 ],
                                 "body": null,
-                                "description": ""
+                                "description": "\u0422\u0430\u043a\u0436\u0435 \u0432\u044b\u0434\u0430\u0435\u0442 CSRF \u0442\u043e\u043a\u0435\u043d \u0432 cookie \u0434\u043b\u044f \u043f\u043e\u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0445 state-changing \u0437\u0430\u043f\u0440\u043e\u0441\u043e\u0432."
                             },
                             "response": [
                                 {
@@ -3198,47 +3195,6 @@
                                     "header": [],
                                     "code": 401,
                                     "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication required.\"\n}",
-                                    "name": ""
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "CSRF",
-                    "description": "",
-                    "item": [
-                        {
-                            "name": "Issue a CSRF token cookie.",
-                            "request": {
-                                "url": {
-                                    "host": "{{baseUrl}}",
-                                    "path": "api\/v1\/auth\/csrf",
-                                    "query": [],
-                                    "raw": "{{baseUrl}}\/api\/v1\/auth\/csrf"
-                                },
-                                "method": "GET",
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application\/json"
-                                    },
-                                    {
-                                        "key": "Accept",
-                                        "value": "application\/json"
-                                    }
-                                ],
-                                "body": null,
-                                "description": "Returns a CSRF token in the response body and sets a non-HttpOnly cookie\nso that JavaScript can read it and include it in subsequent requests.",
-                                "auth": {
-                                    "type": "noauth"
-                                }
-                            },
-                            "response": [
-                                {
-                                    "header": [],
-                                    "code": 200,
-                                    "body": "{\n  \"csrf\": \"bTg3bE7MbY0xI2p4Qz9Vc1FkSmRnT2p5a1NDbGhp\"\n}",
                                     "name": ""
                                 }
                             ]
@@ -3316,7 +3272,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-09T19:18:31\",\"to\":\"2106-12-09\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-10T05:11:40\",\"to\":\"2106-12-09\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

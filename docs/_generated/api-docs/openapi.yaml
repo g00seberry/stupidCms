@@ -342,7 +342,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -370,7 +370,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-09T19:18:32'
+                  example: '2025-11-10T05:11:40'
                   nullable: true
                 date_to:
                   type: string
@@ -388,7 +388,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3187,7 +3187,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -4254,7 +4254,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -5188,7 +5188,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.desc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -5880,7 +5880,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -6793,7 +6793,7 @@ paths:
     post:
       summary: 'Завершение сессии и отзыв refresh токенов.'
       operationId: Refresh
-      description: ''
+      description: "Требует валидный JWT access token. CSRF защита не требуется,\nтак как JWT guard проверяет токен из HttpOnly cookie."
       parameters: []
       responses:
         204:
@@ -6818,34 +6818,11 @@ paths:
                   description: 'Отозвать все refresh токены пользователя (значение true).'
                   example: true
                   nullable: false
-      security: []
-  /api/v1/auth/csrf:
-    get:
-      summary: 'Issue a CSRF token cookie.'
-      operationId: issueACSRFTokenCookie
-      description: "Returns a CSRF token in the response body and sets a non-HttpOnly cookie\nso that JavaScript can read it and include it in subsequent requests."
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  csrf: bTg3bE7MbY0xI2p4Qz9Vc1FkSmRnT2p5a1NDbGhp
-                properties:
-                  csrf:
-                    type: string
-                    example: bTg3bE7MbY0xI2p4Qz9Vc1FkSmRnT2p5a1NDbGhp
-      tags:
-        - Auth
-      security: []
   /api/v1/admin/auth/current:
     get:
       summary: 'Получить данные текущего авторизованного пользователя.'
       operationId: ''
-      description: ''
+      description: 'Также выдает CSRF токен в cookie для последующих state-changing запросов.'
       parameters: []
       responses:
         200:
@@ -7091,7 +7068,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-09T19:18:31'
+                  example: '2025-11-10T05:11:40'
                   nullable: true
                 to:
                   type: string

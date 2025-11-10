@@ -322,11 +322,7 @@ class EntryTermsController extends Controller
                 status: 404,
                 title: 'Entry not found',
                 detail: "Entry with ID {$entryId} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
             )
         );
     }

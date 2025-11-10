@@ -492,6 +492,16 @@
             "type": "string",
             "env": null
         },
+        "guards.api.driver": {
+            "value": "session",
+            "type": "string",
+            "env": null
+        },
+        "guards.api.provider": {
+            "value": "users",
+            "type": "string",
+            "env": null
+        },
         "providers.users.driver": {
             "value": "eloquent",
             "type": "string",

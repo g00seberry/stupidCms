@@ -73,16 +73,17 @@ return Application::configure(basePath: dirname(__DIR__))
                 $errors = $e->errors();
                 $firstError = collect($errors)->flatten()->filter()->first();
 
-                return response()->json([
+                $response = response()->json([
                     'type' => 'https://stupidcms.dev/problems/validation-error',
                     'title' => 'Validation error',
                     'status' => 422,
                     'detail' => $firstError ?? 'Validation failed.',
                     'errors' => $errors,
-                ], 422)
-                    ->header('Content-Type', 'application/problem+json')
-                    ->header('Cache-Control', 'no-store, private')
-                    ->header('Vary', 'Cookie');
+                ], 422)->header('Content-Type', 'application/problem+json');
+
+                \App\Support\Http\AdminResponseHeaders::apply($response);
+
+                return $response;
             }
         });
 
@@ -105,10 +106,12 @@ return Application::configure(basePath: dirname(__DIR__))
                     'detail' => $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_FORBIDDEN,
                 ]);
 
-                return response()->json($payload, 403)
-                    ->header('Content-Type', 'application/problem+json')
-                    ->header('Cache-Control', 'no-store, private')
-                    ->header('Vary', 'Cookie');
+                $response = response()->json($payload, 403)
+                    ->header('Content-Type', 'application/problem+json');
+
+                \App\Support\Http\AdminResponseHeaders::apply($response);
+
+                return $response;
             }
         });
 
@@ -120,10 +123,12 @@ return Application::configure(basePath: dirname(__DIR__))
                     'detail' => $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_FORBIDDEN,
                 ]);
 
-                return response()->json($payload, 403)
-                    ->header('Content-Type', 'application/problem+json')
-                    ->header('Cache-Control', 'no-store, private')
-                    ->header('Vary', 'Cookie');
+                $response = response()->json($payload, 403)
+                    ->header('Content-Type', 'application/problem+json');
+
+                \App\Support\Http\AdminResponseHeaders::apply($response);
+
+                return $response;
             }
         });
 
@@ -138,13 +143,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 404);
                 
                 $response->header('Content-Type', 'application/problem+json');
-                $response->header('Vary', 'Cookie');
-                
-                // Use setCache() to forcefully set cache directives
-                $response->setCache([
-                    'no_store' => true,
-                    'private' => true,
-                ]);
+                \App\Support\Http\AdminResponseHeaders::apply($response);
                 
                 return $response;
             }
@@ -153,15 +152,16 @@ return Application::configure(basePath: dirname(__DIR__))
         // 429 Too Many Requests - Rate limit exceeded
         $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                return response()->json([
+                $response = response()->json([
                     'type' => 'about:blank',
                     'title' => 'Too Many Requests',
                     'status' => 429,
                     'detail' => 'Rate limit exceeded.',
-                ], 429)
-                    ->header('Content-Type', 'application/problem+json')
-                    ->header('Cache-Control', 'no-store, private')
-                    ->header('Vary', 'Cookie');
+                ], 429)->header('Content-Type', 'application/problem+json');
+
+                \App\Support\Http\AdminResponseHeaders::apply($response);
+
+                return $response;
             }
         });
 
@@ -186,13 +186,14 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->expectsJson() || $request->is('api/*')) {
                 $detail = $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_SERVICE_UNAVAILABLE;
 
-                return response()->json(
+                $response = response()->json(
                     \App\Support\ProblemDetails::serviceUnavailable($detail),
                     503
-                )
-                    ->header('Content-Type', 'application/problem+json')
-                    ->header('Cache-Control', 'no-store, private')
-                    ->header('Vary', 'Cookie');
+                )->header('Content-Type', 'application/problem+json');
+
+                \App\Support\Http\AdminResponseHeaders::apply($response);
+
+                return $response;
             }
         });
     })->create();

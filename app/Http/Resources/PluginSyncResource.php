@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Admin\AdminJsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class PluginSyncResource extends JsonResource
+class PluginSyncResource extends AdminJsonResource
 {
     /**
      * @var string|null
@@ -24,7 +23,6 @@ class PluginSyncResource extends JsonResource
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function toArray($request): array
@@ -40,11 +38,10 @@ class PluginSyncResource extends JsonResource
         ];
     }
 
-    public function withResponse($request, $response): void
+    protected function prepareAdminResponse($request, Response $response): void
     {
         $response->setStatusCode(Response::HTTP_ACCEPTED);
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
+        parent::prepareAdminResponse($request, $response);
     }
 }
 

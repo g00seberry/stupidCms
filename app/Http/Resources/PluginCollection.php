@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Support\Http\AdminResponseHeaders;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PluginCollection extends ResourceCollection
@@ -25,8 +26,7 @@ class PluginCollection extends ResourceCollection
 
     public function withResponse($request, $response): void
     {
-        $response->header('Cache-Control', 'no-store, private');
-        $response->header('Vary', 'Cookie');
+        AdminResponseHeaders::apply($response);
     }
 }
 

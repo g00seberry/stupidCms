@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Traits;
 
 use Illuminate\Http\JsonResponse;
+use App\Support\Http\AdminResponseHeaders;
 
 /**
  * RFC 7807 (Problem Details for HTTP APIs) helper trait.
@@ -37,6 +38,9 @@ trait Problems
         foreach ($headers as $name => $value) {
             $response->headers->set($name, $value);
         }
+
+        $forceDefaults = ! array_key_exists('Cache-Control', $headers) && ! array_key_exists('cache-control', array_change_key_case($headers, CASE_LOWER));
+        AdminResponseHeaders::apply($response, $forceDefaults);
 
         return $response;
     }

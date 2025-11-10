@@ -13,6 +13,7 @@ use App\Http\Resources\Admin\EntryCollection;
 use App\Http\Resources\Admin\EntryResource;
 use App\Models\Entry;
 use App\Models\PostType;
+use App\Support\Http\AdminResponse;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -305,10 +306,6 @@ class EntryController extends Controller
                     ext: [
                         'type' => 'https://stupidcms.dev/problems/validation-error',
                         'errors' => ['post_type' => ['The specified post type does not exist.']],
-                    ],
-                    headers: [
-                        'Cache-Control' => 'no-store, private',
-                        'Vary' => 'Cookie',
                     ]
                 )
             );
@@ -507,10 +504,7 @@ class EntryController extends Controller
 
         $entry->delete();
 
-        return response()
-            ->noContent()
-            ->header('Cache-Control', 'no-store, private')
-            ->header('Vary', 'Cookie');
+        return AdminResponse::noContent();
     }
 
     /**
@@ -553,11 +547,7 @@ class EntryController extends Controller
                     status: 404,
                     title: 'Entry not found',
                     detail: "Trashed entry with ID {$id} does not exist.",
-                    ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                    headers: [
-                        'Cache-Control' => 'no-store, private',
-                        'Vary' => 'Cookie',
-                    ]
+                    ext: ['type' => 'https://stupidcms.dev/problems/not-found']
                 )
             );
         }
@@ -606,11 +596,7 @@ class EntryController extends Controller
                 status: 404,
                 title: 'Entry not found',
                 detail: "Entry with ID {$id} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
             )
         );
     }

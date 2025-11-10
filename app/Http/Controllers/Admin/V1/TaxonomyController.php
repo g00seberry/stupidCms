@@ -13,6 +13,7 @@ use App\Http\Resources\Admin\TaxonomyCollection;
 use App\Http\Resources\Admin\TaxonomyResource;
 use App\Models\Taxonomy;
 use App\Models\Term;
+use App\Support\Http\AdminResponse;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -349,11 +350,7 @@ class TaxonomyController extends Controller
                     status: 409,
                     title: 'Taxonomy has terms',
                     detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
-                    ext: ['type' => 'https://stupidcms.dev/problems/conflict'],
-                    headers: [
-                        'Cache-Control' => 'no-store, private',
-                        'Vary' => 'Cookie',
-                    ]
+                    ext: ['type' => 'https://stupidcms.dev/problems/conflict']
                 )
             );
         }
@@ -374,10 +371,7 @@ class TaxonomyController extends Controller
             'force' => $force,
         ]);
 
-        return response()
-            ->noContent()
-            ->header('Cache-Control', 'no-store, private')
-            ->header('Vary', 'Cookie');
+        return AdminResponse::noContent();
     }
 
     private function resolveSort(string $sort): array
@@ -437,11 +431,7 @@ class TaxonomyController extends Controller
                 status: 404,
                 title: 'Taxonomy not found',
                 detail: "Taxonomy with slug {$slug} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
             )
         );
     }

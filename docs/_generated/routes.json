@@ -30,16 +30,9 @@
     {
         "method": "POST",
         "uri": "api/v1/auth/logout",
-        "name": null,
+        "name": "api.auth.logout",
         "action": "App\\Http\\Controllers\\Auth\\LogoutController@logout",
-        "middleware": "api, throttle:login, no-cache-auth"
-    },
-    {
-        "method": "GET|HEAD",
-        "uri": "api/v1/auth/csrf",
-        "name": null,
-        "action": "App\\Http\\Controllers\\Auth\\CsrfController@issue",
-        "middleware": "api, no-cache-auth"
+        "middleware": "api, jwt.auth, throttle:login, no-cache-auth"
     },
     {
         "method": "GET|HEAD",
@@ -53,315 +46,315 @@
         "uri": "api/v1/admin/auth/current",
         "name": "admin.v1.auth.current",
         "action": "App\\Http\\Controllers\\Auth\\CurrentUserController@show",
-        "middleware": "api, admin.auth, throttle:api, no-cache-auth"
+        "middleware": "api, jwt.auth, throttle:api, no-cache-auth"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/utils/slugify",
         "name": null,
         "action": "App\\Http\\Controllers\\Admin\\V1\\UtilsController@slugify",
-        "middleware": "api, admin.auth, throttle:api"
+        "middleware": "api, jwt.auth, throttle:api"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/plugins",
         "name": "admin.v1.plugins.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@index",
-        "middleware": "api, admin.auth, throttle:api, can:plugins.read, throttle:60,1"
+        "middleware": "api, jwt.auth, throttle:api, can:plugins.read, throttle:60,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/plugins/sync",
         "name": "admin.v1.plugins.sync",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@sync",
-        "middleware": "api, admin.auth, throttle:api, can:plugins.sync, throttle:10,1"
+        "middleware": "api, jwt.auth, throttle:api, can:plugins.sync, throttle:10,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/plugins/{slug}/enable",
         "name": "admin.v1.plugins.enable",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@enable",
-        "middleware": "api, admin.auth, throttle:api, can:plugins.toggle, throttle:10,1"
+        "middleware": "api, jwt.auth, throttle:api, can:plugins.toggle, throttle:10,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/plugins/{slug}/disable",
         "name": "admin.v1.plugins.disable",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@disable",
-        "middleware": "api, admin.auth, throttle:api, can:plugins.toggle, throttle:10,1"
+        "middleware": "api, jwt.auth, throttle:api, can:plugins.toggle, throttle:10,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/reservations",
         "name": null,
         "action": "App\\Http\\Controllers\\Admin\\V1\\PathReservationController@index",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\ReservedRoute"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\ReservedRoute"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/reservations",
         "name": null,
         "action": "App\\Http\\Controllers\\Admin\\V1\\PathReservationController@store",
-        "middleware": "api, admin.auth, throttle:api, can:create,App\\Models\\ReservedRoute"
+        "middleware": "api, jwt.auth, throttle:api, can:create,App\\Models\\ReservedRoute"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/reservations/{path}",
         "name": null,
         "action": "App\\Http\\Controllers\\Admin\\V1\\PathReservationController@destroy",
-        "middleware": "api, admin.auth, throttle:api, can:deleteAny,App\\Models\\ReservedRoute"
+        "middleware": "api, jwt.auth, throttle:api, can:deleteAny,App\\Models\\ReservedRoute"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/post-types/{slug}",
         "name": "admin.v1.post-types.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PostTypeController@show",
-        "middleware": "api, admin.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
+        "middleware": "api, jwt.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/post-types/{slug}",
         "name": "admin.v1.post-types.update",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PostTypeController@update",
-        "middleware": "api, admin.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
+        "middleware": "api, jwt.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/entries",
         "name": "admin.v1.entries.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@index",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Entry"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Entry"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/entries",
         "name": "admin.v1.entries.store",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@store",
-        "middleware": "api, admin.auth, throttle:api, can:create,App\\Models\\Entry"
+        "middleware": "api, jwt.auth, throttle:api, can:create,App\\Models\\Entry"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/entries/{id}",
         "name": "admin.v1.entries.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@show",
-        "middleware": "api, admin.auth, throttle:api"
+        "middleware": "api, jwt.auth, throttle:api"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/entries/{id}",
         "name": "admin.v1.entries.update",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@update",
-        "middleware": "api, admin.auth, throttle:api"
+        "middleware": "api, jwt.auth, throttle:api"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/entries/{id}",
         "name": "admin.v1.entries.destroy",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@destroy",
-        "middleware": "api, admin.auth, throttle:api"
+        "middleware": "api, jwt.auth, throttle:api"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/entries/{id}/restore",
         "name": "admin.v1.entries.restore",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@restore",
-        "middleware": "api, admin.auth, throttle:api"
+        "middleware": "api, jwt.auth, throttle:api"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/taxonomies",
         "name": "admin.v1.taxonomies.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@index",
-        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.taxonomies"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/taxonomies",
         "name": "admin.v1.taxonomies.store",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@store",
-        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.taxonomies"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/taxonomies/{slug}",
         "name": "admin.v1.taxonomies.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@show",
-        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.taxonomies"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/taxonomies/{slug}",
         "name": "admin.v1.taxonomies.update",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@update",
-        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.taxonomies"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/taxonomies/{slug}",
         "name": "admin.v1.taxonomies.destroy",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TaxonomyController@destroy",
-        "middleware": "api, admin.auth, throttle:api, can:manage.taxonomies"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.taxonomies"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/taxonomies/{taxonomy}/terms",
         "name": "admin.v1.taxonomies.terms.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@indexByTaxonomy",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/taxonomies/{taxonomy}/terms",
         "name": "admin.v1.taxonomies.terms.store",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@store",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/terms/{term}",
         "name": "admin.v1.terms.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@show",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/terms/{term}",
         "name": "admin.v1.terms.update",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@update",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/terms/{term}",
         "name": "admin.v1.terms.destroy",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@destroy",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/entries/{entry}/terms",
         "name": "admin.v1.entries.terms.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@index",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/entries/{entry}/terms/attach",
         "name": "admin.v1.entries.terms.attach",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@attach",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/entries/{entry}/terms/detach",
         "name": "admin.v1.entries.terms.detach",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@detach",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/entries/{entry}/terms/sync",
         "name": "admin.v1.entries.terms.sync",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryTermsController@sync",
-        "middleware": "api, admin.auth, throttle:api, can:manage.terms"
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/media",
         "name": "admin.v1.media.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaController@index",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/media/{media}",
         "name": "admin.v1.media.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaController@show",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/media/{media}/preview",
         "name": "admin.v1.media.preview",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaPreviewController@preview",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/media/{media}/download",
         "name": "admin.v1.media.download",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaPreviewController@download",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Media, throttle:60,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/media",
         "name": "admin.v1.media.store",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaController@store",
-        "middleware": "api, admin.auth, throttle:api, can:create,App\\Models\\Media, throttle:20,1"
+        "middleware": "api, jwt.auth, throttle:api, can:create,App\\Models\\Media, throttle:20,1"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/media/{media}",
         "name": "admin.v1.media.update",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaController@update",
-        "middleware": "api, admin.auth, throttle:api, throttle:20,1"
+        "middleware": "api, jwt.auth, throttle:api, throttle:20,1"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/media/{media}",
         "name": "admin.v1.media.destroy",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaController@destroy",
-        "middleware": "api, admin.auth, throttle:api, throttle:20,1"
+        "middleware": "api, jwt.auth, throttle:api, throttle:20,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/media/{media}/restore",
         "name": "admin.v1.media.restore",
         "action": "App\\Http\\Controllers\\Admin\\V1\\MediaController@restore",
-        "middleware": "api, admin.auth, throttle:api, throttle:20,1"
+        "middleware": "api, jwt.auth, throttle:api, throttle:20,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/options/{namespace}",
         "name": "admin.v1.options.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@index",
-        "middleware": "api, admin.auth, throttle:api, can:viewAny,App\\Models\\Option, can:options.read, throttle:120,1"
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Option, can:options.read, throttle:120,1"
     },
     {
         "method": "GET|HEAD",
         "uri": "api/v1/admin/options/{namespace}/{key}",
         "name": "admin.v1.options.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@show",
-        "middleware": "api, admin.auth, throttle:api, can:options.read, throttle:120,1"
+        "middleware": "api, jwt.auth, throttle:api, can:options.read, throttle:120,1"
     },
     {
         "method": "PUT",
         "uri": "api/v1/admin/options/{namespace}/{key}",
         "name": "admin.v1.options.upsert",
         "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@put",
-        "middleware": "api, admin.auth, throttle:api, can:options.write, throttle:30,1"
+        "middleware": "api, jwt.auth, throttle:api, can:options.write, throttle:30,1"
     },
     {
         "method": "DELETE",
         "uri": "api/v1/admin/options/{namespace}/{key}",
         "name": "admin.v1.options.destroy",
         "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@destroy",
-        "middleware": "api, admin.auth, throttle:api, can:options.delete, throttle:30,1"
+        "middleware": "api, jwt.auth, throttle:api, can:options.delete, throttle:30,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/options/{namespace}/{key}/restore",
         "name": "admin.v1.options.restore",
         "action": "App\\Http\\Controllers\\Admin\\V1\\OptionsController@restore",
-        "middleware": "api, admin.auth, throttle:api, can:options.restore, throttle:30,1"
+        "middleware": "api, jwt.auth, throttle:api, can:options.restore, throttle:30,1"
     },
     {
         "method": "POST",
         "uri": "api/v1/admin/search/reindex",
         "name": "admin.v1.search.reindex",
         "action": "App\\Http\\Controllers\\Admin\\V1\\SearchAdminController@reindex",
-        "middleware": "api, admin.auth, throttle:api, can:search.reindex, throttle:search-reindex"
+        "middleware": "api, jwt.auth, throttle:api, can:search.reindex, throttle:search-reindex"
     },
     {
         "method": "GET|HEAD",

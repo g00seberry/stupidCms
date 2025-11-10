@@ -299,14 +299,6 @@
                                             <a href="#auth-GETapi-v1-admin-auth-current">Получить данные текущего авторизованного пользователя.</a>
                                         </li>
                                                                     </ul>
-                                                                                <li class="tocify-item level-2" data-unique="auth-csrf">
-                                <a href="#auth-csrf">CSRF</a>
-                            </li>
-                                                            <ul id="tocify-subheader-auth-csrf" class="tocify-subheader">
-                                                                            <li class="tocify-item level-3" data-unique="auth-GETapi-v1-auth-csrf">
-                                            <a href="#auth-GETapi-v1-auth-csrf">Issue a CSRF token cookie.</a>
-                                        </li>
-                                                                    </ul>
                                                                         </ul>
                             </ul>
                     <ul id="tocify-header-search" class="tocify-header">
@@ -328,7 +320,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-09 19:18</li>
+        <li>Last updated: 2025-11-10 05:11</li>
     </ul>
 </div>
 
@@ -372,16 +364,16 @@
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"scheduled\",
+    \"status\": \"published\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-09T19:18:32\",
+    \"date_from\": \"2025-11-10T05:11:40\",
     \"date_to\": \"2106-12-09\",
     \"date_field\": \"published\",
-    \"sort\": \"updated_at.asc\",
+    \"sort\": \"title.desc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -415,16 +407,16 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "scheduled",
+    "status": "published",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-09T19:18:32",
+    "date_from": "2025-11-10T05:11:40",
     "date_to": "2106-12-09",
     "date_field": "published",
-    "sort": "updated_at.asc",
+    "sort": "title.desc",
     "per_page": 13
 };
 
@@ -460,16 +452,16 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'scheduled',
+            'status' =&gt; 'published',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-09T19:18:32',
+            'date_from' =&gt; '2025-11-10T05:11:40',
             'date_to' =&gt; '2106-12-09',
             'date_field' =&gt; 'published',
-            'sort' =&gt; 'updated_at.asc',
+            'sort' =&gt; 'title.desc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -769,10 +761,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="scheduled"
+               value="published"
                data-component="body">
     <br>
-<p>Example: <code>scheduled</code></p>
+<p>Example: <code>published</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -821,10 +813,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-09T19:18:32"
+               value="2025-11-10T05:11:40"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-09T19:18:32</code></p>
+<p>Must be a valid date. Example: <code>2025-11-10T05:11:40</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -859,10 +851,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="updated_at.asc"
+               value="title.desc"
                data-component="body">
     <br>
-<p>Example: <code>updated_at.asc</code></p>
+<p>Example: <code>title.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -5377,7 +5369,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"namespace\": \"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",
     \"q\": \"bajwbpilpmufinllwloau\",
-    \"deleted\": \"with\",
+    \"deleted\": \"only\",
     \"page\": 87,
     \"per_page\": 4
 }"
@@ -5406,7 +5398,7 @@ const headers = {
 let body = {
     "namespace": "gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8",
     "q": "bajwbpilpmufinllwloau",
-    "deleted": "with",
+    "deleted": "only",
     "page": 87,
     "per_page": 4
 };
@@ -5437,7 +5429,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'namespace' =&gt; 'gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8',
             'q' =&gt; 'bajwbpilpmufinllwloau',
-            'deleted' =&gt; 'with',
+            'deleted' =&gt; 'only',
             'page' =&gt; 87,
             'per_page' =&gt; 4,
         ],
@@ -5684,10 +5676,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-options--namespace-"
-               value="with"
+               value="only"
                data-component="body">
     <br>
-<p>Example: <code>with</code></p>
+<p>Example: <code>only</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -7358,7 +7350,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"enabled\": \"true\",
     \"page\": 2,
     \"per_page\": 13,
-    \"sort\": \"slug\",
+    \"sort\": \"updated_at\",
     \"order\": \"asc\"
 }"
 </code></pre></div>
@@ -7390,7 +7382,7 @@ let body = {
     "enabled": "true",
     "page": 2,
     "per_page": 13,
-    "sort": "slug",
+    "sort": "updated_at",
     "order": "asc"
 };
 
@@ -7424,7 +7416,7 @@ $response = $client-&gt;get(
             'enabled' =&gt; 'true',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
-            'sort' =&gt; 'slug',
+            'sort' =&gt; 'updated_at',
             'order' =&gt; 'asc',
         ],
     ]
@@ -7690,10 +7682,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-plugins"
-               value="slug"
+               value="updated_at"
                data-component="body">
     <br>
-<p>Example: <code>slug</code></p>
+<p>Example: <code>updated_at</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>slug</code></li> <li><code>version</code></li> <li><code>updated_at</code></li></ul>
         </div>
@@ -9053,7 +9045,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.desc\"
+    \"sort\": \"created_at.desc\"
 }"
 </code></pre></div>
 
@@ -9080,7 +9072,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.desc"
+    "sort": "created_at.desc"
 };
 
 fetch(url, {
@@ -9109,7 +9101,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.desc',
+            'sort' =&gt; 'created_at.desc',
         ],
     ]
 );
@@ -9311,10 +9303,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="slug.desc"
+               value="created_at.desc"
                data-component="body">
     <br>
-<p>Example: <code>slug.desc</code></p>
+<p>Example: <code>created_at.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
@@ -10369,7 +10361,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.asc\"
+    \"sort\": \"name.asc\"
 }"
 </code></pre></div>
 
@@ -10396,7 +10388,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.asc"
+    "sort": "name.asc"
 };
 
 fetch(url, {
@@ -10425,7 +10417,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.asc',
+            'sort' =&gt; 'name.asc',
         ],
     ]
 );
@@ -10665,10 +10657,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="slug.asc"
+               value="name.asc"
                data-component="body">
     <br>
-<p>Example: <code>slug.asc</code></p>
+<p>Example: <code>name.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li></ul>
         </div>
@@ -12388,9 +12380,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="auth-POSTapi-v1-auth-logout">Завершение сессии и отзыв refresh токенов.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>Требует валидный JWT access token. CSRF защита не требуется,
+так как JWT guard проверяет токен из HttpOnly cookie.</p>
 
 <span id="example-requests-POSTapi-v1-auth-logout">
 <blockquote>Example request:</blockquote>
@@ -12399,6 +12393,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://localhost/api/v1/api/v1/auth/logout" \
+    --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -12413,6 +12408,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 );
 
 const headers = {
+    "Authorization": "Bearer Bearer {JWT}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -12435,6 +12431,7 @@ $response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer Bearer {JWT}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -12473,7 +12470,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-v1-auth-logout" data-method="POST"
       data-path="api/v1/auth/logout"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -12503,6 +12500,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/auth/logout</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-auth-logout"
+               value="Bearer Bearer {JWT}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer Bearer {JWT}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -12558,7 +12567,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>Также выдает CSRF токен в cookie для последующих state-changing запросов.</p>
 
 <span id="example-requests-GETapi-v1-admin-auth-current">
 <blockquote>Example request:</blockquote>
@@ -12717,143 +12726,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                                <h2 id="auth-csrf">CSRF</h2>
-                                                    <h2 id="auth-GETapi-v1-auth-csrf">Issue a CSRF token cookie.</h2>
-
-<p>
-</p>
-
-<p>Returns a CSRF token in the response body and sets a non-HttpOnly cookie
-so that JavaScript can read it and include it in subsequent requests.</p>
-
-<span id="example-requests-GETapi-v1-auth-csrf">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/api/v1/auth/csrf" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/auth/csrf"
-);
-
-const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
-
-
-<div class="php-example">
-    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/auth/csrf';
-$response = $client-&gt;get(
-    $url,
-    [
-        'headers' =&gt; [
-            'Content-Type' =&gt; 'application/json',
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre></div>
-
-</span>
-
-<span id="example-responses-GETapi-v1-auth-csrf">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;csrf&quot;: &quot;bTg3bE7MbY0xI2p4Qz9Vc1FkSmRnT2p5a1NDbGhp&quot;
-}</code>
- </pre>
-    </span>
-<span id="execution-results-GETapi-v1-auth-csrf" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-GETapi-v1-auth-csrf"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-v1-auth-csrf"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-GETapi-v1-auth-csrf" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-v1-auth-csrf">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-GETapi-v1-auth-csrf" data-method="GET"
-      data-path="api/v1/auth/csrf"
-      data-authed="0"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-auth-csrf', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-v1-auth-csrf"
-                    onclick="tryItOut('GETapi-v1-auth-csrf');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-v1-auth-csrf"
-                    onclick="cancelTryOut('GETapi-v1-auth-csrf');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-v1-auth-csrf"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/v1/auth/csrf</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-auth-csrf"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-v1-auth-csrf"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                        </form>
-
                 <h1 id="search">Search</h1>
 
     
@@ -12882,7 +12754,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"vxi4:4$\\/i\"
     ],
-    \"from\": \"2025-11-09T19:18:31\",
+    \"from\": \"2025-11-10T05:11:40\",
     \"to\": \"2106-12-09\",
     \"page\": 45,
     \"per_page\": 16
@@ -12920,7 +12792,7 @@ let body = {
     "term": [
         "vxi4:4$\/i"
     ],
-    "from": "2025-11-09T19:18:31",
+    "from": "2025-11-10T05:11:40",
     "to": "2106-12-09",
     "page": 45,
     "per_page": 16
@@ -12960,7 +12832,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 'vxi4:4$/i',
             ],
-            'from' =&gt; '2025-11-09T19:18:31',
+            'from' =&gt; '2025-11-10T05:11:40',
             'to' =&gt; '2106-12-09',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -13207,10 +13079,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-09T19:18:31"
+               value="2025-11-10T05:11:40"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-09T19:18:31</code></p>
+<p>Must be a valid date. Example: <code>2025-11-10T05:11:40</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

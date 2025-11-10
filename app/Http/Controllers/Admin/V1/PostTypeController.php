@@ -129,11 +129,7 @@ class PostTypeController extends Controller
                 status: 404,
                 title: 'PostType not found',
                 detail: "Unknown post type slug: {$slug}",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found'],
-                headers: [
-                    'Cache-Control' => 'no-store, private',
-                    'Vary' => 'Cookie',
-                ]
+                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
             )
         );
     }
