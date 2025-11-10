@@ -71,9 +71,12 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Global RFC 7807 (Problem Details) handler for API routes
-        
-        $exceptions->render(function (ProblemException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+        $exceptions->render(function (\Throwable $e, $request) {
+            if (! ($request->expectsJson() || $request->is('api/*'))) {
+                return null;
+            }
+
+            if ($e instanceof ProblemException) {
                 $response = ProblemResponseFactory::make(
                     $e->type(),
                     detail: $e->detail(),
@@ -86,11 +89,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
                 return $e->apply($response);
             }
-        });
 
-        // 422 Unprocessable Entity - Validation errors
-        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
                 $errors = $e->errors();
                 $firstError = collect($errors)->flatten()->filter()->first();
 
@@ -100,62 +100,43 @@ return Application::configure(basePath: dirname(__DIR__))
                     extensions: ['errors' => $errors]
                 );
             }
-        });
 
-        // 401 Unauthorized - Authentication errors
-        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
                 return ProblemResponseFactory::make(
                     ProblemType::UNAUTHORIZED,
                     detail: $e->getMessage() ?: ProblemType::UNAUTHORIZED->defaultDetail()
                 );
             }
-        });
 
-        // 403 Forbidden - Authorization errors (AuthorizationException)
-        $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
                 return ProblemResponseFactory::make(
                     ProblemType::FORBIDDEN,
                     detail: $e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail()
                 );
             }
-        });
 
-        // 403 Forbidden - Authorization errors (AccessDeniedHttpException)
-        // Laravel converts AuthorizationException to AccessDeniedHttpException in some cases
-        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException) {
                 return ProblemResponseFactory::make(
                     ProblemType::FORBIDDEN,
                     detail: $e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail()
                 );
             }
-        });
 
-        // 404 Not Found - Route not found
-        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
                 return ProblemResponseFactory::make(
                     ProblemType::NOT_FOUND,
                     detail: 'The requested resource was not found.'
                 );
             }
-        });
 
-        // 429 Too Many Requests - Rate limit exceeded
-        $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Illuminate\Http\Exceptions\ThrottleRequestsException) {
                 return ProblemResponseFactory::make(
                     ProblemType::RATE_LIMIT_EXCEEDED,
                     detail: 'Rate limit exceeded.'
                 );
             }
-        });
 
-        // 500 Internal Server Error - Database/Query exceptions
-        $exceptions->render(function (\Illuminate\Database\QueryException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Illuminate\Database\QueryException) {
                 ProblemReporter::report($e, ProblemType::INTERNAL_ERROR, 'Database error during API request', [
                     'sql' => $e->getSql(),
                     'bindings' => $e->getBindings(),
@@ -166,10 +147,8 @@ return Application::configure(basePath: dirname(__DIR__))
                     detail: ProblemDetailResolver::resolve($e, ProblemType::INTERNAL_ERROR)
                 );
             }
-        });
 
-        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException $e, $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException) {
                 ProblemReporter::report($e, ProblemType::SERVICE_UNAVAILABLE, 'Service unavailable during API request');
 
                 return ProblemResponseFactory::make(
@@ -177,5 +156,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     detail: ProblemDetailResolver::resolve($e, ProblemType::SERVICE_UNAVAILABLE, allowMessage: true)
                 );
             }
+
+            return null;
         });
     })->create();
