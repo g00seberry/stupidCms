@@ -8,6 +8,7 @@ use App\Support\Http\ProblemType;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -69,12 +70,33 @@ final class ProblemReporter
     {
         $request = self::getRequest();
 
-        if ($request === null) {
-            return null;
+        if ($request !== null) {
+            $resolver = $request->getUserResolver();
+
+            try {
+                $user = $resolver();
+            } catch (Throwable) {
+                $user = $resolver(null);
+            }
+
+            $identifier = self::extractIdentifier($user);
+
+            if ($identifier !== null) {
+                return $identifier;
+            }
+
+            $identifier = self::extractIdentifier($request->user());
+
+            if ($identifier !== null) {
+                return $identifier;
+            }
         }
 
-        $user = $request->user();
+        return self::extractIdentifier(Auth::user());
+    }
 
+    private static function extractIdentifier(mixed $user): int|string|null
+    {
         if (! $user instanceof Authenticatable) {
             return null;
         }

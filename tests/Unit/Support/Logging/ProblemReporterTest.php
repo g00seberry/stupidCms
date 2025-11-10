@@ -25,6 +25,7 @@ final class ProblemReporterTest extends TestCase
         $request->setUserResolver(static fn () => $user);
 
         app()->instance('request', $request);
+        auth()->setUser($user);
 
         Log::spy();
 

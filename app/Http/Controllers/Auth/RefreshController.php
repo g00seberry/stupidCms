@@ -11,6 +11,7 @@ use App\Http\Resources\Admin\TokenRefreshResource;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
+use App\Support\Http\ProblemException;
 use App\Support\Http\Problems\RefreshTokenInternalProblem;
 use App\Support\Http\Problems\RefreshTokenUnauthorizedProblem;
 use App\Support\JwtCookies;
@@ -69,25 +70,25 @@ final class RefreshController
             $this->throwUnauthorized('Invalid or expired refresh token.');
         }
 
-        $tokenDto = $this->repo->find($claims['jti']);
-        if (! $tokenDto) {
-            $this->throwUnauthorized('Refresh token not found.');
-        }
-
-        if ($tokenDto->user_id !== (int) $claims['sub']) {
-            $this->throwUnauthorized('Token user mismatch.');
-        }
-
-        if ($tokenDto->used_at || $tokenDto->revoked_at) {
-            $this->handleReuseAttack((int) $claims['sub'], $claims['jti'], $request);
-            $this->throwUnauthorized('Refresh token has been revoked or already used.');
-        }
-
-        if (Carbon::now('UTC')->gte($tokenDto->expires_at)) {
-            $this->throwUnauthorized('Refresh token has expired.');
-        }
-
         try {
+            $tokenDto = $this->repo->find($claims['jti']);
+            if (! $tokenDto) {
+                $this->throwUnauthorized('Refresh token not found.');
+            }
+
+            if ($tokenDto->user_id !== (int) $claims['sub']) {
+                $this->throwUnauthorized('Token user mismatch.');
+            }
+
+            if ($tokenDto->used_at || $tokenDto->revoked_at) {
+                $this->handleReuseAttack((int) $claims['sub'], $claims['jti'], $request);
+                $this->throwUnauthorized('Refresh token has been revoked or already used.');
+            }
+
+            if (Carbon::now('UTC')->gte($tokenDto->expires_at)) {
+                $this->throwUnauthorized('Refresh token has expired.');
+            }
+
             [$accessToken, $refreshToken] = DB::transaction(function () use ($claims, $request): array {
                 $userId = (int) $claims['sub'];
 
@@ -116,6 +117,8 @@ final class RefreshController
             });
         } catch (DomainException) {
             throw new RefreshTokenUnauthorizedProblem('Refresh token has been revoked or already used.', $this->clearCookies());
+        } catch (ProblemException $problem) {
+            throw $problem;
         } catch (Throwable $e) {
             report($e);
 

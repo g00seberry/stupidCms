@@ -16,7 +16,12 @@ final class InfrastructureProblemTest extends TestCase
     public function test_query_exception_returns_neutral_detail(): void
     {
         Route::middleware('api')->get('/test/query-exception', function (): void {
-            throw new QueryException('select 1', [], new RuntimeException('Database is unavailable'));
+            throw new QueryException(
+                config('database.default'),
+                'select 1',
+                [],
+                new RuntimeException('Database is unavailable')
+            );
         });
 
         $response = $this->getJson('/test/query-exception');
@@ -31,7 +36,12 @@ final class InfrastructureProblemTest extends TestCase
     public function test_query_exception_uses_problem_exception_detail_when_available(): void
     {
         Route::middleware('api')->get('/test/query-exception-problem', function (): void {
-            throw new QueryException('select 1', [], new RefreshTokenInternalProblem());
+            throw new QueryException(
+                config('database.default'),
+                'select 1',
+                [],
+                new RefreshTokenInternalProblem()
+            );
         });
 
         $problem = new RefreshTokenInternalProblem();
