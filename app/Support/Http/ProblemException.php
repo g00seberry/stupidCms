@@ -9,6 +9,8 @@ use RuntimeException;
 
 abstract class ProblemException extends RuntimeException
 {
+    private readonly ?string $problemCode;
+
     /**
      * @param array<string, mixed> $extensions
      * @param array<string, string> $headers
@@ -20,8 +22,9 @@ abstract class ProblemException extends RuntimeException
         private readonly array $headers = [],
         private readonly ?string $title = null,
         private readonly ?int $status = null,
-        private readonly ?string $code = null,
+        ?string $code = null,
     ) {
+        $this->problemCode = $code;
         parent::__construct($detail ?? $type->defaultDetail());
     }
 
@@ -63,7 +66,7 @@ abstract class ProblemException extends RuntimeException
 
     public function code(): ?string
     {
-        return $this->code;
+        return $this->problemCode;
     }
 
     public function apply(JsonResponse $response): JsonResponse

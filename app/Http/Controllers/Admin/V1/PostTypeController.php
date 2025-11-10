@@ -109,7 +109,7 @@ class PostTypeController extends Controller
         $type = PostType::query()->where('slug', $slug)->first();
 
         if (! $type) {
-            $this->throwNotFound($slug);
+            throw new PostTypeNotFoundProblem($slug);
         }
 
         DB::transaction(function () use ($type, $request) {
