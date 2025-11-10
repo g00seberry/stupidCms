@@ -38,6 +38,11 @@ abstract class ProblemException extends RuntimeException
         return $this->detail;
     }
 
+    public function userFriendlyDetail(): string
+    {
+        return $this->detail ?? $this->type->defaultDetail();
+    }
+
     /**
      * @return array<string, mixed>
      */

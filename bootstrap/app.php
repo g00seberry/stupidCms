@@ -1,8 +1,10 @@
 <?php
 
+use App\Support\Http\ProblemDetailResolver;
 use App\Support\Http\ProblemException;
 use App\Support\Http\ProblemResponseFactory;
 use App\Support\Http\ProblemType;
+use App\Support\Logging\ProblemReporter;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -154,25 +156,25 @@ return Application::configure(basePath: dirname(__DIR__))
         // 500 Internal Server Error - Database/Query exceptions
         $exceptions->render(function (\Illuminate\Database\QueryException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                \Illuminate\Support\Facades\Log::error('Database error during API request', [
-                    'exception' => $e->getMessage(),
+                ProblemReporter::report($e, ProblemType::INTERNAL_ERROR, 'Database error during API request', [
                     'sql' => $e->getSql(),
+                    'bindings' => $e->getBindings(),
                 ]);
-                
+
                 return ProblemResponseFactory::make(
                     ProblemType::INTERNAL_ERROR,
-                    detail: 'Failed to refresh token due to server error.'
+                    detail: ProblemDetailResolver::resolve($e, ProblemType::INTERNAL_ERROR)
                 );
             }
         });
 
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $detail = $e->getMessage() ?: ProblemType::SERVICE_UNAVAILABLE->defaultDetail();
+                ProblemReporter::report($e, ProblemType::SERVICE_UNAVAILABLE, 'Service unavailable during API request');
 
                 return ProblemResponseFactory::make(
                     ProblemType::SERVICE_UNAVAILABLE,
-                    detail: $detail
+                    detail: ProblemDetailResolver::resolve($e, ProblemType::SERVICE_UNAVAILABLE, allowMessage: true)
                 );
             }
         });
