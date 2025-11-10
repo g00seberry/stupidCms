@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Support\Http\Problems;
 
-use App\Support\Http\ProblemException;
+use App\Support\Http\HttpProblemException;
 use App\Support\Http\ProblemType;
+use App\Support\Problems\Problem;
 
-final class EntryNotFoundProblem extends ProblemException
+final class EntryNotFoundProblem extends HttpProblemException
 {
     public function __construct(int $entryId, bool $trashed = false)
     {
@@ -16,9 +17,9 @@ final class EntryNotFoundProblem extends ProblemException
             : sprintf('Entry with ID %d does not exist.', $entryId);
 
         parent::__construct(
-            ProblemType::NOT_FOUND,
-            detail: $detail,
-            title: 'Entry not found',
+            Problem::of(ProblemType::NOT_FOUND)
+                ->detail($detail)
+                ->title('Entry not found')
         );
     }
 }

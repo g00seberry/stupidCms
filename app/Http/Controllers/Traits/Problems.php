@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Traits;
 
 use App\Support\Http\ProblemResponseFactory;
 use App\Support\Http\ProblemType;
+use App\Support\Problems\Problem;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -31,7 +32,33 @@ trait Problems
         ?int $status = null,
         ?string $code = null,
     ): JsonResponse {
-        return ProblemResponseFactory::make($type, $detail, $extensions, $headers, $title, $status, $code);
+        $problem = Problem::of($type);
+
+        if ($detail !== null) {
+            $problem = $problem->detail($detail);
+        }
+
+        if ($extensions !== []) {
+            $problem = $problem->extensions($extensions);
+        }
+
+        if ($headers !== []) {
+            $problem = $problem->headers($headers);
+        }
+
+        if ($title !== null) {
+            $problem = $problem->title($title);
+        }
+
+        if ($status !== null) {
+            $problem = $problem->status($status);
+        }
+
+        if ($code !== null) {
+            $problem = $problem->code($code);
+        }
+
+        return ProblemResponseFactory::make($problem);
     }
 
     /**

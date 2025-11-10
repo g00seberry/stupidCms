@@ -16,8 +16,8 @@ final class ProblemDetailResolver
     {
         $problem = self::findProblemException($throwable);
 
-        if ($problem instanceof ProblemException) {
-            return $problem->userFriendlyDetail();
+        if ($problem instanceof HttpProblemException) {
+            return $problem->problem()->userFriendlyDetail();
         }
 
         if ($allowMessage) {
@@ -31,12 +31,12 @@ final class ProblemDetailResolver
         return $type->defaultDetail();
     }
 
-    private static function findProblemException(Throwable $throwable): ?ProblemException
+    private static function findProblemException(Throwable $throwable): ?HttpProblemException
     {
         $current = $throwable;
 
         while ($current !== null) {
-            if ($current instanceof ProblemException) {
+            if ($current instanceof HttpProblemException) {
                 return $current;
             }
 

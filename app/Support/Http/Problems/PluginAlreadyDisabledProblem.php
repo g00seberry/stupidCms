@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Support\Http\Problems;
 
-use App\Support\Http\ProblemException;
+use App\Support\Http\HttpProblemException;
 use App\Support\Http\ProblemType;
+use App\Support\Problems\Problem;
 
-final class PluginAlreadyDisabledProblem extends ProblemException
+final class PluginAlreadyDisabledProblem extends HttpProblemException
 {
     public function __construct(string $message)
     {
-        parent::__construct(ProblemType::PLUGIN_ALREADY_DISABLED, detail: $message);
+        parent::__construct(
+            Problem::of(ProblemType::PLUGIN_ALREADY_DISABLED)
+                ->detail($message)
+        );
     }
 }
