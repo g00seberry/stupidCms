@@ -38,6 +38,10 @@ final class JwtAuthTest extends TestCase
         $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Pragma', 'no-cache');
+        $response->assertJson([
+            'code' => 'JWT_ACCESS_TOKEN_MISSING',
+            'detail' => 'Access token cookie is missing.',
+        ]);
     }
 
     public function test_jwt_auth_with_invalid_token_returns_401(): void
@@ -46,6 +50,10 @@ final class JwtAuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('WWW-Authenticate', 'Bearer');
+        $response->assertJson([
+            'code' => 'JWT_ACCESS_TOKEN_INVALID',
+            'detail' => 'Access token is invalid.',
+        ]);
     }
 
     public function test_jwt_auth_with_valid_token_succeeds(): void
@@ -78,6 +86,10 @@ final class JwtAuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('WWW-Authenticate', 'Bearer');
+        $response->assertJson([
+            'code' => 'JWT_USER_NOT_FOUND',
+            'detail' => 'Authenticated user was not found.',
+        ]);
     }
 
     public function test_jwt_auth_with_invalid_subject_returns_401(): void
@@ -93,6 +105,10 @@ final class JwtAuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('WWW-Authenticate', 'Bearer');
+        $response->assertJson([
+            'code' => 'JWT_SUBJECT_INVALID',
+            'detail' => 'Token subject claim is invalid.',
+        ]);
     }
 
     public function test_without_middleware_allows_access_even_without_token(): void

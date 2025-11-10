@@ -116,13 +116,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"detail\": \"Admin privileges are required.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"code\": \"FORBIDDEN\",\n  \"detail\": \"Admin privileges are required.\"\n}",
                             "name": ""
                         },
                         {
@@ -169,7 +169,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -227,13 +227,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -288,13 +288,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -352,13 +352,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -410,13 +410,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Trashed entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Trashed entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -480,13 +480,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -541,13 +541,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -608,13 +608,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -675,13 +675,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -789,7 +789,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -841,13 +841,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -906,13 +906,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -976,13 +976,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -1059,7 +1059,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1120,13 +1120,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -1178,13 +1178,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -1242,13 +1242,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"detail\": \"Deleted media with ID uuid-media does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Deleted media with ID uuid-media does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -1328,7 +1328,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1392,13 +1392,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
                             "name": ""
                         },
                         {
@@ -1459,7 +1459,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1523,13 +1523,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
                             "name": ""
                         },
                         {
@@ -1587,13 +1587,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Option not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Option \\\"site\/hero.title\\\" was not found.\"\n}",
                             "name": ""
                         },
                         {
@@ -1643,7 +1643,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1690,7 +1690,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1757,13 +1757,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"detail\": \"Only owner marketing may release this path.\",\n  \"path\": \"\/promo\",\n  \"owner\": \"marketing\",\n  \"attempted_source\": \"editorial\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"code\": \"FORBIDDEN\",\n  \"detail\": \"Only owner marketing may release this path.\",\n  \"path\": \"\/promo\",\n  \"owner\": \"marketing\",\n  \"attempted_source\": \"editorial\"\n}",
                             "name": ""
                         },
                         {
@@ -1853,7 +1853,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1897,7 +1897,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -1961,13 +1961,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-not-found\",\n  \"title\": \"Plugin not found\",\n  \"status\": 404,\n  \"detail\": \"Plugin with slug \\\"seo-tools\\\" was not found.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-not-found\",\n  \"title\": \"Plugin not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Plugin with slug \\\"seo-tools\\\" was not found.\"\n}",
                             "name": ""
                         },
                         {
@@ -2031,13 +2031,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-not-found\",\n  \"title\": \"Plugin not found\",\n  \"status\": 404,\n  \"detail\": \"Plugin with slug \\\"seo-tools\\\" was not found.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/plugin-not-found\",\n  \"title\": \"Plugin not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Plugin with slug \\\"seo-tools\\\" was not found.\"\n}",
                             "name": ""
                         },
                         {
@@ -2107,13 +2107,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"detail\": \"Unknown post type slug: article\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Unknown post type slug: article\"\n}",
                             "name": ""
                         },
                         {
@@ -2168,13 +2168,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"detail\": \"Unknown post type slug: article\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Unknown post type slug: article\"\n}",
                             "name": ""
                         },
                         {
@@ -2230,7 +2230,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -2308,7 +2308,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -2355,7 +2355,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -2413,13 +2413,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2474,13 +2474,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2545,13 +2545,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2643,13 +2643,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2716,13 +2716,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2786,13 +2786,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2853,13 +2853,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -2930,13 +2930,13 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Term not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Term with ID 3 does not exist.\"\n}",
                             "name": ""
                         },
                         {
@@ -3008,7 +3008,7 @@
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\"\n}",
                             "name": ""
                         },
                         {
@@ -3074,7 +3074,7 @@
                                 {
                                     "header": [],
                                     "code": 401,
-                                    "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Invalid credentials.\"\n}",
+                                    "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Invalid credentials.\"\n}",
                                     "name": ""
                                 }
                             ]
@@ -3115,7 +3115,7 @@
                                 {
                                     "header": [],
                                     "code": 401,
-                                    "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Missing refresh token.\"\n}",
+                                    "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Missing refresh token.\"\n}",
                                     "name": ""
                                 },
                                 {
@@ -3194,7 +3194,7 @@
                                 {
                                     "header": [],
                                     "code": 401,
-                                    "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"detail\": \"Authentication required.\"\n}",
+                                    "body": "{\n  \"type\": \"about:blank\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication required.\"\n}",
                                     "name": ""
                                 }
                             ]
