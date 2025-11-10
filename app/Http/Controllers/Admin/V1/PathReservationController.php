@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\V1;
 
-use App\Domain\Routing\Exceptions\ForbiddenReservationRelease;
-use App\Domain\Routing\Exceptions\InvalidPathException;
-use App\Domain\Routing\Exceptions\PathAlreadyReservedException;
 use App\Domain\Routing\PathReservationService;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\DestroyPathReservationRequest;
 use App\Http\Requests\StorePathReservationRequest;
 use App\Http\Resources\Admin\PathReservationCollection;
 use App\Http\Resources\Admin\PathReservationMessageResource;
-use App\Support\Http\Problems\ForbiddenReservationReleaseProblem;
-use App\Support\Http\Problems\InvalidPathReservationProblem;
 use App\Support\Http\Problems\MissingReservationPathProblem;
-use App\Support\Http\Problems\PathAlreadyReservedProblem;
 use App\Models\Audit;
 use App\Models\ReservedRoute;
 use Illuminate\Http\Response;
@@ -25,7 +18,6 @@ use Illuminate\Support\Facades\Log;
 
 class PathReservationController extends Controller
 {
-    use Problems;
 
     public function __construct(
         private readonly PathReservationService $service
@@ -71,17 +63,11 @@ class PathReservationController extends Controller
     {
         $validated = $request->validated();
 
-        try {
-            $this->service->reservePath(
-                $validated['path'],
-                $validated['source'],
-                $validated['reason'] ?? null
-            );
-        } catch (InvalidPathException $e) {
-            throw new InvalidPathReservationProblem($e->getMessage());
-        } catch (PathAlreadyReservedException $e) {
-            throw new PathAlreadyReservedProblem($e->getMessage(), $e->path, $e->owner);
-        }
+        $this->service->reservePath(
+            $validated['path'],
+            $validated['source'],
+            $validated['reason'] ?? null
+        );
 
         // Аудит: логируем резервирование
         $this->logAudit('reserve', $validated['path'], [
@@ -141,11 +127,7 @@ class PathReservationController extends Controller
             throw new MissingReservationPathProblem();
         }
 
-        try {
-            $this->service->releasePath($actualPath, $validated['source']);
-        } catch (ForbiddenReservationRelease $e) {
-            throw new ForbiddenReservationReleaseProblem($e->getMessage(), $e->path, $e->owner, $e->attemptedSource);
-        }
+        $this->service->releasePath($actualPath, $validated['source']);
 
         // Аудит: логируем освобождение
         $this->logAudit('release', $actualPath, [

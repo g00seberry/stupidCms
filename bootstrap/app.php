@@ -1,5 +1,6 @@
 <?php
 
+use App\Contracts\ProblemConvertible;
 use App\Support\Http\HttpProblemException;
 use App\Support\Http\ProblemDetailResolver;
 use App\Support\Http\ProblemResponseFactory;
@@ -81,6 +82,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 $response = ProblemResponseFactory::make($e->problem());
 
                 return $e->apply($response);
+            }
+
+            if ($e instanceof ProblemConvertible) {
+                return ProblemResponseFactory::make($e->toProblem());
             }
 
             if ($e instanceof \Illuminate\Validation\ValidationException) {
