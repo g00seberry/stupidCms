@@ -4,24 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\V1;
 
-use App\Domain\Plugins\Exceptions\InvalidPluginManifest;
-use App\Domain\Plugins\Exceptions\PluginAlreadyDisabledException;
-use App\Domain\Plugins\Exceptions\PluginAlreadyEnabledException;
-use App\Domain\Plugins\Exceptions\RoutesReloadFailed;
 use App\Domain\Plugins\PluginActivator;
 use App\Domain\Plugins\Services\PluginsSynchronizer;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\Plugins\IndexPluginsRequest;
 use App\Http\Resources\PluginCollection;
 use App\Http\Resources\PluginResource;
 use App\Http\Resources\PluginSyncResource;
 use App\Models\Plugin;
-use App\Support\Http\Problems\InvalidPluginManifestProblem;
-use App\Support\Http\Problems\PluginAlreadyDisabledProblem;
-use App\Support\Http\Problems\PluginAlreadyEnabledProblem;
 use App\Support\Http\Problems\PluginNotFoundProblem;
-use App\Support\Http\Problems\RoutesReloadFailedProblem;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
@@ -29,7 +20,6 @@ use Illuminate\Support\Facades\Gate;
 
 final class PluginsController extends Controller
 {
-    use Problems;
 
     /**
      * Список плагинов.
@@ -160,13 +150,7 @@ final class PluginsController extends Controller
 
         Gate::authorize('toggle', $plugin);
 
-        try {
-            $plugin = $activator->enable($plugin);
-        } catch (PluginAlreadyEnabledException $exception) {
-            throw new PluginAlreadyEnabledProblem($exception->getMessage());
-        } catch (RoutesReloadFailed $exception) {
-            throw new RoutesReloadFailedProblem($exception->getMessage());
-        }
+        $plugin = $activator->enable($plugin);
 
         return new PluginResource($plugin);
     }
@@ -216,13 +200,7 @@ final class PluginsController extends Controller
 
         Gate::authorize('toggle', $plugin);
 
-        try {
-            $plugin = $activator->disable($plugin);
-        } catch (PluginAlreadyDisabledException $exception) {
-            throw new PluginAlreadyDisabledProblem($exception->getMessage());
-        } catch (RoutesReloadFailed $exception) {
-            throw new RoutesReloadFailedProblem($exception->getMessage());
-        }
+        $plugin = $activator->disable($plugin);
 
         return new PluginResource($plugin);
     }
@@ -268,13 +246,7 @@ final class PluginsController extends Controller
     {
         Gate::authorize('sync', Plugin::class);
 
-        try {
-            $summary = $synchronizer->sync();
-        } catch (InvalidPluginManifest $exception) {
-            throw new InvalidPluginManifestProblem($exception->getMessage());
-        } catch (RoutesReloadFailed $exception) {
-            throw new RoutesReloadFailedProblem($exception->getMessage());
-        }
+        $summary = $synchronizer->sync();
 
         return new PluginSyncResource($summary);
     }
