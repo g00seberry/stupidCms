@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Errors;
 
+use App\Support\Http\AdminResponseHeaders;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,19 +26,25 @@ final class FallbackProblemResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
-            'type' => 'about:blank',
+        $payload = [
+            'type' => ProblemType::NOT_FOUND->value,
             'title' => 'Not Found',
-            'status' => Response::HTTP_NOT_FOUND,
-            'detail' => 'The requested resource was not found.',
+            'status' => ProblemType::NOT_FOUND->status(),
+            'detail' => ProblemType::NOT_FOUND->defaultDetail(),
             'path' => $this->path,
         ];
+
+        if ($code = ProblemType::NOT_FOUND->defaultCode()) {
+            $payload['code'] = $code;
+        }
+
+        return $payload;
     }
 
     public function withResponse($request, $response): void
     {
-        $response->setStatusCode(Response::HTTP_NOT_FOUND);
+        $response->setStatusCode(ProblemType::NOT_FOUND->status());
         $response->header('Content-Type', 'application/problem+json');
-        $response->header('Cache-Control', 'no-cache, private');
+        AdminResponseHeaders::apply($response);
     }
 }

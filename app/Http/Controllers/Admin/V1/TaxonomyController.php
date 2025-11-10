@@ -14,6 +14,7 @@ use App\Http\Resources\Admin\TaxonomyResource;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Http\AdminResponse;
+use App\Support\Http\ProblemType;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -347,10 +348,9 @@ class TaxonomyController extends Controller
         if ($termsCount > 0 && ! $force) {
             throw new HttpResponseException(
                 $this->problem(
-                    status: 409,
-                    title: 'Taxonomy has terms',
+                    ProblemType::CONFLICT,
                     detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
-                    ext: ['type' => 'https://stupidcms.dev/problems/conflict']
+                    title: 'Taxonomy has terms'
                 )
             );
         }
@@ -428,10 +428,9 @@ class TaxonomyController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                status: 404,
-                title: 'Taxonomy not found',
+                ProblemType::NOT_FOUND,
                 detail: "Taxonomy with slug {$slug} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                title: 'Taxonomy not found'
             )
         );
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Search;
 
 use App\Domain\Search\ValueObjects\SearchTermFilter;
-use App\Support\ProblemDetails;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -42,7 +42,7 @@ final class SearchService
 
             throw new ServiceUnavailableHttpException(
                 retryAfter: null,
-                message: ProblemDetails::DETAIL_SERVICE_UNAVAILABLE,
+                message: ProblemType::SERVICE_UNAVAILABLE->defaultDetail(),
                 previous: $exception
             );
         }

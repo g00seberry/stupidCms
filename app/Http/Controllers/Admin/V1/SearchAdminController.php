@@ -8,12 +8,11 @@ use App\Domain\Search\Jobs\ReindexSearchJob;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\Entry;
-use App\Support\ProblemDetails;
+use App\Support\Http\ProblemType;
 use App\Http\Resources\Admin\SearchReindexAcceptedResource;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
 
 final class SearchAdminController extends Controller
 {
@@ -50,8 +49,9 @@ final class SearchAdminController extends Controller
     {
         if (! config('search.enabled')) {
             throw new HttpResponseException(
-                $this->problemFromPreset(
-                    ProblemDetails::serviceUnavailable()
+                $this->problem(
+                    ProblemType::SERVICE_UNAVAILABLE,
+                    detail: 'Search service is temporarily unavailable.'
                 )
             );
         }

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -379,7 +380,7 @@ class AuthRefreshTest extends TestCase
         $refreshResponse->assertStatus(500);
         $refreshResponse->assertHeader('Content-Type', 'application/problem+json');
         $refreshResponse->assertJson([
-            'type' => 'about:blank',
+            'type' => ProblemType::INTERNAL_ERROR->value,
             'title' => 'Internal Server Error',
             'status' => 500,
         ]);

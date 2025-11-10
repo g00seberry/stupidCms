@@ -15,6 +15,7 @@ use App\Http\Resources\MediaResource;
 use App\Models\Entry;
 use App\Models\Media;
 use App\Support\Http\AdminResponse;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
@@ -204,11 +205,9 @@ class MediaController extends Controller
         if (! $file) {
             throw new HttpResponseException(
                 $this->problem(
-                    422,
-                    'Validation error',
-                    'File payload is missing.',
-                    [
-                        'type' => 'https://stupidcms.dev/problems/validation-error',
+                    ProblemType::VALIDATION_ERROR,
+                    detail: 'File payload is missing.',
+                    extensions: [
                         'errors' => ['file' => ['File payload is required.']],
                     ]
                 )
@@ -371,16 +370,14 @@ class MediaController extends Controller
 
         if ($references->isNotEmpty()) {
             return $this->problem(
-                409,
-                'Media in use',
-                'Media is referenced by content and cannot be deleted.',
-                [
-                    'type' => 'https://stupidcms.dev/problems/media-in-use',
+                ProblemType::MEDIA_IN_USE,
+                extensions: [
                     'references' => $references->map(fn ($entry) => [
                         'entry_id' => $entry->id,
                         'title' => $entry->title,
                     ]),
-                ]
+                ],
+                title: 'Media in use'
             );
         }
 
@@ -425,10 +422,9 @@ class MediaController extends Controller
         if (! $media) {
             throw new HttpResponseException(
                 $this->problem(
-                    404,
-                    'Media not found',
-                    "Deleted media with ID {$mediaId} does not exist.",
-                    ['type' => 'https://stupidcms.dev/problems/not-found']
+                    ProblemType::NOT_FOUND,
+                    detail: "Deleted media with ID {$mediaId} does not exist.",
+                    title: 'Media not found'
                 )
             );
         }
@@ -445,10 +441,9 @@ class MediaController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                404,
-                'Media not found',
-                "Media with ID {$mediaId} does not exist.",
-                ['type' => 'https://stupidcms.dev/problems/not-found']
+                ProblemType::NOT_FOUND,
+                detail: "Media with ID {$mediaId} does not exist.",
+                title: 'Media not found'
             )
         );
     }

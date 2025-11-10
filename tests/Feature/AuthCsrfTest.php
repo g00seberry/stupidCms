@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -38,10 +39,11 @@ class AuthCsrfTest extends TestCase
         
         // Проверка RFC 7807 формата
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => ProblemType::CSRF_MISMATCH->value,
             'title' => 'CSRF Token Mismatch',
             'status' => 419,
             'detail' => 'CSRF token mismatch.',
+            'code' => ProblemType::CSRF_MISMATCH->defaultCode(),
         ]);
         
         // Проверка, что при 419 выдается новый CSRF cookie

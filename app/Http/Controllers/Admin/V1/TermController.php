@@ -15,6 +15,7 @@ use App\Http\Resources\Admin\TermResource;
 use App\Models\Entry;
 use App\Models\Taxonomy;
 use App\Models\Term;
+use App\Support\Http\ProblemType;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use App\Support\Http\AdminResponse;
@@ -408,10 +409,9 @@ class TermController extends Controller
         if ($hasEntries && ! $forceDetach) {
             throw new HttpResponseException(
                 $this->problem(
-                    status: 409,
-                    title: 'Term still attached',
+                    ProblemType::CONFLICT,
                     detail: 'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.',
-                    ext: ['type' => 'https://stupidcms.dev/problems/conflict']
+                    title: 'Term still attached'
                 )
             );
         }
@@ -496,10 +496,9 @@ class TermController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                status: 404,
-                title: 'Taxonomy not found',
+                ProblemType::NOT_FOUND,
                 detail: "Taxonomy with slug {$slug} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                title: 'Taxonomy not found'
             )
         );
     }
@@ -508,10 +507,9 @@ class TermController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                status: 404,
-                title: 'Term not found',
+                ProblemType::NOT_FOUND,
                 detail: "Term with ID {$termId} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                title: 'Term not found'
             )
         );
     }

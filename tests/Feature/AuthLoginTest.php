@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Audit;
 use App\Models\User;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -88,7 +89,7 @@ class AuthLoginTest extends TestCase
         
         // Проверка RFC 7807 формата
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => ProblemType::UNAUTHORIZED->value,
             'title' => 'Unauthorized',
             'status' => 401,
             'detail' => 'Invalid credentials.',
@@ -119,7 +120,7 @@ class AuthLoginTest extends TestCase
         
         // Проверка RFC 7807 формата
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => ProblemType::UNAUTHORIZED->value,
             'title' => 'Unauthorized',
             'status' => 401,
             'detail' => 'Invalid credentials.',

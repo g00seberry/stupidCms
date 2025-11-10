@@ -14,6 +14,7 @@ use App\Http\Requests\DestroyPathReservationRequest;
 use App\Http\Requests\StorePathReservationRequest;
 use App\Http\Resources\Admin\PathReservationCollection;
 use App\Http\Resources\Admin\PathReservationMessageResource;
+use App\Support\Http\ProblemType;
 use App\Models\Audit;
 use App\Models\ReservedRoute;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -77,18 +78,17 @@ class PathReservationController extends Controller
         } catch (InvalidPathException $e) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_UNPROCESSABLE_ENTITY,
-                    'Unprocessable Entity',
-                    $e->getMessage()
+                    ProblemType::VALIDATION_ERROR,
+                    detail: $e->getMessage(),
+                    title: 'Unprocessable Entity'
                 )
             );
         } catch (PathAlreadyReservedException $e) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_CONFLICT,
-                    'Conflict',
-                    $e->getMessage(),
-                    [
+                    ProblemType::CONFLICT,
+                    detail: $e->getMessage(),
+                    extensions: [
                         'path' => $e->path,
                         'owner' => $e->owner,
                     ]
@@ -153,9 +153,8 @@ class PathReservationController extends Controller
         if (empty($actualPath)) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_UNPROCESSABLE_ENTITY,
-                    'Validation error',
-                    'Path is required either in URL parameter or request body.'
+                    ProblemType::VALIDATION_ERROR,
+                    detail: 'Path is required either in URL parameter or request body.'
                 )
             );
         }
@@ -165,10 +164,9 @@ class PathReservationController extends Controller
         } catch (ForbiddenReservationRelease $e) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_FORBIDDEN,
-                    'Forbidden',
-                    $e->getMessage(),
-                    [
+                    ProblemType::FORBIDDEN,
+                    detail: $e->getMessage(),
+                    extensions: [
                         'path' => $e->path,
                         'owner' => $e->owner,
                         'attempted_source' => $e->attemptedSource,

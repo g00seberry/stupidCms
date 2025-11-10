@@ -12,6 +12,7 @@ use App\Http\Requests\Admin\SyncTermsRequest;
 use App\Http\Resources\Admin\EntryTermsResource;
 use App\Models\Entry;
 use App\Models\Term;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -319,10 +320,9 @@ class EntryTermsController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                status: 404,
-                title: 'Entry not found',
+                ProblemType::NOT_FOUND,
                 detail: "Entry with ID {$entryId} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                title: 'Entry not found'
             )
         );
     }

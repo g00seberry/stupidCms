@@ -9,6 +9,7 @@ use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\UpdatePostTypeRequest;
 use App\Http\Resources\Admin\PostTypeResource;
 use App\Models\PostType;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 
@@ -126,10 +127,9 @@ class PostTypeController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                status: 404,
-                title: 'PostType not found',
+                ProblemType::NOT_FOUND,
                 detail: "Unknown post type slug: {$slug}",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                title: 'PostType not found'
             )
         );
     }

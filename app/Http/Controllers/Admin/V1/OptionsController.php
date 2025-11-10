@@ -13,6 +13,7 @@ use App\Http\Resources\Admin\OptionCollection;
 use App\Http\Resources\Admin\OptionResource;
 use App\Models\Option;
 use App\Support\Http\AdminResponse;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
@@ -356,12 +357,8 @@ class OptionsController extends Controller
         }
 
         throw new HttpResponseException($this->problem(
-            422,
-            'Validation error',
-            'The provided option namespace/key is invalid.',
-            [
-                'type' => 'https://stupidcms.dev/problems/invalid-option-identifier',
-                'code' => 'INVALID_OPTION_IDENTIFIER',
+            ProblemType::INVALID_OPTION_IDENTIFIER,
+            extensions: [
                 'errors' => $validator->errors()->toArray(),
             ]
         ));
@@ -370,13 +367,10 @@ class OptionsController extends Controller
     private function optionNotFoundProblem(string $namespace, string $key): JsonResponse
     {
         return $this->problem(
-            404,
-            'Option not found',
-            sprintf('Option "%s/%s" was not found.', $namespace, $key),
-            [
-                'type' => 'https://stupidcms.dev/problems/not-found',
-                'code' => 'NOT_FOUND',
-            ]
+            ProblemType::NOT_FOUND,
+            detail: sprintf('Option "%s/%s" was not found.', $namespace, $key),
+            title: 'Option not found',
+            code: 'NOT_FOUND'
         );
     }
 }

@@ -49,11 +49,11 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
         // Laravel sets no-cache for route-level 404s; controller errors use no-store
-        $response->assertHeader('Cache-Control', 'no-cache, private');
+        $response->assertHeader('Cache-Control', 'no-store, private');
         // Note: Vary header not set for route-level 404s (no cookies involved)
         // Note: Route-level 404s use about:blank; controller 404s use our custom type
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/not-found',
             'title' => 'Not Found',
             'status' => 404,
             'detail' => 'The requested resource was not found.',
@@ -76,7 +76,7 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => 'https://stupidcms.dev/problems/rate-limit-exceeded',
             'title' => 'Too Many Requests',
             'status' => 429,
             'detail' => 'Rate limit exceeded.',

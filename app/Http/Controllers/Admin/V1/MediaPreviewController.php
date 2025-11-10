@@ -8,6 +8,7 @@ use App\Domain\Media\Services\OnDemandVariantService;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\Media;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -73,10 +74,9 @@ class MediaPreviewController extends Controller
         if (! $media) {
             throw new HttpResponseException(
                 $this->problem(
-                    404,
-                    'Media not found',
-                    "Media with ID {$mediaId} does not exist.",
-                    ['type' => 'https://stupidcms.dev/problems/not-found']
+                    ProblemType::NOT_FOUND,
+                    detail: "Media with ID {$mediaId} does not exist.",
+                    title: 'Media not found'
                 )
             );
         }
@@ -88,19 +88,20 @@ class MediaPreviewController extends Controller
         } catch (InvalidArgumentException $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    422,
-                    'Invalid variant',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/validation-error']
+                    ProblemType::VALIDATION_ERROR,
+                    detail: $exception->getMessage(),
+                    title: 'Invalid variant'
                 )
             );
         } catch (Throwable $exception) {
             report($exception);
 
             throw new HttpResponseException(
-                $this->internalError('Failed to generate media variant.', [
-                    'type' => 'https://stupidcms.dev/problems/media-variant-error',
-                ])
+                $this->problem(
+                    ProblemType::MEDIA_VARIANT_ERROR,
+                    detail: 'Failed to generate media variant.',
+                    title: 'Internal Server Error'
+                )
             );
         }
 
@@ -147,10 +148,9 @@ class MediaPreviewController extends Controller
         if (! $media) {
             throw new HttpResponseException(
                 $this->problem(
-                    404,
-                    'Media not found',
-                    "Media with ID {$mediaId} does not exist.",
-                    ['type' => 'https://stupidcms.dev/problems/not-found']
+                    ProblemType::NOT_FOUND,
+                    detail: "Media with ID {$mediaId} does not exist.",
+                    title: 'Media not found'
                 )
             );
         }
@@ -163,9 +163,11 @@ class MediaPreviewController extends Controller
             report($exception);
 
             throw new HttpResponseException(
-                $this->internalError('Failed to generate download URL.', [
-                    'type' => 'https://stupidcms.dev/problems/media-download-error',
-                ])
+                $this->problem(
+                    ProblemType::MEDIA_DOWNLOAD_ERROR,
+                    detail: 'Failed to generate download URL.',
+                    title: 'Internal Server Error'
+                )
             );
         }
 

@@ -11,6 +11,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Admin\LoginResource;
 use App\Models\Audit;
 use App\Models\User;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -62,9 +63,8 @@ final class LoginController
 
             throw new HttpResponseException(
                 $this->problem(
-                    401,
-                    'Unauthorized',
-                    'Invalid credentials.'
+                    ProblemType::UNAUTHORIZED,
+                    detail: 'Invalid credentials.'
                 )
             );
         }

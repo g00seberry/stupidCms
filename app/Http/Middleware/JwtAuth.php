@@ -7,7 +7,7 @@ namespace App\Http\Middleware;
 use App\Domain\Auth\JwtService;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\User;
-use App\Support\ProblemDetails;
+use App\Support\Http\ProblemType;
 use Illuminate\Http\JsonResponse;
 use Closure;
 use Illuminate\Http\Request;
@@ -75,13 +75,11 @@ final class JwtAuth
 
     private function respondUnauthorized(string $reason): JsonResponse
     {
-        return $this->problemFromPreset(
-            ProblemDetails::unauthorized(),
+        return $this->problem(
+            ProblemType::UNAUTHORIZED,
             headers: [
                 'WWW-Authenticate' => 'Bearer',
-                'Cache-Control' => 'no-store, private',
                 'Pragma' => 'no-cache',
-                'Vary' => 'Cookie',
             ]
         );
     }

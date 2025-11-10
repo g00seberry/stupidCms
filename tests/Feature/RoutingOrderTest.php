@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -69,7 +70,7 @@ class RoutingOrderTest extends TestCase
             'path',
         ]);
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => ProblemType::NOT_FOUND->value,
             'title' => 'Not Found',
             'status' => 404,
         ]);
@@ -172,7 +173,7 @@ class RoutingOrderTest extends TestCase
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
-            'type' => 'about:blank',
+            'type' => ProblemType::NOT_FOUND->value,
             'title' => 'Not Found',
             'status' => 404,
         ]);
@@ -198,7 +199,7 @@ class RoutingOrderTest extends TestCase
         if ($response->status() === 404) {
             $response->assertHeader('Content-Type', 'application/problem+json');
             $response->assertJson([
-                'type' => 'about:blank',
+                'type' => ProblemType::NOT_FOUND->value,
                 'title' => 'Not Found',
                 'status' => 404,
             ]);

@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Admin\Media;
 
 use App\Models\Media;
+use App\Support\Http\ProblemResponseFactory;
+use App\Support\Http\ProblemType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -32,16 +34,11 @@ class StoreMediaRequest extends FormRequest
 
     protected function failedValidation(Validator $validator): void
     {
-        $payload = [
-            'type' => 'https://stupidcms.dev/problems/validation-error',
-            'title' => 'Validation error',
-            'status' => 422,
-            'detail' => 'The media payload failed validation constraints.',
-            'errors' => $validator->errors()->messages(),
-        ];
-
-        $response = response()->json($payload, 422);
-        $response->headers->set('Content-Type', 'application/problem+json');
+        $response = ProblemResponseFactory::make(
+            ProblemType::VALIDATION_ERROR,
+            detail: 'The media payload failed validation constraints.',
+            extensions: ['errors' => $validator->errors()->messages()]
+        );
 
         throw new HttpResponseException($response);
     }

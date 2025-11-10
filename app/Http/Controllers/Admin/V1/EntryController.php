@@ -14,6 +14,7 @@ use App\Http\Resources\Admin\EntryResource;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Support\Http\AdminResponse;
+use App\Support\Http\ProblemType;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -300,11 +301,9 @@ class EntryController extends Controller
         if (! $postType) {
             throw new HttpResponseException(
                 $this->problem(
-                    status: 422,
-                    title: 'Validation error',
+                    ProblemType::VALIDATION_ERROR,
                     detail: 'The specified post type does not exist.',
-                    ext: [
-                        'type' => 'https://stupidcms.dev/problems/validation-error',
+                    extensions: [
                         'errors' => ['post_type' => ['The specified post type does not exist.']],
                     ]
                 )
@@ -544,10 +543,9 @@ class EntryController extends Controller
         if (! $entry) {
             throw new HttpResponseException(
                 $this->problem(
-                    status: 404,
-                    title: 'Entry not found',
+                    ProblemType::NOT_FOUND,
                     detail: "Trashed entry with ID {$id} does not exist.",
-                    ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                    title: 'Entry not found'
                 )
             );
         }
@@ -593,10 +591,9 @@ class EntryController extends Controller
     {
         throw new HttpResponseException(
             $this->problem(
-                status: 404,
-                title: 'Entry not found',
+                ProblemType::NOT_FOUND,
                 detail: "Entry with ID {$id} does not exist.",
-                ext: ['type' => 'https://stupidcms.dev/problems/not-found']
+                title: 'Entry not found'
             )
         );
     }

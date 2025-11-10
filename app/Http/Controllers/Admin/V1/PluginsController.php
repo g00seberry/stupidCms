@@ -17,12 +17,12 @@ use App\Http\Resources\PluginCollection;
 use App\Http\Resources\PluginResource;
 use App\Http\Resources\PluginSyncResource;
 use App\Models\Plugin;
+use App\Support\Http\ProblemType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
-use Symfony\Component\HttpFoundation\Response;
 
 final class PluginsController extends Controller
 {
@@ -162,19 +162,15 @@ final class PluginsController extends Controller
         } catch (PluginAlreadyEnabledException $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_CONFLICT,
-                    'Plugin already enabled',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/plugin-already-enabled']
+                    ProblemType::PLUGIN_ALREADY_ENABLED,
+                    detail: $exception->getMessage()
                 )
             );
         } catch (RoutesReloadFailed $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_INTERNAL_SERVER_ERROR,
-                    'Failed to reload plugin routes',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+                    ProblemType::ROUTES_RELOAD_FAILED,
+                    detail: $exception->getMessage()
                 )
             );
         }
@@ -232,19 +228,15 @@ final class PluginsController extends Controller
         } catch (PluginAlreadyDisabledException $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_CONFLICT,
-                    'Plugin already disabled',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/plugin-already-disabled']
+                    ProblemType::PLUGIN_ALREADY_DISABLED,
+                    detail: $exception->getMessage()
                 )
             );
         } catch (RoutesReloadFailed $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_INTERNAL_SERVER_ERROR,
-                    'Failed to reload plugin routes',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+                    ProblemType::ROUTES_RELOAD_FAILED,
+                    detail: $exception->getMessage()
                 )
             );
         }
@@ -298,19 +290,15 @@ final class PluginsController extends Controller
         } catch (InvalidPluginManifest $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_UNPROCESSABLE_ENTITY,
-                    'Invalid plugin manifest',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/invalid-plugin-manifest']
+                    ProblemType::INVALID_PLUGIN_MANIFEST,
+                    detail: $exception->getMessage()
                 )
             );
         } catch (RoutesReloadFailed $exception) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_INTERNAL_SERVER_ERROR,
-                    'Failed to reload plugin routes',
-                    $exception->getMessage(),
-                    ['type' => 'https://stupidcms.dev/problems/routes-reload-failed']
+                    ProblemType::ROUTES_RELOAD_FAILED,
+                    detail: $exception->getMessage()
                 )
             );
         }
@@ -325,10 +313,9 @@ final class PluginsController extends Controller
         } catch (ModelNotFoundException) {
             throw new HttpResponseException(
                 $this->problem(
-                    Response::HTTP_NOT_FOUND,
-                    'Plugin not found',
-                    sprintf('Plugin with slug "%s" was not found.', $slug),
-                    ['type' => 'https://stupidcms.dev/problems/plugin-not-found']
+                    ProblemType::PLUGIN_NOT_FOUND,
+                    detail: sprintf('Plugin with slug "%s" was not found.', $slug),
+                    title: 'Plugin not found'
                 )
             );
         }

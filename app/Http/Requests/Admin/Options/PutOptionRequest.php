@@ -4,6 +4,8 @@ namespace App\Http\Requests\Admin\Options;
 
 use App\Models\Option;
 use App\Rules\JsonValue;
+use App\Support\Http\ProblemResponseFactory;
+use App\Support\Http\ProblemType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -57,17 +59,12 @@ class PutOptionRequest extends FormRequest
             $code = 'INVALID_OPTION_IDENTIFIER';
         }
 
-        $payload = [
-            'type' => 'https://stupidcms.dev/problems/validation-error',
-            'title' => 'Validation error',
-            'status' => 422,
-            'detail' => 'Invalid option payload.',
-            'code' => $code,
-            'errors' => $errors->messages(),
-        ];
-
-        $response = response()->json($payload, 422);
-        $response->headers->set('Content-Type', 'application/problem+json');
+        $response = ProblemResponseFactory::make(
+            ProblemType::VALIDATION_ERROR,
+            detail: 'Invalid option payload.',
+            extensions: ['errors' => $errors->messages()],
+            code: $code
+        );
 
         throw new HttpResponseException($response);
     }

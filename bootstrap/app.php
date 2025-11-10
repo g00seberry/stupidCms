@@ -1,5 +1,7 @@
 <?php
 
+use App\Support\Http\ProblemResponseFactory;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -73,45 +75,31 @@ return Application::configure(basePath: dirname(__DIR__))
                 $errors = $e->errors();
                 $firstError = collect($errors)->flatten()->filter()->first();
 
-                $response = response()->json([
-                    'type' => 'https://stupidcms.dev/problems/validation-error',
-                    'title' => 'Validation error',
-                    'status' => 422,
-                    'detail' => $firstError ?? 'Validation failed.',
-                    'errors' => $errors,
-                ], 422)->header('Content-Type', 'application/problem+json');
-
-                \App\Support\Http\AdminResponseHeaders::apply($response);
-
-                return $response;
+                return ProblemResponseFactory::make(
+                    ProblemType::VALIDATION_ERROR,
+                    detail: $firstError ?? ProblemType::VALIDATION_ERROR->defaultDetail(),
+                    extensions: ['errors' => $errors]
+                );
             }
         });
 
         // 401 Unauthorized - Authentication errors
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                return response()->json([
-                    'type' => 'about:blank',
-                    'title' => 'Unauthorized',
-                    'status' => 401,
-                    'detail' => $e->getMessage() ?: 'Authentication required.',
-                ], 401)->header('Content-Type', 'application/problem+json');
+                return ProblemResponseFactory::make(
+                    ProblemType::UNAUTHORIZED,
+                    detail: $e->getMessage() ?: ProblemType::UNAUTHORIZED->defaultDetail()
+                );
             }
         });
 
         // 403 Forbidden - Authorization errors (AuthorizationException)
         $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $payload = array_merge(\App\Support\ProblemDetails::forbidden(), [
-                    'detail' => $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_FORBIDDEN,
-                ]);
-
-                $response = response()->json($payload, 403)
-                    ->header('Content-Type', 'application/problem+json');
-
-                \App\Support\Http\AdminResponseHeaders::apply($response);
-
-                return $response;
+                return ProblemResponseFactory::make(
+                    ProblemType::FORBIDDEN,
+                    detail: $e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail()
+                );
             }
         });
 
@@ -119,49 +107,30 @@ return Application::configure(basePath: dirname(__DIR__))
         // Laravel converts AuthorizationException to AccessDeniedHttpException in some cases
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $payload = array_merge(\App\Support\ProblemDetails::forbidden(), [
-                    'detail' => $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_FORBIDDEN,
-                ]);
-
-                $response = response()->json($payload, 403)
-                    ->header('Content-Type', 'application/problem+json');
-
-                \App\Support\Http\AdminResponseHeaders::apply($response);
-
-                return $response;
+                return ProblemResponseFactory::make(
+                    ProblemType::FORBIDDEN,
+                    detail: $e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail()
+                );
             }
         });
 
         // 404 Not Found - Route not found
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $response = response()->json([
-                    'type' => 'https://stupidcms.dev/problems/not-found',
-                    'title' => 'Not Found',
-                    'status' => 404,
-                    'detail' => 'The requested resource was not found.',
-                ], 404);
-                
-                $response->header('Content-Type', 'application/problem+json');
-                \App\Support\Http\AdminResponseHeaders::apply($response);
-                
-                return $response;
+                return ProblemResponseFactory::make(
+                    ProblemType::NOT_FOUND,
+                    detail: 'The requested resource was not found.'
+                );
             }
         });
 
         // 429 Too Many Requests - Rate limit exceeded
         $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $response = response()->json([
-                    'type' => 'about:blank',
-                    'title' => 'Too Many Requests',
-                    'status' => 429,
-                    'detail' => 'Rate limit exceeded.',
-                ], 429)->header('Content-Type', 'application/problem+json');
-
-                \App\Support\Http\AdminResponseHeaders::apply($response);
-
-                return $response;
+                return ProblemResponseFactory::make(
+                    ProblemType::RATE_LIMIT_EXCEEDED,
+                    detail: 'Rate limit exceeded.'
+                );
             }
         });
 
@@ -173,27 +142,21 @@ return Application::configure(basePath: dirname(__DIR__))
                     'sql' => $e->getSql(),
                 ]);
                 
-                return response()->json([
-                    'type' => 'about:blank',
-                    'title' => 'Internal Server Error',
-                    'status' => 500,
-                    'detail' => 'Failed to refresh token due to server error.',
-                ], 500)->header('Content-Type', 'application/problem+json');
+                return ProblemResponseFactory::make(
+                    ProblemType::INTERNAL_ERROR,
+                    detail: 'Failed to refresh token due to server error.'
+                );
             }
         });
 
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $detail = $e->getMessage() ?: \App\Support\ProblemDetails::DETAIL_SERVICE_UNAVAILABLE;
+                $detail = $e->getMessage() ?: ProblemType::SERVICE_UNAVAILABLE->defaultDetail();
 
-                $response = response()->json(
-                    \App\Support\ProblemDetails::serviceUnavailable($detail),
-                    503
-                )->header('Content-Type', 'application/problem+json');
-
-                \App\Support\Http\AdminResponseHeaders::apply($response);
-
-                return $response;
+                return ProblemResponseFactory::make(
+                    ProblemType::SERVICE_UNAVAILABLE,
+                    detail: $detail
+                );
             }
         });
     })->create();
