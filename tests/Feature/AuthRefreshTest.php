@@ -92,6 +92,8 @@ class AuthRefreshTest extends TestCase
             'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
+            'code' => 'UNAUTHORIZED',
+            'detail' => 'Refresh token has been revoked or already used.',
         ]);
 
         // Verify cookies are cleared (expired) on error
@@ -124,6 +126,7 @@ class AuthRefreshTest extends TestCase
             'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
+            'code' => 'UNAUTHORIZED',
             'detail' => 'Missing refresh token.',
         ]);
     }
@@ -140,6 +143,8 @@ class AuthRefreshTest extends TestCase
             'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
+            'code' => 'UNAUTHORIZED',
+            'detail' => 'Invalid or expired refresh token.',
         ]);
     }
 
@@ -170,6 +175,7 @@ class AuthRefreshTest extends TestCase
             'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
+            'code' => 'UNAUTHORIZED',
             'detail' => 'Refresh token has expired.',
         ]);
     }
@@ -201,6 +207,7 @@ class AuthRefreshTest extends TestCase
             'type' => 'https://stupidcms.dev/problems/unauthorized',
             'title' => 'Unauthorized',
             'status' => 401,
+            'code' => 'UNAUTHORIZED',
             'detail' => 'Refresh token has been revoked or already used.',
         ]);
     }

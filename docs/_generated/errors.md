@@ -13,6 +13,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
   "type": "https://api.stupidcms.local/errors/validation",
   "title": "Validation Error",
   "status": 422,
+    "code": "VALIDATION_ERROR",
   "detail": "The given data was invalid.",
   "errors": {
     "field_name": ["Error message"]
@@ -47,6 +48,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/bad-request",
     "title": "Bad Request",
     "status": 400,
+    "code": "BAD_REQUEST",
     "detail": "Invalid JSON syntax"
 }
 ```
@@ -64,6 +66,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/unauthorized",
     "title": "Unauthorized",
     "status": 401,
+    "code": "UNAUTHORIZED",
     "detail": "Invalid or expired token"
 }
 ```
@@ -81,6 +84,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/forbidden",
     "title": "Forbidden",
     "status": 403,
+    "code": "FORBIDDEN",
     "detail": "Insufficient permissions to update this entry"
 }
 ```
@@ -98,6 +102,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/not-found",
     "title": "Not Found",
     "status": 404,
+    "code": "NOT_FOUND",
     "detail": "Entry with slug \"non-existent\" not found"
 }
 ```
@@ -115,6 +120,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/validation",
     "title": "Validation Error",
     "status": 422,
+    "code": "VALIDATION_ERROR",
     "detail": "The given data was invalid.",
     "errors": {
         "title": [
@@ -140,6 +146,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/rate-limit",
     "title": "Too Many Requests",
     "status": 429,
+    "code": "RATE_LIMIT_EXCEEDED",
     "detail": "Rate limit of 60 requests per minute exceeded",
     "retry_after": 60
 }
@@ -158,6 +165,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
     "type": "https://api.stupidcms.local/errors/internal",
     "title": "Internal Server Error",
     "status": 500,
+    "code": "INTERNAL_SERVER_ERROR",
     "detail": "An unexpected error occurred. Please try again later."
 }
 ```

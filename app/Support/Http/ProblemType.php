@@ -100,6 +100,9 @@ enum ProblemType: string
     public function defaultCode(): ?string
     {
         return match ($this) {
+            self::UNAUTHORIZED => 'UNAUTHORIZED',
+            self::FORBIDDEN => 'FORBIDDEN',
+            self::NOT_FOUND => 'NOT_FOUND',
             self::INVALID_OPTION_IDENTIFIER => 'INVALID_OPTION_IDENTIFIER',
             self::INVALID_PLUGIN_MANIFEST => 'INVALID_PLUGIN_MANIFEST',
             self::MEDIA_IN_USE => 'MEDIA_IN_USE',
