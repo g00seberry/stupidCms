@@ -1,10 +1,11 @@
 <?php
 
+use App\Support\Http\HttpProblemException;
 use App\Support\Http\ProblemDetailResolver;
-use App\Support\Http\ProblemException;
 use App\Support\Http\ProblemResponseFactory;
 use App\Support\Http\ProblemType;
 use App\Support\Logging\ProblemReporter;
+use App\Support\Problems\Problem;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -76,16 +77,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            if ($e instanceof ProblemException) {
-                $response = ProblemResponseFactory::make(
-                    $e->type(),
-                    detail: $e->detail(),
-                    extensions: $e->extensions(),
-                    headers: $e->headers(),
-                    title: $e->title(),
-                    status: $e->status(),
-                    code: $e->code(),
-                );
+            if ($e instanceof HttpProblemException) {
+                $response = ProblemResponseFactory::make($e->problem());
 
                 return $e->apply($response);
             }
@@ -94,46 +87,46 @@ return Application::configure(basePath: dirname(__DIR__))
                 $errors = $e->errors();
                 $firstError = collect($errors)->flatten()->filter()->first();
 
-                return ProblemResponseFactory::make(
-                    ProblemType::VALIDATION_ERROR,
-                    detail: $firstError ?? ProblemType::VALIDATION_ERROR->defaultDetail(),
-                    extensions: ['errors' => $errors]
-                );
+                $problem = Problem::of(ProblemType::VALIDATION_ERROR)
+                    ->detail($firstError ?? ProblemType::VALIDATION_ERROR->defaultDetail())
+                    ->extensions(['errors' => $errors]);
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Illuminate\Auth\AuthenticationException) {
-                return ProblemResponseFactory::make(
-                    ProblemType::UNAUTHORIZED,
-                    detail: $e->getMessage() ?: ProblemType::UNAUTHORIZED->defaultDetail()
-                );
+                $problem = Problem::of(ProblemType::UNAUTHORIZED)
+                    ->detail($e->getMessage() ?: ProblemType::UNAUTHORIZED->defaultDetail());
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
-                return ProblemResponseFactory::make(
-                    ProblemType::FORBIDDEN,
-                    detail: $e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail()
-                );
+                $problem = Problem::of(ProblemType::FORBIDDEN)
+                    ->detail($e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail());
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException) {
-                return ProblemResponseFactory::make(
-                    ProblemType::FORBIDDEN,
-                    detail: $e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail()
-                );
+                $problem = Problem::of(ProblemType::FORBIDDEN)
+                    ->detail($e->getMessage() ?: ProblemType::FORBIDDEN->defaultDetail());
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-                return ProblemResponseFactory::make(
-                    ProblemType::NOT_FOUND,
-                    detail: 'The requested resource was not found.'
-                );
+                $problem = Problem::of(ProblemType::NOT_FOUND)
+                    ->detail('The requested resource was not found.');
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Illuminate\Http\Exceptions\ThrottleRequestsException) {
-                return ProblemResponseFactory::make(
-                    ProblemType::RATE_LIMIT_EXCEEDED,
-                    detail: 'Rate limit exceeded.'
-                );
+                $problem = Problem::of(ProblemType::RATE_LIMIT_EXCEEDED)
+                    ->detail('Rate limit exceeded.');
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Illuminate\Database\QueryException) {
@@ -142,19 +135,19 @@ return Application::configure(basePath: dirname(__DIR__))
                     'bindings' => $e->getBindings(),
                 ]);
 
-                return ProblemResponseFactory::make(
-                    ProblemType::INTERNAL_ERROR,
-                    detail: ProblemDetailResolver::resolve($e, ProblemType::INTERNAL_ERROR)
-                );
+                $problem = Problem::of(ProblemType::INTERNAL_ERROR)
+                    ->detail(ProblemDetailResolver::resolve($e, ProblemType::INTERNAL_ERROR));
+
+                return ProblemResponseFactory::make($problem);
             }
 
             if ($e instanceof \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException) {
                 ProblemReporter::report($e, ProblemType::SERVICE_UNAVAILABLE, 'Service unavailable during API request');
 
-                return ProblemResponseFactory::make(
-                    ProblemType::SERVICE_UNAVAILABLE,
-                    detail: ProblemDetailResolver::resolve($e, ProblemType::SERVICE_UNAVAILABLE, allowMessage: true)
-                );
+                $problem = Problem::of(ProblemType::SERVICE_UNAVAILABLE)
+                    ->detail(ProblemDetailResolver::resolve($e, ProblemType::SERVICE_UNAVAILABLE, allowMessage: true));
+
+                return ProblemResponseFactory::make($problem);
             }
 
             return null;

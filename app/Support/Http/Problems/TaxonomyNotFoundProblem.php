@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Support\Http\Problems;
 
-use App\Support\Http\ProblemException;
+use App\Support\Http\HttpProblemException;
 use App\Support\Http\ProblemType;
+use App\Support\Problems\Problem;
 
-final class TaxonomyNotFoundProblem extends ProblemException
+final class TaxonomyNotFoundProblem extends HttpProblemException
 {
     public function __construct(string $slug)
     {
         parent::__construct(
-            ProblemType::NOT_FOUND,
-            detail: sprintf('Taxonomy with slug %s does not exist.', $slug),
-            title: 'Taxonomy not found',
+            Problem::of(ProblemType::NOT_FOUND)
+                ->detail(sprintf('Taxonomy with slug %s does not exist.', $slug))
+                ->title('Taxonomy not found')
         );
     }
 }

@@ -11,7 +11,7 @@ use App\Http\Resources\Admin\TokenRefreshResource;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
-use App\Support\Http\ProblemException;
+use App\Support\Http\HttpProblemException;
 use App\Support\Http\Problems\RefreshTokenInternalProblem;
 use App\Support\Http\Problems\RefreshTokenUnauthorizedProblem;
 use App\Support\JwtCookies;
@@ -117,7 +117,7 @@ final class RefreshController
             });
         } catch (DomainException) {
             throw new RefreshTokenUnauthorizedProblem('Refresh token has been revoked or already used.', $this->clearCookies());
-        } catch (ProblemException $problem) {
+        } catch (HttpProblemException $problem) {
             throw $problem;
         } catch (Throwable $e) {
             report($e);

@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Support\Http\Problems;
 
-use App\Support\Http\ProblemException;
+use App\Support\Http\HttpProblemException;
 use App\Support\Http\ProblemType;
+use App\Support\Problems\Problem;
 
-final class SearchServiceUnavailableProblem extends ProblemException
+final class SearchServiceUnavailableProblem extends HttpProblemException
 {
     public function __construct()
     {
         parent::__construct(
-            ProblemType::SERVICE_UNAVAILABLE,
-            detail: 'Search service is temporarily unavailable.',
+            Problem::of(ProblemType::SERVICE_UNAVAILABLE)
+                ->detail('Search service is temporarily unavailable.')
         );
     }
 }
