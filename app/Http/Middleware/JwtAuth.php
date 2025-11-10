@@ -75,24 +75,24 @@ final class JwtAuth
     }
 
     /**
-     * @var array<string, array{code: string, detail: string}>
+     * @var array<string, array{code: string, log_detail: string}>
      */
     private const FAILURE_RESPONSES = [
         'missing_token' => [
             'code' => 'JWT_ACCESS_TOKEN_MISSING',
-            'detail' => 'Access token cookie is missing.',
+            'log_detail' => 'Access token cookie is missing.',
         ],
         'invalid_token' => [
             'code' => 'JWT_ACCESS_TOKEN_INVALID',
-            'detail' => 'Access token is invalid.',
+            'log_detail' => 'Access token is invalid.',
         ],
         'invalid_subject' => [
             'code' => 'JWT_SUBJECT_INVALID',
-            'detail' => 'Token subject claim is invalid.',
+            'log_detail' => 'Token subject claim is invalid.',
         ],
         'user_not_found' => [
             'code' => 'JWT_USER_NOT_FOUND',
-            'detail' => 'Authenticated user was not found.',
+            'log_detail' => 'Authenticated user was not found.',
         ],
     ];
 
@@ -100,14 +100,16 @@ final class JwtAuth
     {
         $response = self::FAILURE_RESPONSES[$reason] ?? [
             'code' => 'JWT_AUTH_FAILURE',
-            'detail' => ProblemType::UNAUTHORIZED->defaultDetail(),
+            'log_detail' => 'Unknown JWT authentication failure.',
         ];
 
-        report(new JwtAuthenticationException($reason, $response['code'], $response['detail']));
+        $detail = ProblemType::UNAUTHORIZED->defaultDetail();
+
+        report(new JwtAuthenticationException($reason, $response['code'], $response['log_detail']));
 
         return $this->problem(
             ProblemType::UNAUTHORIZED,
-            $response['detail'],
+            $detail,
             headers: [
                 'WWW-Authenticate' => 'Bearer',
                 'Pragma' => 'no-cache',

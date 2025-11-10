@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Domain\Auth\JwtService;
 use App\Http\Middleware\JwtAuth;
 use App\Models\User;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +41,7 @@ final class JwtAuthTest extends TestCase
         $response->assertHeader('Pragma', 'no-cache');
         $response->assertJson([
             'code' => 'JWT_ACCESS_TOKEN_MISSING',
-            'detail' => 'Access token cookie is missing.',
+            'detail' => ProblemType::UNAUTHORIZED->defaultDetail(),
         ]);
     }
 
@@ -52,7 +53,7 @@ final class JwtAuthTest extends TestCase
         $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertJson([
             'code' => 'JWT_ACCESS_TOKEN_INVALID',
-            'detail' => 'Access token is invalid.',
+            'detail' => ProblemType::UNAUTHORIZED->defaultDetail(),
         ]);
     }
 
@@ -88,7 +89,7 @@ final class JwtAuthTest extends TestCase
         $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertJson([
             'code' => 'JWT_USER_NOT_FOUND',
-            'detail' => 'Authenticated user was not found.',
+            'detail' => ProblemType::UNAUTHORIZED->defaultDetail(),
         ]);
     }
 
@@ -107,7 +108,7 @@ final class JwtAuthTest extends TestCase
         $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertJson([
             'code' => 'JWT_SUBJECT_INVALID',
-            'detail' => 'Token subject claim is invalid.',
+            'detail' => ProblemType::UNAUTHORIZED->defaultDetail(),
         ]);
     }
 
