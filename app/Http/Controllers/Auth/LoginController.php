@@ -11,8 +11,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Admin\LoginResource;
 use App\Models\Audit;
 use App\Models\User;
-use App\Support\Http\ProblemType;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Support\Http\Problems\InvalidCredentialsProblem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -61,12 +60,7 @@ final class LoginController
         if (! $user || ! Hash::check($password, $user->password)) {
             $this->logAudit('login_failed', null, $request);
 
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::UNAUTHORIZED,
-                    detail: 'Invalid credentials.'
-                )
-            );
+            throw new InvalidCredentialsProblem();
         }
 
         $this->logAudit('login', (int) $user->id, $request);

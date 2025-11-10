@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Http\ProblemException;
 use App\Support\Http\ProblemResponseFactory;
 use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Application;
@@ -69,6 +70,22 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         // Global RFC 7807 (Problem Details) handler for API routes
         
+        $exceptions->render(function (ProblemException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                $response = ProblemResponseFactory::make(
+                    $e->type(),
+                    detail: $e->detail(),
+                    extensions: $e->extensions(),
+                    headers: $e->headers(),
+                    title: $e->title(),
+                    status: $e->status(),
+                    code: $e->code(),
+                );
+
+                return $e->apply($response);
+            }
+        });
+
         // 422 Unprocessable Entity - Validation errors
         $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {

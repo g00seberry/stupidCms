@@ -2,9 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Http\Problems\CsrfTokenMismatchProblem;
 use App\Support\JwtCookies;
-use App\Support\Http\ProblemResponseFactory;
-use App\Support\Http\ProblemType;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -63,12 +62,7 @@ final class VerifyApiCsrf
             // Issue a new CSRF token on error to help client recover
             $newToken = Str::random(40);
 
-            $response = ProblemResponseFactory::make(
-                ProblemType::CSRF_MISMATCH,
-                headers: ['Vary' => 'Origin']
-            )->withCookie(JwtCookies::csrf($newToken));
-
-            return $response;
+            throw new CsrfTokenMismatchProblem(JwtCookies::csrf($newToken));
         }
 
         return $next($request);

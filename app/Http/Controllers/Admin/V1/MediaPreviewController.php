@@ -8,9 +8,11 @@ use App\Domain\Media\Services\OnDemandVariantService;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\Media;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\InvalidMediaVariantProblem;
+use App\Support\Http\Problems\MediaDownloadProblem;
+use App\Support\Http\Problems\MediaNotFoundProblem;
+use App\Support\Http\Problems\MediaVariantGenerationProblem;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -72,13 +74,7 @@ class MediaPreviewController extends Controller
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::NOT_FOUND,
-                    detail: "Media with ID {$mediaId} does not exist.",
-                    title: 'Media not found'
-                )
-            );
+            throw new MediaNotFoundProblem($mediaId);
         }
 
         $this->authorize('view', $media);
@@ -86,23 +82,11 @@ class MediaPreviewController extends Controller
         try {
             $variantModel = $this->variantService->ensureVariant($media, $variant);
         } catch (InvalidArgumentException $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::VALIDATION_ERROR,
-                    detail: $exception->getMessage(),
-                    title: 'Invalid variant'
-                )
-            );
+            throw new InvalidMediaVariantProblem($exception->getMessage());
         } catch (Throwable $exception) {
             report($exception);
 
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::MEDIA_VARIANT_ERROR,
-                    detail: 'Failed to generate media variant.',
-                    title: 'Internal Server Error'
-                )
-            );
+            throw new MediaVariantGenerationProblem();
         }
 
         $url = $this->temporaryUrl($media->disk, $variantModel->path);
@@ -146,13 +130,7 @@ class MediaPreviewController extends Controller
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::NOT_FOUND,
-                    detail: "Media with ID {$mediaId} does not exist.",
-                    title: 'Media not found'
-                )
-            );
+            throw new MediaNotFoundProblem($mediaId);
         }
 
         $this->authorize('view', $media);
@@ -162,13 +140,7 @@ class MediaPreviewController extends Controller
         } catch (Throwable $exception) {
             report($exception);
 
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::MEDIA_DOWNLOAD_ERROR,
-                    detail: 'Failed to generate download URL.',
-                    title: 'Internal Server Error'
-                )
-            );
+            throw new MediaDownloadProblem();
         }
 
         return redirect()->away($url);

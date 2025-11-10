@@ -12,8 +12,7 @@ use App\Http\Requests\Admin\SyncTermsRequest;
 use App\Http\Resources\Admin\EntryTermsResource;
 use App\Models\Entry;
 use App\Models\Term;
-use App\Support\Http\ProblemType;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Support\Http\Problems\EntryNotFoundProblem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -318,13 +317,7 @@ class EntryTermsController extends Controller
 
     private function throwEntryNotFound(int $entryId): never
     {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Entry with ID {$entryId} does not exist.",
-                title: 'Entry not found'
-            )
-        );
+        throw new EntryNotFoundProblem($entryId);
     }
 }
 

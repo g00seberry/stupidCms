@@ -11,9 +11,10 @@ use App\Http\Resources\Admin\TokenRefreshResource;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
+use App\Support\Http\Problems\RefreshTokenInternalProblem;
+use App\Support\Http\Problems\RefreshTokenUnauthorizedProblem;
 use App\Support\JwtCookies;
 use DomainException;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -114,13 +115,11 @@ final class RefreshController
                 return [$access, $newRefresh];
             });
         } catch (DomainException) {
-            $this->throwUnauthorized('Refresh token has been revoked or already used.');
+            throw new RefreshTokenUnauthorizedProblem('Refresh token has been revoked or already used.', $this->clearCookies());
         } catch (Throwable $e) {
             report($e);
 
-            throw new HttpResponseException(
-                $this->internalError('Failed to refresh token due to server error.')
-            );
+            throw new RefreshTokenInternalProblem();
         }
 
         return new TokenRefreshResource($accessToken, $refreshToken);
@@ -131,13 +130,7 @@ final class RefreshController
      */
     private function throwUnauthorized(string $detail): never
     {
-        $response = $this->unauthorized($detail);
-
-        foreach ($this->clearCookies() as $cookie) {
-            $response->headers->setCookie($cookie);
-        }
-
-        throw new HttpResponseException($response);
+        throw new RefreshTokenUnauthorizedProblem($detail, $this->clearCookies());
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Models\MediaVariant;
 use App\Models\PostType;
 use App\Models\User;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -179,6 +180,21 @@ class MediaApiTest extends TestCase
         $this->assertDatabaseHas('media', [
             'id' => $media->id,
             'deleted_at' => null,
+        ]);
+    }
+
+    public function test_restore_missing_media_returns_problem_payload(): void
+    {
+        $admin = $this->admin(['media.read', 'media.restore']);
+
+        $response = $this->postJsonAsAdmin('/api/v1/admin/media/missing-id/restore', [], $admin);
+
+        $response->assertStatus(404);
+        $response->assertHeader('Content-Type', 'application/problem+json');
+        $response->assertJson([
+            'type' => ProblemType::NOT_FOUND->value,
+            'title' => 'Media not found',
+            'detail' => 'Deleted media with ID missing-id does not exist.',
         ]);
     }
 

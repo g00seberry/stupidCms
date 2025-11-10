@@ -3,11 +3,9 @@
 namespace App\Http\Requests\Admin\Options;
 
 use App\Models\Option;
-use App\Support\Http\ProblemResponseFactory;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\InvalidOptionFiltersProblem;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class IndexOptionsRequest extends FormRequest
 {
@@ -43,14 +41,7 @@ class IndexOptionsRequest extends FormRequest
         $errors = $validator->errors();
         $code = $errors->has('namespace') ? 'INVALID_OPTION_IDENTIFIER' : 'INVALID_OPTION_FILTERS';
 
-        $response = ProblemResponseFactory::make(
-            ProblemType::VALIDATION_ERROR,
-            detail: 'Invalid option filter parameters.',
-            extensions: ['errors' => $errors->messages()],
-            code: $code
-        );
-
-        throw new HttpResponseException($response);
+        throw new InvalidOptionFiltersProblem($errors->messages(), $code);
     }
 }
 

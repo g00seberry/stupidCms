@@ -15,11 +15,12 @@ use App\Http\Resources\Admin\TermResource;
 use App\Models\Entry;
 use App\Models\Taxonomy;
 use App\Models\Term;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\TaxonomyNotFoundProblem;
+use App\Support\Http\Problems\TermNotFoundProblem;
+use App\Support\Http\Problems\TermStillAttachedProblem;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use App\Support\Http\AdminResponse;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -407,13 +408,7 @@ class TermController extends Controller
 
         $hasEntries = $termModel->entries()->exists();
         if ($hasEntries && ! $forceDetach) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::CONFLICT,
-                    detail: 'Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.',
-                    title: 'Term still attached'
-                )
-            );
+            throw new TermStillAttachedProblem();
         }
 
         DB::transaction(function () use ($termModel, $forceDetach) {
@@ -494,24 +489,12 @@ class TermController extends Controller
 
     private function throwTaxonomyNotFound(string $slug): never
     {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Taxonomy with slug {$slug} does not exist.",
-                title: 'Taxonomy not found'
-            )
-        );
+        throw new TaxonomyNotFoundProblem($slug);
     }
 
     private function throwTermNotFound(int $termId): never
     {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Term with ID {$termId} does not exist.",
-                title: 'Term not found'
-            )
-        );
+        throw new TermNotFoundProblem($termId);
     }
 }
 

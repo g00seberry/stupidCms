@@ -3,11 +3,9 @@
 namespace App\Http\Requests\Admin\Media;
 
 use App\Models\Media;
-use App\Support\Http\ProblemResponseFactory;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\InvalidMediaFiltersProblem;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class IndexMediaRequest extends FormRequest
 {
@@ -36,12 +34,6 @@ class IndexMediaRequest extends FormRequest
 
     protected function failedValidation(Validator $validator): void
     {
-        $response = ProblemResponseFactory::make(
-            ProblemType::VALIDATION_ERROR,
-            detail: 'Invalid media filter parameters.',
-            extensions: ['errors' => $validator->errors()->messages()]
-        );
-
-        throw new HttpResponseException($response);
+        throw new InvalidMediaFiltersProblem($validator->errors()->messages());
     }
 }

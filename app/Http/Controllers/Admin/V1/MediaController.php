@@ -16,8 +16,9 @@ use App\Models\Entry;
 use App\Models\Media;
 use App\Support\Http\AdminResponse;
 use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\MediaNotFoundProblem;
+use App\Support\Http\Problems\MissingMediaFileProblem;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
@@ -203,15 +204,7 @@ class MediaController extends Controller
         $file = $request->file('file');
 
         if (! $file) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::VALIDATION_ERROR,
-                    detail: 'File payload is missing.',
-                    extensions: [
-                        'errors' => ['file' => ['File payload is required.']],
-                    ]
-                )
-            );
+            throw new MissingMediaFileProblem();
         }
 
         $media = $this->storeAction->execute($file, $validated);
@@ -420,13 +413,7 @@ class MediaController extends Controller
         $media = Media::onlyTrashed()->find($mediaId);
 
         if (! $media) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::NOT_FOUND,
-                    detail: "Deleted media with ID {$mediaId} does not exist.",
-                    title: 'Media not found'
-                )
-            );
+            throw new MediaNotFoundProblem($mediaId, 'deleted');
         }
 
         $this->authorize('restore', $media);
@@ -439,13 +426,7 @@ class MediaController extends Controller
 
     private function notFound(string $mediaId): never
     {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Media with ID {$mediaId} does not exist.",
-                title: 'Media not found'
-            )
-        );
+        throw new MediaNotFoundProblem($mediaId);
     }
 }
 

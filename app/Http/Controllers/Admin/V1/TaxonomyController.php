@@ -14,10 +14,10 @@ use App\Http\Resources\Admin\TaxonomyResource;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\TaxonomyHasTermsProblem;
+use App\Support\Http\Problems\TaxonomyNotFoundProblem;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -346,13 +346,7 @@ class TaxonomyController extends Controller
 
         $termsCount = $taxonomy->terms()->count();
         if ($termsCount > 0 && ! $force) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::CONFLICT,
-                    detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
-                    title: 'Taxonomy has terms'
-                )
-            );
+            throw new TaxonomyHasTermsProblem();
         }
 
         DB::transaction(function () use ($taxonomy, $force) {
@@ -426,13 +420,7 @@ class TaxonomyController extends Controller
 
     private function throwNotFound(string $slug): never
     {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Taxonomy with slug {$slug} does not exist.",
-                title: 'Taxonomy not found'
-            )
-        );
+        throw new TaxonomyNotFoundProblem($slug);
     }
 }
 

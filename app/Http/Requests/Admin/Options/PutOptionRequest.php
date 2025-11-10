@@ -4,11 +4,10 @@ namespace App\Http\Requests\Admin\Options;
 
 use App\Models\Option;
 use App\Rules\JsonValue;
-use App\Support\Http\ProblemResponseFactory;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\InvalidOptionIdentifierProblem;
+use App\Support\Http\Problems\InvalidOptionPayloadProblem;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PutOptionRequest extends FormRequest
 {
@@ -59,14 +58,11 @@ class PutOptionRequest extends FormRequest
             $code = 'INVALID_OPTION_IDENTIFIER';
         }
 
-        $response = ProblemResponseFactory::make(
-            ProblemType::VALIDATION_ERROR,
-            detail: 'Invalid option payload.',
-            extensions: ['errors' => $errors->messages()],
-            code: $code
-        );
+        if ($code === 'INVALID_OPTION_IDENTIFIER') {
+            throw new InvalidOptionIdentifierProblem($errors->messages());
+        }
 
-        throw new HttpResponseException($response);
+        throw new InvalidOptionPayloadProblem($errors->messages(), $code);
     }
 
     public function option(): Option

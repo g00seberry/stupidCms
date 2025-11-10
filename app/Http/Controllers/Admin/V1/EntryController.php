@@ -14,11 +14,11 @@ use App\Http\Resources\Admin\EntryResource;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\EntryNotFoundProblem;
+use App\Support\Http\Problems\InvalidEntryPostTypeProblem;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -299,15 +299,7 @@ class EntryController extends Controller
         $postType = PostType::query()->where('slug', $validated['post_type'])->first();
         
         if (! $postType) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::VALIDATION_ERROR,
-                    detail: 'The specified post type does not exist.',
-                    extensions: [
-                        'errors' => ['post_type' => ['The specified post type does not exist.']],
-                    ]
-                )
-            );
+            throw new InvalidEntryPostTypeProblem();
         }
 
         // Auto-generate slug if not provided
@@ -541,13 +533,7 @@ class EntryController extends Controller
         $entry = Entry::query()->onlyTrashed()->find($id);
 
         if (! $entry) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::NOT_FOUND,
-                    detail: "Trashed entry with ID {$id} does not exist.",
-                    title: 'Entry not found'
-                )
-            );
+            throw new EntryNotFoundProblem($id, true);
         }
 
         $this->authorize('restore', $entry);
@@ -589,13 +575,7 @@ class EntryController extends Controller
 
     private function throwEntryNotFound(int $id): never
     {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Entry with ID {$id} does not exist.",
-                title: 'Entry not found'
-            )
-        );
+        throw new EntryNotFoundProblem($id);
     }
 }
 

@@ -9,8 +9,7 @@ use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\UpdatePostTypeRequest;
 use App\Http\Resources\Admin\PostTypeResource;
 use App\Models\PostType;
-use App\Support\Http\ProblemType;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Support\Http\Problems\PostTypeNotFoundProblem;
 use Illuminate\Support\Facades\DB;
 
 class PostTypeController extends Controller
@@ -53,7 +52,7 @@ class PostTypeController extends Controller
         $type = PostType::query()->where('slug', $slug)->first();
 
         if (! $type) {
-            $this->throwNotFound($slug);
+            throw new PostTypeNotFoundProblem($slug);
         }
 
         return new PostTypeResource($type);
@@ -123,15 +122,5 @@ class PostTypeController extends Controller
         return new PostTypeResource($type);
     }
 
-    private function throwNotFound(string $slug): never
-    {
-        throw new HttpResponseException(
-            $this->problem(
-                ProblemType::NOT_FOUND,
-                detail: "Unknown post type slug: {$slug}",
-                title: 'PostType not found'
-            )
-        );
-    }
 }
 

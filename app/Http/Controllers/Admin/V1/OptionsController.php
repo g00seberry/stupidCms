@@ -13,10 +13,9 @@ use App\Http\Resources\Admin\OptionCollection;
 use App\Http\Resources\Admin\OptionResource;
 use App\Models\Option;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\ProblemType;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Support\Http\Problems\InvalidOptionIdentifierProblem;
+use App\Support\Http\Problems\OptionNotFoundProblem;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -164,7 +163,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
+            throw new OptionNotFoundProblem($namespace, $key);
         }
 
         $this->authorize('view', $option);
@@ -269,7 +268,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
+            throw new OptionNotFoundProblem($namespace, $key);
         }
 
         $this->authorize('delete', $option);
@@ -277,7 +276,7 @@ class OptionsController extends Controller
         $deleted = $this->repository->delete($namespace, $key);
 
         if (! $deleted) {
-            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
+            throw new OptionNotFoundProblem($namespace, $key);
         }
 
         return AdminResponse::noContent();
@@ -324,7 +323,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
+            throw new OptionNotFoundProblem($namespace, $key);
         }
 
         $this->authorize('restore', $option);
@@ -334,7 +333,7 @@ class OptionsController extends Controller
             : $option;
 
         if (! $restored) {
-            throw new HttpResponseException($this->optionNotFoundProblem($namespace, $key));
+            throw new OptionNotFoundProblem($namespace, $key);
         }
 
         return new OptionResource($restored);
@@ -356,22 +355,7 @@ class OptionsController extends Controller
             return;
         }
 
-        throw new HttpResponseException($this->problem(
-            ProblemType::INVALID_OPTION_IDENTIFIER,
-            extensions: [
-                'errors' => $validator->errors()->toArray(),
-            ]
-        ));
-    }
-
-    private function optionNotFoundProblem(string $namespace, string $key): JsonResponse
-    {
-        return $this->problem(
-            ProblemType::NOT_FOUND,
-            detail: sprintf('Option "%s/%s" was not found.', $namespace, $key),
-            title: 'Option not found',
-            code: 'NOT_FOUND'
-        );
+        throw new InvalidOptionIdentifierProblem($validator->errors()->toArray());
     }
 }
 
