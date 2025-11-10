@@ -3,11 +3,9 @@
 namespace App\Http\Requests\Admin\Media;
 
 use App\Models\Media;
-use App\Support\Http\ProblemResponseFactory;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\InvalidMediaUpdatePayloadProblem;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateMediaRequest extends FormRequest
 {
@@ -39,12 +37,6 @@ class UpdateMediaRequest extends FormRequest
 
     protected function failedValidation(Validator $validator): void
     {
-        $response = ProblemResponseFactory::make(
-            ProblemType::VALIDATION_ERROR,
-            detail: 'The media update payload failed validation constraints.',
-            extensions: ['errors' => $validator->errors()->messages()]
-        );
-
-        throw new HttpResponseException($response);
+        throw new InvalidMediaUpdatePayloadProblem($validator->errors()->messages());
     }
 }

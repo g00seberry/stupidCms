@@ -8,9 +8,8 @@ use App\Domain\Search\Jobs\ReindexSearchJob;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Problems;
 use App\Models\Entry;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\SearchServiceUnavailableProblem;
 use App\Http\Resources\Admin\SearchReindexAcceptedResource;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Str;
 
@@ -48,12 +47,7 @@ final class SearchAdminController extends Controller
     public function reindex(): SearchReindexAcceptedResource
     {
         if (! config('search.enabled')) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::SERVICE_UNAVAILABLE,
-                    detail: 'Search service is temporarily unavailable.'
-                )
-            );
+            throw new SearchServiceUnavailableProblem();
         }
 
         $trackingId = (string) Str::ulid();

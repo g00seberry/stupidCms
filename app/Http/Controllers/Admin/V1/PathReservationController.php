@@ -14,10 +14,12 @@ use App\Http\Requests\DestroyPathReservationRequest;
 use App\Http\Requests\StorePathReservationRequest;
 use App\Http\Resources\Admin\PathReservationCollection;
 use App\Http\Resources\Admin\PathReservationMessageResource;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\ForbiddenReservationReleaseProblem;
+use App\Support\Http\Problems\InvalidPathReservationProblem;
+use App\Support\Http\Problems\MissingReservationPathProblem;
+use App\Support\Http\Problems\PathAlreadyReservedProblem;
 use App\Models\Audit;
 use App\Models\ReservedRoute;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -76,24 +78,9 @@ class PathReservationController extends Controller
                 $validated['reason'] ?? null
             );
         } catch (InvalidPathException $e) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::VALIDATION_ERROR,
-                    detail: $e->getMessage(),
-                    title: 'Unprocessable Entity'
-                )
-            );
+            throw new InvalidPathReservationProblem($e->getMessage());
         } catch (PathAlreadyReservedException $e) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::CONFLICT,
-                    detail: $e->getMessage(),
-                    extensions: [
-                        'path' => $e->path,
-                        'owner' => $e->owner,
-                    ]
-                )
-            );
+            throw new PathAlreadyReservedProblem($e->getMessage(), $e->path, $e->owner);
         }
 
         // Аудит: логируем резервирование
@@ -151,28 +138,13 @@ class PathReservationController extends Controller
         // Если path не в URL (пустой или невалидный), берём из body
         $actualPath = $request->getPath();
         if (empty($actualPath)) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::VALIDATION_ERROR,
-                    detail: 'Path is required either in URL parameter or request body.'
-                )
-            );
+            throw new MissingReservationPathProblem();
         }
 
         try {
             $this->service->releasePath($actualPath, $validated['source']);
         } catch (ForbiddenReservationRelease $e) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::FORBIDDEN,
-                    detail: $e->getMessage(),
-                    extensions: [
-                        'path' => $e->path,
-                        'owner' => $e->owner,
-                        'attempted_source' => $e->attemptedSource,
-                    ]
-                )
-            );
+            throw new ForbiddenReservationReleaseProblem($e->getMessage(), $e->path, $e->owner, $e->attemptedSource);
         }
 
         // Аудит: логируем освобождение

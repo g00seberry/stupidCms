@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin\Options;
 
 use App\Models\Option;
 use App\Models\User;
+use App\Support\Http\ProblemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -181,6 +182,25 @@ class OptionsApiTest extends TestCase
 
         $response->assertStatus(422);
         $this->assertSame('INVALID_OPTION_IDENTIFIER', $response->json('code'));
+    }
+
+    public function test_show_missing_option_renders_problem_exception(): void
+    {
+        $admin = $this->adminWithPermissions(['options.read']);
+
+        $response = $this->getJsonAsAdmin(
+            '/api/v1/admin/options/site/missing',
+            $admin
+        );
+
+        $response->assertStatus(404);
+        $response->assertHeader('Content-Type', 'application/problem+json');
+        $response->assertJson([
+            'type' => ProblemType::NOT_FOUND->value,
+            'title' => 'Option not found',
+            'detail' => 'Option "site/missing" was not found.',
+            'code' => 'NOT_FOUND',
+        ]);
     }
 
     public function test_it_observes_permissions(): void

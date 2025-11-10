@@ -17,10 +17,13 @@ use App\Http\Resources\PluginCollection;
 use App\Http\Resources\PluginResource;
 use App\Http\Resources\PluginSyncResource;
 use App\Models\Plugin;
-use App\Support\Http\ProblemType;
+use App\Support\Http\Problems\InvalidPluginManifestProblem;
+use App\Support\Http\Problems\PluginAlreadyDisabledProblem;
+use App\Support\Http\Problems\PluginAlreadyEnabledProblem;
+use App\Support\Http\Problems\PluginNotFoundProblem;
+use App\Support\Http\Problems\RoutesReloadFailedProblem;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 
@@ -160,19 +163,9 @@ final class PluginsController extends Controller
         try {
             $plugin = $activator->enable($plugin);
         } catch (PluginAlreadyEnabledException $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::PLUGIN_ALREADY_ENABLED,
-                    detail: $exception->getMessage()
-                )
-            );
+            throw new PluginAlreadyEnabledProblem($exception->getMessage());
         } catch (RoutesReloadFailed $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::ROUTES_RELOAD_FAILED,
-                    detail: $exception->getMessage()
-                )
-            );
+            throw new RoutesReloadFailedProblem($exception->getMessage());
         }
 
         return new PluginResource($plugin);
@@ -226,19 +219,9 @@ final class PluginsController extends Controller
         try {
             $plugin = $activator->disable($plugin);
         } catch (PluginAlreadyDisabledException $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::PLUGIN_ALREADY_DISABLED,
-                    detail: $exception->getMessage()
-                )
-            );
+            throw new PluginAlreadyDisabledProblem($exception->getMessage());
         } catch (RoutesReloadFailed $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::ROUTES_RELOAD_FAILED,
-                    detail: $exception->getMessage()
-                )
-            );
+            throw new RoutesReloadFailedProblem($exception->getMessage());
         }
 
         return new PluginResource($plugin);
@@ -288,19 +271,9 @@ final class PluginsController extends Controller
         try {
             $summary = $synchronizer->sync();
         } catch (InvalidPluginManifest $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::INVALID_PLUGIN_MANIFEST,
-                    detail: $exception->getMessage()
-                )
-            );
+            throw new InvalidPluginManifestProblem($exception->getMessage());
         } catch (RoutesReloadFailed $exception) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::ROUTES_RELOAD_FAILED,
-                    detail: $exception->getMessage()
-                )
-            );
+            throw new RoutesReloadFailedProblem($exception->getMessage());
         }
 
         return new PluginSyncResource($summary);
@@ -311,13 +284,7 @@ final class PluginsController extends Controller
         try {
             return Plugin::query()->where('slug', $slug)->firstOrFail();
         } catch (ModelNotFoundException) {
-            throw new HttpResponseException(
-                $this->problem(
-                    ProblemType::PLUGIN_NOT_FOUND,
-                    detail: sprintf('Plugin with slug "%s" was not found.', $slug),
-                    title: 'Plugin not found'
-                )
-            );
+            throw new PluginNotFoundProblem($slug);
         }
     }
 }
