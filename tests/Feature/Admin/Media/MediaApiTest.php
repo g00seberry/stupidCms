@@ -159,6 +159,7 @@ class MediaApiTest extends TestCase
         $response = $this->deleteJsonAsAdmin("/api/v1/admin/media/{$media->id}", [], $admin);
 
         $response->assertStatus(409);
+        $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertJson([
             'type' => 'https://stupidcms.dev/problems/media-in-use',
             'status' => 409,

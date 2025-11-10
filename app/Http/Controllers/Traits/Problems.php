@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Traits;
 
-use App\Support\Http\ProblemResponseFactory;
 use App\Support\Http\ProblemType;
 use App\Support\Problems\Problem;
-use Illuminate\Http\JsonResponse;
 
 /**
  * RFC 7807 (Problem Details for HTTP APIs) helper trait.
@@ -17,11 +15,11 @@ use Illuminate\Http\JsonResponse;
 trait Problems
 {
     /**
-     * Generate a standardized RFC 7807 problem+json response.
+     * Throw a standardized RFC 7807 problem+json response.
      *
      * @param array<string, mixed> $extensions Additional problem-specific extension fields
      * @param array<string, string> $headers Extra headers to append to the response
-     * @return JsonResponse
+     * @return never
      */
     protected function problem(
         ProblemType $type,
@@ -31,7 +29,7 @@ trait Problems
         ?string $title = null,
         ?int $status = null,
         ?string $code = null,
-    ): JsonResponse {
+    ): never {
         $problem = Problem::of($type);
 
         if ($detail !== null) {
@@ -58,7 +56,7 @@ trait Problems
             $problem = $problem->code($code);
         }
 
-        return ProblemResponseFactory::make($problem);
+        $problem->throw();
     }
 
     /**
@@ -67,11 +65,11 @@ trait Problems
      * @param string|null $detail
      * @param array<string, mixed> $extensions
      * @param array<string, string> $headers
-     * @return JsonResponse
+     * @return never
      */
-    protected function unauthorized(?string $detail = null, array $extensions = [], array $headers = []): JsonResponse
+    protected function unauthorized(?string $detail = null, array $extensions = [], array $headers = []): never
     {
-        return $this->problem(ProblemType::UNAUTHORIZED, $detail, $extensions, $headers);
+        $this->problem(ProblemType::UNAUTHORIZED, $detail, $extensions, $headers);
     }
 
     /**
@@ -80,11 +78,11 @@ trait Problems
      * @param string|null $detail
      * @param array<string, mixed> $extensions
      * @param array<string, string> $headers
-     * @return JsonResponse
+     * @return never
      */
-    protected function forbidden(?string $detail = null, array $extensions = [], array $headers = []): JsonResponse
+    protected function forbidden(?string $detail = null, array $extensions = [], array $headers = []): never
     {
-        return $this->problem(ProblemType::FORBIDDEN, $detail, $extensions, $headers);
+        $this->problem(ProblemType::FORBIDDEN, $detail, $extensions, $headers);
     }
 
     /**
@@ -92,11 +90,11 @@ trait Problems
      *
      * @param string $detail
      * @param array<string, mixed> $extensions
-     * @return JsonResponse
+     * @return never
      */
-    protected function internalError(string $detail, array $extensions = []): JsonResponse
+    protected function internalError(string $detail, array $extensions = []): never
     {
-        return $this->problem(ProblemType::INTERNAL_ERROR, $detail, $extensions);
+        $this->problem(ProblemType::INTERNAL_ERROR, $detail, $extensions);
     }
 
     /**
@@ -104,11 +102,11 @@ trait Problems
      *
      * @param string $detail
      * @param array<string, mixed> $extensions
-     * @return JsonResponse
+     * @return never
      */
-    protected function tooManyRequests(string $detail, array $extensions = []): JsonResponse
+    protected function tooManyRequests(string $detail, array $extensions = []): never
     {
-        return $this->problem(ProblemType::RATE_LIMIT_EXCEEDED, $detail, $extensions);
+        $this->problem(ProblemType::RATE_LIMIT_EXCEEDED, $detail, $extensions);
     }
 }
 

@@ -11,11 +11,9 @@ use App\Http\Resources\Admin\TokenRefreshResource;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
-use App\Support\Http\HttpProblemException;
 use App\Support\Http\Problems\RefreshTokenInternalProblem;
 use App\Support\Http\Problems\RefreshTokenUnauthorizedProblem;
 use App\Support\JwtCookies;
-use DomainException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -70,33 +68,34 @@ final class RefreshController
             $this->throwUnauthorized('Invalid or expired refresh token.');
         }
 
+        $tokenDto = $this->repo->find($claims['jti']);
+        if (! $tokenDto) {
+            $this->throwUnauthorized('Refresh token not found.');
+        }
+
+        if ($tokenDto->user_id !== (int) $claims['sub']) {
+            $this->throwUnauthorized('Token user mismatch.');
+        }
+
+        if ($tokenDto->used_at || $tokenDto->revoked_at) {
+            $this->handleReuseAttack((int) $claims['sub'], $claims['jti'], $request);
+            $this->throwUnauthorized('Refresh token has been revoked or already used.');
+        }
+
+        if (Carbon::now('UTC')->gte($tokenDto->expires_at)) {
+            $this->throwUnauthorized('Refresh token has expired.');
+        }
+
         try {
-            $tokenDto = $this->repo->find($claims['jti']);
-            if (! $tokenDto) {
-                $this->throwUnauthorized('Refresh token not found.');
-            }
-
-            if ($tokenDto->user_id !== (int) $claims['sub']) {
-                $this->throwUnauthorized('Token user mismatch.');
-            }
-
-            if ($tokenDto->used_at || $tokenDto->revoked_at) {
-                $this->handleReuseAttack((int) $claims['sub'], $claims['jti'], $request);
-                $this->throwUnauthorized('Refresh token has been revoked or already used.');
-            }
-
-            if (Carbon::now('UTC')->gte($tokenDto->expires_at)) {
-                $this->throwUnauthorized('Refresh token has expired.');
-            }
-
-            [$accessToken, $refreshToken] = DB::transaction(function () use ($claims, $request): array {
+            $result = DB::transaction(function () use ($claims, $request): ?array {
                 $userId = (int) $claims['sub'];
 
                 $updated = $this->repo->markUsedConditionally($claims['jti']);
 
                 if ($updated !== 1) {
                     $this->handleReuseAttack($userId, $claims['jti'], $request);
-                    throw new DomainException('Replay/invalid refresh token');
+
+                    return null;
                 }
 
                 $access = $this->jwt->issueAccessToken($userId, ['scp' => ['api']]);
@@ -115,15 +114,17 @@ final class RefreshController
 
                 return [$access, $newRefresh];
             });
-        } catch (DomainException) {
-            throw new RefreshTokenUnauthorizedProblem('Refresh token has been revoked or already used.', $this->clearCookies());
-        } catch (HttpProblemException $problem) {
-            throw $problem;
         } catch (Throwable $e) {
             report($e);
 
             throw new RefreshTokenInternalProblem();
         }
+
+        if ($result === null) {
+            $this->throwUnauthorized('Refresh token has been revoked or already used.');
+        }
+
+        [$accessToken, $refreshToken] = $result;
 
         return new TokenRefreshResource($accessToken, $refreshToken);
     }
