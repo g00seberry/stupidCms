@@ -362,7 +362,7 @@ class MediaController extends Controller
             ->get();
 
         if ($references->isNotEmpty()) {
-            return $this->problem(
+            $this->problem(
                 ProblemType::MEDIA_IN_USE,
                 extensions: [
                     'references' => $references->map(fn ($entry) => [

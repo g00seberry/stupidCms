@@ -14,7 +14,6 @@ use App\Http\Resources\PluginSyncResource;
 use App\Models\Plugin;
 use App\Support\Http\Problems\PluginNotFoundProblem;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 
@@ -253,11 +252,13 @@ final class PluginsController extends Controller
 
     private function findPluginOrFail(string $slug): Plugin
     {
-        try {
-            return Plugin::query()->where('slug', $slug)->firstOrFail();
-        } catch (ModelNotFoundException) {
+        $plugin = Plugin::query()->where('slug', $slug)->first();
+
+        if (! $plugin) {
             throw new PluginNotFoundProblem($slug);
         }
+
+        return $plugin;
     }
 }
 
