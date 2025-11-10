@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Auth\RefreshRequest;
 use App\Http\Resources\Admin\TokenRefreshResource;
 use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
-use App\Support\Http\Problems\RefreshTokenInternalProblem;
-use App\Support\Http\Problems\RefreshTokenUnauthorizedProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Support\JwtCookies;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -21,7 +21,8 @@ use Throwable;
 
 final class RefreshController
 {
-    use Problems;
+    use ThrowsErrors;
+
     public function __construct(
         private readonly JwtService $jwt,
         private readonly RefreshTokenRepository $repo,
@@ -117,7 +118,7 @@ final class RefreshController
         } catch (Throwable $e) {
             report($e);
 
-            throw new RefreshTokenInternalProblem();
+            $this->throwError(ErrorCode::INTERNAL_SERVER_ERROR, 'Failed to refresh token due to server error.');
         }
 
         if ($result === null) {
@@ -134,7 +135,19 @@ final class RefreshController
      */
     private function throwUnauthorized(string $detail): never
     {
-        throw new RefreshTokenUnauthorizedProblem($detail, $this->clearCookies());
+        $cookies = $this->clearCookies();
+
+        $this->throwError(
+            ErrorCode::UNAUTHORIZED,
+            $detail,
+            responseConfigurator: static function (JsonResponse $response) use ($cookies): JsonResponse {
+                foreach ($cookies as $cookie) {
+                    $response->headers->setCookie($cookie);
+                }
+
+                return $response;
+            },
+        );
     }
 
     /**

@@ -2,10 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Support\Http\Problems\CsrfTokenMismatchProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\HttpErrorException;
 use App\Support\JwtCookies;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -62,7 +65,20 @@ final class VerifyApiCsrf
             // Issue a new CSRF token on error to help client recover
             $newToken = Str::random(40);
 
-            throw new CsrfTokenMismatchProblem(JwtCookies::csrf($newToken));
+            /** @var ErrorFactory $factory */
+            $factory = app(ErrorFactory::class);
+
+            $payload = $factory->for(ErrorCode::CSRF_TOKEN_MISMATCH)->build();
+
+            throw new HttpErrorException(
+                $payload,
+                static function (JsonResponse $response) use ($newToken): JsonResponse {
+                    $response->headers->set('Vary', 'Origin');
+                    $response->headers->setCookie(JwtCookies::csrf($newToken));
+
+                    return $response;
+                },
+            );
         }
 
         return $next($request);

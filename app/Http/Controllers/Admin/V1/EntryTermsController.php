@@ -6,20 +6,20 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Admin\V1\Concerns\ManagesEntryTerms;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\AttachTermsRequest;
 use App\Http\Requests\Admin\SyncTermsRequest;
 use App\Http\Resources\Admin\EntryTermsResource;
 use App\Models\Entry;
 use App\Models\Term;
-use App\Support\Http\Problems\EntryNotFoundProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EntryTermsController extends Controller
 {
-    use Problems;
     use ManagesEntryTerms;
+    use ThrowsErrors;
 
     /**
      * Получение термов записи.
@@ -317,7 +317,11 @@ class EntryTermsController extends Controller
 
     private function throwEntryNotFound(int $entryId): never
     {
-        throw new EntryNotFoundProblem($entryId);
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Entry with ID %d does not exist.', $entryId),
+            ['entry_id' => $entryId],
+        );
     }
 }
 

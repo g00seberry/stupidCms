@@ -6,16 +6,17 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Search\Jobs\ReindexSearchJob;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Models\Entry;
-use App\Support\Http\Problems\SearchServiceUnavailableProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Http\Resources\Admin\SearchReindexAcceptedResource;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Str;
 
 final class SearchAdminController extends Controller
 {
-    use Problems;
+    use ThrowsErrors;
+
 
     /**
      * Запуск фоновой переиндексации поиска.
@@ -47,7 +48,7 @@ final class SearchAdminController extends Controller
     public function reindex(): SearchReindexAcceptedResource
     {
         if (! config('search.enabled')) {
-            throw new SearchServiceUnavailableProblem();
+            $this->throwError(ErrorCode::SERVICE_UNAVAILABLE, 'Search service is disabled.');
         }
 
         $trackingId = (string) Str::ulid();

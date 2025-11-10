@@ -1,11 +1,8 @@
 <?php
 
-use App\Contracts\ProblemConvertible;
-use App\Support\Http\HttpProblemException;
-use App\Support\Http\ProblemResponseFactory;
-use App\Support\Http\ProblemType;
-use App\Support\Logging\ProblemReporter;
-use App\Support\Problems\Problem;
+use App\Support\Errors\ErrorKernel;
+use App\Support\Errors\ErrorResponseFactory;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -71,79 +68,21 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Global RFC 7807 (Problem Details) handler for API routes
         $exceptions->render(function (\Throwable $e, $request) {
             if (! ($request->expectsJson() || $request->is('api/*'))) {
                 return null;
             }
 
-            if ($e instanceof HttpProblemException) {
-                $response = ProblemResponseFactory::make($e->problem());
+            if ($e instanceof HttpErrorException) {
+                $response = ErrorResponseFactory::make($e->payload());
 
                 return $e->apply($response);
             }
 
-            if ($e instanceof ProblemConvertible) {
-                return ProblemResponseFactory::make($e->toProblem());
-            }
+            /** @var ErrorKernel $kernel */
+            $kernel = app(ErrorKernel::class);
+            $payload = $kernel->resolve($e);
 
-            $registry = config('problems.handlers', []);
-
-            foreach ($registry as $class => $definition) {
-                if (! is_a($e, $class)) {
-                    continue;
-                }
-
-                $factory = $definition['factory'] ?? null;
-
-                if (! is_callable($factory)) {
-                    continue;
-                }
-
-                $problem = $factory($e);
-
-                if (! $problem instanceof Problem) {
-                    continue;
-                }
-
-                $status = $definition['status'] ?? null;
-
-                if ($status !== null) {
-                    if (is_callable($status)) {
-                        $status = $status($e, $problem);
-                    }
-
-                    if (is_int($status)) {
-                        $problem = $problem->status($status);
-                    }
-                }
-
-                $reportDefinition = $definition['report'] ?? null;
-
-                if ($reportDefinition !== null) {
-                    $reportType = $reportDefinition['type'] ?? null;
-
-                    if (! $reportType instanceof ProblemType) {
-                        $reportType = $problem->type();
-                    }
-
-                    $message = $reportDefinition['message'] ?? $reportType->defaultDetail();
-
-                    $contextDefinition = $reportDefinition['context'] ?? [];
-                    $context = [];
-
-                    if (is_callable($contextDefinition)) {
-                        $context = (array) $contextDefinition($e, $problem);
-                    } elseif (is_array($contextDefinition)) {
-                        $context = $contextDefinition;
-                    }
-
-                    ProblemReporter::report($e, $reportType, $message, $context);
-                }
-
-                return ProblemResponseFactory::make($problem);
-            }
-
-            return null;
+            return ErrorResponseFactory::make($payload);
         });
     })->create();

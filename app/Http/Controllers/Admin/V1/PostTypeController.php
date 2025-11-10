@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\UpdatePostTypeRequest;
 use App\Http\Resources\Admin\PostTypeResource;
 use App\Models\PostType;
-use App\Support\Http\Problems\PostTypeNotFoundProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use Illuminate\Support\Facades\DB;
 
 class PostTypeController extends Controller
 {
-    use Problems;
+    use ThrowsErrors;
 
     /**
      * Получение настроек типа записи.
@@ -52,10 +52,19 @@ class PostTypeController extends Controller
         $type = PostType::query()->where('slug', $slug)->first();
 
         if (! $type) {
-            throw new PostTypeNotFoundProblem($slug);
+            $this->throwPostTypeNotFound($slug);
         }
 
         return new PostTypeResource($type);
+    }
+
+    private function throwPostTypeNotFound(string $slug): never
+    {
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Unknown post type slug: %s', $slug),
+            ['slug' => $slug],
+        );
     }
 
     /**
@@ -109,7 +118,7 @@ class PostTypeController extends Controller
         $type = PostType::query()->where('slug', $slug)->first();
 
         if (! $type) {
-            throw new PostTypeNotFoundProblem($slug);
+            $this->throwPostTypeNotFound($slug);
         }
 
         DB::transaction(function () use ($type, $request) {

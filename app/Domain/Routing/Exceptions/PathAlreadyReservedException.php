@@ -2,12 +2,13 @@
 
 namespace App\Domain\Routing\Exceptions;
 
-use App\Contracts\ProblemConvertible;
-use App\Support\Http\ProblemType;
-use App\Support\Problems\Problem;
+use App\Contracts\ErrorConvertible;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorPayload;
 use Exception;
 
-class PathAlreadyReservedException extends Exception implements ProblemConvertible
+class PathAlreadyReservedException extends Exception implements ErrorConvertible
 {
     public function __construct(
         public readonly string $path,
@@ -22,14 +23,15 @@ class PathAlreadyReservedException extends Exception implements ProblemConvertib
         parent::__construct($message, $code, $previous);
     }
 
-    public function toProblem(): Problem
+    public function toError(ErrorFactory $factory): ErrorPayload
     {
-        return Problem::of(ProblemType::CONFLICT)
+        return $factory->for(ErrorCode::CONFLICT)
             ->detail($this->getMessage())
-            ->extensions([
+            ->meta([
                 'path' => $this->path,
                 'owner' => $this->owner,
-            ]);
+            ])
+            ->build();
     }
 }
 

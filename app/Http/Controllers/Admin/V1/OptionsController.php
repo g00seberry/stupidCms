@@ -6,15 +6,14 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Options\OptionsRepository;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\Options\IndexOptionsRequest;
 use App\Http\Requests\Admin\Options\PutOptionRequest;
 use App\Http\Resources\Admin\OptionCollection;
 use App\Http\Resources\Admin\OptionResource;
 use App\Models\Option;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\Problems\InvalidOptionIdentifierProblem;
-use App\Support\Http\Problems\OptionNotFoundProblem;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +21,7 @@ use Illuminate\Support\Facades\Validator;
 class OptionsController extends Controller
 {
     use AuthorizesRequests;
-    use Problems;
+    use ThrowsErrors;
 
     private const KEY_PATTERN = '/^[a-z0-9_][a-z0-9_.-]{1,63}$/';
 
@@ -163,7 +162,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            throw new OptionNotFoundProblem($namespace, $key);
+            $this->throwOptionNotFound($namespace, $key);
         }
 
         $this->authorize('view', $option);
@@ -268,7 +267,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            throw new OptionNotFoundProblem($namespace, $key);
+            $this->throwOptionNotFound($namespace, $key);
         }
 
         $this->authorize('delete', $option);
@@ -276,7 +275,7 @@ class OptionsController extends Controller
         $deleted = $this->repository->delete($namespace, $key);
 
         if (! $deleted) {
-            throw new OptionNotFoundProblem($namespace, $key);
+            $this->throwOptionNotFound($namespace, $key);
         }
 
         return AdminResponse::noContent();
@@ -323,7 +322,7 @@ class OptionsController extends Controller
             ->first();
 
         if (! $option) {
-            throw new OptionNotFoundProblem($namespace, $key);
+            $this->throwOptionNotFound($namespace, $key);
         }
 
         $this->authorize('restore', $option);
@@ -333,10 +332,22 @@ class OptionsController extends Controller
             : $option;
 
         if (! $restored) {
-            throw new OptionNotFoundProblem($namespace, $key);
+            $this->throwOptionNotFound($namespace, $key);
         }
 
         return new OptionResource($restored);
+    }
+
+    private function throwOptionNotFound(string $namespace, string $key): never
+    {
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Option "%s/%s" was not found.', $namespace, $key),
+            [
+                'namespace' => $namespace,
+                'key' => $key,
+            ],
+        );
     }
 
     private function assertValidRouteParameters(string $namespace, ?string $key = null): void
@@ -355,7 +366,11 @@ class OptionsController extends Controller
             return;
         }
 
-        throw new InvalidOptionIdentifierProblem($validator->errors()->toArray());
+        $this->throwError(
+            ErrorCode::INVALID_OPTION_IDENTIFIER,
+            'The provided option namespace/key is invalid.',
+            ['errors' => $validator->errors()->toArray()],
+        );
     }
 }
 

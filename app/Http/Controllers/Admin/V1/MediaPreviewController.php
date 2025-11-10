@@ -6,12 +6,9 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Media\Services\OnDemandVariantService;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Models\Media;
-use App\Support\Http\Problems\InvalidMediaVariantProblem;
-use App\Support\Http\Problems\MediaDownloadProblem;
-use App\Support\Http\Problems\MediaNotFoundProblem;
-use App\Support\Http\Problems\MediaVariantGenerationProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,8 +18,8 @@ use Throwable;
 
 class MediaPreviewController extends Controller
 {
-    use Problems;
     use AuthorizesRequests;
+    use ThrowsErrors;
 
     public function __construct(
         private readonly OnDemandVariantService $variantService
@@ -74,7 +71,7 @@ class MediaPreviewController extends Controller
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            throw new MediaNotFoundProblem($mediaId);
+            $this->throwMediaNotFound($mediaId);
         }
 
         $this->authorize('view', $media);
@@ -82,11 +79,21 @@ class MediaPreviewController extends Controller
         try {
             $variantModel = $this->variantService->ensureVariant($media, $variant);
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidMediaVariantProblem($exception->getMessage());
+            $this->throwError(
+                ErrorCode::VALIDATION_ERROR,
+                $exception->getMessage(),
+                [
+                    'variant' => $variant,
+                ],
+            );
         } catch (Throwable $exception) {
             report($exception);
 
-            throw new MediaVariantGenerationProblem();
+            $this->throwError(
+                ErrorCode::MEDIA_VARIANT_ERROR,
+                'Failed to generate media variant.',
+                ['variant' => $variant],
+            );
         }
 
         $url = $this->temporaryUrl($media->disk, $variantModel->path);
@@ -130,7 +137,7 @@ class MediaPreviewController extends Controller
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            throw new MediaNotFoundProblem($mediaId);
+            $this->throwMediaNotFound($mediaId);
         }
 
         $this->authorize('view', $media);
@@ -140,7 +147,11 @@ class MediaPreviewController extends Controller
         } catch (Throwable $exception) {
             report($exception);
 
-            throw new MediaDownloadProblem();
+            $this->throwError(
+                ErrorCode::MEDIA_DOWNLOAD_ERROR,
+                'Failed to generate download URL.',
+                ['media_id' => $mediaId],
+            );
         }
 
         return redirect()->away($url);
@@ -162,6 +173,15 @@ class MediaPreviewController extends Controller
 
             return $url;
         }
+    }
+
+    private function throwMediaNotFound(string $mediaId): never
+    {
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Media with ID %s does not exist.', $mediaId),
+            ['media_id' => $mediaId],
+        );
     }
 }
 

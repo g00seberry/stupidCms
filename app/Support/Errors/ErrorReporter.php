@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Support\Logging;
+namespace App\Support\Errors;
 
-use App\Support\Http\ProblemType;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -12,32 +11,46 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-final class ProblemReporter
+final class ErrorReporter
 {
     private function __construct()
     {
     }
 
-    /**
-     * @param array<string, mixed> $context
-     */
-    public static function report(Throwable $throwable, ProblemType $type, string $message, array $context = []): void
+    public static function report(Throwable $throwable, ErrorPayload $payload, ?ErrorReportDefinition $definition): void
     {
-        $context = array_merge($context, [
+        $level = $definition?->level ?? 'error';
+        $message = $definition?->message ?? $payload->title;
+
+        $context = [
             'exception' => $throwable,
-            'problem_type' => $type->value,
+            'error_code' => $payload->code->value,
+            'error_type' => $payload->type,
+            'status' => $payload->status,
+            'detail' => $payload->detail,
+            'meta' => $payload->meta(),
+            'trace_id' => $payload->traceId,
             'request_id' => self::resolveRequestId(),
             'user_id' => self::resolveUserId(),
-        ]);
+        ];
 
-        $context = array_filter($context, static fn ($value) => $value !== null);
+        $additional = $definition?->resolveContext($throwable, $payload) ?? [];
 
-        Log::error($message, $context);
+        if ($additional !== []) {
+            $context = array_merge($context, $additional);
+        }
+
+        $context = array_filter(
+            $context,
+            static fn ($value) => $value !== null,
+        );
+
+        Log::log($level, $message, $context);
     }
 
     private static function resolveRequestId(): ?string
     {
-        $request = self::getRequest();
+        $request = self::request();
 
         if ($request === null) {
             return null;
@@ -55,7 +68,14 @@ final class ProblemReporter
             }
         }
 
-        foreach (['request_id', 'requestId', 'request-id'] as $attribute) {
+        $attributes = [
+            'request_id',
+            'requestId',
+            'request-id',
+            'X-Request-ID',
+        ];
+
+        foreach ($attributes as $attribute) {
             $value = $request->attributes->get($attribute);
 
             if (is_string($value) && $value !== '') {
@@ -68,7 +88,7 @@ final class ProblemReporter
 
     private static function resolveUserId(): int|string|null
     {
-        $request = self::getRequest();
+        $request = self::request();
 
         if ($request !== null) {
             $resolver = $request->getUserResolver();
@@ -79,23 +99,23 @@ final class ProblemReporter
                 $user = $resolver(null);
             }
 
-            $identifier = self::extractIdentifier($user);
+            $identifier = self::identifier($user);
 
             if ($identifier !== null) {
                 return $identifier;
             }
 
-            $identifier = self::extractIdentifier($request->user());
+            $identifier = self::identifier($request->user());
 
             if ($identifier !== null) {
                 return $identifier;
             }
         }
 
-        return self::extractIdentifier(Auth::user());
+        return self::identifier(Auth::user());
     }
 
-    private static function extractIdentifier(mixed $user): int|string|null
+    private static function identifier(mixed $user): int|string|null
     {
         if (! $user instanceof Authenticatable) {
             return null;
@@ -107,14 +127,14 @@ final class ProblemReporter
             return null;
         }
 
-        if (is_string($identifier) || is_int($identifier)) {
+        if (is_int($identifier) || is_string($identifier)) {
             return $identifier;
         }
 
         return (string) $identifier;
     }
 
-    private static function getRequest(): ?Request
+    private static function request(): ?Request
     {
         if (! App::bound('request')) {
             return null;
@@ -125,3 +145,4 @@ final class ProblemReporter
         return $request instanceof Request ? $request : null;
     }
 }
+

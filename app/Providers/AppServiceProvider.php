@@ -11,6 +11,8 @@ use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Observers\EntryObserver;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,6 +49,16 @@ class AppServiceProvider extends ServiceProvider
 
         // Регистрация RefreshTokenRepository
         $this->app->singleton(RefreshTokenRepository::class, RefreshTokenRepositoryImpl::class);
+
+        // ErrorKernel — единая точка обработки ошибок API
+        $this->app->singleton(ErrorKernel::class, function ($app) {
+            /** @var array<string, mixed> $config */
+            $config = config('errors');
+
+            return ErrorKernel::fromConfig($config, $app);
+        });
+
+        $this->app->singleton(ErrorFactory::class, static fn ($app): ErrorFactory => $app->make(ErrorKernel::class)->factory());
     }
 
     /**

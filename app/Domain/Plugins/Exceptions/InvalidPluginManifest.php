@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Plugins\Exceptions;
 
-use App\Contracts\ProblemConvertible;
-use App\Support\Http\ProblemType;
-use App\Support\Problems\Problem;
+use App\Contracts\ErrorConvertible;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorPayload;
 use RuntimeException;
 
-final class InvalidPluginManifest extends RuntimeException implements ProblemConvertible
+final class InvalidPluginManifest extends RuntimeException implements ErrorConvertible
 {
     private function __construct(
         public readonly string $path,
@@ -28,14 +29,15 @@ final class InvalidPluginManifest extends RuntimeException implements ProblemCon
         );
     }
 
-    public function toProblem(): Problem
+    public function toError(ErrorFactory $factory): ErrorPayload
     {
-        return Problem::of(ProblemType::INVALID_PLUGIN_MANIFEST)
+        return $factory->for(ErrorCode::INVALID_PLUGIN_MANIFEST)
             ->detail($this->getMessage())
-            ->extensions([
+            ->meta([
                 'path' => $this->path,
                 'reason' => $this->reason,
-            ]);
+            ])
+            ->build();
     }
 }
 

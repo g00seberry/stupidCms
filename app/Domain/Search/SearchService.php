@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace App\Domain\Search;
 
 use App\Domain\Search\ValueObjects\SearchTermFilter;
-use App\Support\Http\ProblemType;
-use App\Support\Logging\ProblemReporter;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorReporter;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchService
 {
     public function __construct(
         private readonly SearchClientInterface $client,
         private readonly bool $enabled,
-        private readonly string $readAlias
+        private readonly string $readAlias,
+        private readonly ErrorFactory $errors
     ) {
     }
 
@@ -35,15 +37,15 @@ final class SearchService
         try {
             $response = $this->client->search($this->readAlias, $body);
         } catch (RequestException $exception) {
-            ProblemReporter::report($exception, ProblemType::SERVICE_UNAVAILABLE, 'Search query failed', [
-                'body' => $body,
-            ]);
+            $payload = $this->errors
+                ->for(ErrorCode::SERVICE_UNAVAILABLE)
+                ->detail('Search service is temporarily unavailable.')
+                ->meta(['body' => $body])
+                ->build();
 
-            throw new ServiceUnavailableHttpException(
-                retryAfter: null,
-                message: ProblemType::SERVICE_UNAVAILABLE->defaultDetail(),
-                previous: $exception
-            );
+            ErrorReporter::report($exception, $payload, null);
+
+            throw new HttpErrorException($payload);
         }
 
         return $this->mapResponse($response, $query);

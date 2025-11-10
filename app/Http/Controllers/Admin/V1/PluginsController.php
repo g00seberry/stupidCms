@@ -12,13 +12,16 @@ use App\Http\Resources\PluginCollection;
 use App\Http\Resources\PluginResource;
 use App\Http\Resources\PluginSyncResource;
 use App\Models\Plugin;
-use App\Support\Http\Problems\PluginNotFoundProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 
 final class PluginsController extends Controller
 {
+    use ThrowsErrors;
+
 
     /**
      * Список плагинов.
@@ -255,7 +258,9 @@ final class PluginsController extends Controller
         $plugin = Plugin::query()->where('slug', $slug)->first();
 
         if (! $plugin) {
-            throw new PluginNotFoundProblem($slug);
+            $this->throwError(ErrorCode::PLUGIN_NOT_FOUND, sprintf('Plugin with slug "%s" was not found.', $slug), [
+                'slug' => $slug,
+            ]);
         }
 
         return $plugin;

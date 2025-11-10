@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Admin\V1\Concerns\ManagesEntryTerms;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\IndexTermsRequest;
 use App\Http\Requests\Admin\StoreTermRequest;
 use App\Http\Requests\Admin\UpdateTermRequest;
@@ -15,9 +14,8 @@ use App\Http\Resources\Admin\TermResource;
 use App\Models\Entry;
 use App\Models\Taxonomy;
 use App\Models\Term;
-use App\Support\Http\Problems\TaxonomyNotFoundProblem;
-use App\Support\Http\Problems\TermNotFoundProblem;
-use App\Support\Http\Problems\TermStillAttachedProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use App\Support\Http\AdminResponse;
@@ -29,8 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TermController extends Controller
 {
-    use Problems;
     use ManagesEntryTerms;
+    use ThrowsErrors;
 
     public function __construct(
         private readonly Slugifier $slugifier,
@@ -408,7 +406,7 @@ class TermController extends Controller
 
         $hasEntries = $termModel->entries()->exists();
         if ($hasEntries && ! $forceDetach) {
-            throw new TermStillAttachedProblem();
+            $this->throwTermStillAttached();
         }
 
         DB::transaction(function () use ($termModel, $forceDetach) {
@@ -489,13 +487,24 @@ class TermController extends Controller
 
     private function throwTaxonomyNotFound(string $slug): never
     {
-        throw new TaxonomyNotFoundProblem($slug);
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Taxonomy with slug %s does not exist.', $slug),
+            ['slug' => $slug],
+        );
     }
 
     private function throwTermNotFound(int $termId): never
     {
-        throw new TermNotFoundProblem($termId);
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Term with ID %d does not exist.', $termId),
+            ['term_id' => $termId],
+        );
     }
-}
+
+    private function validateTermBelongsToTaxonomy(Term $term, Taxonomy $taxonomy): void
+    {
+        if ($term->taxonomy_id !== $taxonomy->id) {
 
 

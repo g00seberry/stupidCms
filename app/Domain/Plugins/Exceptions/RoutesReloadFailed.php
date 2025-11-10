@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace App\Domain\Plugins\Exceptions;
 
-use App\Contracts\ProblemConvertible;
-use App\Support\Http\ProblemType;
-use App\Support\Problems\Problem;
+use App\Contracts\ErrorConvertible;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorPayload;
 use RuntimeException;
 use Throwable;
 
-final class RoutesReloadFailed extends RuntimeException implements ProblemConvertible
+final class RoutesReloadFailed extends RuntimeException implements ErrorConvertible
 {
     public static function from(Throwable $previous): self
     {
         return new self('Failed to reload plugin routes.', 0, $previous);
     }
 
-    public function toProblem(): Problem
+    public function toError(ErrorFactory $factory): ErrorPayload
     {
-        return Problem::of(ProblemType::ROUTES_RELOAD_FAILED)
-            ->detail($this->getMessage());
+        return $factory->for(ErrorCode::ROUTES_RELOAD_FAILED)
+            ->detail($this->getMessage())
+            ->build();
     }
 }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\IndexTaxonomiesRequest;
 use App\Http\Requests\Admin\StoreTaxonomyRequest;
 use App\Http\Requests\Admin\UpdateTaxonomyRequest;
@@ -13,9 +12,9 @@ use App\Http\Resources\Admin\TaxonomyCollection;
 use App\Http\Resources\Admin\TaxonomyResource;
 use App\Models\Taxonomy;
 use App\Models\Term;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\Problems\TaxonomyHasTermsProblem;
-use App\Support\Http\Problems\TaxonomyNotFoundProblem;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TaxonomyController extends Controller
 {
-    use Problems;
+    use ThrowsErrors;
 
     public function __construct(
         private readonly Slugifier $slugifier,
@@ -200,7 +199,11 @@ class TaxonomyController extends Controller
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         if (! $taxonomy) {
-            $this->throwNotFound($slug);
+            $this->throwError(
+                ErrorCode::NOT_FOUND,
+                sprintf('Taxonomy with slug %s does not exist.', $slug),
+                ['slug' => $slug],
+            );
         }
 
         return new TaxonomyResource($taxonomy);
@@ -256,7 +259,11 @@ class TaxonomyController extends Controller
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         if (! $taxonomy) {
-            $this->throwNotFound($slug);
+            $this->throwError(
+                ErrorCode::NOT_FOUND,
+                sprintf('Taxonomy with slug %s does not exist.', $slug),
+                ['slug' => $slug],
+            );
         }
 
         $validated = $request->validated();
@@ -339,14 +346,22 @@ class TaxonomyController extends Controller
         $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         if (! $taxonomy) {
-            $this->throwNotFound($slug);
+            $this->throwError(
+                ErrorCode::NOT_FOUND,
+                sprintf('Taxonomy with slug %s does not exist.', $slug),
+                ['slug' => $slug],
+            );
         }
 
         $force = $request->boolean('force');
 
         $termsCount = $taxonomy->terms()->count();
         if ($termsCount > 0 && ! $force) {
-            throw new TaxonomyHasTermsProblem();
+            $this->throwError(
+                ErrorCode::CONFLICT,
+                'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
+                ['terms_count' => $termsCount],
+            );
         }
 
         DB::transaction(function () use ($taxonomy, $force) {
@@ -420,7 +435,11 @@ class TaxonomyController extends Controller
 
     private function throwNotFound(string $slug): never
     {
-        throw new TaxonomyNotFoundProblem($slug);
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            sprintf('Taxonomy with slug %s does not exist.', $slug),
+            ['slug' => $slug],
+        );
     }
 }
 

@@ -10,7 +10,8 @@ use App\Http\Requests\DestroyPathReservationRequest;
 use App\Http\Requests\StorePathReservationRequest;
 use App\Http\Resources\Admin\PathReservationCollection;
 use App\Http\Resources\Admin\PathReservationMessageResource;
-use App\Support\Http\Problems\MissingReservationPathProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Models\Audit;
 use App\Models\ReservedRoute;
 use Illuminate\Http\Response;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 
 class PathReservationController extends Controller
 {
+    use ThrowsErrors;
 
     public function __construct(
         private readonly PathReservationService $service
@@ -124,7 +126,15 @@ class PathReservationController extends Controller
         // Если path не в URL (пустой или невалидный), берём из body
         $actualPath = $request->getPath();
         if (empty($actualPath)) {
-            throw new MissingReservationPathProblem();
+            $this->throwError(
+                ErrorCode::VALIDATION_ERROR,
+                'Path is required either in URL parameter or request body.',
+                [
+                    'errors' => [
+                        'path' => ['The path field is required either in URL parameter or request body.'],
+                    ],
+                ],
+            );
         }
 
         $this->service->releasePath($actualPath, $validated['source']);

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Auth\Exceptions;
 
-use App\Contracts\ProblemConvertible;
-use App\Support\Http\ProblemType;
-use App\Support\Problems\Problem;
+use App\Contracts\ErrorConvertible;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorPayload;
 use RuntimeException;
 
-final class JwtAuthenticationException extends RuntimeException implements ProblemConvertible
+final class JwtAuthenticationException extends RuntimeException implements ErrorConvertible
 {
     public function __construct(
         public readonly string $reason,
@@ -26,14 +27,16 @@ final class JwtAuthenticationException extends RuntimeException implements Probl
         return $this->errorCode;
     }
 
-    public function toProblem(): Problem
+    public function toError(ErrorFactory $factory): ErrorPayload
     {
-        return Problem::of(ProblemType::UNAUTHORIZED)
-            ->detail(ProblemType::UNAUTHORIZED->defaultDetail())
-            ->code($this->errorCode)
-            ->headers([
-                'WWW-Authenticate' => 'Bearer',
-                'Pragma' => 'no-cache',
-            ]);
+        $code = ErrorCode::tryFrom($this->errorCode) ?? ErrorCode::UNAUTHORIZED;
+
+        return $factory->for($code)
+            ->detail('Authentication is required to access this resource.')
+            ->meta([
+                'reason' => $this->reason,
+                'detail' => $this->detail,
+            ])
+            ->build();
     }
 }

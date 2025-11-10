@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Admin\Media;
 
 use App\Models\Media;
-use App\Support\Http\Problems\InvalidMediaPayloadProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -32,6 +34,14 @@ class StoreMediaRequest extends FormRequest
 
     protected function failedValidation(Validator $validator): void
     {
-        throw new InvalidMediaPayloadProblem($validator->errors()->messages());
+        /** @var ErrorFactory $factory */
+        $factory = app(ErrorFactory::class);
+
+        $payload = $factory->for(ErrorCode::VALIDATION_ERROR)
+            ->detail('The media payload failed validation constraints.')
+            ->meta(['errors' => $validator->errors()->messages()])
+            ->build();
+
+        throw new HttpErrorException($payload);
     }
 }

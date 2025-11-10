@@ -10,6 +10,7 @@ use App\Domain\Search\IndexManager;
 use App\Domain\Search\SearchClientInterface;
 use App\Domain\Search\SearchService;
 use App\Domain\Search\Transformers\EntryToSearchDoc;
+use App\Support\Errors\ErrorFactory;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
@@ -56,7 +57,8 @@ final class SearchServiceProvider extends ServiceProvider
             return new SearchService(
                 client: $app->make(SearchClientInterface::class),
                 enabled: (bool) ($config['enabled'] ?? false),
-                readAlias: $readAlias
+                readAlias: $readAlias,
+                errors: $app->make(ErrorFactory::class),
             );
         });
     }

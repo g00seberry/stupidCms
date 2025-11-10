@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Admin\Options;
 
 use App\Models\Option;
-use App\Support\Http\Problems\InvalidOptionFiltersProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -39,9 +41,21 @@ class IndexOptionsRequest extends FormRequest
     protected function failedValidation(Validator $validator): void
     {
         $errors = $validator->errors();
-        $code = $errors->has('namespace') ? 'INVALID_OPTION_IDENTIFIER' : 'INVALID_OPTION_FILTERS';
+        $code = $errors->has('namespace') ? ErrorCode::INVALID_OPTION_IDENTIFIER : ErrorCode::INVALID_OPTION_FILTERS;
 
-        throw new InvalidOptionFiltersProblem($errors->messages(), $code);
+        /** @var ErrorFactory $factory */
+        $factory = app(ErrorFactory::class);
+
+        $detail = $code === ErrorCode::INVALID_OPTION_IDENTIFIER
+            ? 'The provided option namespace/key is invalid.'
+            : 'Invalid option filter parameters.';
+
+        $payload = $factory->for($code)
+            ->detail($detail)
+            ->meta(['errors' => $errors->messages()])
+            ->build();
+
+        throw new HttpErrorException($payload);
     }
 }
 

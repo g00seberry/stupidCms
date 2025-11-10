@@ -6,19 +6,19 @@ namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Admin\LoginResource;
 use App\Models\Audit;
 use App\Models\User;
-use App\Support\Http\Problems\InvalidCredentialsProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 final class LoginController
 {
-    use Problems;
+    use ThrowsErrors;
 
     public function __construct(
         private readonly JwtService $jwt,
@@ -60,7 +60,7 @@ final class LoginController
         if (! $user || ! Hash::check($password, $user->password)) {
             $this->logAudit('login_failed', null, $request);
 
-            throw new InvalidCredentialsProblem();
+            $this->throwError(ErrorCode::UNAUTHORIZED, 'Invalid credentials.');
         }
 
         $this->logAudit('login', (int) $user->id, $request);

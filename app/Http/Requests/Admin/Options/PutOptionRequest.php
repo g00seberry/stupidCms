@@ -4,8 +4,9 @@ namespace App\Http\Requests\Admin\Options;
 
 use App\Models\Option;
 use App\Rules\JsonValue;
-use App\Support\Http\Problems\InvalidOptionIdentifierProblem;
-use App\Support\Http\Problems\InvalidOptionPayloadProblem;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -58,11 +59,23 @@ class PutOptionRequest extends FormRequest
             $code = 'INVALID_OPTION_IDENTIFIER';
         }
 
-        if ($code === 'INVALID_OPTION_IDENTIFIER') {
-            throw new InvalidOptionIdentifierProblem($errors->messages());
-        }
+        $enum = ErrorCode::tryFrom($code) ?? ErrorCode::INVALID_OPTION_PAYLOAD;
 
-        throw new InvalidOptionPayloadProblem($errors->messages(), $code);
+        /** @var ErrorFactory $factory */
+        $factory = app(ErrorFactory::class);
+
+        $detail = match ($enum) {
+            ErrorCode::INVALID_OPTION_IDENTIFIER => 'The provided option namespace/key is invalid.',
+            ErrorCode::INVALID_JSON_VALUE => 'The provided JSON value is invalid.',
+            default => 'Invalid option payload.',
+        };
+
+        $payload = $factory->for($enum)
+            ->detail($detail)
+            ->meta(['errors' => $errors->messages()])
+            ->build();
+
+        throw new HttpErrorException($payload);
     }
 
     public function option(): Option

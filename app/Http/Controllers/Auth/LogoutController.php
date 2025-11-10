@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Auth\LogoutRequest;
 use App\Http\Resources\Admin\LogoutResource;
 use App\Models\RefreshToken;
@@ -16,7 +15,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 final class LogoutController
 {
-    use Problems;
 
     public function __construct(
         private readonly JwtService $jwt,

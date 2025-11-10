@@ -6,10 +6,9 @@ namespace App\Http\Middleware;
 
 use App\Domain\Auth\Exceptions\JwtAuthenticationException;
 use App\Domain\Auth\JwtService;
-use App\Http\Controllers\Traits\Problems;
 use App\Models\User;
-use App\Support\Http\ProblemType;
-use Illuminate\Http\JsonResponse;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +21,7 @@ use Illuminate\Support\Facades\Auth;
  */
 final class JwtAuth
 {
-    use Problems;
+    use ThrowsErrors;
 
     private const GUARD = 'api';
 
@@ -47,25 +46,25 @@ final class JwtAuth
         $accessToken = (string) $request->cookie(config('jwt.cookies.access'), '');
 
         if ($accessToken === '') {
-            return $this->respondUnauthorized('missing_token');
+            $this->respondUnauthorized('missing_token');
         }
 
         try {
             $verified = $this->jwt->verify($accessToken, 'access');
             $claims = $verified['claims'];
         } catch (\Throwable $e) {
-            return $this->respondUnauthorized('invalid_token');
+            $this->respondUnauthorized('invalid_token');
         }
 
         $subject = $claims['sub'] ?? null;
         if (! $this->isValidSubject($subject)) {
-            return $this->respondUnauthorized('invalid_subject');
+            $this->respondUnauthorized('invalid_subject');
         }
 
         $userId = (int) $subject;
         $user = User::query()->find($userId);
         if (! $user) {
-            return $this->respondUnauthorized('user_not_found');
+            $this->respondUnauthorized('user_not_found');
         }
 
         Auth::shouldUse(self::GUARD);
@@ -96,25 +95,28 @@ final class JwtAuth
         ],
     ];
 
-    private function respondUnauthorized(string $reason): JsonResponse
+    private function respondUnauthorized(string $reason): never
     {
         $response = self::FAILURE_RESPONSES[$reason] ?? [
             'code' => 'JWT_AUTH_FAILURE',
             'log_detail' => 'Unknown JWT authentication failure.',
         ];
 
-        $detail = ProblemType::UNAUTHORIZED->defaultDetail();
+        $code = ErrorCode::tryFrom($response['code']) ?? ErrorCode::JWT_AUTH_FAILURE;
 
         report(new JwtAuthenticationException($reason, $response['code'], $response['log_detail']));
 
-        return $this->problem(
-            ProblemType::UNAUTHORIZED,
-            $detail,
+        $this->throwErrorWithHeaders(
+            $code,
+            detail: null,
+            meta: [
+                'reason' => $reason,
+                'message' => $response['log_detail'],
+            ],
             headers: [
                 'WWW-Authenticate' => 'Bearer',
                 'Pragma' => 'no-cache',
             ],
-            code: $response['code'],
         );
     }
 

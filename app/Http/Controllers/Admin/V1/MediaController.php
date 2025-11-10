@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Media\Actions\MediaStoreAction;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
@@ -14,17 +13,16 @@ use App\Http\Resources\Admin\MediaCollection;
 use App\Http\Resources\MediaResource;
 use App\Models\Entry;
 use App\Models\Media;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\ProblemType;
-use App\Support\Http\Problems\MediaNotFoundProblem;
-use App\Support\Http\Problems\MissingMediaFileProblem;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class MediaController extends Controller
 {
-    use Problems;
+    use ThrowsErrors;
     use AuthorizesRequests;
 
     public function __construct(
@@ -204,7 +202,15 @@ class MediaController extends Controller
         $file = $request->file('file');
 
         if (! $file) {
-            throw new MissingMediaFileProblem();
+            $this->throwError(
+                ErrorCode::VALIDATION_ERROR,
+                'File payload is missing.',
+                [
+                    'errors' => [
+                        'file' => ['File payload is required.'],
+                    ],
+                ],
+            );
         }
 
         $media = $this->storeAction->execute($file, $validated);
@@ -249,7 +255,7 @@ class MediaController extends Controller
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            $this->notFound($mediaId);
+            $this->throwMediaNotFound($mediaId);
         }
 
         $this->authorize('view', $media);
@@ -296,7 +302,7 @@ class MediaController extends Controller
         $media = Media::withTrashed()->find($mediaId);
 
         if (! $media) {
-            $this->notFound($mediaId);
+            $this->throwMediaNotFound($mediaId);
         }
 
         $this->authorize('update', $media);
@@ -348,7 +354,7 @@ class MediaController extends Controller
         $media = Media::query()->find($mediaId);
 
         if (! $media) {
-            $this->notFound($mediaId);
+            $this->throwMediaNotFound($mediaId);
         }
 
         $this->authorize('delete', $media);
@@ -362,15 +368,16 @@ class MediaController extends Controller
             ->get();
 
         if ($references->isNotEmpty()) {
-            $this->problem(
-                ProblemType::MEDIA_IN_USE,
-                extensions: [
-                    'references' => $references->map(fn ($entry) => [
-                        'entry_id' => $entry->id,
-                        'title' => $entry->title,
-                    ]),
+            $this->throwError(
+                ErrorCode::MEDIA_IN_USE,
+                meta: [
+                    'references' => $references
+                        ->map(fn ($entry) => [
+                            'entry_id' => $entry->id,
+                            'title' => $entry->title,
+                        ])
+                        ->all(),
                 ],
-                title: 'Media in use'
             );
         }
 
@@ -413,7 +420,7 @@ class MediaController extends Controller
         $media = Media::onlyTrashed()->find($mediaId);
 
         if (! $media) {
-            throw new MediaNotFoundProblem($mediaId, 'deleted');
+            $this->throwMediaNotFound($mediaId, 'deleted');
         }
 
         $this->authorize('restore', $media);
@@ -426,7 +433,23 @@ class MediaController extends Controller
 
     private function notFound(string $mediaId): never
     {
-        throw new MediaNotFoundProblem($mediaId);
+        $this->throwMediaNotFound($mediaId);
+    }
+
+    private function throwMediaNotFound(string $mediaId, ?string $prefix = null): never
+    {
+        $detail = $prefix
+            ? sprintf('%s media with ID %s does not exist.', ucfirst($prefix), $mediaId)
+            : sprintf('Media with ID %s does not exist.', $mediaId);
+
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            $detail,
+            [
+                'media_id' => $mediaId,
+                'prefix' => $prefix,
+            ],
+        );
     }
 }
 

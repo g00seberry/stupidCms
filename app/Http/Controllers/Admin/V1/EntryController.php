@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\Problems;
 use App\Http\Requests\Admin\IndexEntriesRequest;
 use App\Http\Requests\Admin\StoreEntryRequest;
 use App\Http\Requests\Admin\UpdateEntryRequest;
@@ -13,9 +12,9 @@ use App\Http\Resources\Admin\EntryCollection;
 use App\Http\Resources\Admin\EntryResource;
 use App\Models\Entry;
 use App\Models\PostType;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
-use App\Support\Http\Problems\EntryNotFoundProblem;
-use App\Support\Http\Problems\InvalidEntryPostTypeProblem;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -27,7 +26,8 @@ use Illuminate\Support\Facades\DB;
 
 class EntryController extends Controller
 {
-    use Problems, AuthorizesRequests;
+    use AuthorizesRequests;
+    use ThrowsErrors;
 
     public function __construct(
         private Slugifier $slugifier,
@@ -299,7 +299,7 @@ class EntryController extends Controller
         $postType = PostType::query()->where('slug', $validated['post_type'])->first();
         
         if (! $postType) {
-            throw new InvalidEntryPostTypeProblem();
+            $this->throwInvalidPostType();
         }
 
         // Auto-generate slug if not provided
@@ -533,7 +533,7 @@ class EntryController extends Controller
         $entry = Entry::query()->onlyTrashed()->find($id);
 
         if (! $entry) {
-            throw new EntryNotFoundProblem($id, true);
+            $this->throwEntryNotFound($id, true);
         }
 
         $this->authorize('restore', $entry);
@@ -573,9 +573,33 @@ class EntryController extends Controller
         );
     }
 
-    private function throwEntryNotFound(int $id): never
+    private function throwEntryNotFound(int $id, bool $trashed = false): never
     {
-        throw new EntryNotFoundProblem($id);
+        $detail = $trashed
+            ? sprintf('Trashed entry with ID %d does not exist.', $id)
+            : sprintf('Entry with ID %d does not exist.', $id);
+
+        $this->throwError(
+            ErrorCode::NOT_FOUND,
+            $detail,
+            [
+                'entry_id' => $id,
+                'trashed' => $trashed,
+            ],
+        );
+    }
+
+    private function throwInvalidPostType(): never
+    {
+        $this->throwError(
+            ErrorCode::VALIDATION_ERROR,
+            'The specified post type does not exist.',
+            [
+                'errors' => [
+                    'post_type' => ['The specified post type does not exist.'],
+                ],
+            ],
+        );
     }
 }
 
