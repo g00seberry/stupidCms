@@ -6,9 +6,9 @@ namespace App\Domain\Search;
 
 use App\Domain\Search\ValueObjects\SearchTermFilter;
 use App\Support\Http\ProblemType;
+use App\Support\Logging\ProblemReporter;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchService
@@ -35,8 +35,7 @@ final class SearchService
         try {
             $response = $this->client->search($this->readAlias, $body);
         } catch (RequestException $exception) {
-            Log::error('Search query failed', [
-                'exception' => $exception->getMessage(),
+            ProblemReporter::report($exception, ProblemType::SERVICE_UNAVAILABLE, 'Search query failed', [
                 'body' => $body,
             ]);
 
