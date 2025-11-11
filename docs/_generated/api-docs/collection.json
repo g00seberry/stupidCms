@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "abbdf1f3-7d4c-4603-8975-6018484459e5",
+        "_postman_id": "4849e49c-4a0a-42a7-a0f7-53103eca4e31",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -102,7 +102,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"all\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-11T19:49:48\",\"date_to\":\"2106-12-11\",\"date_field\":\"updated\",\"sort\":\"title.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-11T20:19:04\",\"date_to\":\"2106-12-11\",\"date_field\":\"updated\",\"sort\":\"published_at.asc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -775,7 +775,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"created_at\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"audio\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -1839,7 +1839,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"any\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -2066,6 +2066,65 @@
             "name": "Admin \u25b8 Post types",
             "description": "",
             "item": [
+                {
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u043d\u043e\u0432\u043e\u0433\u043e \u0442\u0438\u043f\u0430 \u0437\u0430\u043f\u0438\u0441\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/post-types",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/post-types"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"slug\":\"product\",\"name\":\"Products\",\"template\":\"single-product\",\"options_json\":{\"fields\":{\"price\":{\"type\":\"number\"}}}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": {\n    \"slug\": \"product\",\n    \"label\": \"Products\",\n    \"options_json\": {\n      \"fields\": {\n        \"price\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"created_at\": \"2025-01-10T12:45:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"51111111-2222-3333-4444-555555555555\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-51111111222233334444555555555555-5111111122223333-01\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"code\": \"FORBIDDEN\",\n  \"detail\": \"This action is unauthorized.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation Error\",\n  \"status\": 422,\n  \"code\": \"VALIDATION_ERROR\",\n  \"detail\": \"The slug has already been taken.\",\n  \"meta\": {\n    \"request_id\": \"51111111-2222-3333-4444-555555555556\",\n    \"errors\": {\n      \"slug\": [\n        \"The slug has already been taken.\"\n      ]\n    }\n  },\n  \"trace_id\": \"00-51111111222233334444555555555556-5111111122223333-01\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 429,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"56666666-7777-8888-9999-000000000000\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-56666666777788889999000000000000-5666666677778888-01\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
                 {
                     "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0432\u0441\u0435\u0445 \u0442\u0438\u043f\u043e\u0432 \u0437\u0430\u043f\u0438\u0441\u0435\u0439.",
                     "request": {
@@ -2679,7 +2738,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.desc\"}"
                         },
                         "description": ""
                     },
@@ -3319,7 +3378,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-11T19:49:48\",\"to\":\"2106-12-11\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-11T20:19:04\",\"to\":\"2106-12-11\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

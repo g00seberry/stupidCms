@@ -4,8 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Admin;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class PostTypeResource extends AdminJsonResource
 {
+    private bool $created;
+
+    public function __construct($resource, bool $created = false)
+    {
+        parent::__construct($resource);
+        $this->created = $created;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -18,6 +28,7 @@ class PostTypeResource extends AdminJsonResource
             'slug' => $this->slug,
             'label' => $this->name ?? $this->slug,
             'options_json' => $this->transformOptionsJson($this->options_json),
+            'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),
         ];
     }
@@ -49,6 +60,15 @@ class PostTypeResource extends AdminJsonResource
         }
 
         return $object;
+    }
+
+    protected function prepareAdminResponse($request, Response $response): void
+    {
+        if ($this->created) {
+            $response->setStatusCode(Response::HTTP_CREATED);
+        }
+
+        parent::prepareAdminResponse($request, $response);
     }
 }
 

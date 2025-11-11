@@ -205,7 +205,10 @@
                     <a href="#admin-post-types">Admin ▸ Post types</a>
                 </li>
                                     <ul id="tocify-subheader-admin-post-types" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="admin-post-types-GETapi-v1-admin-post-types">
+                                                    <li class="tocify-item level-2" data-unique="admin-post-types-POSTapi-v1-admin-post-types">
+                                <a href="#admin-post-types-POSTapi-v1-admin-post-types">Создание нового типа записи.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="admin-post-types-GETapi-v1-admin-post-types">
                                 <a href="#admin-post-types-GETapi-v1-admin-post-types">Список всех типов записей.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="admin-post-types-GETapi-v1-admin-post-types--slug-">
@@ -323,7 +326,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-11 19:49</li>
+        <li>Last updated: 2025-11-11 20:19</li>
     </ul>
 </div>
 
@@ -367,16 +370,16 @@
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"all\",
+    \"status\": \"scheduled\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-11T19:49:48\",
+    \"date_from\": \"2025-11-11T20:19:04\",
     \"date_to\": \"2106-12-11\",
     \"date_field\": \"updated\",
-    \"sort\": \"title.asc\",
+    \"sort\": \"published_at.asc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -410,16 +413,16 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "all",
+    "status": "scheduled",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-11T19:49:48",
+    "date_from": "2025-11-11T20:19:04",
     "date_to": "2106-12-11",
     "date_field": "updated",
-    "sort": "title.asc",
+    "sort": "published_at.asc",
     "per_page": 13
 };
 
@@ -455,16 +458,16 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'all',
+            'status' =&gt; 'scheduled',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-11T19:49:48',
+            'date_from' =&gt; '2025-11-11T20:19:04',
             'date_to' =&gt; '2106-12-11',
             'date_field' =&gt; 'updated',
-            'sort' =&gt; 'title.asc',
+            'sort' =&gt; 'published_at.asc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -785,10 +788,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="all"
+               value="scheduled"
                data-component="body">
     <br>
-<p>Example: <code>all</code></p>
+<p>Example: <code>scheduled</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -837,10 +840,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-11T19:49:48"
+               value="2025-11-11T20:19:04"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-11T19:49:48</code></p>
+<p>Must be a valid date. Example: <code>2025-11-11T20:19:04</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -875,10 +878,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="title.asc"
+               value="published_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>title.asc</code></p>
+<p>Example: <code>published_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -3543,12 +3546,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"document\",
+    \"kind\": \"audio\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
-    \"deleted\": \"with\",
-    \"sort\": \"created_at\",
-    \"order\": \"asc\",
+    \"deleted\": \"only\",
+    \"sort\": \"size_bytes\",
+    \"order\": \"desc\",
     \"page\": 3,
     \"per_page\": 21
 }"
@@ -3581,12 +3584,12 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "document",
+    "kind": "audio",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
-    "deleted": "with",
-    "sort": "created_at",
-    "order": "asc",
+    "deleted": "only",
+    "sort": "size_bytes",
+    "order": "desc",
     "page": 3,
     "per_page": 21
 };
@@ -3621,12 +3624,12 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'document',
+            'kind' =&gt; 'audio',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
-            'deleted' =&gt; 'with',
-            'sort' =&gt; 'created_at',
-            'order' =&gt; 'asc',
+            'deleted' =&gt; 'only',
+            'sort' =&gt; 'size_bytes',
+            'order' =&gt; 'desc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
         ],
@@ -3908,10 +3911,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="document"
+               value="audio"
                data-component="body">
     <br>
-<p>Example: <code>document</code></p>
+<p>Example: <code>audio</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -3946,10 +3949,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-media"
-               value="with"
+               value="only"
                data-component="body">
     <br>
-<p>Example: <code>with</code></p>
+<p>Example: <code>only</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -3960,10 +3963,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-media"
-               value="created_at"
+               value="size_bytes"
                data-component="body">
     <br>
-<p>Example: <code>created_at</code></p>
+<p>Example: <code>size_bytes</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>size_bytes</code></li> <li><code>mime</code></li></ul>
         </div>
@@ -3974,10 +3977,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-media"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -7961,11 +7964,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"true\",
+    \"enabled\": \"any\",
     \"page\": 2,
     \"per_page\": 13,
     \"sort\": \"updated_at\",
-    \"order\": \"desc\"
+    \"order\": \"asc\"
 }"
 </code></pre></div>
 
@@ -7993,11 +7996,11 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "true",
+    "enabled": "any",
     "page": 2,
     "per_page": 13,
     "sort": "updated_at",
-    "order": "desc"
+    "order": "asc"
 };
 
 fetch(url, {
@@ -8027,11 +8030,11 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'true',
+            'enabled' =&gt; 'any',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
             'sort' =&gt; 'updated_at',
-            'order' =&gt; 'desc',
+            'order' =&gt; 'asc',
         ],
     ]
 );
@@ -8273,10 +8276,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="true"
+               value="any"
                data-component="body">
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>any</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -8325,10 +8328,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-plugins"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -9087,7 +9090,329 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
     
 
-                                <h2 id="admin-post-types-GETapi-v1-admin-post-types">Список всех типов записей.</h2>
+                                <h2 id="admin-post-types-POSTapi-v1-admin-post-types">Создание нового типа записи.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-v1-admin-post-types">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/v1/api/v1/admin/post-types" \
+    --header "Authorization: Bearer Bearer {JWT}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"slug\": \"product\",
+    \"name\": \"Products\",
+    \"template\": \"single-product\",
+    \"options_json\": {
+        \"fields\": {
+            \"price\": {
+                \"type\": \"number\"
+            }
+        }
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/v1/api/v1/admin/post-types"
+);
+
+const headers = {
+    "Authorization": "Bearer Bearer {JWT}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "slug": "product",
+    "name": "Products",
+    "template": "single-product",
+    "options_json": {
+        "fields": {
+            "price": {
+                "type": "number"
+            }
+        }
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/v1/api/v1/admin/post-types';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer Bearer {JWT}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'slug' =&gt; 'product',
+            'name' =&gt; 'Products',
+            'template' =&gt; 'single-product',
+            'options_json' =&gt; [
+                'fields' =&gt; [
+                    'price' =&gt; [
+                        'type' =&gt; 'number',
+                    ],
+                ],
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-admin-post-types">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;slug&quot;: &quot;product&quot;,
+        &quot;label&quot;: &quot;Products&quot;,
+        &quot;options_json&quot;: {
+            &quot;fields&quot;: {
+                &quot;price&quot;: {
+                    &quot;type&quot;: &quot;number&quot;
+                }
+            }
+        },
+        &quot;created_at&quot;: &quot;2025-01-10T12:45:00+00:00&quot;,
+        &quot;updated_at&quot;: &quot;2025-01-10T12:45:00+00:00&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555555-5111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/forbidden&quot;,
+    &quot;title&quot;: &quot;Forbidden&quot;,
+    &quot;status&quot;: 403,
+    &quot;code&quot;: &quot;FORBIDDEN&quot;,
+    &quot;detail&quot;: &quot;This action is unauthorized.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The slug has already been taken.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555556&quot;,
+        &quot;errors&quot;: {
+            &quot;slug&quot;: [
+                &quot;The slug has already been taken.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555556-5111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;56666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-56666666777788889999000000000000-5666666677778888-01&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-admin-post-types" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-admin-post-types"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-admin-post-types"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-admin-post-types" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-admin-post-types">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-admin-post-types" data-method="POST"
+      data-path="api/v1/admin/post-types"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-admin-post-types', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-admin-post-types"
+                    onclick="tryItOut('POSTapi-v1-admin-post-types');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-admin-post-types"
+                    onclick="cancelTryOut('POSTapi-v1-admin-post-types');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-admin-post-types"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/admin/post-types</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-admin-post-types"
+               value="Bearer Bearer {JWT}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer Bearer {JWT}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-admin-post-types"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-admin-post-types"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="slug"                data-endpoint="POSTapi-v1-admin-post-types"
+               value="product"
+               data-component="body">
+    <br>
+<p>Уникальный slug PostType. Example: <code>product</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-v1-admin-post-types"
+               value="Products"
+               data-component="body">
+    <br>
+<p>Человекочитаемое название. Example: <code>Products</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>template</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="template"                data-endpoint="POSTapi-v1-admin-post-types"
+               value="single-product"
+               data-component="body">
+    <br>
+<p>nullable Имя blade-шаблона. Example: <code>single-product</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>options_json</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="options_json"                data-endpoint="POSTapi-v1-admin-post-types"
+               value=""
+               data-component="body">
+    <br>
+<p>Опциональные настройки.</p>
+        </div>
+        </form>
+
+                    <h2 id="admin-post-types-GETapi-v1-admin-post-types">Список всех типов записей.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -11477,7 +11802,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"name.asc\"
+    \"sort\": \"slug.desc\"
 }"
 </code></pre></div>
 
@@ -11504,7 +11829,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "name.asc"
+    "sort": "slug.desc"
 };
 
 fetch(url, {
@@ -11533,7 +11858,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'name.asc',
+            'sort' =&gt; 'slug.desc',
         ],
     ]
 );
@@ -11794,10 +12119,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="name.asc"
+               value="slug.desc"
                data-component="body">
     <br>
-<p>Example: <code>name.asc</code></p>
+<p>Example: <code>slug.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li></ul>
         </div>
@@ -13981,7 +14306,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"vxi4:4$\\/i\"
     ],
-    \"from\": \"2025-11-11T19:49:48\",
+    \"from\": \"2025-11-11T20:19:04\",
     \"to\": \"2106-12-11\",
     \"page\": 45,
     \"per_page\": 16
@@ -14019,7 +14344,7 @@ let body = {
     "term": [
         "vxi4:4$\/i"
     ],
-    "from": "2025-11-11T19:49:48",
+    "from": "2025-11-11T20:19:04",
     "to": "2106-12-11",
     "page": 45,
     "per_page": 16
@@ -14059,7 +14384,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 'vxi4:4$/i',
             ],
-            'from' =&gt; '2025-11-11T19:49:48',
+            'from' =&gt; '2025-11-11T20:19:04',
             'to' =&gt; '2106-12-11',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -14306,10 +14631,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-11T19:49:48"
+               value="2025-11-11T20:19:04"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-11T19:49:48</code></p>
+<p>Must be a valid date. Example: <code>2025-11-11T20:19:04</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

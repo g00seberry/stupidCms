@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-11 19:49:44_
+_Last generated: 2025-11-11 20:19:00_
 
 ## Web
 
@@ -32,6 +32,7 @@ _Last generated: 2025-11-11 19:49:44_
 | GET|HEAD | `api/v1/admin/reservations` | - | `PathReservationController@index` | api, jwt.auth, throttle:api, can:viewAny,App\Models\ReservedRoute |
 | POST | `api/v1/admin/reservations` | - | `PathReservationController@store` | api, jwt.auth, throttle:api, can:create,App\Models\ReservedRoute |
 | DELETE | `api/v1/admin/reservations/{path}` | - | `PathReservationController@destroy` | api, jwt.auth, throttle:api, can:deleteAny,App\Models\ReservedRoute |
+| POST | `api/v1/admin/post-types` | admin.v1.post-types.store | `PostTypeController@store` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
 | GET|HEAD | `api/v1/admin/post-types` | admin.v1.post-types.index | `PostTypeController@index` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
 | GET|HEAD | `api/v1/admin/post-types/{slug}` | admin.v1.post-types.show | `PostTypeController@show` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
 | PUT | `api/v1/admin/post-types/{slug}` | admin.v1.post-types.update | `PostTypeController@update` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
