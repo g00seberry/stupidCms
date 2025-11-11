@@ -33,16 +33,37 @@ final class SearchAdminController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "61111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-61111111222233334444555555555555-6111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000000-6666666677778888-01"
      * }
      * @response status=503 {
      *   "type": "https://stupidcms.dev/problems/service-unavailable",
      *   "title": "Service Unavailable",
      *   "status": 503,
-     *   "detail": "Search service is temporarily unavailable."
+     *   "code": "SERVICE_UNAVAILABLE",
+     *   "detail": "Search service is temporarily unavailable.",
+     *   "meta": {
+     *     "request_id": "61111111-2222-3333-4444-555555555556",
+     *     "service": "search"
+     *   },
+     *   "trace_id": "00-61111111222233334444555555555556-6111111122223333-01"
      * }
      */
     public function reindex(): SearchReindexAcceptedResource

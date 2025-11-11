@@ -41,24 +41,54 @@ class PathReservationController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555555-3111111122223333-01"
      * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/conflict",
-     *   "title": "Conflict",
+     *   "title": "Path already reserved",
      *   "status": 409,
+     *   "code": "CONFLICT",
      *   "detail": "Path already reserved.",
-     *   "path": "/promo",
-     *   "owner": "marketing"
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555556",
+     *     "path": "/promo",
+     *     "owner": "marketing"
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555556-3111111122223333-01"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
-     *   "title": "Unprocessable Entity",
+     *   "title": "Validation Error",
      *   "status": 422,
-     *   "detail": "The path field is required."
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The path field is required.",
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555557",
+     *     "errors": {
+     *       "path": [
+     *         "The path field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555557-3111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "36666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-36666666777788889999000000000000-3666666677778888-01"
      * }
      */
     public function store(StorePathReservationRequest $request): PathReservationMessageResource
@@ -98,25 +128,55 @@ class PathReservationController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555558",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555558-3111111122223333-01"
      * }
      * @response status=403 {
      *   "type": "https://stupidcms.dev/problems/forbidden",
      *   "title": "Forbidden",
      *   "status": 403,
+     *   "code": "FORBIDDEN",
      *   "detail": "Only owner marketing may release this path.",
-     *   "path": "/promo",
-     *   "owner": "marketing",
-     *   "attempted_source": "editorial"
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555559",
+     *     "path": "/promo",
+     *     "owner": "marketing",
+     *     "attempted_source": "editorial"
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555559-3111111122223333-01"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
-     *   "title": "Validation error",
+     *   "title": "Validation Error",
      *   "status": 422,
-     *   "detail": "Path is required either in URL parameter or request body."
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "Path is required either in URL parameter or request body.",
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555560",
+     *     "errors": {
+     *       "path": [
+     *         "The path field is required either in URL parameter or request body."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555660-3111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "36666666-7777-8888-9999-000000000001",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-36666666777788889999000000000001-3666666677778888-01"
      * }
      */
     public function destroy(string $path, DestroyPathReservationRequest $request): PathReservationMessageResource
@@ -167,10 +227,25 @@ class PathReservationController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "31111111-2222-3333-4444-555555555561",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-31111111222233334444555555555661-3111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "36666666-7777-8888-9999-000000000002",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-36666666777788889999000000000002-3666666677778888-01"
      * }
      */
     public function index(): PathReservationCollection

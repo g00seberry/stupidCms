@@ -35,16 +35,37 @@ class PostTypeController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555555-4111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "PostType not found",
      *   "status": 404,
-     *   "detail": "Unknown post type slug: article"
+     *   "code": "NOT_FOUND",
+     *   "detail": "Unknown post type slug: article",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555556",
+     *     "slug": "article"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555556-4111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "46666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-46666666777788889999000000000000-4666666677778888-01"
      * }
      */
     public function show(string $slug): PostTypeResource
@@ -93,24 +114,53 @@ class PostTypeController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555557",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555557-4111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "PostType not found",
      *   "status": 404,
-     *   "detail": "Unknown post type slug: article"
+     *   "code": "NOT_FOUND",
+     *   "detail": "Unknown post type slug: article",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555558",
+     *     "slug": "article"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555558-4111111122223333-01"
      * }
      * @response status=422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "options_json": [
-     *       "The options_json field is required."
-     *     ]
-     *   }
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The options_json field is required.",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555559",
+     *     "errors": {
+     *       "options_json": [
+     *         "The options_json field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555559-4111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "46666666-7777-8888-9999-000000000001",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-46666666777788889999000000000001-4666666677778888-01"
      * }
      */
     public function update(UpdatePostTypeRequest $request, string $slug): PostTypeResource

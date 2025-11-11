@@ -40,28 +40,61 @@ class MediaPreviewController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b01",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b01-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
-     *   "detail": "Media with ID uuid-media does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b02",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b02-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
-     *   "title": "Invalid variant",
+     *   "title": "Validation Error",
      *   "status": 422,
-     *   "detail": "Variant foo is not configured."
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "Variant foo is not configured.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b03",
+     *     "variant": "foo"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b03-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=500 {
      *   "type": "https://stupidcms.dev/problems/media-variant-error",
-     *   "title": "Internal Server Error",
+     *   "title": "Failed to generate media variant",
      *   "status": 500,
-     *   "detail": "Failed to generate media variant."
+     *   "code": "MEDIA_VARIANT_ERROR",
+     *   "detail": "Failed to generate media variant.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b04",
+     *     "variant": "thumbnail"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b04-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b05",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b05-0b0b0b0bb7cb6c30-01"
      * }
      */
     public function preview(Request $request, string $mediaId): RedirectResponse
@@ -114,22 +147,49 @@ class MediaPreviewController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b06",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b06-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
-     *   "detail": "Media with ID uuid-media does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b07",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b07-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=500 {
      *   "type": "https://stupidcms.dev/problems/media-download-error",
-     *   "title": "Internal Server Error",
+     *   "title": "Failed to generate download URL",
      *   "status": 500,
-     *   "detail": "Failed to generate download URL."
+     *   "code": "MEDIA_DOWNLOAD_ERROR",
+     *   "detail": "Failed to generate download URL.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b08",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b08-0b0b0b0bb7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b09",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b09-0b0b0b0bb7cb6c30-01"
      * }
      */
     public function download(string $mediaId): RedirectResponse

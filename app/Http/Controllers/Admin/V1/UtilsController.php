@@ -37,18 +37,41 @@ class UtilsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01"
      * }
      * @response status=422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "title": [
-     *       "The title field is required."
-     *     ]
-     *   }
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The title field is required.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e8b7cb6c3",
+     *     "errors": {
+     *       "title": [
+     *         "The title field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e8b7cb6c3-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e8c30033f",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01"
      * }
      */
     public function slugify(Request $request): SlugifyPreviewResource

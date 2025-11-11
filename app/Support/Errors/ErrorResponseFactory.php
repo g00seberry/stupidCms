@@ -11,8 +11,16 @@ final class ErrorResponseFactory
 {
     public static function make(ErrorPayload $payload): JsonResponse
     {
+        $data = $payload->toArray();
+
+        $meta = $data['meta'] ?? [];
+
+        if (is_array($meta) && array_key_exists('errors', $meta) && is_array($meta['errors'])) {
+            $data['errors'] = $meta['errors'];
+        }
+
         /** @var JsonResponse $response */
-        $response = response()->json($payload->toArray(), $payload->status);
+        $response = response()->json($data, $payload->status);
         $response->headers->set('Content-Type', 'application/problem+json');
 
         AdminResponseHeaders::apply($response);

@@ -63,16 +63,37 @@ class TermController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "5e9f51ce-7cee-d543-b8b7-cb6c30033f3f",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-5e9f51ce7ceed543b8b7cb6c30033f3f-5e9f51ce7ceed543-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
-     *   "detail": "Taxonomy with slug category does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5e9f51ce",
+     *     "taxonomy_slug": "category"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5e9f51ce-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5e9f51cf",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5e9f51cf-eed543b8b7cb6c30-01"
      * }
      */
     public function indexByTaxonomy(IndexTermsRequest $request, string $taxonomy): TermCollection
@@ -144,24 +165,53 @@ class TermController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "cb6c3003-3f5e-5e9f-51ce-7ceed543b8b7",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-cb6c30033f5e5e9f51ce7ceed543b8b7-cb6c30033f5e5e9f-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
-     *   "detail": "Taxonomy with slug category does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5ecb6c3003",
+     *     "taxonomy_slug": "category"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5ecb6c3003-eed543b8b7cb6c30-01"
      * }
      * @response status=422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "name": [
-     *       "The name field is required."
-     *     ]
-     *   }
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The name field is required.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5ecb6c3004",
+     *     "errors": {
+     *       "name": [
+     *         "The name field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5ecb6c3004-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5ecb6c3005",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5ecb6c3005-eed543b8b7cb6c30-01"
      * }
      */
     public function store(StoreTermRequest $request, string $taxonomy): TermResource
@@ -245,16 +295,37 @@ class TermController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "5ecb6c30-033f-3f5e-5e9f-51ce7ceed543",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-5ecb6c30033f3f5e5e9f51ce7ceed543-5ecb6c30033f3f5e-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Term not found",
      *   "status": 404,
-     *   "detail": "Term with ID 3 does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Term with ID 3 does not exist.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c30",
+     *     "term_id": 3
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c30-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c31",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c31-eed543b8b7cb6c30-01"
      * }
      */
     public function show(int $term): TermResource
@@ -295,24 +366,53 @@ class TermController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "7ceed543-b8b7-cb6c-3003-3f5e5ecb6c32",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-7ceed543b8b7cb6c30033f3f5ecb6c32-7ceed543b8b7cb6c-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Term not found",
      *   "status": 404,
-     *   "detail": "Term with ID 3 does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Term with ID 3 does not exist.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c33",
+     *     "term_id": 3
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c33-eed543b8b7cb6c30-01"
      * }
      * @response status=422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "slug": [
-     *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
-     *     ]
-     *   }
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c34",
+     *     "errors": {
+     *       "slug": [
+     *         "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c34-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c35",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c35-eed543b8b7cb6c30-01"
      * }
      */
     public function update(UpdateTermRequest $request, int $term): TermResource
@@ -376,22 +476,50 @@ class TermController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c36",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c36-eed543b8b7cb6c30-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Term not found",
      *   "status": 404,
-     *   "detail": "Term with ID 3 does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Term with ID 3 does not exist.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c37",
+     *     "term_id": 3
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c37-eed543b8b7cb6c30-01"
      * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/conflict",
      *   "title": "Term still attached",
      *   "status": 409,
-     *   "detail": "Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically."
+     *   "code": "CONFLICT",
+     *   "detail": "Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c38",
+     *     "term_id": 3,
+     *     "force_detach": false
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c38-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c39",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5ecb6c39-eed543b8b7cb6c30-01"
      * }
      */
     public function destroy(Request $request, int $term): Response

@@ -63,10 +63,25 @@ final class PluginsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555555-7111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "76666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-76666666777788889999000000000000-7666666677778888-01"
      * }
      */
     public function index(IndexPluginsRequest $request): PluginCollection
@@ -122,28 +137,61 @@ final class PluginsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555556",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555556-7111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/plugin-not-found",
      *   "title": "Plugin not found",
      *   "status": 404,
-     *   "detail": "Plugin with slug \"seo-tools\" was not found."
+     *   "code": "PLUGIN_NOT_FOUND",
+     *   "detail": "Plugin with slug \"seo-tools\" was not found.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555557",
+     *     "slug": "seo-tools"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555557-7111111122223333-01"
      * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/plugin-already-enabled",
      *   "title": "Plugin already enabled",
      *   "status": 409,
-     *   "detail": "Plugin seo-tools is already enabled."
+     *   "code": "PLUGIN_ALREADY_ENABLED",
+     *   "detail": "Plugin seo-tools is already enabled.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555558",
+     *     "slug": "seo-tools"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555558-7111111122223333-01"
      * }
      * @response status=500 {
      *   "type": "https://stupidcms.dev/problems/routes-reload-failed",
      *   "title": "Failed to reload plugin routes",
      *   "status": 500,
-     *   "detail": "Failed to reload plugin routes"
+     *   "code": "ROUTES_RELOAD_FAILED",
+     *   "detail": "Failed to reload plugin routes.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555559",
+     *     "slug": "seo-tools"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555559-7111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "76666666-7777-8888-9999-000000000001",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-76666666777788889999000000000001-7666666677778888-01"
      * }
      */
     public function enable(string $slug, PluginActivator $activator): PluginResource
@@ -172,28 +220,61 @@ final class PluginsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555560",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555660-7111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/plugin-not-found",
      *   "title": "Plugin not found",
      *   "status": 404,
-     *   "detail": "Plugin with slug \"seo-tools\" was not found."
+     *   "code": "PLUGIN_NOT_FOUND",
+     *   "detail": "Plugin with slug \"seo-tools\" was not found.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555561",
+     *     "slug": "seo-tools"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555661-7111111122223333-01"
      * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/plugin-already-disabled",
      *   "title": "Plugin already disabled",
      *   "status": 409,
-     *   "detail": "Plugin seo-tools is already disabled."
+     *   "code": "PLUGIN_ALREADY_DISABLED",
+     *   "detail": "Plugin seo-tools is already disabled.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555562",
+     *     "slug": "seo-tools"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555662-7111111122223333-01"
      * }
      * @response status=500 {
      *   "type": "https://stupidcms.dev/problems/routes-reload-failed",
      *   "title": "Failed to reload plugin routes",
      *   "status": 500,
-     *   "detail": "Failed to reload plugin routes"
+     *   "code": "ROUTES_RELOAD_FAILED",
+     *   "detail": "Failed to reload plugin routes.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555563",
+     *     "slug": "seo-tools"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555663-7111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "76666666-7777-8888-9999-000000000002",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-76666666777788889999000000000002-7666666677778888-01"
      * }
      */
     public function disable(string $slug, PluginActivator $activator): PluginResource
@@ -226,22 +307,51 @@ final class PluginsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555564",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555664-7111111122223333-01"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/invalid-plugin-manifest",
      *   "title": "Invalid plugin manifest",
      *   "status": 422,
-     *   "detail": "Plugin manifest is invalid."
+     *   "code": "INVALID_PLUGIN_MANIFEST",
+     *   "detail": "Plugin manifest is invalid.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555565",
+     *     "manifest": "plugins/seo-tools/manifest.json"
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555665-7111111122223333-01"
      * }
      * @response status=500 {
      *   "type": "https://stupidcms.dev/problems/routes-reload-failed",
      *   "title": "Failed to reload plugin routes",
      *   "status": 500,
-     *   "detail": "Failed to reload plugin routes"
+     *   "code": "ROUTES_RELOAD_FAILED",
+     *   "detail": "Failed to reload plugin routes.",
+     *   "meta": {
+     *     "request_id": "71111111-2222-3333-4444-555555555566",
+     *     "providers": [
+     *       "Plugins\\SeoTools\\ServiceProvider"
+     *     ]
+     *   },
+     *   "trace_id": "00-71111111222233334444555555555666-7111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "76666666-7777-8888-9999-000000000003",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-76666666777788889999000000000003-7666666677778888-01"
      * }
      */
     public function sync(PluginsSynchronizer $synchronizer): PluginSyncResource

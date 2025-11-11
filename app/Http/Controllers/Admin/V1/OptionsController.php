@@ -68,21 +68,41 @@ class OptionsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a01",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a01-eed543b8b7cb6c30-01"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/invalid-option-identifier",
-     *   "title": "Validation error",
+     *   "title": "Validation Error",
      *   "status": 422,
+     *   "code": "INVALID_OPTION_IDENTIFIER",
      *   "detail": "The provided option namespace/key is invalid.",
-     *   "errors": {
-     *     "namespace": [
-     *       "The namespace format is invalid."
-     *     ]
-     *   }
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a02",
+     *     "errors": {
+     *       "namespace": [
+     *         "The namespace format is invalid."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a02-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a03",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a03-eed543b8b7cb6c30-01"
      * }
      */
     public function index(IndexOptionsRequest $request, string $namespace): OptionCollection
@@ -140,16 +160,38 @@ class OptionsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a04",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a04-eed543b8b7cb6c30-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Option not found",
      *   "status": 404,
-     *   "detail": "Option \"site/hero.title\" was not found."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Option \"site/hero.title\" was not found.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a05",
+     *     "namespace": "site",
+     *     "key": "hero.title"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a05-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a06",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a06-eed543b8b7cb6c30-01"
      * }
      */
     public function show(string $namespace, string $key): OptionResource
@@ -194,21 +236,41 @@ class OptionsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a07",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a07-eed543b8b7cb6c30-01"
      * }
      * @response status=422 {
-     *   "type": "https://stupidcms.dev/problems/validation-error",
-     *   "title": "Validation error",
+     *   "type": "https://stupidcms.dev/problems/invalid-option-payload",
+     *   "title": "Validation Error",
      *   "status": 422,
+     *   "code": "INVALID_OPTION_PAYLOAD",
      *   "detail": "Invalid option payload.",
-     *   "errors": {
-     *     "value": [
-     *       "The value must be valid JSON."
-     *     ]
-     *   }
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a08",
+     *     "errors": {
+     *       "value": [
+     *         "The value must be valid JSON."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a08-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a09",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a09-eed543b8b7cb6c30-01"
      * }
      */
     public function put(PutOptionRequest $request, string $namespace, string $key): OptionResource
@@ -245,16 +307,38 @@ class OptionsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a0a",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a0a-eed543b8b7cb6c30-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Option not found",
      *   "status": 404,
-     *   "detail": "Option \"site/hero.title\" was not found."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Option \"site/hero.title\" was not found.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a0b",
+     *     "namespace": "site",
+     *     "key": "hero.title"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a0b-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a0c",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a0c-eed543b8b7cb6c30-01"
      * }
      */
     public function destroy(string $namespace, string $key): Response
@@ -300,16 +384,38 @@ class OptionsController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a0d",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a0d-eed543b8b7cb6c30-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Option not found",
      *   "status": 404,
-     *   "detail": "Option \"site/hero.title\" was not found."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Option \"site/hero.title\" was not found.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a0e",
+     *     "namespace": "site",
+     *     "key": "hero.title"
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a0e-eed543b8b7cb6c30-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e0a0a0a0f",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e0a0a0a0f-eed543b8b7cb6c30-01"
      * }
      */
     public function restore(string $namespace, string $key): OptionResource

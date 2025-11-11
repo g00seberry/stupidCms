@@ -58,10 +58,25 @@ class TaxonomyController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555555-2111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "26666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-26666666777788889999000000000000-2666666677778888-01"
      * }
      */
     public function index(IndexTaxonomiesRequest $request): TaxonomyCollection
@@ -114,18 +129,41 @@ class TaxonomyController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555556",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555556-2111111122223333-01"
      * }
      * @response status=422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "slug": [
-     *       "The slug has already been taken."
-     *     ]
-     *   }
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The given data was invalid.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555557",
+     *     "errors": {
+     *       "slug": [
+     *         "The slug has already been taken."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555557-2111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "26666666-7777-8888-9999-000000000001",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-26666666777788889999000000000001-2666666677778888-01"
      * }
      */
     public function store(StoreTaxonomyRequest $request): TaxonomyResource
@@ -182,16 +220,37 @@ class TaxonomyController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555558",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555558-2111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
-     *   "detail": "Taxonomy with slug category does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555559",
+     *     "slug": "category"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555559-2111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "26666666-7777-8888-9999-000000000002",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-26666666777788889999000000000002-2666666677778888-01"
      * }
      */
     public function show(string $slug): TaxonomyResource
@@ -234,24 +293,53 @@ class TaxonomyController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555560",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555660-2111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
-     *   "detail": "Taxonomy with slug category does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555561",
+     *     "slug": "category"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555661-2111111122223333-01"
      * }
      * @response status=422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "slug": [
-     *       "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
-     *     ]
-     *   }
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555562",
+     *     "errors": {
+     *       "slug": [
+     *         "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555662-2111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "26666666-7777-8888-9999-000000000003",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-26666666777788889999000000000003-2666666677778888-01"
      * }
      */
     public function update(UpdateTaxonomyRequest $request, string $slug): TaxonomyResource
@@ -322,23 +410,49 @@ class TaxonomyController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555563",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555663-2111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Taxonomy not found",
      *   "status": 404,
-     *   "detail": "Taxonomy with slug category does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555564",
+     *     "slug": "category"
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555664-2111111122223333-01"
      * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/conflict",
      *   "title": "Taxonomy has terms",
      *   "status": 409,
+     *   "code": "CONFLICT",
      *   "detail": "Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.",
-     *   "path": "/api/v1/admin/taxonomies/category"
+     *   "meta": {
+     *     "request_id": "21111111-2222-3333-4444-555555555565",
+     *     "terms_count": 5
+     *   },
+     *   "trace_id": "00-21111111222233334444555555555665-2111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "26666666-7777-8888-9999-000000000004",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-26666666777788889999000000000004-2666666677778888-01"
      * }
      */
     public function destroy(Request $request, string $slug): Response

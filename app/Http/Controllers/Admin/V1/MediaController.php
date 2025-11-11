@@ -75,10 +75,25 @@ class MediaController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555555-1111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000000-6666666677778888-01"
      * }
      */
     public function index(IndexMediaRequest $request): MediaCollection
@@ -177,21 +192,41 @@ class MediaController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555556",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555556-1111111122223333-01"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
-     *   "title": "Validation error",
+     *   "title": "Validation Error",
      *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
      *   "detail": "The media payload failed validation constraints.",
-     *   "errors": {
-     *     "file": [
-     *       "The file field is required."
-     *     ]
-     *   }
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555557",
+     *     "errors": {
+     *       "file": [
+     *         "The file field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555557-1111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000001",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000001-6666666677778888-01"
      * }
      */
     public function store(StoreMediaRequest $request): MediaResource
@@ -238,16 +273,37 @@ class MediaController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555558",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555558-1111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
-     *   "detail": "Media with ID uuid-media does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555559",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555559-1111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000002",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000002-6666666677778888-01"
      * }
      */
     public function show(string $mediaId): MediaResource
@@ -285,16 +341,37 @@ class MediaController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555560",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555660-1111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
-     *   "detail": "Media with ID uuid-media does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555561",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555661-1111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000003",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000003-6666666677778888-01"
      * }
      */
     public function update(UpdateMediaRequest $request, string $mediaId): MediaResource
@@ -325,28 +402,54 @@ class MediaController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555562",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555662-1111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
-     *   "detail": "Media with ID uuid-media does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555563",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555663-1111111122223333-01"
      * }
      * @response status=409 {
      *   "type": "https://stupidcms.dev/problems/media-in-use",
      *   "title": "Media in use",
      *   "status": 409,
+     *   "code": "MEDIA_IN_USE",
      *   "detail": "Media is referenced by content and cannot be deleted.",
-     *   "references": [
-     *     {
-     *       "entry_id": 42,
-     *       "title": "Landing page"
-     *     }
-     *   ]
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555564",
+     *     "references": [
+     *       {
+     *         "entry_id": 42,
+     *         "title": "Landing page"
+     *       }
+     *     ]
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555664-1111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000004",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000004-6666666677778888-01"
      * }
      */
     public function destroy(Request $request, string $mediaId): HttpResponse
@@ -403,16 +506,38 @@ class MediaController extends Controller
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
      *   "status": 401,
-     *   "detail": "Authentication is required to access this resource."
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555565",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555665-1111111122223333-01"
      * }
      * @response status=404 {
      *   "type": "https://stupidcms.dev/problems/not-found",
      *   "title": "Media not found",
      *   "status": 404,
-     *   "detail": "Deleted media with ID uuid-media does not exist."
+     *   "code": "NOT_FOUND",
+     *   "detail": "Deleted media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555566",
+     *     "media_id": "uuid-media",
+     *     "trashed": true
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555666-1111111122223333-01"
      * }
      * @response status=429 {
-     *   "message": "Too Many Attempts."
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000005",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000005-6666666677778888-01"
      * }
      */
     public function restore(Request $request, string $mediaId): MediaResource

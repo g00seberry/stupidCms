@@ -68,5 +68,6 @@
 - Для построения ошибки используйте `ErrorPayload::create()` и передавайте в ErrorKernel.
 - Дополнительные поля добавляются через `withMeta()`/`withAddedMeta()`.
 - `trace_id` задаётся на стадии обогащения (middleware трассировки или ErrorKernel).
+- `UNAUTHORIZED` используется для всех отказов аутентификации; конкретная причина (`missing_token`, `invalid_token`, `invalid_subject`, `user_not_found`, `unknown`) передаётся в `meta.reason`.
 
 
