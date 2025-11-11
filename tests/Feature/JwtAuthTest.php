@@ -39,7 +39,7 @@ final class JwtAuthTest extends TestCase
         $response->assertHeader('WWW-Authenticate', 'Bearer');
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Pragma', 'no-cache');
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => $this->errorDetail(ErrorCode::UNAUTHORIZED),
             'meta.reason' => 'missing_token',
         ]);
@@ -51,7 +51,7 @@ final class JwtAuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('WWW-Authenticate', 'Bearer');
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_INVALID, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => $this->errorDetail(ErrorCode::UNAUTHORIZED),
             'meta.reason' => 'invalid_token',
         ]);
@@ -87,7 +87,7 @@ final class JwtAuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('WWW-Authenticate', 'Bearer');
-        $this->assertErrorResponse($response, ErrorCode::JWT_USER_NOT_FOUND, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => $this->errorDetail(ErrorCode::UNAUTHORIZED),
             'meta.reason' => 'user_not_found',
         ]);
@@ -106,7 +106,7 @@ final class JwtAuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertHeader('WWW-Authenticate', 'Bearer');
-        $this->assertErrorResponse($response, ErrorCode::JWT_SUBJECT_INVALID, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => $this->errorDetail(ErrorCode::UNAUTHORIZED),
             'meta.reason' => 'invalid_subject',
         ]);

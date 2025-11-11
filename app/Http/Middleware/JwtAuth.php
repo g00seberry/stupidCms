@@ -74,23 +74,19 @@ final class JwtAuth
     }
 
     /**
-     * @var array<string, array{code: string, log_detail: string}>
+     * @var array<string, array{log_detail: string}>
      */
     private const FAILURE_RESPONSES = [
         'missing_token' => [
-            'code' => 'JWT_ACCESS_TOKEN_MISSING',
             'log_detail' => 'Access token cookie is missing.',
         ],
         'invalid_token' => [
-            'code' => 'JWT_ACCESS_TOKEN_INVALID',
             'log_detail' => 'Access token is invalid.',
         ],
         'invalid_subject' => [
-            'code' => 'JWT_SUBJECT_INVALID',
             'log_detail' => 'Token subject claim is invalid.',
         ],
         'user_not_found' => [
-            'code' => 'JWT_USER_NOT_FOUND',
             'log_detail' => 'Authenticated user was not found.',
         ],
     ];
@@ -98,16 +94,13 @@ final class JwtAuth
     private function respondUnauthorized(string $reason): never
     {
         $response = self::FAILURE_RESPONSES[$reason] ?? [
-            'code' => 'JWT_AUTH_FAILURE',
             'log_detail' => 'Unknown JWT authentication failure.',
         ];
 
-        $code = ErrorCode::tryFrom($response['code']) ?? ErrorCode::JWT_AUTH_FAILURE;
-
-        report(new JwtAuthenticationException($reason, $response['code'], $response['log_detail']));
+        report(new JwtAuthenticationException($reason, $response['log_detail']));
 
         $this->throwErrorWithHeaders(
-            $code,
+            ErrorCode::UNAUTHORIZED,
             detail: null,
             meta: [
                 'reason' => $reason,

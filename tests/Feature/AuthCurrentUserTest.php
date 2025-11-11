@@ -46,7 +46,7 @@ final class AuthCurrentUserTest extends TestCase
         $response = $this->getJson('/api/v1/admin/auth/current');
 
         $response->assertStatus(401);
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Authentication is required to access this resource.',
         ]);
     }
@@ -62,7 +62,7 @@ final class AuthCurrentUserTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertHeader('WWW-Authenticate', 'Bearer');
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_INVALID, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'meta.reason' => 'invalid_token',
         ]);
     }

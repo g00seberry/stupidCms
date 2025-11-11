@@ -14,7 +14,6 @@ final class JwtAuthenticationException extends RuntimeException implements Error
 {
     public function __construct(
         public readonly string $reason,
-        public readonly string $errorCode,
         public readonly string $detail,
     ) {
         parent::__construct(
@@ -22,16 +21,9 @@ final class JwtAuthenticationException extends RuntimeException implements Error
         );
     }
 
-    public function getErrorCode(): string
-    {
-        return $this->errorCode;
-    }
-
     public function toError(ErrorFactory $factory): ErrorPayload
     {
-        $code = ErrorCode::tryFrom($this->errorCode) ?? ErrorCode::UNAUTHORIZED;
-
-        return $factory->for($code)
+        return $factory->for(ErrorCode::UNAUTHORIZED)
             ->detail('Authentication is required to access this resource.')
             ->meta([
                 'reason' => $this->reason,

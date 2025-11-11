@@ -60,11 +60,6 @@
 | `MEDIA_DOWNLOAD_ERROR` | Ошибка скачивания медиа |
 | `MEDIA_VARIANT_ERROR` | Ошибка генерации варианта медиа |
 | `CSRF_TOKEN_MISMATCH` | Несовпадение CSRF токена |
-| `JWT_ACCESS_TOKEN_MISSING` | Отсутствует access-token |
-| `JWT_ACCESS_TOKEN_INVALID` | Невалидный access-token |
-| `JWT_SUBJECT_INVALID` | Некорректный субъект токена |
-| `JWT_USER_NOT_FOUND` | Пользователь не найден по токену |
-| `JWT_AUTH_FAILURE` | Прочие ошибки авторизации JWT |
 
 Расширение списка допускается только через обновление enum и этой таблицы.
 

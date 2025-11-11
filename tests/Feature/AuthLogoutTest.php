@@ -24,7 +24,7 @@ class AuthLogoutTest extends TestCase
         $response = $this->postJson('/api/v1/auth/logout');
 
         $response->assertStatus(401);
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'meta.reason' => 'missing_token',
         ]);
     }
@@ -139,7 +139,7 @@ class AuthLogoutTest extends TestCase
         ]);
 
         $response->assertStatus(401);
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_INVALID, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'meta.reason' => 'invalid_token',
         ]);
     }

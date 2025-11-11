@@ -79,7 +79,7 @@ class Rfc7807ErrorTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $response->assertHeader('WWW-Authenticate', 'Bearer');
-        $this->assertErrorResponse($response, ErrorCode::JWT_ACCESS_TOKEN_MISSING, [
+        $this->assertErrorResponse($response, ErrorCode::UNAUTHORIZED, [
             'detail' => 'Authentication is required to access this resource.',
             'meta.reason' => 'missing_token',
         ]);

@@ -153,36 +153,6 @@ return [
             'status' => 419,
             'detail' => 'CSRF token mismatch.',
         ],
-        ErrorCode::JWT_ACCESS_TOKEN_MISSING->value => [
-            'uri' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'detail' => 'Authentication is required to access this resource.',
-        ],
-        ErrorCode::JWT_ACCESS_TOKEN_INVALID->value => [
-            'uri' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'detail' => 'Authentication is required to access this resource.',
-        ],
-        ErrorCode::JWT_SUBJECT_INVALID->value => [
-            'uri' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'detail' => 'Authentication is required to access this resource.',
-        ],
-        ErrorCode::JWT_USER_NOT_FOUND->value => [
-            'uri' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'detail' => 'Authentication is required to access this resource.',
-        ],
-        ErrorCode::JWT_AUTH_FAILURE->value => [
-            'uri' => 'https://stupidcms.dev/problems/unauthorized',
-            'title' => 'Unauthorized',
-            'status' => 401,
-            'detail' => 'Authentication is required to access this resource.',
-        ],
     ],
 
     'mappings' => [
