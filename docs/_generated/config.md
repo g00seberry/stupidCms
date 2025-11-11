@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-10 05:11:37_
+_Last generated: 2025-11-11 15:14:12_
 
 ## app
 
@@ -271,6 +271,118 @@ _Last generated: 2025-11-10 05:11:37_
 | `redis.cache.backoff_algorithm` | `decorrelated_jitter` | string |
 | `redis.cache.backoff_base` | `100` | integer |
 | `redis.cache.backoff_cap` | `1000` | integer |
+
+## errors
+
+**File**: `config/errors.php`
+
+| Key | Value | Type |
+|-----|-------|------|
+| `kernel.enabled` | `false` | boolean |
+| `types.BAD_REQUEST.uri` | `https://stupidcms.dev/problems/bad-request` | string |
+| `types.BAD_REQUEST.title` | `Bad Request` | string |
+| `types.BAD_REQUEST.status` | `400` | integer |
+| `types.BAD_REQUEST.detail` | `The request could not be understood or was miss...` | string |
+| `types.UNAUTHORIZED.uri` | `https://stupidcms.dev/problems/unauthorized` | string |
+| `types.UNAUTHORIZED.title` | `Unauthorized` | string |
+| `types.UNAUTHORIZED.status` | `401` | integer |
+| `types.UNAUTHORIZED.detail` | `Authentication is required to access this resou...` | string |
+| `types.FORBIDDEN.uri` | `https://stupidcms.dev/problems/forbidden` | string |
+| `types.FORBIDDEN.title` | `Forbidden` | string |
+| `types.FORBIDDEN.status` | `403` | integer |
+| `types.FORBIDDEN.detail` | `Admin privileges are required.` | string |
+| `types.NOT_FOUND.uri` | `https://stupidcms.dev/problems/not-found` | string |
+| `types.NOT_FOUND.title` | `Not Found` | string |
+| `types.NOT_FOUND.status` | `404` | integer |
+| `types.NOT_FOUND.detail` | `The requested resource was not found.` | string |
+| `types.VALIDATION_ERROR.uri` | `https://stupidcms.dev/problems/validation-error` | string |
+| `types.VALIDATION_ERROR.title` | `Validation Error` | string |
+| `types.VALIDATION_ERROR.status` | `422` | integer |
+| `types.VALIDATION_ERROR.detail` | `Validation failed.` | string |
+| `types.CONFLICT.uri` | `https://stupidcms.dev/problems/conflict` | string |
+| `types.CONFLICT.title` | `Conflict` | string |
+| `types.CONFLICT.status` | `409` | integer |
+| `types.CONFLICT.detail` | `The request conflicts with the current state of...` | string |
+| `types.RATE_LIMIT_EXCEEDED.uri` | `https://stupidcms.dev/problems/rate-limit-exceeded` | string |
+| `types.RATE_LIMIT_EXCEEDED.title` | `Too Many Requests` | string |
+| `types.RATE_LIMIT_EXCEEDED.status` | `429` | integer |
+| `types.RATE_LIMIT_EXCEEDED.detail` | `Rate limit exceeded.` | string |
+| `types.SERVICE_UNAVAILABLE.uri` | `https://stupidcms.dev/problems/service-unavailable` | string |
+| `types.SERVICE_UNAVAILABLE.title` | `Service Unavailable` | string |
+| `types.SERVICE_UNAVAILABLE.status` | `503` | integer |
+| `types.SERVICE_UNAVAILABLE.detail` | `Service is temporarily unavailable.` | string |
+| `types.INTERNAL_SERVER_ERROR.uri` | `https://stupidcms.dev/problems/internal-error` | string |
+| `types.INTERNAL_SERVER_ERROR.title` | `Internal Server Error` | string |
+| `types.INTERNAL_SERVER_ERROR.status` | `500` | integer |
+| `types.INTERNAL_SERVER_ERROR.detail` | `An unexpected error occurred.` | string |
+| `types.INVALID_OPTION_IDENTIFIER.uri` | `https://stupidcms.dev/problems/invalid-option-i...` | string |
+| `types.INVALID_OPTION_IDENTIFIER.title` | `Validation Error` | string |
+| `types.INVALID_OPTION_IDENTIFIER.status` | `422` | integer |
+| `types.INVALID_OPTION_IDENTIFIER.detail` | `The provided option namespace/key is invalid.` | string |
+| `types.INVALID_OPTION_PAYLOAD.uri` | `https://stupidcms.dev/problems/invalid-option-p...` | string |
+| `types.INVALID_OPTION_PAYLOAD.title` | `Validation Error` | string |
+| `types.INVALID_OPTION_PAYLOAD.status` | `422` | integer |
+| `types.INVALID_OPTION_PAYLOAD.detail` | `The provided option payload is invalid.` | string |
+| `types.INVALID_JSON_VALUE.uri` | `https://stupidcms.dev/problems/invalid-json-value` | string |
+| `types.INVALID_JSON_VALUE.title` | `Validation Error` | string |
+| `types.INVALID_JSON_VALUE.status` | `422` | integer |
+| `types.INVALID_JSON_VALUE.detail` | `The provided JSON value is invalid.` | string |
+| `types.INVALID_OPTION_FILTERS.uri` | `https://stupidcms.dev/problems/invalid-option-f...` | string |
+| `types.INVALID_OPTION_FILTERS.title` | `Validation Error` | string |
+| `types.INVALID_OPTION_FILTERS.status` | `422` | integer |
+| `types.INVALID_OPTION_FILTERS.detail` | `The provided option filters are invalid.` | string |
+| `types.INVALID_PLUGIN_MANIFEST.uri` | `https://stupidcms.dev/problems/invalid-plugin-m...` | string |
+| `types.INVALID_PLUGIN_MANIFEST.title` | `Invalid plugin manifest` | string |
+| `types.INVALID_PLUGIN_MANIFEST.status` | `422` | integer |
+| `types.INVALID_PLUGIN_MANIFEST.detail` | `Plugin manifest is invalid.` | string |
+| `types.PLUGIN_ALREADY_DISABLED.uri` | `https://stupidcms.dev/problems/plugin-already-d...` | string |
+| `types.PLUGIN_ALREADY_DISABLED.title` | `Plugin already disabled` | string |
+| `types.PLUGIN_ALREADY_DISABLED.status` | `409` | integer |
+| `types.PLUGIN_ALREADY_DISABLED.detail` | `Plugin is already disabled.` | string |
+| `types.PLUGIN_ALREADY_ENABLED.uri` | `https://stupidcms.dev/problems/plugin-already-e...` | string |
+| `types.PLUGIN_ALREADY_ENABLED.title` | `Plugin already enabled` | string |
+| `types.PLUGIN_ALREADY_ENABLED.status` | `409` | integer |
+| `types.PLUGIN_ALREADY_ENABLED.detail` | `Plugin is already enabled.` | string |
+| `types.PLUGIN_NOT_FOUND.uri` | `https://stupidcms.dev/problems/plugin-not-found` | string |
+| `types.PLUGIN_NOT_FOUND.title` | `Plugin not found` | string |
+| `types.PLUGIN_NOT_FOUND.status` | `404` | integer |
+| `types.PLUGIN_NOT_FOUND.detail` | `Plugin was not found.` | string |
+| `types.ROUTES_RELOAD_FAILED.uri` | `https://stupidcms.dev/problems/routes-reload-fa...` | string |
+| `types.ROUTES_RELOAD_FAILED.title` | `Failed to reload plugin routes` | string |
+| `types.ROUTES_RELOAD_FAILED.status` | `500` | integer |
+| `types.ROUTES_RELOAD_FAILED.detail` | `Failed to reload plugin routes.` | string |
+| `types.MEDIA_IN_USE.uri` | `https://stupidcms.dev/problems/media-in-use` | string |
+| `types.MEDIA_IN_USE.title` | `Media in use` | string |
+| `types.MEDIA_IN_USE.status` | `409` | integer |
+| `types.MEDIA_IN_USE.detail` | `Media is referenced by content and cannot be de...` | string |
+| `types.MEDIA_DOWNLOAD_ERROR.uri` | `https://stupidcms.dev/problems/media-download-e...` | string |
+| `types.MEDIA_DOWNLOAD_ERROR.title` | `Failed to download media` | string |
+| `types.MEDIA_DOWNLOAD_ERROR.status` | `500` | integer |
+| `types.MEDIA_DOWNLOAD_ERROR.detail` | `Failed to generate download URL.` | string |
+| `types.MEDIA_VARIANT_ERROR.uri` | `https://stupidcms.dev/problems/media-variant-error` | string |
+| `types.MEDIA_VARIANT_ERROR.title` | `Failed to generate media variant` | string |
+| `types.MEDIA_VARIANT_ERROR.status` | `500` | integer |
+| `types.MEDIA_VARIANT_ERROR.detail` | `Failed to generate media variant.` | string |
+| `types.CSRF_TOKEN_MISMATCH.uri` | `https://stupidcms.dev/problems/csrf-token-mismatch` | string |
+| `types.CSRF_TOKEN_MISMATCH.title` | `CSRF Token Mismatch` | string |
+| `types.CSRF_TOKEN_MISMATCH.status` | `419` | integer |
+| `types.CSRF_TOKEN_MISMATCH.detail` | `CSRF token mismatch.` | string |
+| `mappings.Illuminate\Validation\ValidationException.builder` | _object_ | object |
+| `mappings.Illuminate\Auth\AuthenticationException.builder` | _object_ | object |
+| `mappings.Illuminate\Auth\Access\AuthorizationException.builder` | _object_ | object |
+| `mappings.Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException.builder` | _object_ | object |
+| `mappings.Symfony\Component\HttpKernel\Exception\NotFoundHttpException.builder` | _object_ | object |
+| `mappings.Illuminate\Http\Exceptions\ThrottleRequestsException.builder` | _object_ | object |
+| `mappings.Illuminate\Database\QueryException.builder` | _object_ | object |
+| `mappings.Illuminate\Database\QueryException.report.level` | `error` | string |
+| `mappings.Illuminate\Database\QueryException.report.message` | `Database error during API request` | string |
+| `mappings.Illuminate\Database\QueryException.report.context` | _object_ | object |
+| `mappings.Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException.builder` | _object_ | object |
+| `mappings.Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException.report.level` | `error` | string |
+| `mappings.Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException.report.message` | `Service unavailable during API request` | string |
+| `fallback.builder` | _object_ | object |
+| `fallback.report.level` | `error` | string |
+| `fallback.report.message` | `Unhandled exception in API request` | string |
 
 ## filesystems
 

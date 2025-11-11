@@ -320,7 +320,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-10 05:11</li>
+        <li>Last updated: 2025-11-11 15:14</li>
     </ul>
 </div>
 
@@ -370,10 +370,10 @@
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-10T05:11:40\",
-    \"date_to\": \"2106-12-09\",
-    \"date_field\": \"published\",
-    \"sort\": \"title.desc\",
+    \"date_from\": \"2025-11-11T15:14:16\",
+    \"date_to\": \"2106-12-11\",
+    \"date_field\": \"updated\",
+    \"sort\": \"updated_at.asc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -413,10 +413,10 @@ let body = {
     "term": [
         17
     ],
-    "date_from": "2025-11-10T05:11:40",
-    "date_to": "2106-12-09",
-    "date_field": "published",
-    "sort": "title.desc",
+    "date_from": "2025-11-11T15:14:16",
+    "date_to": "2106-12-11",
+    "date_field": "updated",
+    "sort": "updated_at.asc",
     "per_page": 13
 };
 
@@ -458,10 +458,10 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-10T05:11:40',
-            'date_to' =&gt; '2106-12-09',
-            'date_field' =&gt; 'published',
-            'sort' =&gt; 'title.desc',
+            'date_from' =&gt; '2025-11-11T15:14:16',
+            'date_to' =&gt; '2106-12-11',
+            'date_field' =&gt; 'updated',
+            'sort' =&gt; 'updated_at.asc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -513,7 +513,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;f51ce7c9-eed5-43b8-b7cb-6c30033f3f5e&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-f51ce7c9eed543b8b7cb6c30033f3f5e-f51ce7c9eed543b8-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -526,7 +531,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Forbidden&quot;,
     &quot;status&quot;: 403,
     &quot;code&quot;: &quot;FORBIDDEN&quot;,
-    &quot;detail&quot;: &quot;Admin privileges are required.&quot;
+    &quot;detail&quot;: &quot;Admin privileges are required.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b6c3003-3f5e-9f51-ce7c-eed543b8b7cb&quot;,
+        &quot;permission&quot;: &quot;entries.view&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b6c30033f5e9f51ce7ceed543b8b7cb-0b6c30033f5e9f51-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -535,7 +545,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ef51ce7c9&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ef51ce7c9-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -815,10 +834,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-10T05:11:40"
+               value="2025-11-11T15:14:16"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-10T05:11:40</code></p>
+<p>Must be a valid date. Example: <code>2025-11-11T15:14:16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -827,10 +846,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_to"                data-endpoint="GETapi-v1-admin-entries"
-               value="2106-12-09"
+               value="2106-12-11"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>date_from</code>. Example: <code>2106-12-09</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>date_from</code>. Example: <code>2106-12-11</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_field</code></b>&nbsp;&nbsp;
@@ -839,10 +858,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_field"                data-endpoint="GETapi-v1-admin-entries"
-               value="published"
+               value="updated"
                data-component="body">
     <br>
-<p>Example: <code>published</code></p>
+<p>Example: <code>updated</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated</code></li> <li><code>published</code></li></ul>
         </div>
@@ -853,10 +872,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="title.desc"
+               value="updated_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>title.desc</code></p>
+<p>Example: <code>updated_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -1032,7 +1051,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;f3f5e9f5-1ce7-ceed-543b-8b7cb6c30033&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-f3f5e9f51ce7ceed543b8b7cb6c30033-f3f5e9f51ce7ceed-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1041,15 +1065,23 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;post_type&quot;: [
-            &quot;The specified post type does not exist.&quot;
-        ],
-        &quot;slug&quot;: [
-            &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The specified post type does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;7ceed543-b8b7-cb6c-3003-3f5ef51ce7c9&quot;,
+        &quot;errors&quot;: {
+            &quot;post_type&quot;: [
+                &quot;The specified post type does not exist.&quot;
+            ],
+            &quot;slug&quot;: [
+                &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-7ceed543b8b7cb6c30033f5ef51ce7c9-7ceed543b8b7cb6c-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1058,7 +1090,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ef51ce7c9&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ef51ce7c9-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -1368,7 +1409,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;1b8b7cb6-c300-33f3-f5e9-f51ce7ceed54&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-1b8b7cb6c30033f3f5e9f51ce7ceed54-1b8b7cb6c30033f3-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1381,7 +1427,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;f5e9f51c-e7ce-ed54-3b8b-7cb6c30033f3&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-f5e9f51ce7ceed543b8b7cb6c30033f3-f5e9f51ce7ceed54-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1390,7 +1441,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e9f51ce7c&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e9f51ce7c-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -1631,7 +1691,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;b7cb6c30-033f-3f5e-f51c-e7ceed543b8b&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-b7cb6c30033f3f5ef51ce7ceed543b8b-b7cb6c30033f3f5e-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1644,7 +1709,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;33f3f5e9-f51c-e7ce-ed54-3b8b7cb6c300&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-33f3f5e9f51ce7ceed543b8b7cb6c300-33f3f5e9f51ce7ce-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1653,12 +1723,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;slug&quot;: [
-            &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5eb7cb6c30&quot;,
+        &quot;errors&quot;: {
+            &quot;slug&quot;: [
+                &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5eb7cb6c30-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1667,7 +1745,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5eb8b7cb6c&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5eb8b7cb6c-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -1950,7 +2037,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;c30033f3-f5e9-f51c-e7ce-ed543b8b7cb6&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-c30033f3f5e9f51ce7ceed543b8b7cb6-c30033f3f5e9f51c-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1963,7 +2055,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ec30033f3&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ec30033f3-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -1972,7 +2069,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ec30033ff&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ec30033ff-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -2153,7 +2259,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;9f51ce7c-eed5-43b8-b7cb-6c30033f3f5e&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-9f51ce7ceed543b8b7cb6c30033f3f5e-9f51ce7ceed543b8-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2166,7 +2277,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Trashed entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Trashed entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;7cb6c300-33f3-4b8b-9f51-ceed543b8b7c&quot;,
+        &quot;entry_id&quot;: 42,
+        &quot;trashed&quot;: true
+    },
+    &quot;trace_id&quot;: &quot;00-7cb6c30033f34b8b9f51ceed543b8b7c-7cb6c30033f34b8b-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2175,7 +2292,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e9f51ce7c&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e9f51ce7c-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -2375,7 +2501,30 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555557&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555557-5111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555555-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2388,7 +2537,52 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555558&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555558-5111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;Entry not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;,
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555556&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555556-5111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555559&quot;,
+        &quot;errors&quot;: {
+            &quot;term_ids&quot;: [
+                &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555559-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2397,7 +2591,34 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;56666666-7777-8888-9999-000000000001&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-56666666777788889999000000000001-5666666677778888-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;56666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-56666666777788889999000000000000-5666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -2616,55 +2837,6 @@ print_r(json_decode((string) $body));</code></pre></div>
     }
 }</code>
  </pre>
-            <blockquote>
-            <p>Example response (401):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
-    &quot;title&quot;: &quot;Unauthorized&quot;,
-    &quot;status&quot;: 401,
-    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
-    &quot;title&quot;: &quot;Entry not found&quot;,
-    &quot;status&quot;: 404,
-    &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (422):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;term_ids&quot;: [
-            &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
-        ]
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (429):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
-}</code>
- </pre>
     </span>
 <span id="execution-results-POSTapi-v1-admin-entries--entry--terms-attach" hidden>
     <blockquote>Received response<span
@@ -2878,7 +3050,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555560&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555660-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2891,7 +3068,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555561&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555661-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2900,12 +3082,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;term_ids&quot;: [
-            &quot;The term_ids field is required.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The term_ids field is required.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555562&quot;,
+        &quot;errors&quot;: {
+            &quot;term_ids&quot;: [
+                &quot;The term_ids field is required.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555662-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -2914,7 +3104,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;56666666-7777-8888-9999-000000000002&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-56666666777788889999000000000002-5666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -3137,7 +3336,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555563&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555663-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3150,7 +3354,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Entry not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;
+    &quot;detail&quot;: &quot;Entry with ID 42 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555564&quot;,
+        &quot;entry_id&quot;: 42
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555664-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3159,12 +3368,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;term_ids&quot;: [
-            &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555565&quot;,
+        &quot;errors&quot;: {
+            &quot;term_ids&quot;: [
+                &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-51111111222233334444555555555665-5111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3173,7 +3390,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;56666666-7777-8888-9999-000000000003&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-56666666777788889999000000000003-5666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -3317,8 +3543,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"kind\": \"audio\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
-    \"deleted\": \"with\",
-    \"sort\": \"mime\",
+    \"deleted\": \"only\",
+    \"sort\": \"created_at\",
     \"order\": \"desc\",
     \"page\": 3,
     \"per_page\": 21
@@ -3355,8 +3581,8 @@ let body = {
     "kind": "audio",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
-    "deleted": "with",
-    "sort": "mime",
+    "deleted": "only",
+    "sort": "created_at",
     "order": "desc",
     "page": 3,
     "per_page": 21
@@ -3395,8 +3621,8 @@ $response = $client-&gt;get(
             'kind' =&gt; 'audio',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
-            'deleted' =&gt; 'with',
-            'sort' =&gt; 'mime',
+            'deleted' =&gt; 'only',
+            'sort' =&gt; 'created_at',
             'order' =&gt; 'desc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
@@ -3452,7 +3678,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555555-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3461,7 +3692,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000000-6666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -3703,10 +3943,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-media"
-               value="with"
+               value="only"
                data-component="body">
     <br>
-<p>Example: <code>with</code></p>
+<p>Example: <code>only</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -3717,10 +3957,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-media"
-               value="mime"
+               value="created_at"
                data-component="body">
     <br>
-<p>Example: <code>mime</code></p>
+<p>Example: <code>created_at</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>size_bytes</code></li> <li><code>mime</code></li></ul>
         </div>
@@ -3845,7 +4085,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555558&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555558-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3858,7 +4103,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555559&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555559-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -3867,7 +4117,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000002&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000002-6666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -4051,7 +4310,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b01&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b01-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4064,7 +4328,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b02&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b02-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4074,9 +4343,15 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
-    &quot;title&quot;: &quot;Invalid variant&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
-    &quot;detail&quot;: &quot;Variant foo is not configured.&quot;
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;Variant foo is not configured.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b03&quot;,
+        &quot;variant&quot;: &quot;foo&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b03-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4085,7 +4360,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b05&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b05-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4095,9 +4379,15 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/media-variant-error&quot;,
-    &quot;title&quot;: &quot;Internal Server Error&quot;,
+    &quot;title&quot;: &quot;Failed to generate media variant&quot;,
     &quot;status&quot;: 500,
-    &quot;detail&quot;: &quot;Failed to generate media variant.&quot;
+    &quot;code&quot;: &quot;MEDIA_VARIANT_ERROR&quot;,
+    &quot;detail&quot;: &quot;Failed to generate media variant.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b04&quot;,
+        &quot;variant&quot;: &quot;thumbnail&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b04-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -4285,7 +4575,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b06&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b06-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4298,7 +4593,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b07&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b07-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4307,7 +4607,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b09&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b09-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4317,9 +4626,15 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/media-download-error&quot;,
-    &quot;title&quot;: &quot;Internal Server Error&quot;,
+    &quot;title&quot;: &quot;Failed to generate download URL&quot;,
     &quot;status&quot;: 500,
-    &quot;detail&quot;: &quot;Failed to generate download URL.&quot;
+    &quot;code&quot;: &quot;MEDIA_DOWNLOAD_ERROR&quot;,
+    &quot;detail&quot;: &quot;Failed to generate download URL.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b08&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-0b0b0b0bb7cb6c30033f3f5e0b0b0b08-0b0b0b0bb7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -4538,7 +4853,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555556&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555556-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4548,14 +4868,19 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
-    &quot;title&quot;: &quot;Validation error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
     &quot;detail&quot;: &quot;The media payload failed validation constraints.&quot;,
-    &quot;errors&quot;: {
-        &quot;file&quot;: [
-            &quot;The file field is required.&quot;
-        ]
-    }
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555557&quot;,
+        &quot;errors&quot;: {
+            &quot;file&quot;: [
+                &quot;The file field is required.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555557-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4564,7 +4889,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000001&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000001-6666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -4800,7 +5134,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555560&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555660-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4813,7 +5152,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555561&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555661-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -4822,7 +5166,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000003&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000003-6666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -5033,7 +5386,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555562&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555662-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5046,7 +5404,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;
+    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555563&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555663-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5058,13 +5421,18 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/media-in-use&quot;,
     &quot;title&quot;: &quot;Media in use&quot;,
     &quot;status&quot;: 409,
+    &quot;code&quot;: &quot;MEDIA_IN_USE&quot;,
     &quot;detail&quot;: &quot;Media is referenced by content and cannot be deleted.&quot;,
-    &quot;references&quot;: [
-        {
-            &quot;entry_id&quot;: 42,
-            &quot;title&quot;: &quot;Landing page&quot;
-        }
-    ]
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555564&quot;,
+        &quot;references&quot;: [
+            {
+                &quot;entry_id&quot;: 42,
+                &quot;title&quot;: &quot;Landing page&quot;
+            }
+        ]
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555664-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5073,7 +5441,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000004&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000004-6666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -5253,7 +5630,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555565&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555665-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5266,7 +5648,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Media not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Deleted media with ID uuid-media does not exist.&quot;
+    &quot;detail&quot;: &quot;Deleted media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555566&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;,
+        &quot;trashed&quot;: true
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555666-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5275,7 +5663,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000005&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000005-6666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -5402,7 +5799,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"namespace\": \"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",
     \"q\": \"bajwbpilpmufinllwloau\",
-    \"deleted\": \"only\",
+    \"deleted\": \"with\",
     \"page\": 87,
     \"per_page\": 4
 }"
@@ -5431,7 +5828,7 @@ const headers = {
 let body = {
     "namespace": "gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8",
     "q": "bajwbpilpmufinllwloau",
-    "deleted": "only",
+    "deleted": "with",
     "page": 87,
     "per_page": 4
 };
@@ -5462,7 +5859,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'namespace' =&gt; 'gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8',
             'q' =&gt; 'bajwbpilpmufinllwloau',
-            'deleted' =&gt; 'only',
+            'deleted' =&gt; 'with',
             'page' =&gt; 87,
             'per_page' =&gt; 4,
         ],
@@ -5515,7 +5912,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a01&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a01-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5525,14 +5927,19 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/invalid-option-identifier&quot;,
-    &quot;title&quot;: &quot;Validation error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;INVALID_OPTION_IDENTIFIER&quot;,
     &quot;detail&quot;: &quot;The provided option namespace/key is invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;namespace&quot;: [
-            &quot;The namespace format is invalid.&quot;
-        ]
-    }
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a02&quot;,
+        &quot;errors&quot;: {
+            &quot;namespace&quot;: [
+                &quot;The namespace format is invalid.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a02-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5541,7 +5948,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a03&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a03-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -5710,10 +6126,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-options--namespace-"
-               value="only"
+               value="with"
                data-component="body">
     <br>
-<p>Example: <code>only</code></p>
+<p>Example: <code>with</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -5825,7 +6241,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a04&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a04-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5838,7 +6259,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Option not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;
+    &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a05&quot;,
+        &quot;namespace&quot;: &quot;site&quot;,
+        &quot;key&quot;: &quot;hero.title&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a05-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -5847,7 +6274,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a06&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a06-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -6064,7 +6500,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a07&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a07-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6073,15 +6514,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
-    &quot;title&quot;: &quot;Validation error&quot;,
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/invalid-option-payload&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;INVALID_OPTION_PAYLOAD&quot;,
     &quot;detail&quot;: &quot;Invalid option payload.&quot;,
-    &quot;errors&quot;: {
-        &quot;value&quot;: [
-            &quot;The value must be valid JSON.&quot;
-        ]
-    }
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a08&quot;,
+        &quot;errors&quot;: {
+            &quot;value&quot;: [
+                &quot;The value must be valid JSON.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a08-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6090,7 +6536,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a09&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a09-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -6325,7 +6780,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a0a&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a0a-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6338,7 +6798,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Option not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;
+    &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a0b&quot;,
+        &quot;namespace&quot;: &quot;site&quot;,
+        &quot;key&quot;: &quot;hero.title&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a0b-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6347,7 +6813,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a0c&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a0c-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -6540,7 +7015,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a0d&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a0d-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6553,7 +7033,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Option not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;
+    &quot;detail&quot;: &quot;Option \&quot;site/hero.title\&quot; was not found.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a0e&quot;,
+        &quot;namespace&quot;: &quot;site&quot;,
+        &quot;key&quot;: &quot;hero.title&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a0e-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6562,7 +7048,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e0a0a0a0f&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e0a0a0a0f-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -6762,7 +7257,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555561&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555661-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6771,7 +7271,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;36666666-7777-8888-9999-000000000002&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-36666666777788889999000000000002-3666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -6953,7 +7462,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555555-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6963,11 +7477,16 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/conflict&quot;,
-    &quot;title&quot;: &quot;Conflict&quot;,
+    &quot;title&quot;: &quot;Path already reserved&quot;,
     &quot;status&quot;: 409,
+    &quot;code&quot;: &quot;CONFLICT&quot;,
     &quot;detail&quot;: &quot;Path already reserved.&quot;,
-    &quot;path&quot;: &quot;/promo&quot;,
-    &quot;owner&quot;: &quot;marketing&quot;
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555556&quot;,
+        &quot;path&quot;: &quot;/promo&quot;,
+        &quot;owner&quot;: &quot;marketing&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555556-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6977,9 +7496,19 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
-    &quot;title&quot;: &quot;Unprocessable Entity&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
-    &quot;detail&quot;: &quot;The path field is required.&quot;
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The path field is required.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555557&quot;,
+        &quot;errors&quot;: {
+            &quot;path&quot;: [
+                &quot;The path field is required.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555557-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -6988,7 +7517,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;36666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-36666666777788889999000000000000-3666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -7204,7 +7742,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555558&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555558-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7218,9 +7761,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;status&quot;: 403,
     &quot;code&quot;: &quot;FORBIDDEN&quot;,
     &quot;detail&quot;: &quot;Only owner marketing may release this path.&quot;,
-    &quot;path&quot;: &quot;/promo&quot;,
-    &quot;owner&quot;: &quot;marketing&quot;,
-    &quot;attempted_source&quot;: &quot;editorial&quot;
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555559&quot;,
+        &quot;path&quot;: &quot;/promo&quot;,
+        &quot;owner&quot;: &quot;marketing&quot;,
+        &quot;attempted_source&quot;: &quot;editorial&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555559-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7230,9 +7777,19 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
-    &quot;title&quot;: &quot;Validation error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
-    &quot;detail&quot;: &quot;Path is required either in URL parameter or request body.&quot;
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;Path is required either in URL parameter or request body.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;31111111-2222-3333-4444-555555555560&quot;,
+        &quot;errors&quot;: {
+            &quot;path&quot;: [
+                &quot;The path field is required either in URL parameter or request body.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-31111111222233334444555555555660-3111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7241,7 +7798,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;36666666-7777-8888-9999-000000000001&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-36666666777788889999000000000001-3666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -7392,10 +7958,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"true\",
+    \"enabled\": \"any\",
     \"page\": 2,
     \"per_page\": 13,
-    \"sort\": \"updated_at\",
+    \"sort\": \"slug\",
     \"order\": \"asc\"
 }"
 </code></pre></div>
@@ -7424,10 +7990,10 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "true",
+    "enabled": "any",
     "page": 2,
     "per_page": 13,
-    "sort": "updated_at",
+    "sort": "slug",
     "order": "asc"
 };
 
@@ -7458,10 +8024,10 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'true',
+            'enabled' =&gt; 'any',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
-            'sort' =&gt; 'updated_at',
+            'sort' =&gt; 'slug',
             'order' =&gt; 'asc',
         ],
     ]
@@ -7513,7 +8079,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555555-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7522,7 +8093,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;76666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-76666666777788889999000000000000-7666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -7690,10 +8270,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="true"
+               value="any"
                data-component="body">
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>any</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -7728,10 +8308,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-plugins"
-               value="updated_at"
+               value="slug"
                data-component="body">
     <br>
-<p>Example: <code>updated_at</code></p>
+<p>Example: <code>slug</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>slug</code></li> <li><code>version</code></li> <li><code>updated_at</code></li></ul>
         </div>
@@ -7838,7 +8418,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555564&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555664-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7850,7 +8435,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/invalid-plugin-manifest&quot;,
     &quot;title&quot;: &quot;Invalid plugin manifest&quot;,
     &quot;status&quot;: 422,
-    &quot;detail&quot;: &quot;Plugin manifest is invalid.&quot;
+    &quot;code&quot;: &quot;INVALID_PLUGIN_MANIFEST&quot;,
+    &quot;detail&quot;: &quot;Plugin manifest is invalid.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555565&quot;,
+        &quot;manifest&quot;: &quot;plugins/seo-tools/manifest.json&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555665-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7859,7 +8450,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;76666666-7777-8888-9999-000000000003&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-76666666777788889999000000000003-7666666677778888-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -7871,7 +8471,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/routes-reload-failed&quot;,
     &quot;title&quot;: &quot;Failed to reload plugin routes&quot;,
     &quot;status&quot;: 500,
-    &quot;detail&quot;: &quot;Failed to reload plugin routes&quot;
+    &quot;code&quot;: &quot;ROUTES_RELOAD_FAILED&quot;,
+    &quot;detail&quot;: &quot;Failed to reload plugin routes.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555566&quot;,
+        &quot;providers&quot;: [
+            &quot;Plugins\\SeoTools\\ServiceProvider&quot;
+        ]
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555666-7111111122223333-01&quot;
 }</code>
  </pre>
     </span>
@@ -8038,7 +8646,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555556&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555556-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8050,8 +8663,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/plugin-not-found&quot;,
     &quot;title&quot;: &quot;Plugin not found&quot;,
     &quot;status&quot;: 404,
-    &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Plugin with slug \&quot;seo-tools\&quot; was not found.&quot;
+    &quot;code&quot;: &quot;PLUGIN_NOT_FOUND&quot;,
+    &quot;detail&quot;: &quot;Plugin with slug \&quot;seo-tools\&quot; was not found.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555557&quot;,
+        &quot;slug&quot;: &quot;seo-tools&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555557-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8063,7 +8681,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/plugin-already-enabled&quot;,
     &quot;title&quot;: &quot;Plugin already enabled&quot;,
     &quot;status&quot;: 409,
-    &quot;detail&quot;: &quot;Plugin seo-tools is already enabled.&quot;
+    &quot;code&quot;: &quot;PLUGIN_ALREADY_ENABLED&quot;,
+    &quot;detail&quot;: &quot;Plugin seo-tools is already enabled.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555558&quot;,
+        &quot;slug&quot;: &quot;seo-tools&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555558-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8072,7 +8696,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;76666666-7777-8888-9999-000000000001&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-76666666777788889999000000000001-7666666677778888-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8084,7 +8717,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/routes-reload-failed&quot;,
     &quot;title&quot;: &quot;Failed to reload plugin routes&quot;,
     &quot;status&quot;: 500,
-    &quot;detail&quot;: &quot;Failed to reload plugin routes&quot;
+    &quot;code&quot;: &quot;ROUTES_RELOAD_FAILED&quot;,
+    &quot;detail&quot;: &quot;Failed to reload plugin routes.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555559&quot;,
+        &quot;slug&quot;: &quot;seo-tools&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555559-7111111122223333-01&quot;
 }</code>
  </pre>
     </span>
@@ -8262,7 +8901,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555560&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555660-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8274,8 +8918,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/plugin-not-found&quot;,
     &quot;title&quot;: &quot;Plugin not found&quot;,
     &quot;status&quot;: 404,
-    &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Plugin with slug \&quot;seo-tools\&quot; was not found.&quot;
+    &quot;code&quot;: &quot;PLUGIN_NOT_FOUND&quot;,
+    &quot;detail&quot;: &quot;Plugin with slug \&quot;seo-tools\&quot; was not found.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555561&quot;,
+        &quot;slug&quot;: &quot;seo-tools&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555661-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8287,7 +8936,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/plugin-already-disabled&quot;,
     &quot;title&quot;: &quot;Plugin already disabled&quot;,
     &quot;status&quot;: 409,
-    &quot;detail&quot;: &quot;Plugin seo-tools is already disabled.&quot;
+    &quot;code&quot;: &quot;PLUGIN_ALREADY_DISABLED&quot;,
+    &quot;detail&quot;: &quot;Plugin seo-tools is already disabled.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555562&quot;,
+        &quot;slug&quot;: &quot;seo-tools&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555662-7111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8296,7 +8951,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;76666666-7777-8888-9999-000000000002&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-76666666777788889999000000000002-7666666677778888-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8308,7 +8972,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/routes-reload-failed&quot;,
     &quot;title&quot;: &quot;Failed to reload plugin routes&quot;,
     &quot;status&quot;: 500,
-    &quot;detail&quot;: &quot;Failed to reload plugin routes&quot;
+    &quot;code&quot;: &quot;ROUTES_RELOAD_FAILED&quot;,
+    &quot;detail&quot;: &quot;Failed to reload plugin routes.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;71111111-2222-3333-4444-555555555563&quot;,
+        &quot;slug&quot;: &quot;seo-tools&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-71111111222233334444555555555663-7111111122223333-01&quot;
 }</code>
  </pre>
     </span>
@@ -8494,7 +9164,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555555-4111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8507,7 +9182,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;PostType not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Unknown post type slug: article&quot;
+    &quot;detail&quot;: &quot;Unknown post type slug: article&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555556&quot;,
+        &quot;slug&quot;: &quot;article&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555556-4111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8516,7 +9196,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;46666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-46666666777788889999000000000000-4666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -8734,7 +9423,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555557&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555557-4111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8747,7 +9441,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;PostType not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Unknown post type slug: article&quot;
+    &quot;detail&quot;: &quot;Unknown post type slug: article&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555558&quot;,
+        &quot;slug&quot;: &quot;article&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555558-4111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8756,12 +9455,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;options_json&quot;: [
-            &quot;The options_json field is required.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The options_json field is required.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555559&quot;,
+        &quot;errors&quot;: {
+            &quot;options_json&quot;: [
+                &quot;The options_json field is required.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555559-4111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8770,7 +9477,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;46666666-7777-8888-9999-000000000001&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-46666666777788889999000000000001-4666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -8966,7 +9682,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;61111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-61111111222233334444555555555555-6111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8975,7 +9696,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000000-6666666677778888-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -8987,7 +9717,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/service-unavailable&quot;,
     &quot;title&quot;: &quot;Service Unavailable&quot;,
     &quot;status&quot;: 503,
-    &quot;detail&quot;: &quot;Search service is temporarily unavailable.&quot;
+    &quot;code&quot;: &quot;SERVICE_UNAVAILABLE&quot;,
+    &quot;detail&quot;: &quot;Search service is temporarily unavailable.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;61111111-2222-3333-4444-555555555556&quot;,
+        &quot;service&quot;: &quot;search&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-61111111222233334444555555555556-6111111122223333-01&quot;
 }</code>
  </pre>
     </span>
@@ -9101,7 +9837,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"created_at.desc\"
+    \"sort\": \"slug.desc\"
 }"
 </code></pre></div>
 
@@ -9128,7 +9864,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "created_at.desc"
+    "sort": "slug.desc"
 };
 
 fetch(url, {
@@ -9157,7 +9893,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'created_at.desc',
+            'sort' =&gt; 'slug.desc',
         ],
     ]
 );
@@ -9195,7 +9931,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555555&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555555-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9204,7 +9945,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;26666666-7777-8888-9999-000000000000&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-26666666777788889999000000000000-2666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -9360,10 +10110,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="created_at.desc"
+               value="slug.desc"
                data-component="body">
     <br>
-<p>Example: <code>created_at.desc</code></p>
+<p>Example: <code>slug.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
@@ -9478,7 +10228,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555556&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555556-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9487,12 +10242,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;slug&quot;: [
-            &quot;The slug has already been taken.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The given data was invalid.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555557&quot;,
+        &quot;errors&quot;: {
+            &quot;slug&quot;: [
+                &quot;The slug has already been taken.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555557-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9501,7 +10264,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;26666666-7777-8888-9999-000000000001&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-26666666777788889999000000000001-2666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -9729,7 +10501,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555558&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555558-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9742,7 +10519,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555559&quot;,
+        &quot;slug&quot;: &quot;category&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555559-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9751,7 +10533,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;26666666-7777-8888-9999-000000000002&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-26666666777788889999000000000002-2666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -9962,7 +10753,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555560&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555660-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9975,7 +10771,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555561&quot;,
+        &quot;slug&quot;: &quot;category&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555661-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9984,12 +10785,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;slug&quot;: [
-            &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555562&quot;,
+        &quot;errors&quot;: {
+            &quot;slug&quot;: [
+                &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555662-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -9998,7 +10807,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;26666666-7777-8888-9999-000000000003&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-26666666777788889999000000000003-2666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -10240,7 +11058,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555563&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555663-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10253,7 +11076,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555564&quot;,
+        &quot;slug&quot;: &quot;category&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555664-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10265,8 +11093,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/conflict&quot;,
     &quot;title&quot;: &quot;Taxonomy has terms&quot;,
     &quot;status&quot;: 409,
+    &quot;code&quot;: &quot;CONFLICT&quot;,
     &quot;detail&quot;: &quot;Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.&quot;,
-    &quot;path&quot;: &quot;/api/v1/admin/taxonomies/category&quot;
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555565&quot;,
+        &quot;terms_count&quot;: 5
+    },
+    &quot;trace_id&quot;: &quot;00-21111111222233334444555555555665-2111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10275,7 +11108,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;26666666-7777-8888-9999-000000000004&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-26666666777788889999000000000004-2666666677778888-01&quot;
 }</code>
  </pre>
     </span>
@@ -10425,7 +11267,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"name.asc\"
+    \"sort\": \"slug.desc\"
 }"
 </code></pre></div>
 
@@ -10452,7 +11294,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "name.asc"
+    "sort": "slug.desc"
 };
 
 fetch(url, {
@@ -10481,7 +11323,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'name.asc',
+            'sort' =&gt; 'slug.desc',
         ],
     ]
 );
@@ -10520,7 +11362,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;5e9f51ce-7cee-d543-b8b7-cb6c30033f3f&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-5e9f51ce7ceed543b8b7cb6c30033f3f-5e9f51ce7ceed543-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10533,7 +11380,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5e9f51ce&quot;,
+        &quot;taxonomy_slug&quot;: &quot;category&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5e9f51ce-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10542,7 +11394,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5e9f51cf&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5e9f51cf-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -10723,10 +11584,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="name.asc"
+               value="slug.desc"
                data-component="body">
     <br>
-<p>Example: <code>name.asc</code></p>
+<p>Example: <code>slug.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li></ul>
         </div>
@@ -10864,7 +11725,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;cb6c3003-3f5e-5e9f-51ce-7ceed543b8b7&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-cb6c30033f5e5e9f51ce7ceed543b8b7-cb6c30033f5e5e9f-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10877,7 +11743,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Taxonomy not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;
+    &quot;detail&quot;: &quot;Taxonomy with slug category does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ecb6c3003&quot;,
+        &quot;taxonomy_slug&quot;: &quot;category&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ecb6c3003-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10886,12 +11757,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;name&quot;: [
-            &quot;The name field is required.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The name field is required.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ecb6c3004&quot;,
+        &quot;errors&quot;: {
+            &quot;name&quot;: [
+                &quot;The name field is required.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ecb6c3004-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -10900,7 +11779,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5ecb6c3005&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5ecb6c3005-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -11147,7 +12035,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;5ecb6c30-033f-3f5e-5e9f-51ce7ceed543&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-5ecb6c30033f3f5e5e9f51ce7ceed543-5ecb6c30033f3f5e-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11160,7 +12053,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Term not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;
+    &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c30&quot;,
+        &quot;term_id&quot;: 3
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c30-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11169,7 +12067,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c31&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c31-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -11390,7 +12297,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;7ceed543-b8b7-cb6c-3003-3f5e5ecb6c32&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-7ceed543b8b7cb6c30033f3f5ecb6c32-7ceed543b8b7cb6c-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11403,7 +12315,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Term not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;
+    &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c33&quot;,
+        &quot;term_id&quot;: 3
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c33-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11412,12 +12329,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;slug&quot;: [
-            &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c34&quot;,
+        &quot;errors&quot;: {
+            &quot;slug&quot;: [
+                &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c34-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11426,7 +12351,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c35&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c35-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -11658,7 +12592,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c36&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c36-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11671,7 +12610,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Term not found&quot;,
     &quot;status&quot;: 404,
     &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;
+    &quot;detail&quot;: &quot;Term with ID 3 does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c37&quot;,
+        &quot;term_id&quot;: 3
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c37-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11683,7 +12627,14 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/conflict&quot;,
     &quot;title&quot;: &quot;Term still attached&quot;,
     &quot;status&quot;: 409,
-    &quot;detail&quot;: &quot;Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.&quot;
+    &quot;code&quot;: &quot;CONFLICT&quot;,
+    &quot;detail&quot;: &quot;Cannot delete term while it is attached to entries. Use forceDetach=1 to detach automatically.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c38&quot;,
+        &quot;term_id&quot;: 3,
+        &quot;force_detach&quot;: false
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c38-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11692,7 +12643,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c39&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e5ecb6c39-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -11850,12 +12810,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --get "http://localhost/api/v1/api/v1/admin/utils/slugify?title=New+landing+page&amp;postType=article" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"title\": \"vmqeopfuudtdsufvyvddq\",
-    \"postType\": \"consequatur\"
-}"
-</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -11876,15 +12831,9 @@ const headers = {
     "Accept": "application/json",
 };
 
-let body = {
-    "title": "vmqeopfuudtdsufvyvddq",
-    "postType": "consequatur"
-};
-
 fetch(url, {
     method: "GET",
     headers,
-    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -11902,10 +12851,6 @@ $response = $client-&gt;get(
         'query' =&gt; [
             'title' =&gt; 'New landing page',
             'postType' =&gt; 'article',
-        ],
-        'json' =&gt; [
-            'title' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'postType' =&gt; 'consequatur',
         ],
     ]
 );
@@ -11935,7 +12880,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
     &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
-    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11944,12 +12894,20 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The given data was invalid.&quot;,
-    &quot;errors&quot;: {
-        &quot;title&quot;: [
-            &quot;The title field is required.&quot;
-        ]
-    }
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The title field is required.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e8b7cb6c3&quot;,
+        &quot;errors&quot;: {
+            &quot;title&quot;: [
+                &quot;The title field is required.&quot;
+            ]
+        }
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e8b7cb6c3-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
             <blockquote>
@@ -11958,7 +12916,16 @@ print_r(json_decode((string) $body));</code></pre></div>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Too Many Attempts.&quot;
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e8c30033f&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01&quot;
 }</code>
  </pre>
     </span>
@@ -12070,32 +13037,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Slug типа записи (для проверки уникальности). Default: page. Example: <code>article</code></p>
             </div>
-                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="title"                data-endpoint="GETapi-v1-admin-utils-slugify"
-               value="vmqeopfuudtdsufvyvddq"
-               data-component="body">
-    <br>
-<p>Must not be greater than 500 characters. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>postType</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="postType"                data-endpoint="GETapi-v1-admin-utils-slugify"
-               value="consequatur"
-               data-component="body">
-    <br>
-<p>Example: <code>consequatur</code></p>
-        </div>
-        </form>
+                </form>
 
                 <h1 id="auth">Auth</h1>
 
@@ -12191,7 +13133,6 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;about:blank&quot;,
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
-    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
     &quot;detail&quot;: &quot;Invalid credentials.&quot;
 }</code>
  </pre>
@@ -12364,7 +13305,6 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
-    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
     &quot;detail&quot;: &quot;Missing refresh token.&quot;
 }</code>
  </pre>
@@ -12714,7 +13654,6 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;type&quot;: &quot;about:blank&quot;,
     &quot;title&quot;: &quot;Unauthorized&quot;,
     &quot;status&quot;: 401,
-    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
     &quot;detail&quot;: &quot;Authentication required.&quot;
 }</code>
  </pre>
@@ -12832,8 +13771,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"vxi4:4$\\/i\"
     ],
-    \"from\": \"2025-11-10T05:11:40\",
-    \"to\": \"2106-12-09\",
+    \"from\": \"2025-11-11T15:14:16\",
+    \"to\": \"2106-12-11\",
     \"page\": 45,
     \"per_page\": 16
 }"
@@ -12870,8 +13809,8 @@ let body = {
     "term": [
         "vxi4:4$\/i"
     ],
-    "from": "2025-11-10T05:11:40",
-    "to": "2106-12-09",
+    "from": "2025-11-11T15:14:16",
+    "to": "2106-12-11",
     "page": 45,
     "per_page": 16
 };
@@ -12910,8 +13849,8 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 'vxi4:4$/i',
             ],
-            'from' =&gt; '2025-11-10T05:11:40',
-            'to' =&gt; '2106-12-09',
+            'from' =&gt; '2025-11-11T15:14:16',
+            'to' =&gt; '2106-12-11',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
         ],
@@ -13157,10 +14096,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-10T05:11:40"
+               value="2025-11-11T15:14:16"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-10T05:11:40</code></p>
+<p>Must be a valid date. Example: <code>2025-11-11T15:14:16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -13169,10 +14108,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-search"
-               value="2106-12-09"
+               value="2106-12-11"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>from</code>. Example: <code>2106-12-09</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>from</code>. Example: <code>2106-12-11</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;

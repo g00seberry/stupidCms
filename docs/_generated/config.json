@@ -1174,6 +1174,533 @@
             "env": null
         }
     },
+    "errors": {
+        "kernel.enabled": {
+            "value": false,
+            "type": "boolean",
+            "env": null
+        },
+        "types.BAD_REQUEST.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/bad-request",
+            "type": "string",
+            "env": null
+        },
+        "types.BAD_REQUEST.title": {
+            "value": "Bad Request",
+            "type": "string",
+            "env": null
+        },
+        "types.BAD_REQUEST.status": {
+            "value": 400,
+            "type": "integer",
+            "env": null
+        },
+        "types.BAD_REQUEST.detail": {
+            "value": "The request could not be understood or was missing required parameters.",
+            "type": "string",
+            "env": null
+        },
+        "types.UNAUTHORIZED.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/unauthorized",
+            "type": "string",
+            "env": null
+        },
+        "types.UNAUTHORIZED.title": {
+            "value": "Unauthorized",
+            "type": "string",
+            "env": null
+        },
+        "types.UNAUTHORIZED.status": {
+            "value": 401,
+            "type": "integer",
+            "env": null
+        },
+        "types.UNAUTHORIZED.detail": {
+            "value": "Authentication is required to access this resource.",
+            "type": "string",
+            "env": null
+        },
+        "types.FORBIDDEN.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/forbidden",
+            "type": "string",
+            "env": null
+        },
+        "types.FORBIDDEN.title": {
+            "value": "Forbidden",
+            "type": "string",
+            "env": null
+        },
+        "types.FORBIDDEN.status": {
+            "value": 403,
+            "type": "integer",
+            "env": null
+        },
+        "types.FORBIDDEN.detail": {
+            "value": "Admin privileges are required.",
+            "type": "string",
+            "env": null
+        },
+        "types.NOT_FOUND.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/not-found",
+            "type": "string",
+            "env": null
+        },
+        "types.NOT_FOUND.title": {
+            "value": "Not Found",
+            "type": "string",
+            "env": null
+        },
+        "types.NOT_FOUND.status": {
+            "value": 404,
+            "type": "integer",
+            "env": null
+        },
+        "types.NOT_FOUND.detail": {
+            "value": "The requested resource was not found.",
+            "type": "string",
+            "env": null
+        },
+        "types.VALIDATION_ERROR.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/validation-error",
+            "type": "string",
+            "env": null
+        },
+        "types.VALIDATION_ERROR.title": {
+            "value": "Validation Error",
+            "type": "string",
+            "env": null
+        },
+        "types.VALIDATION_ERROR.status": {
+            "value": 422,
+            "type": "integer",
+            "env": null
+        },
+        "types.VALIDATION_ERROR.detail": {
+            "value": "Validation failed.",
+            "type": "string",
+            "env": null
+        },
+        "types.CONFLICT.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/conflict",
+            "type": "string",
+            "env": null
+        },
+        "types.CONFLICT.title": {
+            "value": "Conflict",
+            "type": "string",
+            "env": null
+        },
+        "types.CONFLICT.status": {
+            "value": 409,
+            "type": "integer",
+            "env": null
+        },
+        "types.CONFLICT.detail": {
+            "value": "The request conflicts with the current state of the resource.",
+            "type": "string",
+            "env": null
+        },
+        "types.RATE_LIMIT_EXCEEDED.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded",
+            "type": "string",
+            "env": null
+        },
+        "types.RATE_LIMIT_EXCEEDED.title": {
+            "value": "Too Many Requests",
+            "type": "string",
+            "env": null
+        },
+        "types.RATE_LIMIT_EXCEEDED.status": {
+            "value": 429,
+            "type": "integer",
+            "env": null
+        },
+        "types.RATE_LIMIT_EXCEEDED.detail": {
+            "value": "Rate limit exceeded.",
+            "type": "string",
+            "env": null
+        },
+        "types.SERVICE_UNAVAILABLE.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/service-unavailable",
+            "type": "string",
+            "env": null
+        },
+        "types.SERVICE_UNAVAILABLE.title": {
+            "value": "Service Unavailable",
+            "type": "string",
+            "env": null
+        },
+        "types.SERVICE_UNAVAILABLE.status": {
+            "value": 503,
+            "type": "integer",
+            "env": null
+        },
+        "types.SERVICE_UNAVAILABLE.detail": {
+            "value": "Service is temporarily unavailable.",
+            "type": "string",
+            "env": null
+        },
+        "types.INTERNAL_SERVER_ERROR.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/internal-error",
+            "type": "string",
+            "env": null
+        },
+        "types.INTERNAL_SERVER_ERROR.title": {
+            "value": "Internal Server Error",
+            "type": "string",
+            "env": null
+        },
+        "types.INTERNAL_SERVER_ERROR.status": {
+            "value": 500,
+            "type": "integer",
+            "env": null
+        },
+        "types.INTERNAL_SERVER_ERROR.detail": {
+            "value": "An unexpected error occurred.",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_IDENTIFIER.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/invalid-option-identifier",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_IDENTIFIER.title": {
+            "value": "Validation Error",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_IDENTIFIER.status": {
+            "value": 422,
+            "type": "integer",
+            "env": null
+        },
+        "types.INVALID_OPTION_IDENTIFIER.detail": {
+            "value": "The provided option namespace\/key is invalid.",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_PAYLOAD.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/invalid-option-payload",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_PAYLOAD.title": {
+            "value": "Validation Error",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_PAYLOAD.status": {
+            "value": 422,
+            "type": "integer",
+            "env": null
+        },
+        "types.INVALID_OPTION_PAYLOAD.detail": {
+            "value": "The provided option payload is invalid.",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_JSON_VALUE.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/invalid-json-value",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_JSON_VALUE.title": {
+            "value": "Validation Error",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_JSON_VALUE.status": {
+            "value": 422,
+            "type": "integer",
+            "env": null
+        },
+        "types.INVALID_JSON_VALUE.detail": {
+            "value": "The provided JSON value is invalid.",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_FILTERS.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/invalid-option-filters",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_FILTERS.title": {
+            "value": "Validation Error",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_OPTION_FILTERS.status": {
+            "value": 422,
+            "type": "integer",
+            "env": null
+        },
+        "types.INVALID_OPTION_FILTERS.detail": {
+            "value": "The provided option filters are invalid.",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_PLUGIN_MANIFEST.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/invalid-plugin-manifest",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_PLUGIN_MANIFEST.title": {
+            "value": "Invalid plugin manifest",
+            "type": "string",
+            "env": null
+        },
+        "types.INVALID_PLUGIN_MANIFEST.status": {
+            "value": 422,
+            "type": "integer",
+            "env": null
+        },
+        "types.INVALID_PLUGIN_MANIFEST.detail": {
+            "value": "Plugin manifest is invalid.",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_DISABLED.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/plugin-already-disabled",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_DISABLED.title": {
+            "value": "Plugin already disabled",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_DISABLED.status": {
+            "value": 409,
+            "type": "integer",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_DISABLED.detail": {
+            "value": "Plugin is already disabled.",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_ENABLED.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/plugin-already-enabled",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_ENABLED.title": {
+            "value": "Plugin already enabled",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_ENABLED.status": {
+            "value": 409,
+            "type": "integer",
+            "env": null
+        },
+        "types.PLUGIN_ALREADY_ENABLED.detail": {
+            "value": "Plugin is already enabled.",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_NOT_FOUND.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/plugin-not-found",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_NOT_FOUND.title": {
+            "value": "Plugin not found",
+            "type": "string",
+            "env": null
+        },
+        "types.PLUGIN_NOT_FOUND.status": {
+            "value": 404,
+            "type": "integer",
+            "env": null
+        },
+        "types.PLUGIN_NOT_FOUND.detail": {
+            "value": "Plugin was not found.",
+            "type": "string",
+            "env": null
+        },
+        "types.ROUTES_RELOAD_FAILED.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/routes-reload-failed",
+            "type": "string",
+            "env": null
+        },
+        "types.ROUTES_RELOAD_FAILED.title": {
+            "value": "Failed to reload plugin routes",
+            "type": "string",
+            "env": null
+        },
+        "types.ROUTES_RELOAD_FAILED.status": {
+            "value": 500,
+            "type": "integer",
+            "env": null
+        },
+        "types.ROUTES_RELOAD_FAILED.detail": {
+            "value": "Failed to reload plugin routes.",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_IN_USE.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/media-in-use",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_IN_USE.title": {
+            "value": "Media in use",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_IN_USE.status": {
+            "value": 409,
+            "type": "integer",
+            "env": null
+        },
+        "types.MEDIA_IN_USE.detail": {
+            "value": "Media is referenced by content and cannot be deleted.",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_DOWNLOAD_ERROR.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/media-download-error",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_DOWNLOAD_ERROR.title": {
+            "value": "Failed to download media",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_DOWNLOAD_ERROR.status": {
+            "value": 500,
+            "type": "integer",
+            "env": null
+        },
+        "types.MEDIA_DOWNLOAD_ERROR.detail": {
+            "value": "Failed to generate download URL.",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_VARIANT_ERROR.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/media-variant-error",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_VARIANT_ERROR.title": {
+            "value": "Failed to generate media variant",
+            "type": "string",
+            "env": null
+        },
+        "types.MEDIA_VARIANT_ERROR.status": {
+            "value": 500,
+            "type": "integer",
+            "env": null
+        },
+        "types.MEDIA_VARIANT_ERROR.detail": {
+            "value": "Failed to generate media variant.",
+            "type": "string",
+            "env": null
+        },
+        "types.CSRF_TOKEN_MISMATCH.uri": {
+            "value": "https:\/\/stupidcms.dev\/problems\/csrf-token-mismatch",
+            "type": "string",
+            "env": null
+        },
+        "types.CSRF_TOKEN_MISMATCH.title": {
+            "value": "CSRF Token Mismatch",
+            "type": "string",
+            "env": null
+        },
+        "types.CSRF_TOKEN_MISMATCH.status": {
+            "value": 419,
+            "type": "integer",
+            "env": null
+        },
+        "types.CSRF_TOKEN_MISMATCH.detail": {
+            "value": "CSRF token mismatch.",
+            "type": "string",
+            "env": null
+        },
+        "mappings.Illuminate\\Validation\\ValidationException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Illuminate\\Auth\\AuthenticationException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Illuminate\\Auth\\Access\\AuthorizationException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Symfony\\Component\\HttpKernel\\Exception\\AccessDeniedHttpException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Illuminate\\Http\\Exceptions\\ThrottleRequestsException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Illuminate\\Database\\QueryException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Illuminate\\Database\\QueryException.report.level": {
+            "value": "error",
+            "type": "string",
+            "env": null
+        },
+        "mappings.Illuminate\\Database\\QueryException.report.message": {
+            "value": "Database error during API request",
+            "type": "string",
+            "env": null
+        },
+        "mappings.Illuminate\\Database\\QueryException.report.context": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Symfony\\Component\\HttpKernel\\Exception\\ServiceUnavailableHttpException.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "mappings.Symfony\\Component\\HttpKernel\\Exception\\ServiceUnavailableHttpException.report.level": {
+            "value": "error",
+            "type": "string",
+            "env": null
+        },
+        "mappings.Symfony\\Component\\HttpKernel\\Exception\\ServiceUnavailableHttpException.report.message": {
+            "value": "Service unavailable during API request",
+            "type": "string",
+            "env": null
+        },
+        "fallback.builder": {
+            "value": {},
+            "type": "object",
+            "env": null
+        },
+        "fallback.report.level": {
+            "value": "error",
+            "type": "string",
+            "env": null
+        },
+        "fallback.report.message": {
+            "value": "Unhandled exception in API request",
+            "type": "string",
+            "env": null
+        }
+    },
     "filesystems": {
         "default": {
             "value": "local",

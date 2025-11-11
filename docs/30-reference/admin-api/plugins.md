@@ -88,7 +88,37 @@ last_reviewed: 2025-11-08
 }
 ```
 
-> При ошибках в manifest возвращается `422` с RFC7807 payload. Ошибка регистрации маршрутов — `500`.
+> Все ошибки возвращаются в формате [`ErrorPayload`](../errors.md) (RFC7807 + `code`, `meta`, `trace_id`). Ниже — типовые ответы.
+
+```json
+{
+    "type": "https://stupidcms.dev/problems/invalid-plugin-manifest",
+    "title": "Invalid plugin manifest",
+    "status": 422,
+    "code": "INVALID_PLUGIN_MANIFEST",
+    "detail": "Plugin manifest is invalid.",
+    "meta": {
+        "request_id": "b4865eb5-1fa6-46a5-9d25-73e9d55876a0",
+        "manifest": "plugins/example/plugin.json"
+    },
+    "trace_id": "00-b4865eb51fa646a59d2573e9d55876a0-b4865eb51fa646a5-01"
+}
+```
+
+```json
+{
+    "type": "https://stupidcms.dev/problems/routes-reload-failed",
+    "title": "Failed to reload plugin routes",
+    "status": 500,
+    "code": "ROUTES_RELOAD_FAILED",
+    "detail": "Failed to reload plugin routes.",
+    "meta": {
+        "request_id": "b2f5c3f7-4edb-40dd-a0c8-7c0a5db91f61",
+        "providers": ["Plugins\\Example\\ExamplePluginServiceProvider"]
+    },
+    "trace_id": "00-b2f5c3f74edb40dda0c87c0a5db91f61-b2f5c3f74edb40dd-01"
+}
+```
 
 ### POST `/api/v1/admin/plugins/{slug}/enable`
 

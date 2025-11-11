@@ -22,7 +22,7 @@ related_code:
 -   **Права доступа:**
     -   `manage.taxonomies` — CRUD таксономий.
     -   `manage.terms` — CRUD терминов + pivot операции.
--   **Формат ошибок:** RFC7807 (`application/problem+json`).
+-   **Формат ошибок:** RFC7807 (`application/problem+json`) c расширениями `code`, `meta`, `trace_id`. См. [Error Payload](../errors.md).
 
 ## Модель данных (актуальная)
 

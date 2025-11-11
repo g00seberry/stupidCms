@@ -148,12 +148,17 @@ curl -X PUT \
 ```json
 {
     "type": "https://stupidcms.dev/problems/invalid-option-identifier",
-    "title": "Validation error",
+    "title": "Validation Error",
     "status": 422,
     "code": "INVALID_OPTION_IDENTIFIER",
-    "errors": {
-        "namespace": ["The selected namespace is invalid."]
-    }
+    "detail": "The provided option namespace/key is invalid.",
+    "meta": {
+        "request_id": "0aa2f81d-9f4c-4f30-8d8b-1c3de2c5b9a7",
+        "errors": {
+            "namespace": ["The selected namespace is invalid."]
+        }
+    },
+    "trace_id": "00-4f30d8db1c3de2c50aa2f81d9f4c8d8b-4f30d8db1c3de2c5-01"
 }
 ```
 
