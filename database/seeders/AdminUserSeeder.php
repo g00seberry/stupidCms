@@ -36,6 +36,8 @@ class AdminUserSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@example.com',
             'password' => Hash::make('admin123'), // Пароль будет автоматически хеширован (bcrypt/argon2)
+            'admin_permissions' => ['manage.posttypes', 'manage.entries', 'manage.taxonomies', 'manage.terms'],
+            'is_admin' => true,
         ]);
 
         $this->command->info('Admin user created successfully!');

@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:errors` to update.
 
-_Last generated: 2025-11-11 15:27:21_
+_Last generated: 2025-11-11 19:49:45_
 
 stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7807) for error responses.
 
@@ -157,15 +157,7 @@ stupidCms API follows [RFC7807 Problem Details](https://tools.ietf.org/html/rfc7
             ]
         }
     },
-    "trace_id": "00-55555555555545558555555555555555-5555555555554555-01",
-    "errors": {
-        "title": [
-            "The title field is required."
-        ],
-        "slug": [
-            "The slug has already been taken."
-        ]
-    }
+    "trace_id": "00-55555555555545558555555555555555-5555555555554555-01"
 }
 ```
 

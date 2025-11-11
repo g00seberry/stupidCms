@@ -10,11 +10,69 @@ use App\Http\Resources\Admin\PostTypeResource;
 use App\Models\PostType;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class PostTypeController extends Controller
 {
     use ThrowsErrors;
+
+    /**
+     * Список всех типов записей.
+     *
+     * @group Admin ▸ Post types
+     * @name List post types
+     * @authenticated
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "slug": "article",
+     *       "label": "Articles",
+     *       "options_json": {},
+     *       "updated_at": "2025-01-10T12:45:00+00:00"
+     *     }
+     *   ]
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555555-4111111122223333-01"
+     * }
+     * @response status=403 {
+     *   "type": "https://stupidcms.dev/problems/forbidden",
+     *   "title": "Forbidden",
+     *   "status": 403,
+     *   "code": "FORBIDDEN",
+     *   "detail": "This action is unauthorized."
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "46666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-46666666777788889999000000000000-4666666677778888-01"
+     * }
+     */
+    public function index(): AnonymousResourceCollection
+    {
+        $types = PostType::query()
+            ->orderBy('slug')
+            ->get();
+
+        return PostTypeResource::collection($types);
+    }
 
     /**
      * Получение настроек типа записи.

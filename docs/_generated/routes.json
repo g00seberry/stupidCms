@@ -106,6 +106,13 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/post-types",
+        "name": "admin.v1.post-types.index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\PostTypeController@index",
+        "middleware": "api, jwt.auth, throttle:api, App\\Http\\Middleware\\EnsureCanManagePostTypes"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "api/v1/admin/post-types/{slug}",
         "name": "admin.v1.post-types.show",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PostTypeController@show",

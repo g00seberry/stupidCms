@@ -68,7 +68,10 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->where('path', '.*')
         ->middleware('can:deleteAny,' . ReservedRoute::class);
     
-    // Post Types (only show/update, no create/delete)
+    // Post Types (list/show/update, no create/delete)
+    Route::get('/post-types', [PostTypeController::class, 'index'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.index');
     Route::get('/post-types/{slug}', [PostTypeController::class, 'show'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.show');

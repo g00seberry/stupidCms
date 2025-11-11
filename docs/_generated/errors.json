@@ -93,15 +93,7 @@
                     ]
                 }
             },
-            "trace_id": "00-55555555555545558555555555555555-5555555555554555-01",
-            "errors": {
-                "title": [
-                    "The title field is required."
-                ],
-                "slug": [
-                    "The slug has already been taken."
-                ]
-            }
+            "trace_id": "00-55555555555545558555555555555555-5555555555554555-01"
         }
     },
     {
