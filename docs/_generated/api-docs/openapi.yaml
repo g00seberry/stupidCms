@@ -414,7 +414,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -442,17 +442,17 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T06:06:46'
+                  example: '2025-11-12T12:29:01'
                   nullable: true
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2106-12-11'
+                  example: '2106-12-12'
                   nullable: true
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -460,7 +460,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2960,7 +2960,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -4731,7 +4731,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -7978,6 +7978,16 @@ paths:
             schema:
               type: object
               properties:
+                slug:
+                  type: string
+                  description: 'optional Новый slug PostType.'
+                  example: article-updated
+                  nullable: false
+                name:
+                  type: string
+                  description: 'optional Человекочитаемое название.'
+                  example: 'Articles Updated'
+                  nullable: false
                 options_json:
                   type: object
                   description: 'JSON-объект схемы настроек.'
@@ -7989,6 +7999,237 @@ paths:
                   properties: {  }
               required:
                 - options_json
+    delete:
+      summary: 'Удаление типа записи.'
+      operationId: ''
+      description: ''
+      parameters:
+        -
+          in: query
+          name: force
+          description: 'Каскадно удалить все записи (Entry) этого типа.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Каскадно удалить все записи (Entry) этого типа.'
+            example: true
+            nullable: false
+      responses:
+        204:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 41111111-2222-3333-4444-555555555560
+                    reason: missing_token
+                  trace_id: 00-41111111222233334444555555555560-4111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 41111111-2222-3333-4444-555555555560
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-41111111222233334444555555555560-4111111122223333-01
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/forbidden'
+                  title: Forbidden
+                  status: 403
+                  code: FORBIDDEN
+                  detail: 'This action is unauthorized.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/forbidden'
+                  title:
+                    type: string
+                    example: Forbidden
+                  status:
+                    type: integer
+                    example: 403
+                  code:
+                    type: string
+                    example: FORBIDDEN
+                  detail:
+                    type: string
+                    example: 'This action is unauthorized.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'PostType not found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Unknown post type slug: article'
+                  meta:
+                    request_id: 41111111-2222-3333-4444-555555555561
+                    slug: article
+                  trace_id: 00-41111111222233334444555555555561-4111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'PostType not found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Unknown post type slug: article'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 41111111-2222-3333-4444-555555555561
+                      slug:
+                        type: string
+                        example: article
+                  trace_id:
+                    type: string
+                    example: 00-41111111222233334444555555555561-4111111122223333-01
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/conflict'
+                  title: 'PostType has entries'
+                  status: 409
+                  code: CONFLICT
+                  detail: 'Cannot delete post type while entries exist. Use force=1 to cascade delete.'
+                  meta:
+                    request_id: 41111111-2222-3333-4444-555555555562
+                    entries_count: 5
+                  trace_id: 00-41111111222233334444555555555562-4111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/conflict'
+                  title:
+                    type: string
+                    example: 'PostType has entries'
+                  status:
+                    type: integer
+                    example: 409
+                  code:
+                    type: string
+                    example: CONFLICT
+                  detail:
+                    type: string
+                    example: 'Cannot delete post type while entries exist. Use force=1 to cascade delete.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 41111111-2222-3333-4444-555555555562
+                      entries_count:
+                        type: integer
+                        example: 5
+                  trace_id:
+                    type: string
+                    example: 00-41111111222233334444555555555562-4111111122223333-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: 46666666-7777-8888-9999-000000000002
+                    retry_after: 60
+                  trace_id: 00-46666666777788889999000000000002-4666666677778888-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 46666666-7777-8888-9999-000000000002
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-46666666777788889999000000000002-4666666677778888-01
+      tags:
+        - 'Admin ▸ Post types'
     parameters:
       -
         in: path
@@ -11077,12 +11318,12 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T06:06:45'
+                  example: '2025-11-12T12:29:01'
                   nullable: true
                 to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
-                  example: '2106-12-11'
+                  example: '2106-12-12'
                   nullable: true
                 page:
                   type: integer

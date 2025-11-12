@@ -217,6 +217,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="admin-post-types-PUTapi-v1-admin-post-types--slug-">
                                 <a href="#admin-post-types-PUTapi-v1-admin-post-types--slug-">Обновление настроек типа записи.</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="admin-post-types-DELETEapi-v1-admin-post-types--slug-">
+                                <a href="#admin-post-types-DELETEapi-v1-admin-post-types--slug-">Удаление типа записи.</a>
+                            </li>
                                                                         </ul>
                             </ul>
                     <ul id="tocify-header-admin-search" class="tocify-header">
@@ -326,7 +329,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-12 06:06</li>
+        <li>Last updated: 2025-11-12 12:29</li>
     </ul>
 </div>
 
@@ -370,16 +373,16 @@
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"trashed\",
+    \"status\": \"published\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-12T06:06:46\",
-    \"date_to\": \"2106-12-11\",
-    \"date_field\": \"published\",
-    \"sort\": \"published_at.asc\",
+    \"date_from\": \"2025-11-12T12:29:01\",
+    \"date_to\": \"2106-12-12\",
+    \"date_field\": \"updated\",
+    \"sort\": \"title.desc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -413,16 +416,16 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "trashed",
+    "status": "published",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-12T06:06:46",
-    "date_to": "2106-12-11",
-    "date_field": "published",
-    "sort": "published_at.asc",
+    "date_from": "2025-11-12T12:29:01",
+    "date_to": "2106-12-12",
+    "date_field": "updated",
+    "sort": "title.desc",
     "per_page": 13
 };
 
@@ -458,16 +461,16 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'trashed',
+            'status' =&gt; 'published',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-12T06:06:46',
-            'date_to' =&gt; '2106-12-11',
-            'date_field' =&gt; 'published',
-            'sort' =&gt; 'published_at.asc',
+            'date_from' =&gt; '2025-11-12T12:29:01',
+            'date_to' =&gt; '2106-12-12',
+            'date_field' =&gt; 'updated',
+            'sort' =&gt; 'title.desc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -788,10 +791,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="trashed"
+               value="published"
                data-component="body">
     <br>
-<p>Example: <code>trashed</code></p>
+<p>Example: <code>published</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -840,10 +843,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-12T06:06:46"
+               value="2025-11-12T12:29:01"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-12T06:06:46</code></p>
+<p>Must be a valid date. Example: <code>2025-11-12T12:29:01</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -852,10 +855,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_to"                data-endpoint="GETapi-v1-admin-entries"
-               value="2106-12-11"
+               value="2106-12-12"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>date_from</code>. Example: <code>2106-12-11</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>date_from</code>. Example: <code>2106-12-12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_field</code></b>&nbsp;&nbsp;
@@ -864,10 +867,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_field"                data-endpoint="GETapi-v1-admin-entries"
-               value="published"
+               value="updated"
                data-component="body">
     <br>
-<p>Example: <code>published</code></p>
+<p>Example: <code>updated</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated</code></li> <li><code>published</code></li></ul>
         </div>
@@ -878,10 +881,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="published_at.asc"
+               value="title.desc"
                data-component="body">
     <br>
-<p>Example: <code>published_at.asc</code></p>
+<p>Example: <code>title.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -3549,7 +3552,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"kind\": \"audio\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
-    \"deleted\": \"only\",
+    \"deleted\": \"with\",
     \"sort\": \"mime\",
     \"order\": \"asc\",
     \"page\": 3,
@@ -3587,7 +3590,7 @@ let body = {
     "kind": "audio",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
-    "deleted": "only",
+    "deleted": "with",
     "sort": "mime",
     "order": "asc",
     "page": 3,
@@ -3627,7 +3630,7 @@ $response = $client-&gt;get(
             'kind' =&gt; 'audio',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
-            'deleted' =&gt; 'only',
+            'deleted' =&gt; 'with',
             'sort' =&gt; 'mime',
             'order' =&gt; 'asc',
             'page' =&gt; 3,
@@ -3949,10 +3952,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-media"
-               value="only"
+               value="with"
                data-component="body">
     <br>
-<p>Example: <code>only</code></p>
+<p>Example: <code>with</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -5805,7 +5808,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"namespace\": \"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",
     \"q\": \"bajwbpilpmufinllwloau\",
-    \"deleted\": \"with\",
+    \"deleted\": \"only\",
     \"page\": 87,
     \"per_page\": 4
 }"
@@ -5834,7 +5837,7 @@ const headers = {
 let body = {
     "namespace": "gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8",
     "q": "bajwbpilpmufinllwloau",
-    "deleted": "with",
+    "deleted": "only",
     "page": 87,
     "per_page": 4
 };
@@ -5865,7 +5868,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'namespace' =&gt; 'gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8',
             'q' =&gt; 'bajwbpilpmufinllwloau',
-            'deleted' =&gt; 'with',
+            'deleted' =&gt; 'only',
             'page' =&gt; 87,
             'per_page' =&gt; 4,
         ],
@@ -6132,10 +6135,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-options--namespace-"
-               value="with"
+               value="only"
                data-component="body">
     <br>
-<p>Example: <code>with</code></p>
+<p>Example: <code>only</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -9861,6 +9864,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
+    \"slug\": \"article-updated\",
+    \"name\": \"Articles Updated\",
     \"options_json\": {
         \"fields\": {
             \"hero\": {
@@ -9884,6 +9889,8 @@ const headers = {
 };
 
 let body = {
+    "slug": "article-updated",
+    "name": "Articles Updated",
     "options_json": {
         "fields": {
             "hero": {
@@ -9912,6 +9919,8 @@ $response = $client-&gt;put(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
+            'slug' =&gt; 'article-updated',
+            'name' =&gt; 'Articles Updated',
             'options_json' =&gt; [
                 'fields' =&gt; [
                     'hero' =&gt; [
@@ -10123,6 +10132,30 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="slug"                data-endpoint="PUTapi-v1-admin-post-types--slug-"
+               value="article-updated"
+               data-component="body">
+    <br>
+<p>optional Новый slug PostType. Example: <code>article-updated</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="PUTapi-v1-admin-post-types--slug-"
+               value="Articles Updated"
+               data-component="body">
+    <br>
+<p>optional Человекочитаемое название. Example: <code>Articles Updated</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>options_json</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
  &nbsp;
@@ -10135,6 +10168,284 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>JSON-объект схемы настроек.</p>
         </div>
         </form>
+
+                    <h2 id="admin-post-types-DELETEapi-v1-admin-post-types--slug-">Удаление типа записи.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-v1-admin-post-types--slug-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost/api/v1/api/v1/admin/post-types/article?force=1" \
+    --header "Authorization: Bearer Bearer {JWT}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/v1/api/v1/admin/post-types/article"
+);
+
+const params = {
+    "force": "1",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer Bearer {JWT}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/v1/api/v1/admin/post-types/article';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer Bearer {JWT}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'query' =&gt; [
+            'force' =&gt; '1',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-v1-admin-post-types--slug-">
+            <blockquote>
+            <p>Example response (204):</p>
+        </blockquote>
+                <pre>
+<code>Empty response</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555560&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555560-4111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/forbidden&quot;,
+    &quot;title&quot;: &quot;Forbidden&quot;,
+    &quot;status&quot;: 403,
+    &quot;code&quot;: &quot;FORBIDDEN&quot;,
+    &quot;detail&quot;: &quot;This action is unauthorized.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;PostType not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;,
+    &quot;detail&quot;: &quot;Unknown post type slug: article&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555561&quot;,
+        &quot;slug&quot;: &quot;article&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555561-4111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (409):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/conflict&quot;,
+    &quot;title&quot;: &quot;PostType has entries&quot;,
+    &quot;status&quot;: 409,
+    &quot;code&quot;: &quot;CONFLICT&quot;,
+    &quot;detail&quot;: &quot;Cannot delete post type while entries exist. Use force=1 to cascade delete.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;41111111-2222-3333-4444-555555555562&quot;,
+        &quot;entries_count&quot;: 5
+    },
+    &quot;trace_id&quot;: &quot;00-41111111222233334444555555555562-4111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;46666666-7777-8888-9999-000000000002&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-46666666777788889999000000000002-4666666677778888-01&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-v1-admin-post-types--slug-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-v1-admin-post-types--slug-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-post-types--slug-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-v1-admin-post-types--slug-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-v1-admin-post-types--slug-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-v1-admin-post-types--slug-" data-method="DELETE"
+      data-path="api/v1/admin/post-types/{slug}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-post-types--slug-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-v1-admin-post-types--slug-"
+                    onclick="tryItOut('DELETEapi-v1-admin-post-types--slug-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-v1-admin-post-types--slug-"
+                    onclick="cancelTryOut('DELETEapi-v1-admin-post-types--slug-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-v1-admin-post-types--slug-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/v1/admin/post-types/{slug}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-admin-post-types--slug-"
+               value="Bearer Bearer {JWT}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer Bearer {JWT}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-post-types--slug-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-v1-admin-post-types--slug-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="slug"                data-endpoint="DELETEapi-v1-admin-post-types--slug-"
+               value="article"
+               data-component="url">
+    <br>
+<p>Slug PostType. Example: <code>article</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>force</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="DELETEapi-v1-admin-post-types--slug-" style="display: none">
+            <input type="radio" name="force"
+                   value="1"
+                   data-endpoint="DELETEapi-v1-admin-post-types--slug-"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="DELETEapi-v1-admin-post-types--slug-" style="display: none">
+            <input type="radio" name="force"
+                   value="0"
+                   data-endpoint="DELETEapi-v1-admin-post-types--slug-"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Каскадно удалить все записи (Entry) этого типа. Example: <code>true</code></p>
+            </div>
+                </form>
 
                 <h1 id="admin-search">Admin ▸ Search</h1>
 
@@ -14306,8 +14617,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"vxi4:4$\\/i\"
     ],
-    \"from\": \"2025-11-12T06:06:45\",
-    \"to\": \"2106-12-11\",
+    \"from\": \"2025-11-12T12:29:01\",
+    \"to\": \"2106-12-12\",
     \"page\": 45,
     \"per_page\": 16
 }"
@@ -14344,8 +14655,8 @@ let body = {
     "term": [
         "vxi4:4$\/i"
     ],
-    "from": "2025-11-12T06:06:45",
-    "to": "2106-12-11",
+    "from": "2025-11-12T12:29:01",
+    "to": "2106-12-12",
     "page": 45,
     "per_page": 16
 };
@@ -14384,8 +14695,8 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 'vxi4:4$/i',
             ],
-            'from' =&gt; '2025-11-12T06:06:45',
-            'to' =&gt; '2106-12-11',
+            'from' =&gt; '2025-11-12T12:29:01',
+            'to' =&gt; '2106-12-12',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
         ],
@@ -14631,10 +14942,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-12T06:06:45"
+               value="2025-11-12T12:29:01"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-12T06:06:45</code></p>
+<p>Must be a valid date. Example: <code>2025-11-12T12:29:01</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -14643,10 +14954,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-search"
-               value="2106-12-11"
+               value="2106-12-12"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>from</code>. Example: <code>2106-12-11</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>from</code>. Example: <code>2106-12-12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;

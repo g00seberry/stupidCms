@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-12 06:06:40_
+_Last generated: 2025-11-12 12:28:55_
 
 ## Web
 
@@ -36,6 +36,7 @@ _Last generated: 2025-11-12 06:06:40_
 | GET|HEAD | `api/v1/admin/post-types` | admin.v1.post-types.index | `PostTypeController@index` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
 | GET|HEAD | `api/v1/admin/post-types/{slug}` | admin.v1.post-types.show | `PostTypeController@show` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
 | PUT | `api/v1/admin/post-types/{slug}` | admin.v1.post-types.update | `PostTypeController@update` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
+| DELETE | `api/v1/admin/post-types/{slug}` | admin.v1.post-types.destroy | `PostTypeController@destroy` | api, jwt.auth, throttle:api, App\Http\Middleware\EnsureCanManagePostTypes |
 | GET|HEAD | `api/v1/admin/entries` | admin.v1.entries.index | `EntryController@index` | api, jwt.auth, throttle:api, can:viewAny,App\Models\Entry |
 | POST | `api/v1/admin/entries` | admin.v1.entries.store | `EntryController@store` | api, jwt.auth, throttle:api, can:create,App\Models\Entry |
 | GET|HEAD | `api/v1/admin/entries/{id}` | admin.v1.entries.show | `EntryController@show` | api, jwt.auth, throttle:api |

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "fbf0715d-5994-482e-a9a7-558752da18a8",
+        "_postman_id": "7a24af13-a95c-47df-a909-514ba80d4639",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -102,7 +102,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"trashed\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-12T06:06:46\",\"date_to\":\"2106-12-11\",\"date_field\":\"published\",\"sort\":\"published_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-12T12:29:01\",\"date_to\":\"2106-12-12\",\"date_field\":\"updated\",\"sort\":\"title.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -775,7 +775,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"audio\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"mime\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"audio\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"mime\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -1314,7 +1314,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"with\",\"page\":87,\"per_page\":4}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"only\",\"page\":87,\"per_page\":4}"
                         },
                         "description": ""
                     },
@@ -2263,7 +2263,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"options_json\":{\"fields\":{\"hero\":{\"type\":\"image\"}}}}"
+                            "raw": "{\"slug\":\"article-updated\",\"name\":\"Articles Updated\",\"options_json\":{\"fields\":{\"hero\":{\"type\":\"image\"}}}}"
                         },
                         "description": ""
                     },
@@ -2296,6 +2296,83 @@
                             "header": [],
                             "code": 429,
                             "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"46666666-7777-8888-9999-000000000001\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-46666666777788889999000000000001-4666666677778888-01\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0442\u0438\u043f\u0430 \u0437\u0430\u043f\u0438\u0441\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/post-types\/:slug",
+                            "query": [
+                                {
+                                    "key": "force",
+                                    "value": "1",
+                                    "description": "\u041a\u0430\u0441\u043a\u0430\u0434\u043d\u043e \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0432\u0441\u0435 \u0437\u0430\u043f\u0438\u0441\u0438 (Entry) \u044d\u0442\u043e\u0433\u043e \u0442\u0438\u043f\u0430.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/post-types\/:slug?force=1",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "article",
+                                    "description": "Slug PostType."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"41111111-2222-3333-4444-555555555560\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-41111111222233334444555555555560-4111111122223333-01\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"code\": \"FORBIDDEN\",\n  \"detail\": \"This action is unauthorized.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"PostType not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Unknown post type slug: article\",\n  \"meta\": {\n    \"request_id\": \"41111111-2222-3333-4444-555555555561\",\n    \"slug\": \"article\"\n  },\n  \"trace_id\": \"00-41111111222233334444555555555561-4111111122223333-01\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/conflict\",\n  \"title\": \"PostType has entries\",\n  \"status\": 409,\n  \"code\": \"CONFLICT\",\n  \"detail\": \"Cannot delete post type while entries exist. Use force=1 to cascade delete.\",\n  \"meta\": {\n    \"request_id\": \"41111111-2222-3333-4444-555555555562\",\n    \"entries_count\": 5\n  },\n  \"trace_id\": \"00-41111111222233334444555555555562-4111111122223333-01\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 429,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"46666666-7777-8888-9999-000000000002\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-46666666777788889999000000000002-4666666677778888-01\"\n}",
                             "name": ""
                         }
                     ]
@@ -3378,7 +3455,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-12T06:06:45\",\"to\":\"2106-12-11\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-12T12:29:01\",\"to\":\"2106-12-12\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

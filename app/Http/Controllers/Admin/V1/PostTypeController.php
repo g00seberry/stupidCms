@@ -8,11 +8,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePostTypeRequest;
 use App\Http\Requests\Admin\UpdatePostTypeRequest;
 use App\Http\Resources\Admin\PostTypeResource;
+use App\Models\Entry;
 use App\Models\PostType;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
+use App\Support\Http\AdminResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostTypeController extends Controller
 {
@@ -342,6 +346,113 @@ class PostTypeController extends Controller
         $type->refresh();
 
         return new PostTypeResource($type);
+    }
+
+    /**
+     * Удаление типа записи.
+     *
+     * @group Admin ▸ Post types
+     * @name Delete post type
+     * @authenticated
+     * @urlParam slug string required Slug PostType. Example: article
+     * @queryParam force boolean Каскадно удалить все записи (Entry) этого типа. Example: true
+     * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555560",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555560-4111111122223333-01"
+     * }
+     * @response status=403 {
+     *   "type": "https://stupidcms.dev/problems/forbidden",
+     *   "title": "Forbidden",
+     *   "status": 403,
+     *   "code": "FORBIDDEN",
+     *   "detail": "This action is unauthorized."
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "PostType not found",
+     *   "status": 404,
+     *   "code": "NOT_FOUND",
+     *   "detail": "Unknown post type slug: article",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555561",
+     *     "slug": "article"
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555561-4111111122223333-01"
+     * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/conflict",
+     *   "title": "PostType has entries",
+     *   "status": 409,
+     *   "code": "CONFLICT",
+     *   "detail": "Cannot delete post type while entries exist. Use force=1 to cascade delete.",
+     *   "meta": {
+     *     "request_id": "41111111-2222-3333-4444-555555555562",
+     *     "entries_count": 5
+     *   },
+     *   "trace_id": "00-41111111222233334444555555555562-4111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "46666666-7777-8888-9999-000000000002",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-46666666777788889999000000000002-4666666677778888-01"
+     * }
+     */
+    public function destroy(Request $request, string $slug): Response
+    {
+        $type = PostType::query()->where('slug', $slug)->first();
+
+        if (! $type) {
+            $this->throwPostTypeNotFound($slug);
+        }
+
+        $force = $request->boolean('force');
+
+        // Проверяем наличие связанных Entry (включая soft-deleted)
+        $entriesCount = Entry::query()
+            ->withTrashed()
+            ->where('post_type_id', $type->id)
+            ->count();
+
+        if ($entriesCount > 0 && ! $force) {
+            $this->throwError(
+                ErrorCode::CONFLICT,
+                'Cannot delete post type while entries exist. Use force=1 to cascade delete.',
+                ['entries_count' => $entriesCount],
+            );
+        }
+
+        DB::transaction(function () use ($type, $force) {
+            if ($force) {
+                // Каскадно удаляем все Entry (включая soft-deleted)
+                // Связи (entry_term, entry_media, entry_slugs) удаляются автоматически через каскад в БД
+                Entry::query()
+                    ->withTrashed()
+                    ->where('post_type_id', $type->id)
+                    ->each(function (Entry $entry): void {
+                        $entry->forceDelete();
+                    });
+            }
+
+            $type->delete();
+        });
+
+        return AdminResponse::noContent();
     }
 
 }

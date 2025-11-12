@@ -68,7 +68,7 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->where('path', '.*')
         ->middleware('can:deleteAny,' . ReservedRoute::class);
     
-    // Post Types (create/list/show/update, no delete)
+    // Post Types (full CRUD)
     Route::post('/post-types', [PostTypeController::class, 'store'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.store');
@@ -81,6 +81,9 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::put('/post-types/{slug}', [PostTypeController::class, 'update'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.update');
+    Route::delete('/post-types/{slug}', [PostTypeController::class, 'destroy'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.destroy');
     
     // Entries (full CRUD + soft-delete/restore)
     Route::get('/entries', [EntryController::class, 'index'])
