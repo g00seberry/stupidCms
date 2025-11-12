@@ -31,9 +31,11 @@ PostType определяет:
 - `single-product` — шаблон для товаров
 
 **Приоритет выбора шаблона** (при рендеринге Entry):
-1. `Entry.template_override` — переопределение для конкретной записи
-2. `PostType.template` — шаблон типа поста
-3. Резолвер шаблонов (см. `BladeTemplateResolver`)
+1. `Entry.template_override` — переопределение для конкретной записи (если задан)
+2. `PostType.template` — шаблон типа поста (если задан)
+3. `pages.show` (default) — если оба не заданы
+
+См. `BladeTemplateResolver` для деталей реализации.
 
 **Получение списка доступных шаблонов**: `GET /api/v1/admin/utils/templates`
 

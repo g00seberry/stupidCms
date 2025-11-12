@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\V1\OptionsController;
 use App\Http\Controllers\Admin\V1\PathReservationController;
 use App\Http\Controllers\Admin\V1\PluginsController;
 use App\Http\Controllers\Admin\V1\SearchAdminController;
+use App\Http\Controllers\Admin\V1\TemplateController;
 use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
@@ -42,8 +43,18 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->name('admin.v1.auth.current');
     
     Route::get('/utils/slugify', [UtilsController::class, 'slugify']);
-    Route::get('/utils/templates', [UtilsController::class, 'templates'])
-        ->name('admin.v1.utils.templates');
+    
+    // Templates (full CRUD)
+    Route::get('/templates', [TemplateController::class, 'index'])
+        ->name('admin.v1.templates.index');
+    Route::get('/templates/{name}', [TemplateController::class, 'show'])
+        ->where('name', '.*')
+        ->name('admin.v1.templates.show');
+    Route::post('/templates', [TemplateController::class, 'store'])
+        ->name('admin.v1.templates.store');
+    Route::put('/templates/{name}', [TemplateController::class, 'update'])
+        ->where('name', '.*')
+        ->name('admin.v1.templates.update');
     
     Route::get('/plugins', [PluginsController::class, 'index'])
         ->middleware(['can:plugins.read', 'throttle:60,1'])

@@ -30,12 +30,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Регистрация TemplateResolver
         // Используем scoped вместо singleton для совместимости с Octane/Swoole
-        // Это гарантирует, что мемоизация View::exists() не протекает между запросами
         $this->app->scoped(TemplateResolver::class, function () {
             return new BladeTemplateResolver(
                 default: config('view_templates.default', 'pages.show'),
-                overridePrefix: config('view_templates.override_prefix', 'pages.overrides.'),
-                typePrefix: config('view_templates.type_prefix', 'pages.types.'),
             );
         });
 

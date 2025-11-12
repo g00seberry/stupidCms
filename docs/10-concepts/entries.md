@@ -28,7 +28,7 @@ Entry {
   seo_json: json                   // SEO метаданные
   status: enum('draft', 'published')
   published_at: ?datetime
-  template_override: ?string       // переопределение шаблона для конкретной записи
+  template_override: ?string       // переопределение шаблона для конкретной записи (приоритет выше, чем PostType.template)
   created_at: datetime
   updated_at: datetime
   deleted_at: ?datetime            // soft delete

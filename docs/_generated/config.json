@@ -3891,16 +3891,6 @@
             "value": "pages.show",
             "type": "string",
             "env": null
-        },
-        "override_prefix": {
-            "value": "pages.overrides.",
-            "type": "string",
-            "env": null
-        },
-        "type_prefix": {
-            "value": "pages.types.",
-            "type": "string",
-            "env": null
         }
     }
 }

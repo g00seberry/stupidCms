@@ -8,16 +8,12 @@ return [
     |
     | Настройки для BladeTemplateResolver, который выбирает шаблоны
     | для рендера записей (Entry) по приоритету:
-    | 1. Override по slug (pages.overrides.{slug})
-    | 2. По типу поста (pages.types.{postType->slug})
-    | 3. Default (pages.show)
+    | 1. Entry.template_override (если задан)
+    | 2. PostType.template (если задан)
+    | 3. Default (pages.show) - если оба не заданы
     |
     */
 
     'default' => env('VIEW_TEMPLATES_DEFAULT', 'pages.show'),
-
-    'override_prefix' => env('VIEW_TEMPLATES_OVERRIDE_PREFIX', 'pages.overrides.'),
-
-    'type_prefix' => env('VIEW_TEMPLATES_TYPE_PREFIX', 'pages.types.'),
 ];
 

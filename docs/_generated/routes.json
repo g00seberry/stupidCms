@@ -57,9 +57,30 @@
     },
     {
         "method": "GET|HEAD",
-        "uri": "api/v1/admin/utils/templates",
-        "name": "admin.v1.utils.templates",
-        "action": "App\\Http\\Controllers\\Admin\\V1\\UtilsController@templates",
+        "uri": "api/v1/admin/templates",
+        "name": "admin.v1.templates.index",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TemplateController@index",
+        "middleware": "api, jwt.auth, throttle:api"
+    },
+    {
+        "method": "GET|HEAD",
+        "uri": "api/v1/admin/templates/{name}",
+        "name": "admin.v1.templates.show",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TemplateController@show",
+        "middleware": "api, jwt.auth, throttle:api"
+    },
+    {
+        "method": "POST",
+        "uri": "api/v1/admin/templates",
+        "name": "admin.v1.templates.store",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TemplateController@store",
+        "middleware": "api, jwt.auth, throttle:api"
+    },
+    {
+        "method": "PUT",
+        "uri": "api/v1/admin/templates/{name}",
+        "name": "admin.v1.templates.update",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TemplateController@update",
         "middleware": "api, jwt.auth, throttle:api"
     },
     {
