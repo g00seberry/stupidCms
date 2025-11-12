@@ -26,7 +26,7 @@ class PostTypeResource extends AdminJsonResource
     {
         return [
             'slug' => $this->slug,
-            'label' => $this->name ?? $this->slug,
+            'name' => $this->name,
             'options_json' => $this->transformOptionsJson($this->options_json),
             'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),

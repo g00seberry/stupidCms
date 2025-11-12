@@ -34,7 +34,7 @@ class ShowPostTypeTest extends TestCase
         $response->assertJson([
             'data' => [
                 'slug' => 'page',
-                'label' => 'Страница',
+                'name' => 'Страница',
                 'options_json' => [
                     'template' => 'default',
                     'editor' => ['toolbar' => ['h2', 'bold', 'link']],
@@ -45,7 +45,7 @@ class ShowPostTypeTest extends TestCase
         $response->assertJsonStructure([
             'data' => [
                 'slug',
-                'label',
+                'name',
                 'options_json',
                 'updated_at',
             ],

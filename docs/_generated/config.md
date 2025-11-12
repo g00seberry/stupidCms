@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-11 20:19:02_
+_Last generated: 2025-11-12 06:06:42_
 
 ## app
 

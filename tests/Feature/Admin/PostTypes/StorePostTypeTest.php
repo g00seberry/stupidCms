@@ -37,7 +37,7 @@ class StorePostTypeTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertHeader('Vary', 'Cookie');
         $response->assertJsonPath('data.slug', 'product');
-        $response->assertJsonPath('data.label', 'Product');
+        $response->assertJsonPath('data.name', 'Product');
         $response->assertJsonPath('data.options_json.fields.price.type', 'number');
 
         $this->assertDatabaseHas('post_types', [

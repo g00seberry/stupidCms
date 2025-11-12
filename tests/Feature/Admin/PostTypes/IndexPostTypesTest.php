@@ -38,7 +38,7 @@ class IndexPostTypesTest extends TestCase
         $response->assertJsonCount(2, 'data');
         $response->assertJsonFragment([
             'slug' => 'article',
-            'label' => 'Article',
+            'name' => 'Article',
             'options_json' => [
                 'template' => 'default',
             ],

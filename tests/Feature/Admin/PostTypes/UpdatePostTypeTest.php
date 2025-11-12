@@ -40,7 +40,7 @@ class UpdatePostTypeTest extends TestCase
         $response->assertJson([
             'data' => [
                 'slug' => 'page',
-                'label' => 'Страница',
+                'name' => 'Страница',
                 'options_json' => $newOptions,
             ],
         ]);

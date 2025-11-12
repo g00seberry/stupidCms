@@ -31,7 +31,7 @@ class PostTypeController extends Controller
      * @response status=201 {
      *   "data": {
      *     "slug": "product",
-     *     "label": "Products",
+     *     "name": "Products",
      *     "options_json": {
      *       "fields": {
      *         "price": {
@@ -122,7 +122,7 @@ class PostTypeController extends Controller
      *   "data": [
      *     {
      *       "slug": "article",
-     *       "label": "Articles",
+     *       "name": "Articles",
      *       "options_json": {},
      *       "updated_at": "2025-01-10T12:45:00+00:00"
      *     }
@@ -179,7 +179,7 @@ class PostTypeController extends Controller
      * @response status=200 {
      *   "data": {
      *     "slug": "article",
-     *     "label": "Articles",
+     *     "name": "Articles",
      *     "options_json": {},
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
@@ -252,7 +252,7 @@ class PostTypeController extends Controller
      * @response status=200 {
      *   "data": {
      *     "slug": "article",
-     *     "label": "Articles",
+     *     "name": "Articles",
      *     "options_json": {
      *       "fields": {
      *         "hero": {
