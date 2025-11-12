@@ -337,8 +337,10 @@ $entry = Entry::ofType($postTypeSlug)
 
 ```php
 Route::get('/{postTypeSlug}/{slug}', [EntryController::class, 'show']);
-Route::get('/{slug}', [PageController::class, 'show']); // для page без префикса
+Route::get('/{slug}', [PageController::class, 'show']); // для всех типов без префикса
 ```
+
+**Примечание**: `PageController` ищет entry через `entry_slugs` с `is_current=true`, а не напрямую по полю `entries.slug`. Это обеспечивает корректную работу с историей slugs и поддержку всех типов entries.
 
 ## События
 
