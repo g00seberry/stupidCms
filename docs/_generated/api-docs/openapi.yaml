@@ -532,7 +532,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: all
                   nullable: true
                   enum:
                     - all
@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T15:33:45'
+                  example: '2025-11-12T15:53:53'
                   nullable: true
                 date_to:
                   type: string
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.desc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3078,7 +3078,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -3086,7 +3086,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -6489,7 +6489,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -6518,7 +6518,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -8106,6 +8106,11 @@ paths:
                   description: 'optional Человекочитаемое название.'
                   example: 'Articles Updated'
                   nullable: false
+                template:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: qxbajwbpilpmufinllwlo
+                  nullable: true
                 options_json:
                   type: object
                   description: 'JSON-объект схемы настроек.'
@@ -8715,7 +8720,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: label.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10340,7 +10345,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11957,7 +11962,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T15:33:45'
+                  example: '2025-11-12T15:53:53'
                   nullable: true
                 to:
                   type: string

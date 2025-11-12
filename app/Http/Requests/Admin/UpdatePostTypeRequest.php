@@ -44,6 +44,12 @@ class UpdatePostTypeRequest extends FormRequest
                 'string',
                 'max:255',
             ],
+            'template' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:255',
+            ],
             'options_json' => [
                 'present',
                 'array',

@@ -339,6 +339,9 @@ class PostTypeController extends Controller
             if (isset($validated['name'])) {
                 $type->name = $validated['name'];
             }
+            if (array_key_exists('template', $validated)) {
+                $type->template = $validated['template'];
+            }
             $type->options_json = $validated['options_json'];
             $type->save();
         });

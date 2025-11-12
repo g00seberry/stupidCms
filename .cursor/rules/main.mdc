@@ -44,6 +44,7 @@ UPDATE POLICY (short)
 
 -   При изменении API/схем/прав — требуй обновления /docs через composer docs:gen.
 -   Помечай ответы: «requires: docs:gen» когда нужны авто-артефакты.
+-   **ОБЯЗАТЕЛЬНО в конце каждой задачи:** запустить `php artisan test` и `composer docs:gen`.
 -   См. подробные правила в docs/\_assistant/rules/07-quality-gates.md
 
 REFERENCES
