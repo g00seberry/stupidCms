@@ -76,7 +76,7 @@ docs/
 
 -   **PostType** — шаблон типа контента (например, "статья", "событие")
 -   **Entry** — конкретная запись этого типа
--   Каждый Entry имеет `slug`, `published_at`, `unpublished_at`
+-   Каждый Entry имеет `slug`, `published_at`, `status` (draft/published)
 
 **Подробнее**: [Post Types](../10-concepts/post-types.md), [Entries](../10-concepts/entries.md)
 

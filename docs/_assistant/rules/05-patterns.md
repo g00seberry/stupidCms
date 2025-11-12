@@ -13,9 +13,9 @@
 
 ## Entry Publishing
 
--   Поля: `published_at`, `unpublished_at`.
--   Сервис публикации: `app/Support/Publishing/*`.
--   Невидимые записи исключаются из публичных выборок.
+-   Поля: `status` (draft/published), `published_at`.
+-   Сервис публикации: `app/Domain/Entries/PublishingService.php`.
+-   Невидимые записи (draft или deleted) исключаются из публичных выборок.
 
 ## Reserved Routes
 

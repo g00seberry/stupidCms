@@ -125,7 +125,7 @@ Laravel класс для проверки прав доступа. Наприм
 
 ### Publishing Flow
 
-Жизненный цикл entry: Draft → Scheduled → Published → Archived.
+Жизненный цикл entry: Draft → Scheduled → Published → Draft (возврат) → Deleted (soft delete).
 
 ## R
 

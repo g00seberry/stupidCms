@@ -2,10 +2,10 @@
 owner: "@backend-team"
 system_of_record: "narrative"
 review_cycle_days: 60
-last_reviewed: 2025-11-08
+last_reviewed: 2025-11-12
 related_code:
   - "app/Models/Entry.php"
-  - "app/Http/Controllers/EntryController.php"
+  - "app/Http/Controllers/Admin/V1/EntryController.php"
   - "app/Observers/EntryObserver.php"
 ---
 
@@ -26,9 +26,8 @@ Entry {
   title: string
   data_json: json                  // кастомные поля
   seo_json: json                   // SEO метаданные
-  status: enum('draft', 'published', 'archived')
+  status: enum('draft', 'published')
   published_at: ?datetime
-  unpublished_at: ?datetime
   created_at: datetime
   updated_at: datetime
   deleted_at: ?datetime            // soft delete
@@ -52,10 +51,9 @@ Entry проходит через несколько состояний:
 stateDiagram-v2
     [*] --> Draft
     Draft --> Scheduled: set published_at (future)
-    Draft --> Published: set published_at (past)
-    Scheduled --> Published: when published_at <= now
-    Published --> Archived: set unpublished_at (past)
-    Archived --> Draft: reset dates
+    Draft --> Published: set published_at (past) AND status = 'published'
+    Scheduled --> Published: when published_at <= now AND status = 'published'
+    Published --> Draft: set status = 'draft' OR clear published_at
     Draft --> [*]: delete (soft)
 ```
 
@@ -119,36 +117,18 @@ $entry->update([
 **Характеристики**:
 - `status = 'published'`
 - `published_at <= now()`
-- `unpublished_at = null` или в будущем
 - Видно всем пользователям
 - Индексируется поиском
 
 **Scope**:
 ```php
 Entry::published()->get();
-// WHERE status = 'published' AND published_at <= NOW() AND unpublished_at IS NULL
+// WHERE status = 'published' AND published_at IS NOT NULL AND published_at <= NOW()
 ```
 
 ---
 
-### 4. Archived (архивировано)
-
-```php
-$entry->update([
-    'status' => 'archived',
-    'unpublished_at' => now(),
-]);
-```
-
-**Характеристики**:
-- `unpublished_at <= now()`
-- Не видно пользователям
-- Сохраняется в админке
-- Можно вернуть в draft
-
----
-
-### 5. Deleted (удалено)
+### 4. Deleted (удалено)
 
 ```php
 $entry->delete();  // soft delete
@@ -284,6 +264,7 @@ Entry::published()->get();
 
 Возвращает только опубликованные entries:
 - `status = 'published'`
+- `published_at IS NOT NULL`
 - `published_at <= now()`
 
 ### ofType(string $postTypeSlug)
@@ -376,9 +357,27 @@ public function deleted(Entry $entry): void
 
 ## API
 
+### Получение списка статусов
+
+**Endpoint**: `GET /api/v1/admin/entries/statuses`
+
+**Response**: `200 OK`
+```json
+{
+  "data": [
+    "draft",
+    "published"
+  ]
+}
+```
+
+**Описание**: Возвращает список возможных статусов для Entry. Требует авторизации и права `viewAny` на `Entry`.
+
+---
+
 ### Создание Entry
 
-**Endpoint**: `POST /api/admin/entries`
+**Endpoint**: `POST /api/v1/admin/entries`
 
 **Request**:
 ```json
@@ -406,7 +405,7 @@ public function deleted(Entry $entry): void
 
 ### Публикация Entry
 
-**Endpoint**: `PUT /api/admin/entries/{id}`
+**Endpoint**: `PUT /api/v1/admin/entries/{id}`
 
 **Request**:
 ```json
@@ -420,7 +419,7 @@ public function deleted(Entry $entry): void
 
 ### Получение списка (public)
 
-**Endpoint**: `GET /api/entries`
+**Endpoint**: `GET /api/v1/entries`
 
 **Query**:
 - `?post_type=article` — фильтр по типу
@@ -453,7 +452,7 @@ public function deleted(Entry $entry): void
 
 ### Получение по slug
 
-**Endpoint**: `GET /api/entries/{slug}`
+**Endpoint**: `GET /api/v1/entries/{slug}`
 
 **Response**:
 ```json

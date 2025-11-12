@@ -59,9 +59,8 @@ related_code:
 - `title` (string)
 - `data_json` (json) — кастомные поля
 - `seo_json` (json) — SEO (title, description, og:*)
-- `status` (enum: `draft`, `published`, `archived`)
+- `status` (enum: `draft`, `published`)
 - `published_at` (datetime, nullable)
-- `unpublished_at` (datetime, nullable)
 - `created_at`, `updated_at`, `deleted_at` (soft delete)
 
 **Связи**:

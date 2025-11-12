@@ -85,12 +85,12 @@ Slugs — не просто строка в таблице entries, а отде�
 
 ## Жизненный цикл Entry
 
-1. **Draft** — создаётся как черновик (`published_at = null`)
-2. **Scheduled** — задаётся `published_at` в будущем
-3. **Published** — `published_at` в прошлом, `unpublished_at = null`
-4. **Unpublished** — `unpublished_at` в прошлом
+1. **Draft** — создаётся как черновик (`status = 'draft'`, `published_at = null`)
+2. **Scheduled** — задаётся `published_at` в будущем (`status = 'published'`)
+3. **Published** — `status = 'published'`, `published_at <= now()`
+4. **Deleted** — soft delete (`deleted_at` установлен)
 
-Entry может вернуться из published в draft или быть заархивирована.
+Entry может вернуться из published в draft (изменение `status` на `'draft'` или очистка `published_at`).
 
 Подробнее: [Entries — Publishing Flow](entries.md#publishing-flow)
 

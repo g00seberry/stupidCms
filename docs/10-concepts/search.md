@@ -112,7 +112,7 @@ public function handle(EntryCreated|EntryUpdated $event): void
     $entry = $event->entry;
     
     if ($entry->status !== 'published') {
-        // Удалить из индекса, если unpublished
+        // Удалить из индекса, если не published (draft)
         $this->searchService->delete($entry->id);
         return;
     }
@@ -465,8 +465,8 @@ ELASTICSEARCH_INDEX=entries
 
 ### ❌ DON'T
 
-- Не индексируйте draft/unpublished entries
-- Не забывайте удалять из индекса при unpublish/delete
+- Не индексируйте draft entries (только `status = 'published'`)
+- Не забывайте удалять из индекса при изменении статуса на draft или удалении
 - Не делайте `SELECT *` перед индексацией (только нужные поля)
 - Не используйте wildcard запросы часто (медленно)
 
