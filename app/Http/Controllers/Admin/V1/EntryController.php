@@ -18,6 +18,7 @@ use App\Support\Http\AdminResponse;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -679,6 +680,52 @@ class EntryController extends Controller
         $entry->load(['postType', 'author', 'terms.taxonomy']);
 
         return new EntryResource($entry);
+    }
+
+    /**
+     * Получение списка возможных статусов записей.
+     *
+     * @group Admin ▸ Entries
+     * @name Get entry statuses
+     * @authenticated
+     * @response status=200 {
+     *   "data": [
+     *     "draft",
+     *     "published"
+     *   ]
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "9f51ce7c-eed5-43b8-b7cb-6c30033f3f5e",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-9f51ce7ceed543b8b7cb6c30033f3f5e-9f51ce7ceed543b8-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e9f51ce7c",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5e9f51ce7c-eed543b8b7cb6c30-01"
+     * }
+     */
+    public function statuses(): JsonResponse
+    {
+        $this->authorize('viewAny', Entry::class);
+
+        return AdminResponse::json([
+            'data' => Entry::getStatuses(),
+        ]);
     }
 
     /**

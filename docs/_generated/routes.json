@@ -141,6 +141,13 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/entries/statuses",
+        "name": "admin.v1.entries.statuses",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@statuses",
+        "middleware": "api, jwt.auth, throttle:api, can:viewAny,App\\Models\\Entry"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "api/v1/admin/entries",
         "name": "admin.v1.entries.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\EntryController@index",

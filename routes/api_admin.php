@@ -86,6 +86,9 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->name('admin.v1.post-types.destroy');
     
     // Entries (full CRUD + soft-delete/restore)
+    Route::get('/entries/statuses', [EntryController::class, 'statuses'])
+        ->middleware('can:viewAny,' . Entry::class)
+        ->name('admin.v1.entries.statuses');
     Route::get('/entries', [EntryController::class, 'index'])
         ->middleware('can:viewAny,' . Entry::class)
         ->name('admin.v1.entries.index');

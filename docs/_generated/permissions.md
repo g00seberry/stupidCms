@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:abilities` to update.
 
-_Last generated: 2025-11-12 12:28:55_
+_Last generated: 2025-11-12 14:02:24_
 
 ## Entry
 

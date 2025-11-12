@@ -56,6 +56,121 @@ security:
   -
     default: []
 paths:
+  /api/v1/admin/entries/statuses:
+    get:
+      summary: 'Получение списка возможных статусов записей.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    - draft
+                    - published
+                properties:
+                  data:
+                    type: array
+                    example:
+                      - draft
+                      - published
+                    items:
+                      type: string
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 9f51ce7c-eed5-43b8-b7cb-6c30033f3f5e
+                    reason: missing_token
+                  trace_id: 00-9f51ce7ceed543b8b7cb6c30033f3f5e-9f51ce7ceed543b8-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 9f51ce7c-eed5-43b8-b7cb-6c30033f3f5e
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-9f51ce7ceed543b8b7cb6c30033f3f5e-9f51ce7ceed543b8-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: eed543b8-b7cb-6c30-033f-3f5e9f51ce7c
+                    retry_after: 60
+                  trace_id: 00-eed543b8b7cb6c30033f3f5e9f51ce7c-eed543b8b7cb6c30-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: eed543b8-b7cb-6c30-033f-3f5e9f51ce7c
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-eed543b8b7cb6c30033f3f5e9f51ce7c-eed543b8b7cb6c30-01
+      tags:
+        - 'Admin ▸ Entries'
   /api/v1/admin/entries:
     get:
       summary: 'Список записей с фильтрами и пагинацией.'
@@ -414,7 +529,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: published
+                  example: scheduled
                   nullable: true
                   enum:
                     - all
@@ -442,7 +557,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T12:29:01'
+                  example: '2025-11-12T14:02:29'
                   nullable: true
                 date_to:
                   type: string
@@ -452,7 +567,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -460,7 +575,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.desc
+                  example: published_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2940,7 +3055,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -2960,7 +3075,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -2968,7 +3083,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -2977,7 +3092,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -6371,7 +6486,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -6390,7 +6505,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -8597,7 +8712,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: label.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9701,7 +9816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11318,7 +11433,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T12:29:01'
+                  example: '2025-11-12T14:02:29'
                   nullable: true
                 to:
                   type: string

@@ -13,12 +13,28 @@ class Entry extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_PUBLISHED = 'published';
+
     protected $guarded = [];
     protected $casts = [
         'data_json' => 'array',
         'seo_json' => 'array',
         'published_at' => 'datetime',
     ];
+
+    /**
+     * Получить список возможных статусов.
+     *
+     * @return array<string>
+     */
+    public static function getStatuses(): array
+    {
+        return [
+            self::STATUS_DRAFT,
+            self::STATUS_PUBLISHED,
+        ];
+    }
 
     // Связи
     public function postType()
