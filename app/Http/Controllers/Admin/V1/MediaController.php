@@ -50,8 +50,18 @@ class MediaController extends Controller
      *       "id": "uuid-media",
      *       "kind": "image",
      *       "name": "hero.jpg",
+     *       "ext": "jpg",
      *       "mime": "image/jpeg",
      *       "size_bytes": 235678,
+     *       "width": 1920,
+     *       "height": 1080,
+     *       "duration_ms": null,
+     *       "title": "Hero image",
+     *       "alt": "Hero cover",
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null,
      *       "preview_urls": {
      *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
      *       },
@@ -177,11 +187,18 @@ class MediaController extends Controller
      *     "id": "uuid-media",
      *     "kind": "image",
      *     "name": "hero.jpg",
+     *     "ext": "jpg",
      *     "mime": "image/jpeg",
      *     "size_bytes": 235678,
+     *     "width": 1920,
+     *     "height": 1080,
+     *     "duration_ms": null,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
      *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
      *     "preview_urls": {
      *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
      *     },
@@ -265,8 +282,22 @@ class MediaController extends Controller
      *     "id": "uuid-media",
      *     "kind": "image",
      *     "name": "hero.jpg",
+     *     "ext": "jpg",
      *     "mime": "image/jpeg",
-     *     "deleted_at": null
+     *     "size_bytes": 235678,
+     *     "width": 1920,
+     *     "height": 1080,
+     *     "duration_ms": null,
+     *     "title": "Hero image",
+     *     "alt": "Hero cover",
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "preview_urls": {
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *     },
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
      *   }
      * }
      * @response status=401 {
@@ -332,9 +363,24 @@ class MediaController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": "uuid-media",
+     *     "kind": "image",
+     *     "name": "hero.jpg",
+     *     "ext": "jpg",
+     *     "mime": "image/jpeg",
+     *     "size_bytes": 235678,
+     *     "width": 1920,
+     *     "height": 1080,
+     *     "duration_ms": null,
      *     "title": "Updated hero image",
      *     "alt": "Updated hero cover",
-     *     "collection": "uploads"
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "preview_urls": {
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *     },
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
      *   }
      * }
      * @response status=401 {
@@ -499,7 +545,24 @@ class MediaController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": "uuid-media",
-     *     "deleted_at": null
+     *     "kind": "image",
+     *     "name": "hero.jpg",
+     *     "ext": "jpg",
+     *     "mime": "image/jpeg",
+     *     "size_bytes": 235678,
+     *     "width": 1920,
+     *     "height": 1080,
+     *     "duration_ms": null,
+     *     "title": "Hero image",
+     *     "alt": "Hero cover",
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "preview_urls": {
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *     },
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
      *   }
      * }
      * @response status=401 {

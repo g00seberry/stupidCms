@@ -36,6 +36,7 @@ class PostTypeController extends Controller
      *   "data": {
      *     "slug": "product",
      *     "name": "Products",
+     *     "template": "single-product",
      *     "options_json": {
      *       "fields": {
      *         "price": {
@@ -127,6 +128,7 @@ class PostTypeController extends Controller
      *     {
      *       "slug": "article",
      *       "name": "Articles",
+     *       "template": null,
      *       "options_json": {},
      *       "updated_at": "2025-01-10T12:45:00+00:00"
      *     }
@@ -184,6 +186,7 @@ class PostTypeController extends Controller
      *   "data": {
      *     "slug": "article",
      *     "name": "Articles",
+     *     "template": null,
      *     "options_json": {},
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
@@ -254,11 +257,13 @@ class PostTypeController extends Controller
      * @urlParam slug string required Slug PostType. Example: article
      * @bodyParam slug string optional Новый slug PostType. Example: article-updated
      * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
+     * @bodyParam template string optional Имя blade-шаблона. Example: landing
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @response status=200 {
      *   "data": {
      *     "slug": "article",
      *     "name": "Articles",
+     *     "template": "landing",
      *     "options_json": {
      *       "fields": {
      *         "hero": {

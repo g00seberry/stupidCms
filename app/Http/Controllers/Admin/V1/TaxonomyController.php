@@ -213,7 +213,9 @@ class TaxonomyController extends Controller
      *     "slug": "category",
      *     "label": "Categories",
      *     "hierarchical": true,
-     *     "options_json": {}
+     *     "options_json": {},
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00"
      *   }
      * }
      * @response status=401 {
@@ -286,7 +288,9 @@ class TaxonomyController extends Controller
      *     "hierarchical": true,
      *     "options_json": {
      *       "color": "#ffcc00"
-     *     }
+     *     },
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00"
      *   }
      * }
      * @response status=401 {

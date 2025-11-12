@@ -208,6 +208,7 @@ class EntryController extends Controller
      *     "published_at": "2025-02-10T08:00:00+00:00",
      *     "content_json": {},
      *     "meta_json": {},
+     *     "template_override": null,
      *     "author": {
      *       "id": 7,
      *       "name": "Admin User"
@@ -310,7 +311,15 @@ class EntryController extends Controller
      *     "meta_json": {
      *       "title": "Launch"
      *     },
-     *     "template_override": "templates.landing"
+     *     "template_override": "templates.landing",
+     *     "author": {
+     *       "id": 1,
+     *       "name": "Admin"
+     *     },
+     *     "terms": [],
+     *     "created_at": "2025-02-10T08:00:00+00:00",
+     *     "updated_at": "2025-02-10T08:00:00+00:00",
+     *     "deleted_at": null
      *   }
      * }
      * @response status=401 {
@@ -427,11 +436,18 @@ class EntryController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 42,
+     *     "post_type": "article",
      *     "title": "Updated checklist",
      *     "slug": "launch-checklist",
      *     "status": "draft",
      *     "is_published": false,
-     *     "published_at": null
+     *     "published_at": null,
+     *     "content_json": {},
+     *     "meta_json": {},
+     *     "template_override": null,
+     *     "created_at": "2025-02-09T10:15:00+00:00",
+     *     "updated_at": "2025-02-10T08:05:00+00:00",
+     *     "deleted_at": null
      *   }
      * }
      * @response status=401 {

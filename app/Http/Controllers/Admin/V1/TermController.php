@@ -359,7 +359,10 @@ class TermController extends Controller
      *     "slug": "tutorials",
      *     "meta_json": {
      *       "color": "#3366ff"
-     *     }
+     *     },
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null
      *   }
      * }
      * @response status=401 {

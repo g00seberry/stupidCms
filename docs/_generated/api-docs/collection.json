@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "1124ed30-64db-4e51-b44c-a3aa7c49547b",
+        "_postman_id": "afcf2636-c604-4251-9969-902808a0ef8b",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"all\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-12T15:53:53\",\"date_to\":\"2106-12-12\",\"date_field\":\"updated\",\"sort\":\"title.desc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-12T17:03:32\",\"date_to\":\"2106-12-12\",\"date_field\":\"updated\",\"sort\":\"published_at.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -207,7 +207,7 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {\n      \"hero\": {\n        \"title\": \"Launch\"\n      }\n    },\n    \"meta_json\": {\n      \"title\": \"Launch\"\n    },\n    \"template_override\": \"templates.landing\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {\n      \"hero\": {\n        \"title\": \"Launch\"\n      }\n    },\n    \"meta_json\": {\n      \"title\": \"Launch\"\n    },\n    \"template_override\": \"templates.landing\",\n    \"author\": {\n      \"id\": 1,\n      \"name\": \"Admin\"\n    },\n    \"terms\": [],\n    \"created_at\": \"2025-02-10T08:00:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:00:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -265,7 +265,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {},\n    \"meta_json\": {},\n    \"author\": {\n      \"id\": 7,\n      \"name\": \"Admin User\"\n    },\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"created_at\": \"2025-02-09T10:15:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {},\n    \"meta_json\": {},\n    \"template_override\": null,\n    \"author\": {\n      \"id\": 7,\n      \"name\": \"Admin User\"\n    },\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"created_at\": \"2025-02-09T10:15:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -326,7 +326,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"title\": \"Updated checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"draft\",\n    \"is_published\": false,\n    \"published_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Updated checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"draft\",\n    \"is_published\": false,\n    \"published_at\": null,\n    \"content_json\": {},\n    \"meta_json\": {},\n    \"template_override\": null,\n    \"created_at\": \"2025-02-09T10:15:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -529,20 +529,8 @@
                         },
                         {
                             "header": [],
-                            "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"51111111-2222-3333-4444-555555555555\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-51111111222233334444555555555555-5111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
                             "code": 404,
                             "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\",\n  \"meta\": {\n    \"request_id\": \"51111111-2222-3333-4444-555555555558\",\n    \"entry_id\": 42\n  },\n  \"trace_id\": \"00-51111111222233334444555555555558-5111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Entry not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Entry with ID 42 does not exist.\",\n  \"meta\": {\n    \"request_id\": \"51111111-2222-3333-4444-555555555556\",\n    \"entry_id\": 42\n  },\n  \"trace_id\": \"00-51111111222233334444555555555556-5111111122223333-01\"\n}",
                             "name": ""
                         },
                         {
@@ -555,12 +543,6 @@
                             "header": [],
                             "code": 429,
                             "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"56666666-7777-8888-9999-000000000001\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-56666666777788889999000000000001-5666666677778888-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 429,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"56666666-7777-8888-9999-000000000000\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-56666666777788889999000000000000-5666666677778888-01\"\n}",
                             "name": ""
                         }
                     ]
@@ -819,7 +801,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"image\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"mime\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -827,7 +809,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid-media\",\n      \"kind\": \"image\",\n      \"name\": \"hero.jpg\",\n      \"mime\": \"image\/jpeg\",\n      \"size_bytes\": 235678,\n      \"preview_urls\": {\n        \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n      },\n      \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 15,\n    \"total\": 1\n  }\n}",
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid-media\",\n      \"kind\": \"image\",\n      \"name\": \"hero.jpg\",\n      \"ext\": \"jpg\",\n      \"mime\": \"image\/jpeg\",\n      \"size_bytes\": 235678,\n      \"width\": 1920,\n      \"height\": 1080,\n      \"duration_ms\": null,\n      \"title\": \"Hero image\",\n      \"alt\": \"Hero cover\",\n      \"collection\": \"uploads\",\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n      \"deleted_at\": null,\n      \"preview_urls\": {\n        \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n      },\n      \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 15,\n    \"total\": 1\n  }\n}",
                             "name": ""
                         },
                         {
@@ -879,7 +861,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"ext\": \"jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"width\": 1920,\n    \"height\": 1080,\n    \"duration_ms\": null,\n    \"title\": \"Hero image\",\n    \"alt\": \"Hero cover\",\n    \"collection\": \"uploads\",\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null,\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1097,7 +1079,7 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"title\": \"Hero image\",\n    \"alt\": \"Hero cover\",\n    \"collection\": \"uploads\",\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"ext\": \"jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"width\": 1920,\n    \"height\": 1080,\n    \"duration_ms\": null,\n    \"title\": \"Hero image\",\n    \"alt\": \"Hero cover\",\n    \"collection\": \"uploads\",\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null,\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1158,7 +1140,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"title\": \"Updated hero image\",\n    \"alt\": \"Updated hero cover\",\n    \"collection\": \"uploads\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"ext\": \"jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"width\": 1920,\n    \"height\": 1080,\n    \"duration_ms\": null,\n    \"title\": \"Updated hero image\",\n    \"alt\": \"Updated hero cover\",\n    \"collection\": \"uploads\",\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:05:00+00:00\",\n    \"deleted_at\": null,\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1280,7 +1262,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"ext\": \"jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"width\": 1920,\n    \"height\": 1080,\n    \"duration_ms\": null,\n    \"title\": \"Hero image\",\n    \"alt\": \"Hero cover\",\n    \"collection\": \"uploads\",\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null,\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1497,7 +1479,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"value\": {\n      \"title\": \"Launch\"\n    },\n    \"description\": \"Hero headline\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 10,\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"value\": {\n      \"title\": \"Launch\"\n    },\n    \"description\": \"Hero headline\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1625,7 +1607,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 10,\n    \"namespace\": \"site\",\n    \"key\": \"hero.title\",\n    \"value\": \"Launch the future\",\n    \"description\": \"Hero headline\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -1883,7 +1865,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"slug\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -1999,7 +1981,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"slug\": \"seo-tools\",\n  \"name\": \"SEO Tools\",\n  \"enabled\": true,\n  \"routes_active\": true\n}",
+                            "body": "{\n  \"slug\": \"seo-tools\",\n  \"name\": \"SEO Tools\",\n  \"version\": \"1.2.0\",\n  \"enabled\": true,\n  \"provider\": \"Plugins\\\\SeoTools\\\\ServiceProvider\",\n  \"routes_active\": true,\n  \"last_synced_at\": \"2025-01-10T12:00:00+00:00\"\n}",
                             "name": ""
                         },
                         {
@@ -2069,7 +2051,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"slug\": \"seo-tools\",\n  \"enabled\": false\n}",
+                            "body": "{\n  \"slug\": \"seo-tools\",\n  \"name\": \"SEO Tools\",\n  \"version\": \"1.2.0\",\n  \"enabled\": false,\n  \"provider\": \"Plugins\\\\SeoTools\\\\ServiceProvider\",\n  \"routes_active\": false,\n  \"last_synced_at\": \"2025-01-10T12:00:00+00:00\"\n}",
                             "name": ""
                         },
                         {
@@ -2140,7 +2122,7 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"data\": {\n    \"slug\": \"product\",\n    \"name\": \"Products\",\n    \"options_json\": {\n      \"fields\": {\n        \"price\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"created_at\": \"2025-01-10T12:45:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"slug\": \"product\",\n    \"name\": \"Products\",\n    \"template\": \"single-product\",\n    \"options_json\": {\n      \"fields\": {\n        \"price\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"created_at\": \"2025-01-10T12:45:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -2196,7 +2178,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"slug\": \"article\",\n      \"name\": \"Articles\",\n      \"options_json\": {},\n      \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n    }\n  ]\n}",
+                            "body": "{\n  \"data\": [\n    {\n      \"slug\": \"article\",\n      \"name\": \"Articles\",\n      \"template\": null,\n      \"options_json\": {},\n      \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n    }\n  ]\n}",
                             "name": ""
                         },
                         {
@@ -2254,7 +2236,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"slug\": \"article\",\n    \"name\": \"Articles\",\n    \"options_json\": {},\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"slug\": \"article\",\n    \"name\": \"Articles\",\n    \"template\": null,\n    \"options_json\": {},\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -2307,7 +2289,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"slug\":\"article-updated\",\"name\":\"Articles Updated\",\"template\":\"qxbajwbpilpmufinllwlo\",\"options_json\":{\"fields\":{\"hero\":{\"type\":\"image\"}}}}"
+                            "raw": "{\"slug\":\"article-updated\",\"name\":\"Articles Updated\",\"template\":\"landing\",\"options_json\":{\"fields\":{\"hero\":{\"type\":\"image\"}}}}"
                         },
                         "description": ""
                     },
@@ -2315,7 +2297,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"slug\": \"article\",\n    \"name\": \"Articles\",\n    \"options_json\": {\n      \"fields\": {\n        \"hero\": {\n          \"type\": \"image\"\n        }\n      }\n    },\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"slug\": \"article\",\n    \"name\": \"Articles\",\n    \"template\": \"landing\",\n    \"options_json\": {\n      \"fields\": {\n        \"hero\": {\n          \"type\": \"image\"\n        }\n      }\n    },\n    \"updated_at\": \"2025-01-10T12:45:00+00:00\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -2524,7 +2506,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"label.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.desc\"}"
                         },
                         "description": ""
                     },
@@ -2637,7 +2619,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"slug\": \"category\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {}\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"slug\": \"category\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -2698,7 +2680,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"slug\": \"categories\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {\n      \"color\": \"#ffcc00\"\n    }\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"slug\": \"categories\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {\n      \"color\": \"#ffcc00\"\n    },\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:05:00+00:00\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -3075,7 +3057,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.desc\"}"
                         },
                         "description": ""
                     },
@@ -3293,7 +3275,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Tutorials\",\n    \"slug\": \"tutorials\",\n    \"meta_json\": {\n      \"color\": \"#3366ff\"\n    }\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Tutorials\",\n    \"slug\": \"tutorials\",\n    \"meta_json\": {\n      \"color\": \"#3366ff\"\n    },\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -3715,7 +3697,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-12T15:53:53\",\"to\":\"2106-12-12\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-12T17:03:32\",\"to\":\"2106-12-12\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

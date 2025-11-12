@@ -532,7 +532,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: all
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T15:53:53'
+                  example: '2025-11-12T17:03:32'
                   nullable: true
                 date_to:
                   type: string
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.desc
+                  example: published_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -619,6 +619,13 @@ paths:
                     meta_json:
                       title: Launch
                     template_override: templates.landing
+                    author:
+                      id: 1
+                      name: Admin
+                    terms: []
+                    created_at: '2025-02-10T08:00:00+00:00'
+                    updated_at: '2025-02-10T08:00:00+00:00'
+                    deleted_at: null
                 properties:
                   data:
                     type: object
@@ -662,6 +669,27 @@ paths:
                       template_override:
                         type: string
                         example: templates.landing
+                      author:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: Admin
+                      terms:
+                        type: array
+                        example: []
+                      created_at:
+                        type: string
+                        example: '2025-02-10T08:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-02-10T08:00:00+00:00'
+                      deleted_at:
+                        type: string
+                        example: null
         401:
           description: ''
           content:
@@ -900,6 +928,7 @@ paths:
                     published_at: '2025-02-10T08:00:00+00:00'
                     content_json: {  }
                     meta_json: {  }
+                    template_override: null
                     author:
                       id: 7
                       name: 'Admin User'
@@ -943,6 +972,9 @@ paths:
                       meta_json:
                         type: object
                         properties: {  }
+                      template_override:
+                        type: string
+                        example: null
                       author:
                         type: object
                         properties:
@@ -1133,11 +1165,18 @@ paths:
                 example:
                   data:
                     id: 42
+                    post_type: article
                     title: 'Updated checklist'
                     slug: launch-checklist
                     status: draft
                     is_published: false
                     published_at: null
+                    content_json: {  }
+                    meta_json: {  }
+                    template_override: null
+                    created_at: '2025-02-09T10:15:00+00:00'
+                    updated_at: '2025-02-10T08:05:00+00:00'
+                    deleted_at: null
                 properties:
                   data:
                     type: object
@@ -1145,6 +1184,9 @@ paths:
                       id:
                         type: integer
                         example: 42
+                      post_type:
+                        type: string
+                        example: article
                       title:
                         type: string
                         example: 'Updated checklist'
@@ -1158,6 +1200,24 @@ paths:
                         type: boolean
                         example: false
                       published_at:
+                        type: string
+                        example: null
+                      content_json:
+                        type: object
+                        properties: {  }
+                      meta_json:
+                        type: object
+                        properties: {  }
+                      template_override:
+                        type: string
+                        example: null
+                      created_at:
+                        type: string
+                        example: '2025-02-09T10:15:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-02-10T08:05:00+00:00'
+                      deleted_at:
                         type: string
                         example: null
         401:
@@ -1820,177 +1880,89 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 51111111-2222-3333-4444-555555555557
+                    reason: missing_token
+                  trace_id: 00-51111111222233334444555555555557-5111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
                     type: object
-                    example:
-                      type: 'https://stupidcms.dev/problems/unauthorized'
-                      title: Unauthorized
-                      status: 401
-                      code: UNAUTHORIZED
-                      detail: 'Authentication is required to access this resource.'
-                      meta:
-                        request_id: 51111111-2222-3333-4444-555555555557
-                        reason: missing_token
-                      trace_id: 00-51111111222233334444555555555557-5111111122223333-01
                     properties:
-                      type:
+                      request_id:
                         type: string
-                        example: 'https://stupidcms.dev/problems/unauthorized'
-                      title:
+                        example: 51111111-2222-3333-4444-555555555557
+                      reason:
                         type: string
-                        example: Unauthorized
-                      status:
-                        type: integer
-                        example: 401
-                      code:
-                        type: string
-                        example: UNAUTHORIZED
-                      detail:
-                        type: string
-                        example: 'Authentication is required to access this resource.'
-                      meta:
-                        type: object
-                        properties:
-                          request_id:
-                            type: string
-                            example: 51111111-2222-3333-4444-555555555557
-                          reason:
-                            type: string
-                            example: missing_token
-                      trace_id:
-                        type: string
-                        example: 00-51111111222233334444555555555557-5111111122223333-01
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      type: 'https://stupidcms.dev/problems/unauthorized'
-                      title: Unauthorized
-                      status: 401
-                      code: UNAUTHORIZED
-                      detail: 'Authentication is required to access this resource.'
-                      meta:
-                        request_id: 51111111-2222-3333-4444-555555555555
-                        reason: missing_token
-                      trace_id: 00-51111111222233334444555555555555-5111111122223333-01
-                    properties:
-                      type:
-                        type: string
-                        example: 'https://stupidcms.dev/problems/unauthorized'
-                      title:
-                        type: string
-                        example: Unauthorized
-                      status:
-                        type: integer
-                        example: 401
-                      code:
-                        type: string
-                        example: UNAUTHORIZED
-                      detail:
-                        type: string
-                        example: 'Authentication is required to access this resource.'
-                      meta:
-                        type: object
-                        properties:
-                          request_id:
-                            type: string
-                            example: 51111111-2222-3333-4444-555555555555
-                          reason:
-                            type: string
-                            example: missing_token
-                      trace_id:
-                        type: string
-                        example: 00-51111111222233334444555555555555-5111111122223333-01
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-51111111222233334444555555555557-5111111122223333-01
         404:
           description: ''
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Entry not found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Entry with ID 42 does not exist.'
+                  meta:
+                    request_id: 51111111-2222-3333-4444-555555555558
+                    entry_id: 42
+                  trace_id: 00-51111111222233334444555555555558-5111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Entry not found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Entry with ID 42 does not exist.'
+                  meta:
                     type: object
-                    example:
-                      type: 'https://stupidcms.dev/problems/not-found'
-                      title: 'Entry not found'
-                      status: 404
-                      code: NOT_FOUND
-                      detail: 'Entry with ID 42 does not exist.'
-                      meta:
-                        request_id: 51111111-2222-3333-4444-555555555558
-                        entry_id: 42
-                      trace_id: 00-51111111222233334444555555555558-5111111122223333-01
                     properties:
-                      type:
+                      request_id:
                         type: string
-                        example: 'https://stupidcms.dev/problems/not-found'
-                      title:
-                        type: string
-                        example: 'Entry not found'
-                      status:
+                        example: 51111111-2222-3333-4444-555555555558
+                      entry_id:
                         type: integer
-                        example: 404
-                      code:
-                        type: string
-                        example: NOT_FOUND
-                      detail:
-                        type: string
-                        example: 'Entry with ID 42 does not exist.'
-                      meta:
-                        type: object
-                        properties:
-                          request_id:
-                            type: string
-                            example: 51111111-2222-3333-4444-555555555558
-                          entry_id:
-                            type: integer
-                            example: 42
-                      trace_id:
-                        type: string
-                        example: 00-51111111222233334444555555555558-5111111122223333-01
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      type: 'https://stupidcms.dev/problems/not-found'
-                      title: 'Entry not found'
-                      status: 404
-                      code: NOT_FOUND
-                      detail: 'Entry with ID 42 does not exist.'
-                      meta:
-                        request_id: 51111111-2222-3333-4444-555555555556
-                        entry_id: 42
-                      trace_id: 00-51111111222233334444555555555556-5111111122223333-01
-                    properties:
-                      type:
-                        type: string
-                        example: 'https://stupidcms.dev/problems/not-found'
-                      title:
-                        type: string
-                        example: 'Entry not found'
-                      status:
-                        type: integer
-                        example: 404
-                      code:
-                        type: string
-                        example: NOT_FOUND
-                      detail:
-                        type: string
-                        example: 'Entry with ID 42 does not exist.'
-                      meta:
-                        type: object
-                        properties:
-                          request_id:
-                            type: string
-                            example: 51111111-2222-3333-4444-555555555556
-                          entry_id:
-                            type: integer
-                            example: 42
-                      trace_id:
-                        type: string
-                        example: 00-51111111222233334444555555555556-5111111122223333-01
+                        example: 42
+                  trace_id:
+                    type: string
+                    example: 00-51111111222233334444555555555558-5111111122223333-01
         422:
           description: ''
           content:
@@ -2048,89 +2020,45 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: 56666666-7777-8888-9999-000000000001
+                    retry_after: 60
+                  trace_id: 00-56666666777788889999000000000001-5666666677778888-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
                     type: object
-                    example:
-                      type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                      title: 'Too Many Requests'
-                      status: 429
-                      code: RATE_LIMIT_EXCEEDED
-                      detail: 'Too many attempts. Try again later.'
-                      meta:
-                        request_id: 56666666-7777-8888-9999-000000000001
-                        retry_after: 60
-                      trace_id: 00-56666666777788889999000000000001-5666666677778888-01
                     properties:
-                      type:
+                      request_id:
                         type: string
-                        example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                      title:
-                        type: string
-                        example: 'Too Many Requests'
-                      status:
+                        example: 56666666-7777-8888-9999-000000000001
+                      retry_after:
                         type: integer
-                        example: 429
-                      code:
-                        type: string
-                        example: RATE_LIMIT_EXCEEDED
-                      detail:
-                        type: string
-                        example: 'Too many attempts. Try again later.'
-                      meta:
-                        type: object
-                        properties:
-                          request_id:
-                            type: string
-                            example: 56666666-7777-8888-9999-000000000001
-                          retry_after:
-                            type: integer
-                            example: 60
-                      trace_id:
-                        type: string
-                        example: 00-56666666777788889999000000000001-5666666677778888-01
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                      title: 'Too Many Requests'
-                      status: 429
-                      code: RATE_LIMIT_EXCEEDED
-                      detail: 'Too many attempts. Try again later.'
-                      meta:
-                        request_id: 56666666-7777-8888-9999-000000000000
-                        retry_after: 60
-                      trace_id: 00-56666666777788889999000000000000-5666666677778888-01
-                    properties:
-                      type:
-                        type: string
-                        example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                      title:
-                        type: string
-                        example: 'Too Many Requests'
-                      status:
-                        type: integer
-                        example: 429
-                      code:
-                        type: string
-                        example: RATE_LIMIT_EXCEEDED
-                      detail:
-                        type: string
-                        example: 'Too many attempts. Try again later.'
-                      meta:
-                        type: object
-                        properties:
-                          request_id:
-                            type: string
-                            example: 56666666-7777-8888-9999-000000000000
-                          retry_after:
-                            type: integer
-                            example: 60
-                      trace_id:
-                        type: string
-                        example: 00-56666666777788889999000000000000-5666666677778888-01
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-56666666777788889999000000000001-5666666677778888-01
       tags:
         - 'Admin ▸ Entry terms'
     parameters:
@@ -2868,8 +2796,18 @@ paths:
                       id: uuid-media
                       kind: image
                       name: hero.jpg
+                      ext: jpg
                       mime: image/jpeg
                       size_bytes: 235678
+                      width: 1920
+                      height: 1080
+                      duration_ms: null
+                      title: 'Hero image'
+                      alt: 'Hero cover'
+                      collection: uploads
+                      created_at: '2025-01-10T12:00:00+00:00'
+                      updated_at: '2025-01-10T12:00:00+00:00'
+                      deleted_at: null
                       preview_urls:
                         thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
                       download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
@@ -2891,8 +2829,18 @@ paths:
                         id: uuid-media
                         kind: image
                         name: hero.jpg
+                        ext: jpg
                         mime: image/jpeg
                         size_bytes: 235678
+                        width: 1920
+                        height: 1080
+                        duration_ms: null
+                        title: 'Hero image'
+                        alt: 'Hero cover'
+                        collection: uploads
+                        created_at: '2025-01-10T12:00:00+00:00'
+                        updated_at: '2025-01-10T12:00:00+00:00'
+                        deleted_at: null
                         preview_urls:
                           thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
                         download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
@@ -2908,12 +2856,42 @@ paths:
                         name:
                           type: string
                           example: hero.jpg
+                        ext:
+                          type: string
+                          example: jpg
                         mime:
                           type: string
                           example: image/jpeg
                         size_bytes:
                           type: integer
                           example: 235678
+                        width:
+                          type: integer
+                          example: 1920
+                        height:
+                          type: integer
+                          example: 1080
+                        duration_ms:
+                          type: string
+                          example: null
+                        title:
+                          type: string
+                          example: 'Hero image'
+                        alt:
+                          type: string
+                          example: 'Hero cover'
+                        collection:
+                          type: string
+                          example: uploads
+                        created_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
+                        updated_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
+                        deleted_at:
+                          type: string
+                          example: null
                         preview_urls:
                           type: object
                           properties:
@@ -3058,7 +3036,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -3078,7 +3056,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -3086,7 +3064,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -3127,11 +3105,18 @@ paths:
                     id: uuid-media
                     kind: image
                     name: hero.jpg
+                    ext: jpg
                     mime: image/jpeg
                     size_bytes: 235678
+                    width: 1920
+                    height: 1080
+                    duration_ms: null
                     title: 'Hero image'
                     alt: 'Hero cover'
                     collection: uploads
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:00:00+00:00'
+                    deleted_at: null
                     preview_urls:
                       thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
                     download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
@@ -3148,12 +3133,24 @@ paths:
                       name:
                         type: string
                         example: hero.jpg
+                      ext:
+                        type: string
+                        example: jpg
                       mime:
                         type: string
                         example: image/jpeg
                       size_bytes:
                         type: integer
                         example: 235678
+                      width:
+                        type: integer
+                        example: 1920
+                      height:
+                        type: integer
+                        example: 1080
+                      duration_ms:
+                        type: string
+                        example: null
                       title:
                         type: string
                         example: 'Hero image'
@@ -3163,6 +3160,15 @@ paths:
                       collection:
                         type: string
                         example: uploads
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      deleted_at:
+                        type: string
+                        example: null
                       preview_urls:
                         type: object
                         properties:
@@ -3361,8 +3367,21 @@ paths:
                     id: uuid-media
                     kind: image
                     name: hero.jpg
+                    ext: jpg
                     mime: image/jpeg
+                    size_bytes: 235678
+                    width: 1920
+                    height: 1080
+                    duration_ms: null
+                    title: 'Hero image'
+                    alt: 'Hero cover'
+                    collection: uploads
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:00:00+00:00'
                     deleted_at: null
+                    preview_urls:
+                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
                 properties:
                   data:
                     type: object
@@ -3376,12 +3395,51 @@ paths:
                       name:
                         type: string
                         example: hero.jpg
+                      ext:
+                        type: string
+                        example: jpg
                       mime:
                         type: string
                         example: image/jpeg
+                      size_bytes:
+                        type: integer
+                        example: 235678
+                      width:
+                        type: integer
+                        example: 1920
+                      height:
+                        type: integer
+                        example: 1080
+                      duration_ms:
+                        type: string
+                        example: null
+                      title:
+                        type: string
+                        example: 'Hero image'
+                      alt:
+                        type: string
+                        example: 'Hero cover'
+                      collection:
+                        type: string
+                        example: uploads
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
                       deleted_at:
                         type: string
                         example: null
+                      preview_urls:
+                        type: object
+                        properties:
+                          thumbnail:
+                            type: string
+                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                      download_url:
+                        type: string
+                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
         401:
           description: ''
           content:
@@ -3531,9 +3589,23 @@ paths:
                 example:
                   data:
                     id: uuid-media
+                    kind: image
+                    name: hero.jpg
+                    ext: jpg
+                    mime: image/jpeg
+                    size_bytes: 235678
+                    width: 1920
+                    height: 1080
+                    duration_ms: null
                     title: 'Updated hero image'
                     alt: 'Updated hero cover'
                     collection: uploads
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:05:00+00:00'
+                    deleted_at: null
+                    preview_urls:
+                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
                 properties:
                   data:
                     type: object
@@ -3541,6 +3613,30 @@ paths:
                       id:
                         type: string
                         example: uuid-media
+                      kind:
+                        type: string
+                        example: image
+                      name:
+                        type: string
+                        example: hero.jpg
+                      ext:
+                        type: string
+                        example: jpg
+                      mime:
+                        type: string
+                        example: image/jpeg
+                      size_bytes:
+                        type: integer
+                        example: 235678
+                      width:
+                        type: integer
+                        example: 1920
+                      height:
+                        type: integer
+                        example: 1080
+                      duration_ms:
+                        type: string
+                        example: null
                       title:
                         type: string
                         example: 'Updated hero image'
@@ -3550,6 +3646,24 @@ paths:
                       collection:
                         type: string
                         example: uploads
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:05:00+00:00'
+                      deleted_at:
+                        type: string
+                        example: null
+                      preview_urls:
+                        type: object
+                        properties:
+                          thumbnail:
+                            type: string
+                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                      download_url:
+                        type: string
+                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
         401:
           description: ''
           content:
@@ -4397,7 +4511,23 @@ paths:
                 example:
                   data:
                     id: uuid-media
+                    kind: image
+                    name: hero.jpg
+                    ext: jpg
+                    mime: image/jpeg
+                    size_bytes: 235678
+                    width: 1920
+                    height: 1080
+                    duration_ms: null
+                    title: 'Hero image'
+                    alt: 'Hero cover'
+                    collection: uploads
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:00:00+00:00'
                     deleted_at: null
+                    preview_urls:
+                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
                 properties:
                   data:
                     type: object
@@ -4405,9 +4535,57 @@ paths:
                       id:
                         type: string
                         example: uuid-media
+                      kind:
+                        type: string
+                        example: image
+                      name:
+                        type: string
+                        example: hero.jpg
+                      ext:
+                        type: string
+                        example: jpg
+                      mime:
+                        type: string
+                        example: image/jpeg
+                      size_bytes:
+                        type: integer
+                        example: 235678
+                      width:
+                        type: integer
+                        example: 1920
+                      height:
+                        type: integer
+                        example: 1080
+                      duration_ms:
+                        type: string
+                        example: null
+                      title:
+                        type: string
+                        example: 'Hero image'
+                      alt:
+                        type: string
+                        example: 'Hero cover'
+                      collection:
+                        type: string
+                        example: uploads
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
                       deleted_at:
                         type: string
                         example: null
+                      preview_urls:
+                        type: object
+                        properties:
+                          thumbnail:
+                            type: string
+                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                      download_url:
+                        type: string
+                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
         401:
           description: ''
           content:
@@ -5070,15 +5248,21 @@ paths:
                 type: object
                 example:
                   data:
+                    id: 10
                     namespace: site
                     key: hero.title
                     value:
                       title: Launch
                     description: 'Hero headline'
+                    updated_at: '2025-01-10T12:00:00+00:00'
+                    deleted_at: null
                 properties:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: integer
+                        example: 10
                       namespace:
                         type: string
                         example: site
@@ -5094,6 +5278,12 @@ paths:
                       description:
                         type: string
                         example: 'Hero headline'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      deleted_at:
+                        type: string
+                        example: null
         401:
           description: ''
           content:
@@ -5451,19 +5641,35 @@ paths:
                 type: object
                 example:
                   data:
+                    id: 10
                     namespace: site
                     key: hero.title
+                    value: 'Launch the future'
+                    description: 'Hero headline'
+                    updated_at: '2025-01-10T12:00:00+00:00'
                     deleted_at: null
                 properties:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: integer
+                        example: 10
                       namespace:
                         type: string
                         example: site
                       key:
                         type: string
                         example: hero.title
+                      value:
+                        type: string
+                        example: 'Launch the future'
+                      description:
+                        type: string
+                        example: 'Hero headline'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
                       deleted_at:
                         type: string
                         example: null
@@ -6508,7 +6714,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -6518,7 +6724,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -6772,8 +6978,11 @@ paths:
                 example:
                   slug: seo-tools
                   name: 'SEO Tools'
+                  version: 1.2.0
                   enabled: true
+                  provider: Plugins\SeoTools\ServiceProvider
                   routes_active: true
+                  last_synced_at: '2025-01-10T12:00:00+00:00'
                 properties:
                   slug:
                     type: string
@@ -6781,12 +6990,21 @@ paths:
                   name:
                     type: string
                     example: 'SEO Tools'
+                  version:
+                    type: string
+                    example: 1.2.0
                   enabled:
                     type: boolean
                     example: true
+                  provider:
+                    type: string
+                    example: Plugins\SeoTools\ServiceProvider
                   routes_active:
                     type: boolean
                     example: true
+                  last_synced_at:
+                    type: string
+                    example: '2025-01-10T12:00:00+00:00'
         401:
           description: ''
           content:
@@ -7033,14 +7251,34 @@ paths:
                 type: object
                 example:
                   slug: seo-tools
+                  name: 'SEO Tools'
+                  version: 1.2.0
                   enabled: false
+                  provider: Plugins\SeoTools\ServiceProvider
+                  routes_active: false
+                  last_synced_at: '2025-01-10T12:00:00+00:00'
                 properties:
                   slug:
                     type: string
                     example: seo-tools
+                  name:
+                    type: string
+                    example: 'SEO Tools'
+                  version:
+                    type: string
+                    example: 1.2.0
                   enabled:
                     type: boolean
                     example: false
+                  provider:
+                    type: string
+                    example: Plugins\SeoTools\ServiceProvider
+                  routes_active:
+                    type: boolean
+                    example: false
+                  last_synced_at:
+                    type: string
+                    example: '2025-01-10T12:00:00+00:00'
         401:
           description: ''
           content:
@@ -7289,6 +7527,7 @@ paths:
                   data:
                     slug: product
                     name: Products
+                    template: single-product
                     options_json:
                       fields:
                         price:
@@ -7305,6 +7544,9 @@ paths:
                       name:
                         type: string
                         example: Products
+                      template:
+                        type: string
+                        example: single-product
                       options_json:
                         type: object
                         properties:
@@ -7544,6 +7786,7 @@ paths:
                     -
                       slug: article
                       name: Articles
+                      template: null
                       options_json: {  }
                       updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
@@ -7553,6 +7796,7 @@ paths:
                       -
                         slug: article
                         name: Articles
+                        template: null
                         options_json: []
                         updated_at: '2025-01-10T12:45:00+00:00'
                     items:
@@ -7564,6 +7808,9 @@ paths:
                         name:
                           type: string
                           example: Articles
+                        template:
+                          type: string
+                          example: null
                         options_json:
                           type: object
                           properties: {  }
@@ -7705,6 +7952,7 @@ paths:
                   data:
                     slug: article
                     name: Articles
+                    template: null
                     options_json: {  }
                     updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
@@ -7717,6 +7965,9 @@ paths:
                       name:
                         type: string
                         example: Articles
+                      template:
+                        type: string
+                        example: null
                       options_json:
                         type: object
                         properties: {  }
@@ -7873,6 +8124,7 @@ paths:
                   data:
                     slug: article
                     name: Articles
+                    template: landing
                     options_json:
                       fields:
                         hero:
@@ -7888,6 +8140,9 @@ paths:
                       name:
                         type: string
                         example: Articles
+                      template:
+                        type: string
+                        example: landing
                       options_json:
                         type: object
                         properties:
@@ -8108,8 +8363,8 @@ paths:
                   nullable: false
                 template:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: qxbajwbpilpmufinllwlo
+                  description: 'optional Имя blade-шаблона.'
+                  example: landing
                   nullable: true
                 options_json:
                   type: object
@@ -8720,7 +8975,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.desc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -8963,6 +9218,8 @@ paths:
                     label: Categories
                     hierarchical: true
                     options_json: {  }
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:00:00+00:00'
                 properties:
                   data:
                     type: object
@@ -8979,6 +9236,12 @@ paths:
                       options_json:
                         type: object
                         properties: {  }
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
         401:
           description: ''
           content:
@@ -9132,6 +9395,8 @@ paths:
                     hierarchical: true
                     options_json:
                       color: '#ffcc00'
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:05:00+00:00'
                 properties:
                   data:
                     type: object
@@ -9151,6 +9416,12 @@ paths:
                           color:
                             type: string
                             example: '#ffcc00'
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:05:00+00:00'
         401:
           description: ''
           content:
@@ -10345,7 +10616,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.desc
+                  example: slug.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10892,6 +11163,9 @@ paths:
                     slug: tutorials
                     meta_json:
                       color: '#3366ff'
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:05:00+00:00'
+                    deleted_at: null
                 properties:
                   data:
                     type: object
@@ -10914,6 +11188,15 @@ paths:
                           color:
                             type: string
                             example: '#3366ff'
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:05:00+00:00'
+                      deleted_at:
+                        type: string
+                        example: null
         401:
           description: ''
           content:
@@ -11962,7 +12245,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T15:53:53'
+                  example: '2025-11-12T17:03:32'
                   nullable: true
                 to:
                   type: string

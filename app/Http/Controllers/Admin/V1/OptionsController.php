@@ -224,12 +224,15 @@ class OptionsController extends Controller
      * @bodyParam description string Описание (<=255). Example: Hero headline
      * @response status=200 {
      *   "data": {
+     *     "id": 10,
      *     "namespace": "site",
      *     "key": "hero.title",
      *     "value": {
      *       "title": "Launch"
      *     },
-     *     "description": "Hero headline"
+     *     "description": "Hero headline",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null
      *   }
      * }
      * @response status=401 {
@@ -375,8 +378,12 @@ class OptionsController extends Controller
      * @urlParam key string required Ключ. Example: hero.title
      * @response status=200 {
      *   "data": {
+     *     "id": 10,
      *     "namespace": "site",
      *     "key": "hero.title",
+     *     "value": "Launch the future",
+     *     "description": "Hero headline",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null
      *   }
      * }

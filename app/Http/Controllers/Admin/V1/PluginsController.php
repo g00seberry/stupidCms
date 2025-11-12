@@ -130,8 +130,11 @@ final class PluginsController extends Controller
      * @response status=200 {
      *   "slug": "seo-tools",
      *   "name": "SEO Tools",
+     *   "version": "1.2.0",
      *   "enabled": true,
-     *   "routes_active": true
+     *   "provider": "Plugins\\SeoTools\\ServiceProvider",
+     *   "routes_active": true,
+     *   "last_synced_at": "2025-01-10T12:00:00+00:00"
      * }
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
@@ -214,7 +217,12 @@ final class PluginsController extends Controller
      * @urlParam slug string required Slug плагина. Example: seo-tools
      * @response status=200 {
      *   "slug": "seo-tools",
-     *   "enabled": false
+     *   "name": "SEO Tools",
+     *   "version": "1.2.0",
+     *   "enabled": false,
+     *   "provider": "Plugins\\SeoTools\\ServiceProvider",
+     *   "routes_active": false,
+     *   "last_synced_at": "2025-01-10T12:00:00+00:00"
      * }
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
