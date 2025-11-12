@@ -61,9 +61,8 @@ class UtilsTemplatesTest extends TestCase
 
         foreach ($templates as $template) {
             foreach ($systemPrefixes as $prefix) {
-                $this->assertStringNotStartsWith(
-                    $prefix,
-                    $template,
+                $this->assertFalse(
+                    str_starts_with($template, $prefix),
                     "Шаблон '{$template}' не должен начинаться с системного префикса '{$prefix}'"
                 );
             }
