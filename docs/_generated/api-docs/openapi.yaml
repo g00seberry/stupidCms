@@ -35,6 +35,9 @@ tags:
     name: 'Admin ▸ Taxonomies'
     description: ''
   -
+    name: 'Admin ▸ Templates'
+    description: ''
+  -
     name: 'Admin ▸ Terms'
     description: ''
   -
@@ -529,7 +532,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: published
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -557,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T14:49:25'
+                  example: '2025-11-12T15:33:45'
                   nullable: true
                 date_to:
                   type: string
@@ -575,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: published_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3055,7 +3058,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: image
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -3075,7 +3078,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -3083,7 +3086,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -4846,7 +4849,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -6486,7 +6489,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -6505,7 +6508,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: slug
                   nullable: true
                   enum:
                     - name
@@ -6515,7 +6518,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -8712,7 +8715,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.desc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9570,6 +9573,527 @@ paths:
         required: true
         schema:
           type: string
+  /api/v1/admin/templates:
+    get:
+      summary: 'Получение списка всех доступных шаблонов.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      name: pages.show
+                      path: pages/show.blade.php
+                      exists: true
+                    -
+                      name: home.default
+                      path: home/default.blade.php
+                      exists: true
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        name: pages.show
+                        path: pages/show.blade.php
+                        exists: true
+                      -
+                        name: home.default
+                        path: home/default.blade.php
+                        exists: true
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: pages.show
+                        path:
+                          type: string
+                          example: pages/show.blade.php
+                        exists:
+                          type: boolean
+                          example: true
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b
+                    reason: missing_token
+                  trace_id: 00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: eed543b8-b7cb-6c30-033f-3f5e8b7cb6c3
+                    retry_after: 60
+                  trace_id: 00-eed543b8b7cb6c30033f3f5e8b7cb6c3-eed543b8b7cb6c30-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: eed543b8-b7cb-6c30-033f-3f5e8b7cb6c3
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-eed543b8b7cb6c30033f3f5e8b7cb6c3-eed543b8b7cb6c30-01
+      tags:
+        - 'Admin ▸ Templates'
+    post:
+      summary: 'Создание нового шаблона.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    name: pages.article
+                    path: pages/article.blade.php
+                    exists: true
+                    created_at: '2025-01-10T12:45:00+00:00'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: pages.article
+                      path:
+                        type: string
+                        example: pages/article.blade.php
+                      exists:
+                        type: boolean
+                        example: true
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:45:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/conflict'
+                  title: Conflict
+                  status: 409
+                  code: CONFLICT
+                  detail: 'Template already exists.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/conflict'
+                  title:
+                    type: string
+                    example: Conflict
+                  status:
+                    type: integer
+                    example: 409
+                  code:
+                    type: string
+                    example: CONFLICT
+                  detail:
+                    type: string
+                    example: 'Template already exists.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: 'The name field is required.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/validation-error'
+                  title:
+                    type: string
+                    example: 'Validation Error'
+                  status:
+                    type: integer
+                    example: 422
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  detail:
+                    type: string
+                    example: 'The name field is required.'
+      tags:
+        - 'Admin ▸ Templates'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Имя шаблона в dot notation.'
+                  example: pages.article
+                  nullable: false
+                content:
+                  type: string
+                  description: 'Содержимое шаблона.'
+                  example: '<div>Hello</div>'
+                  nullable: false
+              required:
+                - name
+                - content
+  '/api/v1/admin/templates/{name}':
+    get:
+      summary: 'Получение конкретного шаблона по имени.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    name: pages.article
+                    path: pages/article.blade.php
+                    exists: true
+                    content: '<div>Template content</div>'
+                    created_at: null
+                    updated_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: pages.article
+                      path:
+                        type: string
+                        example: pages/article.blade.php
+                      exists:
+                        type: boolean
+                        example: true
+                      content:
+                        type: string
+                        example: '<div>Template content</div>'
+                      created_at:
+                        type: string
+                        example: null
+                      updated_at:
+                        type: string
+                        example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Not Found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Template not found.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Not Found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Template not found.'
+      tags:
+        - 'Admin ▸ Templates'
+    put:
+      summary: 'Обновление существующего шаблона.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    name: pages.article
+                    path: pages/article.blade.php
+                    exists: true
+                    updated_at: '2025-01-10T12:45:00+00:00'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: pages.article
+                      path:
+                        type: string
+                        example: pages/article.blade.php
+                      exists:
+                        type: boolean
+                        example: true
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:45:00+00:00'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Not Found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Template not found.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Not Found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Template not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: 'The content field is required.'
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/validation-error'
+                  title:
+                    type: string
+                    example: 'Validation Error'
+                  status:
+                    type: integer
+                    example: 422
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  detail:
+                    type: string
+                    example: 'The content field is required.'
+      tags:
+        - 'Admin ▸ Templates'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'Содержимое шаблона.'
+                  example: '<div>Updated</div>'
+                  nullable: false
+              required:
+                - content
+    parameters:
+      -
+        in: path
+        name: name
+        description: 'Имя шаблона в dot notation.'
+        example: pages.article
+        required: true
+        schema:
+          type: string
   '/api/v1/admin/taxonomies/{taxonomy_id}/terms':
     get:
       summary: 'Список термов внутри таксономии.'
@@ -9816,7 +10340,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.asc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11006,123 +11530,6 @@ paths:
                     example: 00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01
       tags:
         - 'Admin ▸ Utils'
-  /api/v1/admin/utils/templates:
-    get:
-      summary: 'Получение списка всех доступных шаблонов.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    - pages.show
-                    - home.default
-                    - welcome
-                properties:
-                  data:
-                    type: array
-                    example:
-                      - pages.show
-                      - home.default
-                      - welcome
-                    items:
-                      type: string
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b
-                    reason: missing_token
-                  trace_id: 00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: eed543b8-b7cb-6c30-033f-3f5e8c30033f
-                    retry_after: 60
-                  trace_id: 00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: eed543b8-b7cb-6c30-033f-3f5e8c30033f
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01
-      tags:
-        - 'Admin ▸ Utils'
   /api/v1/auth/login:
     post:
       summary: 'Аутентификация администратора и выдача JWT.'
@@ -11550,7 +11957,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T14:49:25'
+                  example: '2025-11-12T15:33:45'
                   nullable: true
                 to:
                   type: string
