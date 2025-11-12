@@ -57,6 +57,13 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/utils/templates",
+        "name": "admin.v1.utils.templates",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\UtilsController@templates",
+        "middleware": "api, jwt.auth, throttle:api"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "api/v1/admin/plugins",
         "name": "admin.v1.plugins.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\PluginsController@index",

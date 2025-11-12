@@ -557,7 +557,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T14:42:27'
+                  example: '2025-11-12T14:49:25'
                   nullable: true
                 date_to:
                   type: string
@@ -575,7 +575,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.desc
+                  example: published_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3075,7 +3075,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -3083,7 +3083,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -3092,7 +3092,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -4846,7 +4846,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -6486,7 +6486,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -6505,7 +6505,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -8712,7 +8712,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: label.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9816,7 +9816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11006,6 +11006,123 @@ paths:
                     example: 00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01
       tags:
         - 'Admin ▸ Utils'
+  /api/v1/admin/utils/templates:
+    get:
+      summary: 'Получение списка всех доступных шаблонов.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    - pages.show
+                    - home.default
+                    - welcome
+                properties:
+                  data:
+                    type: array
+                    example:
+                      - pages.show
+                      - home.default
+                      - welcome
+                    items:
+                      type: string
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b
+                    reason: missing_token
+                  trace_id: 00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 8b7cb6c3-0033-f3f5-e9f5-1ce7ceed543b
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-8b7cb6c30033f3f5e9f51ce7ceed543b-8b7cb6c30033f3f5-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: eed543b8-b7cb-6c30-033f-3f5e8c30033f
+                    retry_after: 60
+                  trace_id: 00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: eed543b8-b7cb-6c30-033f-3f5e8c30033f
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-eed543b8b7cb6c30033f3f5e8c30033f-eed543b8b7cb6c30-01
+      tags:
+        - 'Admin ▸ Utils'
   /api/v1/auth/login:
     post:
       summary: 'Аутентификация администратора и выдача JWT.'
@@ -11433,7 +11550,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T14:42:27'
+                  example: '2025-11-12T14:49:25'
                   nullable: true
                 to:
                   type: string

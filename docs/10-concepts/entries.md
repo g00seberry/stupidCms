@@ -28,6 +28,7 @@ Entry {
   seo_json: json                   // SEO метаданные
   status: enum('draft', 'published')
   published_at: ?datetime
+  template_override: ?string       // переопределение шаблона для конкретной записи
   created_at: datetime
   updated_at: datetime
   deleted_at: ?datetime            // soft delete
@@ -375,6 +376,26 @@ public function deleted(Entry $entry): void
 
 ---
 
+### Получение списка доступных шаблонов
+
+**Endpoint**: `GET /api/v1/admin/utils/templates`
+
+**Response**: `200 OK`
+```json
+{
+  "data": [
+    "pages.show",
+    "home.default",
+    "welcome",
+    "pages.types.article"
+  ]
+}
+```
+
+**Описание**: Возвращает список всех доступных Blade-шаблонов для назначения в `Entry.template_override` или `PostType.template`. См. [Post Types → Шаблоны](../post-types.md#шаблоны-templates).
+
+---
+
 ### Создание Entry
 
 **Endpoint**: `POST /api/v1/admin/entries`
@@ -394,6 +415,7 @@ public function deleted(Entry $entry): void
     "meta_description": "Learn about new features in Laravel 12"
   },
   "status": "draft",
+  "template_override": "pages.types.article",
   "term_ids": [1, 2],
   "media_ids": [10]
 }

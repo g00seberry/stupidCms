@@ -27,6 +27,7 @@ last_reviewed: 2025-11-08
 
 -   [Admin API — Plugins](admin-api/plugins.md) — управление manifest-плагинами, синхронизация, enable/disable.
 -   [Admin API — Taxonomies & Terms](admin-api/taxonomies-terms.md) — ручное описание CRUD и pivot операций для таксономий/терминов.
+-   [Admin API — Utils](admin-api/utils.md) — утилиты: генерация slug, получение списка шаблонов.
 
 ---
 

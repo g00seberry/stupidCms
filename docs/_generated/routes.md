@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-12 14:42:22_
+_Last generated: 2025-11-12 14:49:15_
 
 ## Web
 
@@ -25,6 +25,7 @@ _Last generated: 2025-11-12 14:42:22_
 | GET|HEAD | `api/v1/search` | api.v1.search | `SearchController@index` | api, throttle:search-public |
 | GET|HEAD | `api/v1/admin/auth/current` | admin.v1.auth.current | `CurrentUserController@show` | api, jwt.auth, throttle:api, no-cache-auth |
 | GET|HEAD | `api/v1/admin/utils/slugify` | - | `UtilsController@slugify` | api, jwt.auth, throttle:api |
+| GET|HEAD | `api/v1/admin/utils/templates` | admin.v1.utils.templates | `UtilsController@templates` | api, jwt.auth, throttle:api |
 | GET|HEAD | `api/v1/admin/plugins` | admin.v1.plugins.index | `PluginsController@index` | api, jwt.auth, throttle:api, can:plugins.read, throttle:60,1 |
 | POST | `api/v1/admin/plugins/sync` | admin.v1.plugins.sync | `PluginsController@sync` | api, jwt.auth, throttle:api, can:plugins.sync, throttle:10,1 |
 | POST | `api/v1/admin/plugins/{slug}/enable` | admin.v1.plugins.enable | `PluginsController@enable` | api, jwt.auth, throttle:api, can:plugins.toggle, throttle:10,1 |

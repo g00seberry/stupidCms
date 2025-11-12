@@ -42,6 +42,8 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->name('admin.v1.auth.current');
     
     Route::get('/utils/slugify', [UtilsController::class, 'slugify']);
+    Route::get('/utils/templates', [UtilsController::class, 'templates'])
+        ->name('admin.v1.utils.templates');
     
     Route::get('/plugins', [PluginsController::class, 'index'])
         ->middleware(['can:plugins.read', 'throttle:60,1'])
