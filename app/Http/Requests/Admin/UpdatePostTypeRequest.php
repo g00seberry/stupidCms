@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin;
 
+use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePostTypeRequest extends FormRequest
 {
@@ -24,7 +28,22 @@ class UpdatePostTypeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $slug = $this->route('slug');
+
         return [
+            'slug' => [
+                'sometimes',
+                'string',
+                'max:64',
+                'regex:/^[a-z0-9_-]+$/',
+                Rule::unique('post_types', 'slug')->ignore($slug, 'slug'),
+                new ReservedSlug(),
+            ],
+            'name' => [
+                'sometimes',
+                'string',
+                'max:255',
+            ],
             'options_json' => [
                 'present',
                 'array',
@@ -59,6 +78,7 @@ class UpdatePostTypeRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'slug.regex' => 'The slug may only contain lowercase letters, numbers, underscores, and hyphens.',
             'options_json.present' => 'The options_json field is required.',
             'options_json.array' => 'The options_json field must be an object.',
         ];

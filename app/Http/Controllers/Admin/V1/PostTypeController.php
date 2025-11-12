@@ -248,6 +248,8 @@ class PostTypeController extends Controller
      * @name Update post type
      * @authenticated
      * @urlParam slug string required Slug PostType. Example: article
+     * @bodyParam slug string optional Новый slug PostType. Example: article-updated
+     * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @response status=200 {
      *   "data": {
@@ -324,8 +326,16 @@ class PostTypeController extends Controller
             $this->throwPostTypeNotFound($slug);
         }
 
-        DB::transaction(function () use ($type, $request) {
-            $type->options_json = $request->validated('options_json');
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($type, $validated) {
+            if (isset($validated['slug'])) {
+                $type->slug = strtolower(trim($validated['slug']));
+            }
+            if (isset($validated['name'])) {
+                $type->name = $validated['name'];
+            }
+            $type->options_json = $validated['options_json'];
             $type->save();
         });
 

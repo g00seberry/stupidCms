@@ -273,5 +273,69 @@ class UpdatePostTypeTest extends TestCase
         ]);
     }
 
+    public function test_update_post_type_updates_name_and_slug(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        
+        $postType = PostType::factory()->create([
+            'slug' => 'page',
+            'name' => 'Page',
+            'options_json' => ['old' => 'value'],
+        ]);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
+            'slug' => 'page',
+            'name' => 'Pageыы',
+            'options_json' => ['new' => 'value'],
+        ], $admin);
+
+        $response->assertStatus(200);
+        
+        $postType->refresh();
+        
+        $this->assertEquals('page', $postType->slug);
+        $this->assertEquals('Pageыы', $postType->name);
+        $this->assertEquals(['new' => 'value'], $postType->options_json);
+        
+        $response->assertJson([
+            'data' => [
+                'slug' => 'page',
+                'name' => 'Pageыы',
+                'options_json' => ['new' => 'value'],
+            ],
+        ]);
+    }
+
+    public function test_update_post_type_can_change_slug(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        
+        $postType = PostType::factory()->create([
+            'slug' => 'page',
+            'name' => 'Page',
+            'options_json' => [],
+        ]);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
+            'slug' => 'article',
+            'name' => 'Article',
+            'options_json' => [],
+        ], $admin);
+
+        $response->assertStatus(200);
+        
+        $postType->refresh();
+        
+        $this->assertEquals('article', $postType->slug);
+        $this->assertEquals('Article', $postType->name);
+        
+        $response->assertJson([
+            'data' => [
+                'slug' => 'article',
+                'name' => 'Article',
+            ],
+        ]);
+    }
+
 }
 
