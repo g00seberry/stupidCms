@@ -11,7 +11,6 @@ return new class extends Migration {
             $table->id();
             $table->string('slug')->unique();
             $table->string('name');
-            $table->string('template')->nullable();
             $table->json('options_json')->nullable();
             $table->timestamps();
         });
