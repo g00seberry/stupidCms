@@ -102,7 +102,6 @@ PostType {
 PostType::create([
     'slug' => 'article',
     'name' => 'Статья',
-    'template' => 'single-article',
     'options_json' => [
         'fields' => ['subtitle', 'featured', 'read_time'],
         'taxonomies' => ['categories', 'tags'],
@@ -130,7 +129,6 @@ PostType::create([
 PostType::create([
     'slug' => 'page',
     'name' => 'Страница',
-    'template' => 'page',
     'options_json' => [
         'fields' => ['blocks'],  // для page builder
         'taxonomies' => [],
@@ -158,7 +156,6 @@ PostType::create([
 PostType::create([
     'slug' => 'event',
     'name' => 'Событие',
-    'template' => 'single-event',
     'options_json' => [
         'fields' => ['event_date', 'location', 'registration_url'],
         'taxonomies' => ['event-categories'],
@@ -298,7 +295,7 @@ PostType::create([
 
 **Использование**:
 
--   Шаблоны из этого списка можно назначить в поле `PostType.template` или `Entry.template_override`
+-   Шаблоны из этого списка можно назначить в поле `Entry.template_override` для переопределения шаблона конкретной записи
 -   Формат шаблонов: dot notation (например, `pages.show` соответствует `resources/views/pages/show.blade.php`)
 -   Шаблоны из вложенных директорий также включаются (например, `pages.types.article`)
 
@@ -381,7 +378,7 @@ foreach ($requestedTerms as $term) {
 
 ### Неизменяемые поля
 
--   `template` — не обновляется через API (может быть привязан к логике рендеринга)
+Все поля изменяемы через API.
 
 ### Удаление PostType
 

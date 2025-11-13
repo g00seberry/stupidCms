@@ -4,9 +4,9 @@ system_of_record: "narrative"
 review_cycle_days: 60
 last_reviewed: 2025-11-12
 related_code:
-  - "app/Models/Entry.php"
-  - "app/Http/Controllers/Admin/V1/EntryController.php"
-  - "app/Observers/EntryObserver.php"
+    - "app/Models/Entry.php"
+    - "app/Http/Controllers/Admin/V1/EntryController.php"
+    - "app/Observers/EntryObserver.php"
 ---
 
 # Entry (записи)
@@ -28,7 +28,7 @@ Entry {
   seo_json: json                   // SEO метаданные
   status: enum('draft', 'published')
   published_at: ?datetime
-  template_override: ?string       // переопределение шаблона для конкретной записи (приоритет выше, чем PostType.template)
+  template_override: ?string       // переопределение шаблона для конкретной записи (приоритет выше файловой конвенции)
   created_at: datetime
   updated_at: datetime
   deleted_at: ?datetime            // soft delete
@@ -36,11 +36,12 @@ Entry {
 ```
 
 **Связи**:
-- `belongsTo(PostType)` — тип контента
-- `belongsTo(User, 'author_id')` — автор
-- `hasMany(EntrySlug)` — история URL
-- `belongsToMany(Term)` via `entry_term` — категории/теги
-- `belongsToMany(Media)` via `entry_media` — медиафайлы
+
+-   `belongsTo(PostType)` — тип контента
+-   `belongsTo(User, 'author_id')` — автор
+-   `hasMany(EntrySlug)` — история URL
+-   `belongsToMany(Term)` via `entry_term` — категории/теги
+-   `belongsToMany(Media)` via `entry_media` — медиафайлы
 
 **Файл**: `app/Models/Entry.php`
 
@@ -72,10 +73,11 @@ Entry::create([
 ```
 
 **Характеристики**:
-- `status = 'draft'`
-- `published_at = null`
-- Видно только автору и админам
-- Не индексируется поиском
+
+-   `status = 'draft'`
+-   `published_at = null`
+-   Видно только автору и админам
+-   Не индексируется поиском
 
 ---
 
@@ -88,9 +90,10 @@ $entry->update([
 ```
 
 **Характеристики**:
-- `published_at` в будущем
-- Автоматически станет published, когда `published_at <= now`
-- Видно в админке как "Запланировано"
+
+-   `published_at` в будущем
+-   Автоматически станет published, когда `published_at <= now`
+-   Видно в админке как "Запланировано"
 
 **Проверка** (например, через Scheduler):
 
@@ -116,12 +119,14 @@ $entry->update([
 ```
 
 **Характеристики**:
-- `status = 'published'`
-- `published_at <= now()`
-- Видно всем пользователям
-- Индексируется поиском
+
+-   `status = 'published'`
+-   `published_at <= now()`
+-   Видно всем пользователям
+-   Индексируется поиском
 
 **Scope**:
+
 ```php
 Entry::published()->get();
 // WHERE status = 'published' AND published_at IS NOT NULL AND published_at <= NOW()
@@ -136,9 +141,10 @@ $entry->delete();  // soft delete
 ```
 
 **Характеристики**:
-- `deleted_at` установлен
-- Скрыто везде, кроме админки с фильтром "trashed"
-- Можно восстановить: `$entry->restore()`
+
+-   `deleted_at` установлен
+-   Скрыто везде, кроме админки с фильтром "trashed"
+-   Можно восстановить: `$entry->restore()`
 
 ## data_json (кастомные поля)
 
@@ -148,10 +154,10 @@ $entry->delete();  // soft delete
 
 ```json
 {
-  "subtitle": "Краткое описание статьи",
-  "featured": true,
-  "read_time": 5,
-  "custom_field": "any value"
+    "subtitle": "Краткое описание статьи",
+    "featured": true,
+    "read_time": 5,
+    "custom_field": "any value"
 }
 ```
 
@@ -176,12 +182,12 @@ if ($invalidFields) {
 
 ```json
 {
-  "meta_title": "Custom Title for Search Engines",
-  "meta_description": "Description for search results",
-  "og:title": "Title for social sharing",
-  "og:description": "Description for social sharing",
-  "og:image": "/media/123/featured.jpg",
-  "canonical_url": "https://example.com/articles/my-post"
+    "meta_title": "Custom Title for Search Engines",
+    "meta_description": "Description for search results",
+    "og:title": "Title for social sharing",
+    "og:description": "Description for social sharing",
+    "og:image": "/media/123/featured.jpg",
+    "canonical_url": "https://example.com/articles/my-post"
 }
 ```
 
@@ -264,9 +270,10 @@ Entry::published()->get();
 ```
 
 Возвращает только опубликованные entries:
-- `status = 'published'`
-- `published_at IS NOT NULL`
-- `published_at <= now()`
+
+-   `status = 'published'`
+-   `published_at IS NOT NULL`
+-   `published_at <= now()`
 
 ### ofType(string $postTypeSlug)
 
@@ -331,7 +338,7 @@ public function updating(Entry $entry): void
         EntrySlug::where('entry_id', $entry->id)
             ->where('is_current', true)
             ->update(['is_current' => false]);
-        
+
         // Новый slug → создать
         EntrySlug::create([
             'entry_id' => $entry->id,
@@ -339,7 +346,7 @@ public function updating(Entry $entry): void
             'is_current' => true,
             'created_at' => now(),
         ]);
-        
+
         // Событие для кэша
         event(new EntrySlugChanged($entry, $entry->getOriginal('slug'), $entry->slug));
     }
@@ -363,12 +370,10 @@ public function deleted(Entry $entry): void
 **Endpoint**: `GET /api/v1/admin/entries/statuses`
 
 **Response**: `200 OK`
+
 ```json
 {
-  "data": [
-    "draft",
-    "published"
-  ]
+    "data": ["draft", "published"]
 }
 ```
 
@@ -381,18 +386,14 @@ public function deleted(Entry $entry): void
 **Endpoint**: `GET /api/v1/admin/utils/templates`
 
 **Response**: `200 OK`
+
 ```json
 {
-  "data": [
-    "pages.show",
-    "home.default",
-    "welcome",
-    "pages.types.article"
-  ]
+    "data": ["pages.show", "home.default", "welcome", "pages.types.article"]
 }
 ```
 
-**Описание**: Возвращает список всех доступных Blade-шаблонов для назначения в `Entry.template_override` или `PostType.template`. См. [Post Types → Шаблоны](../post-types.md#шаблоны-templates).
+**Описание**: Возвращает список всех доступных Blade-шаблонов для назначения в `Entry.template_override`. См. [Post Types → Шаблоны](../post-types.md#шаблоны-templates).
 
 ---
 
@@ -401,23 +402,24 @@ public function deleted(Entry $entry): void
 **Endpoint**: `POST /api/v1/admin/entries`
 
 **Request**:
+
 ```json
 {
-  "post_type_id": 1,
-  "title": "Laravel 12 Released",
-  "slug": "laravel-12-released",
-  "data_json": {
-    "subtitle": "What's new in Laravel 12",
-    "featured": true,
-    "read_time": 8
-  },
-  "seo_json": {
-    "meta_description": "Learn about new features in Laravel 12"
-  },
-  "status": "draft",
-  "template_override": "pages.types.article",
-  "term_ids": [1, 2],
-  "media_ids": [10]
+    "post_type_id": 1,
+    "title": "Laravel 12 Released",
+    "slug": "laravel-12-released",
+    "data_json": {
+        "subtitle": "What's new in Laravel 12",
+        "featured": true,
+        "read_time": 8
+    },
+    "seo_json": {
+        "meta_description": "Learn about new features in Laravel 12"
+    },
+    "status": "draft",
+    "template_override": "pages.types.article",
+    "term_ids": [1, 2],
+    "media_ids": [10]
 }
 ```
 
@@ -430,10 +432,11 @@ public function deleted(Entry $entry): void
 **Endpoint**: `PUT /api/v1/admin/entries/{id}`
 
 **Request**:
+
 ```json
 {
-  "status": "published",
-  "published_at": "2025-11-08T12:00:00Z"
+    "status": "published",
+    "published_at": "2025-11-08T12:00:00Z"
 }
 ```
 
@@ -444,11 +447,13 @@ public function deleted(Entry $entry): void
 **Endpoint**: `GET /api/v1/entries`
 
 **Query**:
-- `?post_type=article` — фильтр по типу
-- `?term_id=5` — фильтр по термину
-- `?page=2` — пагинация
+
+-   `?post_type=article` — фильтр по типу
+-   `?term_id=5` — фильтр по термину
+-   `?page=2` — пагинация
 
 **Response**:
+
 ```json
 {
   "data": [
@@ -477,6 +482,7 @@ public function deleted(Entry $entry): void
 **Endpoint**: `GET /api/v1/entries/{slug}`
 
 **Response**:
+
 ```json
 {
   "data": {
@@ -500,17 +506,17 @@ public function deleted(Entry $entry): void
 
 ### ✅ DO
 
-- Используйте `published()` scope для публичных запросов
-- Валидируйте `data_json` на соответствие PostType.fields
-- Заполняйте `seo_json` для всех публичных entries
-- Используйте soft deletes (`deleted_at`)
-- Логируйте изменения через Audit
+-   Используйте `published()` scope для публичных запросов
+-   Валидируйте `data_json` на соответствие PostType.fields
+-   Заполняйте `seo_json` для всех публичных entries
+-   Используйте soft deletes (`deleted_at`)
+-   Логируйте изменения через Audit
 
 ### ❌ DON'T
 
-- Не возвращайте draft entries в публичном API
-- Не храните чувствительные данные в `data_json` (используйте зашифрованные поля)
-- Не изменяйте `slug` без предупреждения пользователя (ломает внешние ссылки, хотя будет 301)
+-   Не возвращайте draft entries в публичном API
+-   Не храните чувствительные данные в `data_json` (используйте зашифрованные поля)
+-   Не изменяйте `slug` без предупреждения пользователя (ломает внешние ссылки, хотя будет 301)
 
 ## Производительность
 
@@ -527,23 +533,23 @@ Entry::with(['postType', 'author', 'terms', 'media'])
 ### Индексы
 
 Убедитесь, что есть индексы на:
-- `post_type_id`
-- `slug`
-- `author_id`
-- `status`
-- `published_at`
+
+-   `post_type_id`
+-   `slug`
+-   `author_id`
+-   `status`
+-   `published_at`
 
 См. миграцию `create_entries_table`.
 
 ## Связанные страницы
 
-- [Post Types](post-types.md) — типы контента
-- [Slugs & 301](slugs.md) — маршрутизация
-- [Taxonomy](taxonomy.md) — категоризация
-- [Media](media.md) — медиатека
-- Scribe API Reference (`../_generated/api-docs/index.html`) — endpoints
+-   [Post Types](post-types.md) — типы контента
+-   [Slugs & 301](slugs.md) — маршрутизация
+-   [Taxonomy](taxonomy.md) — категоризация
+-   [Media](media.md) — медиатека
+-   Scribe API Reference (`../_generated/api-docs/index.html`) — endpoints
 
 ---
 
 > 💡 **Tip**: Используйте `published_at` для планирования публикаций. Настройте Laravel Scheduler для автоматической публикации.
-

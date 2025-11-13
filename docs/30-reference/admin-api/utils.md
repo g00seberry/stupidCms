@@ -26,6 +26,7 @@ related_code:
 Генерирует slug из заголовка с проверкой уникальности.
 
 **Query параметры**:
+
 -   `title` (required, string, max:500) — заголовок для генерации slug
 -   `postType` (optional, string) — slug типа поста для проверки уникальности в рамках типа
 
@@ -33,16 +34,18 @@ related_code:
 
 ```json
 {
-  "base": "new-landing-page",
-  "unique": "new-landing-page-2"
+    "base": "new-landing-page",
+    "unique": "new-landing-page-2"
 }
 ```
 
 **Описание**:
+
 -   `base` — базовый slug из заголовка
 -   `unique` — уникальный slug с суффиксом (если базовый занят)
 
 **Пример**:
+
 ```bash
 curl -i -X GET \
   --cookie "cms_at=..." \
@@ -51,10 +54,11 @@ curl -i -X GET \
 ```
 
 **Ответ**:
+
 ```json
 {
-  "base": "novaya-stranica",
-  "unique": "novaya-stranica-2"
+    "base": "novaya-stranica",
+    "unique": "novaya-stranica-2"
 }
 ```
 
@@ -70,17 +74,18 @@ curl -i -X GET \
 
 ```json
 {
-  "data": [
-    "pages.show",
-    "home.default",
-    "welcome",
-    "pages.types.article",
-    "pages.types.product"
-  ]
+    "data": [
+        "pages.show",
+        "home.default",
+        "welcome",
+        "pages.types.article",
+        "pages.types.product"
+    ]
 }
 ```
 
 **Описание**:
+
 -   Сканирует директорию `resources/views` рекурсивно
 -   Исключает системные директории: `admin`, `errors`, `layouts`, `partials`, `vendor`
 -   Конвертирует пути в dot notation (например, `pages/show.blade.php` → `pages.show`)
@@ -88,11 +93,12 @@ curl -i -X GET \
 -   Включает шаблоны из вложенных директорий (например, `pages/types/article.blade.php` → `pages.types.article`)
 
 **Использование**:
--   Шаблоны из этого списка можно назначить в поле `PostType.template` при создании/обновлении PostType
+
 -   Шаблоны из этого списка можно назначить в поле `Entry.template_override` при создании/обновлении Entry
 -   Формат шаблонов: dot notation (например, `pages.show` соответствует `resources/views/pages/show.blade.php`)
 
 **Пример**:
+
 ```bash
 curl -i -X GET \
   --cookie "cms_at=..." \
@@ -101,14 +107,10 @@ curl -i -X GET \
 ```
 
 **Ответ**:
+
 ```json
 {
-  "data": [
-    "home.default",
-    "pages.show",
-    "pages.types.article",
-    "welcome"
-  ]
+    "data": ["home.default", "pages.show", "pages.types.article", "welcome"]
 }
 ```
 
@@ -116,11 +118,12 @@ curl -i -X GET \
 
 При рендеринге Entry шаблон выбирается по следующему приоритету:
 
-1. **`Entry.template_override`** — переопределение для конкретной записи (если задан)
-2. **`PostType.template`** — шаблон типа поста (если задан)
-3. **`pages.show`** (default) — если оба не заданы
+1. **`Entry.template_override`** — переопределение для конкретной записи (если задан и существует)
+2. **`entry--{postType}--{slug}`** — специфичный шаблон для конкретной записи (если существует)
+3. **`entry--{postType}`** — шаблон для всех записей типа (если существует)
+4. **`entry`** — глобальный шаблон по умолчанию
 
-См. `BladeTemplateResolver` для деталей реализации.
+См. `BladeTemplateResolver` и [Post Types → Шаблоны](../../10-concepts/post-types.md#шаблоны-templates) для деталей реализации.
 
 ### Структура шаблонов
 
@@ -138,6 +141,7 @@ resources/views/
 ```
 
 **Исключаются**:
+
 -   `admin/` — административные шаблоны
 -   `errors/` — шаблоны ошибок
 -   `layouts/` — layout шаблоны
@@ -152,16 +156,16 @@ resources/views/
 
 ```json
 {
-  "type": "https://stupidcms.dev/problems/unauthorized",
-  "title": "Unauthorized",
-  "status": 401,
-  "code": "UNAUTHORIZED",
-  "detail": "Authentication is required to access this resource.",
-  "meta": {
-    "request_id": "...",
-    "reason": "missing_token"
-  },
-  "trace_id": "..."
+    "type": "https://stupidcms.dev/problems/unauthorized",
+    "title": "Unauthorized",
+    "status": 401,
+    "code": "UNAUTHORIZED",
+    "detail": "Authentication is required to access this resource.",
+    "meta": {
+        "request_id": "...",
+        "reason": "missing_token"
+    },
+    "trace_id": "..."
 }
 ```
 
@@ -169,20 +173,18 @@ resources/views/
 
 ```json
 {
-  "type": "https://stupidcms.dev/problems/validation-error",
-  "title": "Validation Error",
-  "status": 422,
-  "code": "VALIDATION_ERROR",
-  "detail": "The title field is required.",
-  "meta": {
-    "request_id": "...",
-    "errors": {
-      "title": [
-        "The title field is required."
-      ]
-    }
-  },
-  "trace_id": "..."
+    "type": "https://stupidcms.dev/problems/validation-error",
+    "title": "Validation Error",
+    "status": 422,
+    "code": "VALIDATION_ERROR",
+    "detail": "The title field is required.",
+    "meta": {
+        "request_id": "...",
+        "errors": {
+            "title": ["The title field is required."]
+        }
+    },
+    "trace_id": "..."
 }
 ```
 
@@ -193,4 +195,3 @@ resources/views/
 -   [Post Types](../10-concepts/post-types.md) — описание шаблонов для типов постов
 -   [Entries](../10-concepts/entries.md) — описание `template_override` для записей
 -   Scribe API Reference (`../../_generated/api-docs/index.html`) — полная API документация
-
