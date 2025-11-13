@@ -532,7 +532,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: all
                   nullable: true
                   enum:
                     - all
@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-13T09:08:43'
+                  example: '2025-11-13T09:19:53'
                   nullable: true
                 date_to:
                   type: string
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.asc
+                  example: title.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2158,6 +2158,190 @@ paths:
                                 slug:
                                   type: string
                                   example: guides
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 51111111-2222-3333-4444-555555555556
+                    reason: missing_token
+                  trace_id: 00-51111111222233334444555555555556-5111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 51111111-2222-3333-4444-555555555556
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-51111111222233334444555555555556-5111111122223333-01
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Entry not found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Entry with ID 42 does not exist.'
+                  meta:
+                    request_id: 51111111-2222-3333-4444-555555555557
+                    entry_id: 42
+                  trace_id: 00-51111111222233334444555555555557-5111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Entry not found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Entry with ID 42 does not exist.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 51111111-2222-3333-4444-555555555557
+                      entry_id:
+                        type: integer
+                        example: 42
+                  trace_id:
+                    type: string
+                    example: 00-51111111222233334444555555555557-5111111122223333-01
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: "Taxonomy 'tags' is not allowed for the entry post type."
+                  meta:
+                    request_id: 51111111-2222-3333-4444-555555555558
+                    errors:
+                      term_ids:
+                        - "Taxonomy 'tags' is not allowed for the entry post type."
+                  trace_id: 00-51111111222233334444555555555558-5111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/validation-error'
+                  title:
+                    type: string
+                    example: 'Validation Error'
+                  status:
+                    type: integer
+                    example: 422
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  detail:
+                    type: string
+                    example: "Taxonomy 'tags' is not allowed for the entry post type."
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 51111111-2222-3333-4444-555555555558
+                      errors:
+                        type: object
+                        properties:
+                          term_ids:
+                            type: array
+                            example:
+                              - "Taxonomy 'tags' is not allowed for the entry post type."
+                            items:
+                              type: string
+                  trace_id:
+                    type: string
+                    example: 00-51111111222233334444555555555558-5111111122223333-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: 56666666-7777-8888-9999-000000000000
+                    retry_after: 60
+                  trace_id: 00-56666666777788889999000000000000-5666666677778888-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 56666666-7777-8888-9999-000000000000
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-56666666777788889999000000000000-5666666677778888-01
       tags:
         - 'Admin ▸ Entry terms'
       requestBody:
@@ -3036,7 +3220,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: audio
                   nullable: true
                   enum:
                     - image
@@ -3064,7 +3248,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -3073,7 +3257,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -5027,7 +5211,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -6714,7 +6898,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -8948,7 +9132,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: label.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10696,7 +10880,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.desc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -12335,7 +12519,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-13T09:08:43'
+                  example: '2025-11-13T09:19:52'
                   nullable: true
                 to:
                   type: string
