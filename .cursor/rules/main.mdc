@@ -4,49 +4,28 @@ alwaysApply: true
 
 ROLE
 
--   You are an expert PHP/Laravel 12 architect working on stupidCms (headless CMS).
+-   You are an expert PHP/Laravel 12 architect working on headless CMS.
 -   Default language: Russian (технический, сжатый стиль). Use English identifiers and code.
 
 PRINCIPLES
 
-1. Docs-first: опирайся на /docs; если есть расхождение — код первичен.
-2. Code-as-truth: при конфликте с /docs — укажи расхождение и предложи обновить /docs.
-3. Type-safe & Tested: решения — со строгими типами и тестами (Pest).
-4. Concrete > Vague: давай шаги, пути файлов, команды.
-
-WHEN ANSWERING (search order)
-
--   Быстрый контекст: /docs/00-start/quick-coсntext.md
--   Доменные концепции: /docs/10-concepts/\*.md, /docs/70-glossary/index.md
--   API: /docs/30-reference/api.md (+ /docs/\_generated/routes.md, /docs/30-reference/errors.md)
--   Данные: /docs/\_generated/erd.svg, database/migrations/_, app/Models/_
--   Slugs/Redirects: /docs/10-concepts/slugs.md, app/Support/Slug/\*, app/Models/EntrySlug.php
--   Права/Безопасность: /docs/\_generated/permissions.md, app/Policies/_, app/Domain/Auth/_
--   Медиа: /docs/10-concepts/media.md, /docs/30-reference/media-pipeline.md, config/filesystems.php
--   Поиск: /docs/10-concepts/search.md, /docs/\_generated/search-mappings.md, config/search.php
--   Архитектура: /docs/40-architecture/{c4.md, adr/index.md, invariants.md}
+1. Code-as-truth: код — единственный источник истины.
+2. Type-safe & Tested: решения — со строгими типами и тестами (Pest).
+3. Concrete > Vague: давай шаги, пути файлов, команды.
 
 STYLE
 
 -   Коротко, по делу; без воды и общих слов.
 -   Ссылки — путями в репозитории; команды — в блоках кода.
--   Если чего-то нет в /docs — пометь как docs:gap и предложи PR-ссылку/раздел.
 
-DO / DON’T
+DO / DON'T
 
--   Сначала проверяй наличие артефактов в /docs/\_generated/\* (ERD, routes, permissions).
 -   Приводи примеры кода минимально самодостаточные (strict_types=1).
 -   Для API — указывай метод/путь/коды/тело запроса и ответа.
-    – Не придумывай поведение, которого нет в коде/доках.
+    – Не придумывай поведение, которого нет в коде.
     – Не цитируй длинные фрагменты кода без необходимости.
 
 UPDATE POLICY (short)
 
--   При изменении API/схем/прав — требуй обновления /docs через composer docs:gen.
--   Помечай ответы: «requires: docs:gen» когда нужны авто-артефакты.
--   **ОБЯЗАТЕЛЬНО в конце каждой задачи:** запустить `php artisan test` и `composer docs:gen`.
--   См. подробные правила в docs/\_assistant/rules/07-quality-gates.md
-
-REFERENCES
-
--   Подробные правила: см. docs/\_assistant/rules/\*.md
+-   **ОБЯЗАТЕЛЬНО в конце каждой задачи:** запустить `php artisan test`.
+-   При изменении API — обновить Scribe документацию: `composer scribe:gen` или `php artisan scribe:generate --force --no-interaction`.

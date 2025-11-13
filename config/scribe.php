@@ -17,7 +17,6 @@ return [
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<INTRO
         <p><strong>stupidCms</strong> — headless CMS API. Все public/admin endpoints документируются автоматически на основе PHPDoc, FormRequest и Resource-описаний.</p>
-        <p>Подробности по домену и ограничениям см. в <code>docs/10-concepts/*</code>.</p>
     INTRO,
 
     // The base URL displayed in the docs.

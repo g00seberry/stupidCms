@@ -57,14 +57,7 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
-        "docs:gen": [
-            "@php artisan docs:routes",
-            "@php artisan docs:abilities",
-            "@php artisan docs:errors",
-            "@php artisan docs:config",
-            "@php artisan docs:erd",
-            "@php artisan docs:search",
-            "@php artisan docs:media",
+        "scribe:gen": [
             "@php artisan scribe:generate --force --no-interaction"
         ],
         "post-autoload-dump": [
