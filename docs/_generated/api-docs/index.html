@@ -351,7 +351,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-13 06:19</li>
+        <li>Last updated: 2025-11-13 07:24</li>
     </ul>
 </div>
 
@@ -591,10 +591,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-13T06:19:56\",
+    \"date_from\": \"2025-11-13T07:24:22\",
     \"date_to\": \"2106-12-12\",
     \"date_field\": \"published\",
-    \"sort\": \"title.desc\",
+    \"sort\": \"updated_at.asc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -634,10 +634,10 @@ let body = {
     "term": [
         17
     ],
-    "date_from": "2025-11-13T06:19:56",
+    "date_from": "2025-11-13T07:24:22",
     "date_to": "2106-12-12",
     "date_field": "published",
-    "sort": "title.desc",
+    "sort": "updated_at.asc",
     "per_page": 13
 };
 
@@ -679,10 +679,10 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-13T06:19:56',
+            'date_from' =&gt; '2025-11-13T07:24:22',
             'date_to' =&gt; '2106-12-12',
             'date_field' =&gt; 'published',
-            'sort' =&gt; 'title.desc',
+            'sort' =&gt; 'updated_at.asc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -1055,10 +1055,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-13T06:19:56"
+               value="2025-11-13T07:24:22"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-13T06:19:56</code></p>
+<p>Must be a valid date. Example: <code>2025-11-13T07:24:22</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -1093,10 +1093,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="title.desc"
+               value="updated_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>title.desc</code></p>
+<p>Example: <code>updated_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -2658,7 +2658,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/api/v1/admin/entries/2/terms" \
+    --get "http://localhost/api/v1/api/v1/admin/entries/1/terms" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2666,7 +2666,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/entries/2/terms"
+    "http://localhost/api/v1/api/v1/admin/entries/1/terms"
 );
 
 const headers = {
@@ -2683,7 +2683,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/entries/2/terms';
+$url = 'http://localhost/api/v1/api/v1/admin/entries/1/terms';
 $response = $client-&gt;get(
     $url,
     [
@@ -2896,10 +2896,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="entry_id"                data-endpoint="GETapi-v1-admin-entries--entry_id--terms"
-               value="2"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the entry. Example: <code>2</code></p>
+<p>The ID of the entry. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>entry</code></b>&nbsp;&nbsp;
@@ -3723,12 +3723,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"video\",
+    \"kind\": \"document\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
     \"deleted\": \"only\",
-    \"sort\": \"created_at\",
-    \"order\": \"asc\",
+    \"sort\": \"size_bytes\",
+    \"order\": \"desc\",
     \"page\": 3,
     \"per_page\": 21
 }"
@@ -3761,12 +3761,12 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "video",
+    "kind": "document",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
     "deleted": "only",
-    "sort": "created_at",
-    "order": "asc",
+    "sort": "size_bytes",
+    "order": "desc",
     "page": 3,
     "per_page": 21
 };
@@ -3801,12 +3801,12 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'video',
+            'kind' =&gt; 'document',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
             'deleted' =&gt; 'only',
-            'sort' =&gt; 'created_at',
-            'order' =&gt; 'asc',
+            'sort' =&gt; 'size_bytes',
+            'order' =&gt; 'desc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
         ],
@@ -4098,10 +4098,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="video"
+               value="document"
                data-component="body">
     <br>
-<p>Example: <code>video</code></p>
+<p>Example: <code>document</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -4150,10 +4150,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-media"
-               value="created_at"
+               value="size_bytes"
                data-component="body">
     <br>
-<p>Example: <code>created_at</code></p>
+<p>Example: <code>size_bytes</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>size_bytes</code></li> <li><code>mime</code></li></ul>
         </div>
@@ -4164,10 +4164,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-media"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -8211,10 +8211,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"true\",
+    \"enabled\": \"any\",
     \"page\": 2,
     \"per_page\": 13,
-    \"sort\": \"slug\",
+    \"sort\": \"version\",
     \"order\": \"desc\"
 }"
 </code></pre></div>
@@ -8243,10 +8243,10 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "true",
+    "enabled": "any",
     "page": 2,
     "per_page": 13,
-    "sort": "slug",
+    "sort": "version",
     "order": "desc"
 };
 
@@ -8277,10 +8277,10 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'true',
+            'enabled' =&gt; 'any',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
-            'sort' =&gt; 'slug',
+            'sort' =&gt; 'version',
             'order' =&gt; 'desc',
         ],
     ]
@@ -8523,10 +8523,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="true"
+               value="any"
                data-component="body">
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>any</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -8561,10 +8561,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-plugins"
-               value="slug"
+               value="version"
                data-component="body">
     <br>
-<p>Example: <code>slug</code></p>
+<p>Example: <code>version</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>slug</code></li> <li><code>version</code></li> <li><code>updated_at</code></li></ul>
         </div>
@@ -10920,7 +10920,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.desc\"
+    \"sort\": \"created_at.asc\"
 }"
 </code></pre></div>
 
@@ -10947,7 +10947,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.desc"
+    "sort": "created_at.asc"
 };
 
 fetch(url, {
@@ -10976,7 +10976,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.desc',
+            'sort' =&gt; 'created_at.asc',
         ],
     ]
 );
@@ -11193,10 +11193,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="slug.desc"
+               value="created_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>slug.desc</code></p>
+<p>Example: <code>created_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
@@ -13221,7 +13221,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.desc\"
+    \"sort\": \"created_at.desc\"
 }"
 </code></pre></div>
 
@@ -13248,7 +13248,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.desc"
+    "sort": "created_at.desc"
 };
 
 fetch(url, {
@@ -13277,7 +13277,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.desc',
+            'sort' =&gt; 'created_at.desc',
         ],
     ]
 );
@@ -13538,10 +13538,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="slug.desc"
+               value="created_at.desc"
                data-component="body">
     <br>
-<p>Example: <code>slug.desc</code></p>
+<p>Example: <code>created_at.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li></ul>
         </div>
@@ -14482,7 +14482,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/v1/api/v1/admin/terms/17?forceDetach=1" \
+    "http://localhost/api/v1/api/v1/admin/terms/1?forceDetach=1" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -14490,7 +14490,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/terms/17"
+    "http://localhost/api/v1/api/v1/admin/terms/1"
 );
 
 const params = {
@@ -14513,7 +14513,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/terms/17';
+$url = 'http://localhost/api/v1/api/v1/admin/terms/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -14704,10 +14704,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-v1-admin-terms--id-"
-               value="17"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the term. Example: <code>17</code></p>
+<p>The ID of the term. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>term</code></b>&nbsp;&nbsp;
@@ -15728,7 +15728,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"vxi4:4$\\/i\"
     ],
-    \"from\": \"2025-11-13T06:19:55\",
+    \"from\": \"2025-11-13T07:24:22\",
     \"to\": \"2106-12-12\",
     \"page\": 45,
     \"per_page\": 16
@@ -15766,7 +15766,7 @@ let body = {
     "term": [
         "vxi4:4$\/i"
     ],
-    "from": "2025-11-13T06:19:55",
+    "from": "2025-11-13T07:24:22",
     "to": "2106-12-12",
     "page": 45,
     "per_page": 16
@@ -15806,7 +15806,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 'vxi4:4$/i',
             ],
-            'from' =&gt; '2025-11-13T06:19:55',
+            'from' =&gt; '2025-11-13T07:24:22',
             'to' =&gt; '2106-12-12',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -16053,10 +16053,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-13T06:19:55"
+               value="2025-11-13T07:24:22"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-13T06:19:55</code></p>
+<p>Must be a valid date. Example: <code>2025-11-13T07:24:22</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

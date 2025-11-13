@@ -2014,17 +2014,6 @@
                 "generation": null
             },
             {
-                "name": "template",
-                "type_name": "varchar",
-                "type": "varchar(255)",
-                "collation": "utf8mb4_unicode_ci",
-                "nullable": true,
-                "default": null,
-                "auto_increment": false,
-                "comment": null,
-                "generation": null
-            },
-            {
                 "name": "options_json",
                 "type_name": "json",
                 "type": "json",

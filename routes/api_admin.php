@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
  *   - CORS с credentials: true
  *   - CSRF токены для state-changing операций (если используется cookie-based auth)
  */
+
 Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::get('/auth/current', [CurrentUserController::class, 'show'])
         ->middleware('no-cache-auth')

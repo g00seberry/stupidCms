@@ -41,7 +41,7 @@ class TermResource extends AdminJsonResource
 
     private function transformJson(mixed $value): mixed
     {
-        if ($value === null) {
+        if ($value === null || $value === []) {
             return new \stdClass();
         }
 

@@ -173,7 +173,6 @@ entity "post_types" as post_types {
   id : bigint <<PK>>
   slug : varchar
   name : varchar
-  template : varchar?
   options_json : json?
   created_at : timestamp?
   updated_at : timestamp?
