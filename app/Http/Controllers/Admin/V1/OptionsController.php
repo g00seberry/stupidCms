@@ -18,13 +18,29 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Контроллер для управления системными опциями в админ-панели.
+ *
+ * Предоставляет CRUD операции для опций: создание, чтение, обновление, удаление, восстановление.
+ * Опции организованы по namespace и используются для хранения настроек системы.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class OptionsController extends Controller
 {
     use AuthorizesRequests;
     use ThrowsErrors;
 
+    /**
+     * Паттерн для валидации ключей опций.
+     *
+     * @var string
+     */
     private const KEY_PATTERN = '/^[a-z0-9_][a-z0-9_.-]{1,63}$/';
 
+    /**
+     * @param \App\Domain\Options\OptionsRepository $repository Репозиторий опций
+     */
     public function __construct(private readonly OptionsRepository $repository)
     {
     }
@@ -451,6 +467,13 @@ class OptionsController extends Controller
         return new OptionResource($restored);
     }
 
+    /**
+     * Выбросить ошибку "опция не найдена".
+     *
+     * @param string $namespace Namespace опции
+     * @param string $key Ключ опции
+     * @return never
+     */
     private function throwOptionNotFound(string $namespace, string $key): never
     {
         $this->throwError(
@@ -463,6 +486,14 @@ class OptionsController extends Controller
         );
     }
 
+    /**
+     * Проверить валидность параметров маршрута (namespace и key).
+     *
+     * @param string $namespace Namespace опции
+     * @param string|null $key Ключ опции (опционально)
+     * @return void
+     * @throws \App\Support\Errors\HttpErrorException Если параметры невалидны
+     */
     private function assertValidRouteParameters(string $namespace, ?string $key = null): void
     {
         $data = ['namespace' => $namespace];

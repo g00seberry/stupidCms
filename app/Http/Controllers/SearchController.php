@@ -9,8 +9,19 @@ use App\Http\Requests\Public\Search\QuerySearchRequest;
 use App\Http\Resources\SearchHitResource;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Контроллер для публичного поиска контента.
+ *
+ * Предоставляет API для поиска опубликованных записей с фильтрами
+ * по типам записей, термам и датам публикации.
+ *
+ * @package App\Http\Controllers
+ */
 final class SearchController extends Controller
 {
+    /**
+     * @param \App\Domain\Search\SearchService $search Сервис поиска
+     */
     public function __construct(
         private readonly SearchService $search
     ) {
@@ -81,7 +92,12 @@ final class SearchController extends Controller
     }
 
     /**
-     * @param mixed $payload
+     * Создать ETag для ответа.
+     *
+     * Генерирует слабый ETag (W/") на основе SHA256 хэша JSON payload.
+     *
+     * @param mixed $payload Данные для хэширования
+     * @return string ETag в формате W/"{hash}"
      */
     private function makeEtag($payload): string
     {

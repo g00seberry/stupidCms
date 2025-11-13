@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Контроллер для управления шаблонами в админ-панели.
+ *
+ * Предоставляет операции для работы с Blade шаблонами:
+ * просмотр списка доступных шаблонов, создание и обновление шаблонов.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class TemplateController extends Controller
 {
     use ThrowsErrors;

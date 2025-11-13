@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Entries;
 
 use App\Events\EntrySlugChanged;
@@ -7,10 +9,24 @@ use App\Models\Entry;
 use App\Models\EntrySlug;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Сервис для управления историей slug'ов записей.
+ *
+ * Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.
+ * Гарантирует атомарность операций и корректность флага is_current.
+ *
+ * @package App\Domain\Entries
+ */
 final class DefaultEntrySlugService implements EntrySlugService
 {
     /**
-     * Создать текущую запись истории (после создания Entry).
+     * Создать текущую запись истории после создания Entry.
+     *
+     * Если slug пуст, операция не выполняется.
+     * Использует транзакцию для атомарности.
+     *
+     * @param \App\Models\Entry $entry Созданная запись
+     * @return void
      */
     public function onCreated(Entry $entry): void
     {
@@ -46,12 +62,14 @@ final class DefaultEntrySlugService implements EntrySlugService
 
     /**
      * Синхронизировать историю при изменении slug.
-     * Возвращает true, если slug сменился.
      *
-     * @param Entry $entry
-     * @param string $oldSlug
+     * Создаёт новую запись в истории, если slug изменился.
+     * Атомарно обновляет флаг is_current для всех записей истории.
+     *
+     * @param \App\Models\Entry $entry Обновлённая запись
+     * @param string $oldSlug Предыдущий slug
      * @param bool $dispatchEvent Диспатчить событие EntrySlugChanged (по умолчанию true)
-     * @return bool
+     * @return bool true, если slug изменился; false, если остался прежним
      */
     public function onUpdated(Entry $entry, string $oldSlug, bool $dispatchEvent = true): bool
     {
@@ -99,7 +117,10 @@ final class DefaultEntrySlugService implements EntrySlugService
     }
 
     /**
-     * Получить текущий слуг для Entry.
+     * Получить текущий slug для Entry.
+     *
+     * @param int $entryId ID записи
+     * @return string|null Текущий slug или null, если не найден
      */
     public function currentSlug(int $entryId): ?string
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -7,6 +9,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Eloquent модель для пользователей (User).
+ *
+ * Представляет пользователей системы с поддержкой аутентификации и авторизации.
+ * Поддерживает административные права и разрешения.
+ *
+ * @property int $id
+ * @property string $name Имя пользователя
+ * @property string $email Email пользователя (уникальный)
+ * @property \Illuminate\Support\Carbon|null $email_verified_at Дата подтверждения email
+ * @property string $password Хеш пароля
+ * @property string|null $remember_token Токен для "запомнить меня"
+ * @property bool $is_admin Флаг администратора (всегда имеет все права)
+ * @property array $admin_permissions Список административных разрешений
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -61,7 +80,10 @@ class User extends Authenticatable
     /**
      * Get normalized list of admin permissions for the user.
      *
-     * @return array<int, string>
+     * Возвращает очищенный и нормализованный список разрешений:
+     * удаляет пустые строки, дубликаты и нестроковые значения.
+     *
+     * @return array<int, string> Массив уникальных разрешений
      */
     public function adminPermissions(): array
     {
@@ -76,6 +98,12 @@ class User extends Authenticatable
 
     /**
      * Check whether user has specific admin permission (admins always pass).
+     *
+     * Администраторы (is_admin = true) всегда имеют все права.
+     * Для обычных пользователей проверяется наличие разрешения в списке.
+     *
+     * @param string $permission Название разрешения (например, 'manage.entries')
+     * @return bool true, если пользователь имеет разрешение
      */
     public function hasAdminPermission(string $permission): bool
     {
@@ -88,6 +116,12 @@ class User extends Authenticatable
 
     /**
      * Assign admin permissions without persisting (useful in tests).
+     *
+     * Назначает разрешения без сохранения в БД. Полезно для тестов.
+     * Разрешения добавляются к существующим (без дубликатов).
+     *
+     * @param string ...$permissions Разрешения для назначения
+     * @return void
      */
     public function grantAdminPermissions(string ...$permissions): void
     {

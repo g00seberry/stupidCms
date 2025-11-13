@@ -9,10 +9,23 @@ use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * Автозагрузчик классов плагинов.
+ *
+ * Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.
+ *
+ * @package App\Domain\Plugins\Services
+ */
 final class PluginAutoloader
 {
     /**
-     * @param Collection<int, Plugin> $plugins
+     * Зарегистрировать автозагрузку для плагинов.
+     *
+     * Извлекает namespace из FQCN провайдера и регистрирует PSR-4 автозагрузку
+     * для директории src плагина.
+     *
+     * @param \Illuminate\Support\Collection<int, \App\Models\Plugin> $plugins Коллекция плагинов
+     * @return void
      */
     public function register(Collection $plugins): void
     {

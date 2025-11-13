@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Media\Actions;
 
 use App\Domain\Media\Services\MediaMetadataExtractor;
@@ -10,13 +12,35 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
 
+/**
+ * Действие для сохранения медиа-файла.
+ *
+ * Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
+ * создание записи Media в БД.
+ *
+ * @package App\Domain\Media\Actions
+ */
 class MediaStoreAction
 {
+    /**
+     * @param \App\Domain\Media\Services\MediaMetadataExtractor $metadataExtractor Извлекатель метаданных
+     */
     public function __construct(
         private readonly MediaMetadataExtractor $metadataExtractor
     ) {
     }
 
+    /**
+     * Выполнить сохранение медиа-файла.
+     *
+     * Сохраняет файл на диск, извлекает метаданные (размеры, EXIF и т.д.),
+     * вычисляет checksum и создаёт запись Media в БД.
+     *
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @param array<string, mixed> $payload Дополнительные данные (title, alt, collection)
+     * @return \App\Models\Media Созданная запись Media
+     * @throws \RuntimeException Если не удалось сохранить файл на диск
+     */
     public function execute(UploadedFile $file, array $payload = []): Media
     {
         $diskName = config('media.disk', 'media');
@@ -50,6 +74,19 @@ class MediaStoreAction
         ]);
     }
 
+    /**
+     * Сохранить файл на диск.
+     *
+     * Использует стратегию организации путей (by-date или hash-shard).
+     * Генерирует уникальное имя файла на основе ULID.
+     *
+     * @param \Illuminate\Contracts\Filesystem\Filesystem $disk Диск для сохранения
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @param string $extension Расширение файла
+     * @param string|null $checksum SHA256 checksum файла (для hash-shard стратегии)
+     * @return string Путь к сохранённому файлу
+     * @throws \RuntimeException Если не удалось сохранить файл
+     */
     private function storeFile(Filesystem $disk, UploadedFile $file, string $extension, ?string $checksum): string
     {
         $strategy = config('media.path_strategy', 'by-date');
@@ -74,6 +111,12 @@ class MediaStoreAction
         return str_replace('\\', '/', ltrim($storedPath, '/'));
     }
 
+    /**
+     * Вычислить SHA256 checksum файла.
+     *
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @return string|null Checksum или null, если не удалось вычислить
+     */
     private function checksum(UploadedFile $file): ?string
     {
         $realPath = $file->getRealPath();
@@ -85,6 +128,15 @@ class MediaStoreAction
         return hash_file('sha256', $realPath);
     }
 
+    /**
+     * Сформировать директорию на основе hash-shard стратегии.
+     *
+     * Использует первые 4 символа checksum для создания структуры директорий (XX/YY).
+     * Если checksum недоступен, использует дату.
+     *
+     * @param string|null $checksum SHA256 checksum
+     * @return string Путь директории (например, 'a1/b2')
+     */
     private function hashShardDirectory(?string $checksum): string
     {
         if ($checksum === null || strlen($checksum) < 4) {

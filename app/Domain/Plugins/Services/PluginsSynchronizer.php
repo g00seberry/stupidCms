@@ -14,15 +14,32 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Синхронизатор плагинов.
+ *
+ * Синхронизирует плагины из файловой системы в БД:
+ * обнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.
+ *
+ * @package App\Domain\Plugins\Services
+ */
 final class PluginsSynchronizer
 {
+    /**
+     * @param \App\Domain\Plugins\Services\PluginsRouteReloader $routeReloader Перезагрузчик маршрутов
+     */
     public function __construct(
         private readonly PluginsRouteReloader $routeReloader,
     ) {
     }
 
     /**
-     * @return array{added: int, updated: int, removed: int, providers: list<string>}
+     * Синхронизировать плагины из файловой системы в БД.
+     *
+     * Обнаруживает плагины в директории, указанной в конфиге,
+     * создаёт новые записи, обновляет существующие и удаляет отсутствующие.
+     *
+     * @return array{added: int, updated: int, removed: int, providers: list<string>} Статистика синхронизации
+     * @throws \App\Domain\Plugins\Exceptions\InvalidPluginManifest Если манифест плагина невалиден
      */
     public function sync(): array
     {
@@ -87,7 +104,12 @@ final class PluginsSynchronizer
     }
 
     /**
-     * @return Collection<int, array{slug: string, name: string, version: string, provider: string, path: string, meta: array<string, mixed>}>
+     * Обнаружить манифесты плагинов в директории.
+     *
+     * Ищет директории первого уровня и читает манифесты из них.
+     *
+     * @param string $rootPath Корневая директория плагинов
+     * @return \Illuminate\Support\Collection<int, array{slug: string, name: string, version: string, provider: string, path: string, meta: array<string, mixed>}> Коллекция манифестов
      */
     private function discoverManifests(string $rootPath): Collection
     {
@@ -106,7 +128,14 @@ final class PluginsSynchronizer
     }
 
     /**
-     * @return array{slug: string, name: string, version: string, provider: string, path: string, meta: array<string, mixed>}
+     * Прочитать манифест плагина из директории.
+     *
+     * Ищет файлы манифеста из конфига (например, plugin.json, composer.json).
+     * Поддерживает извлечение данных из composer.json (extra.stupidcms-plugin).
+     *
+     * @param string $directory Директория плагина
+     * @return array{slug: string, name: string, version: string, provider: string, path: string, meta: array<string, mixed>} Нормализованный манифест
+     * @throws \App\Domain\Plugins\Exceptions\InvalidPluginManifest Если манифест не найден или невалиден
      */
     private function readManifest(string $directory): array
     {
@@ -135,8 +164,14 @@ final class PluginsSynchronizer
     }
 
     /**
-     * @param array<string, mixed> $payload
-     * @return array<string, mixed>
+     * Извлечь данные плагина из composer.json.
+     *
+     * Извлекает секцию extra.stupidcms-plugin и объединяет с name и version.
+     *
+     * @param array<string, mixed> $payload Данные из composer.json
+     * @param string $manifestPath Путь к composer.json
+     * @return array<string, mixed> Извлечённые данные
+     * @throws \App\Domain\Plugins\Exceptions\InvalidPluginManifest Если секция extra.stupidcms-plugin отсутствует
      */
     private function extractComposerManifest(array $payload, string $manifestPath): array
     {
@@ -150,8 +185,16 @@ final class PluginsSynchronizer
     }
 
     /**
-     * @param array<string, mixed> $payload
-     * @return array{slug: string, name: string, version: string, provider: string, path: string, meta: array<string, mixed>}
+     * Нормализовать манифест плагина.
+     *
+     * Валидирует обязательные поля (slug, name, version, provider)
+     * и формирует структуру для сохранения в БД.
+     *
+     * @param string $directory Директория плагина
+     * @param array<string, mixed> $payload Данные манифеста
+     * @param string $manifestPath Путь к файлу манифеста
+     * @return array{slug: string, name: string, version: string, provider: string, path: string, meta: array<string, mixed>} Нормализованный манифест
+     * @throws \App\Domain\Plugins\Exceptions\InvalidPluginManifest Если поля невалидны
      */
     private function normalizeManifest(string $directory, array $payload, string $manifestPath): array
     {

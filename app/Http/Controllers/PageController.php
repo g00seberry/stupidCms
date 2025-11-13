@@ -16,15 +16,29 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * Обрабатывает все опубликованные entries (любого типа) через entry_slugs с is_current=true.
  * Зарезервированные пути исключаются на уровне роутинга через ReservedPattern.
+ *
+ * @package App\Http\Controllers
  */
 final class PageController extends Controller
 {
+    /**
+     * @param \App\Domain\View\TemplateResolver $templateResolver Резолвер шаблонов
+     * @param \Illuminate\Contracts\View\Factory $view Фабрика представлений
+     */
     public function __construct(
         private readonly TemplateResolver $templateResolver,
         private readonly ViewFactory $view,
     ) {
     }
 
+    /**
+     * Отобразить страницу по slug.
+     *
+     * @param \App\Http\Requests\PageShowRequest $request Запрос
+     * @param string $slug Slug страницы
+     * @return \Illuminate\Contracts\View\View Представление
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException Если страница не найдена
+     */
     public function show(PageShowRequest $request, string $slug): View
     {
         // Ищем entry через entry_slugs с is_current=true (как в документации)

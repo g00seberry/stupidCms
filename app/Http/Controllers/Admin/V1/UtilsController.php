@@ -16,8 +16,20 @@ use App\Support\Slug\UniqueSlugService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 
+/**
+ * Контроллер для утилитарных операций в админ-панели.
+ *
+ * Предоставляет вспомогательные операции: генерация slug'ов,
+ * проверка уникальности, предпросмотр результатов.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class UtilsController extends Controller
 {
+    /**
+     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
+     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
+     */
     public function __construct(
         private Slugifier $slugifier,
         private UniqueSlugService $uniqueSlugService,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Media\Services;
 
 use App\Domain\Media\Jobs\GenerateVariantJob;
@@ -9,10 +11,25 @@ use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 use RuntimeException;
 
+/**
+ * Сервис для генерации вариантов медиа-файлов по требованию.
+ *
+ * Генерирует варианты изображений (thumbnails, resized) на лету,
+ * используя GD для обработки изображений.
+ *
+ * @package App\Domain\Media\Services
+ */
 class OnDemandVariantService
 {
     /**
-     * Ensure media variant exists on storage and database. Generates on demand if missing.
+     * Убедиться, что вариант существует на диске и в БД.
+     *
+     * Проверяет существование варианта, если отсутствует — генерирует синхронно.
+     *
+     * @param \App\Models\Media $media Медиа-файл
+     * @param string $variant Имя варианта
+     * @return \App\Models\MediaVariant Созданный или существующий вариант
+     * @throws \InvalidArgumentException Если медиа не поддерживает варианты или вариант не настроен
      */
     public function ensureVariant(Media $media, string $variant): MediaVariant
     {
@@ -33,6 +50,18 @@ class OnDemandVariantService
             ->firstOrFail();
     }
 
+    /**
+     * Сгенерировать вариант медиа-файла.
+     *
+     * Читает оригинальный файл, изменяет размер (если нужно),
+     * кодирует в нужный формат и сохраняет на диск.
+     *
+     * @param \App\Models\Media $media Медиа-файл
+     * @param string $variant Имя варианта
+     * @return \App\Models\MediaVariant Созданный вариант
+     * @throws \InvalidArgumentException Если медиа не поддерживает варианты или вариант не настроен
+     * @throws \RuntimeException Если не удалось прочитать/обработать файл
+     */
     public function generateVariant(Media $media, string $variant): MediaVariant
     {
         $this->assertSupportsVariants($media, $variant);
@@ -101,6 +130,14 @@ class OnDemandVariantService
         return $variantModel;
     }
 
+    /**
+     * Проверить, что медиа поддерживает варианты и вариант настроен.
+     *
+     * @param \App\Models\Media $media Медиа-файл
+     * @param string $variant Имя варианта
+     * @return void
+     * @throws \InvalidArgumentException Если медиа не изображение или вариант не настроен
+     */
     private function assertSupportsVariants(Media $media, string $variant): void
     {
         if ($media->kind() !== 'image') {
@@ -114,6 +151,17 @@ class OnDemandVariantService
         }
     }
 
+    /**
+     * Изменить размер изображения.
+     *
+     * Использует imagecopyresampled для качественного изменения размера
+     * с сохранением прозрачности.
+     *
+     * @param \GdImage $image Исходное изображение
+     * @param int $targetWidth Целевая ширина
+     * @param int $targetHeight Целевая высота
+     * @return \GdImage Изменённое изображение
+     */
     private function resizeImage(\GdImage $image, int $targetWidth, int $targetHeight): \GdImage
     {
         if (imagesx($image) === $targetWidth && imagesy($image) === $targetHeight) {
@@ -144,7 +192,14 @@ class OnDemandVariantService
     }
 
     /**
-     * @return array{0: string, 1: string}
+     * Закодировать изображение в нужный формат.
+     *
+     * Поддерживает PNG, GIF, WebP (с fallback на JPEG) и JPEG.
+     *
+     * @param \GdImage $image Изображение для кодирования
+     * @param string|null $extension Желаемое расширение
+     * @return array{0: string, 1: string} Массив [данные, расширение]
+     * @throws \RuntimeException Если не удалось закодировать изображение
      */
     private function encodeImage(\GdImage $image, ?string $extension): array
     {
@@ -183,6 +238,16 @@ class OnDemandVariantService
         return [$data, $extension];
     }
 
+    /**
+     * Построить путь для варианта.
+     *
+     * Формат: {original-filename}-{variant}.{extension}
+     *
+     * @param \App\Models\Media $media Медиа-файл
+     * @param string $variant Имя варианта
+     * @param string $extension Расширение файла
+     * @return string Путь к варианту
+     */
     private function buildVariantPath(Media $media, string $variant, string $extension): string
     {
         $pathInfo = pathinfo($media->path);

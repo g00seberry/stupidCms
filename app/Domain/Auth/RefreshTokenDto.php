@@ -7,12 +7,25 @@ namespace App\Domain\Auth;
 use Carbon\Carbon;
 
 /**
- * Data Transfer Object for RefreshToken.
+ * Data Transfer Object для RefreshToken.
  *
- * Provides type-safe access to refresh token data without exposing Eloquent model.
+ * Предоставляет типобезопасный доступ к данным refresh токена
+ * без раскрытия Eloquent модели.
+ *
+ * @package App\Domain\Auth
  */
 final readonly class RefreshTokenDto
 {
+    /**
+     * @param int $user_id ID пользователя-владельца токена
+     * @param string $jti JWT ID (уникальный идентификатор токена)
+     * @param \Carbon\Carbon $expires_at Дата истечения токена (UTC)
+     * @param \Carbon\Carbon|null $used_at Дата использования токена (UTC)
+     * @param \Carbon\Carbon|null $revoked_at Дата отзыва токена (UTC)
+     * @param string|null $parent_jti JWT ID родительского токена (для ротации)
+     * @param \Carbon\Carbon $created_at Дата создания
+     * @param \Carbon\Carbon $updated_at Дата обновления
+     */
     public function __construct(
         public int $user_id,
         public string $jti,
@@ -27,6 +40,10 @@ final readonly class RefreshTokenDto
 
     /**
      * Check if the token is valid (not used, not revoked, not expired).
+     *
+     * Проверяет, что токен не использован, не отозван и не истёк.
+     *
+     * @return bool true, если токен валиден
      */
     public function isValid(): bool
     {
@@ -37,6 +54,10 @@ final readonly class RefreshTokenDto
 
     /**
      * Check if the token is invalid.
+     *
+     * Проверяет, что токен невалиден (использован, отозван или истёк).
+     *
+     * @return bool true, если токен невалиден
      */
     public function isInvalid(): bool
     {

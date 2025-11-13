@@ -10,8 +10,19 @@ use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorPayload;
 use RuntimeException;
 
+/**
+ * Исключение: ошибка JWT аутентификации.
+ *
+ * Выбрасывается при неудачной попытке аутентификации через JWT токен.
+ *
+ * @package App\Domain\Auth\Exceptions
+ */
 final class JwtAuthenticationException extends RuntimeException implements ErrorConvertible
 {
+    /**
+     * @param string $reason Причина ошибки (например, 'token_expired', 'token_invalid')
+     * @param string $detail Детальное описание ошибки
+     */
     public function __construct(
         public readonly string $reason,
         public readonly string $detail,
@@ -21,6 +32,12 @@ final class JwtAuthenticationException extends RuntimeException implements Error
         );
     }
 
+    /**
+     * Преобразовать исключение в ErrorPayload.
+     *
+     * @param \App\Support\Errors\ErrorFactory $factory Фабрика ошибок
+     * @return \App\Support\Errors\ErrorPayload Payload ошибки
+     */
     public function toError(ErrorFactory $factory): ErrorPayload
     {
         return $factory->for(ErrorCode::UNAUTHORIZED)

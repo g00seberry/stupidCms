@@ -18,6 +18,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * Контроллер для управления плагинами в админ-панели.
+ *
+ * Предоставляет операции для плагинов: просмотр списка, синхронизация из файловой системы,
+ * включение/отключение плагинов.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 final class PluginsController extends Controller
 {
     use ThrowsErrors;
@@ -371,6 +379,13 @@ final class PluginsController extends Controller
         return new PluginSyncResource($summary);
     }
 
+    /**
+     * Найти плагин по slug или выбросить ошибку.
+     *
+     * @param string $slug Slug плагина
+     * @return \App\Models\Plugin Плагин
+     * @throws \App\Support\Errors\HttpErrorException Если плагин не найден
+     */
     private function findPluginOrFail(string $slug): Plugin
     {
         $plugin = Plugin::query()->where('slug', $slug)->first();

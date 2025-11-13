@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Routing;
 
 use Illuminate\Support\Facades\DB;
@@ -7,25 +9,27 @@ use Illuminate\Support\Str;
 
 /**
  * Генератор регулярного выражения для плоских URL с исключением зарезервированных путей.
- * 
+ *
  * Используется для создания негативного lookahead паттерна, который исключает
  * зарезервированные первые сегменты из плоской маршрутизации /{slug}.
- * 
+ *
  * При route:cache список фиксируется до следующего деплоя/инвалидации.
  * Это приемлемо, так как сами плагины/система регистрируют свои конкретные роуты
  * раньше и перехватят свои пути.
+ *
+ * @package App\Domain\Routing
  */
 final class ReservedPattern
 {
     /**
      * Генерирует регулярное выражение для плоского slug с исключением зарезервированных путей.
-     * 
+     *
      * Формат: негативный lookahead для зарезервированных сегментов + базовый паттерн slug.
-     * 
+     *
      * Источник списка:
      * - config('stupidcms.reserved_routes.paths') (статические)
      * - reserved_routes (динамические) — берём только первый сегмент
-     * 
+     *
      * @return string Regex паттерн для использования в Route::where('slug', ...)
      */
     public static function slugRegex(): string
@@ -77,8 +81,8 @@ final class ReservedPattern
 
     /**
      * Получает все зарезервированные пути из БД (reserved_routes).
-     * 
-     * @return array<string>
+     *
+     * @return array<string> Массив путей из БД
      */
     private static function getDynamicReservedPaths(): array
     {

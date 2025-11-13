@@ -1,13 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Media\Services;
 
 use Illuminate\Http\UploadedFile;
 
+/**
+ * Сервис для извлечения метаданных из медиа-файлов.
+ *
+ * Извлекает размеры изображений, EXIF данные и другую информацию
+ * из загруженных файлов.
+ *
+ * @package App\Domain\Media\Services
+ */
 class MediaMetadataExtractor
 {
     /**
-     * @return array{width: ?int, height: ?int, duration_ms: ?int, exif: ?array}
+     * Извлечь метаданные из медиа-файла.
+     *
+     * Для изображений извлекает размеры и EXIF данные (если доступны).
+     * Для видео/аудио может извлекать длительность (не реализовано).
+     *
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @param string|null $mime MIME-тип файла (если не указан, определяется автоматически)
+     * @return array{width: ?int, height: ?int, duration_ms: ?int, exif: ?array} Метаданные файла
      */
     public function extract(UploadedFile $file, ?string $mime = null): array
     {
@@ -39,6 +56,12 @@ class MediaMetadataExtractor
         ];
     }
 
+    /**
+     * Проверить, можно ли читать EXIF данные для данного MIME-типа.
+     *
+     * @param string $mime MIME-тип файла
+     * @return bool true, если EXIF доступен для этого типа
+     */
     private function canReadExif(string $mime): bool
     {
         if (! function_exists('exif_read_data')) {
@@ -48,6 +71,14 @@ class MediaMetadataExtractor
         return in_array($mime, ['image/jpeg', 'image/tiff'], true);
     }
 
+    /**
+     * Прочитать EXIF данные из файла.
+     *
+     * Нормализует EXIF данные, оставляя только скалярные значения.
+     *
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @return array<string, array<string, mixed>>|null EXIF данные или null, если не удалось прочитать
+     */
     private function readExif(UploadedFile $file): ?array
     {
         $path = $file->getRealPath();

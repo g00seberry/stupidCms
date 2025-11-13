@@ -17,15 +17,27 @@ use Illuminate\Support\Carbon;
  * Читает опцию site:home_entry_id и рендерит:
  * - Если опция указывает на опубликованную запись → эту запись
  * - Иначе → дефолтный шаблон home.default
+ *
+ * @package App\Http\Controllers
  */
 final class HomeController
 {
+    /**
+     * @param \Illuminate\Contracts\View\Factory $view Фабрика представлений
+     * @param \App\Domain\View\TemplateResolver $templateResolver Резолвер шаблонов
+     */
     public function __construct(
         private readonly ViewFactory $view,
         private readonly TemplateResolver $templateResolver,
     ) {
     }
 
+    /**
+     * Обработать запрос к главной странице.
+     *
+     * @param \App\Http\Requests\HomeRequest $request Запрос
+     * @return \Illuminate\Contracts\View\View Представление
+     */
     public function __invoke(HomeRequest $request): View
     {
         $option = options('site', 'home_entry_id');

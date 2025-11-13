@@ -1,20 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Entries;
 
 use App\Models\Entry;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Сервис для применения правил публикации записей.
+ *
+ * Обрабатывает логику публикации Entry: автозаполнение published_at,
+ * валидация инвариантов (дата публикации не в будущем).
+ *
+ * @package App\Domain\Entries
+ */
 final class PublishingService
 {
     /**
-     * Применяет правила публикации и валидирует инварианты
+     * Применяет правила публикации и валидирует инварианты.
      *
-     * @param array $payload Данные для сохранения
-     * @param Entry|null $existing Существующая запись (для обновления)
-     * @return array Обработанный payload
-     * @throws ValidationException
+     * Автоматически устанавливает published_at при публикации, если не указан.
+     * Валидирует, что дата публикации не в будущем.
+     *
+     * @param array<string, mixed> $payload Данные для сохранения
+     * @param \App\Models\Entry|null $existing Существующая запись (для обновления)
+     * @return array<string, mixed> Обработанный payload с применёнными правилами
+     * @throws \Illuminate\Validation\ValidationException Если дата публикации в будущем
      */
     public function applyAndValidate(array $payload, ?Entry $existing = null): array
     {

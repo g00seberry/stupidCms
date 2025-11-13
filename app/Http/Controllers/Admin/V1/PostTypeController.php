@@ -18,6 +18,14 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Контроллер для управления типами записей (PostType) в админ-панели.
+ *
+ * Предоставляет CRUD операции для типов записей: создание, чтение, обновление, удаление.
+ * Управляет настройками типов записей через options_json.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class PostTypeController extends Controller
 {
     use ThrowsErrors;

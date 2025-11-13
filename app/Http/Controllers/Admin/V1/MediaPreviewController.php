@@ -16,11 +16,22 @@ use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 use Throwable;
 
+/**
+ * Контроллер для предпросмотра медиа-файлов в админ-панели.
+ *
+ * Предоставляет временные подписанные URL для предпросмотра вариантов изображений
+ * (thumbnails, resized) с автоматической генерацией вариантов по требованию.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class MediaPreviewController extends Controller
 {
     use AuthorizesRequests;
     use ThrowsErrors;
 
+    /**
+     * @param \App\Domain\Media\Services\OnDemandVariantService $variantService Сервис для генерации вариантов
+     */
     public function __construct(
         private readonly OnDemandVariantService $variantService
     ) {
@@ -217,6 +228,17 @@ class MediaPreviewController extends Controller
         return redirect()->away($url);
     }
 
+    /**
+     * Создать временный подписанный URL для медиа-файла.
+     *
+     * Пытается создать временный URL с TTL из конфига. При ошибке
+     * возвращает обычный URL.
+     *
+     * @param string $diskName Имя диска (storage)
+     * @param string $path Путь к файлу
+     * @return string URL для доступа к файлу
+     * @throws \InvalidArgumentException Если не удалось создать URL
+     */
     private function temporaryUrl(string $diskName, string $path): string
     {
         $disk = Storage::disk($diskName);
@@ -235,6 +257,12 @@ class MediaPreviewController extends Controller
         }
     }
 
+    /**
+     * Выбросить ошибку "медиа не найдено".
+     *
+     * @param string $mediaId ID медиа-файла
+     * @return never
+     */
     private function throwMediaNotFound(string $mediaId): never
     {
         $this->throwError(

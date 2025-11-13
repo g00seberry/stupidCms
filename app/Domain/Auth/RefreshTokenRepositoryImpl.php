@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Auth;
 
 use App\Models\RefreshToken;
@@ -7,15 +9,29 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Implementation of RefreshTokenRepository using Eloquent.
+ * Реализация RefreshTokenRepository с использованием Eloquent.
+ *
+ * @package App\Domain\Auth
  */
 final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
 {
+    /**
+     * Сохранить новый refresh токен в БД.
+     *
+     * @param array<string, mixed> $data Данные токена
+     * @return void
+     */
     public function store(array $data): void
     {
         RefreshToken::create($data);
     }
 
+    /**
+     * Условно пометить refresh токен как использованный (только если ещё валиден).
+     *
+     * @param string $jti JWT ID
+     * @return int Количество затронутых строк (0 или 1)
+     */
     public function markUsedConditionally(string $jti): int
     {
         return RefreshToken::where('jti', $jti)
@@ -25,12 +41,27 @@ final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
             ->update(['used_at' => now('UTC')]);
     }
 
+    /**
+     * Отозвать refresh токен (logout/admin действие).
+     *
+     * @param string $jti JWT ID
+     * @return void
+     */
     public function revoke(string $jti): void
     {
         RefreshToken::where('jti', $jti)
             ->update(['revoked_at' => now('UTC')]);
     }
 
+    /**
+     * Отозвать токен и всех его потомков в цепочке обновления (инвалидация семейства токенов).
+     *
+     * Использует итеративный подход для обхода дерева токенов.
+     * Обёрнуто в транзакцию для атомарности.
+     *
+     * @param string $jti JWT ID токена для отзыва
+     * @return int Количество отозванных токенов (включая сам токен и всех потомков)
+     */
     public function revokeFamily(string $jti): int
     {
         // Wrap in transaction to ensure atomicity
@@ -98,6 +129,12 @@ final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
         });
     }
 
+    /**
+     * Найти refresh токен по его JTI.
+     *
+     * @param string $jti JWT ID
+     * @return \App\Domain\Auth\RefreshTokenDto|null DTO токена или null, если не найден
+     */
     public function find(string $jti): ?RefreshTokenDto
     {
         $token = RefreshToken::where('jti', $jti)->first();
@@ -118,6 +155,11 @@ final class RefreshTokenRepositoryImpl implements RefreshTokenRepository
         );
     }
 
+    /**
+     * Удалить истёкшие refresh токены (очистка).
+     *
+     * @return int Количество удалённых токенов
+     */
     public function deleteExpired(): int
     {
         return RefreshToken::where('expires_at', '<', now('UTC'))->delete();

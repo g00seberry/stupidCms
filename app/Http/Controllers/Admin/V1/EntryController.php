@@ -25,11 +25,23 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Контроллер для управления записями (entries) в админ-панели.
+ *
+ * Предоставляет CRUD операции для записей: создание, чтение, обновление, удаление,
+ * восстановление, управление статусами и slug'ами.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class EntryController extends Controller
 {
     use AuthorizesRequests;
     use ThrowsErrors;
 
+    /**
+     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
+     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
+     */
     public function __construct(
         private Slugifier $slugifier,
         private UniqueSlugService $uniqueSlugService

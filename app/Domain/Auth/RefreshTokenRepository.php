@@ -1,34 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Auth;
 
 /**
- * Repository interface for managing refresh tokens.
+ * Интерфейс репозитория для управления refresh токенами.
+ *
+ * Определяет контракт для работы с refresh токенами: сохранение,
+ * пометка как использованных, отзыв, поиск и очистка.
+ *
+ * @package App\Domain\Auth
  */
 interface RefreshTokenRepository
 {
     /**
-     * Store a new refresh token in the database.
+     * Сохранить новый refresh токен в БД.
      *
-     * @param array $data Token data: user_id, jti, kid, expires_at, parent_jti?
+     * @param array<string, mixed> $data Данные токена: user_id, jti, expires_at, parent_jti?
      * @return void
      */
     public function store(array $data): void;
 
     /**
-     * Conditionally mark a refresh token as used (only if still valid).
-     * Returns the number of affected rows (should be 1 for success, 0 if already used/revoked/expired).
+     * Условно пометить refresh токен как использованный (только если ещё валиден).
      *
-     * This is the only safe way to mark a token as used, as it performs an atomic conditional update
-     * that prevents race conditions and double-spend attacks.
+     * Возвращает количество затронутых строк (1 для успеха, 0 если уже использован/отозван/истёк).
+     * Это единственный безопасный способ пометить токен как использованный,
+     * так как выполняется атомарное условное обновление, предотвращающее гонки и double-spend атаки.
      *
      * @param string $jti JWT ID
-     * @return int Number of affected rows (0 or 1)
+     * @return int Количество затронутых строк (0 или 1)
      */
     public function markUsedConditionally(string $jti): int;
 
     /**
-     * Revoke a refresh token (logout/admin action).
+     * Отозвать refresh токен (logout/admin действие).
      *
      * @param string $jti JWT ID
      * @return void
@@ -36,26 +43,27 @@ interface RefreshTokenRepository
     public function revoke(string $jti): void;
 
     /**
-     * Revoke a token and all its descendants in the refresh chain (token family invalidation).
-     * Used when reuse attack is detected.
+     * Отозвать токен и всех его потомков в цепочке обновления (инвалидация семейства токенов).
      *
-     * @param string $jti JWT ID of the token to revoke
-     * @return int Number of revoked tokens (including the token itself and all descendants)
+     * Используется при обнаружении атаки повторного использования токена.
+     *
+     * @param string $jti JWT ID токена для отзыва
+     * @return int Количество отозванных токенов (включая сам токен и всех потомков)
      */
     public function revokeFamily(string $jti): int;
 
     /**
-     * Find a refresh token by its JTI.
+     * Найти refresh токен по его JTI.
      *
      * @param string $jti JWT ID
-     * @return RefreshTokenDto|null Token DTO or null if not found
+     * @return \App\Domain\Auth\RefreshTokenDto|null DTO токена или null, если не найден
      */
     public function find(string $jti): ?RefreshTokenDto;
 
     /**
-     * Delete expired refresh tokens (cleanup).
+     * Удалить истёкшие refresh токены (очистка).
      *
-     * @return int Number of deleted tokens
+     * @return int Количество удалённых токенов
      */
     public function deleteExpired(): int;
 }

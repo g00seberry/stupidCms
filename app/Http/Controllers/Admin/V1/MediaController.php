@@ -20,11 +20,22 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
+/**
+ * Контроллер для управления медиа-файлами в админ-панели.
+ *
+ * Предоставляет CRUD операции для медиа-файлов: загрузка, просмотр, обновление,
+ * удаление, восстановление, управление вариантами и привязкой к записям.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class MediaController extends Controller
 {
     use ThrowsErrors;
     use AuthorizesRequests;
 
+    /**
+     * @param \App\Domain\Media\Actions\MediaStoreAction $storeAction Действие для сохранения медиа-файлов
+     */
     public function __construct(
         private readonly MediaStoreAction $storeAction
     ) {

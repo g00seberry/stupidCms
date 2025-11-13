@@ -13,9 +13,20 @@ use App\Support\JwtCookies;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Cookie;
 
+/**
+ * Контроллер для завершения сессии администратора.
+ *
+ * Отзывает refresh токены (один или все), очищает JWT cookies
+ * и возвращает ответ с пустыми cookies для их удаления.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 final class LogoutController
 {
-
+    /**
+     * @param \App\Domain\Auth\JwtService $jwt Сервис для работы с JWT токенами
+     * @param \App\Domain\Auth\RefreshTokenRepository $repo Репозиторий refresh токенов
+     */
     public function __construct(
         private readonly JwtService $jwt,
         private readonly RefreshTokenRepository $repo,
@@ -67,7 +78,9 @@ final class LogoutController
     }
 
     /**
-     * @return array<int, Cookie>
+     * Создать cookies для очистки JWT токенов.
+     *
+     * @return array<int, \Symfony\Component\HttpFoundation\Cookie> Массив cookies с Max-Age=0
      */
     private function clearCookies(): array
     {

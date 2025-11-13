@@ -9,10 +9,24 @@ use App\Models\Term;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
+/**
+ * Трансформер Entry в документ для поискового индекса.
+ *
+ * Преобразует Entry в структуру документа для Elasticsearch:
+ * извлекает текст из data_json, нормализует пробелы, формирует excerpt.
+ *
+ * @package App\Domain\Search\Transformers
+ */
 final class EntryToSearchDoc
 {
     /**
-     * @return array<string, mixed>
+     * Трансформировать Entry в документ для поискового индекса.
+     *
+     * Извлекает данные из Entry и data_json, нормализует текст,
+     * формирует excerpt и маппит термы.
+     *
+     * @param \App\Models\Entry $entry Запись для трансформации
+     * @return array<string, mixed> Документ для индексации
      */
     public function transform(Entry $entry): array
     {
@@ -37,7 +51,12 @@ final class EntryToSearchDoc
     }
 
     /**
-     * @param array<string, mixed> $data
+     * Извлечь тело контента из data_json.
+     *
+     * Ищет поле 'body' или 'content' в data_json.
+     *
+     * @param array<string, mixed> $data Данные из data_json
+     * @return string Тело контента (HTML)
      */
     private function extractBody(array $data): string
     {
@@ -47,7 +66,13 @@ final class EntryToSearchDoc
     }
 
     /**
-     * @param array<string, mixed> $data
+     * Сформировать excerpt (краткое описание).
+     *
+     * Использует excerpt из data_json, если есть, иначе обрезает body_plain до 240 символов.
+     *
+     * @param array<string, mixed> $data Данные из data_json
+     * @param string $bodyPlain Очищенный текст тела
+     * @return string Excerpt
      */
     private function makeExcerpt(array $data, string $bodyPlain): string
     {
@@ -61,7 +86,10 @@ final class EntryToSearchDoc
     }
 
     /**
-     * @param array<string, mixed> $data
+     * Извлечь boost (коэффициент релевантности) из data_json.
+     *
+     * @param array<string, mixed> $data Данные из data_json
+     * @return float|null Boost или null, если не указан
      */
     private function extractBoost(array $data): ?float
     {
@@ -75,7 +103,12 @@ final class EntryToSearchDoc
     }
 
     /**
-     * @return list<array{taxonomy: string, slug: string}>
+     * Маппить термы Entry в структуру для индекса.
+     *
+     * Преобразует коллекцию термов в массив с taxonomy и slug.
+     *
+     * @param \App\Models\Entry $entry Запись с загруженными термами
+     * @return list<array{taxonomy: string, slug: string}> Список термов
      */
     private function mapTerms(Entry $entry): array
     {
@@ -100,6 +133,14 @@ final class EntryToSearchDoc
             ->all();
     }
 
+    /**
+     * Нормализовать пробелы в тексте.
+     *
+     * Заменяет множественные пробелы на один и удаляет пробелы в начале/конце.
+     *
+     * @param string $value Исходный текст
+     * @return string Нормализованный текст
+     */
     private function normalizeWhitespace(string $value): string
     {
         if ($value === '') {

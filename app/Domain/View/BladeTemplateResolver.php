@@ -24,15 +24,16 @@ final class BladeTemplateResolver implements TemplateResolver
 
     /**
      * Возвращает имя blade-шаблона для рендера Entry.
-     * 
-     * Приоритет:
+     *
+     * Приоритет выбора шаблона:
      * 1. Entry.template_override (если задано — используется как полное имя вью)
      * 2. entry--{postType}--{slug} (если существует)
      * 3. entry--{postType} (если существует)
-     * 4. entry (глобальный)
-     * 
-     * @param Entry $entry
-     * @return string
+     * 4. entry (глобальный шаблон по умолчанию)
+     *
+     * @param \App\Models\Entry $entry Запись для рендеринга
+     * @return string Имя Blade-шаблона
+     * @throws \InvalidArgumentException Если template_override указан, но шаблон не найден
      */
     public function forEntry(Entry $entry): string
     {
@@ -75,9 +76,11 @@ final class BladeTemplateResolver implements TemplateResolver
 
     /**
      * Получает slug postType из Entry.
-     * 
-     * @param Entry $entry
-     * @return string|null
+     *
+     * Использует загруженную связь, если доступна, иначе выполняет запрос к БД.
+     *
+     * @param \App\Models\Entry $entry Запись
+     * @return string|null Slug типа записи или null
      */
     private function getPostTypeSlug(Entry $entry): ?string
     {

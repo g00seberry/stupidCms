@@ -1,13 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Sanitizer;
 
 use Mews\Purifier\Facades\Purifier;
 
+/**
+ * Сервис для санитизации HTML контента.
+ *
+ * Очищает HTML от потенциально опасных элементов и атрибутов через HTMLPurifier.
+ * Автоматически добавляет rel="noopener noreferrer" к ссылкам с target="_blank"
+ * для защиты от атак через window.opener.
+ *
+ * @package App\Domain\Sanitizer
+ */
 final class RichTextSanitizer
 {
+    /**
+     * @param string $profile Профиль очистки HTMLPurifier (по умолчанию 'cms_default')
+     */
     public function __construct(private string $profile = 'cms_default') {}
 
+    /**
+     * Санитизировать HTML контент.
+     *
+     * Очищает HTML через HTMLPurifier и добавляет rel="noopener noreferrer"
+     * к ссылкам с target="_blank".
+     *
+     * @param string $html Исходный HTML
+     * @return string Очищенный HTML
+     */
     public function sanitize(string $html): string
     {
         // Сохраняем href ссылок с target="_blank" до санитизации для сопоставления

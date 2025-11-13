@@ -12,10 +12,21 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use RuntimeException;
 
+/**
+ * Менеджер для управления индексами поиска.
+ *
+ * Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,
+ * переключает алиасы и удаляет старые индексы.
+ *
+ * @package App\Domain\Search
+ */
 final class IndexManager
 {
     /**
-     * @param array<string, mixed> $config
+     * @param \App\Domain\Search\SearchClientInterface $client Клиент поискового движка
+     * @param \App\Domain\Search\Transformers\EntryToSearchDoc $transformer Трансформер Entry в документ поиска
+     * @param bool $enabled Флаг включения поиска
+     * @param array<string, mixed> $config Конфигурация индексов
      */
     public function __construct(
         private readonly SearchClientInterface $client,
@@ -25,6 +36,18 @@ final class IndexManager
     ) {
     }
 
+    /**
+     * Выполнить полную реиндексацию всех опубликованных записей.
+     *
+     * Процесс:
+     * 1. Создаёт новый индекс с уникальным именем
+     * 2. Индексирует все опубликованные записи батчами
+     * 3. Переключает алиасы на новый индекс
+     * 4. Удаляет старые индексы
+     *
+     * @return string Имя созданного индекса
+     * @throws \RuntimeException Если поиск отключен или конфигурация отсутствует
+     */
     public function reindex(): string
     {
         if (! $this->enabled) {
@@ -54,7 +77,12 @@ final class IndexManager
     }
 
     /**
-     * @param array<string, mixed> $indexConfig
+     * Создать новый индекс с уникальным именем.
+     *
+     * Имя индекса формируется как: {prefix}_{timestamp}_{random}.
+     *
+     * @param array<string, mixed> $indexConfig Конфигурация индекса
+     * @return string Имя созданного индекса
      */
     private function createIndex(array $indexConfig): string
     {
@@ -74,6 +102,15 @@ final class IndexManager
         return $newIndex;
     }
 
+    /**
+     * Массовая индексация всех опубликованных записей.
+     *
+     * Обрабатывает записи батчами для оптимизации производительности.
+     * После завершения обновляет индекс (refresh).
+     *
+     * @param string $indexName Имя индекса для индексации
+     * @return int Количество проиндексированных записей
+     */
     private function bulkImport(string $indexName): int
     {
         $batchSize = (int) Arr::get($this->config, 'batch.size', 500);
@@ -109,10 +146,13 @@ final class IndexManager
     }
 
     /**
-     * @param array<string, mixed> $indexConfig
-     */
-    /**
-     * @return list<string>
+     * Переключить алиасы на новый индекс.
+     *
+     * Атомарно переключает read и write алиасы с старых индексов на новый.
+     *
+     * @param array<string, mixed> $indexConfig Конфигурация индекса
+     * @param string $newIndex Имя нового индекса
+     * @return list<string> Список имён старых индексов, которые были отвязаны от алиасов
      */
     private function switchAliases(array $indexConfig, string $newIndex): array
     {
@@ -161,7 +201,13 @@ final class IndexManager
     }
 
     /**
-     * @param list<string> $previousIndices
+     * Удалить старые индексы.
+     *
+     * Удаляет все индексы из списка, кроме нового.
+     *
+     * @param list<string> $previousIndices Список имён старых индексов
+     * @param string $newIndex Имя нового индекса (не удаляется)
+     * @return void
      */
     private function cleanupOldIndices(array $previousIndices, string $newIndex): void
     {

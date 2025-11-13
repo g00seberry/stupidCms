@@ -7,6 +7,14 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Resources\Admin\UserResource;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Контроллер для получения данных текущего авторизованного пользователя.
+ *
+ * Возвращает информацию о пользователе из JWT токена и устанавливает CSRF cookie
+ * для последующих state-changing запросов.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 final class CurrentUserController
 {
     /**

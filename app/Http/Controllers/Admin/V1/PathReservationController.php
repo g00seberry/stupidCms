@@ -17,10 +17,21 @@ use App\Models\ReservedRoute;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Контроллер для управления резервациями путей в админ-панели.
+ *
+ * Предоставляет операции для резервации и освобождения путей:
+ * создание резервации, просмотр списка, удаление резервации.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class PathReservationController extends Controller
 {
     use ThrowsErrors;
 
+    /**
+     * @param \App\Domain\Routing\PathReservationService $service Сервис для управления резервациями путей
+     */
     public function __construct(
         private readonly PathReservationService $service
     ) {}
@@ -256,7 +267,12 @@ class PathReservationController extends Controller
     }
 
     /**
-     * Логирует действие в таблицу audits.
+     * Записать событие аудита для резервации пути.
+     *
+     * @param string $action Действие (reserve, release)
+     * @param string $path Путь, для которого выполняется действие
+     * @param array<string, mixed> $context Дополнительный контекст
+     * @return void
      */
     private function logAudit(string $action, string $path, array $context = []): void
     {

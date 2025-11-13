@@ -12,8 +12,22 @@ use App\Support\Errors\HttpErrorException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
 
+/**
+ * Сервис для выполнения поисковых запросов.
+ *
+ * Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).
+ * Строит запросы, обрабатывает ошибки, маппит результаты.
+ *
+ * @package App\Domain\Search
+ */
 final class SearchService
 {
+    /**
+     * @param \App\Domain\Search\SearchClientInterface $client Клиент поискового движка
+     * @param bool $enabled Флаг включения поиска (если false, возвращает пустые результаты)
+     * @param string $readAlias Алиас индекса для чтения
+     * @param \App\Support\Errors\ErrorFactory $errors Фабрика ошибок
+     */
     public function __construct(
         private readonly SearchClientInterface $client,
         private readonly bool $enabled,
@@ -22,6 +36,16 @@ final class SearchService
     ) {
     }
 
+    /**
+     * Выполнить поисковый запрос.
+     *
+     * Если поиск отключен или запрос пустой, возвращает пустой результат.
+     * При ошибке поискового движка выбрасывает HttpErrorException.
+     *
+     * @param \App\Domain\Search\SearchQuery $query Поисковый запрос
+     * @return \App\Domain\Search\SearchResult Результаты поиска
+     * @throws \App\Support\Errors\HttpErrorException Если поисковый движок недоступен
+     */
     public function search(SearchQuery $query): SearchResult
     {
         if (! $this->enabled) {
@@ -52,7 +76,13 @@ final class SearchService
     }
 
     /**
-     * @return array<string, mixed>
+     * Построить тело запроса для Elasticsearch.
+     *
+     * Формирует multi_match запрос с фильтрами по типам записей, термам и датам.
+     * Настраивает подсветку совпадений (highlighting).
+     *
+     * @param \App\Domain\Search\SearchQuery $query Поисковый запрос
+     * @return array<string, mixed> Тело запроса для Elasticsearch
      */
     private function buildRequestBody(SearchQuery $query): array
     {
@@ -127,7 +157,12 @@ final class SearchService
     }
 
     /**
-     * @return array<string, mixed>
+     * Построить фильтр для терма (nested query).
+     *
+     * Создаёт nested запрос для фильтрации по термам таксономии.
+     *
+     * @param \App\Domain\Search\ValueObjects\SearchTermFilter $term Фильтр терма
+     * @return array<string, mixed> Nested query для Elasticsearch
      */
     private function buildTermFilter(SearchTermFilter $term): array
     {
@@ -147,7 +182,13 @@ final class SearchService
     }
 
     /**
-     * @param array<string, mixed> $response
+     * Маппить ответ поискового движка в SearchResult.
+     *
+     * Извлекает hits, total, took из ответа и создаёт SearchHit объекты.
+     *
+     * @param array<string, mixed> $response Ответ от поискового движка
+     * @param \App\Domain\Search\SearchQuery $query Исходный запрос
+     * @return \App\Domain\Search\SearchResult Результаты поиска
      */
     private function mapResponse(array $response, SearchQuery $query): SearchResult
     {
@@ -182,8 +223,12 @@ final class SearchService
     }
 
     /**
-     * @param array<string, mixed> $highlight
-     * @return array<string, list<string>>
+     * Нормализовать подсветку совпадений из ответа.
+     *
+     * Приводит формат подсветки к единому виду: массив полей -> список фрагментов.
+     *
+     * @param array<string, mixed> $highlight Подсветка из ответа Elasticsearch
+     * @return array<string, list<string>> Нормализованная подсветка
      */
     private function normalizeHighlight(array $highlight): array
     {

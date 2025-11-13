@@ -13,8 +13,26 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
+/**
+ * Контроллер для обработки 404 ошибок (fallback маршрут).
+ *
+ * Обрабатывает все запросы, которые не совпали с другими маршрутами.
+ * Логирует информацию о запросе и возвращает соответствующий ответ
+ * (JSON для API, HTML для веб-запросов).
+ *
+ * @package App\Http\Controllers
+ */
 final class FallbackController extends Controller
 {
+    /**
+     * Обработать fallback запрос (404).
+     *
+     * Логирует информацию о запросе и возвращает ответ в зависимости
+     * от типа запроса (JSON для API, HTML для веб).
+     *
+     * @param \App\Http\Requests\FallbackRequest $request Запрос
+     * @return \Illuminate\Http\Response|\Illuminate\View\View|\Illuminate\Http\JsonResponse Ответ
+     */
     public function __invoke(FallbackRequest $request): Response|View|JsonResponse
     {
         Log::info('404 Not Found', [

@@ -13,6 +13,14 @@ use App\Http\Resources\Admin\SearchReindexAcceptedResource;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Str;
 
+/**
+ * Контроллер для управления поиском в админ-панели.
+ *
+ * Предоставляет операции для запуска реиндексации поискового индекса
+ * в фоновом режиме через очередь.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 final class SearchAdminController extends Controller
 {
     use ThrowsErrors;

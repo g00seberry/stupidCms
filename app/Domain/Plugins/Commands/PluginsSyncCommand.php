@@ -10,17 +10,36 @@ use App\Domain\Plugins\Services\PluginsSynchronizer;
 use Illuminate\Console\Command;
 use Throwable;
 
+/**
+ * Команда для синхронизации плагинов из файловой системы в БД.
+ *
+ * @package App\Domain\Plugins\Commands
+ */
 final class PluginsSyncCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected $signature = 'plugins:sync';
 
+    /**
+     * @var string
+     */
     protected $description = 'Synchronize plugins from filesystem into database.';
 
+    /**
+     * @param \App\Domain\Plugins\Services\PluginsSynchronizer $synchronizer Синхронизатор плагинов
+     */
     public function __construct(private readonly PluginsSynchronizer $synchronizer)
     {
         parent::__construct();
     }
 
+    /**
+     * Выполнить команду.
+     *
+     * @return int Код возврата (Command::SUCCESS или Command::FAILURE)
+     */
     public function handle(): int
     {
         try {

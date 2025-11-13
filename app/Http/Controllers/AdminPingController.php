@@ -11,6 +11,8 @@ use App\Http\Resources\Admin\AdminPingResource;
  *
  * Маршрут /admin/ping должен обрабатываться до fallback,
  * что подтверждает правильный порядок загрузки роутов.
+ *
+ * @package App\Http\Controllers
  */
 class AdminPingController extends Controller
 {
@@ -19,6 +21,8 @@ class AdminPingController extends Controller
      *
      * Простой эндпоинт для проверки, что системные маршруты
      * обрабатываются раньше fallback.
+     *
+     * @return \App\Http\Resources\Admin\AdminPingResource Ресурс с информацией о статусе
      */
     public function ping(): AdminPingResource
     {

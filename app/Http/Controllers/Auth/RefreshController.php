@@ -19,10 +19,23 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Cookie;
 use Throwable;
 
+/**
+ * Контроллер для ротации refresh токенов.
+ *
+ * Выполняет ротацию refresh токена: помечает старый как использованный,
+ * выдаёт новую пару access/refresh токенов и сохраняет новый refresh токен в БД.
+ * Обрабатывает атаки повторного использования токенов.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 final class RefreshController
 {
     use ThrowsErrors;
 
+    /**
+     * @param \App\Domain\Auth\JwtService $jwt Сервис для работы с JWT токенами
+     * @param \App\Domain\Auth\RefreshTokenRepository $repo Репозиторий refresh токенов
+     */
     public function __construct(
         private readonly JwtService $jwt,
         private readonly RefreshTokenRepository $repo,
@@ -131,6 +144,9 @@ final class RefreshController
     }
 
     /**
+     * Выбросить ошибку 401 с очисткой cookies.
+     *
+     * @param string $detail Детальное сообщение об ошибке
      * @return never
      */
     private function throwUnauthorized(string $detail): never
@@ -151,7 +167,9 @@ final class RefreshController
     }
 
     /**
-     * @return array<int, Cookie>
+     * Создать cookies для очистки JWT токенов.
+     *
+     * @return array<int, \Symfony\Component\HttpFoundation\Cookie> Массив cookies с Max-Age=0
      */
     private function clearCookies(): array
     {

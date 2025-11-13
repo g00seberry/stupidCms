@@ -16,10 +16,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Контроллер для аутентификации администратора.
+ *
+ * Обрабатывает вход в систему, выдаёт JWT токены (access и refresh),
+ * сохраняет refresh токен в БД и логирует события аудита.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 final class LoginController
 {
     use ThrowsErrors;
 
+    /**
+     * @param \App\Domain\Auth\JwtService $jwt Сервис для работы с JWT токенами
+     * @param \App\Domain\Auth\RefreshTokenRepository $repo Репозиторий refresh токенов
+     */
     public function __construct(
         private readonly JwtService $jwt,
         private readonly RefreshTokenRepository $repo,
@@ -79,6 +91,16 @@ final class LoginController
         return new LoginResource($user, $access, $refresh);
     }
 
+    /**
+     * Записать событие аудита.
+     *
+     * Игнорирует ошибки записи аудита, чтобы не прерывать процесс аутентификации.
+     *
+     * @param string $action Действие (login, login_failed)
+     * @param int|null $userId ID пользователя (null для неудачных попыток)
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return void
+     */
     private function logAudit(string $action, ?int $userId, Request $request): void
     {
         try {

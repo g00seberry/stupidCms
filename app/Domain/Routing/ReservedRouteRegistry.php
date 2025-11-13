@@ -1,24 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Routing;
 
 use App\Models\ReservedRoute;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\Collection;
 
+/**
+ * Реестр зарезервированных маршрутов.
+ *
+ * Объединяет статические пути из конфига и динамические из БД.
+ * Использует кэширование для оптимизации частых проверок.
+ *
+ * @package App\Domain\Routing
+ */
 final class ReservedRouteRegistry
 {
+    /**
+     * Ключ кэша для всех зарезервированных маршрутов.
+     */
     private const CACHE_KEY = 'reserved_routes_all';
-    private const CACHE_TTL = 60; // секунды
 
+    /**
+     * Время жизни кэша в секундах.
+     */
+    private const CACHE_TTL = 60;
+
+    /**
+     * @param \Illuminate\Contracts\Cache\Repository $cache Кэш для хранения маршрутов
+     * @param array<string, mixed> $config Конфигурация с зарезервированными маршрутами
+     */
     public function __construct(
         private CacheRepository $cache,
         private array $config
     ) {}
 
     /**
-     * Получить все зарезервированные пути и префиксы
-     * @return array{paths: string[], prefixes: string[]}
+     * Получить все зарезервированные пути и префиксы.
+     *
+     * Загружает из конфига и БД, объединяет и кэширует результат.
+     *
+     * @return array{paths: string[], prefixes: string[]} Массив с ключами 'paths' и 'prefixes'
      */
     public function all(): array
     {
@@ -30,7 +54,10 @@ final class ReservedRouteRegistry
     }
 
     /**
-     * Проверка, является ли путь зарезервированным (точное совпадение)
+     * Проверка, является ли путь зарезервированным (точное совпадение).
+     *
+     * @param string $path Путь для проверки
+     * @return bool true, если путь зарезервирован как точное совпадение
      */
     public function isReservedPath(string $path): bool
     {
@@ -41,7 +68,13 @@ final class ReservedRouteRegistry
     }
 
     /**
-     * Проверка, является ли путь зарезервированным префиксом
+     * Проверка, является ли путь зарезервированным префиксом.
+     *
+     * Для slug (один сегмент) проверяет точное совпадение.
+     * Для полных путей проверяет, начинается ли путь с префикса.
+     *
+     * @param string $path Путь для проверки
+     * @return bool true, если путь зарезервирован как префикс
      */
     public function isReservedPrefix(string $path): bool
     {
@@ -64,7 +97,12 @@ final class ReservedRouteRegistry
     }
 
     /**
-     * Проверка по slug (первый сегмент, без ведущего слэша)
+     * Проверка по slug (первый сегмент, без ведущего слэша).
+     *
+     * Проверяет slug как точное совпадение (path) и как префикс.
+     *
+     * @param string $slug Slug для проверки
+     * @return bool true, если slug зарезервирован
      */
     public function isReservedSlug(string $slug): bool
     {
@@ -77,7 +115,9 @@ final class ReservedRouteRegistry
     }
 
     /**
-     * Очистить кэш
+     * Очистить кэш зарезервированных маршрутов.
+     *
+     * @return void
      */
     public function clearCache(): void
     {
@@ -85,7 +125,12 @@ final class ReservedRouteRegistry
     }
 
     /**
-     * Загрузить все зарезервированные маршруты из конфига и БД
+     * Загрузить все зарезервированные маршруты из конфига и БД.
+     *
+     * Объединяет статические пути из конфига и динамические из БД.
+     * Выполняет дедупликацию и сортировку.
+     *
+     * @return array{paths: string[], prefixes: string[]} Массив с ключами 'paths' и 'prefixes'
      */
     private function loadAll(): array
     {
@@ -131,7 +176,10 @@ final class ReservedRouteRegistry
     }
 
     /**
-     * Нормализация пути: trim, lowercase, NFC
+     * Нормализация пути: trim, lowercase, NFC.
+     *
+     * @param string $path Исходный путь
+     * @return string Нормализованный путь
      */
     private function normalize(string $path): string
     {

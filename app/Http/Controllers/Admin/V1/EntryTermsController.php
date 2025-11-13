@@ -16,6 +16,14 @@ use App\Support\Errors\ThrowsErrors;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Контроллер для управления термами записей в админ-панели.
+ *
+ * Предоставляет операции для управления привязкой термов к записям:
+ * просмотр, добавление, синхронизация термов записи.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class EntryTermsController extends Controller
 {
     use ManagesEntryTerms;
@@ -423,6 +431,12 @@ class EntryTermsController extends Controller
         return $this->entryTermsResource($entryModel->fresh());
     }
 
+    /**
+     * Создать ресурс с термами записи.
+     *
+     * @param \App\Models\Entry $entry Запись с загруженными термами
+     * @return \App\Http\Resources\Admin\EntryTermsResource Ресурс
+     */
     private function entryTermsResource(Entry $entry): EntryTermsResource
     {
         $payload = $this->buildEntryTermsPayload($entry);
@@ -430,6 +444,12 @@ class EntryTermsController extends Controller
         return new EntryTermsResource($payload);
     }
 
+    /**
+     * Найти запись по ID (без удалённых).
+     *
+     * @param int $entryId ID записи
+     * @return \App\Models\Entry|null Запись или null
+     */
     private function findEntry(int $entryId): ?Entry
     {
         return Entry::query()
@@ -439,6 +459,12 @@ class EntryTermsController extends Controller
             ->first();
     }
 
+    /**
+     * Выбросить ошибку "запись не найдена".
+     *
+     * @param int $entryId ID записи
+     * @return never
+     */
     private function throwEntryNotFound(int $entryId): never
     {
         $this->throwError(

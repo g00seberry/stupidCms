@@ -9,10 +9,19 @@ use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 
+/**
+ * Реализация SearchClientInterface для Elasticsearch.
+ *
+ * Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.
+ * Поддерживает базовую аутентификацию и настройку SSL.
+ *
+ * @package App\Domain\Search\Clients
+ */
 final class ElasticsearchSearchClient implements SearchClientInterface
 {
     /**
-     * @param array<string, mixed> $config
+     * @param \Illuminate\Http\Client\Factory $http HTTP клиент
+     * @param array<string, mixed> $config Конфигурация (hosts, timeout, username, password, verify_ssl)
      */
     public function __construct(
         private readonly HttpFactory $http,
@@ -20,6 +29,13 @@ final class ElasticsearchSearchClient implements SearchClientInterface
     ) {
     }
 
+    /**
+     * Выполнить поисковый запрос.
+     *
+     * @param string $indexAlias Алиас индекса для поиска
+     * @param array<string, mixed> $body Тело запроса (Elasticsearch query DSL)
+     * @return array<string, mixed> Ответ Elasticsearch
+     */
     public function search(string $indexAlias, array $body): array
     {
         $response = $this->request()
@@ -28,6 +44,14 @@ final class ElasticsearchSearchClient implements SearchClientInterface
         return $response->throw()->json();
     }
 
+    /**
+     * Создать индекс с указанными настройками и маппингами.
+     *
+     * @param string $indexName Имя индекса
+     * @param array<string, mixed> $settings Настройки индекса
+     * @param array<string, mixed> $mappings Маппинги полей
+     * @return void
+     */
     public function createIndex(string $indexName, array $settings, array $mappings): void
     {
         $payload = array_filter([
@@ -40,6 +64,14 @@ final class ElasticsearchSearchClient implements SearchClientInterface
             ->throw();
     }
 
+    /**
+     * Удалить индекс.
+     *
+     * Игнорирует ошибку 404 (индекс уже не существует).
+     *
+     * @param string $indexName Имя индекса для удаления
+     * @return void
+     */
     public function deleteIndex(string $indexName): void
     {
         $response = $this->request()
@@ -52,6 +84,12 @@ final class ElasticsearchSearchClient implements SearchClientInterface
         $response->throw();
     }
 
+    /**
+     * Обновить алиасы индексов.
+     *
+     * @param array<int, array<string, mixed>> $actions Массив действий (add, remove)
+     * @return void
+     */
     public function updateAliases(array $actions): void
     {
         $this->request()
@@ -59,6 +97,12 @@ final class ElasticsearchSearchClient implements SearchClientInterface
             ->throw();
     }
 
+    /**
+     * Возвращает список индексов, привязанных к алиасу.
+     *
+     * @param string $alias Алиас индекса
+     * @return list<string> Список имён индексов
+     */
     public function getIndicesForAlias(string $alias): array
     {
         $response = $this->request()
@@ -73,6 +117,16 @@ final class ElasticsearchSearchClient implements SearchClientInterface
         return array_keys($data ?? []);
     }
 
+    /**
+     * Выполнить bulk-операции.
+     *
+     * Отправляет операции в формате NDJSON (newline-delimited JSON).
+     * Проверяет наличие ошибок в ответе.
+     *
+     * @param list<array<string, mixed>> $operations Массив операций
+     * @return void
+     * @throws \RuntimeException Если bulk-операции завершились с ошибками
+     */
     public function bulk(array $operations): void
     {
         if ($operations === []) {
@@ -94,6 +148,12 @@ final class ElasticsearchSearchClient implements SearchClientInterface
         }
     }
 
+    /**
+     * Обновить индекс (сделать изменения видимыми для поиска).
+     *
+     * @param string $indexName Имя индекса
+     * @return void
+     */
     public function refresh(string $indexName): void
     {
         $this->request()
@@ -102,7 +162,10 @@ final class ElasticsearchSearchClient implements SearchClientInterface
     }
 
     /**
-     * @param list<array<string, mixed>> $operations
+     * Преобразовать массив операций в NDJSON формат.
+     *
+     * @param list<array<string, mixed>> $operations Массив операций
+     * @return string NDJSON строка
      */
     private function toNdjson(array $operations): string
     {
@@ -114,6 +177,13 @@ final class ElasticsearchSearchClient implements SearchClientInterface
         return implode("\n", $lines) . "\n";
     }
 
+    /**
+     * Создать настроенный HTTP запрос к Elasticsearch.
+     *
+     * Настраивает базовый URL, timeout, SSL верификацию и базовую аутентификацию.
+     *
+     * @return \Illuminate\Http\Client\PendingRequest Настроенный запрос
+     */
     private function request(): PendingRequest
     {
         $hosts = $this->config['hosts'] ?? ['http://127.0.0.1:9200'];

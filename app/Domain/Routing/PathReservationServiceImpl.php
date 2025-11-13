@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Routing;
 
 use App\Domain\Routing\Exceptions\ForbiddenReservationRelease;
@@ -8,9 +10,18 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
+/**
+ * Реализация сервиса для резервации путей.
+ *
+ * Управляет зарезервированными путями с поддержкой статических путей из конфига
+ * и динамических резерваций из БД. Использует кэширование для оптимизации проверок.
+ *
+ * @package App\Domain\Routing
+ */
 final class PathReservationServiceImpl implements PathReservationService
 {
     /**
+     * @param \App\Domain\Routing\PathReservationStore $store Хранилище резерваций
      * @param array<string> $static Статические пути из конфига, которые нельзя резервировать
      */
     public function __construct(
@@ -18,6 +29,15 @@ final class PathReservationServiceImpl implements PathReservationService
         private array $static = []
     ) {}
 
+    /**
+     * Пробует зарезервировать путь.
+     *
+     * @param string $path Путь для резервации
+     * @param string $source Источник резервации
+     * @param string|null $reason Причина резервации
+     * @return void
+     * @throws \App\Domain\Routing\Exceptions\PathAlreadyReservedException Если путь уже зарезервирован
+     */
     public function reservePath(string $path, string $source, ?string $reason = null): void
     {
         $normalized = PathNormalizer::normalize($path);
@@ -42,6 +62,14 @@ final class PathReservationServiceImpl implements PathReservationService
         }
     }
 
+    /**
+     * Снять резерв у конкретного пути, если он принадлежит источнику.
+     *
+     * @param string $path Путь для освобождения
+     * @param string $source Источник резервации
+     * @return void
+     * @throws \App\Domain\Routing\Exceptions\ForbiddenReservationRelease Если путь не принадлежит источнику
+     */
     public function releasePath(string $path, string $source): void
     {
         $normalized = PathNormalizer::normalize($path);
@@ -62,6 +90,12 @@ final class PathReservationServiceImpl implements PathReservationService
         }
     }
 
+    /**
+     * Освободить все пути данного источника.
+     *
+     * @param string $source Источник резервации
+     * @return int Количество освобождённых путей
+     */
     public function releaseBySource(string $source): int
     {
         $deleted = $this->store->deleteBySource($source);
@@ -74,6 +108,15 @@ final class PathReservationServiceImpl implements PathReservationService
         return $deleted;
     }
 
+    /**
+     * Проверить, забронирован ли путь (с учётом статических из config).
+     *
+     * Использует оптимизацию: сначала проверяет первый сегмент пути через кэш,
+     * затем проверяет полный путь в БД только если первый сегмент заблокирован.
+     *
+     * @param string $path Путь для проверки
+     * @return bool true, если путь зарезервирован
+     */
     public function isReserved(string $path): bool
     {
         $normalized = PathNormalizer::normalize($path);
@@ -104,7 +147,9 @@ final class PathReservationServiceImpl implements PathReservationService
 
     /**
      * Загружает список первых сегментов всех зарезервированных путей из БД.
-     * 
+     *
+     * Используется для оптимизации проверки isReserved().
+     *
      * @return array<string, true> Ассоциативный массив, где ключ - первый сегмент пути
      */
     private function loadFirstSegments(): array
@@ -127,6 +172,12 @@ final class PathReservationServiceImpl implements PathReservationService
         }
     }
 
+    /**
+     * Вернуть владельца пути (источник резервации).
+     *
+     * @param string $path Путь
+     * @return string|null Источник резервации или null, если путь не зарезервирован
+     */
     public function ownerOf(string $path): ?string
     {
         $normalized = PathNormalizer::normalize($path);

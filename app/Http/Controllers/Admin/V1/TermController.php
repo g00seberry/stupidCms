@@ -26,11 +26,24 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Контроллер для управления термами таксономий в админ-панели.
+ *
+ * Предоставляет CRUD операции для термов: создание, чтение, обновление, удаление.
+ * Управляет иерархией термов (родитель-потомок) и привязкой термов к записям.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class TermController extends Controller
 {
     use ManagesEntryTerms;
     use ThrowsErrors;
 
+    /**
+     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
+     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
+     * @param \App\Support\TermHierarchy\TermHierarchyService $hierarchyService Сервис для управления иерархией термов
+     */
     public function __construct(
         private readonly Slugifier $slugifier,
         private readonly UniqueSlugService $uniqueSlugService,
@@ -661,6 +674,12 @@ class TermController extends Controller
         return AdminResponse::noContent();
     }
 
+    /**
+     * Разобрать строку сортировки на поле и направление.
+     *
+     * @param string $sort Строка сортировки (например, "created_at.desc")
+     * @return array{0: string, 1: string} Массив [поле, направление]
+     */
     private function resolveSort(string $sort): array
     {
         [$field, $direction] = array_pad(explode('.', $sort), 2, 'desc');
@@ -676,6 +695,14 @@ class TermController extends Controller
         return [$column, $dir];
     }
 
+    /**
+     * Обеспечить уникальность slug терма в рамках таксономии.
+     *
+     * @param \App\Models\Taxonomy $taxonomy Таксономия
+     * @param string $base Базовый slug
+     * @param int|null $ignoreId ID терма для игнорирования (при обновлении)
+     * @return string Уникальный slug
+     */
     private function ensureUniqueTermSlug(Taxonomy $taxonomy, string $base, ?int $ignoreId = null): string
     {
         $base = $base !== '' ? $base : 'term';
@@ -694,17 +721,39 @@ class TermController extends Controller
         });
     }
 
+    /**
+     * Нормализовать slug терма.
+     *
+     * @param string $value Исходное значение
+     * @return string Нормализованный slug
+     */
     private function sanitizeTermSlug(string $value): string
     {
         $slug = $this->slugifier->slugify($value);
         return $slug !== '' ? $slug : 'term';
     }
 
+    /**
+     * Найти таксономию по slug.
+     *
+     * @param string $slug Slug таксономии
+     * @return \App\Models\Taxonomy|null Таксономия или null
+     */
     private function findTaxonomy(string $slug): ?Taxonomy
     {
         return Taxonomy::query()->where('slug', $slug)->first();
     }
 
+    /**
+     * Привязать терм к записи.
+     *
+     * Валидирует, что терм разрешён для типа записи, и выполняет привязку.
+     *
+     * @param \App\Models\Term $term Терм
+     * @param int $entryId ID записи
+     * @return void
+     * @throws \Illuminate\Validation\ValidationException Если запись недоступна или терм не разрешён
+     */
     private function attachTermToEntry(Term $term, int $entryId): void
     {
         $entry = Entry::query()->with(['postType', 'terms.taxonomy'])->find($entryId);
@@ -721,6 +770,12 @@ class TermController extends Controller
         $entry->terms()->syncWithoutDetaching([$term->id]);
     }
 
+    /**
+     * Выбросить ошибку "таксономия не найдена".
+     *
+     * @param string $slug Slug таксономии
+     * @return never
+     */
     private function throwTaxonomyNotFound(string $slug): never
     {
         $this->throwError(
@@ -730,6 +785,12 @@ class TermController extends Controller
         );
     }
 
+    /**
+     * Выбросить ошибку "терм не найден".
+     *
+     * @param int $termId ID терма
+     * @return never
+     */
     private function throwTermNotFound(int $termId): never
     {
         $this->throwError(
@@ -739,6 +800,14 @@ class TermController extends Controller
         );
     }
 
+    /**
+     * Проверить, что терм принадлежит указанной таксономии.
+     *
+     * @param \App\Models\Term $term Терм
+     * @param \App\Models\Taxonomy $taxonomy Таксономия
+     * @return void
+     * @throws \Illuminate\Validation\ValidationException Если терм не принадлежит таксономии
+     */
     private function validateTermBelongsToTaxonomy(Term $term, Taxonomy $taxonomy): void
     {
         if ($term->taxonomy_id !== $taxonomy->id) {
@@ -750,6 +819,11 @@ class TermController extends Controller
         }
     }
 
+    /**
+     * Выбросить ошибку "терм всё ещё привязан к записям".
+     *
+     * @return never
+     */
     private function throwTermStillAttached(): never
     {
         $this->throwError(

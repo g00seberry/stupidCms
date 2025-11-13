@@ -23,10 +23,22 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Контроллер для управления таксономиями в админ-панели.
+ *
+ * Предоставляет CRUD операции для таксономий: создание, чтение, обновление, удаление.
+ * Управляет иерархическими и плоскими таксономиями.
+ *
+ * @package App\Http\Controllers\Admin\V1
+ */
 class TaxonomyController extends Controller
 {
     use ThrowsErrors;
 
+    /**
+     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
+     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
+     */
     public function __construct(
         private readonly Slugifier $slugifier,
         private readonly UniqueSlugService $uniqueSlugService
@@ -501,6 +513,12 @@ class TaxonomyController extends Controller
         return AdminResponse::noContent();
     }
 
+    /**
+     * Разобрать строку сортировки на поле и направление.
+     *
+     * @param string $sort Строка сортировки (например, "created_at.desc")
+     * @return array{0: string, 1: string} Массив [поле, направление]
+     */
     private function resolveSort(string $sort): array
     {
         [$field, $direction] = array_pad(explode('.', $sort), 2, 'desc');
@@ -516,6 +534,12 @@ class TaxonomyController extends Controller
         return [$column, $dir];
     }
 
+    /**
+     * Нормализовать slug таксономии.
+     *
+     * @param string $value Исходное значение
+     * @return string Нормализованный slug
+     */
     private function sanitizeSlug(string $value): string
     {
         $slug = $this->slugifier->slugify($value);
@@ -527,6 +551,12 @@ class TaxonomyController extends Controller
         return $slug !== '' ? $slug : 'taxonomy';
     }
 
+    /**
+     * Сгенерировать уникальный slug из label.
+     *
+     * @param string $label Человекочитаемое название
+     * @return string Уникальный slug
+     */
     private function generateUniqueSlug(string $label): string
     {
         $base = $this->slugifier->slugify($label);
@@ -537,6 +567,13 @@ class TaxonomyController extends Controller
         return $this->ensureUniqueSlug($base);
     }
 
+    /**
+     * Обеспечить уникальность slug таксономии.
+     *
+     * @param string $base Базовый slug
+     * @param int|null $ignoreId ID таксономии для игнорирования (при обновлении)
+     * @return string Уникальный slug
+     */
     private function ensureUniqueSlug(string $base, ?int $ignoreId = null): string
     {
         $base = $base !== '' ? $base : 'taxonomy';

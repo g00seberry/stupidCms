@@ -12,13 +12,33 @@ use App\Models\Plugin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
+/**
+ * Активатор плагинов.
+ *
+ * Управляет включением и отключением плагинов с транзакционной безопасностью
+ * и автоматической перезагрузкой маршрутов.
+ *
+ * @package App\Domain\Plugins
+ */
 final class PluginActivator
 {
+    /**
+     * @param \App\Domain\Plugins\Services\PluginsRouteReloader $routeReloader Перезагрузчик маршрутов
+     */
     public function __construct(
         private readonly Services\PluginsRouteReloader $routeReloader,
     ) {
     }
 
+    /**
+     * Включить плагин.
+     *
+     * Обновляет статус плагина в БД, отправляет событие и перезагружает маршруты.
+     *
+     * @param \App\Models\Plugin $plugin Плагин для включения
+     * @return \App\Models\Plugin Обновлённый плагин
+     * @throws \App\Domain\Plugins\Exceptions\PluginAlreadyEnabledException Если плагин уже включён
+     */
     public function enable(Plugin $plugin): Plugin
     {
         if ($plugin->enabled) {
@@ -38,6 +58,15 @@ final class PluginActivator
         return $updated;
     }
 
+    /**
+     * Отключить плагин.
+     *
+     * Обновляет статус плагина в БД, отправляет событие и перезагружает маршруты.
+     *
+     * @param \App\Models\Plugin $plugin Плагин для отключения
+     * @return \App\Models\Plugin Обновлённый плагин
+     * @throws \App\Domain\Plugins\Exceptions\PluginAlreadyDisabledException Если плагин уже отключён
+     */
     public function disable(Plugin $plugin): Plugin
     {
         if (! $plugin->enabled) {

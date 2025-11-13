@@ -1,15 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Routing;
 
 use App\Domain\Routing\Exceptions\InvalidPathException;
 
+/**
+ * Сервис для нормализации путей.
+ *
+ * Приводит пути к единому формату: удаляет query/fragment, гарантирует ведущий слэш,
+ * убирает trailing слэш, приводит к нижнему регистру, применяет Unicode NFC нормализацию.
+ *
+ * @package App\Domain\Routing
+ */
 final class PathNormalizer
 {
     /**
      * Нормализует путь: trim, убирает query/fragment, гарантирует ведущий /, убирает trailing /, lowercase, NFC.
      *
-     * @throws InvalidPathException если путь пустой или невалидный
+     * Выполняет следующие преобразования:
+     * - Удаляет query string и fragment
+     * - Удаляет пробелы в начале и конце
+     * - Удаляет относительные сегменты (./, ../)
+     * - Удаляет дублирующие слэши
+     * - Гарантирует ведущий слэш
+     * - Удаляет trailing слэш (кроме корня)
+     * - Приводит к нижнему регистру
+     * - Применяет Unicode NFC нормализацию (если доступна)
+     *
+     * @param string $raw Исходный путь
+     * @return string Нормализованный путь
+     * @throws \App\Domain\Routing\Exceptions\InvalidPathException Если путь пустой или невалидный
      */
     public static function normalize(string $raw): string
     {
