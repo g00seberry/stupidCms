@@ -8,11 +8,21 @@ use App\Models\Option;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API Resource для Option в админ-панели.
+ *
+ * Форматирует опцию для ответа API, преобразуя value_json
+ * в объекты для консистентности JSON.
+ *
+ * @package App\Http\Resources\Admin
+ */
 class OptionResource extends AdminJsonResource
 {
     /**
-     * @param Request $request
-     * @return array<string, mixed>
+     * Преобразовать ресурс в массив.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив с полями опции
      */
     public function toArray($request): array
     {
@@ -27,6 +37,12 @@ class OptionResource extends AdminJsonResource
         ];
     }
 
+    /**
+     * Рекурсивно преобразовать JSON данные, чтобы пустые массивы стали объектами.
+     *
+     * @param mixed $value Значение для преобразования
+     * @return mixed Преобразованное значение
+     */
     private function transformJson(mixed $value): mixed
     {
         if ($value === null || $value === []) {
@@ -49,6 +65,15 @@ class OptionResource extends AdminJsonResource
         return $object;
     }
 
+    /**
+     * Настроить HTTP ответ для Option.
+     *
+     * Устанавливает статус 201 (Created) для только что созданных опций.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
+     */
     protected function prepareAdminResponse($request, Response $response): void
     {
         if ($this->resource instanceof Option && $this->resource->wasRecentlyCreated) {

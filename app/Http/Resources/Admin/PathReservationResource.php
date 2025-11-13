@@ -6,11 +6,20 @@ namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Request;
 
+/**
+ * API Resource для PathReservation в админ-панели.
+ *
+ * Форматирует резервацию пути для ответа API.
+ *
+ * @package App\Http\Resources\Admin
+ */
 class PathReservationResource extends AdminJsonResource
 {
     /**
-     * @param Request $request
-     * @return array<string, mixed>
+     * Преобразовать ресурс в массив.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив с полями резервации пути
      */
     public function toArray($request): array
     {

@@ -7,14 +7,38 @@ namespace App\Http\Requests\Admin\Plugins;
 use App\Models\Plugin;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для получения списка плагинов в админ-панели.
+ *
+ * Валидирует параметры фильтрации, поиска, сортировки и пагинации
+ * для списка плагинов.
+ *
+ * @package App\Http\Requests\Admin\Plugins
+ */
 final class IndexPluginsRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Требует права viewAny для Plugin.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return $this->user()?->can('viewAny', Plugin::class) ?? false;
     }
 
     /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - q: опциональный поисковый запрос (максимум 128 символов)
+     * - enabled: опциональный фильтр по статусу (true, false, any)
+     * - page/per_page: опциональные параметры пагинации
+     * - sort: опциональная сортировка (name, slug, version, updated_at)
+     * - order: опциональный порядок (asc, desc)
+     *
      * @return array<string, mixed>
      */
     public function rules(): array
@@ -30,7 +54,13 @@ final class IndexPluginsRequest extends FormRequest
     }
 
     /**
-     * @return array<string, mixed>
+     * Получить валидированные данные с значениями по умолчанию.
+     *
+     * Добавляет значения по умолчанию для enabled, sort, order, per_page.
+     *
+     * @param string|null $key Ключ для извлечения конкретного значения
+     * @param mixed $default Значение по умолчанию
+     * @return array<string, mixed> Валидированные данные с значениями по умолчанию
      */
     public function validated($key = null, $default = null): array
     {

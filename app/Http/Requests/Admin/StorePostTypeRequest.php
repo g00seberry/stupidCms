@@ -9,14 +9,38 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/**
+ * Request для создания типа записи (PostType).
+ *
+ * Валидирует данные для создания типа записи:
+ * - slug: обязательный уникальный slug (regex, зарезервированные пути)
+ * - name: обязательное название (максимум 255 символов)
+ * - options_json: опциональный объект настроек
+ *
+ * @package App\Http\Requests\Admin
+ */
 class StorePostTypeRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - slug: обязательный уникальный slug (regex, зарезервированные пути)
+     * - name: обязательное название (максимум 255 символов)
+     * - options_json: опциональный объект (не массив)
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -52,7 +76,9 @@ class StorePostTypeRequest extends FormRequest
     }
 
     /**
-     * @return array<string, string>
+     * Получить кастомные сообщения для ошибок валидации.
+     *
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {
@@ -64,6 +90,15 @@ class StorePostTypeRequest extends FormRequest
         ];
     }
 
+    /**
+     * Настроить валидатор с дополнительной логикой.
+     *
+     * Warnings не блокируют валидацию, только предупреждают.
+     * Реальная передача warnings происходит через метод warnings() в контроллере.
+     *
+     * @param \Illuminate\Validation\Validator $validator Валидатор
+     * @return void
+     */
     public function withValidator(Validator $validator): void
     {
         // Warnings не блокируют валидацию, только предупреждают
@@ -73,7 +108,7 @@ class StorePostTypeRequest extends FormRequest
     /**
      * Получить warnings для добавления в meta ответа.
      *
-     * @return array<string, array<string>>
+     * @return array<string, array<string>> Массив warnings
      */
     public function warnings(): array
     {

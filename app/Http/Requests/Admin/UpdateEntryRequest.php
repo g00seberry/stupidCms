@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin;
 
 use App\Models\Entry;
@@ -9,12 +11,29 @@ use App\Rules\UniqueEntrySlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
+/**
+ * Request для обновления записи (Entry).
+ *
+ * Валидирует данные для обновления записи контента:
+ * - Все поля опциональны (sometimes)
+ * - Проверяет уникальность slug в рамках типа записи (исключая текущую запись)
+ * - Проверяет зарезервированные пути
+ *
+ * @package App\Http\Requests\Admin
+ */
 class UpdateEntryRequest extends FormRequest
 {
+    /**
+     * @var \App\Models\Entry|null Кэшированная модель записи
+     */
     private ?Entry $entryModel = null;
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -22,7 +41,16 @@ class UpdateEntryRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует (все поля опциональны):
+     * - title: заголовок (максимум 500 символов)
+     * - slug: slug (regex, уникальность, зарезервированные пути)
+     * - content_json/meta_json: JSON массивы
+     * - is_published: boolean
+     * - published_at: дата публикации
+     * - template_override: шаблон
+     * - term_ids: массив ID термов
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -62,9 +90,9 @@ class UpdateEntryRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * Получить кастомные сообщения для ошибок валидации.
      *
-     * @return array<string, string>
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {
@@ -80,6 +108,15 @@ class UpdateEntryRequest extends FormRequest
         ];
     }
 
+    /**
+     * Настроить валидатор с дополнительной логикой.
+     *
+     * Проверяет, что при публикации записи указан валидный slug
+     * (либо в запросе, либо в существующей записи).
+     *
+     * @param \Illuminate\Validation\Validator $validator Валидатор
+     * @return void
+     */
     public function withValidator(Validator $validator): void
     {
         $entry = $this->entryModel;

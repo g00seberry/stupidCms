@@ -9,15 +9,25 @@ use App\Support\JwtCookies;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API Resource для User в админ-панели.
+ *
+ * Форматирует данные пользователя и устанавливает CSRF cookie
+ * для последующих state-changing запросов.
+ *
+ * @package App\Http\Resources\Admin
+ */
 class UserResource extends AdminJsonResource
 {
     /**
+     * Отключить обёртку 'data' в ответе.
+     *
      * @var string|null
      */
     public static $wrap = null;
 
     /**
-     * @param User $resource
+     * @param \App\Models\User $resource Модель пользователя
      */
     public function __construct($resource)
     {
@@ -25,7 +35,10 @@ class UserResource extends AdminJsonResource
     }
 
     /**
-     * @return array<string, mixed>
+     * Преобразовать ресурс в массив.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив с полями пользователя (id, email, name)
      */
     public function toArray($request): array
     {
@@ -39,6 +52,15 @@ class UserResource extends AdminJsonResource
         ];
     }
 
+    /**
+     * Настроить HTTP ответ для User.
+     *
+     * Устанавливает CSRF cookie для аутентифицированных пользователей.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
+     */
     protected function prepareAdminResponse($request, Response $response): void
     {
         // Issue CSRF token for authenticated users

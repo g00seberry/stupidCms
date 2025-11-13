@@ -9,13 +9,24 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Pagination\AbstractPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Базовый класс для коллекций ресурсов админ-панели.
+ *
+ * Автоматически применяет стандартные заголовки и формирует структуру
+ * пагинации для коллекций с пагинацией.
+ *
+ * @package App\Http\Resources\Admin
+ */
 abstract class AdminResourceCollection extends ResourceCollection
 {
     use ConfiguresAdminResponse;
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Response  $response
+     * Настроить HTTP ответ перед отправкой.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
      */
     public function withResponse($request, $response): void
     {
@@ -23,8 +34,11 @@ abstract class AdminResourceCollection extends ResourceCollection
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Response  $response
+     * Точка расширения для потомков.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
      */
     protected function prepareAdminResponse($request, Response $response): void
     {
@@ -34,10 +48,11 @@ abstract class AdminResourceCollection extends ResourceCollection
     /**
      * Формирует стандартную структуру пагинации.
      *
-     * @param  AbstractPaginator  $paginator
-     * @param  array<string, mixed>  $default
-     * @param  array<string, mixed>  $meta
-     * @return array<string, mixed>
+     * Объединяет links и meta из пагинатора с переданными значениями.
+     *
+     * @param array<string, mixed> $default Значения по умолчанию
+     * @param array<string, mixed>|null $meta Дополнительные метаданные (если null, генерируются автоматически)
+     * @return array<string, mixed> Структура пагинации с links и meta
      */
     protected function buildPagination(array $default, ?array $meta = null): array
     {
@@ -55,7 +70,10 @@ abstract class AdminResourceCollection extends ResourceCollection
     }
 
     /**
-     * @return array<string, int|null|string>
+     * Извлечь метаданные пагинации из пагинатора.
+     *
+     * @param \Illuminate\Pagination\AbstractPaginator $paginator Пагинатор
+     * @return array<string, int|null|string> Метаданные пагинации
      */
     protected function paginationMeta(AbstractPaginator $paginator): array
     {
@@ -74,7 +92,10 @@ abstract class AdminResourceCollection extends ResourceCollection
     }
 
     /**
-     * @return array<string, string|null>
+     * Извлечь ссылки пагинации из пагинатора.
+     *
+     * @param \Illuminate\Pagination\AbstractPaginator $paginator Пагинатор
+     * @return array<string, string|null> Ссылки пагинации (first, last, prev, next)
      */
     private function paginatorLinks(AbstractPaginator $paginator): array
     {

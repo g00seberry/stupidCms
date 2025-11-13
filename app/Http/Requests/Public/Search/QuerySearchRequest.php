@@ -10,14 +10,38 @@ use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Request для публичного поиска контента.
+ *
+ * Валидирует параметры поиска (запрос, фильтры по типам записей, термам, датам)
+ * и преобразует их в SearchQuery для поискового сервиса.
+ *
+ * @package App\Http\Requests\Public\Search
+ */
 final class QuerySearchRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Публичный запрос, доступен всем.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - q: опциональный поисковый запрос (минимум 2 символа, максимум 200)
+     * - post_type: опциональный массив типов записей (максимум 10 элементов)
+     * - term: опциональный массив фильтров по термам (формат: taxonomy:term, максимум 20 элементов)
+     * - from/to: опциональные даты для фильтрации по дате публикации
+     * - page/per_page: опциональные параметры пагинации
+     *
      * @return array<string, mixed>
      */
     public function rules(): array
@@ -37,6 +61,17 @@ final class QuerySearchRequest extends FormRequest
         ];
     }
 
+    /**
+     * Подготовить данные для валидации.
+     *
+     * Нормализует входные данные:
+     * - Обрезает пробелы в поисковом запросе (q)
+     * - Преобразует строку post_type в массив (через запятую)
+     * - Преобразует строку term в массив
+     * - Обрезает пробелы в датах (from, to)
+     *
+     * @return void
+     */
     protected function prepareForValidation(): void
     {
         $input = $this->all();
@@ -80,6 +115,15 @@ final class QuerySearchRequest extends FormRequest
         $this->replace($input);
     }
 
+    /**
+     * Преобразовать валидированные данные в SearchQuery.
+     *
+     * Создаёт объект SearchQuery с валидированными параметрами,
+     * преобразуя строки термов в SearchTermFilter объекты.
+     *
+     * @return \App\Domain\Search\SearchQuery Объект запроса поиска
+     * @throws \Illuminate\Validation\ValidationException Если формат терма невалиден
+     */
     public function toSearchQuery(): SearchQuery
     {
         $validated = $this->validated();

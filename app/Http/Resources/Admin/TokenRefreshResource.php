@@ -7,13 +7,27 @@ namespace App\Http\Resources\Admin;
 use App\Support\JwtCookies;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API Resource для ответа на успешную ротацию refresh токена.
+ *
+ * Возвращает сообщение об успехе и устанавливает новые JWT cookies
+ * (access и refresh токены) в HttpOnly cookies.
+ *
+ * @package App\Http\Resources\Admin
+ */
 final class TokenRefreshResource extends AdminJsonResource
 {
     /**
+     * Отключить обёртку 'data' в ответе.
+     *
      * @var string|null
      */
     public static $wrap = null;
 
+    /**
+     * @param string $accessToken Новый JWT access токен
+     * @param string $refreshToken Новый JWT refresh токен
+     */
     public function __construct(
         private readonly string $accessToken,
         private readonly string $refreshToken
@@ -22,7 +36,10 @@ final class TokenRefreshResource extends AdminJsonResource
     }
 
     /**
-     * @return array<string, string>
+     * Преобразовать ресурс в массив.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, string> Массив с сообщением об успехе
      */
     public function toArray($request): array
     {
@@ -31,6 +48,15 @@ final class TokenRefreshResource extends AdminJsonResource
         ];
     }
 
+    /**
+     * Настроить HTTP ответ для TokenRefresh.
+     *
+     * Устанавливает новые JWT cookies (access и refresh) в HttpOnly cookies.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
+     */
     protected function prepareAdminResponse($request, Response $response): void
     {
         $response->headers->setCookie(JwtCookies::access($this->accessToken));

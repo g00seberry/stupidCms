@@ -1,17 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Entry;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для работы с опциями (Options).
+ *
+ * Валидирует namespace, key и value для опций.
+ * Проверяет allow-list из конфига и специальную валидацию
+ * для site:home_entry_id (проверка существования записи).
+ *
+ * @package App\Http\Requests
+ */
 class OptionsRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация должна быть настроена через middleware.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true; // Авторизация должна быть настроена через middleware
     }
 
+    /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - namespace: обязательный строковый namespace
+     * - key: обязательный строковый ключ
+     * - value: опциональное значение
+     *
+     * Для site:home_entry_id дополнительно проверяет существование записи.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         $namespace = $this->input('namespace');

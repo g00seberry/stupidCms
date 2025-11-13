@@ -7,13 +7,27 @@ namespace App\Http\Resources\Admin;
 use App\Models\Entry;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API Resource для Entry в админ-панели.
+ *
+ * Форматирует Entry для ответа API, включая связанные сущности
+ * (postType, author, terms) при их загрузке.
+ *
+ * @package App\Http\Resources\Admin
+ */
 class EntryResource extends AdminJsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Преобразовать ресурс в массив.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array<string, mixed>
+     * Возвращает массив с полями записи, включая:
+     * - Основные поля (id, post_type, title, slug, status)
+     * - JSON поля (content_json, meta_json) преобразованные в объекты
+     * - Связанные сущности (author, terms) при их загрузке
+     * - Даты в ISO 8601 формате
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив данных записи
      */
     public function toArray($request): array
     {
@@ -51,7 +65,13 @@ class EntryResource extends AdminJsonResource
     }
 
     /**
-     * Recursively transform JSON data to ensure empty arrays become empty objects.
+     * Рекурсивно преобразовать JSON данные, чтобы пустые массивы стали объектами.
+     *
+     * Обеспечивает консистентность: пустые массивы и null преобразуются в stdClass,
+     * чтобы в JSON они были {} вместо [] или null.
+     *
+     * @param mixed $value Значение для преобразования
+     * @return mixed Преобразованное значение
      */
     private function transformJson(mixed $value): mixed
     {
@@ -75,6 +95,15 @@ class EntryResource extends AdminJsonResource
         return $object;
     }
 
+    /**
+     * Настроить HTTP ответ для Entry.
+     *
+     * Устанавливает статус 201 (Created) для только что созданных записей.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
+     */
     protected function prepareAdminResponse($request, Response $response): void
     {
         if ($this->resource instanceof Entry && $this->resource->wasRecentlyCreated) {

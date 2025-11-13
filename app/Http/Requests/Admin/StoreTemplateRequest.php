@@ -6,14 +6,36 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для создания Blade шаблона.
+ *
+ * Валидирует данные для создания шаблона:
+ * - name: обязательное имя шаблона (regex, максимум 255 символов)
+ * - content: обязательное содержимое шаблона
+ *
+ * @package App\Http\Requests\Admin
+ */
 class StoreTemplateRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - name: обязательное имя шаблона (regex, максимум 255 символов)
+     * - content: обязательное содержимое шаблона
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -33,7 +55,9 @@ class StoreTemplateRequest extends FormRequest
     }
 
     /**
-     * @return array<string, string>
+     * Получить кастомные сообщения для ошибок валидации.
+     *
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {

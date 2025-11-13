@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin;
 
 use App\Models\Term;
@@ -8,15 +10,46 @@ use App\Rules\UniqueTermSlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Request для обновления терма таксономии (Term).
+ *
+ * Валидирует данные для обновления терма:
+ * - Все поля опциональны (sometimes)
+ * - Проверяет уникальность slug в рамках таксономии (исключая текущий терм)
+ * - Проверяет, что parent_id не указывает на самого себя
+ *
+ * @package App\Http\Requests\Admin
+ */
 class UpdateTermRequest extends FormRequest
 {
+    /**
+     * @var \App\Models\Term|null Кэшированная модель терма
+     */
     private ?Term $resolvedTerm = null;
 
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует (все поля опциональны):
+     * - name: название (максимум 255 символов)
+     * - slug: slug (regex, уникальность в рамках таксономии)
+     * - meta_json: объект метаданных
+     * - parent_id: ID родителя (должен существовать в той же таксономии, не может быть самим собой)
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         $term = $this->term();
@@ -50,6 +83,11 @@ class UpdateTermRequest extends FormRequest
         ];
     }
 
+    /**
+     * Получить терм из route параметра.
+     *
+     * @return \App\Models\Term|null Модель терма или null
+     */
     public function term(): ?Term
     {
         if ($this->resolvedTerm !== null) {
@@ -64,6 +102,11 @@ class UpdateTermRequest extends FormRequest
         return $this->resolvedTerm;
     }
 
+    /**
+     * Получить таксономию из route параметра.
+     *
+     * @return \App\Models\Taxonomy|null Модель таксономии или null
+     */
     private function taxonomyFromRoute(): ?Taxonomy
     {
         $slug = (string) $this->route('taxonomy');

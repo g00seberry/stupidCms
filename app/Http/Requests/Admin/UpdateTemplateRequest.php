@@ -7,14 +7,34 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
+/**
+ * Request для обновления Blade шаблона.
+ *
+ * Валидирует данные для обновления шаблона:
+ * - content: обязательное содержимое шаблона (разрешается пустая строка)
+ *
+ * @package App\Http\Requests\Admin
+ */
 class UpdateTemplateRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - content: обязательное содержимое шаблона (разрешается пустая строка)
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -29,9 +49,12 @@ class UpdateTemplateRequest extends FormRequest
     }
 
     /**
-     * Подготовка данных для валидации.
-     * Преобразуем null в пустую строку, так как Laravel middleware ConvertEmptyStringsToNull
+     * Подготовить данные для валидации.
+     *
+     * Преобразует null в пустую строку, так как Laravel middleware ConvertEmptyStringsToNull
      * преобразует пустые строки в null, но для шаблонов пустая строка - валидное значение.
+     *
+     * @return void
      */
     protected function prepareForValidation(): void
     {
@@ -47,7 +70,9 @@ class UpdateTemplateRequest extends FormRequest
 
 
     /**
-     * @return array<string, string>
+     * Получить кастомные сообщения для ошибок валидации.
+     *
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {

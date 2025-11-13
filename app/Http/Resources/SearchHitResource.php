@@ -9,12 +9,21 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property SearchHit $resource
+ * API Resource для результата поиска (SearchHit).
+ *
+ * Форматирует один результат поиска для публичного API,
+ * включая highlight для подсветки совпадений.
+ *
+ * @package App\Http\Resources
+ * @property \App\Domain\Search\SearchHit $resource
  */
 final class SearchHitResource extends JsonResource
 {
     /**
-     * @return array<string, mixed>
+     * Преобразовать ресурс в массив.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив с полями результата поиска
      */
     public function toArray(Request $request): array
     {

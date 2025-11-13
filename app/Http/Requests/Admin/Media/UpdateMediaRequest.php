@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin\Media;
 
 use App\Models\Media;
@@ -9,8 +11,26 @@ use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для обновления медиа-файла.
+ *
+ * Валидирует данные для обновления метаданных медиа-файла:
+ * - Все поля опциональны
+ * - title: опциональный заголовок (максимум 255 символов)
+ * - alt: опциональный alt текст (максимум 255 символов)
+ * - collection: опциональная коллекция (regex, максимум 64 символа)
+ *
+ * @package App\Http\Requests\Admin\Media
+ */
 class UpdateMediaRequest extends FormRequest
 {
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Требует права update для конкретного Media.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         $routeParam = $this->route('media');
@@ -26,6 +46,13 @@ class UpdateMediaRequest extends FormRequest
     }
 
     /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует (все поля опциональны):
+     * - title: заголовок (максимум 255 символов)
+     * - alt: alt текст (максимум 255 символов)
+     * - collection: коллекция (regex, максимум 64 символа)
+     *
      * @return array<string, mixed>
      */
     public function rules(): array
@@ -37,6 +64,15 @@ class UpdateMediaRequest extends FormRequest
         ];
     }
 
+    /**
+     * Обработать ошибки валидации.
+     *
+     * Выбрасывает HttpErrorException с кодом VALIDATION_ERROR.
+     *
+     * @param \Illuminate\Contracts\Validation\Validator $validator Валидатор
+     * @return void
+     * @throws \App\Support\Errors\HttpErrorException
+     */
     protected function failedValidation(Validator $validator): void
     {
         /** @var ErrorFactory $factory */

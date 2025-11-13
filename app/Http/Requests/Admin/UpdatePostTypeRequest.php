@@ -9,13 +9,24 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/**
+ * Request для обновления типа записи (PostType).
+ *
+ * Валидирует данные для обновления типа записи:
+ * - Все поля опциональны (sometimes)
+ * - Проверяет уникальность slug (исключая текущий тип)
+ * - Проверяет зарезервированные пути
+ *
+ * @package App\Http\Requests\Admin
+ */
 class UpdatePostTypeRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     * 
-     * Authorization is handled by route middleware (can:manage.posttypes).
-     * This returns true to avoid duplicate checks.
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута (can:manage.posttypes).
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -23,7 +34,12 @@ class UpdatePostTypeRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует (все поля опциональны):
+     * - slug: slug (regex, уникальность, зарезервированные пути)
+     * - name: название (максимум 255 символов)
+     * - options_json: обязательный объект (present, не массив)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -72,9 +88,9 @@ class UpdatePostTypeRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * Получить кастомные сообщения для ошибок валидации.
      *
-     * @return array<string, string>
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {
@@ -85,6 +101,14 @@ class UpdatePostTypeRequest extends FormRequest
         ];
     }
 
+    /**
+     * Настроить валидатор с дополнительной логикой.
+     *
+     * Warnings не блокируют валидацию, только предупреждают.
+     *
+     * @param \Illuminate\Validation\Validator $validator Валидатор
+     * @return void
+     */
     public function withValidator(Validator $validator): void
     {
         // Warnings не блокируют валидацию, только предупреждают
@@ -94,7 +118,7 @@ class UpdatePostTypeRequest extends FormRequest
     /**
      * Получить warnings для добавления в meta ответа.
      *
-     * @return array<string, array<string>>
+     * @return array<string, array<string>> Массив warnings
      */
     public function warnings(): array
     {

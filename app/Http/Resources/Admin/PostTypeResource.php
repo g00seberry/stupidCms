@@ -6,11 +6,31 @@ namespace App\Http\Resources\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API Resource для PostType в админ-панели.
+ *
+ * Форматирует тип записи для ответа API, преобразуя options_json
+ * в объекты для консистентности JSON.
+ *
+ * @package App\Http\Resources\Admin
+ */
 class PostTypeResource extends AdminJsonResource
 {
+    /**
+     * @var bool Флаг создания нового типа записи
+     */
     private bool $created;
+
+    /**
+     * @var array<string>|null Предупреждения (если есть)
+     */
     private ?array $warnings = null;
 
+    /**
+     * @param mixed $resource Модель PostType
+     * @param bool $created Флаг создания нового типа записи
+     * @param array<string>|null $warnings Предупреждения
+     */
     public function __construct($resource, bool $created = false, ?array $warnings = null)
     {
         parent::__construct($resource);
@@ -23,10 +43,10 @@ class PostTypeResource extends AdminJsonResource
     }
 
     /**
-     * Transform the resource into an array.
+     * Преобразовать ресурс в массив.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array<string, mixed>
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив с полями типа записи
      */
     public function toArray($request): array
     {
@@ -40,7 +60,12 @@ class PostTypeResource extends AdminJsonResource
     }
 
     /**
-     * Recursively normalize options_json to ensure JSON objects remain objects ({}).
+     * Рекурсивно нормализовать options_json, чтобы JSON объекты оставались объектами ({}).
+     *
+     * Преобразует пустые массивы и null в stdClass для консистентности JSON.
+     *
+     * @param mixed $value Значение для преобразования
+     * @return mixed Преобразованное значение
      */
     private function transformOptionsJson(mixed $value): mixed
     {
@@ -69,6 +94,15 @@ class PostTypeResource extends AdminJsonResource
     }
 
 
+    /**
+     * Настроить HTTP ответ для PostType.
+     *
+     * Устанавливает статус 201 (Created) для только что созданных типов записей.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
+     */
     protected function prepareAdminResponse($request, Response $response): void
     {
         if ($this->created) {

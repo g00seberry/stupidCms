@@ -8,11 +8,24 @@ use App\Http\Resources\Admin\AdminJsonResource;
 use App\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API Resource для Media в админ-панели.
+ *
+ * Форматирует медиа-файл для ответа API, включая preview URLs
+ * для вариантов изображений и download URL.
+ *
+ * @package App\Http\Resources
+ */
 class MediaResource extends AdminJsonResource
 {
     /**
-     * @param \Illuminate\Http\Request $request
-     * @return array<string, mixed>
+     * Преобразовать ресурс в массив.
+     *
+     * Включает метаданные файла, preview URLs для вариантов изображений
+     * и download URL.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @return array<string, mixed> Массив с полями медиа-файла
      */
     public function toArray($request): array
     {
@@ -39,6 +52,15 @@ class MediaResource extends AdminJsonResource
         ];
     }
 
+    /**
+     * Настроить HTTP ответ для Media.
+     *
+     * Устанавливает статус 201 (Created) для только что загруженных медиа-файлов.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Symfony\Component\HttpFoundation\Response $response HTTP ответ
+     * @return void
+     */
     public function withResponse($request, $response): void
     {
         if ($this->resource instanceof Media && $this->resource->wasRecentlyCreated) {
@@ -49,7 +71,12 @@ class MediaResource extends AdminJsonResource
     }
 
     /**
-     * @return array<string, string>|array{}
+     * Сформировать preview URLs для вариантов изображения.
+     *
+     * Возвращает массив URL для всех настроенных вариантов изображения
+     * (thumbnail, medium, large и т.д.). Для не-изображений возвращает пустой массив.
+     *
+     * @return array<string, string> Массив [variant => URL] или пустой массив
      */
     private function previewUrls(): array
     {

@@ -1,13 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для получения списка записей (entries) в админ-панели.
+ *
+ * Валидирует параметры фильтрации, поиска, сортировки и пагинации
+ * для списка записей контента.
+ *
+ * @package App\Http\Requests\Admin
+ */
 class IndexEntriesRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -15,7 +29,18 @@ class IndexEntriesRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - post_type: опциональный slug типа записи (должен существовать)
+     * - status: опциональный статус (all, draft, published, scheduled, trashed)
+     * - q: опциональный поисковый запрос (максимум 500 символов)
+     * - author_id: опциональный ID автора (должен существовать)
+     * - term: опциональный массив ID термов (должны существовать)
+     * - date_from/date_to: опциональные даты для фильтрации
+     * - date_field: опциональное поле даты (updated, published)
+     * - sort: опциональная сортировка
+     * - per_page: опциональное количество на странице (10-100)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -37,9 +62,9 @@ class IndexEntriesRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * Получить кастомные сообщения для ошибок валидации.
      *
-     * @return array<string, string>
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {

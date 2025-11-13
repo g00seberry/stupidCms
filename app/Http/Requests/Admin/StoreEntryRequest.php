@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin;
 
 use App\Rules\Publishable;
@@ -8,10 +10,25 @@ use App\Rules\UniqueEntrySlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
+/**
+ * Request для создания новой записи (Entry).
+ *
+ * Валидирует данные для создания записи контента:
+ * - Обязательные: post_type, title
+ * - Опциональные: slug (автогенерация), content_json, meta_json, published_at
+ * - Проверяет уникальность slug в рамках типа записи
+ * - Проверяет зарезервированные пути
+ *
+ * @package App\Http\Requests\Admin
+ */
 class StoreEntryRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Авторизация обрабатывается middleware маршрута.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -19,7 +36,17 @@ class StoreEntryRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - post_type: обязательный slug типа записи (должен существовать)
+     * - title: обязательный заголовок (максимум 500 символов)
+     * - slug: опциональный slug (regex, уникальность, зарезервированные пути)
+     * - content_json/meta_json: опциональные JSON массивы
+     * - is_published: опциональный boolean
+     * - published_at: опциональная дата публикации
+     * - template_override: опциональный шаблон
+     * - term_ids: опциональный массив ID термов
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -50,7 +77,12 @@ class StoreEntryRequest extends FormRequest
     }
 
     /**
-     * Prepare the data for validation.
+     * Подготовить данные для валидации.
+     *
+     * Автоматически устанавливает published_at в текущее время,
+     * если is_published=true и published_at не указан.
+     *
+     * @return void
      */
     protected function prepareForValidation(): void
     {
@@ -61,6 +93,14 @@ class StoreEntryRequest extends FormRequest
         }
     }
 
+    /**
+     * Настроить валидатор с дополнительной логикой.
+     *
+     * Проверяет, что при публикации записи указан валидный slug.
+     *
+     * @param \Illuminate\Validation\Validator $validator Валидатор
+     * @return void
+     */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
@@ -75,9 +115,9 @@ class StoreEntryRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * Получить кастомные сообщения для ошибок валидации.
      *
-     * @return array<string, string>
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {

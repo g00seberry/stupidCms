@@ -1,13 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для создания резервации пути.
+ *
+ * Валидирует данные для резервации пути:
+ * - path: обязательный путь (максимум 255 символов)
+ * - source: обязательный источник резервации (максимум 100 символов)
+ * - reason: опциональная причина резервации (максимум 255 символов)
+ *
+ * @package App\Http\Requests
+ */
 class StorePathReservationRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Требует прав администратора (is_admin=true).
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -15,7 +31,12 @@ class StorePathReservationRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - path: обязательный путь (максимум 255 символов)
+     * - source: обязательный источник (максимум 100 символов)
+     * - reason: опциональная причина (максимум 255 символов)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -29,9 +50,9 @@ class StorePathReservationRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * Получить кастомные сообщения для ошибок валидации.
      *
-     * @return array<string, string>
+     * @return array<string, string> Массив сообщений об ошибках
      */
     public function messages(): array
     {

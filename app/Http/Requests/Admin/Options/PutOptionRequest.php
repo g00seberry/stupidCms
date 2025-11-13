@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin\Options;
 
 use App\Models\Option;
@@ -10,12 +12,38 @@ use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request для создания/обновления опции (PUT).
+ *
+ * Валидирует данные для создания или обновления опции:
+ * - namespace: обязательный namespace (regex, из route параметра)
+ * - key: обязательный ключ (regex, из route параметра)
+ * - value: обязательное значение (может быть null, JSON, максимум 65536 байт)
+ * - description: опциональное описание (максимум 255 символов)
+ *
+ * @package App\Http\Requests\Admin\Options
+ */
 class PutOptionRequest extends FormRequest
 {
+    /**
+     * Паттерн для валидации namespace/key опций.
+     *
+     * @var string
+     */
     private const KEY_PATTERN = '/^[a-z0-9_][a-z0-9_.-]{1,63}$/';
 
+    /**
+     * @var \App\Models\Option|null Кэшированная модель опции
+     */
     private ?Option $resolvedOption = null;
 
+    /**
+     * Определить, авторизован ли пользователь для выполнения запроса.
+     *
+     * Требует права write для Option (создаёт новую опцию, если не существует).
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         $user = $this->user();
@@ -28,6 +56,17 @@ class PutOptionRequest extends FormRequest
         return $user->can('write', $option);
     }
 
+    /**
+     * Получить правила валидации для запроса.
+     *
+     * Валидирует:
+     * - namespace: обязательный namespace (regex, из route параметра)
+     * - key: обязательный ключ (regex, из route параметра)
+     * - value: обязательное значение (может быть null, JSON, максимум 65536 байт)
+     * - description: опциональное описание (максимум 255 символов)
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
@@ -38,6 +77,13 @@ class PutOptionRequest extends FormRequest
         ];
     }
 
+    /**
+     * Подготовить данные для валидации.
+     *
+     * Извлекает namespace и key из route параметров.
+     *
+     * @return void
+     */
     protected function prepareForValidation(): void
     {
         $this->merge([
@@ -46,6 +92,16 @@ class PutOptionRequest extends FormRequest
         ]);
     }
 
+    /**
+     * Обработать ошибки валидации.
+     *
+     * Выбрасывает HttpErrorException с кодом INVALID_OPTION_PAYLOAD,
+     * INVALID_JSON_VALUE или INVALID_OPTION_IDENTIFIER в зависимости от типа ошибки.
+     *
+     * @param \Illuminate\Contracts\Validation\Validator $validator Валидатор
+     * @return void
+     * @throws \App\Support\Errors\HttpErrorException
+     */
     protected function failedValidation(Validator $validator): void
     {
         $errors = $validator->errors();
@@ -78,6 +134,14 @@ class PutOptionRequest extends FormRequest
         throw new HttpErrorException($payload);
     }
 
+    /**
+     * Получить опцию из route параметров или создать новую.
+     *
+     * Если опция не существует, создаёт новую модель Option
+     * с указанными namespace и key.
+     *
+     * @return \App\Models\Option Модель опции
+     */
     public function option(): Option
     {
         if ($this->resolvedOption !== null) {
