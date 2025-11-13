@@ -6,6 +6,7 @@ use App\Models\Term;
 use App\Models\Taxonomy;
 use App\Rules\UniqueTermSlug;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTermRequest extends FormRequest
 {
@@ -32,6 +33,20 @@ class UpdateTermRequest extends FormRequest
                 new UniqueTermSlug($taxonomy?->getKey(), $term?->getKey()),
             ],
             'meta_json' => 'sometimes|nullable|array',
+            'parent_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('terms', 'id')->where(function ($query) use ($taxonomy, $term) {
+                    if ($taxonomy) {
+                        $query->where('taxonomy_id', $taxonomy->id);
+                    }
+                    if ($term) {
+                        // Нельзя сделать родителем самого себя
+                        $query->where('id', '!=', $term->id);
+                    }
+                }),
+            ],
         ];
     }
 

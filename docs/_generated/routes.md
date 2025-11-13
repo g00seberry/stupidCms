@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-13 07:24:18_
+_Last generated: 2025-11-13 09:08:40_
 
 ## Web
 
@@ -53,6 +53,7 @@ _Last generated: 2025-11-13 07:24:18_
 | GET|HEAD | `api/v1/admin/taxonomies/{slug}` | admin.v1.taxonomies.show | `TaxonomyController@show` | api, jwt.auth, throttle:api, can:manage.taxonomies |
 | PUT | `api/v1/admin/taxonomies/{slug}` | admin.v1.taxonomies.update | `TaxonomyController@update` | api, jwt.auth, throttle:api, can:manage.taxonomies |
 | DELETE | `api/v1/admin/taxonomies/{slug}` | admin.v1.taxonomies.destroy | `TaxonomyController@destroy` | api, jwt.auth, throttle:api, can:manage.taxonomies |
+| GET|HEAD | `api/v1/admin/taxonomies/{taxonomy}/terms/tree` | admin.v1.taxonomies.terms.tree | `TermController@tree` | api, jwt.auth, throttle:api, can:manage.terms |
 | GET|HEAD | `api/v1/admin/taxonomies/{taxonomy}/terms` | admin.v1.taxonomies.terms.index | `TermController@indexByTaxonomy` | api, jwt.auth, throttle:api, can:manage.terms |
 | POST | `api/v1/admin/taxonomies/{taxonomy}/terms` | admin.v1.taxonomies.terms.store | `TermController@store` | api, jwt.auth, throttle:api, can:manage.terms |
 | GET|HEAD | `api/v1/admin/terms/{term}` | admin.v1.terms.show | `TermController@show` | api, jwt.auth, throttle:api, can:manage.terms |

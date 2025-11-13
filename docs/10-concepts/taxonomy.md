@@ -322,26 +322,27 @@ getBreadcrumb($term);
 
 ### Создание термина
 
-**Endpoint**: `POST /api/admin/terms`
+**Endpoint**: `POST /api/v1/admin/taxonomies/{taxonomy}/terms`
 
 **Request**:
 ```json
 {
-  "taxonomy_id": 1,
-  "slug": "vue",
   "name": "Vue.js",
+  "slug": "vue",
   "parent_id": 1,
-  "description": "Vue.js фреймворк"
+  "meta_json": {}
 }
 ```
 
 **Response**: `201 Created`
 
+> ⚠️ `parent_id` доступен только для иерархических таксономий (`hierarchical = true`). При указании `parent_id` автоматически создаются записи в `term_tree` (Closure Table).
+
 ---
 
 ### Обновление термина
 
-**Endpoint**: `PUT /api/admin/terms/{id}`
+**Endpoint**: `PUT /api/v1/admin/terms/{id}`
 
 **Request**:
 ```json
@@ -351,7 +352,38 @@ getBreadcrumb($term);
 }
 ```
 
-> ⚠️ При изменении `parent_id` обновляется `term_tree` (уровень, путь).
+> ⚠️ При изменении `parent_id` обновляется `term_tree` (Closure Table). Проверяется, что родитель принадлежит той же таксономии и не создаётся циклическая зависимость.
+
+---
+
+### Получение дерева терминов
+
+**Endpoint**: `GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree`
+
+**Response**:
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Технологии",
+      "slug": "tech",
+      "parent_id": null,
+      "children": [
+        {
+          "id": 2,
+          "name": "Laravel",
+          "slug": "laravel",
+          "parent_id": 1,
+          "children": []
+        }
+      ]
+    }
+  ]
+}
+```
+
+> Для неиерархических таксономий возвращается плоский список терминов.
 
 ## Валидация
 

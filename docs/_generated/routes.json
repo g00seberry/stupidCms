@@ -253,6 +253,13 @@
     },
     {
         "method": "GET|HEAD",
+        "uri": "api/v1/admin/taxonomies/{taxonomy}/terms/tree",
+        "name": "admin.v1.taxonomies.terms.tree",
+        "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@tree",
+        "middleware": "api, jwt.auth, throttle:api, can:manage.terms"
+    },
+    {
+        "method": "GET|HEAD",
         "uri": "api/v1/admin/taxonomies/{taxonomy}/terms",
         "name": "admin.v1.taxonomies.terms.index",
         "action": "App\\Http\\Controllers\\Admin\\V1\\TermController@indexByTaxonomy",

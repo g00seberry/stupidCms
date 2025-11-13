@@ -113,12 +113,14 @@ curl -i -X POST \
     -   `name` (required)
     -   `slug` (optional, `[a-z0-9][a-z0-9_-]*`)
     -   `meta_json` (optional object)
+    -   `parent_id` (optional int) — ID родительского термина (только для иерархических таксономий). Должен принадлежать той же таксономии.
     -   `attach_entry_id` (optional int) — моментальная привязка к записи.
 
 ```
 POST /api/v1/admin/taxonomies/topics/terms
 {
   "name": "Analytics",
+  "parent_id": 5,
   "attach_entry_id": 123
 }
 ```
@@ -131,7 +133,8 @@ POST /api/v1/admin/taxonomies/topics/terms
         "id": 11,
         "taxonomy": "topics",
         "name": "Analytics",
-        "slug": "analytics"
+        "slug": "analytics",
+        "parent_id": 5
     },
     "entry_terms": {
         "entry_id": 123,
@@ -150,10 +153,46 @@ POST /api/v1/admin/taxonomies/topics/terms
 }
 ```
 
+### Получение дерева терминов
+
+-   **GET** `/api/v1/admin/taxonomies/{taxonomy}/terms/tree`
+-   Возвращает иерархическое дерево терминов (только для иерархических таксономий).
+-   Для неиерархических таксономий возвращает плоский список.
+
+Ответ (`200`):
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "taxonomy": "categories",
+            "name": "Технологии",
+            "slug": "tech",
+            "parent_id": null,
+            "children": [
+                {
+                    "id": 2,
+                    "taxonomy": "categories",
+                    "name": "Laravel",
+                    "slug": "laravel",
+                    "parent_id": 1,
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
+```
+
 ### Просмотр / обновление / удаление
 
 -   **GET** `/api/v1/admin/terms/{id}`
--   **PUT** `/api/v1/admin/terms/{id}` — `name`, `slug`, `meta_json`.
+    -   Возвращает термин с полем `parent_id` (для иерархических таксономий).
+-   **PUT** `/api/v1/admin/terms/{id}` — `name`, `slug`, `meta_json`, `parent_id` (optional).
+    -   При изменении `parent_id` автоматически обновляется `term_tree` (Closure Table).
+    -   `parent_id` должен принадлежать той же таксономии.
+    -   Нельзя сделать родителем самого себя или потомка.
 -   **DELETE** `/api/v1/admin/terms/{id}`
     -   Если термин привязан к записям → `409`.
     -   `?forceDetach=1` — `detach` всех связей + soft-delete.

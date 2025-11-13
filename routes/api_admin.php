@@ -132,6 +132,8 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     });
 
     Route::middleware('can:manage.terms')->group(function () {
+        Route::get('/taxonomies/{taxonomy}/terms/tree', [TermController::class, 'tree'])
+            ->name('admin.v1.taxonomies.terms.tree');
         Route::get('/taxonomies/{taxonomy}/terms', [TermController::class, 'indexByTaxonomy'])
             ->name('admin.v1.taxonomies.terms.index');
         Route::post('/taxonomies/{taxonomy}/terms', [TermController::class, 'store'])

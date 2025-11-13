@@ -19,6 +19,7 @@ use App\Support\Errors\ThrowsErrors;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use App\Support\Http\AdminResponse;
+use App\Support\TermHierarchy\TermHierarchyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +33,8 @@ class TermController extends Controller
 
     public function __construct(
         private readonly Slugifier $slugifier,
-        private readonly UniqueSlugService $uniqueSlugService
+        private readonly UniqueSlugService $uniqueSlugService,
+        private readonly TermHierarchyService $hierarchyService
     ) {
     }
 
@@ -131,6 +133,81 @@ class TermController extends Controller
     }
 
     /**
+     * Получение дерева терминов таксономии.
+     *
+     * @group Admin ▸ Terms
+     * @name Get terms tree
+     * @authenticated
+     * @urlParam taxonomy string required Slug таксономии. Example: category
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "taxonomy": "category",
+     *       "name": "Технологии",
+     *       "slug": "tech",
+     *       "parent_id": null,
+     *       "children": [
+     *         {
+     *           "id": 2,
+     *           "taxonomy": "category",
+     *           "name": "Laravel",
+     *           "slug": "laravel",
+     *           "parent_id": 1,
+     *           "children": []
+     *         }
+     *       ]
+     *     }
+     *   ]
+     * }
+     */
+    public function tree(string $taxonomy): \Illuminate\Http\JsonResponse
+    {
+        $taxonomyModel = $this->findTaxonomy($taxonomy);
+
+        if (! $taxonomyModel) {
+            $this->throwTaxonomyNotFound($taxonomy);
+        }
+
+        // Если таксономия не иерархическая, возвращаем плоский список
+        if (! $taxonomyModel->hierarchical) {
+            $terms = Term::query()
+                ->where('taxonomy_id', $taxonomyModel->id)
+                ->get();
+            
+            return response()->json([
+                'data' => TermResource::collection($terms),
+            ]);
+        }
+
+        // Получаем все термины с загрузкой parent для вычисления parent_id
+        $allTerms = Term::query()
+            ->where('taxonomy_id', $taxonomyModel->id)
+            ->with('parent')
+            ->get()
+            ->keyBy('id');
+
+        // Загружаем детей для каждого термина
+        foreach ($allTerms as $term) {
+            $children = $allTerms->filter(function ($child) use ($term) {
+                $childParentId = $child->parent_id;
+                return $childParentId === $term->id;
+            })->sortBy('name')->values();
+            
+            $term->setRelation('children', $children);
+        }
+
+        // Находим корневые термины (без родителя)
+        $rootTerms = $allTerms->filter(function ($term) {
+            return $term->parent_id === null;
+        })->sortBy('name')->values();
+
+        return response()->json([
+            'data' => TermResource::collection($rootTerms),
+        ]);
+    }
+
+    /**
      * Создание терма.
      *
      * @group Admin ▸ Terms
@@ -226,6 +303,7 @@ class TermController extends Controller
         $name = trim((string) $validated['name']);
         $slugInput = $validated['slug'] ?? null;
         $meta = $validated['meta_json'] ?? null;
+        $parentId = isset($validated['parent_id']) ? (int) $validated['parent_id'] : null;
         $attachEntryId = $validated['attach_entry_id'] ?? null;
 
         $slugBase = $slugInput !== null && $slugInput !== ''
@@ -238,13 +316,24 @@ class TermController extends Controller
 
         $term = null;
 
-        DB::transaction(function () use (&$term, $taxonomyModel, $name, $slugBase, $meta, $attachEntryId) {
+        DB::transaction(function () use (&$term, $taxonomyModel, $name, $slugBase, $meta, $parentId, $attachEntryId) {
             $term = Term::query()->create([
                 'taxonomy_id' => $taxonomyModel->id,
                 'name' => $name,
                 'slug' => $this->ensureUniqueTermSlug($taxonomyModel, $slugBase),
                 'meta_json' => $meta,
             ]);
+
+            // Устанавливаем иерархию, если таксономия поддерживает её
+            if ($taxonomyModel->hierarchical) {
+                try {
+                    $this->hierarchyService->setParent($term, $parentId);
+                } catch (\InvalidArgumentException $e) {
+                    throw ValidationException::withMessages([
+                        'parent_id' => [$e->getMessage()],
+                    ]);
+                }
+            }
 
             if ($attachEntryId) {
                 $this->attachTermToEntry($term, $attachEntryId);
@@ -331,7 +420,7 @@ class TermController extends Controller
     public function show(int $term): TermResource
     {
         $termModel = Term::query()
-            ->with('taxonomy')
+            ->with(['taxonomy', 'parent'])
             ->find($term);
 
         if (! $termModel) {
@@ -450,6 +539,22 @@ class TermController extends Controller
                 } else {
                     $candidate = $this->sanitizeTermSlug($slugValue);
                     $termModel->slug = $this->ensureUniqueTermSlug($termModel->taxonomy, $candidate, $termModel->id);
+                }
+            }
+
+            // Обновляем иерархию, если таксономия поддерживает её и parent_id изменился
+            if ($termModel->taxonomy->hierarchical && array_key_exists('parent_id', $validated)) {
+                $newParentId = $validated['parent_id'] !== null ? (int) $validated['parent_id'] : null;
+                $currentParentId = $termModel->parent_id;
+                
+                if ($newParentId !== $currentParentId) {
+                    try {
+                        $this->hierarchyService->setParent($termModel, $newParentId);
+                    } catch (\InvalidArgumentException $e) {
+                        throw ValidationException::withMessages([
+                            'parent_id' => [$e->getMessage()],
+                        ]);
+                    }
                 }
             }
 

@@ -17,6 +17,8 @@ class StoreTermRequest extends FormRequest
 
     public function rules(): array
     {
+        $taxonomy = $this->taxonomy();
+
         return [
             'name' => 'required|string|max:255',
             'slug' => [
@@ -27,6 +29,15 @@ class StoreTermRequest extends FormRequest
                 // Уникальность гарантируется контроллером через ensureUniqueTermSlug
             ],
             'meta_json' => 'nullable|array',
+            'parent_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('terms', 'id')->where(function ($query) use ($taxonomy) {
+                    if ($taxonomy) {
+                        $query->where('taxonomy_id', $taxonomy->id);
+                    }
+                }),
+            ],
             'attach_entry_id' => [
                 'nullable',
                 'integer',

@@ -18,7 +18,7 @@ class TermResource extends AdminJsonResource
 
     public function toArray($request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'taxonomy' => $this->taxonomy?->slug,
             'name' => $this->name,
@@ -28,6 +28,18 @@ class TermResource extends AdminJsonResource
             'updated_at' => $this->updated_at?->toIso8601String(),
             'deleted_at' => $this->deleted_at?->toIso8601String(),
         ];
+
+        // Добавляем информацию об иерархии, если таксономия поддерживает её
+        if ($this->taxonomy?->hierarchical) {
+            $data['parent_id'] = $this->parent_id;
+            
+            // Если загружены дети, добавляем их
+            if ($this->relationLoaded('children')) {
+                $data['children'] = TermResource::collection($this->children);
+            }
+        }
+
+        return $data;
     }
 
     protected function prepareAdminResponse($request, Response $response): void
