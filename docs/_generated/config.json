@@ -3888,7 +3888,7 @@
     },
     "view_templates": {
         "default": {
-            "value": "pages.show",
+            "value": "entry",
             "type": "string",
             "env": null
         }

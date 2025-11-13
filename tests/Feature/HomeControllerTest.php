@@ -89,7 +89,7 @@ class HomeControllerTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertViewIs('pages.show');
+        $response->assertViewIs('entry');
         $response->assertViewHas('entry', $entry);
     }
 
@@ -151,7 +151,7 @@ class HomeControllerTest extends TestCase
         DB::enableQueryLog();
         $response1 = $this->get('/');
         $response1->assertStatus(200);
-        $response1->assertViewIs('pages.show');
+        $response1->assertViewIs('entry');
         $queries1 = count(DB::getQueryLog());
         DB::flushQueryLog();
 
@@ -160,7 +160,7 @@ class HomeControllerTest extends TestCase
         DB::enableQueryLog();
         $response2 = $this->get('/');
         $response2->assertStatus(200);
-        $response2->assertViewIs('pages.show');
+        $response2->assertViewIs('entry');
         $queries2 = count(DB::getQueryLog());
         DB::disableQueryLog();
 
@@ -206,7 +206,7 @@ class HomeControllerTest extends TestCase
 
         $responseA = $this->get('/');
         $responseA->assertStatus(200);
-        $responseA->assertViewIs('pages.show');
+        $responseA->assertViewIs('entry');
         $responseA->assertViewHas('entry', function ($entry) use ($entryA) {
             return $entry->id === $entryA->id && $entry->title === 'Home Page A';
         });
@@ -217,7 +217,7 @@ class HomeControllerTest extends TestCase
 
         $responseB = $this->get('/');
         $responseB->assertStatus(200);
-        $responseB->assertViewIs('pages.show');
+        $responseB->assertViewIs('entry');
         $responseB->assertViewHas('entry', function ($entry) use ($entryB) {
             return $entry->id === $entryB->id && $entry->title === 'Home Page B';
         });
@@ -241,7 +241,7 @@ class HomeControllerTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertViewIs('pages.show');
+        $response->assertViewIs('entry');
         
         // Проверяем что активен именованный маршрут 'home'
         $this->assertTrue(request()->routeIs('home'), 
@@ -287,7 +287,7 @@ class HomeControllerTest extends TestCase
 
         $responseA = $this->get('/');
         $responseA->assertStatus(200);
-        $responseA->assertViewIs('pages.show');
+        $responseA->assertViewIs('entry');
         $responseA->assertViewHas('entry', function ($entry) use ($entryA) {
             return $entry->id === $entryA->id && $entry->title === 'Home Page A';
         });
@@ -300,7 +300,7 @@ class HomeControllerTest extends TestCase
 
         $responseB = $this->get('/');
         $responseB->assertStatus(200);
-        $responseB->assertViewIs('pages.show');
+        $responseB->assertViewIs('entry');
         $responseB->assertViewHas('entry', function ($entry) use ($entryB) {
             return $entry->id === $entryB->id && $entry->title === 'Home Page B';
         });

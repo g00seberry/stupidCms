@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         // Используем scoped вместо singleton для совместимости с Octane/Swoole
         $this->app->scoped(TemplateResolver::class, function () {
             return new BladeTemplateResolver(
-                default: config('view_templates.default', 'pages.show'),
+                default: config('view_templates.default', 'entry'),
             );
         });
 

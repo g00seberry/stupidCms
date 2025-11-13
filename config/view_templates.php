@@ -7,13 +7,14 @@ return [
     |--------------------------------------------------------------------------
     |
     | Настройки для BladeTemplateResolver, который выбирает шаблоны
-    | для рендера записей (Entry) по приоритету:
-    | 1. Entry.template_override (если задан)
-    | 2. PostType.template (если задан)
-    | 3. Default (pages.show) - если оба не заданы
+    | для рендера записей (Entry) по файловой конвенции:
+    | 1. Entry.template_override (если задано — используется как полное имя вью)
+    | 2. entry--{postType}--{slug} (если существует)
+    | 3. entry--{postType} (если существует)
+    | 4. entry (глобальный)
     |
     */
 
-    'default' => env('VIEW_TEMPLATES_DEFAULT', 'pages.show'),
+    'default' => env('VIEW_TEMPLATES_DEFAULT', 'entry'),
 ];
 

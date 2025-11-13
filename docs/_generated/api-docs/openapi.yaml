@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T17:03:32'
+                  example: '2025-11-13T06:00:17'
                   nullable: true
                 date_to:
                   type: string
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.desc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3064,7 +3064,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -6714,7 +6714,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -7754,7 +7754,7 @@ paths:
                   nullable: false
                 template:
                   type: string
-                  description: 'nullable Имя blade-шаблона.'
+                  description: 'nullable @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}.'
                   example: single-product
                   nullable: true
                 options_json:
@@ -8363,7 +8363,7 @@ paths:
                   nullable: false
                 template:
                   type: string
-                  description: 'optional Имя blade-шаблона.'
+                  description: 'optional @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}.'
                   example: landing
                   nullable: true
                 options_json:
@@ -8975,7 +8975,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10616,7 +10616,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.desc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -12245,7 +12245,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-12T17:03:32'
+                  example: '2025-11-13T06:00:17'
                   nullable: true
                 to:
                   type: string

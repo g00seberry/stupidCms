@@ -7,6 +7,7 @@ namespace App\Http\Requests\Admin;
 use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StorePostTypeRequest extends FormRequest
 {
@@ -66,6 +67,30 @@ class StorePostTypeRequest extends FormRequest
             'name.required' => 'The name field is required.',
             'options_json.array' => 'The options_json field must be an object.',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        // Warnings не блокируют валидацию, только предупреждают
+        // Реальная передача warnings происходит через метод warnings() в контроллере
+    }
+
+    /**
+     * Получить warnings для добавления в meta ответа.
+     *
+     * @return array<string, array<string>>
+     */
+    public function warnings(): array
+    {
+        $warnings = [];
+        
+        if ($this->has('template') && !empty($this->input('template'))) {
+            $warnings['template'] = [
+                'Поле template устарело. Используйте файловую конвенцию entry--{postType} вместо указания шаблона в настройках типа.',
+            ];
+        }
+
+        return $warnings;
     }
 }
 

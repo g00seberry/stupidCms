@@ -1,52 +1,120 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\View;
 
 use App\Models\Entry;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 /**
- * Резолвер для выбора Blade-шаблона по приоритету:
- * 1. Entry.template_override (если задан)
- * 2. PostType.template (если задан)
- * 3. Default (pages.show) - если оба не заданы
+ * Резолвер для выбора Blade-шаблона по файловой конвенции.
+ * 
+ * Приоритет:
+ * 1. Entry.template_override (если задано — используется как полное имя вью)
+ * 2. entry--{postType}--{slug} (если существует)
+ * 3. entry--{postType} (если существует)
+ * 4. entry (глобальный)
  */
 final class BladeTemplateResolver implements TemplateResolver
 {
     public function __construct(
-        private string $default = 'pages.show',
+        private string $default = 'entry',
     ) {}
 
     /**
      * Возвращает имя blade-шаблона для рендера Entry.
      * 
      * Приоритет:
-     * 1. Entry.template_override (если задан)
-     * 2. PostType.template (если задан)
-     * 3. Default (pages.show) - если оба не заданы
+     * 1. Entry.template_override (если задано — используется как полное имя вью)
+     * 2. entry--{postType}--{slug} (если существует)
+     * 3. entry--{postType} (если существует)
+     * 4. entry (глобальный)
      * 
      * @param Entry $entry
      * @return string
      */
     public function forEntry(Entry $entry): string
     {
-        // 1) Entry.template_override
+        // 1) Entry.template_override (если задано — используем как полное имя вью)
         if (!empty($entry->template_override)) {
-            return $entry->template_override;
+            $override = $entry->template_override;
+            if (!View::exists($override)) {
+                throw new \InvalidArgumentException(
+                    "Template override '{$override}' не найден. Убедитесь, что шаблон существует."
+                );
+            }
+            return $override;
         }
 
-        // 2) PostType.template
-        if ($entry->relationLoaded('postType') && $entry->postType) {
-            $template = $entry->postType->template;
-        } else {
-            $template = $entry->postType()->value('template');
-        }
+        // Получаем postType slug
+        $postTypeSlug = $this->getPostTypeSlug($entry);
         
-        if (!empty($template)) {
-            return $template;
+        // Получаем entry slug
+        $entrySlug = $entry->slug;
+
+        // 2) Проверяем entry--{postType}--{slug}
+        if ($postTypeSlug && $entrySlug) {
+            $specificTemplate = "entry--{$postTypeSlug}--{$entrySlug}";
+            if (View::exists($specificTemplate)) {
+                return $specificTemplate;
+            }
         }
 
-        // 3) Default
+        // 3) Проверяем entry--{postType}
+        if ($postTypeSlug) {
+            $typeTemplate = "entry--{$postTypeSlug}";
+            if (View::exists($typeTemplate)) {
+                return $typeTemplate;
+            }
+        }
+
+        // 4) Фолбэк на PostType.template (deprecated, для совместимости)
+        $postTypeTemplate = $this->getPostTypeTemplate($entry);
+        if (!empty($postTypeTemplate)) {
+            Log::channel('stack')->warning(
+                'post_types.template устарел; используйте entry--{postType}. Переходный фолбэк: {template}',
+                [
+                    'postType' => $postTypeSlug,
+                    'template' => $postTypeTemplate,
+                ]
+            );
+            return $postTypeTemplate;
+        }
+
+        // 5) Глобальный entry
         return $this->default;
+    }
+
+    /**
+     * Получает slug postType из Entry.
+     * 
+     * @param Entry $entry
+     * @return string|null
+     */
+    private function getPostTypeSlug(Entry $entry): ?string
+    {
+        if ($entry->relationLoaded('postType') && $entry->postType) {
+            return $entry->postType->slug;
+        }
+
+        return $entry->postType()->value('slug');
+    }
+
+    /**
+     * Получает template из PostType (deprecated).
+     * 
+     * @param Entry $entry
+     * @return string|null
+     */
+    private function getPostTypeTemplate(Entry $entry): ?string
+    {
+        if ($entry->relationLoaded('postType') && $entry->postType) {
+            return $entry->postType->template;
+        }
+
+        return $entry->postType()->value('template');
     }
 }
 

@@ -43,7 +43,7 @@ class UpdateTaxonomyRequest extends FormRequest
             return $this->resolvedTaxonomy;
         }
 
-        $slug = (string) $this->route('taxonomy');
+        $slug = (string) $this->route('slug');
         $this->resolvedTaxonomy = Taxonomy::query()->where('slug', $slug)->first();
 
         return $this->resolvedTaxonomy;

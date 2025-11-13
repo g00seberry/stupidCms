@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:routes` to update.
 
-_Last generated: 2025-11-12 17:03:28_
+_Last generated: 2025-11-13 06:00:12_
 
 ## Web
 

@@ -2,7 +2,7 @@
 
 > ⚠️ **Auto-generated**. Do not edit manually. Run `php artisan docs:config` to update.
 
-_Last generated: 2025-11-12 17:03:30_
+_Last generated: 2025-11-13 06:00:14_
 
 ## app
 
@@ -926,7 +926,7 @@ _Last generated: 2025-11-12 17:03:30_
 
 | Key | Value | Type |
 |-----|-------|------|
-| `default` | `pages.show` | string |
+| `default` | `entry` | string |
 
 ## Environment Variables
 

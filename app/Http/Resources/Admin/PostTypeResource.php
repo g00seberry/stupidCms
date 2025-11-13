@@ -9,11 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 class PostTypeResource extends AdminJsonResource
 {
     private bool $created;
+    private ?array $warnings = null;
 
-    public function __construct($resource, bool $created = false)
+    public function __construct($resource, bool $created = false, ?array $warnings = null)
     {
         parent::__construct($resource);
         $this->created = $created;
+        $this->warnings = $warnings;
+        
+        if ($warnings !== null && !empty($warnings)) {
+            $this->additional(['meta' => ['warnings' => $warnings]]);
+        }
     }
 
     /**
@@ -27,6 +33,7 @@ class PostTypeResource extends AdminJsonResource
         return [
             'slug' => $this->slug,
             'name' => $this->name,
+            /** @deprecated Используйте файловую конвенцию entry--{postType} */
             'template' => $this->template,
             'options_json' => $this->transformOptionsJson($this->options_json),
             'created_at' => optional($this->created_at)->toIso8601String(),
@@ -62,6 +69,7 @@ class PostTypeResource extends AdminJsonResource
 
         return $object;
     }
+
 
     protected function prepareAdminResponse($request, Response $response): void
     {

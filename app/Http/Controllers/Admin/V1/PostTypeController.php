@@ -30,7 +30,7 @@ class PostTypeController extends Controller
      * @authenticated
      * @bodyParam slug string required Уникальный slug PostType. Example: product
      * @bodyParam name string required Человекочитаемое название. Example: Products
-     * @bodyParam template string nullable Имя blade-шаблона. Example: single-product
+     * @bodyParam template string nullable @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}. Example: single-product
      * @bodyParam options_json object Опциональные настройки. Example: {"fields":{"price":{"type":"number"}}}
      * @response status=201 {
      *   "data": {
@@ -114,7 +114,8 @@ class PostTypeController extends Controller
             ]);
         });
 
-        return new PostTypeResource($postType->fresh(), true);
+        $warnings = $request->warnings();
+        return new PostTypeResource($postType->fresh(), true, $warnings);
     }
 
     /**
@@ -257,7 +258,7 @@ class PostTypeController extends Controller
      * @urlParam slug string required Slug PostType. Example: article
      * @bodyParam slug string optional Новый slug PostType. Example: article-updated
      * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
-     * @bodyParam template string optional Имя blade-шаблона. Example: landing
+     * @bodyParam template string optional @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}. Example: landing
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @response status=200 {
      *   "data": {
@@ -353,7 +354,8 @@ class PostTypeController extends Controller
 
         $type->refresh();
 
-        return new PostTypeResource($type);
+        $warnings = $request->warnings();
+        return new PostTypeResource($type, false, $warnings);
     }
 
     /**

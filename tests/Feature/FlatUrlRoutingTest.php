@@ -73,7 +73,7 @@ class FlatUrlRoutingTest extends TestCase
         $response = $this->get('/about');
 
         $response->assertStatus(200);
-        $response->assertViewIs('pages.show');
+        $response->assertViewIs('entry');
         $response->assertViewHas('entry', function ($entry) {
             return $entry->slug === 'about' && $entry->title === 'About Us';
         });
@@ -185,7 +185,7 @@ class FlatUrlRoutingTest extends TestCase
         // /home должен обрабатываться PageController
         $response = $this->get('/home');
         $response->assertStatus(200);
-        $response->assertViewIs('pages.show');
+        $response->assertViewIs('entry');
     }
 
     /**
@@ -287,7 +287,7 @@ class FlatUrlRoutingTest extends TestCase
 
         // Должен обработаться PageController и вернуть 200
         $response->assertStatus(200);
-        $response->assertViewIs('pages.show');
+        $response->assertViewIs('entry');
         $response->assertViewHas('entry', function ($entry) {
             return $entry->slug === 'admin1';
         });
@@ -349,7 +349,7 @@ class FlatUrlRoutingTest extends TestCase
         if ($response->status() === 301) {
             $response->assertRedirect('/about');
         } else {
-            $response->assertViewIs('pages.show');
+            $response->assertViewIs('entry');
         }
     }
 

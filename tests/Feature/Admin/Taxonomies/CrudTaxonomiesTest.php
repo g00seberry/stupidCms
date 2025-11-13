@@ -105,6 +105,41 @@ class CrudTaxonomiesTest extends TestCase
         $this->assertDatabaseHas('taxonomies', ['slug' => 'updated-topics', 'name' => 'Updated Topics']);
     }
 
+    public function test_update_allows_same_slug(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $taxonomy = Taxonomy::factory()->create(['slug' => 'tags', 'label' => 'Tags']);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/taxonomies/tags', [
+            'label' => 'Tags3',
+            'slug' => 'tags',
+            'hierarchical' => true,
+            'options_json' => [],
+        ], $admin);
+
+        $response->assertOk();
+        $response->assertJsonPath('data.slug', 'tags');
+        $response->assertJsonPath('data.label', 'Tags3');
+        $this->assertDatabaseHas('taxonomies', ['slug' => 'tags', 'name' => 'Tags3']);
+    }
+
+    public function test_options_json_returns_object_not_array(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $taxonomy = Taxonomy::factory()->create([
+            'slug' => 'tags',
+            'label' => 'Tags',
+            'options_json' => [],
+        ]);
+
+        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/tags', $admin);
+
+        $response->assertOk();
+        $decoded = json_decode($response->getContent());
+        $this->assertInstanceOf(\stdClass::class, $decoded->data->options_json);
+        $this->assertSame([], (array) $decoded->data->options_json);
+    }
+
     public function test_destroy_blocks_when_terms_exist_without_force(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
