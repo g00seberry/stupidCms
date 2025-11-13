@@ -1,15 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Models\Entry;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
+/**
+ * Политика авторизации для Entry.
+ *
+ * Определяет права доступа к записям контента на основе
+ * административных разрешений пользователя (manage.entries).
+ *
+ * @package App\Policies
+ */
 class EntryPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Определить, может ли пользователь просматривать любые записи.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @return bool
      */
     public function viewAny(User $user): bool
     {
@@ -17,7 +32,13 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Определить, может ли пользователь просматривать запись.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function view(User $user, Entry $entry): bool
     {
@@ -25,7 +46,12 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Определить, может ли пользователь создавать записи.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @return bool
      */
     public function create(User $user): bool
     {
@@ -33,7 +59,13 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Определить, может ли пользователь обновлять запись.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function update(User $user, Entry $entry): bool
     {
@@ -41,7 +73,13 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Определить, может ли пользователь удалять запись.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function delete(User $user, Entry $entry): bool
     {
@@ -49,7 +87,13 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Определить, может ли пользователь восстанавливать запись.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function restore(User $user, Entry $entry): bool
     {
@@ -57,16 +101,27 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Определить, может ли пользователь окончательно удалять запись.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function forceDelete(User $user, Entry $entry): bool
     {
         return $user->hasAdminPermission('manage.entries');
     }
 
-    // Кастомные abilities
     /**
-     * Determine whether the user can publish/unpublish the entry.
+     * Определить, может ли пользователь публиковать/снимать с публикации запись.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function publish(User $user, Entry $entry): bool
     {
@@ -74,7 +129,13 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can attach media to the entry.
+     * Определить, может ли пользователь привязывать медиа к записи.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function attachMedia(User $user, Entry $entry): bool
     {
@@ -82,7 +143,13 @@ class EntryPolicy
     }
 
     /**
-     * Determine whether the user can manage terms for the entry.
+     * Определить, может ли пользователь управлять термами записи.
+     *
+     * Требует права 'manage.entries'.
+     *
+     * @param \App\Models\User $user Пользователь
+     * @param \App\Models\Entry $entry Запись
+     * @return bool
      */
     public function manageTerms(User $user, Entry $entry): bool
     {

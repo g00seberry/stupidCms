@@ -25,30 +25,30 @@ HTTP эндпоинты API (61 сущностей)
 
 ### Models
 
-- [Audit](./models.md#audit) - Audit model
-- [Entry](./models.md#entry) - Entry model
-- [EntryMedia](./models.md#entrymedia) - EntryMedia model
-- [EntrySlug](./models.md#entryslug) - EntrySlug model
-- [Media](./models.md#media) - Media model
-- [MediaVariant](./models.md#mediavariant) - MediaVariant model
-- [Option](./models.md#option) - Option model
-- [Outbox](./models.md#outbox) - Outbox model
-- [Plugin](./models.md#plugin) - Plugin model
-- [PostType](./models.md#posttype) - PostType model
+- [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
+- [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
+- [EntryMedia](./models.md#entrymedia) - Pivot модель для связи записей и медиа-файлов (EntryMedia).
+- [EntrySlug](./models.md#entryslug) - Eloquent модель для истории slug'ов записей (EntrySlug).
+- [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
+- [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
+- [Option](./models.md#option) - Eloquent модель для опций системы (Option).
+- [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
+- [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
+- [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
 - *...и еще 8 сущностей*
 
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
-- [DefaultEntrySlugService](./domain-services.md#defaultentryslugservice) - DefaultEntrySlugService
-- [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - ElasticsearchSearchClient
-- [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - EntryToSearchDoc
-- [GenerateVariantJob](./domain-services.md#generatevariantjob) - GenerateVariantJob
-- [IndexManager](./domain-services.md#indexmanager) - IndexManager
+- [DefaultEntrySlugService](./domain-services.md#defaultentryslugservice) - Сервис для управления историей slug'ов записей.
+- [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
+- [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
+- [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
+- [IndexManager](./domain-services.md#indexmanager) - Менеджер для управления индексами поиска.
 - [JwtService](./domain-services.md#jwtservice) - Service for issuing and verifying JWT access and refresh tokens.
-- [MediaMetadataExtractor](./domain-services.md#mediametadataextractor) - MediaMetadataExtractor
-- [MediaStoreAction](./domain-services.md#mediastoreaction) - MediaStoreAction
-- [NotReservedRoute](./domain-services.md#notreservedroute) - NotReservedRoute
+- [MediaMetadataExtractor](./domain-services.md#mediametadataextractor) - Сервис для извлечения метаданных из медиа-файлов.
+- [MediaStoreAction](./domain-services.md#mediastoreaction) - Действие для сохранения медиа-файла.
+- [NotReservedRoute](./domain-services.md#notreservedroute) - Правило валидации: slug не должен быть зарезервированным путём.
 - *...и еще 29 сущностей*
 
 ### Blade Views
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-13 16:22:11
+**Сгенерировано:** 2025-11-13 17:32:18
 
 Для обновления документации выполните:
 ```bash

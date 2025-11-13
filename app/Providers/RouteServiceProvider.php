@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
@@ -9,19 +11,32 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
+/**
+ * Service Provider для маршрутизации.
+ *
+ * Настраивает rate limiters для API, login, refresh, search.
+ * Загружает маршруты в детерминированном порядке:
+ * 1) Core → 2) Public API → 3) Admin API → 4) Plugins → 5) Content → 6) Fallback
+ *
+ * @package App\Providers
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * The path to your application's "home" route.
+     * Путь к "home" маршруту приложения.
      *
-     * Typically, users are redirected here after authentication.
+     * Обычно пользователи перенаправляются сюда после аутентификации.
      *
      * @var string
      */
     public const HOME = '/';
 
     /**
-     * Define your route model bindings, pattern filters, and other route configuration.
+     * Определить привязки моделей, фильтры паттернов и другую конфигурацию маршрутов.
+     *
+     * Настраивает rate limiters и загружает маршруты в определённом порядке.
+     *
+     * @return void
      */
     public function boot(): void
     {

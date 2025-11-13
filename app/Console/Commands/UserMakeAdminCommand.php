@@ -1,28 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
 
+/**
+ * Команда для назначения пользователя администратором.
+ *
+ * Устанавливает is_admin=1 для указанного пользователя по email.
+ *
+ * @package App\Console\Commands
+ */
 class UserMakeAdminCommand extends Command
 {
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'user:make-admin {email : The email of the user to make admin}';
 
     /**
-     * The console command description.
+     * Описание консольной команды.
      *
      * @var string
      */
     protected $description = 'Make a user an administrator by setting is_admin=1';
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
+     *
+     * Находит пользователя по email и устанавливает is_admin=1.
+     *
+     * @return int Код возврата (0 = успех, 1 = ошибка)
      */
     public function handle(): int
     {

@@ -15,10 +15,26 @@ use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Service Provider для поисковых сервисов.
+ *
+ * Регистрирует SearchClientInterface, IndexManager и SearchService как singleton.
+ * Если поиск отключён в конфиге, использует NullSearchClient.
+ *
+ * @package App\Providers
+ */
 final class SearchServiceProvider extends ServiceProvider
 {
     /**
-     * Register services.
+     * Зарегистрировать сервисы поиска.
+     *
+     * Регистрирует:
+     * - SearchClientInterface (ElasticsearchSearchClient или NullSearchClient)
+     * - EntryToSearchDoc (singleton)
+     * - IndexManager (singleton)
+     * - SearchService (singleton)
+     *
+     * @return void
      */
     public function register(): void
     {

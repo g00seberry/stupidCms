@@ -6,18 +6,22 @@ use Closure;
 use Illuminate\Http\Request;
 
 /**
- * Adds Vary: Origin, Cookie headers to responses with cookies.
+ * Middleware для добавления заголовков Vary: Origin, Cookie к ответам с cookies.
  *
- * This ensures proper cache behavior when cookies are present,
- * as responses with cookies may vary based on Origin and Cookie headers.
+ * Обеспечивает корректное поведение кэша при наличии cookies,
+ * так как ответы с cookies могут различаться в зависимости от заголовков Origin и Cookie.
+ *
+ * @package App\Http\Middleware
  */
 final class AddCacheVary
 {
     /**
-     * Handle an incoming request.
+     * Обработать входящий запрос.
      *
-     * @param Request $request
-     * @param Closure $next
+     * Добавляет заголовки Vary: Origin, Cookie к ответам, которые устанавливают cookies.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Closure $next Следующий middleware
      * @return mixed
      */
     public function handle(Request $request, Closure $next)

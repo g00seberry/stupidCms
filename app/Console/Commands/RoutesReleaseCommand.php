@@ -1,29 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Domain\Routing\PathReservationService;
 use App\Domain\Routing\Exceptions\ForbiddenReservationRelease;
 use Illuminate\Console\Command;
 
+/**
+ * Команда для освобождения зарезервированного пути.
+ *
+ * Освобождает путь, зарезервированный указанным источником.
+ * Выбрасывает ForbiddenReservationRelease, если путь зарезервирован другим источником.
+ *
+ * @package App\Console\Commands
+ */
 class RoutesReleaseCommand extends Command
 {
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'routes:release {path : The path to release} {source : The source identifier that owns the reservation}';
 
     /**
-     * The console command description.
+     * Описание консольной команды.
      *
      * @var string
      */
     protected $description = 'Release a reserved URL path';
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
+     *
+     * Освобождает путь через PathReservationService.
+     *
+     * @param \App\Domain\Routing\PathReservationService $service Сервис резервации путей
+     * @return int Код возврата (0 = успех, 1 = ошибка)
      */
     public function handle(PathReservationService $service): int
     {

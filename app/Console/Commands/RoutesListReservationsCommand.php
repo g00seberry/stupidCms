@@ -1,28 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\ReservedRoute;
 use Illuminate\Console\Command;
 
+/**
+ * Команда для вывода списка всех зарезервированных путей.
+ *
+ * Выводит таблицу со всеми резервациями путей из таблицы reserved_routes.
+ *
+ * @package App\Console\Commands
+ */
 class RoutesListReservationsCommand extends Command
 {
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'routes:list-reservations';
 
     /**
-     * The console command description.
+     * Описание консольной команды.
      *
      * @var string
      */
     protected $description = 'List all reserved paths';
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
+     *
+     * Выводит таблицу с зарезервированными путями (path, kind, source, created_at).
+     *
+     * @return int Код возврата (0 = успех, 1 = ошибка)
      */
     public function handle(): int
     {

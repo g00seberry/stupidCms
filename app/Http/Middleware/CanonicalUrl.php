@@ -8,20 +8,27 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Middleware для канонизации URL публичных страниц.
- * 
+ *
  * Выполняет 301 редиректы для:
  * - Приведения к нижнему регистру: /About → /about
  * - Удаления завершающего слэша: /about/ → /about
- * 
+ *
  * Применяется только к публичным контентным маршрутам (web_content.php),
  * не затрагивает админку (/admin/*) и API (/api/*).
+ *
+ * @package App\Http\Middleware
  */
 class CanonicalUrl
 {
     /**
-     * Handle an incoming request.
+     * Обработать входящий запрос.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Нормализует путь (нижний регистр, без trailing slash) и выполняет
+     * 301 редирект при необходимости. Сохраняет query string.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Closure $next Следующий middleware
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -59,8 +66,10 @@ class CanonicalUrl
     }
 
     /**
-     * Проверяет, является ли путь системным (админка, API и т.д.).
-     * 
+     * Проверить, является ли путь системным (админка, API и т.д.).
+     *
+     * Системные пути не должны канонизироваться.
+     *
      * @param string $path Путь без ведущего '/'
      * @return bool
      */

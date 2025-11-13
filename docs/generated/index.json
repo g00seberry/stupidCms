@@ -5,8 +5,8 @@
             "type": "model",
             "name": "Audit",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Audit.php",
-            "summary": "Audit model",
-            "details": null,
+            "summary": "Eloquent модель для аудита изменений (Audit).",
+            "details": "Хранит историю изменений сущностей системы для аудита и отслеживания действий пользователей.",
             "meta": {
                 "table": "audits",
                 "fillable": [],
@@ -33,8 +33,8 @@
             "type": "model",
             "name": "Entry",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Entry.php",
-            "summary": "Entry model",
-            "details": null,
+            "summary": "Eloquent модель для записей контента (Entry).",
+            "details": "Представляет единицу контента в CMS: статьи, страницы, посты и т.д.\nПоддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.",
             "meta": {
                 "table": "entries",
                 "fillable": [],
@@ -78,8 +78,8 @@
             "type": "model",
             "name": "EntryMedia",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntryMedia.php",
-            "summary": "EntryMedia model",
-            "details": null,
+            "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia).",
+            "details": "Представляет связь many-to-many между Entry и Media с дополнительными полями:\nfield_key (ключ поля в структуре контента) и order (порядок сортировки).",
             "meta": {
                 "table": "entry_media",
                 "fillable": [],
@@ -100,8 +100,8 @@
             "type": "model",
             "name": "EntrySlug",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntrySlug.php",
-            "summary": "EntrySlug model",
-            "details": null,
+            "summary": "Eloquent модель для истории slug'ов записей (EntrySlug).",
+            "details": "Хранит историю изменений slug'ов для каждой записи Entry.\nПозволяет отслеживать все предыдущие URL и обеспечивает редиректы.",
             "meta": {
                 "table": "entry_slugs",
                 "fillable": [],
@@ -128,8 +128,8 @@
             "type": "model",
             "name": "Media",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Media.php",
-            "summary": "Media model",
-            "details": null,
+            "summary": "Eloquent модель для медиа-файлов (Media).",
+            "details": "Представляет загруженные файлы: изображения, видео, аудио, документы.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.",
             "meta": {
                 "table": "media",
                 "fillable": [],
@@ -160,8 +160,8 @@
             "type": "model",
             "name": "MediaVariant",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaVariant.php",
-            "summary": "MediaVariant model",
-            "details": null,
+            "summary": "Eloquent модель для вариантов медиа-файлов (MediaVariant).",
+            "details": "Представляет производные версии медиа-файла: превью, миниатюры, ресайзы изображений.\nИспользует ULID в качестве первичного ключа.",
             "meta": {
                 "table": "media_variants",
                 "fillable": [],
@@ -185,8 +185,8 @@
             "type": "model",
             "name": "Option",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Option.php",
-            "summary": "Option model",
-            "details": null,
+            "summary": "Eloquent модель для опций системы (Option).",
+            "details": "Хранит настройки системы в формате ключ-значение с поддержкой пространств имён.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.",
             "meta": {
                 "table": "options",
                 "fillable": [
@@ -214,8 +214,8 @@
             "type": "model",
             "name": "Outbox",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Outbox.php",
-            "summary": "Outbox model",
-            "details": null,
+            "summary": "Eloquent модель для исходящих сообщений (Outbox).",
+            "details": "Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.\nИспользуется для реализации паттерна Outbox для гарантированной доставки.",
             "meta": {
                 "table": "outboxes",
                 "fillable": [],
@@ -238,8 +238,8 @@
             "type": "model",
             "name": "Plugin",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Plugin.php",
-            "summary": "Plugin model",
-            "details": null,
+            "summary": "Eloquent модель для плагинов (Plugin).",
+            "details": "Представляет плагины системы с информацией о состоянии, метаданных и синхронизации.\nИспользует ULID в качестве первичного ключа.",
             "meta": {
                 "table": "plugins",
                 "fillable": [],
@@ -262,8 +262,8 @@
             "type": "model",
             "name": "PostType",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/PostType.php",
-            "summary": "PostType model",
-            "details": null,
+            "summary": "Eloquent модель для типов записей (PostType).",
+            "details": "Определяет типы контента в CMS (например, 'article', 'page', 'post').\nКаждый тип может иметь свои опции и настройки.",
             "meta": {
                 "table": "post_types",
                 "fillable": [
@@ -295,8 +295,8 @@
             "type": "model",
             "name": "Redirect",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Redirect.php",
-            "summary": "Redirect model",
-            "details": null,
+            "summary": "Eloquent модель для редиректов (Redirect).",
+            "details": "Хранит правила перенаправления URL (301, 302 и т.д.).",
             "meta": {
                 "table": "redirects",
                 "fillable": [],
@@ -315,8 +315,8 @@
             "type": "model",
             "name": "RefreshToken",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/RefreshToken.php",
-            "summary": "RefreshToken model for tracking JWT refresh tokens.",
-            "details": null,
+            "summary": "Eloquent модель для JWT refresh токенов (RefreshToken).",
+            "details": "Отслеживает refresh токены для обновления access токенов.\nПоддерживает ротацию токенов через parent_jti и отслеживание использования/отзыва.",
             "meta": {
                 "table": "refresh_tokens",
                 "fillable": [
@@ -353,8 +353,8 @@
             "type": "model",
             "name": "ReservedRoute",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/ReservedRoute.php",
-            "summary": "ReservedRoute model",
-            "details": null,
+            "summary": "Eloquent модель для зарезервированных путей (ReservedRoute).",
+            "details": "Хранит пути, которые зарезервированы системой и не могут использоваться\nдля записей контента. Поддерживает два типа: 'path' (точное совпадение)\nи 'prefix' (префикс пути).",
             "meta": {
                 "table": "reserved_routes",
                 "fillable": [
@@ -382,8 +382,8 @@
             "type": "model",
             "name": "RouteReservation",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/RouteReservation.php",
-            "summary": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.",
-            "details": null,
+            "summary": "Eloquent модель для зарезервированных путей (RouteReservation).",
+            "details": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.",
             "meta": {
                 "table": "reserved_routes",
                 "fillable": [
@@ -411,8 +411,8 @@
             "type": "model",
             "name": "Taxonomy",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Taxonomy.php",
-            "summary": "Taxonomy model",
-            "details": null,
+            "summary": "Eloquent модель для таксономий (Taxonomy).",
+            "details": "Определяет группы термов: категории, теги, метки и т.д.\nМожет быть иерархической (hierarchical = true) или плоской (hierarchical = false).",
             "meta": {
                 "table": "taxonomies",
                 "fillable": [],
@@ -439,8 +439,8 @@
             "type": "model",
             "name": "Term",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Term.php",
-            "summary": "Term model",
-            "details": null,
+            "summary": "Eloquent модель для термов (Term).",
+            "details": "Представляет элементы таксономии: категории, теги, метки и т.д.\nПоддерживает иерархическую структуру через closure-table (term_tree).\nПоддерживает мягкое удаление.",
             "meta": {
                 "table": "terms",
                 "fillable": [],
@@ -486,8 +486,8 @@
             "type": "model",
             "name": "TermTree",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/TermTree.php",
-            "summary": "TermTree model",
-            "details": null,
+            "summary": "Eloquent модель для closure-table иерархии термов (TermTree).",
+            "details": "Реализует closure-table паттерн для хранения иерархических связей между термами.\nПозволяет эффективно получать всех предков и потомков терма.",
             "meta": {
                 "table": "term_tree",
                 "fillable": [],
@@ -506,8 +506,8 @@
             "type": "model",
             "name": "User",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/User.php",
-            "summary": "User model",
-            "details": null,
+            "summary": "Eloquent модель для пользователей (User).",
+            "details": "Представляет пользователей системы с поддержкой аутентификации и авторизации.\nПоддерживает административные права и разрешения.",
             "meta": {
                 "table": "users",
                 "fillable": [
@@ -560,8 +560,8 @@
             "type": "domain_service",
             "name": "RefreshTokenDto",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Auth\\RefreshTokenDto.php",
-            "summary": "Data Transfer Object for RefreshToken.",
-            "details": "Provides type-safe access to refresh token data without exposing Eloquent model.",
+            "summary": "Data Transfer Object для RefreshToken.",
+            "details": "Предоставляет типобезопасный доступ к данным refresh токена\nбез раскрытия Eloquent модели.",
             "meta": {
                 "methods": [
                     "isValid",
@@ -586,7 +586,7 @@
             "type": "domain_service",
             "name": "RefreshTokenRepositoryImpl",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Auth\\RefreshTokenRepositoryImpl.php",
-            "summary": "Implementation of RefreshTokenRepository using Eloquent.",
+            "summary": "Реализация RefreshTokenRepository с использованием Eloquent.",
             "details": null,
             "meta": {
                 "methods": [
@@ -610,8 +610,8 @@
             "type": "domain_service",
             "name": "DefaultEntrySlugService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Entries\\DefaultEntrySlugService.php",
-            "summary": "DefaultEntrySlugService",
-            "details": null,
+            "summary": "Сервис для управления историей slug'ов записей.",
+            "details": "Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.\nГарантирует атомарность операций и корректность флага is_current.",
             "meta": {
                 "methods": [
                     "onCreated",
@@ -631,8 +631,8 @@
             "type": "domain_service",
             "name": "PublishingService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Entries\\PublishingService.php",
-            "summary": "PublishingService",
-            "details": null,
+            "summary": "Сервис для применения правил публикации записей.",
+            "details": "Обрабатывает логику публикации Entry: автозаполнение published_at,\nвалидация инвариантов (дата публикации не в будущем).",
             "meta": {
                 "methods": [
                     "applyAndValidate"
@@ -650,8 +650,8 @@
             "type": "domain_service",
             "name": "MediaStoreAction",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
-            "summary": "MediaStoreAction",
-            "details": null,
+            "summary": "Действие для сохранения медиа-файла.",
+            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД.",
             "meta": {
                 "methods": [
                     "execute"
@@ -672,8 +672,8 @@
             "type": "domain_service",
             "name": "GenerateVariantJob",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Jobs\\GenerateVariantJob.php",
-            "summary": "GenerateVariantJob",
-            "details": null,
+            "summary": "Job для генерации варианта медиа-файла.",
+            "details": "Выполняет генерацию варианта изображения (thumbnail, resize и т.д.)\nв фоновом режиме через очередь.",
             "meta": {
                 "methods": [
                     "handle",
@@ -730,8 +730,8 @@
             "type": "domain_service",
             "name": "MediaMetadataExtractor",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
-            "summary": "MediaMetadataExtractor",
-            "details": null,
+            "summary": "Сервис для извлечения метаданных из медиа-файлов.",
+            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов.",
             "meta": {
                 "methods": [
                     "extract"
@@ -750,8 +750,8 @@
             "type": "domain_service",
             "name": "OnDemandVariantService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\OnDemandVariantService.php",
-            "summary": "OnDemandVariantService",
-            "details": null,
+            "summary": "Сервис для генерации вариантов медиа-файлов по требованию.",
+            "details": "Генерирует варианты изображений (thumbnails, resized) на лету,\nиспользуя GD для обработки изображений.",
             "meta": {
                 "methods": [
                     "ensureVariant",
@@ -771,8 +771,8 @@
             "type": "domain_service",
             "name": "OptionsRepository",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Options\\OptionsRepository.php",
-            "summary": "OptionsRepository",
-            "details": null,
+            "summary": "Репозиторий для работы с опциями системы.",
+            "details": "Предоставляет доступ к опциям с кэшированием и поддержкой пространств имён.\nПоддерживает мягкое удаление и восстановление опций.",
             "meta": {
                 "methods": [
                     "get",
@@ -796,8 +796,8 @@
             "type": "domain_service",
             "name": "NotReservedRoute",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Pages\\Validation\\NotReservedRoute.php",
-            "summary": "NotReservedRoute",
-            "details": null,
+            "summary": "Правило валидации: slug не должен быть зарезервированным путём.",
+            "details": "Проверяет, что slug не совпадает с зарезервированными путями или префиксами.\nИспользуется для валидации slug'ов страниц.",
             "meta": {
                 "methods": [
                     "passes",
@@ -819,7 +819,7 @@
             "type": "domain_service",
             "name": "PluginsSyncCommand",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Commands\\PluginsSyncCommand.php",
-            "summary": "PluginsSyncCommand",
+            "summary": "Команда для синхронизации плагинов из файловой системы в БД.",
             "details": null,
             "meta": {
                 "methods": [
@@ -841,8 +841,8 @@
             "type": "domain_service",
             "name": "PluginDisabled",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginDisabled.php",
-            "summary": "PluginDisabled",
-            "details": null,
+            "summary": "Событие: плагин отключён.",
+            "details": "Отправляется после успешного отключения плагина в БД.",
             "meta": {
                 "methods": [
                     "dispatch",
@@ -867,8 +867,8 @@
             "type": "domain_service",
             "name": "PluginEnabled",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginEnabled.php",
-            "summary": "PluginEnabled",
-            "details": null,
+            "summary": "Событие: плагин включён.",
+            "details": "Отправляется после успешного включения плагина в БД.",
             "meta": {
                 "methods": [
                     "dispatch",
@@ -893,8 +893,8 @@
             "type": "domain_service",
             "name": "PluginsRoutesReloaded",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsRoutesReloaded.php",
-            "summary": "PluginsRoutesReloaded",
-            "details": null,
+            "summary": "Событие: маршруты плагинов перезагружены.",
+            "details": "Отправляется после успешной перезагрузки маршрутов плагинов.",
             "meta": {
                 "methods": [
                     "dispatch",
@@ -917,8 +917,8 @@
             "type": "domain_service",
             "name": "PluginsSynced",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsSynced.php",
-            "summary": "PluginsSynced",
-            "details": null,
+            "summary": "Событие: плагины синхронизированы.",
+            "details": "Отправляется после успешной синхронизации плагинов из файловой системы в БД.",
             "meta": {
                 "methods": [
                     "dispatch",
@@ -941,8 +941,8 @@
             "type": "domain_service",
             "name": "PluginActivator",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginActivator.php",
-            "summary": "PluginActivator",
-            "details": null,
+            "summary": "Активатор плагинов.",
+            "details": "Управляет включением и отключением плагинов с транзакционной безопасностью\nи автоматической перезагрузкой маршрутов.",
             "meta": {
                 "methods": [
                     "enable",
@@ -963,8 +963,8 @@
             "type": "domain_service",
             "name": "PluginRegistry",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginRegistry.php",
-            "summary": "PluginRegistry",
-            "details": null,
+            "summary": "Реестр плагинов.",
+            "details": "Управляет списком включённых плагинов и их провайдерами.",
             "meta": {
                 "methods": [
                     "enabled",
@@ -983,8 +983,8 @@
             "type": "domain_service",
             "name": "PluginAutoloader",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginAutoloader.php",
-            "summary": "PluginAutoloader",
-            "details": null,
+            "summary": "Автозагрузчик классов плагинов.",
+            "details": "Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.",
             "meta": {
                 "methods": [
                     "register"
@@ -1003,8 +1003,8 @@
             "type": "domain_service",
             "name": "PluginsRouteReloader",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsRouteReloader.php",
-            "summary": "PluginsRouteReloader",
-            "details": null,
+            "summary": "Перезагрузчик маршрутов плагинов.",
+            "details": "Очищает кэш маршрутов, регистрирует автозагрузку, регистрирует провайдеры\nвключённых плагинов и кэширует маршруты (если включено).",
             "meta": {
                 "methods": [
                     "reload"
@@ -1027,8 +1027,8 @@
             "type": "domain_service",
             "name": "PluginsSynchronizer",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsSynchronizer.php",
-            "summary": "PluginsSynchronizer",
-            "details": null,
+            "summary": "Синхронизатор плагинов.",
+            "details": "Синхронизирует плагины из файловой системы в БД:\nобнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.",
             "meta": {
                 "methods": [
                     "sync"
@@ -1049,8 +1049,8 @@
             "type": "domain_service",
             "name": "PathNormalizer",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathNormalizer.php",
-            "summary": "PathNormalizer",
-            "details": null,
+            "summary": "Сервис для нормализации путей.",
+            "details": "Приводит пути к единому формату: удаляет query/fragment, гарантирует ведущий слэш,\nубирает trailing слэш, приводит к нижнему регистру, применяет Unicode NFC нормализацию.",
             "meta": {
                 "methods": [
                     "normalize"
@@ -1068,8 +1068,8 @@
             "type": "domain_service",
             "name": "PathReservationServiceImpl",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationServiceImpl.php",
-            "summary": "PathReservationServiceImpl",
-            "details": null,
+            "summary": "Реализация сервиса для резервации путей.",
+            "details": "Управляет зарезервированными путями с поддержкой статических путей из конфига\nи динамических резерваций из БД. Использует кэширование для оптимизации проверок.",
             "meta": {
                 "methods": [
                     "reservePath",
@@ -1093,8 +1093,8 @@
             "type": "domain_service",
             "name": "PathReservationStoreImpl",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationStoreImpl.php",
-            "summary": "PathReservationStoreImpl",
-            "details": null,
+            "summary": "Реализация PathReservationStore с использованием Eloquent.",
+            "details": "Использует модель ReservedRoute для хранения резерваций в БД.",
             "meta": {
                 "methods": [
                     "insert",
@@ -1138,8 +1138,8 @@
             "type": "domain_service",
             "name": "ReservedRouteRegistry",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\ReservedRouteRegistry.php",
-            "summary": "ReservedRouteRegistry",
-            "details": null,
+            "summary": "Реестр зарезервированных маршрутов.",
+            "details": "Объединяет статические пути из конфига и динамические из БД.\nИспользует кэширование для оптимизации частых проверок.",
             "meta": {
                 "methods": [
                     "all",
@@ -1163,8 +1163,8 @@
             "type": "domain_service",
             "name": "RichTextSanitizer",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Sanitizer\\RichTextSanitizer.php",
-            "summary": "RichTextSanitizer",
-            "details": null,
+            "summary": "Сервис для санитизации HTML контента.",
+            "details": "Очищает HTML от потенциально опасных элементов и атрибутов через HTMLPurifier.\nАвтоматически добавляет rel=\"noopener noreferrer\" к ссылкам с target=\"_blank\"\nдля защиты от атак через window.opener.",
             "meta": {
                 "methods": [
                     "sanitize"
@@ -1182,8 +1182,8 @@
             "type": "domain_service",
             "name": "ElasticsearchSearchClient",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\ElasticsearchSearchClient.php",
-            "summary": "ElasticsearchSearchClient",
-            "details": null,
+            "summary": "Реализация SearchClientInterface для Elasticsearch.",
+            "details": "Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.\nПоддерживает базовую аутентификацию и настройку SSL.",
             "meta": {
                 "methods": [
                     "search",
@@ -1210,8 +1210,8 @@
             "type": "domain_service",
             "name": "NullSearchClient",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\NullSearchClient.php",
-            "summary": "NullSearchClient",
-            "details": null,
+            "summary": "Null-реализация SearchClientInterface.",
+            "details": "Используется когда поиск отключен. Все методы возвращают пустые результаты\nили выполняют no-op операции.",
             "meta": {
                 "methods": [
                     "search",
@@ -1236,7 +1236,7 @@
             "type": "domain_service",
             "name": "SearchReindexCommand",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Commands\\SearchReindexCommand.php",
-            "summary": "SearchReindexCommand",
+            "summary": "Команда для реиндексации поискового индекса.",
             "details": null,
             "meta": {
                 "methods": [
@@ -1256,8 +1256,8 @@
             "type": "domain_service",
             "name": "IndexManager",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\IndexManager.php",
-            "summary": "IndexManager",
-            "details": null,
+            "summary": "Менеджер для управления индексами поиска.",
+            "details": "Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,\nпереключает алиасы и удаляет старые индексы.",
             "meta": {
                 "methods": [
                     "reindex"
@@ -1278,8 +1278,8 @@
             "type": "domain_service",
             "name": "ReindexSearchJob",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Jobs\\ReindexSearchJob.php",
-            "summary": "ReindexSearchJob",
-            "details": null,
+            "summary": "Job для реиндексации поискового индекса в фоновом режиме.",
+            "details": "Выполняет полную реиндексацию всех опубликованных записей через очередь.",
             "meta": {
                 "methods": [
                     "handle",
@@ -1336,8 +1336,8 @@
             "type": "domain_service",
             "name": "SearchHit",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchHit.php",
-            "summary": "SearchHit",
-            "details": null,
+            "summary": "Результат поиска (одна найденная запись).",
+            "details": "Представляет одну найденную запись с информацией о релевантности\nи подсветкой совпадений в тексте.",
             "meta": {
                 "methods": [],
                 "dependencies": [],
@@ -1353,8 +1353,8 @@
             "type": "domain_service",
             "name": "SearchQuery",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchQuery.php",
-            "summary": "SearchQuery",
-            "details": null,
+            "summary": "Value Object для поискового запроса.",
+            "details": "Инкапсулирует параметры поиска: текст запроса, фильтры по типам записей,\nтермам, датам, пагинацию.",
             "meta": {
                 "methods": [
                     "query",
@@ -1383,8 +1383,8 @@
             "type": "domain_service",
             "name": "SearchResult",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchResult.php",
-            "summary": "SearchResult",
-            "details": null,
+            "summary": "Результаты поискового запроса.",
+            "details": "Инкапсулирует результаты поиска: список найденных записей, общее количество,\nинформацию о пагинации и время выполнения запроса.",
             "meta": {
                 "methods": [
                     "hits",
@@ -1407,8 +1407,8 @@
             "type": "domain_service",
             "name": "SearchService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchService.php",
-            "summary": "SearchService",
-            "details": null,
+            "summary": "Сервис для выполнения поисковых запросов.",
+            "details": "Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).\nСтроит запросы, обрабатывает ошибки, маппит результаты.",
             "meta": {
                 "methods": [
                     "search"
@@ -1429,8 +1429,8 @@
             "type": "domain_service",
             "name": "EntryToSearchDoc",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Transformers\\EntryToSearchDoc.php",
-            "summary": "EntryToSearchDoc",
-            "details": null,
+            "summary": "Трансформер Entry в документ для поискового индекса.",
+            "details": "Преобразует Entry в структуру документа для Elasticsearch:\nизвлекает текст из data_json, нормализует пробелы, формирует excerpt.",
             "meta": {
                 "methods": [
                     "transform"
@@ -1449,8 +1449,8 @@
             "type": "domain_service",
             "name": "SearchTermFilter",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
-            "summary": "SearchTermFilter",
-            "details": null,
+            "summary": "Value Object для фильтра поиска по терму.",
+            "details": "Представляет фильтр по терму таксономии в формате \"taxonomy:slug\".",
             "meta": {
                 "methods": [
                     "fromString"
@@ -4423,8 +4423,8 @@
                 "type": "model",
                 "name": "Audit",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Audit.php",
-                "summary": "Audit model",
-                "details": null,
+                "summary": "Eloquent модель для аудита изменений (Audit).",
+                "details": "Хранит историю изменений сущностей системы для аудита и отслеживания действий пользователей.",
                 "meta": {
                     "table": "audits",
                     "fillable": [],
@@ -4451,8 +4451,8 @@
                 "type": "model",
                 "name": "Entry",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Entry.php",
-                "summary": "Entry model",
-                "details": null,
+                "summary": "Eloquent модель для записей контента (Entry).",
+                "details": "Представляет единицу контента в CMS: статьи, страницы, посты и т.д.\nПоддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.",
                 "meta": {
                     "table": "entries",
                     "fillable": [],
@@ -4496,8 +4496,8 @@
                 "type": "model",
                 "name": "EntryMedia",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntryMedia.php",
-                "summary": "EntryMedia model",
-                "details": null,
+                "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia).",
+                "details": "Представляет связь many-to-many между Entry и Media с дополнительными полями:\nfield_key (ключ поля в структуре контента) и order (порядок сортировки).",
                 "meta": {
                     "table": "entry_media",
                     "fillable": [],
@@ -4518,8 +4518,8 @@
                 "type": "model",
                 "name": "EntrySlug",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntrySlug.php",
-                "summary": "EntrySlug model",
-                "details": null,
+                "summary": "Eloquent модель для истории slug'ов записей (EntrySlug).",
+                "details": "Хранит историю изменений slug'ов для каждой записи Entry.\nПозволяет отслеживать все предыдущие URL и обеспечивает редиректы.",
                 "meta": {
                     "table": "entry_slugs",
                     "fillable": [],
@@ -4546,8 +4546,8 @@
                 "type": "model",
                 "name": "Media",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Media.php",
-                "summary": "Media model",
-                "details": null,
+                "summary": "Eloquent модель для медиа-файлов (Media).",
+                "details": "Представляет загруженные файлы: изображения, видео, аудио, документы.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.",
                 "meta": {
                     "table": "media",
                     "fillable": [],
@@ -4578,8 +4578,8 @@
                 "type": "model",
                 "name": "MediaVariant",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaVariant.php",
-                "summary": "MediaVariant model",
-                "details": null,
+                "summary": "Eloquent модель для вариантов медиа-файлов (MediaVariant).",
+                "details": "Представляет производные версии медиа-файла: превью, миниатюры, ресайзы изображений.\nИспользует ULID в качестве первичного ключа.",
                 "meta": {
                     "table": "media_variants",
                     "fillable": [],
@@ -4603,8 +4603,8 @@
                 "type": "model",
                 "name": "Option",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Option.php",
-                "summary": "Option model",
-                "details": null,
+                "summary": "Eloquent модель для опций системы (Option).",
+                "details": "Хранит настройки системы в формате ключ-значение с поддержкой пространств имён.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.",
                 "meta": {
                     "table": "options",
                     "fillable": [
@@ -4632,8 +4632,8 @@
                 "type": "model",
                 "name": "Outbox",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Outbox.php",
-                "summary": "Outbox model",
-                "details": null,
+                "summary": "Eloquent модель для исходящих сообщений (Outbox).",
+                "details": "Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.\nИспользуется для реализации паттерна Outbox для гарантированной доставки.",
                 "meta": {
                     "table": "outboxes",
                     "fillable": [],
@@ -4656,8 +4656,8 @@
                 "type": "model",
                 "name": "Plugin",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Plugin.php",
-                "summary": "Plugin model",
-                "details": null,
+                "summary": "Eloquent модель для плагинов (Plugin).",
+                "details": "Представляет плагины системы с информацией о состоянии, метаданных и синхронизации.\nИспользует ULID в качестве первичного ключа.",
                 "meta": {
                     "table": "plugins",
                     "fillable": [],
@@ -4680,8 +4680,8 @@
                 "type": "model",
                 "name": "PostType",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/PostType.php",
-                "summary": "PostType model",
-                "details": null,
+                "summary": "Eloquent модель для типов записей (PostType).",
+                "details": "Определяет типы контента в CMS (например, 'article', 'page', 'post').\nКаждый тип может иметь свои опции и настройки.",
                 "meta": {
                     "table": "post_types",
                     "fillable": [
@@ -4713,8 +4713,8 @@
                 "type": "model",
                 "name": "Redirect",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Redirect.php",
-                "summary": "Redirect model",
-                "details": null,
+                "summary": "Eloquent модель для редиректов (Redirect).",
+                "details": "Хранит правила перенаправления URL (301, 302 и т.д.).",
                 "meta": {
                     "table": "redirects",
                     "fillable": [],
@@ -4733,8 +4733,8 @@
                 "type": "model",
                 "name": "RefreshToken",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/RefreshToken.php",
-                "summary": "RefreshToken model for tracking JWT refresh tokens.",
-                "details": null,
+                "summary": "Eloquent модель для JWT refresh токенов (RefreshToken).",
+                "details": "Отслеживает refresh токены для обновления access токенов.\nПоддерживает ротацию токенов через parent_jti и отслеживание использования/отзыва.",
                 "meta": {
                     "table": "refresh_tokens",
                     "fillable": [
@@ -4771,8 +4771,8 @@
                 "type": "model",
                 "name": "ReservedRoute",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/ReservedRoute.php",
-                "summary": "ReservedRoute model",
-                "details": null,
+                "summary": "Eloquent модель для зарезервированных путей (ReservedRoute).",
+                "details": "Хранит пути, которые зарезервированы системой и не могут использоваться\nдля записей контента. Поддерживает два типа: 'path' (точное совпадение)\nи 'prefix' (префикс пути).",
                 "meta": {
                     "table": "reserved_routes",
                     "fillable": [
@@ -4800,8 +4800,8 @@
                 "type": "model",
                 "name": "RouteReservation",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/RouteReservation.php",
-                "summary": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.",
-                "details": null,
+                "summary": "Eloquent модель для зарезервированных путей (RouteReservation).",
+                "details": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.",
                 "meta": {
                     "table": "reserved_routes",
                     "fillable": [
@@ -4829,8 +4829,8 @@
                 "type": "model",
                 "name": "Taxonomy",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Taxonomy.php",
-                "summary": "Taxonomy model",
-                "details": null,
+                "summary": "Eloquent модель для таксономий (Taxonomy).",
+                "details": "Определяет группы термов: категории, теги, метки и т.д.\nМожет быть иерархической (hierarchical = true) или плоской (hierarchical = false).",
                 "meta": {
                     "table": "taxonomies",
                     "fillable": [],
@@ -4857,8 +4857,8 @@
                 "type": "model",
                 "name": "Term",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Term.php",
-                "summary": "Term model",
-                "details": null,
+                "summary": "Eloquent модель для термов (Term).",
+                "details": "Представляет элементы таксономии: категории, теги, метки и т.д.\nПоддерживает иерархическую структуру через closure-table (term_tree).\nПоддерживает мягкое удаление.",
                 "meta": {
                     "table": "terms",
                     "fillable": [],
@@ -4904,8 +4904,8 @@
                 "type": "model",
                 "name": "TermTree",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/TermTree.php",
-                "summary": "TermTree model",
-                "details": null,
+                "summary": "Eloquent модель для closure-table иерархии термов (TermTree).",
+                "details": "Реализует closure-table паттерн для хранения иерархических связей между термами.\nПозволяет эффективно получать всех предков и потомков терма.",
                 "meta": {
                     "table": "term_tree",
                     "fillable": [],
@@ -4924,8 +4924,8 @@
                 "type": "model",
                 "name": "User",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/User.php",
-                "summary": "User model",
-                "details": null,
+                "summary": "Eloquent модель для пользователей (User).",
+                "details": "Представляет пользователей системы с поддержкой аутентификации и авторизации.\nПоддерживает административные права и разрешения.",
                 "meta": {
                     "table": "users",
                     "fillable": [
@@ -4980,8 +4980,8 @@
                 "type": "domain_service",
                 "name": "RefreshTokenDto",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Auth\\RefreshTokenDto.php",
-                "summary": "Data Transfer Object for RefreshToken.",
-                "details": "Provides type-safe access to refresh token data without exposing Eloquent model.",
+                "summary": "Data Transfer Object для RefreshToken.",
+                "details": "Предоставляет типобезопасный доступ к данным refresh токена\nбез раскрытия Eloquent модели.",
                 "meta": {
                     "methods": [
                         "isValid",
@@ -5006,7 +5006,7 @@
                 "type": "domain_service",
                 "name": "RefreshTokenRepositoryImpl",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Auth\\RefreshTokenRepositoryImpl.php",
-                "summary": "Implementation of RefreshTokenRepository using Eloquent.",
+                "summary": "Реализация RefreshTokenRepository с использованием Eloquent.",
                 "details": null,
                 "meta": {
                     "methods": [
@@ -5030,8 +5030,8 @@
                 "type": "domain_service",
                 "name": "DefaultEntrySlugService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Entries\\DefaultEntrySlugService.php",
-                "summary": "DefaultEntrySlugService",
-                "details": null,
+                "summary": "Сервис для управления историей slug'ов записей.",
+                "details": "Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.\nГарантирует атомарность операций и корректность флага is_current.",
                 "meta": {
                     "methods": [
                         "onCreated",
@@ -5051,8 +5051,8 @@
                 "type": "domain_service",
                 "name": "PublishingService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Entries\\PublishingService.php",
-                "summary": "PublishingService",
-                "details": null,
+                "summary": "Сервис для применения правил публикации записей.",
+                "details": "Обрабатывает логику публикации Entry: автозаполнение published_at,\nвалидация инвариантов (дата публикации не в будущем).",
                 "meta": {
                     "methods": [
                         "applyAndValidate"
@@ -5070,8 +5070,8 @@
                 "type": "domain_service",
                 "name": "MediaStoreAction",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
-                "summary": "MediaStoreAction",
-                "details": null,
+                "summary": "Действие для сохранения медиа-файла.",
+                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД.",
                 "meta": {
                     "methods": [
                         "execute"
@@ -5092,8 +5092,8 @@
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Jobs\\GenerateVariantJob.php",
-                "summary": "GenerateVariantJob",
-                "details": null,
+                "summary": "Job для генерации варианта медиа-файла.",
+                "details": "Выполняет генерацию варианта изображения (thumbnail, resize и т.д.)\nв фоновом режиме через очередь.",
                 "meta": {
                     "methods": [
                         "handle",
@@ -5150,8 +5150,8 @@
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
-                "summary": "MediaMetadataExtractor",
-                "details": null,
+                "summary": "Сервис для извлечения метаданных из медиа-файлов.",
+                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов.",
                 "meta": {
                     "methods": [
                         "extract"
@@ -5170,8 +5170,8 @@
                 "type": "domain_service",
                 "name": "OnDemandVariantService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\OnDemandVariantService.php",
-                "summary": "OnDemandVariantService",
-                "details": null,
+                "summary": "Сервис для генерации вариантов медиа-файлов по требованию.",
+                "details": "Генерирует варианты изображений (thumbnails, resized) на лету,\nиспользуя GD для обработки изображений.",
                 "meta": {
                     "methods": [
                         "ensureVariant",
@@ -5191,8 +5191,8 @@
                 "type": "domain_service",
                 "name": "OptionsRepository",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Options\\OptionsRepository.php",
-                "summary": "OptionsRepository",
-                "details": null,
+                "summary": "Репозиторий для работы с опциями системы.",
+                "details": "Предоставляет доступ к опциям с кэшированием и поддержкой пространств имён.\nПоддерживает мягкое удаление и восстановление опций.",
                 "meta": {
                     "methods": [
                         "get",
@@ -5216,8 +5216,8 @@
                 "type": "domain_service",
                 "name": "NotReservedRoute",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Pages\\Validation\\NotReservedRoute.php",
-                "summary": "NotReservedRoute",
-                "details": null,
+                "summary": "Правило валидации: slug не должен быть зарезервированным путём.",
+                "details": "Проверяет, что slug не совпадает с зарезервированными путями или префиксами.\nИспользуется для валидации slug'ов страниц.",
                 "meta": {
                     "methods": [
                         "passes",
@@ -5239,7 +5239,7 @@
                 "type": "domain_service",
                 "name": "PluginsSyncCommand",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Commands\\PluginsSyncCommand.php",
-                "summary": "PluginsSyncCommand",
+                "summary": "Команда для синхронизации плагинов из файловой системы в БД.",
                 "details": null,
                 "meta": {
                     "methods": [
@@ -5261,8 +5261,8 @@
                 "type": "domain_service",
                 "name": "PluginDisabled",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginDisabled.php",
-                "summary": "PluginDisabled",
-                "details": null,
+                "summary": "Событие: плагин отключён.",
+                "details": "Отправляется после успешного отключения плагина в БД.",
                 "meta": {
                     "methods": [
                         "dispatch",
@@ -5287,8 +5287,8 @@
                 "type": "domain_service",
                 "name": "PluginEnabled",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginEnabled.php",
-                "summary": "PluginEnabled",
-                "details": null,
+                "summary": "Событие: плагин включён.",
+                "details": "Отправляется после успешного включения плагина в БД.",
                 "meta": {
                     "methods": [
                         "dispatch",
@@ -5313,8 +5313,8 @@
                 "type": "domain_service",
                 "name": "PluginsRoutesReloaded",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsRoutesReloaded.php",
-                "summary": "PluginsRoutesReloaded",
-                "details": null,
+                "summary": "Событие: маршруты плагинов перезагружены.",
+                "details": "Отправляется после успешной перезагрузки маршрутов плагинов.",
                 "meta": {
                     "methods": [
                         "dispatch",
@@ -5337,8 +5337,8 @@
                 "type": "domain_service",
                 "name": "PluginsSynced",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsSynced.php",
-                "summary": "PluginsSynced",
-                "details": null,
+                "summary": "Событие: плагины синхронизированы.",
+                "details": "Отправляется после успешной синхронизации плагинов из файловой системы в БД.",
                 "meta": {
                     "methods": [
                         "dispatch",
@@ -5361,8 +5361,8 @@
                 "type": "domain_service",
                 "name": "PluginActivator",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginActivator.php",
-                "summary": "PluginActivator",
-                "details": null,
+                "summary": "Активатор плагинов.",
+                "details": "Управляет включением и отключением плагинов с транзакционной безопасностью\nи автоматической перезагрузкой маршрутов.",
                 "meta": {
                     "methods": [
                         "enable",
@@ -5383,8 +5383,8 @@
                 "type": "domain_service",
                 "name": "PluginRegistry",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginRegistry.php",
-                "summary": "PluginRegistry",
-                "details": null,
+                "summary": "Реестр плагинов.",
+                "details": "Управляет списком включённых плагинов и их провайдерами.",
                 "meta": {
                     "methods": [
                         "enabled",
@@ -5403,8 +5403,8 @@
                 "type": "domain_service",
                 "name": "PluginAutoloader",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginAutoloader.php",
-                "summary": "PluginAutoloader",
-                "details": null,
+                "summary": "Автозагрузчик классов плагинов.",
+                "details": "Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.",
                 "meta": {
                     "methods": [
                         "register"
@@ -5423,8 +5423,8 @@
                 "type": "domain_service",
                 "name": "PluginsRouteReloader",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsRouteReloader.php",
-                "summary": "PluginsRouteReloader",
-                "details": null,
+                "summary": "Перезагрузчик маршрутов плагинов.",
+                "details": "Очищает кэш маршрутов, регистрирует автозагрузку, регистрирует провайдеры\nвключённых плагинов и кэширует маршруты (если включено).",
                 "meta": {
                     "methods": [
                         "reload"
@@ -5447,8 +5447,8 @@
                 "type": "domain_service",
                 "name": "PluginsSynchronizer",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsSynchronizer.php",
-                "summary": "PluginsSynchronizer",
-                "details": null,
+                "summary": "Синхронизатор плагинов.",
+                "details": "Синхронизирует плагины из файловой системы в БД:\nобнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.",
                 "meta": {
                     "methods": [
                         "sync"
@@ -5469,8 +5469,8 @@
                 "type": "domain_service",
                 "name": "PathNormalizer",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathNormalizer.php",
-                "summary": "PathNormalizer",
-                "details": null,
+                "summary": "Сервис для нормализации путей.",
+                "details": "Приводит пути к единому формату: удаляет query/fragment, гарантирует ведущий слэш,\nубирает trailing слэш, приводит к нижнему регистру, применяет Unicode NFC нормализацию.",
                 "meta": {
                     "methods": [
                         "normalize"
@@ -5488,8 +5488,8 @@
                 "type": "domain_service",
                 "name": "PathReservationServiceImpl",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationServiceImpl.php",
-                "summary": "PathReservationServiceImpl",
-                "details": null,
+                "summary": "Реализация сервиса для резервации путей.",
+                "details": "Управляет зарезервированными путями с поддержкой статических путей из конфига\nи динамических резерваций из БД. Использует кэширование для оптимизации проверок.",
                 "meta": {
                     "methods": [
                         "reservePath",
@@ -5513,8 +5513,8 @@
                 "type": "domain_service",
                 "name": "PathReservationStoreImpl",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationStoreImpl.php",
-                "summary": "PathReservationStoreImpl",
-                "details": null,
+                "summary": "Реализация PathReservationStore с использованием Eloquent.",
+                "details": "Использует модель ReservedRoute для хранения резерваций в БД.",
                 "meta": {
                     "methods": [
                         "insert",
@@ -5558,8 +5558,8 @@
                 "type": "domain_service",
                 "name": "ReservedRouteRegistry",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\ReservedRouteRegistry.php",
-                "summary": "ReservedRouteRegistry",
-                "details": null,
+                "summary": "Реестр зарезервированных маршрутов.",
+                "details": "Объединяет статические пути из конфига и динамические из БД.\nИспользует кэширование для оптимизации частых проверок.",
                 "meta": {
                     "methods": [
                         "all",
@@ -5583,8 +5583,8 @@
                 "type": "domain_service",
                 "name": "RichTextSanitizer",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Sanitizer\\RichTextSanitizer.php",
-                "summary": "RichTextSanitizer",
-                "details": null,
+                "summary": "Сервис для санитизации HTML контента.",
+                "details": "Очищает HTML от потенциально опасных элементов и атрибутов через HTMLPurifier.\nАвтоматически добавляет rel=\"noopener noreferrer\" к ссылкам с target=\"_blank\"\nдля защиты от атак через window.opener.",
                 "meta": {
                     "methods": [
                         "sanitize"
@@ -5602,8 +5602,8 @@
                 "type": "domain_service",
                 "name": "ElasticsearchSearchClient",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\ElasticsearchSearchClient.php",
-                "summary": "ElasticsearchSearchClient",
-                "details": null,
+                "summary": "Реализация SearchClientInterface для Elasticsearch.",
+                "details": "Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.\nПоддерживает базовую аутентификацию и настройку SSL.",
                 "meta": {
                     "methods": [
                         "search",
@@ -5630,8 +5630,8 @@
                 "type": "domain_service",
                 "name": "NullSearchClient",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\NullSearchClient.php",
-                "summary": "NullSearchClient",
-                "details": null,
+                "summary": "Null-реализация SearchClientInterface.",
+                "details": "Используется когда поиск отключен. Все методы возвращают пустые результаты\nили выполняют no-op операции.",
                 "meta": {
                     "methods": [
                         "search",
@@ -5656,7 +5656,7 @@
                 "type": "domain_service",
                 "name": "SearchReindexCommand",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Commands\\SearchReindexCommand.php",
-                "summary": "SearchReindexCommand",
+                "summary": "Команда для реиндексации поискового индекса.",
                 "details": null,
                 "meta": {
                     "methods": [
@@ -5676,8 +5676,8 @@
                 "type": "domain_service",
                 "name": "IndexManager",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\IndexManager.php",
-                "summary": "IndexManager",
-                "details": null,
+                "summary": "Менеджер для управления индексами поиска.",
+                "details": "Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,\nпереключает алиасы и удаляет старые индексы.",
                 "meta": {
                     "methods": [
                         "reindex"
@@ -5698,8 +5698,8 @@
                 "type": "domain_service",
                 "name": "ReindexSearchJob",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Jobs\\ReindexSearchJob.php",
-                "summary": "ReindexSearchJob",
-                "details": null,
+                "summary": "Job для реиндексации поискового индекса в фоновом режиме.",
+                "details": "Выполняет полную реиндексацию всех опубликованных записей через очередь.",
                 "meta": {
                     "methods": [
                         "handle",
@@ -5756,8 +5756,8 @@
                 "type": "domain_service",
                 "name": "SearchHit",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchHit.php",
-                "summary": "SearchHit",
-                "details": null,
+                "summary": "Результат поиска (одна найденная запись).",
+                "details": "Представляет одну найденную запись с информацией о релевантности\nи подсветкой совпадений в тексте.",
                 "meta": {
                     "methods": [],
                     "dependencies": [],
@@ -5773,8 +5773,8 @@
                 "type": "domain_service",
                 "name": "SearchQuery",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchQuery.php",
-                "summary": "SearchQuery",
-                "details": null,
+                "summary": "Value Object для поискового запроса.",
+                "details": "Инкапсулирует параметры поиска: текст запроса, фильтры по типам записей,\nтермам, датам, пагинацию.",
                 "meta": {
                     "methods": [
                         "query",
@@ -5803,8 +5803,8 @@
                 "type": "domain_service",
                 "name": "SearchResult",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchResult.php",
-                "summary": "SearchResult",
-                "details": null,
+                "summary": "Результаты поискового запроса.",
+                "details": "Инкапсулирует результаты поиска: список найденных записей, общее количество,\nинформацию о пагинации и время выполнения запроса.",
                 "meta": {
                     "methods": [
                         "hits",
@@ -5827,8 +5827,8 @@
                 "type": "domain_service",
                 "name": "SearchService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchService.php",
-                "summary": "SearchService",
-                "details": null,
+                "summary": "Сервис для выполнения поисковых запросов.",
+                "details": "Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).\nСтроит запросы, обрабатывает ошибки, маппит результаты.",
                 "meta": {
                     "methods": [
                         "search"
@@ -5849,8 +5849,8 @@
                 "type": "domain_service",
                 "name": "EntryToSearchDoc",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Transformers\\EntryToSearchDoc.php",
-                "summary": "EntryToSearchDoc",
-                "details": null,
+                "summary": "Трансформер Entry в документ для поискового индекса.",
+                "details": "Преобразует Entry в структуру документа для Elasticsearch:\nизвлекает текст из data_json, нормализует пробелы, формирует excerpt.",
                 "meta": {
                     "methods": [
                         "transform"
@@ -5869,8 +5869,8 @@
                 "type": "domain_service",
                 "name": "SearchTermFilter",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
-                "summary": "SearchTermFilter",
-                "details": null,
+                "summary": "Value Object для фильтра поиска по терму.",
+                "details": "Представляет фильтр по терму таксономии в формате \"taxonomy:slug\".",
                 "meta": {
                     "methods": [
                         "fromString"
@@ -8849,7 +8849,7 @@
                 "id": "model:App\\Models\\Audit",
                 "type": "model",
                 "name": "Audit",
-                "summary": "Audit model"
+                "summary": "Eloquent модель для аудита изменений (Audit)."
             }
         ],
         "entry": [
@@ -8857,19 +8857,19 @@
                 "id": "model:App\\Models\\Entry",
                 "type": "model",
                 "name": "Entry",
-                "summary": "Entry model"
+                "summary": "Eloquent модель для записей контента (Entry)."
             },
             {
                 "id": "domain_service:Entries/DefaultEntrySlugService",
                 "type": "domain_service",
                 "name": "DefaultEntrySlugService",
-                "summary": "DefaultEntrySlugService"
+                "summary": "Сервис для управления историей slug'ов записей."
             },
             {
                 "id": "domain_service:Entries/PublishingService",
                 "type": "domain_service",
                 "name": "PublishingService",
-                "summary": "PublishingService"
+                "summary": "Сервис для применения правил публикации записей."
             }
         ],
         "entrymedia": [
@@ -8877,7 +8877,7 @@
                 "id": "model:App\\Models\\EntryMedia",
                 "type": "model",
                 "name": "EntryMedia",
-                "summary": "EntryMedia model"
+                "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia)."
             }
         ],
         "entryslug": [
@@ -8885,7 +8885,7 @@
                 "id": "model:App\\Models\\EntrySlug",
                 "type": "model",
                 "name": "EntrySlug",
-                "summary": "EntrySlug model"
+                "summary": "Eloquent модель для истории slug'ов записей (EntrySlug)."
             }
         ],
         "media": [
@@ -8893,31 +8893,31 @@
                 "id": "model:App\\Models\\Media",
                 "type": "model",
                 "name": "Media",
-                "summary": "Media model"
+                "summary": "Eloquent модель для медиа-файлов (Media)."
             },
             {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
                 "type": "domain_service",
                 "name": "MediaStoreAction",
-                "summary": "MediaStoreAction"
+                "summary": "Действие для сохранения медиа-файла."
             },
             {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
-                "summary": "GenerateVariantJob"
+                "summary": "Job для генерации варианта медиа-файла."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
-                "summary": "MediaMetadataExtractor"
+                "summary": "Сервис для извлечения метаданных из медиа-файлов."
             },
             {
                 "id": "domain_service:Media/Services/OnDemandVariantService",
                 "type": "domain_service",
                 "name": "OnDemandVariantService",
-                "summary": "OnDemandVariantService"
+                "summary": "Сервис для генерации вариантов медиа-файлов по требованию."
             },
             {
                 "id": "config_area:media",
@@ -8979,7 +8979,7 @@
                 "id": "model:App\\Models\\MediaVariant",
                 "type": "model",
                 "name": "MediaVariant",
-                "summary": "MediaVariant model"
+                "summary": "Eloquent модель для вариантов медиа-файлов (MediaVariant)."
             }
         ],
         "option": [
@@ -8987,13 +8987,13 @@
                 "id": "model:App\\Models\\Option",
                 "type": "model",
                 "name": "Option",
-                "summary": "Option model"
+                "summary": "Eloquent модель для опций системы (Option)."
             },
             {
                 "id": "domain_service:Options/OptionsRepository",
                 "type": "domain_service",
                 "name": "OptionsRepository",
-                "summary": "OptionsRepository"
+                "summary": "Репозиторий для работы с опциями системы."
             }
         ],
         "outbox": [
@@ -9001,7 +9001,7 @@
                 "id": "model:App\\Models\\Outbox",
                 "type": "model",
                 "name": "Outbox",
-                "summary": "Outbox model"
+                "summary": "Eloquent модель для исходящих сообщений (Outbox)."
             }
         ],
         "plugin": [
@@ -9009,67 +9009,67 @@
                 "id": "model:App\\Models\\Plugin",
                 "type": "model",
                 "name": "Plugin",
-                "summary": "Plugin model"
+                "summary": "Eloquent модель для плагинов (Plugin)."
             },
             {
                 "id": "domain_service:Plugins/Commands/PluginsSyncCommand",
                 "type": "domain_service",
                 "name": "PluginsSyncCommand",
-                "summary": "PluginsSyncCommand"
+                "summary": "Команда для синхронизации плагинов из файловой системы в БД."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginDisabled",
                 "type": "domain_service",
                 "name": "PluginDisabled",
-                "summary": "PluginDisabled"
+                "summary": "Событие: плагин отключён."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginEnabled",
                 "type": "domain_service",
                 "name": "PluginEnabled",
-                "summary": "PluginEnabled"
+                "summary": "Событие: плагин включён."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
                 "type": "domain_service",
                 "name": "PluginsRoutesReloaded",
-                "summary": "PluginsRoutesReloaded"
+                "summary": "Событие: маршруты плагинов перезагружены."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginsSynced",
                 "type": "domain_service",
                 "name": "PluginsSynced",
-                "summary": "PluginsSynced"
+                "summary": "Событие: плагины синхронизированы."
             },
             {
                 "id": "domain_service:Plugins/PluginActivator",
                 "type": "domain_service",
                 "name": "PluginActivator",
-                "summary": "PluginActivator"
+                "summary": "Активатор плагинов."
             },
             {
                 "id": "domain_service:Plugins/PluginRegistry",
                 "type": "domain_service",
                 "name": "PluginRegistry",
-                "summary": "PluginRegistry"
+                "summary": "Реестр плагинов."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginAutoloader",
                 "type": "domain_service",
                 "name": "PluginAutoloader",
-                "summary": "PluginAutoloader"
+                "summary": "Автозагрузчик классов плагинов."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginsRouteReloader",
                 "type": "domain_service",
                 "name": "PluginsRouteReloader",
-                "summary": "PluginsRouteReloader"
+                "summary": "Перезагрузчик маршрутов плагинов."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginsSynchronizer",
                 "type": "domain_service",
                 "name": "PluginsSynchronizer",
-                "summary": "PluginsSynchronizer"
+                "summary": "Синхронизатор плагинов."
             }
         ],
         "posttype": [
@@ -9077,7 +9077,7 @@
                 "id": "model:App\\Models\\PostType",
                 "type": "model",
                 "name": "PostType",
-                "summary": "PostType model"
+                "summary": "Eloquent модель для типов записей (PostType)."
             }
         ],
         "redirect": [
@@ -9085,7 +9085,7 @@
                 "id": "model:App\\Models\\Redirect",
                 "type": "model",
                 "name": "Redirect",
-                "summary": "Redirect model"
+                "summary": "Eloquent модель для редиректов (Redirect)."
             }
         ],
         "refreshtoken": [
@@ -9093,7 +9093,7 @@
                 "id": "model:App\\Models\\RefreshToken",
                 "type": "model",
                 "name": "RefreshToken",
-                "summary": "RefreshToken model for tracking JWT refresh tokens."
+                "summary": "Eloquent модель для JWT refresh токенов (RefreshToken)."
             }
         ],
         "reservedroute": [
@@ -9101,7 +9101,7 @@
                 "id": "model:App\\Models\\ReservedRoute",
                 "type": "model",
                 "name": "ReservedRoute",
-                "summary": "ReservedRoute model"
+                "summary": "Eloquent модель для зарезервированных путей (ReservedRoute)."
             }
         ],
         "routereservation": [
@@ -9109,7 +9109,7 @@
                 "id": "model:App\\Models\\RouteReservation",
                 "type": "model",
                 "name": "RouteReservation",
-                "summary": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes."
+                "summary": "Eloquent модель для зарезервированных путей (RouteReservation)."
             }
         ],
         "taxonomy": [
@@ -9117,7 +9117,7 @@
                 "id": "model:App\\Models\\Taxonomy",
                 "type": "model",
                 "name": "Taxonomy",
-                "summary": "Taxonomy model"
+                "summary": "Eloquent модель для таксономий (Taxonomy)."
             }
         ],
         "term": [
@@ -9125,7 +9125,7 @@
                 "id": "model:App\\Models\\Term",
                 "type": "model",
                 "name": "Term",
-                "summary": "Term model"
+                "summary": "Eloquent модель для термов (Term)."
             }
         ],
         "termtree": [
@@ -9133,7 +9133,7 @@
                 "id": "model:App\\Models\\TermTree",
                 "type": "model",
                 "name": "TermTree",
-                "summary": "TermTree model"
+                "summary": "Eloquent модель для closure-table иерархии термов (TermTree)."
             }
         ],
         "user": [
@@ -9141,7 +9141,7 @@
                 "id": "model:App\\Models\\User",
                 "type": "model",
                 "name": "User",
-                "summary": "User model"
+                "summary": "Eloquent модель для пользователей (User)."
             }
         ],
         "auth": [
@@ -9155,13 +9155,13 @@
                 "id": "domain_service:Auth/RefreshTokenDto",
                 "type": "domain_service",
                 "name": "RefreshTokenDto",
-                "summary": "Data Transfer Object for RefreshToken."
+                "summary": "Data Transfer Object для RefreshToken."
             },
             {
                 "id": "domain_service:Auth/RefreshTokenRepositoryImpl",
                 "type": "domain_service",
                 "name": "RefreshTokenRepositoryImpl",
-                "summary": "Implementation of RefreshTokenRepository using Eloquent."
+                "summary": "Реализация RefreshTokenRepository с использованием Eloquent."
             },
             {
                 "id": "config_area:auth",
@@ -9199,7 +9199,7 @@
                 "id": "domain_service:Media/Actions/MediaStoreAction",
                 "type": "domain_service",
                 "name": "MediaStoreAction",
-                "summary": "MediaStoreAction"
+                "summary": "Действие для сохранения медиа-файла."
             }
         ],
         "job": [
@@ -9207,13 +9207,13 @@
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
-                "summary": "GenerateVariantJob"
+                "summary": "Job для генерации варианта медиа-файла."
             },
             {
                 "id": "domain_service:Search/Jobs/ReindexSearchJob",
                 "type": "domain_service",
                 "name": "ReindexSearchJob",
-                "summary": "ReindexSearchJob"
+                "summary": "Job для реиндексации поискового индекса в фоновом режиме."
             }
         ],
         "service": [
@@ -9221,31 +9221,31 @@
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
-                "summary": "MediaMetadataExtractor"
+                "summary": "Сервис для извлечения метаданных из медиа-файлов."
             },
             {
                 "id": "domain_service:Media/Services/OnDemandVariantService",
                 "type": "domain_service",
                 "name": "OnDemandVariantService",
-                "summary": "OnDemandVariantService"
+                "summary": "Сервис для генерации вариантов медиа-файлов по требованию."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginAutoloader",
                 "type": "domain_service",
                 "name": "PluginAutoloader",
-                "summary": "PluginAutoloader"
+                "summary": "Автозагрузчик классов плагинов."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginsRouteReloader",
                 "type": "domain_service",
                 "name": "PluginsRouteReloader",
-                "summary": "PluginsRouteReloader"
+                "summary": "Перезагрузчик маршрутов плагинов."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginsSynchronizer",
                 "type": "domain_service",
                 "name": "PluginsSynchronizer",
-                "summary": "PluginsSynchronizer"
+                "summary": "Синхронизатор плагинов."
             }
         ],
         "page": [
@@ -9253,7 +9253,7 @@
                 "id": "domain_service:Pages/Validation/NotReservedRoute",
                 "type": "domain_service",
                 "name": "NotReservedRoute",
-                "summary": "NotReservedRoute"
+                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/entry.blade.php",
@@ -9309,7 +9309,7 @@
                 "id": "domain_service:Pages/Validation/NotReservedRoute",
                 "type": "domain_service",
                 "name": "NotReservedRoute",
-                "summary": "NotReservedRoute"
+                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
             }
         ],
         "command": [
@@ -9317,13 +9317,13 @@
                 "id": "domain_service:Plugins/Commands/PluginsSyncCommand",
                 "type": "domain_service",
                 "name": "PluginsSyncCommand",
-                "summary": "PluginsSyncCommand"
+                "summary": "Команда для синхронизации плагинов из файловой системы в БД."
             },
             {
                 "id": "domain_service:Search/Commands/SearchReindexCommand",
                 "type": "domain_service",
                 "name": "SearchReindexCommand",
-                "summary": "SearchReindexCommand"
+                "summary": "Команда для реиндексации поискового индекса."
             }
         ],
         "event": [
@@ -9331,25 +9331,25 @@
                 "id": "domain_service:Plugins/Events/PluginDisabled",
                 "type": "domain_service",
                 "name": "PluginDisabled",
-                "summary": "PluginDisabled"
+                "summary": "Событие: плагин отключён."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginEnabled",
                 "type": "domain_service",
                 "name": "PluginEnabled",
-                "summary": "PluginEnabled"
+                "summary": "Событие: плагин включён."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
                 "type": "domain_service",
                 "name": "PluginsRoutesReloaded",
-                "summary": "PluginsRoutesReloaded"
+                "summary": "Событие: маршруты плагинов перезагружены."
             },
             {
                 "id": "domain_service:Plugins/Events/PluginsSynced",
                 "type": "domain_service",
                 "name": "PluginsSynced",
-                "summary": "PluginsSynced"
+                "summary": "Событие: плагины синхронизированы."
             }
         ],
         "routing": [
@@ -9357,19 +9357,19 @@
                 "id": "domain_service:Routing/PathNormalizer",
                 "type": "domain_service",
                 "name": "PathNormalizer",
-                "summary": "PathNormalizer"
+                "summary": "Сервис для нормализации путей."
             },
             {
                 "id": "domain_service:Routing/PathReservationServiceImpl",
                 "type": "domain_service",
                 "name": "PathReservationServiceImpl",
-                "summary": "PathReservationServiceImpl"
+                "summary": "Реализация сервиса для резервации путей."
             },
             {
                 "id": "domain_service:Routing/PathReservationStoreImpl",
                 "type": "domain_service",
                 "name": "PathReservationStoreImpl",
-                "summary": "PathReservationStoreImpl"
+                "summary": "Реализация PathReservationStore с использованием Eloquent."
             },
             {
                 "id": "domain_service:Routing/ReservedPattern",
@@ -9381,7 +9381,7 @@
                 "id": "domain_service:Routing/ReservedRouteRegistry",
                 "type": "domain_service",
                 "name": "ReservedRouteRegistry",
-                "summary": "ReservedRouteRegistry"
+                "summary": "Реестр зарезервированных маршрутов."
             }
         ],
         "sanitizer": [
@@ -9389,7 +9389,7 @@
                 "id": "domain_service:Sanitizer/RichTextSanitizer",
                 "type": "domain_service",
                 "name": "RichTextSanitizer",
-                "summary": "RichTextSanitizer"
+                "summary": "Сервис для санитизации HTML контента."
             }
         ],
         "search": [
@@ -9397,67 +9397,67 @@
                 "id": "domain_service:Search/Clients/ElasticsearchSearchClient",
                 "type": "domain_service",
                 "name": "ElasticsearchSearchClient",
-                "summary": "ElasticsearchSearchClient"
+                "summary": "Реализация SearchClientInterface для Elasticsearch."
             },
             {
                 "id": "domain_service:Search/Clients/NullSearchClient",
                 "type": "domain_service",
                 "name": "NullSearchClient",
-                "summary": "NullSearchClient"
+                "summary": "Null-реализация SearchClientInterface."
             },
             {
                 "id": "domain_service:Search/Commands/SearchReindexCommand",
                 "type": "domain_service",
                 "name": "SearchReindexCommand",
-                "summary": "SearchReindexCommand"
+                "summary": "Команда для реиндексации поискового индекса."
             },
             {
                 "id": "domain_service:Search/IndexManager",
                 "type": "domain_service",
                 "name": "IndexManager",
-                "summary": "IndexManager"
+                "summary": "Менеджер для управления индексами поиска."
             },
             {
                 "id": "domain_service:Search/Jobs/ReindexSearchJob",
                 "type": "domain_service",
                 "name": "ReindexSearchJob",
-                "summary": "ReindexSearchJob"
+                "summary": "Job для реиндексации поискового индекса в фоновом режиме."
             },
             {
                 "id": "domain_service:Search/SearchHit",
                 "type": "domain_service",
                 "name": "SearchHit",
-                "summary": "SearchHit"
+                "summary": "Результат поиска (одна найденная запись)."
             },
             {
                 "id": "domain_service:Search/SearchQuery",
                 "type": "domain_service",
                 "name": "SearchQuery",
-                "summary": "SearchQuery"
+                "summary": "Value Object для поискового запроса."
             },
             {
                 "id": "domain_service:Search/SearchResult",
                 "type": "domain_service",
                 "name": "SearchResult",
-                "summary": "SearchResult"
+                "summary": "Результаты поискового запроса."
             },
             {
                 "id": "domain_service:Search/SearchService",
                 "type": "domain_service",
                 "name": "SearchService",
-                "summary": "SearchService"
+                "summary": "Сервис для выполнения поисковых запросов."
             },
             {
                 "id": "domain_service:Search/Transformers/EntryToSearchDoc",
                 "type": "domain_service",
                 "name": "EntryToSearchDoc",
-                "summary": "EntryToSearchDoc"
+                "summary": "Трансформер Entry в документ для поискового индекса."
             },
             {
                 "id": "domain_service:Search/ValueObjects/SearchTermFilter",
                 "type": "domain_service",
                 "name": "SearchTermFilter",
-                "summary": "SearchTermFilter"
+                "summary": "Value Object для фильтра поиска по терму."
             },
             {
                 "id": "config_area:search",
@@ -9483,13 +9483,13 @@
                 "id": "domain_service:Search/Clients/ElasticsearchSearchClient",
                 "type": "domain_service",
                 "name": "ElasticsearchSearchClient",
-                "summary": "ElasticsearchSearchClient"
+                "summary": "Реализация SearchClientInterface для Elasticsearch."
             },
             {
                 "id": "domain_service:Search/Clients/NullSearchClient",
                 "type": "domain_service",
                 "name": "NullSearchClient",
-                "summary": "NullSearchClient"
+                "summary": "Null-реализация SearchClientInterface."
             }
         ],
         "transformer": [
@@ -9497,7 +9497,7 @@
                 "id": "domain_service:Search/Transformers/EntryToSearchDoc",
                 "type": "domain_service",
                 "name": "EntryToSearchDoc",
-                "summary": "EntryToSearchDoc"
+                "summary": "Трансформер Entry в документ для поискового индекса."
             }
         ],
         "valueobject": [
@@ -9505,7 +9505,7 @@
                 "id": "domain_service:Search/ValueObjects/SearchTermFilter",
                 "type": "domain_service",
                 "name": "SearchTermFilter",
-                "summary": "SearchTermFilter"
+                "summary": "Value Object для фильтра поиска по терму."
             }
         ],
         "view": [
@@ -11331,5 +11331,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-13T16:22:11+00:00"
+    "generated_at": "2025-11-13T17:32:18+00:00"
 }

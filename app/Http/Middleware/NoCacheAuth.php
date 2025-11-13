@@ -7,18 +7,22 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Middleware to add Cache-Control: no-store header to auth endpoints.
+ * Middleware для добавления заголовка Cache-Control: no-store к auth эндпоинтам.
  *
- * Prevents caching of authentication responses by proxies and browsers.
+ * Предотвращает кэширование ответов аутентификации прокси и браузерами.
+ *
+ * @package App\Http\Middleware
  */
 final class NoCacheAuth
 {
     /**
-     * Handle an incoming request.
+     * Обработать входящий запрос.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @return Response
+     * Добавляет заголовок Cache-Control: no-store к ответу.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Closure $next Следующий middleware
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next): Response
     {

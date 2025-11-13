@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\{Entry, Media, Option, Plugin, ReservedRoute, Term, User};
@@ -7,10 +9,18 @@ use App\Policies\{EntryPolicy, MediaPolicy, OptionPolicy, PluginPolicy, RouteRes
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * Service Provider для авторизации и политик доступа.
+ *
+ * Регистрирует политики для моделей и определяет Gate abilities
+ * для административных разрешений.
+ *
+ * @package App\Providers
+ */
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
+     * Маппинг политик для моделей.
      *
      * @var array<class-string, class-string>
      */
@@ -24,7 +34,9 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register services.
+     * Зарегистрировать сервисы.
+     *
+     * @return void
      */
     public function register(): void
     {
@@ -32,7 +44,17 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap services.
+     * Загрузить сервисы авторизации.
+     *
+     * Регистрирует политики и определяет Gate abilities:
+     * - Глобальный доступ для администратора (is_admin=true)
+     * - manage.posttypes, manage.entries, manage.taxonomies, manage.terms
+     * - media.* (read, create, update, delete, restore)
+     * - options.* (read, write, delete, restore)
+     * - plugins.* (read, toggle, sync)
+     * - search.reindex
+     *
+     * @return void
      */
     public function boot(): void
     {

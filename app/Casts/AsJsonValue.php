@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -7,8 +9,27 @@ use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 use JsonException;
 
+/**
+ * Eloquent cast для JSON значений.
+ *
+ * Преобразует JSON строки в массивы при чтении и массивы в JSON строки при записи.
+ * Обрабатывает ошибки декодирования (возвращает null) и кодирования (выбрасывает исключение).
+ *
+ * @package App\Casts
+ */
 final class AsJsonValue implements CastsAttributes
 {
+    /**
+     * Преобразовать атрибут из значения модели в значение для приложения.
+     *
+     * Декодирует JSON строку в массив. При ошибке декодирования возвращает null.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model Модель
+     * @param string $key Имя атрибута
+     * @param mixed $value Значение из БД (JSON строка или null)
+     * @param array<string, mixed> $attributes Все атрибуты модели
+     * @return mixed Декодированное значение или null
+     */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if ($value === null) {
@@ -23,6 +44,18 @@ final class AsJsonValue implements CastsAttributes
         }
     }
 
+    /**
+     * Преобразовать атрибут из значения приложения в значение для БД.
+     *
+     * Кодирует значение в JSON строку. При ошибке кодирования выбрасывает InvalidArgumentException.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model Модель
+     * @param string $key Имя атрибута
+     * @param mixed $value Значение для кодирования
+     * @param array<string, mixed> $attributes Все атрибуты модели
+     * @return string JSON строка
+     * @throws \InvalidArgumentException Если значение не может быть закодировано в JSON
+     */
     public function set(Model $model, string $key, mixed $value, array $attributes): string
     {
         try {

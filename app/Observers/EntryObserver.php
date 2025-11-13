@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\Domain\Sanitizer\RichTextSanitizer;
@@ -12,14 +14,35 @@ use App\Support\Slug\UniqueSlugService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
+/**
+ * Observer для модели Entry.
+ *
+ * Обрабатывает события жизненного цикла Entry:
+ * - Генерация slug из title (если не указан)
+ * - Проверка уникальности slug в рамках типа записи
+ * - Проверка зарезервированных путей
+ * - Синхронизация истории slug'ов через EntrySlugService
+ * - Санитизация HTML полей (body_html, excerpt_html) в data_json
+ *
+ * @package App\Observers
+ */
 class EntryObserver
 {
     /**
-     * Временное хранилище для старых slug'ов (по ID записи)
-     * Используется для передачи старого slug из updating() в updated()
+     * Временное хранилище для старых slug'ов (по ID записи).
+     *
+     * Используется для передачи старого slug из updating() в updated().
+     *
+     * @var array<int, string>
      */
     private static array $oldSlugs = [];
 
+    /**
+     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
+     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис уникальности slug'ов
+     * @param \App\Domain\Entries\EntrySlugService $entrySlugService Сервис управления slug'ами записей
+     * @param \App\Domain\Sanitizer\RichTextSanitizer $sanitizer Санитизатор HTML
+     */
     public function __construct(
         private Slugifier $slugifier,
         private UniqueSlugService $uniqueSlugService,
@@ -27,12 +50,30 @@ class EntryObserver
         private RichTextSanitizer $sanitizer,
     ) {}
 
+    /**
+     * Обработать событие "creating" для Entry.
+     *
+     * Генерирует slug из title (если не указан) и санитизирует HTML поля.
+     *
+     * @param \App\Models\Entry $entry Создаваемая запись
+     * @return void
+     */
     public function creating(Entry $entry): void
     {
         $this->ensureSlug($entry);
         $this->sanitizeRichTextFields($entry);
     }
 
+    /**
+     * Обработать событие "updating" для Entry.
+     *
+     * Пересчитывает slug при изменении title или slug.
+     * Сохраняет старый slug для истории (через временное хранилище).
+     * Санитизирует HTML поля при изменении data_json.
+     *
+     * @param \App\Models\Entry $entry Обновляемая запись
+     * @return void
+     */
     public function updating(Entry $entry): void
     {
         // Если изменился title или slug, пересчитываем
@@ -53,11 +94,27 @@ class EntryObserver
         }
     }
 
+    /**
+     * Обработать событие "created" для Entry.
+     *
+     * Синхронизирует slug через EntrySlugService.
+     *
+     * @param \App\Models\Entry $entry Созданная запись
+     * @return void
+     */
     public function created(Entry $entry): void
     {
         $this->entrySlugService->onCreated($entry);
     }
 
+    /**
+     * Обработать событие "updated" для Entry.
+     *
+     * Синхронизирует историю slug'ов через EntrySlugService при изменении slug.
+     *
+     * @param \App\Models\Entry $entry Обновлённая запись
+     * @return void
+     */
     public function updated(Entry $entry): void
     {
         if ($entry->wasChanged('slug')) {
@@ -69,6 +126,16 @@ class EntryObserver
         }
     }
 
+    /**
+     * Обеспечить наличие валидного уникального slug для записи.
+     *
+     * Генерирует slug из title (если не указан) или нормализует указанный slug.
+     * Проверяет уникальность в рамках типа записи и зарезервированные пути.
+     * Автоматически добавляет суффикс при конфликте.
+     *
+     * @param \App\Models\Entry $entry Запись
+     * @return void
+     */
     private function ensureSlug(Entry $entry): void
     {
         // Если пользователь задал кастомный slug — прогоняем через мягкий slugify
@@ -129,8 +196,13 @@ class EntryObserver
     }
 
     /**
-     * Санитизирует richtext поля (body_html, excerpt_html) из data_json
-     * и сохраняет очищенный HTML в body_html_sanitized/excerpt_html_sanitized
+     * Санитизировать richtext поля (body_html, excerpt_html) из data_json.
+     *
+     * Сохраняет очищенный HTML в body_html_sanitized/excerpt_html_sanitized
+     * для безопасного отображения на фронтенде.
+     *
+     * @param \App\Models\Entry $entry Запись
+     * @return void
      */
     private function sanitizeRichTextFields(Entry $entry): void
     {

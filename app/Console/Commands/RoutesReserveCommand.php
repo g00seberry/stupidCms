@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Domain\Routing\PathReservationService;
@@ -7,24 +9,38 @@ use App\Domain\Routing\Exceptions\InvalidPathException;
 use App\Domain\Routing\Exceptions\PathAlreadyReservedException;
 use Illuminate\Console\Command;
 
+/**
+ * Команда для резервации URL пути.
+ *
+ * Резервирует путь для предотвращения использования его контентом или маршрутами.
+ * Выбрасывает InvalidPathException при невалидном пути или PathAlreadyReservedException
+ * при попытке зарезервировать уже занятый путь.
+ *
+ * @package App\Console\Commands
+ */
 class RoutesReserveCommand extends Command
 {
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'routes:reserve {path : The path to reserve} {source : The source identifier (e.g., system:feeds, plugin:shop)} {reason? : Optional reason for reservation}';
 
     /**
-     * The console command description.
+     * Описание консольной команды.
      *
      * @var string
      */
     protected $description = 'Reserve a URL path to prevent content/routes from using it';
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
+     *
+     * Резервирует путь через PathReservationService.
+     *
+     * @param \App\Domain\Routing\PathReservationService $service Сервис резервации путей
+     * @return int Код возврата (0 = успех, 1 = ошибка)
      */
     public function handle(PathReservationService $service): int
     {

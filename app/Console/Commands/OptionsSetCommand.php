@@ -1,16 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Domain\Options\OptionsRepository;
 use App\Models\Entry;
 use Illuminate\Console\Command;
 
+/**
+ * Команда для установки значения опции.
+ *
+ * Устанавливает значение опции через OptionsRepository.
+ * Проверяет allow-list из конфига и валидирует специальные опции
+ * (например, site:home_entry_id - проверка существования записи).
+ *
+ * @package App\Console\Commands
+ */
 class OptionsSetCommand extends Command
 {
+    /**
+     * Имя и сигнатура консольной команды.
+     *
+     * @var string
+     */
     protected $signature = 'cms:options:set {namespace} {key} {value?}';
+
+    /**
+     * Описание консольной команды.
+     *
+     * @var string
+     */
     protected $description = 'Установить значение опции';
 
+    /**
+     * Выполнить консольную команду.
+     *
+     * Проверяет allow-list, парсит JSON-литералы и валидирует специальные опции.
+     * Для site:home_entry_id проверяет существование записи.
+     *
+     * @param \App\Domain\Options\OptionsRepository $repository Репозиторий опций
+     * @return int Код возврата (0 = успех, 1 = ошибка)
+     */
     public function handle(OptionsRepository $repository): int
     {
         $namespace = $this->argument('namespace');

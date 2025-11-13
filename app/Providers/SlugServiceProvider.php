@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Support\Slug\DefaultSlugifier;
@@ -8,10 +10,21 @@ use App\Support\Slug\Slugifier;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Service Provider для сервисов работы со slug'ами.
+ *
+ * Регистрирует Slugifier и UniqueSlugService как singleton.
+ *
+ * @package App\Providers
+ */
 class SlugServiceProvider extends ServiceProvider
 {
     /**
-     * Register services.
+     * Зарегистрировать сервисы.
+     *
+     * Регистрирует Slugifier и UniqueSlugService как singleton.
+     *
+     * @return void
      */
     public function register(): void
     {
@@ -23,7 +36,9 @@ class SlugServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap services.
+     * Загрузить сервисы.
+     *
+     * @return void
      */
     public function boot(): void
     {

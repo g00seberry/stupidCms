@@ -9,22 +9,32 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Middleware для дополнительной защиты от ложных срабатываний плоской маршрутизации.
- * 
+ *
  * Проверяет, не зарезервирован ли путь, если он совпал с /{slug} маршрутом.
  * Это защита на случай, если список зарезервированных изменился после route:cache.
- * 
+ *
  * Использование: опционально, так как основная защита на уровне ReservedPattern.
+ *
+ * @package App\Http\Middleware
  */
 class RejectReservedIfMatched
 {
+    /**
+     * @param \App\Domain\Routing\PathReservationService $pathReservationService Сервис резервации путей
+     */
     public function __construct(
         private PathReservationService $pathReservationService
     ) {}
 
     /**
-     * Handle an incoming request.
+     * Обработать входящий запрос.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Проверяет, не зарезервирован ли slug из маршрута.
+     * В testing окружении обрабатывает отсутствие таблицы (после route:cache).
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Closure $next Следующий middleware
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next): Response
     {

@@ -1,15 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use App\Models\ReservedRoute;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
+/**
+ * Правило валидации: проверка конфликтов с зарезервированными путями.
+ *
+ * Проверяет, что slug не конфликтует с зарезервированными путями
+ * (kind='path' или kind='prefix').
+ *
+ * @package App\Rules
+ */
 class ReservedSlug implements ValidationRule
 {
     /**
-     * Run the validation rule.
+     * Выполнить правило валидации.
+     *
+     * Проверяет конфликты с зарезервированными путями:
+     * - Для kind='path': точное совпадение
+     * - Для kind='prefix': совпадение или начало с префикса
+     *
+     * Если конфликт обнаружен, добавляет ошибку валидации.
+     *
+     * @param string $attribute Имя атрибута
+     * @param mixed $value Значение для валидации
+     * @param \Closure(string, string): void $fail Callback для добавления ошибки
+     * @return void
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

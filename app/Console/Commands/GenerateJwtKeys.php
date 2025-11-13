@@ -6,17 +6,18 @@ use Illuminate\Console\Command;
 use RuntimeException;
 
 /**
- * Generate RSA key pair for JWT token signing.
+ * Команда для генерации RSA пары ключей для подписи JWT токенов.
  *
- * Usage: php artisan cms:jwt:keys {kid}
+ * Генерирует RSA пару ключей (2048 бит по умолчанию) и сохраняет их в:
+ * - storage/keys/jwt-{kid}-private.pem (права 0600)
+ * - storage/keys/jwt-{kid}-public.pem (права 0644)
  *
- * This command generates a 2048-bit RSA key pair and stores it in
- * storage/keys/jwt-{kid}-private.pem and storage/keys/jwt-{kid}-public.pem
+ * @package App\Console\Commands
  */
 class GenerateJwtKeys extends Command
 {
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
@@ -25,14 +26,19 @@ class GenerateJwtKeys extends Command
                                         {--force : Overwrite existing keys}';
 
     /**
-     * The console command description.
+     * Описание консольной команды.
      *
      * @var string
      */
     protected $description = 'Generate RSA key pair for JWT token signing';
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
+     *
+     * Генерирует RSA пару ключей указанного размера (минимум 2048 бит)
+     * и сохраняет их в storage/keys с безопасными правами доступа.
+     *
+     * @return int Код возврата (0 = успех, 1 = ошибка)
      */
     public function handle(): int
     {

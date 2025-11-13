@@ -10,15 +10,42 @@ use App\Documentation\Generators\MarkdownGenerator;
 use App\Documentation\ScannerManager;
 use Illuminate\Console\Command;
 
+/**
+ * Команда для генерации документации из кодовой базы.
+ *
+ * Сканирует проект и генерирует Markdown файлы с описанием сущностей:
+ * модели, сервисы, контроллеры, роуты и т.д.
+ *
+ * @package App\Console\Commands
+ */
 final class GenerateDocsCommand extends Command
 {
+    /**
+     * Имя и сигнатура консольной команды.
+     *
+     * @var string
+     */
     protected $signature = 'docs:generate 
                             {--type= : Generate documentation for specific type only}
                             {--force : Overwrite existing files}
                             {--cache : Use cached scan results}';
 
+    /**
+     * Описание консольной команды.
+     *
+     * @var string
+     */
     protected $description = 'Generate documentation from codebase';
 
+    /**
+     * Выполнить консольную команду.
+     *
+     * Запускает сканирование кодовой базы, группирует сущности по типам
+     * и генерирует Markdown файлы и индекс.
+     *
+     * @param \App\Documentation\ScannerManager $scannerManager Менеджер сканеров
+     * @return int Код возврата (0 = успех, 1 = ошибка)
+     */
     public function handle(ScannerManager $scannerManager): int
     {
         $this->info('Starting documentation generation...');

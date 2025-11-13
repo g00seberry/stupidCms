@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Domain\Auth\JwtService;
@@ -16,10 +18,27 @@ use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Основной Service Provider приложения.
+ *
+ * Регистрирует основные сервисы:
+ * - OptionsRepository (singleton)
+ * - TemplateResolver (scoped для совместимости с Octane/Swoole)
+ * - RichTextSanitizer (singleton)
+ * - JwtService (singleton)
+ * - RefreshTokenRepository (singleton)
+ * - ErrorKernel и ErrorFactory (singleton)
+ *
+ * @package App\Providers
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Зарегистрировать сервисы приложения.
+     *
+     * Регистрирует все основные сервисы как singleton или scoped.
+     *
+     * @return void
      */
     public function register(): void
     {
@@ -59,7 +78,13 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Загрузить сервисы приложения.
+     *
+     * Регистрирует EntryObserver для модели Entry.
+     * Создаёт директорию для кэша HTMLPurifier.
+     * Устанавливает JWT leeway для учёта расхождения часов.
+     *
+     * @return void
      */
     public function boot(): void
     {

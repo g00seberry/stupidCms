@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Closure;
@@ -7,15 +9,25 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- * Validates that if is_published is true, the slug is present and valid.
- * This rule should be applied to the 'slug' field.
+ * Правило валидации: проверка возможности публикации записи.
+ *
+ * Валидирует, что если is_published=true, то slug присутствует и валиден.
+ * Это правило должно применяться к полю 'slug'.
+ *
+ * @package App\Rules
  */
 class Publishable implements ValidationRule, DataAwareRule
 {
+    /**
+     * @var array<string, mixed> Данные запроса для валидации
+     */
     protected array $data = [];
 
     /**
-     * Set the data under validation.
+     * Установить данные для валидации.
+     *
+     * @param array<string, mixed> $data Данные запроса
+     * @return static
      */
     public function setData(array $data): static
     {
@@ -24,7 +36,15 @@ class Publishable implements ValidationRule, DataAwareRule
     }
 
     /**
-     * Run the validation rule.
+     * Выполнить правило валидации.
+     *
+     * Проверяет, что при is_published=true slug присутствует и не пустой.
+     * Для update проверяет, что slug валиден (даже если не указан в запросе).
+     *
+     * @param string $attribute Имя атрибута
+     * @param mixed $value Значение для валидации
+     * @param \Closure(string, string): void $fail Callback для добавления ошибки
+     * @return void
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

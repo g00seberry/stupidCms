@@ -14,32 +14,45 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Basic JWT authentication middleware.
- * 
- * Verifies JWT access token from cookie without requiring admin scope.
- * Use this for authenticated endpoints that don't require admin privileges.
+ * Middleware для базовой JWT аутентификации.
+ *
+ * Проверяет JWT access токен из cookie без требования admin scope.
+ * Используется для аутентифицированных эндпоинтов, не требующих прав администратора.
+ *
+ * @package App\Http\Middleware
  */
 final class JwtAuth
 {
     use ThrowsErrors;
 
+    /**
+     * Имя guard для аутентификации.
+     *
+     * @var string
+     */
     private const GUARD = 'api';
 
+    /**
+     * @param \App\Domain\Auth\JwtService $jwt Сервис JWT
+     */
     public function __construct(
         private JwtService $jwt
     ) {
     }
 
     /**
-     * Handle an incoming request.
+     * Обработать входящий запрос.
      *
-     * Verifies JWT access token from cookie and checks:
-     * - Token is valid (signature, expiration)
-     * - User exists in database
+     * Проверяет JWT access токен из cookie и валидирует:
+     * - Токен валиден (подпись, срок действия)
+     * - Пользователь существует в базе данных
      *
-     * @param Request $request
-     * @param Closure $next
+     * При ошибке выбрасывает HttpErrorException с кодом UNAUTHORIZED.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param \Closure $next Следующий middleware
      * @return mixed
+     * @throws \App\Support\Errors\HttpErrorException
      */
     public function handle(Request $request, Closure $next)
     {
@@ -74,6 +87,8 @@ final class JwtAuth
     }
 
     /**
+     * Маппинг причин ошибок на детали для логирования.
+     *
      * @var array<string, array{log_detail: string}>
      */
     private const FAILURE_RESPONSES = [
@@ -91,6 +106,15 @@ final class JwtAuth
         ],
     ];
 
+    /**
+     * Вернуть ответ 401 Unauthorized с деталями ошибки.
+     *
+     * Логирует ошибку и выбрасывает HttpErrorException с кодом UNAUTHORIZED.
+     *
+     * @param string $reason Причина ошибки (missing_token, invalid_token, invalid_subject, user_not_found)
+     * @return never
+     * @throws \App\Support\Errors\HttpErrorException
+     */
     private function respondUnauthorized(string $reason): never
     {
         $response = self::FAILURE_RESPONSES[$reason] ?? [
@@ -113,6 +137,14 @@ final class JwtAuth
         );
     }
 
+    /**
+     * Проверить валидность subject claim токена.
+     *
+     * Subject должен быть положительным целым числом (ID пользователя).
+     *
+     * @param mixed $subject Subject claim из токена
+     * @return bool
+     */
     private function isValidSubject(mixed $subject): bool
     {
         if (! is_numeric($subject)) {

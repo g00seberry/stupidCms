@@ -4,7 +4,10 @@
 **ID:** `model:App\Models\Audit`
 **Path:** `app/Models/Audit.php`
 
-Audit model
+Eloquent модель для аудита изменений (Audit).
+
+### Details
+Хранит историю изменений сущностей системы для аудита и отслеживания действий пользователей.
 
 ### Meta
 - **Table:** `audits`
@@ -22,7 +25,11 @@ Audit model
 **ID:** `model:App\Models\Entry`
 **Path:** `app/Models/Entry.php`
 
-Entry model
+Eloquent модель для записей контента (Entry).
+
+### Details
+Представляет единицу контента в CMS: статьи, страницы, посты и т.д.
+Поддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.
 
 ### Meta
 - **Table:** `entries`
@@ -45,7 +52,11 @@ Entry model
 **ID:** `model:App\Models\EntryMedia`
 **Path:** `app/Models/EntryMedia.php`
 
-EntryMedia model
+Pivot модель для связи записей и медиа-файлов (EntryMedia).
+
+### Details
+Представляет связь many-to-many между Entry и Media с дополнительными полями:
+field_key (ключ поля в структуре контента) и order (порядок сортировки).
 
 ### Meta
 - **Table:** `entry_media`
@@ -61,7 +72,11 @@ EntryMedia model
 **ID:** `model:App\Models\EntrySlug`
 **Path:** `app/Models/EntrySlug.php`
 
-EntrySlug model
+Eloquent модель для истории slug'ов записей (EntrySlug).
+
+### Details
+Хранит историю изменений slug'ов для каждой записи Entry.
+Позволяет отслеживать все предыдущие URL и обеспечивает редиректы.
 
 ### Meta
 - **Table:** `entry_slugs`
@@ -79,7 +94,11 @@ EntrySlug model
 **ID:** `model:App\Models\Media`
 **Path:** `app/Models/Media.php`
 
-Media model
+Eloquent модель для медиа-файлов (Media).
+
+### Details
+Представляет загруженные файлы: изображения, видео, аудио, документы.
+Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
 
 ### Meta
 - **Table:** `media`
@@ -98,7 +117,11 @@ Media model
 **ID:** `model:App\Models\MediaVariant`
 **Path:** `app/Models/MediaVariant.php`
 
-MediaVariant model
+Eloquent модель для вариантов медиа-файлов (MediaVariant).
+
+### Details
+Представляет производные версии медиа-файла: превью, миниатюры, ресайзы изображений.
+Использует ULID в качестве первичного ключа.
 
 ### Meta
 - **Table:** `media_variants`
@@ -115,7 +138,11 @@ MediaVariant model
 **ID:** `model:App\Models\Option`
 **Path:** `app/Models/Option.php`
 
-Option model
+Eloquent модель для опций системы (Option).
+
+### Details
+Хранит настройки системы в формате ключ-значение с поддержкой пространств имён.
+Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
 
 ### Meta
 - **Table:** `options`
@@ -133,7 +160,11 @@ Option model
 **ID:** `model:App\Models\Outbox`
 **Path:** `app/Models/Outbox.php`
 
-Outbox model
+Eloquent модель для исходящих сообщений (Outbox).
+
+### Details
+Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.
+Используется для реализации паттерна Outbox для гарантированной доставки.
 
 ### Meta
 - **Table:** `outboxes`
@@ -149,7 +180,11 @@ Outbox model
 **ID:** `model:App\Models\Plugin`
 **Path:** `app/Models/Plugin.php`
 
-Plugin model
+Eloquent модель для плагинов (Plugin).
+
+### Details
+Представляет плагины системы с информацией о состоянии, метаданных и синхронизации.
+Использует ULID в качестве первичного ключа.
 
 ### Meta
 - **Table:** `plugins`
@@ -165,7 +200,11 @@ Plugin model
 **ID:** `model:App\Models\PostType`
 **Path:** `app/Models/PostType.php`
 
-PostType model
+Eloquent модель для типов записей (PostType).
+
+### Details
+Определяет типы контента в CMS (например, 'article', 'page', 'post').
+Каждый тип может иметь свои опции и настройки.
 
 ### Meta
 - **Table:** `post_types`
@@ -186,7 +225,10 @@ PostType model
 **ID:** `model:App\Models\Redirect`
 **Path:** `app/Models/Redirect.php`
 
-Redirect model
+Eloquent модель для редиректов (Redirect).
+
+### Details
+Хранит правила перенаправления URL (301, 302 и т.д.).
 
 ### Meta
 - **Table:** `redirects`
@@ -201,7 +243,11 @@ Redirect model
 **ID:** `model:App\Models\RefreshToken`
 **Path:** `app/Models/RefreshToken.php`
 
-RefreshToken model for tracking JWT refresh tokens.
+Eloquent модель для JWT refresh токенов (RefreshToken).
+
+### Details
+Отслеживает refresh токены для обновления access токенов.
+Поддерживает ротацию токенов через parent_jti и отслеживание использования/отзыва.
 
 ### Meta
 - **Table:** `refresh_tokens`
@@ -221,7 +267,12 @@ RefreshToken model for tracking JWT refresh tokens.
 **ID:** `model:App\Models\ReservedRoute`
 **Path:** `app/Models/ReservedRoute.php`
 
-ReservedRoute model
+Eloquent модель для зарезервированных путей (ReservedRoute).
+
+### Details
+Хранит пути, которые зарезервированы системой и не могут использоваться
+для записей контента. Поддерживает два типа: 'path' (точное совпадение)
+и 'prefix' (префикс пути).
 
 ### Meta
 - **Table:** `reserved_routes`
@@ -239,6 +290,9 @@ ReservedRoute model
 **ID:** `model:App\Models\RouteReservation`
 **Path:** `app/Models/RouteReservation.php`
 
+Eloquent модель для зарезервированных путей (RouteReservation).
+
+### Details
 Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.
 
 ### Meta
@@ -257,7 +311,11 @@ ReservedRoute model
 **ID:** `model:App\Models\Taxonomy`
 **Path:** `app/Models/Taxonomy.php`
 
-Taxonomy model
+Eloquent модель для таксономий (Taxonomy).
+
+### Details
+Определяет группы термов: категории, теги, метки и т.д.
+Может быть иерархической (hierarchical = true) или плоской (hierarchical = false).
 
 ### Meta
 - **Table:** `taxonomies`
@@ -276,7 +334,12 @@ Taxonomy model
 **ID:** `model:App\Models\Term`
 **Path:** `app/Models/Term.php`
 
-Term model
+Eloquent модель для термов (Term).
+
+### Details
+Представляет элементы таксономии: категории, теги, метки и т.д.
+Поддерживает иерархическую структуру через closure-table (term_tree).
+Поддерживает мягкое удаление.
 
 ### Meta
 - **Table:** `terms`
@@ -300,7 +363,11 @@ Term model
 **ID:** `model:App\Models\TermTree`
 **Path:** `app/Models/TermTree.php`
 
-TermTree model
+Eloquent модель для closure-table иерархии термов (TermTree).
+
+### Details
+Реализует closure-table паттерн для хранения иерархических связей между термами.
+Позволяет эффективно получать всех предков и потомков терма.
 
 ### Meta
 - **Table:** `term_tree`
@@ -315,7 +382,11 @@ TermTree model
 **ID:** `model:App\Models\User`
 **Path:** `app/Models/User.php`
 
-User model
+Eloquent модель для пользователей (User).
+
+### Details
+Представляет пользователей системы с поддержкой аутентификации и авторизации.
+Поддерживает административные права и разрешения.
 
 ### Meta
 - **Table:** `users`

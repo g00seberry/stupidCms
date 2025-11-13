@@ -27,7 +27,11 @@
 **ID:** `domain_service:Entries/DefaultEntrySlugService`
 **Path:** `app/Domain/Entries/DefaultEntrySlugService.php`
 
-DefaultEntrySlugService
+Сервис для управления историей slug'ов записей.
+
+### Details
+Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.
+Гарантирует атомарность операций и корректность флага is_current.
 
 ### Meta
 - **Methods:** `onCreated`, `onUpdated`, `currentSlug`
@@ -43,7 +47,11 @@ DefaultEntrySlugService
 **ID:** `domain_service:Search/Clients/ElasticsearchSearchClient`
 **Path:** `app/Domain/Search/Clients/ElasticsearchSearchClient.php`
 
-ElasticsearchSearchClient
+Реализация SearchClientInterface для Elasticsearch.
+
+### Details
+Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.
+Поддерживает базовую аутентификацию и настройку SSL.
 
 ### Meta
 - **Methods:** `search`, `createIndex`, `deleteIndex`, `updateAliases`, `getIndicesForAlias`, `bulk`, `refresh`
@@ -60,7 +68,11 @@ ElasticsearchSearchClient
 **ID:** `domain_service:Search/Transformers/EntryToSearchDoc`
 **Path:** `app/Domain/Search/Transformers/EntryToSearchDoc.php`
 
-EntryToSearchDoc
+Трансформер Entry в документ для поискового индекса.
+
+### Details
+Преобразует Entry в структуру документа для Elasticsearch:
+извлекает текст из data_json, нормализует пробелы, формирует excerpt.
 
 ### Meta
 - **Methods:** `transform`
@@ -75,7 +87,11 @@ EntryToSearchDoc
 **ID:** `domain_service:Media/Jobs/GenerateVariantJob`
 **Path:** `app/Domain/Media/Jobs/GenerateVariantJob.php`
 
-GenerateVariantJob
+Job для генерации варианта медиа-файла.
+
+### Details
+Выполняет генерацию варианта изображения (thumbnail, resize и т.д.)
+в фоновом режиме через очередь.
 
 ### Meta
 - **Methods:** `handle`, `dispatch`, `dispatchIf`, `dispatchUnless`, `dispatchSync`, `dispatchAfterResponse`, `withChain`, `attempts`, `delete`, `fail`, `release`, `withFakeQueueInteractions`, `assertDeleted`, `assertNotDeleted`, `assertFailed`, `assertFailedWith`, `assertNotFailed`, `assertReleased`, `assertNotReleased`, `setJob`, `onConnection`, `onQueue`, `onGroup`, `withDeduplicator`, `allOnConnection`, `allOnQueue`, `delay`, `withoutDelay`, `afterCommit`, `beforeCommit`, `through`, `chain`, `prependToChain`, `appendToChain`, `dispatchNextJobInChain`, `invokeChainCatchCallbacks`, `assertHasChain`, `assertDoesntHaveChain`, `restoreModel`
@@ -91,7 +107,11 @@ GenerateVariantJob
 **ID:** `domain_service:Search/IndexManager`
 **Path:** `app/Domain/Search/IndexManager.php`
 
-IndexManager
+Менеджер для управления индексами поиска.
+
+### Details
+Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,
+переключает алиасы и удаляет старые индексы.
 
 ### Meta
 - **Methods:** `reindex`
@@ -125,7 +145,11 @@ Uses HS256 (HMAC with SHA-256) algorithm with a secret key.
 **ID:** `domain_service:Media/Services/MediaMetadataExtractor`
 **Path:** `app/Domain/Media/Services/MediaMetadataExtractor.php`
 
-MediaMetadataExtractor
+Сервис для извлечения метаданных из медиа-файлов.
+
+### Details
+Извлекает размеры изображений, EXIF данные и другую информацию
+из загруженных файлов.
 
 ### Meta
 - **Methods:** `extract`
@@ -140,7 +164,11 @@ MediaMetadataExtractor
 **ID:** `domain_service:Media/Actions/MediaStoreAction`
 **Path:** `app/Domain/Media/Actions/MediaStoreAction.php`
 
-MediaStoreAction
+Действие для сохранения медиа-файла.
+
+### Details
+Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
+создание записи Media в БД.
 
 ### Meta
 - **Methods:** `execute`
@@ -156,7 +184,11 @@ MediaStoreAction
 **ID:** `domain_service:Pages/Validation/NotReservedRoute`
 **Path:** `app/Domain/Pages/Validation/NotReservedRoute.php`
 
-NotReservedRoute
+Правило валидации: slug не должен быть зарезервированным путём.
+
+### Details
+Проверяет, что slug не совпадает с зарезервированными путями или префиксами.
+Используется для валидации slug'ов страниц.
 
 ### Meta
 - **Methods:** `passes`, `message`
@@ -173,7 +205,11 @@ NotReservedRoute
 **ID:** `domain_service:Search/Clients/NullSearchClient`
 **Path:** `app/Domain/Search/Clients/NullSearchClient.php`
 
-NullSearchClient
+Null-реализация SearchClientInterface.
+
+### Details
+Используется когда поиск отключен. Все методы возвращают пустые результаты
+или выполняют no-op операции.
 
 ### Meta
 - **Methods:** `search`, `createIndex`, `deleteIndex`, `updateAliases`, `getIndicesForAlias`, `bulk`, `refresh`
@@ -189,7 +225,11 @@ NullSearchClient
 **ID:** `domain_service:Media/Services/OnDemandVariantService`
 **Path:** `app/Domain/Media/Services/OnDemandVariantService.php`
 
-OnDemandVariantService
+Сервис для генерации вариантов медиа-файлов по требованию.
+
+### Details
+Генерирует варианты изображений (thumbnails, resized) на лету,
+используя GD для обработки изображений.
 
 ### Meta
 - **Methods:** `ensureVariant`, `generateVariant`
@@ -204,7 +244,11 @@ OnDemandVariantService
 **ID:** `domain_service:Options/OptionsRepository`
 **Path:** `app/Domain/Options/OptionsRepository.php`
 
-OptionsRepository
+Репозиторий для работы с опциями системы.
+
+### Details
+Предоставляет доступ к опциям с кэшированием и поддержкой пространств имён.
+Поддерживает мягкое удаление и восстановление опций.
 
 ### Meta
 - **Methods:** `get`, `set`, `delete`, `restore`, `getInt`
@@ -220,7 +264,11 @@ OptionsRepository
 **ID:** `domain_service:Routing/PathNormalizer`
 **Path:** `app/Domain/Routing/PathNormalizer.php`
 
-PathNormalizer
+Сервис для нормализации путей.
+
+### Details
+Приводит пути к единому формату: удаляет query/fragment, гарантирует ведущий слэш,
+убирает trailing слэш, приводит к нижнему регистру, применяет Unicode NFC нормализацию.
 
 ### Meta
 - **Methods:** `normalize`
@@ -235,7 +283,11 @@ PathNormalizer
 **ID:** `domain_service:Routing/PathReservationServiceImpl`
 **Path:** `app/Domain/Routing/PathReservationServiceImpl.php`
 
-PathReservationServiceImpl
+Реализация сервиса для резервации путей.
+
+### Details
+Управляет зарезервированными путями с поддержкой статических путей из конфига
+и динамических резерваций из БД. Использует кэширование для оптимизации проверок.
 
 ### Meta
 - **Methods:** `reservePath`, `releasePath`, `releaseBySource`, `isReserved`, `ownerOf`
@@ -252,7 +304,10 @@ PathReservationServiceImpl
 **ID:** `domain_service:Routing/PathReservationStoreImpl`
 **Path:** `app/Domain/Routing/PathReservationStoreImpl.php`
 
-PathReservationStoreImpl
+Реализация PathReservationStore с использованием Eloquent.
+
+### Details
+Использует модель ReservedRoute для хранения резерваций в БД.
 
 ### Meta
 - **Methods:** `insert`, `delete`, `deleteIfOwnedBy`, `deleteBySource`, `exists`, `ownerOf`, `getAllPaths`, `isUniqueViolation`
@@ -268,7 +323,11 @@ PathReservationStoreImpl
 **ID:** `domain_service:Plugins/PluginActivator`
 **Path:** `app/Domain/Plugins/PluginActivator.php`
 
-PluginActivator
+Активатор плагинов.
+
+### Details
+Управляет включением и отключением плагинов с транзакционной безопасностью
+и автоматической перезагрузкой маршрутов.
 
 ### Meta
 - **Methods:** `enable`, `disable`
@@ -284,7 +343,10 @@ PluginActivator
 **ID:** `domain_service:Plugins/Services/PluginAutoloader`
 **Path:** `app/Domain/Plugins/Services/PluginAutoloader.php`
 
-PluginAutoloader
+Автозагрузчик классов плагинов.
+
+### Details
+Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.
 
 ### Meta
 - **Methods:** `register`
@@ -299,7 +361,10 @@ PluginAutoloader
 **ID:** `domain_service:Plugins/Events/PluginDisabled`
 **Path:** `app/Domain/Plugins/Events/PluginDisabled.php`
 
-PluginDisabled
+Событие: плагин отключён.
+
+### Details
+Отправляется после успешного отключения плагина в БД.
 
 ### Meta
 - **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
@@ -315,7 +380,10 @@ PluginDisabled
 **ID:** `domain_service:Plugins/Events/PluginEnabled`
 **Path:** `app/Domain/Plugins/Events/PluginEnabled.php`
 
-PluginEnabled
+Событие: плагин включён.
+
+### Details
+Отправляется после успешного включения плагина в БД.
 
 ### Meta
 - **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
@@ -331,7 +399,10 @@ PluginEnabled
 **ID:** `domain_service:Plugins/PluginRegistry`
 **Path:** `app/Domain/Plugins/PluginRegistry.php`
 
-PluginRegistry
+Реестр плагинов.
+
+### Details
+Управляет списком включённых плагинов и их провайдерами.
 
 ### Meta
 - **Methods:** `enabled`, `enabledProviders`
@@ -346,7 +417,11 @@ PluginRegistry
 **ID:** `domain_service:Plugins/Services/PluginsRouteReloader`
 **Path:** `app/Domain/Plugins/Services/PluginsRouteReloader.php`
 
-PluginsRouteReloader
+Перезагрузчик маршрутов плагинов.
+
+### Details
+Очищает кэш маршрутов, регистрирует автозагрузку, регистрирует провайдеры
+включённых плагинов и кэширует маршруты (если включено).
 
 ### Meta
 - **Methods:** `reload`
@@ -362,7 +437,10 @@ PluginsRouteReloader
 **ID:** `domain_service:Plugins/Events/PluginsRoutesReloaded`
 **Path:** `app/Domain/Plugins/Events/PluginsRoutesReloaded.php`
 
-PluginsRoutesReloaded
+Событие: маршруты плагинов перезагружены.
+
+### Details
+Отправляется после успешной перезагрузки маршрутов плагинов.
 
 ### Meta
 - **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
@@ -377,7 +455,7 @@ PluginsRoutesReloaded
 **ID:** `domain_service:Plugins/Commands/PluginsSyncCommand`
 **Path:** `app/Domain/Plugins/Commands/PluginsSyncCommand.php`
 
-PluginsSyncCommand
+Команда для синхронизации плагинов из файловой системы в БД.
 
 ### Meta
 - **Methods:** `handle`
@@ -394,7 +472,10 @@ PluginsSyncCommand
 **ID:** `domain_service:Plugins/Events/PluginsSynced`
 **Path:** `app/Domain/Plugins/Events/PluginsSynced.php`
 
-PluginsSynced
+Событие: плагины синхронизированы.
+
+### Details
+Отправляется после успешной синхронизации плагинов из файловой системы в БД.
 
 ### Meta
 - **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
@@ -409,7 +490,11 @@ PluginsSynced
 **ID:** `domain_service:Plugins/Services/PluginsSynchronizer`
 **Path:** `app/Domain/Plugins/Services/PluginsSynchronizer.php`
 
-PluginsSynchronizer
+Синхронизатор плагинов.
+
+### Details
+Синхронизирует плагины из файловой системы в БД:
+обнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.
 
 ### Meta
 - **Methods:** `sync`
@@ -425,7 +510,11 @@ PluginsSynchronizer
 **ID:** `domain_service:Entries/PublishingService`
 **Path:** `app/Domain/Entries/PublishingService.php`
 
-PublishingService
+Сервис для применения правил публикации записей.
+
+### Details
+Обрабатывает логику публикации Entry: автозаполнение published_at,
+валидация инвариантов (дата публикации не в будущем).
 
 ### Meta
 - **Methods:** `applyAndValidate`
@@ -440,10 +529,11 @@ PublishingService
 **ID:** `domain_service:Auth/RefreshTokenDto`
 **Path:** `app/Domain/Auth/RefreshTokenDto.php`
 
-Data Transfer Object for RefreshToken.
+Data Transfer Object для RefreshToken.
 
 ### Details
-Provides type-safe access to refresh token data without exposing Eloquent model.
+Предоставляет типобезопасный доступ к данным refresh токена
+без раскрытия Eloquent модели.
 
 ### Meta
 - **Methods:** `isValid`, `isInvalid`
@@ -459,7 +549,7 @@ Provides type-safe access to refresh token data without exposing Eloquent model.
 **ID:** `domain_service:Auth/RefreshTokenRepositoryImpl`
 **Path:** `app/Domain/Auth/RefreshTokenRepositoryImpl.php`
 
-Implementation of RefreshTokenRepository using Eloquent.
+Реализация RefreshTokenRepository с использованием Eloquent.
 
 ### Meta
 - **Methods:** `store`, `markUsedConditionally`, `revoke`, `revokeFamily`, `find`, `deleteExpired`
@@ -475,7 +565,10 @@ Implementation of RefreshTokenRepository using Eloquent.
 **ID:** `domain_service:Search/Jobs/ReindexSearchJob`
 **Path:** `app/Domain/Search/Jobs/ReindexSearchJob.php`
 
-ReindexSearchJob
+Job для реиндексации поискового индекса в фоновом режиме.
+
+### Details
+Выполняет полную реиндексацию всех опубликованных записей через очередь.
 
 ### Meta
 - **Methods:** `handle`, `dispatch`, `dispatchIf`, `dispatchUnless`, `dispatchSync`, `dispatchAfterResponse`, `withChain`, `attempts`, `delete`, `fail`, `release`, `withFakeQueueInteractions`, `assertDeleted`, `assertNotDeleted`, `assertFailed`, `assertFailedWith`, `assertNotFailed`, `assertReleased`, `assertNotReleased`, `setJob`, `onConnection`, `onQueue`, `onGroup`, `withDeduplicator`, `allOnConnection`, `allOnQueue`, `delay`, `withoutDelay`, `afterCommit`, `beforeCommit`, `through`, `chain`, `prependToChain`, `appendToChain`, `dispatchNextJobInChain`, `invokeChainCatchCallbacks`, `assertHasChain`, `assertDoesntHaveChain`, `restoreModel`
@@ -513,7 +606,11 @@ ReindexSearchJob
 **ID:** `domain_service:Routing/ReservedRouteRegistry`
 **Path:** `app/Domain/Routing/ReservedRouteRegistry.php`
 
-ReservedRouteRegistry
+Реестр зарезервированных маршрутов.
+
+### Details
+Объединяет статические пути из конфига и динамические из БД.
+Использует кэширование для оптимизации частых проверок.
 
 ### Meta
 - **Methods:** `all`, `isReservedPath`, `isReservedPrefix`, `isReservedSlug`, `clearCache`
@@ -529,7 +626,12 @@ ReservedRouteRegistry
 **ID:** `domain_service:Sanitizer/RichTextSanitizer`
 **Path:** `app/Domain/Sanitizer/RichTextSanitizer.php`
 
-RichTextSanitizer
+Сервис для санитизации HTML контента.
+
+### Details
+Очищает HTML от потенциально опасных элементов и атрибутов через HTMLPurifier.
+Автоматически добавляет rel="noopener noreferrer" к ссылкам с target="_blank"
+для защиты от атак через window.opener.
 
 ### Meta
 - **Methods:** `sanitize`
@@ -544,7 +646,11 @@ RichTextSanitizer
 **ID:** `domain_service:Search/SearchHit`
 **Path:** `app/Domain/Search/SearchHit.php`
 
-SearchHit
+Результат поиска (одна найденная запись).
+
+### Details
+Представляет одну найденную запись с информацией о релевантности
+и подсветкой совпадений в тексте.
 
 ### Meta
 
@@ -559,7 +665,11 @@ SearchHit
 **ID:** `domain_service:Search/SearchQuery`
 **Path:** `app/Domain/Search/SearchQuery.php`
 
-SearchQuery
+Value Object для поискового запроса.
+
+### Details
+Инкапсулирует параметры поиска: текст запроса, фильтры по типам записей,
+термам, датам, пагинацию.
 
 ### Meta
 - **Methods:** `query`, `postTypes`, `terms`, `from`, `to`, `page`, `perPage`, `offset`, `isBlank`
@@ -575,7 +685,7 @@ SearchQuery
 **ID:** `domain_service:Search/Commands/SearchReindexCommand`
 **Path:** `app/Domain/Search/Commands/SearchReindexCommand.php`
 
-SearchReindexCommand
+Команда для реиндексации поискового индекса.
 
 ### Meta
 - **Methods:** `handle`
@@ -591,7 +701,11 @@ SearchReindexCommand
 **ID:** `domain_service:Search/SearchResult`
 **Path:** `app/Domain/Search/SearchResult.php`
 
-SearchResult
+Результаты поискового запроса.
+
+### Details
+Инкапсулирует результаты поиска: список найденных записей, общее количество,
+информацию о пагинации и время выполнения запроса.
 
 ### Meta
 - **Methods:** `hits`, `total`, `page`, `perPage`, `tookMs`, `empty`
@@ -606,7 +720,11 @@ SearchResult
 **ID:** `domain_service:Search/SearchService`
 **Path:** `app/Domain/Search/SearchService.php`
 
-SearchService
+Сервис для выполнения поисковых запросов.
+
+### Details
+Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).
+Строит запросы, обрабатывает ошибки, маппит результаты.
 
 ### Meta
 - **Methods:** `search`
@@ -622,7 +740,10 @@ SearchService
 **ID:** `domain_service:Search/ValueObjects/SearchTermFilter`
 **Path:** `app/Domain/Search/ValueObjects/SearchTermFilter.php`
 
-SearchTermFilter
+Value Object для фильтра поиска по терму.
+
+### Details
+Представляет фильтр по терму таксономии в формате "taxonomy:slug".
 
 ### Meta
 - **Methods:** `fromString`
