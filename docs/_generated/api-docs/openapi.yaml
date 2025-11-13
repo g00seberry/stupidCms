@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-13T06:00:17'
+                  example: '2025-11-13T06:16:00'
                   nullable: true
                 date_to:
                   type: string
@@ -570,7 +570,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.asc
+                  example: published_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3036,7 +3036,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: image
+                  example: audio
                   nullable: true
                   enum:
                     - image
@@ -3073,7 +3073,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -6724,7 +6724,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -7527,7 +7527,6 @@ paths:
                   data:
                     slug: product
                     name: Products
-                    template: single-product
                     options_json:
                       fields:
                         price:
@@ -7544,9 +7543,6 @@ paths:
                       name:
                         type: string
                         example: Products
-                      template:
-                        type: string
-                        example: single-product
                       options_json:
                         type: object
                         properties:
@@ -7752,11 +7748,6 @@ paths:
                   description: 'Человекочитаемое название.'
                   example: Products
                   nullable: false
-                template:
-                  type: string
-                  description: 'nullable @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}.'
-                  example: single-product
-                  nullable: true
                 options_json:
                   type: object
                   description: 'Опциональные настройки.'
@@ -7786,7 +7777,6 @@ paths:
                     -
                       slug: article
                       name: Articles
-                      template: null
                       options_json: {  }
                       updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
@@ -7796,7 +7786,6 @@ paths:
                       -
                         slug: article
                         name: Articles
-                        template: null
                         options_json: []
                         updated_at: '2025-01-10T12:45:00+00:00'
                     items:
@@ -7808,9 +7797,6 @@ paths:
                         name:
                           type: string
                           example: Articles
-                        template:
-                          type: string
-                          example: null
                         options_json:
                           type: object
                           properties: {  }
@@ -7952,7 +7938,6 @@ paths:
                   data:
                     slug: article
                     name: Articles
-                    template: null
                     options_json: {  }
                     updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
@@ -7965,9 +7950,6 @@ paths:
                       name:
                         type: string
                         example: Articles
-                      template:
-                        type: string
-                        example: null
                       options_json:
                         type: object
                         properties: {  }
@@ -8124,7 +8106,6 @@ paths:
                   data:
                     slug: article
                     name: Articles
-                    template: landing
                     options_json:
                       fields:
                         hero:
@@ -8140,9 +8121,6 @@ paths:
                       name:
                         type: string
                         example: Articles
-                      template:
-                        type: string
-                        example: landing
                       options_json:
                         type: object
                         properties:
@@ -8361,11 +8339,6 @@ paths:
                   description: 'optional Человекочитаемое название.'
                   example: 'Articles Updated'
                   nullable: false
-                template:
-                  type: string
-                  description: 'optional @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}.'
-                  example: landing
-                  nullable: true
                 options_json:
                   type: object
                   description: 'JSON-объект схемы настроек.'
@@ -8975,7 +8948,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10616,7 +10589,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -12245,7 +12218,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-13T06:00:17'
+                  example: '2025-11-13T06:16:00'
                   nullable: true
                 to:
                   type: string

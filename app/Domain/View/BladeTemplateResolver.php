@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\View;
 
 use App\Models\Entry;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 /**
@@ -70,20 +69,7 @@ final class BladeTemplateResolver implements TemplateResolver
             }
         }
 
-        // 4) Фолбэк на PostType.template (deprecated, для совместимости)
-        $postTypeTemplate = $this->getPostTypeTemplate($entry);
-        if (!empty($postTypeTemplate)) {
-            Log::channel('stack')->warning(
-                'post_types.template устарел; используйте entry--{postType}. Переходный фолбэк: {template}',
-                [
-                    'postType' => $postTypeSlug,
-                    'template' => $postTypeTemplate,
-                ]
-            );
-            return $postTypeTemplate;
-        }
-
-        // 5) Глобальный entry
+        // 4) Глобальный entry
         return $this->default;
     }
 
@@ -100,21 +86,6 @@ final class BladeTemplateResolver implements TemplateResolver
         }
 
         return $entry->postType()->value('slug');
-    }
-
-    /**
-     * Получает template из PostType (deprecated).
-     * 
-     * @param Entry $entry
-     * @return string|null
-     */
-    private function getPostTypeTemplate(Entry $entry): ?string
-    {
-        if ($entry->relationLoaded('postType') && $entry->postType) {
-            return $entry->postType->template;
-        }
-
-        return $entry->postType()->value('template');
     }
 }
 

@@ -35,11 +35,6 @@ class StorePostTypeRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'template' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
             'options_json' => [
                 'sometimes',
                 'array',
@@ -82,15 +77,7 @@ class StorePostTypeRequest extends FormRequest
      */
     public function warnings(): array
     {
-        $warnings = [];
-        
-        if ($this->has('template') && !empty($this->input('template'))) {
-            $warnings['template'] = [
-                'Поле template устарело. Используйте файловую конвенцию entry--{postType} вместо указания шаблона в настройках типа.',
-            ];
-        }
-
-        return $warnings;
+        return [];
     }
 }
 

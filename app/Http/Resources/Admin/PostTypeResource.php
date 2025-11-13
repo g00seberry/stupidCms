@@ -33,8 +33,6 @@ class PostTypeResource extends AdminJsonResource
         return [
             'slug' => $this->slug,
             'name' => $this->name,
-            /** @deprecated Используйте файловую конвенцию entry--{postType} */
-            'template' => $this->template,
             'options_json' => $this->transformOptionsJson($this->options_json),
             'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),

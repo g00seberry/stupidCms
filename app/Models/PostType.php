@@ -19,7 +19,6 @@ class PostType extends Model
     protected $fillable = [
         'slug',
         'name',
-        'template',
         'options_json',
     ];
 

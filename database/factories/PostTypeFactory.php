@@ -27,7 +27,6 @@ class PostTypeFactory extends Factory
         return [
             'slug' => $this->faker->unique()->slug(2),
             'name' => $this->faker->word(),
-            'template' => null,
             'options_json' => [],
         ];
     }

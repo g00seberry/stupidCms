@@ -18,22 +18,24 @@ PostType определяет:
 
 -   **Идентификатор** (`slug`) — например, `article`, `event`, `product`
 -   **Название** (`name`) — для админки ("Статья", "Событие")
--   **Шаблон** (`template`) — Blade-шаблон для рендеринга записей этого типа (опционально)
 -   **Настройки** (`options_json`) — какие поля, таксономии, медиа поддерживаются
 
 ### Шаблоны (Templates)
 
-Поле `template` в PostType задаёт Blade-шаблон по умолчанию для всех записей этого типа. Формат значения — dot notation (например, `pages.show` соответствует `resources/views/pages/show.blade.php`).
-
-**Примеры**:
-- `pages.show` — базовый шаблон для страниц
-- `pages.types.article` — шаблон для статей из поддиректории
-- `single-product` — шаблон для товаров
+Шаблоны для рендеринга записей определяются через файловую конвенцию:
 
 **Приоритет выбора шаблона** (при рендеринге Entry):
-1. `Entry.template_override` — переопределение для конкретной записи (если задан)
-2. `PostType.template` — шаблон типа поста (если задан)
-3. `pages.show` (default) — если оба не заданы
+
+1. `Entry.template_override` — переопределение для конкретной записи (если задан и существует)
+2. `entry--{postType}--{slug}` — специфичный шаблон для конкретной записи (если существует)
+3. `entry--{postType}` — шаблон для всех записей типа (если существует)
+4. `entry` — глобальный шаблон по умолчанию
+
+**Примеры**:
+
+-   `entry--article.blade.php` — шаблон для всех статей
+-   `entry--article--hello-world.blade.php` — шаблон для конкретной статьи со slug `hello-world`
+-   `entry.blade.php` — глобальный шаблон для всех записей
 
 См. `BladeTemplateResolver` для деталей реализации.
 
@@ -48,7 +50,6 @@ PostType {
   id: bigint (PK)
   slug: string (unique)      // 'article', 'page', 'event'
   name: string               // 'Статья', 'Страница', 'Событие'
-  template: ?string          // 'single-article', 'page'
   options_json: json         // настройки (см. ниже)
   created_at: datetime
   updated_at: datetime
@@ -191,7 +192,6 @@ PostType::create([
 {
     "slug": "product",
     "name": "Товар",
-    "template": "single-product",
     "options_json": {
         "fields": ["price", "sku", "stock"],
         "taxonomies": ["product-categories"],
@@ -209,7 +209,6 @@ PostType::create([
     "id": 4,
     "slug": "product",
     "name": "Товар",
-    "template": "single-product",
     "options_json": { ... },
     "created_at": "2025-11-08T12:00:00Z",
     "updated_at": "2025-11-08T12:00:00Z"
@@ -282,24 +281,26 @@ PostType::create([
 **Endpoint**: `GET /api/v1/admin/utils/templates`
 
 **Response**: `200 OK`
+
 ```json
 {
-  "data": [
-    "pages.show",
-    "home.default",
-    "welcome",
-    "pages.types.article",
-    "pages.types.product"
-  ]
+    "data": [
+        "pages.show",
+        "home.default",
+        "welcome",
+        "pages.types.article",
+        "pages.types.product"
+    ]
 }
 ```
 
 **Описание**: Возвращает список всех доступных Blade-шаблонов из `resources/views` для назначения PostType или Entry. Исключает системные директории (`admin`, `errors`, `layouts`, `partials`, `vendor`). Результаты отсортированы по алфавиту.
 
 **Использование**:
-- Шаблоны из этого списка можно назначить в поле `PostType.template` или `Entry.template_override`
-- Формат шаблонов: dot notation (например, `pages.show` соответствует `resources/views/pages/show.blade.php`)
-- Шаблоны из вложенных директорий также включаются (например, `pages.types.article`)
+
+-   Шаблоны из этого списка можно назначить в поле `PostType.template` или `Entry.template_override`
+-   Формат шаблонов: dot notation (например, `pages.show` соответствует `resources/views/pages/show.blade.php`)
+-   Шаблоны из вложенных директорий также включаются (например, `pages.types.article`)
 
 ## Использование в коде
 

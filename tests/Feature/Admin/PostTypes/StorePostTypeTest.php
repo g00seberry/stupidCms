@@ -22,7 +22,6 @@ class StorePostTypeTest extends TestCase
         $payload = [
             'slug' => 'product',
             'name' => 'Product',
-            'template' => 'single-product',
             'options_json' => [
                 'fields' => [
                     'price' => ['type' => 'number'],
@@ -43,7 +42,6 @@ class StorePostTypeTest extends TestCase
         $this->assertDatabaseHas('post_types', [
             'slug' => 'product',
             'name' => 'Product',
-            'template' => 'single-product',
             'options_json' => json_encode($payload['options_json']),
         ]);
     }

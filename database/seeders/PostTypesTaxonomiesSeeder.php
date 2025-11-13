@@ -43,7 +43,6 @@ class PostTypesTaxonomiesSeeder extends Seeder
             ['slug' => 'page'],
             [
                 'name' => 'Page',
-                'template' => null,
                 'options_json' => null,
             ]
         );

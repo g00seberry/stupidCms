@@ -7,7 +7,6 @@ use App\Models\Entry;
 use App\Models\PostType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Tests\TestCase;
 
@@ -344,105 +343,6 @@ class BladeTemplateResolverTest extends TestCase
         $result = $this->resolver->forEntry($entry);
 
         $this->assertEquals('entry', $result);
-        $this->assertFalse($entry->relationLoaded('postType'), 
-            'Связь postType не должна быть загружена через lazy loading');
-    }
-
-    public function test_fallback_to_post_type_template_when_no_file_convention_exists(): void
-    {
-        // Не создаём файлов конвенции, но задаём post_types.template
-        $this->articleType->update(['template' => 'pages.article']);
-
-        // Создаём шаблон для back-compat
-        $this->createViewFile('pages.article');
-
-        Log::shouldReceive('channel')
-            ->once()
-            ->with('stack')
-            ->andReturnSelf();
-        
-        Log::shouldReceive('warning')
-            ->once()
-            ->with(
-                'post_types.template устарел; используйте entry--{postType}. Переходный фолбэк: {template}',
-                \Mockery::on(function ($context) {
-                    return isset($context['postType']) && $context['postType'] === 'article' &&
-                           isset($context['template']) && $context['template'] === 'pages.article';
-                })
-            );
-
-        $entry = Entry::create([
-            'post_type_id' => $this->articleType->id,
-            'title' => 'Test Article',
-            'slug' => 'test-article',
-            'status' => 'draft',
-            'template_override' => null,
-            'data_json' => [],
-        ]);
-        $entry->load('postType');
-
-        $result = $this->resolver->forEntry($entry);
-
-        $this->assertEquals('pages.article', $result);
-    }
-
-    public function test_file_convention_has_priority_over_post_type_template(): void
-    {
-        // Задаём post_types.template
-        $this->articleType->update(['template' => 'pages.article']);
-
-        // Создаём файл конвенции
-        $this->createViewFile('entry--article');
-
-        // Не должно быть warning, так как используется файловая конвенция
-        Log::shouldReceive('channel')->never();
-        Log::shouldReceive('warning')->never();
-
-        $entry = Entry::create([
-            'post_type_id' => $this->articleType->id,
-            'title' => 'Test Article',
-            'slug' => 'test-article',
-            'status' => 'draft',
-            'template_override' => null,
-            'data_json' => [],
-        ]);
-        $entry->load('postType');
-
-        $result = $this->resolver->forEntry($entry);
-
-        // Должна использоваться файловая конвенция, а не post_types.template
-        $this->assertEquals('entry--article', $result);
-    }
-
-    public function test_handles_missing_post_type_relation_with_template_fallback(): void
-    {
-        // Задаём post_types.template
-        $this->articleType->update(['template' => 'pages.article']);
-
-        // Создаём шаблон для back-compat
-        $this->createViewFile('pages.article');
-
-        Log::shouldReceive('channel')
-            ->once()
-            ->with('stack')
-            ->andReturnSelf();
-        
-        Log::shouldReceive('warning')
-            ->once();
-
-        $entry = Entry::create([
-            'post_type_id' => $this->articleType->id,
-            'title' => 'Test Article',
-            'slug' => 'test-article',
-            'status' => 'draft',
-            'template_override' => null,
-            'data_json' => [],
-        ]);
-
-        // Entry без загруженной связи postType
-        $result = $this->resolver->forEntry($entry);
-
-        $this->assertEquals('pages.article', $result);
         $this->assertFalse($entry->relationLoaded('postType'), 
             'Связь postType не должна быть загружена через lazy loading');
     }

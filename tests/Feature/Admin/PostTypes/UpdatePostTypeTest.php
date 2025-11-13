@@ -41,7 +41,6 @@ class UpdatePostTypeTest extends TestCase
             'data' => [
                 'slug' => 'page',
                 'name' => 'Страница',
-                'template' => null,
                 'options_json' => $newOptions,
             ],
         ]);
@@ -302,7 +301,6 @@ class UpdatePostTypeTest extends TestCase
             'data' => [
                 'slug' => 'page',
                 'name' => 'Pageыы',
-                'template' => null,
                 'options_json' => ['new' => 'value'],
             ],
         ]);
@@ -335,177 +333,10 @@ class UpdatePostTypeTest extends TestCase
             'data' => [
                 'slug' => 'article',
                 'name' => 'Article',
-                'template' => null,
             ],
         ]);
     }
 
-    public function test_update_post_type_updates_template(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        $postType = PostType::factory()->create([
-            'slug' => 'page',
-            'name' => 'Page',
-            'template' => 'default',
-            'options_json' => [],
-        ]);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'template' => 'welcome',
-            'options_json' => [],
-        ], $admin);
-
-        $response->assertStatus(200);
-        
-        $postType->refresh();
-        
-        $this->assertEquals('welcome', $postType->template);
-        
-        $response->assertJson([
-            'data' => [
-                'slug' => 'page',
-                'name' => 'Page',
-                'template' => 'welcome',
-            ],
-        ]);
-        $response->assertJsonPath('data.template', 'welcome');
-
-        $this->assertDatabaseHas('post_types', [
-            'slug' => 'page',
-            'template' => 'welcome',
-        ]);
-    }
-
-    public function test_update_post_type_updates_template_with_other_fields(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        $postType = PostType::factory()->create([
-            'slug' => 'page',
-            'name' => 'Page',
-            'template' => 'default',
-            'options_json' => [],
-        ]);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'name' => 'Updated Page',
-            'template' => 'landing',
-            'options_json' => [],
-        ], $admin);
-
-        $response->assertStatus(200);
-        
-        $postType->refresh();
-        
-        $this->assertEquals('Updated Page', $postType->name);
-        $this->assertEquals('landing', $postType->template);
-        
-        $response->assertJson([
-            'data' => [
-                'slug' => 'page',
-                'name' => 'Updated Page',
-                'template' => 'landing',
-            ],
-        ]);
-    }
-
-    public function test_update_post_type_can_set_template_to_null(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        $postType = PostType::factory()->create([
-            'slug' => 'page',
-            'name' => 'Page',
-            'template' => 'default',
-            'options_json' => [],
-        ]);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'template' => null,
-            'options_json' => [],
-        ], $admin);
-
-        $response->assertStatus(200);
-        
-        $postType->refresh();
-        
-        $this->assertNull($postType->template);
-        
-        $response->assertJson([
-            'data' => [
-                'slug' => 'page',
-                'name' => 'Page',
-                'template' => null,
-            ],
-        ]);
-    }
-
-    public function test_update_post_type_does_not_change_template_when_not_provided(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        $postType = PostType::factory()->create([
-            'slug' => 'page',
-            'name' => 'Page',
-            'template' => 'default',
-            'options_json' => [],
-        ]);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'name' => 'Updated Page',
-            'options_json' => [],
-        ], $admin);
-
-        $response->assertStatus(200);
-        
-        $postType->refresh();
-        
-        $this->assertEquals('Updated Page', $postType->name);
-        $this->assertEquals('default', $postType->template);
-        
-        $response->assertJson([
-            'data' => [
-                'slug' => 'page',
-                'name' => 'Updated Page',
-                'template' => 'default',
-            ],
-        ]);
-    }
-
-    public function test_update_post_type_validates_template_max_length(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        PostType::factory()->create(['slug' => 'page']);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'template' => str_repeat('a', 256),
-            'options_json' => [],
-        ], $admin);
-
-        $response->assertStatus(422);
-        $response->assertHeader('Content-Type', 'application/problem+json');
-        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
-        $this->assertValidationErrors($response, ['template']);
-    }
-
-    public function test_update_post_type_validates_template_is_string(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        PostType::factory()->create(['slug' => 'page']);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'template' => 123,
-            'options_json' => [],
-        ], $admin);
-
-        $response->assertStatus(422);
-        $response->assertHeader('Content-Type', 'application/problem+json');
-        $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
-        $this->assertValidationErrors($response, ['template']);
-    }
 
 }
 

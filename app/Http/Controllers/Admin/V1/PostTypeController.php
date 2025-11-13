@@ -30,13 +30,11 @@ class PostTypeController extends Controller
      * @authenticated
      * @bodyParam slug string required Уникальный slug PostType. Example: product
      * @bodyParam name string required Человекочитаемое название. Example: Products
-     * @bodyParam template string nullable @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}. Example: single-product
      * @bodyParam options_json object Опциональные настройки. Example: {"fields":{"price":{"type":"number"}}}
      * @response status=201 {
      *   "data": {
      *     "slug": "product",
      *     "name": "Products",
-     *     "template": "single-product",
      *     "options_json": {
      *       "fields": {
      *         "price": {
@@ -109,7 +107,6 @@ class PostTypeController extends Controller
             return PostType::query()->create([
                 'slug' => $slug,
                 'name' => $validated['name'],
-                'template' => $validated['template'] ?? null,
                 'options_json' => $options,
             ]);
         });
@@ -129,7 +126,6 @@ class PostTypeController extends Controller
      *     {
      *       "slug": "article",
      *       "name": "Articles",
-     *       "template": null,
      *       "options_json": {},
      *       "updated_at": "2025-01-10T12:45:00+00:00"
      *     }
@@ -187,7 +183,6 @@ class PostTypeController extends Controller
      *   "data": {
      *     "slug": "article",
      *     "name": "Articles",
-     *     "template": null,
      *     "options_json": {},
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
@@ -258,13 +253,11 @@ class PostTypeController extends Controller
      * @urlParam slug string required Slug PostType. Example: article
      * @bodyParam slug string optional Новый slug PostType. Example: article-updated
      * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
-     * @bodyParam template string optional @deprecated Имя blade-шаблона. Используйте файловую конвенцию entry--{postType}. Example: landing
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @response status=200 {
      *   "data": {
      *     "slug": "article",
      *     "name": "Articles",
-     *     "template": "landing",
      *     "options_json": {
      *       "fields": {
      *         "hero": {
@@ -344,9 +337,6 @@ class PostTypeController extends Controller
             }
             if (isset($validated['name'])) {
                 $type->name = $validated['name'];
-            }
-            if (array_key_exists('template', $validated)) {
-                $type->template = $validated['template'];
             }
             $type->options_json = $validated['options_json'];
             $type->save();
