@@ -33,23 +33,40 @@ final class PostTypeOptions
     /**
      * Создать из массива (нормализует данные).
      *
+     * Нормализует taxonomies: принимает как целые числа, так и строковые представления чисел,
+     * преобразуя их в целые числа для внутреннего хранения.
+     *
      * @param array<string, mixed> $data Исходные данные
      * @return self Экземпляр PostTypeOptions
+     * @throws \InvalidArgumentException Если taxonomies содержит невалидные значения
      */
     public static function fromArray(array $data): self
     {
-        // Извлекаем taxonomies - строго массив целых чисел
+        // Извлекаем taxonomies - нормализуем в массив целых чисел
         $taxonomies = [];
         if (isset($data['taxonomies'])) {
             $taxonomiesValue = $data['taxonomies'];
             if (is_array($taxonomiesValue) && array_is_list($taxonomiesValue)) {
                 foreach ($taxonomiesValue as $item) {
-                    if (! is_int($item) || $item <= 0) {
+                    // Принимаем как целые числа, так и строковые представления чисел
+                    if (is_int($item)) {
+                        $normalizedItem = $item;
+                    } elseif (is_string($item) && is_numeric($item)) {
+                        $normalizedItem = (int) $item;
+                    } else {
                         throw new InvalidArgumentException(
                             'Taxonomies must be an array of positive integers.'
                         );
                     }
-                    $taxonomies[] = $item;
+
+                    // Проверяем, что после нормализации это положительное целое число
+                    if ($normalizedItem <= 0) {
+                        throw new InvalidArgumentException(
+                            'Taxonomies must be an array of positive integers.'
+                        );
+                    }
+
+                    $taxonomies[] = $normalizedItem;
                 }
             } else {
                 throw new InvalidArgumentException(

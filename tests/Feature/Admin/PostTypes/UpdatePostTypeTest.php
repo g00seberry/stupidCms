@@ -407,7 +407,45 @@ class UpdatePostTypeTest extends TestCase
         $this->assertIsArray($response->json('data.options_json.taxonomies'));
     }
 
+    public function test_update_normalizes_string_taxonomies_to_integers(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $categoryTaxonomy = Taxonomy::factory()->create();
+        $tagsTaxonomy = Taxonomy::factory()->create();
+        
+        PostType::factory()->create([
+            'slug' => 'article',
+            'name' => 'Article',
+            'options_json' => [],
+        ]);
 
+        // Отправляем taxonomies в виде строк (как приходит из JSON)
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/article', [
+            'slug' => 'article',
+            'name' => 'Article',
+            'options_json' => [
+                'taxonomies' => [(string) $categoryTaxonomy->id, (string) $tagsTaxonomy->id],
+            ],
+        ], $admin);
+
+        $response->assertStatus(200);
+        
+        // Проверяем, что в ответе taxonomies нормализованы в целые числа
+        $response->assertJsonPath('data.options_json.taxonomies', [$categoryTaxonomy->id, $tagsTaxonomy->id]);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+        
+        // Проверяем, что в БД сохранились целые числа
+        $postType = PostType::query()->where('slug', 'article')->first();
+        $this->assertNotNull($postType);
+        $this->assertInstanceOf(\App\Domain\PostTypes\PostTypeOptions::class, $postType->options_json);
+        $this->assertEquals([$categoryTaxonomy->id, $tagsTaxonomy->id], $postType->options_json->getAllowedTaxonomies());
+        
+        // Проверяем, что все элементы массива - целые числа
+        $taxonomies = $postType->options_json->getAllowedTaxonomies();
+        foreach ($taxonomies as $taxonomyId) {
+            $this->assertIsInt($taxonomyId);
+        }
+    }
 
 }
 

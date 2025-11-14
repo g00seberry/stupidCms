@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T15:08:32'
+                  example: '2025-11-14T15:16:26'
                   nullable: true
                 date_to:
                   type: string
@@ -573,7 +573,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.desc
+                  example: title.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2117,8 +2117,8 @@ paths:
           type: integer
   '/api/v1/admin/entries/{entry}/terms/sync':
     put:
-      summary: 'Полная синхронизация термов (detach + attach).'
-      operationId: detach+Attach
+      summary: 'Полная синхронизация термов записи.'
+      operationId: ''
       description: ''
       parameters: []
       responses:
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -2825,7 +2825,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -4779,7 +4779,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -6466,7 +6466,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -7845,7 +7845,7 @@ paths:
     put:
       summary: 'Обновление настроек типа записи.'
       operationId: ''
-      description: ''
+      description: "Обновляет slug, name и options_json типа записи. Нормализует taxonomies в options_json:\nпринимает как целые числа, так и строковые представления чисел, преобразуя их в целые числа."
       parameters: []
       responses:
         200:
@@ -8700,7 +8700,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10880,7 +10880,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T15:08:31'
+                  example: '2025-11-14T15:16:26'
                   nullable: true
                 to:
                   type: string

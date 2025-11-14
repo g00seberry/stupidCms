@@ -257,6 +257,14 @@ class PostTypeController extends Controller
     /**
      * Обновление настроек типа записи.
      *
+     * Обновляет slug, name и options_json типа записи. Нормализует taxonomies в options_json:
+     * принимает как целые числа, так и строковые представления чисел, преобразуя их в целые числа.
+     *
+     * @param \App\Http\Requests\Admin\UpdatePostTypeRequest $request Валидированный запрос
+     * @param string $slug Slug типа записи для обновления
+     * @return \App\Http\Resources\Admin\PostTypeResource Обновлённый тип записи
+     * @throws \App\Support\Errors\HttpErrorException Если тип записи не найден (ErrorCode::NOT_FOUND)
+     *
      * @group Admin ▸ Post types
      * @name Update post type
      * @authenticated
