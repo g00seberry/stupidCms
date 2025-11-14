@@ -6,6 +6,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\Term;
 use App\Models\Taxonomy;
+use App\Rules\NoTermCycle;
 use App\Rules\UniqueTermSlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -17,6 +18,7 @@ use Illuminate\Validation\Rule;
  * - Все поля опциональны (sometimes)
  * - Проверяет уникальность slug в рамках таксономии (исключая текущий терм)
  * - Проверяет, что parent_id не указывает на самого себя
+ * - Проверяет, что parent_id не создаст циклическую зависимость
  *
  * @package App\Http\Requests\Admin
  */
@@ -42,11 +44,11 @@ class UpdateTermRequest extends FormRequest
     /**
      * Получить правила валидации для запроса.
      *
-     * Валидирует (все поля опциональны):
-     * - name: название (максимум 255 символов)
-     * - slug: slug (regex, уникальность в рамках таксономии)
-     * - meta_json: объект метаданных
-     * - parent_id: ID родителя (должен существовать в той же таксономии, не может быть самим собой)
+ * Валидирует (все поля опциональны):
+ * - name: название (максимум 255 символов)
+ * - slug: slug (regex, уникальность в рамках таксономии)
+ * - meta_json: объект метаданных
+ * - parent_id: ID родителя (должен существовать в той же таксономии, не может быть самим собой, не должен создавать цикл)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -79,6 +81,7 @@ class UpdateTermRequest extends FormRequest
                         $query->where('id', '!=', $term->id);
                     }
                 }),
+                new NoTermCycle($term),
             ],
         ];
     }
