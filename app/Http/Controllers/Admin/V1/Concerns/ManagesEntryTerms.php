@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\V1\Concerns;
 use App\Http\Resources\Admin\TaxonomyResource;
 use App\Http\Resources\Admin\TermResource;
 use App\Models\Entry;
+use App\Models\Taxonomy;
 use App\Models\Term;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
@@ -69,40 +70,53 @@ trait ManagesEntryTerms
      *
      * Формирует структуру с термами, сгруппированными по таксономиям.
      * Возвращает массив объектов, где каждый объект содержит таксономию и её термы.
+     * Все разрешённые таксономии для типа записи возвращаются, даже если к ним не прикреплены термы.
      *
      * @param \App\Models\Entry $entry Запись с загруженными термами
      * @return array{entry_id: int, terms_by_taxonomy: array<int, array{taxonomy: array, terms: array}>} Payload ответа
      */
     protected function buildEntryTermsPayload(Entry $entry): array
     {
-        $entry->load('terms.taxonomy');
+        $entry->loadMissing(['terms', 'postType']);
 
-        $termsByTaxonomy = collect($entry->terms)
+        // Получаем разрешённые таксономии для типа записи
+        $allowedTaxonomyIds = [];
+        if ($entry->postType !== null) {
+            $allowedTaxonomyIds = $entry->postType->options_json->getAllowedTaxonomies();
+        }
+
+        // Если список пуст, все таксономии разрешены - загружаем все
+        if (empty($allowedTaxonomyIds)) {
+            $taxonomies = Taxonomy::all();
+        } else {
+            $taxonomies = Taxonomy::whereIn('id', $allowedTaxonomyIds)->get();
+        }
+
+        // Группируем существующие термы по таксономиям
+        $termsByTaxonomyId = collect($entry->terms)
             ->groupBy(fn (Term $term) => $term->taxonomy_id)
-            ->map(function (Collection $terms, int $taxonomyId) {
-                $firstTerm = $terms->first();
-                $taxonomy = $firstTerm?->taxonomy;
-
-                if ($taxonomy === null) {
-                    return null;
-                }
-
-                $taxonomyData = (new TaxonomyResource($taxonomy))->resolve();
+            ->map(function (Collection $terms) {
                 $termsData = TermResource::collection($terms)->resolve();
 
                 // Убираем поле taxonomy из каждого терма, так как оно уже в родительском объекте
-                $termsData = collect($termsData)->map(function (array $term) {
+                return collect($termsData)->map(function (array $term) {
                     $copy = $term;
                     unset($copy['taxonomy']);
                     return $copy;
                 })->values()->toArray();
+            });
+
+        // Формируем результат: для каждой разрешённой таксономии создаём объект
+        $termsByTaxonomy = $taxonomies
+            ->map(function (Taxonomy $taxonomy) use ($termsByTaxonomyId) {
+                $taxonomyData = (new TaxonomyResource($taxonomy))->resolve();
+                $termsData = $termsByTaxonomyId->get($taxonomy->id, []);
 
                 return [
                     'taxonomy' => $taxonomyData,
                     'terms' => $termsData,
                 ];
             })
-            ->filter()
             ->values()
             ->toArray();
 

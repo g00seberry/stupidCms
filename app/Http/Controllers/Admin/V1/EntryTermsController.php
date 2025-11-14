@@ -477,7 +477,7 @@ class EntryTermsController extends Controller
     private function findEntry(int $entryId): ?Entry
     {
         return Entry::query()
-            ->with(['terms.taxonomy', 'postType'])
+            ->with(['terms', 'postType'])
             ->where('id', $entryId)
             ->whereNull('deleted_at')
             ->first();
