@@ -17,7 +17,7 @@ class CrudTermsTest extends TestCase
     public function test_index_returns_terms_for_taxonomy(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
+        $taxonomy = Taxonomy::factory()->create();
         Term::factory()->count(2)->forTaxonomy($taxonomy)->create();
 
         $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", $admin);
@@ -25,17 +25,17 @@ class CrudTermsTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([
             'data' => [
-                '*' => ['id', 'taxonomy', 'name', 'slug'],
+                '*' => ['id', 'taxonomy', 'name'],
             ],
             'links',
             'meta',
         ]);
     }
 
-    public function test_store_creates_term_with_auto_slug(): void
+    public function test_store_creates_term(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
+        $taxonomy = Taxonomy::factory()->create();
 
         $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Laravel',
@@ -43,23 +43,7 @@ class CrudTermsTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonPath('data.name', 'Laravel');
-        $slug = $response->json('data.slug');
-        $this->assertNotEmpty($slug);
-        $this->assertDatabaseHas('terms', ['taxonomy_id' => $taxonomy->id, 'slug' => $slug]);
-    }
-
-    public function test_store_respects_custom_slug(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
-
-        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
-            'name' => 'Laravel',
-            'slug' => 'laravel',
-        ], $admin);
-
-        $response->assertStatus(201);
-        $response->assertJsonPath('data.slug', 'laravel');
+        $this->assertDatabaseHas('terms', ['taxonomy_id' => $taxonomy->id, 'name' => 'Laravel']);
     }
 
     public function test_show_returns_term_details(): void
@@ -76,22 +60,21 @@ class CrudTermsTest extends TestCase
     public function test_update_changes_term_fields(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $term = Term::factory()->create(['name' => 'Laravel', 'slug' => 'laravel']);
+        $term = Term::factory()->create(['name' => 'Laravel']);
 
         $response = $this->putJsonAsAdmin("/api/v1/admin/terms/{$term->id}", [
             'name' => 'Laravel 11',
-            'slug' => 'laravel-11',
         ], $admin);
 
         $response->assertOk();
-        $response->assertJsonPath('data.slug', 'laravel-11');
-        $this->assertDatabaseHas('terms', ['id' => $term->id, 'slug' => 'laravel-11']);
+        $response->assertJsonPath('data.name', 'Laravel 11');
+        $this->assertDatabaseHas('terms', ['id' => $term->id, 'name' => 'Laravel 11']);
     }
 
     public function test_destroy_requires_force_when_term_attached(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
+        $taxonomy = Taxonomy::factory()->create();
         $postType = PostType::factory()->withOptions(['taxonomies' => [$taxonomy->id]])->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create();
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
@@ -120,7 +103,7 @@ class CrudTermsTest extends TestCase
     public function test_operations_require_manage_terms_permission(): void
     {
         $editor = User::factory()->create(['is_admin' => false]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
+        $taxonomy = Taxonomy::factory()->create();
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
 
         $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", ['name' => 'Test'], $editor);

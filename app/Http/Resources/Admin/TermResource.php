@@ -47,7 +47,6 @@ class TermResource extends AdminJsonResource
             'id' => $this->id,
             'taxonomy' => $this->taxonomy_id,
             'name' => $this->name,
-            'slug' => $this->slug,
             'meta_json' => $this->transformJson($this->meta_json),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),

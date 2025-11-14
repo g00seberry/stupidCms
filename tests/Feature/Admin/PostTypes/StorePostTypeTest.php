@@ -19,7 +19,7 @@ class StorePostTypeTest extends TestCase
     public function test_store_creates_post_type_with_options(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'catalog']);
+        $taxonomy = Taxonomy::factory()->create();
 
         $payload = [
             'slug' => 'product',
@@ -198,8 +198,8 @@ class StorePostTypeTest extends TestCase
     public function test_store_keeps_taxonomies_as_array_when_filled(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $categoryTaxonomy = Taxonomy::factory()->create(['slug' => 'categories']);
-        $tagsTaxonomy = Taxonomy::factory()->create(['slug' => 'tags']);
+        $categoryTaxonomy = Taxonomy::factory()->create();
+        $tagsTaxonomy = Taxonomy::factory()->create();
 
         $payload = [
             'slug' => 'article',

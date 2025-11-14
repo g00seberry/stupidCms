@@ -15,8 +15,6 @@ use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
-use App\Support\Slug\Slugifier;
-use App\Support\Slug\UniqueSlugService;
 use App\Support\Http\AdminResponse;
 use App\Support\TermHierarchy\TermHierarchyService;
 use Illuminate\Http\Request;
@@ -40,13 +38,9 @@ class TermController extends Controller
     use ThrowsErrors;
 
     /**
-     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
-     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
      * @param \App\Support\TermHierarchy\TermHierarchyService $hierarchyService Сервис для управления иерархией термов
      */
     public function __construct(
-        private readonly Slugifier $slugifier,
-        private readonly UniqueSlugService $uniqueSlugService,
         private readonly TermHierarchyService $hierarchyService
     ) {
     }
@@ -58,8 +52,8 @@ class TermController extends Controller
      * @name List terms
      * @authenticated
      * @urlParam taxonomy int required ID таксономии. Example: 1
-     * @queryParam q string Поиск по имени/slug (<=255). Example: guides
-     * @queryParam sort string Сортировка. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.
+     * @queryParam q string Поиск по имени (<=255). Example: guides
+     * @queryParam sort string Сортировка. Values: created_at.desc,created_at.asc,name.asc,name.desc. Default: created_at.desc.
      * @queryParam per_page int Размер страницы (10-100). Default: 15.
      * @response status=200 {
      *   "data": [
@@ -67,7 +61,6 @@ class TermController extends Controller
      *       "id": 3,
      *       "taxonomy": 1,
      *       "name": "Guides",
-     *       "slug": "guides",
      *       "meta_json": {},
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00"
@@ -134,11 +127,7 @@ class TermController extends Controller
 
         if (! empty($validated['q'])) {
             $search = $validated['q'];
-            $query->where(function ($q) use ($search) {
-                $like = '%' . $search . '%';
-                $q->where('name', 'like', $like)
-                    ->orWhere('slug', 'like', $like);
-            });
+            $query->where('name', 'like', '%' . $search . '%');
         }
 
         [$column, $direction] = $this->resolveSort($validated['sort'] ?? 'created_at.desc');
@@ -165,14 +154,12 @@ class TermController extends Controller
      *       "id": 1,
      *       "taxonomy": 1,
      *       "name": "Технологии",
-     *       "slug": "tech",
      *       "parent_id": null,
      *       "children": [
      *         {
      *           "id": 2,
      *           "taxonomy": 1,
      *           "name": "Laravel",
-     *           "slug": "laravel",
      *           "parent_id": 1,
      *           "children": []
      *         }
@@ -241,14 +228,12 @@ class TermController extends Controller
      * @authenticated
      * @urlParam taxonomy int required ID таксономии. Example: 1
      * @bodyParam name string required Название (<=255). Example: Guides
-     * @bodyParam slug string Уникальный slug (а-z0-9_-). Генерируется из name, если не указан. Example: guides
      * @bodyParam meta_json object Мета-данные. Example: {"color":"#ffcc00"}
      * @response status=201 {
      *   "data": {
      *     "id": 3,
      *     "taxonomy": 1,
      *     "name": "Guides",
-     *     "slug": "guides",
      *     "meta_json": {},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
@@ -324,25 +309,15 @@ class TermController extends Controller
 
         $validated = $request->validated();
         $name = trim((string) $validated['name']);
-        $slugInput = $validated['slug'] ?? null;
         $meta = $validated['meta_json'] ?? null;
         $parentId = isset($validated['parent_id']) ? (int) $validated['parent_id'] : null;
 
-        $slugBase = $slugInput !== null && $slugInput !== ''
-            ? $this->sanitizeTermSlug($slugInput)
-            : $this->slugifier->slugify($name);
-
-        if ($slugBase === '') {
-            $slugBase = 'term';
-        }
-
         $term = null;
 
-        DB::transaction(function () use (&$term, $taxonomyModel, $name, $slugBase, $meta, $parentId) {
+        DB::transaction(function () use (&$term, $taxonomyModel, $name, $meta, $parentId) {
             $term = Term::query()->create([
                 'taxonomy_id' => $taxonomyModel->id,
                 'name' => $name,
-                'slug' => $this->ensureUniqueTermSlug($taxonomyModel, $slugBase),
                 'meta_json' => $meta,
             ]);
 
@@ -380,7 +355,6 @@ class TermController extends Controller
      *     "id": 3,
      *     "taxonomy": 1,
      *     "name": "Guides",
-     *     "slug": "guides",
      *     "meta_json": {},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
@@ -445,14 +419,12 @@ class TermController extends Controller
      * @authenticated
      * @urlParam term int required ID терма. Example: 3
      * @bodyParam name string Новое название (<=255). Example: Tutorials
-     * @bodyParam slug string Новый slug (а-z0-9_-). Example: tutorials
      * @bodyParam meta_json object Обновлённые мета-данные. Example: {"color":"#3366ff"}
      * @response status=200 {
      *   "data": {
      *     "id": 3,
      *     "taxonomy": 1,
      *     "name": "Tutorials",
-     *     "slug": "tutorials",
      *     "meta_json": {
      *       "color": "#3366ff"
      *     },
@@ -490,12 +462,12 @@ class TermController extends Controller
      *   "title": "Validation Error",
      *   "status": 422,
      *   "code": "VALIDATION_ERROR",
-     *   "detail": "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.",
+     *   "detail": "The given data was invalid.",
      *   "meta": {
      *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5ecb6c34",
      *     "errors": {
-     *       "slug": [
-     *         "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
+     *       "name": [
+     *         "The name field is required."
      *       ]
      *     }
      *   },
@@ -533,20 +505,6 @@ class TermController extends Controller
 
             if (array_key_exists('meta_json', $validated)) {
                 $termModel->meta_json = $validated['meta_json'];
-            }
-
-            if (array_key_exists('slug', $validated)) {
-                $slugValue = $validated['slug'];
-                if ($slugValue === null || $slugValue === '') {
-                    $base = $this->slugifier->slugify($validated['name'] ?? $termModel->name);
-                    if ($base === '') {
-                        $base = 'term';
-                    }
-                    $termModel->slug = $this->ensureUniqueTermSlug($termModel->taxonomy, $base, $termModel->id);
-                } else {
-                    $candidate = $this->sanitizeTermSlug($slugValue);
-                    $termModel->slug = $this->ensureUniqueTermSlug($termModel->taxonomy, $candidate, $termModel->id);
-                }
             }
 
             // Обновляем иерархию, если таксономия поддерживает её и parent_id изменился
@@ -680,7 +638,6 @@ class TermController extends Controller
         $fieldMap = [
             'created_at' => 'created_at',
             'name' => 'name',
-            'slug' => 'slug',
         ];
 
         $column = $fieldMap[$field] ?? 'created_at';
@@ -689,43 +646,6 @@ class TermController extends Controller
         return [$column, $dir];
     }
 
-    /**
-     * Обеспечить уникальность slug терма в рамках таксономии.
-     *
-     * @param \App\Models\Taxonomy $taxonomy Таксономия
-     * @param string $base Базовый slug
-     * @param int|null $ignoreId ID терма для игнорирования (при обновлении)
-     * @return string Уникальный slug
-     */
-    private function ensureUniqueTermSlug(Taxonomy $taxonomy, string $base, ?int $ignoreId = null): string
-    {
-        $base = $base !== '' ? $base : 'term';
-
-        return $this->uniqueSlugService->ensureUnique($base, function (string $candidate) use ($taxonomy, $ignoreId) {
-            $query = Term::query()
-                ->where('taxonomy_id', $taxonomy->id)
-                ->where('slug', $candidate)
-                ->whereNull('deleted_at');
-
-            if ($ignoreId) {
-                $query->where('id', '!=', $ignoreId);
-            }
-
-            return $query->exists();
-        });
-    }
-
-    /**
-     * Нормализовать slug терма.
-     *
-     * @param string $value Исходное значение
-     * @return string Нормализованный slug
-     */
-    private function sanitizeTermSlug(string $value): string
-    {
-        $slug = $this->slugifier->slugify($value);
-        return $slug !== '' ? $slug : 'term';
-    }
 
     /**
      * Найти таксономию по ID.
@@ -781,7 +701,7 @@ class TermController extends Controller
         if ($term->taxonomy_id !== $taxonomy->id) {
             throw ValidationException::withMessages([
                 'term_id' => [
-                    sprintf('Term %d does not belong to taxonomy %s.', $term->id, $taxonomy->slug),
+                    sprintf('Term %d does not belong to taxonomy %d.', $term->id, $taxonomy->id),
                 ],
             ]);
         }

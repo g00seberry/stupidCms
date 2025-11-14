@@ -43,7 +43,6 @@ class EntryTermsController extends Controller
      *       {
      *         "id": 3,
      *         "name": "Guides",
-     *         "slug": "guides",
      *         "taxonomy": 1
      *       }
      *     ],
@@ -51,8 +50,7 @@ class EntryTermsController extends Controller
      *       "1": [
      *         {
      *           "id": 3,
-     *           "name": "Guides",
-     *           "slug": "guides"
+     *           "name": "Guides"
      *         }
      *       ]
      *     }
@@ -87,12 +85,12 @@ class EntryTermsController extends Controller
      *   "title": "Validation Error",
      *   "status": 422,
      *   "code": "VALIDATION_ERROR",
-     *   "detail": "Taxonomy 'tags' is not allowed for the entry post type.",
+     *   "detail": "Taxonomy with id '2' is not allowed for the entry post type.",
      *   "meta": {
      *     "request_id": "51111111-2222-3333-4444-555555555559",
      *     "errors": {
      *       "term_ids": [
-     *         "Taxonomy 'tags' is not allowed for the entry post type."
+     *         "Taxonomy with id '2' is not allowed for the entry post type."
      *       ]
      *     }
      *   },
@@ -137,7 +135,6 @@ class EntryTermsController extends Controller
      *       {
      *         "id": 3,
      *         "name": "Guides",
-     *         "slug": "guides",
      *         "taxonomy": 1
      *       }
      *     ],
@@ -145,8 +142,7 @@ class EntryTermsController extends Controller
      *       "1": [
      *         {
      *           "id": 3,
-     *           "name": "Guides",
-     *           "slug": "guides"
+     *           "name": "Guides"
      *         }
      *       ]
      *     }
@@ -181,12 +177,12 @@ class EntryTermsController extends Controller
      *   "title": "Validation Error",
      *   "status": 422,
      *   "code": "VALIDATION_ERROR",
-     *   "detail": "Taxonomy 'tags' is not allowed for the entry post type.",
+     *   "detail": "Taxonomy with id '2' is not allowed for the entry post type.",
      *   "meta": {
      *     "request_id": "51111111-2222-3333-4444-555555555558",
      *     "errors": {
      *       "term_ids": [
-     *         "Taxonomy 'tags' is not allowed for the entry post type."
+     *         "Taxonomy with id '2' is not allowed for the entry post type."
      *       ]
      *     }
      *   },
@@ -340,7 +336,6 @@ class EntryTermsController extends Controller
      *       {
      *         "id": 8,
      *         "name": "Announcements",
-     *         "slug": "announcements",
      *         "taxonomy": 1
      *       }
      *     ]
@@ -375,12 +370,12 @@ class EntryTermsController extends Controller
      *   "title": "Validation Error",
      *   "status": 422,
      *   "code": "VALIDATION_ERROR",
-     *   "detail": "Taxonomy 'tags' is not allowed for the entry post type.",
+     *   "detail": "Taxonomy with id '2' is not allowed for the entry post type.",
      *   "meta": {
      *     "request_id": "51111111-2222-3333-4444-555555555565",
      *     "errors": {
      *       "term_ids": [
-     *         "Taxonomy 'tags' is not allowed for the entry post type."
+     *         "Taxonomy with id '2' is not allowed for the entry post type."
      *       ]
      *     }
      *   },

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,7 +12,6 @@ use Illuminate\Validation\Rule;
  *
  * Валидирует данные для создания таксономии:
  * - label: обязательное название (максимум 255 символов)
- * - slug: опциональный уникальный slug (regex, зарезервированные пути)
  * - hierarchical: опциональный boolean для иерархической таксономии
  * - options_json: опциональный объект настроек
  *
@@ -38,7 +36,6 @@ class StoreTaxonomyRequest extends FormRequest
      *
      * Валидирует:
      * - label: обязательное название (максимум 255 символов)
-     * - slug: опциональный уникальный slug (regex, зарезервированные пути)
      * - hierarchical: опциональный boolean
      * - options_json: опциональный объект
      *
@@ -48,14 +45,6 @@ class StoreTaxonomyRequest extends FormRequest
     {
         return [
             'label' => 'required|string|max:255',
-            'slug' => [
-                'nullable',
-                'string',
-                'max:64',
-                'regex:/^[a-z0-9_-]+$/',
-                Rule::unique('taxonomies', 'slug'),
-                new ReservedSlug(),
-            ],
             'hierarchical' => 'sometimes|boolean',
             'options_json' => 'sometimes|array',
         ];

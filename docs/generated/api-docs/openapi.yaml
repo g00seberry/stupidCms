@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: published
+                  example: trashed
                   nullable: true
                   enum:
                     - all
@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T10:11:07'
+                  example: '2025-11-14T11:03:01'
                   nullable: true
                 date_to:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.desc
+                  example: title.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -1818,14 +1818,12 @@ paths:
                       -
                         id: 3
                         name: Guides
-                        slug: guides
                         taxonomy: 1
                     terms_by_taxonomy:
                       '1':
                         -
                           id: 3
                           name: Guides
-                          slug: guides
                 properties:
                   data:
                     type: object
@@ -1839,7 +1837,6 @@ paths:
                           -
                             id: 3
                             name: Guides
-                            slug: guides
                             taxonomy: 1
                         items:
                           type: object
@@ -1850,9 +1847,6 @@ paths:
                             name:
                               type: string
                               example: Guides
-                            slug:
-                              type: string
-                              example: guides
                             taxonomy:
                               type: integer
                               example: 1
@@ -1865,7 +1859,6 @@ paths:
                               -
                                 id: 3
                                 name: Guides
-                                slug: guides
                             items:
                               type: object
                               properties:
@@ -1875,9 +1868,6 @@ paths:
                                 name:
                                   type: string
                                   example: Guides
-                                slug:
-                                  type: string
-                                  example: guides
         401:
           description: ''
           content:
@@ -1977,12 +1967,12 @@ paths:
                   title: 'Validation Error'
                   status: 422
                   code: VALIDATION_ERROR
-                  detail: "Taxonomy 'tags' is not allowed for the entry post type."
+                  detail: "Taxonomy with id '2' is not allowed for the entry post type."
                   meta:
                     request_id: 51111111-2222-3333-4444-555555555559
                     errors:
                       term_ids:
-                        - "Taxonomy 'tags' is not allowed for the entry post type."
+                        - "Taxonomy with id '2' is not allowed for the entry post type."
                   trace_id: 00-51111111222233334444555555555559-5111111122223333-01
                 properties:
                   type:
@@ -1999,7 +1989,7 @@ paths:
                     example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: "Taxonomy 'tags' is not allowed for the entry post type."
+                    example: "Taxonomy with id '2' is not allowed for the entry post type."
                   meta:
                     type: object
                     properties:
@@ -2012,7 +2002,7 @@ paths:
                           term_ids:
                             type: array
                             example:
-                              - "Taxonomy 'tags' is not allowed for the entry post type."
+                              - "Taxonomy with id '2' is not allowed for the entry post type."
                             items:
                               type: string
                   trace_id:
@@ -2101,14 +2091,12 @@ paths:
                       -
                         id: 3
                         name: Guides
-                        slug: guides
                         taxonomy: 1
                     terms_by_taxonomy:
                       '1':
                         -
                           id: 3
                           name: Guides
-                          slug: guides
                 properties:
                   data:
                     type: object
@@ -2122,7 +2110,6 @@ paths:
                           -
                             id: 3
                             name: Guides
-                            slug: guides
                             taxonomy: 1
                         items:
                           type: object
@@ -2133,9 +2120,6 @@ paths:
                             name:
                               type: string
                               example: Guides
-                            slug:
-                              type: string
-                              example: guides
                             taxonomy:
                               type: integer
                               example: 1
@@ -2148,7 +2132,6 @@ paths:
                               -
                                 id: 3
                                 name: Guides
-                                slug: guides
                             items:
                               type: object
                               properties:
@@ -2158,9 +2141,6 @@ paths:
                                 name:
                                   type: string
                                   example: Guides
-                                slug:
-                                  type: string
-                                  example: guides
         401:
           description: ''
           content:
@@ -2260,12 +2240,12 @@ paths:
                   title: 'Validation Error'
                   status: 422
                   code: VALIDATION_ERROR
-                  detail: "Taxonomy 'tags' is not allowed for the entry post type."
+                  detail: "Taxonomy with id '2' is not allowed for the entry post type."
                   meta:
                     request_id: 51111111-2222-3333-4444-555555555558
                     errors:
                       term_ids:
-                        - "Taxonomy 'tags' is not allowed for the entry post type."
+                        - "Taxonomy with id '2' is not allowed for the entry post type."
                   trace_id: 00-51111111222233334444555555555558-5111111122223333-01
                 properties:
                   type:
@@ -2282,7 +2262,7 @@ paths:
                     example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: "Taxonomy 'tags' is not allowed for the entry post type."
+                    example: "Taxonomy with id '2' is not allowed for the entry post type."
                   meta:
                     type: object
                     properties:
@@ -2295,7 +2275,7 @@ paths:
                           term_ids:
                             type: array
                             example:
-                              - "Taxonomy 'tags' is not allowed for the entry post type."
+                              - "Taxonomy with id '2' is not allowed for the entry post type."
                             items:
                               type: string
                   trace_id:
@@ -2632,7 +2612,6 @@ paths:
                       -
                         id: 8
                         name: Announcements
-                        slug: announcements
                         taxonomy: 1
                 properties:
                   data:
@@ -2647,7 +2626,6 @@ paths:
                           -
                             id: 8
                             name: Announcements
-                            slug: announcements
                             taxonomy: 1
                         items:
                           type: object
@@ -2658,9 +2636,6 @@ paths:
                             name:
                               type: string
                               example: Announcements
-                            slug:
-                              type: string
-                              example: announcements
                             taxonomy:
                               type: integer
                               example: 1
@@ -2763,12 +2738,12 @@ paths:
                   title: 'Validation Error'
                   status: 422
                   code: VALIDATION_ERROR
-                  detail: "Taxonomy 'tags' is not allowed for the entry post type."
+                  detail: "Taxonomy with id '2' is not allowed for the entry post type."
                   meta:
                     request_id: 51111111-2222-3333-4444-555555555565
                     errors:
                       term_ids:
-                        - "Taxonomy 'tags' is not allowed for the entry post type."
+                        - "Taxonomy with id '2' is not allowed for the entry post type."
                   trace_id: 00-51111111222233334444555555555665-5111111122223333-01
                 properties:
                   type:
@@ -2785,7 +2760,7 @@ paths:
                     example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: "Taxonomy 'tags' is not allowed for the entry post type."
+                    example: "Taxonomy with id '2' is not allowed for the entry post type."
                   meta:
                     type: object
                     properties:
@@ -2798,7 +2773,7 @@ paths:
                           term_ids:
                             type: array
                             example:
-                              - "Taxonomy 'tags' is not allowed for the entry post type."
+                              - "Taxonomy with id '2' is not allowed for the entry post type."
                             items:
                               type: string
                   trace_id:
@@ -3223,7 +3198,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: image
+                  example: video
                   nullable: true
                   enum:
                     - image
@@ -3251,7 +3226,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -3260,7 +3235,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -5214,7 +5189,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -6901,7 +6876,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -8947,23 +8922,23 @@ paths:
         -
           in: query
           name: q
-          description: 'Поиск по slug/label (<=255 символов).'
+          description: 'Поиск по label (<=255 символов).'
           example: category
           required: false
           schema:
             type: string
-            description: 'Поиск по slug/label (<=255 символов).'
+            description: 'Поиск по label (<=255 символов).'
             example: category
             nullable: false
         -
           in: query
           name: sort
-          description: 'Сортировка. Values: created_at.desc,created_at.asc,slug.asc,slug.desc,label.asc,label.desc. Default: created_at.desc.'
+          description: 'Сортировка. Values: created_at.desc,created_at.asc,label.asc,label.desc. Default: created_at.desc.'
           example: consequatur
           required: false
           schema:
             type: string
-            description: 'Сортировка. Values: created_at.desc,created_at.asc,slug.asc,slug.desc,label.asc,label.desc. Default: created_at.desc.'
+            description: 'Сортировка. Values: created_at.desc,created_at.asc,label.asc,label.desc. Default: created_at.desc.'
             example: consequatur
             nullable: false
         -
@@ -8988,7 +8963,6 @@ paths:
                   data:
                     -
                       id: 1
-                      slug: category
                       label: Categories
                       hierarchical: true
                       options_json: {  }
@@ -9000,7 +8974,6 @@ paths:
                     example:
                       -
                         id: 1
-                        slug: category
                         label: Categories
                         hierarchical: true
                         options_json: []
@@ -9012,9 +8985,6 @@ paths:
                         id:
                           type: integer
                           example: 1
-                        slug:
-                          type: string
-                          example: category
                         label:
                           type: string
                           example: Categories
@@ -9140,13 +9110,11 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: label.asc
                   nullable: false
                   enum:
                     - created_at.desc
                     - created_at.asc
-                    - slug.asc
-                    - slug.desc
                     - label.asc
                     - label.desc
     post:
@@ -9254,8 +9222,8 @@ paths:
                   meta:
                     request_id: 21111111-2222-3333-4444-555555555557
                     errors:
-                      slug:
-                        - 'The slug has already been taken.'
+                      label:
+                        - 'The label field is required.'
                   trace_id: 00-21111111222233334444555555555557-2111111122223333-01
                 properties:
                   type:
@@ -9282,10 +9250,10 @@ paths:
                       errors:
                         type: object
                         properties:
-                          slug:
+                          label:
                             type: array
                             example:
-                              - 'The slug has already been taken.'
+                              - 'The label field is required.'
                             items:
                               type: string
                   trace_id:
@@ -9349,11 +9317,6 @@ paths:
                   description: 'Человекочитаемое название (<=255).'
                   example: Categories
                   nullable: false
-                slug:
-                  type: string
-                  description: 'Уникальный slug (а-z0-9_-). Генерируется из label, если не указан.'
-                  example: category
-                  nullable: true
                 hierarchical:
                   type: boolean
                   description: 'Иерархическая ли таксономия. Default: false.'
@@ -9907,7 +9870,6 @@ paths:
                     id: 3
                     taxonomy: 1
                     name: Guides
-                    slug: guides
                     meta_json: {  }
                     created_at: '2025-01-10T12:00:00+00:00'
                     updated_at: '2025-01-10T12:00:00+00:00'
@@ -9925,9 +9887,6 @@ paths:
                       name:
                         type: string
                         example: Guides
-                      slug:
-                        type: string
-                        example: guides
                       meta_json:
                         type: object
                         properties: {  }
@@ -10091,7 +10050,6 @@ paths:
                     id: 3
                     taxonomy: 1
                     name: Tutorials
-                    slug: tutorials
                     meta_json:
                       color: '#3366ff'
                     created_at: '2025-01-10T12:00:00+00:00'
@@ -10110,9 +10068,6 @@ paths:
                       name:
                         type: string
                         example: Tutorials
-                      slug:
-                        type: string
-                        example: tutorials
                       meta_json:
                         type: object
                         properties:
@@ -10227,12 +10182,12 @@ paths:
                   title: 'Validation Error'
                   status: 422
                   code: VALIDATION_ERROR
-                  detail: 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
+                  detail: 'The given data was invalid.'
                   meta:
                     request_id: eed543b8-b7cb-6c30-033f-3f5e5ecb6c34
                     errors:
-                      slug:
-                        - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
+                      name:
+                        - 'The name field is required.'
                   trace_id: 00-eed543b8b7cb6c30033f3f5e5ecb6c34-eed543b8b7cb6c30-01
                 properties:
                   type:
@@ -10249,7 +10204,7 @@ paths:
                     example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
+                    example: 'The given data was invalid.'
                   meta:
                     type: object
                     properties:
@@ -10259,10 +10214,10 @@ paths:
                       errors:
                         type: object
                         properties:
-                          slug:
+                          name:
                             type: array
                             example:
-                              - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
+                              - 'The name field is required.'
                             items:
                               type: string
                   trace_id:
@@ -10326,11 +10281,6 @@ paths:
                   description: 'Новое название (<=255).'
                   example: Tutorials
                   nullable: false
-                slug:
-                  type: string
-                  description: 'Новый slug (а-z0-9_-).'
-                  example: tutorials
-                  nullable: true
                 meta_json:
                   type: object
                   description: 'Обновлённые мета-данные.'
@@ -11014,11 +10964,6 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: vmqeopfuudtdsufvyvddq
                   nullable: false
-                slug:
-                  type: string
-                  description: 'Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 64 characters.'
-                  example: amniihfqcoynlazghdtqt
-                  nullable: true
                 hierarchical:
                   type: boolean
                   description: ''
@@ -11097,15 +11042,13 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
                     - created_at.asc
                     - name.asc
                     - name.desc
-                    - slug.asc
-                    - slug.desc
       security: []
     post:
       summary: 'Создание терма.'
@@ -11127,11 +11070,6 @@ paths:
                   description: 'Must not be greater than 255 characters.'
                   example: vmqeopfuudtdsufvyvddq
                   nullable: false
-                slug:
-                  type: string
-                  description: 'Must match the regex /^[a-z0-9][a-z0-9_-]*$/. Must not be greater than 255 characters.'
-                  example: amniihfqcoynlazghdtqt
-                  nullable: true
                 meta_json:
                   type: object
                   description: ''
@@ -11344,15 +11282,15 @@ paths:
                     type: string
                 term:
                   type: array
-                  description: 'Must match the regex /^[0-9]+:[a-z0-9_.-]+$/i.'
+                  description: 'Must match the regex /^[0-9]+:[0-9]+$/.'
                   example:
-                    - '5627:4$/i'
+                    - '5627:7'
                   items:
                     type: string
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T10:11:07'
+                  example: '2025-11-14T11:03:01'
                   nullable: true
                 to:
                   type: string

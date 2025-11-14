@@ -21,7 +21,6 @@ class TermFactory extends Factory
         return [
             'taxonomy_id' => Taxonomy::factory(),
             'name' => $name,
-            'slug' => Str::slug($name . '-' . $this->faker->unique()->numberBetween(1, 9999)),
             'meta_json' => [],
         ];
     }

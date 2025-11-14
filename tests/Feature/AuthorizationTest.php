@@ -38,7 +38,6 @@ class AuthorizationTest extends TestCase
         ]);
 
         $this->taxonomy = Taxonomy::create([
-            'slug' => 'category',
             'name' => 'Category',
             'hierarchical' => false,
         ]);
@@ -54,7 +53,6 @@ class AuthorizationTest extends TestCase
         $this->term = Term::create([
             'taxonomy_id' => $this->taxonomy->id,
             'name' => 'Test Term',
-            'slug' => 'test-term',
             'meta_json' => [],
         ]);
 

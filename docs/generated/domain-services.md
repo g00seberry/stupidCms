@@ -765,7 +765,7 @@ Value Object для поискового запроса.
 Value Object для фильтра поиска по терму.
 
 ### Details
-Представляет фильтр по терму таксономии в формате "taxonomy_id:slug".
+Представляет фильтр по терму таксономии в формате "taxonomy_id:term_id".
 
 ### Meta
 - **Methods:** `fromString`

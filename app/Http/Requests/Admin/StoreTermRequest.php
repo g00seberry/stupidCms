@@ -13,7 +13,6 @@ use Illuminate\Validation\Rule;
  *
  * Валидирует данные для создания терма:
  * - name: обязательное название (максимум 255 символов)
- * - slug: опциональный slug (regex, уникальность гарантируется контроллером)
  * - meta_json: опциональный объект метаданных
  * - parent_id: опциональный ID родителя (для иерархических таксономий)
  *
@@ -43,7 +42,6 @@ class StoreTermRequest extends FormRequest
      *
      * Валидирует:
      * - name: обязательное название (максимум 255 символов)
-     * - slug: опциональный slug (regex)
      * - meta_json: опциональный объект
      * - parent_id: опциональный ID родителя (должен существовать в той же таксономии)
      *
@@ -55,13 +53,6 @@ class StoreTermRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'slug' => [
-                'nullable',
-                'string',
-                'max:255',
-                'regex:/^[a-z0-9][a-z0-9_-]*$/',
-                // Уникальность гарантируется контроллером через ensureUniqueTermSlug
-            ],
             'meta_json' => 'nullable|array',
             'parent_id' => [
                 'nullable',

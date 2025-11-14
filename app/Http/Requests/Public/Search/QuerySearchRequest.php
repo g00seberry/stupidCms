@@ -38,7 +38,7 @@ final class QuerySearchRequest extends FormRequest
      * Валидирует:
      * - q: опциональный поисковый запрос (минимум 2 символа, максимум 200)
      * - post_type: опциональный массив типов записей (максимум 10 элементов)
-     * - term: опциональный массив фильтров по термам (формат: taxonomy:term, максимум 20 элементов)
+     * - term: опциональный массив фильтров по термам (формат: taxonomy_id:term_id, максимум 20 элементов)
      * - from/to: опциональные даты для фильтрации по дате публикации
      * - page/per_page: опциональные параметры пагинации
      *
@@ -53,7 +53,7 @@ final class QuerySearchRequest extends FormRequest
             'post_type' => ['nullable', 'array', 'max:10'],
             'post_type.*' => ['string', 'max:64'],
             'term' => ['nullable', 'array', 'max:20'],
-            'term.*' => ['string', 'regex:/^[0-9]+:[a-z0-9_.-]+$/i'],
+            'term.*' => ['string', 'regex:/^[0-9]+:[0-9]+$/'],
             'from' => ['nullable', 'date'],
             'to' => ['nullable', 'date', 'after_or_equal:from'],
             'page' => ['nullable', 'integer', 'min:1'],

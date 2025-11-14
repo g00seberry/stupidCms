@@ -173,7 +173,7 @@ final class SearchService
                     'bool' => [
                         'must' => [
                             ['term' => ['terms.taxonomy' => $term->taxonomyId]],
-                            ['term' => ['terms.slug' => $term->slug]],
+                            ['term' => ['terms.term_id' => $term->termId]],
                         ],
                     ],
                 ],

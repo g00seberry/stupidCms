@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property int $taxonomy_id ID таксономии
  * @property string $name Название терма
- * @property string $slug Уникальный slug терма в рамках таксономии
  * @property array|null $meta_json Дополнительные метаданные терма
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at

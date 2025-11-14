@@ -361,7 +361,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-14 10:11</li>
+        <li>Last updated: 2025-11-14 11:03</li>
     </ul>
 </div>
 
@@ -594,16 +594,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"published\",
+    \"status\": \"trashed\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-14T10:11:07\",
+    \"date_from\": \"2025-11-14T11:03:01\",
     \"date_to\": \"2106-12-13\",
     \"date_field\": \"published\",
-    \"sort\": \"title.desc\",
+    \"sort\": \"title.asc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -637,16 +637,16 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "published",
+    "status": "trashed",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-14T10:11:07",
+    "date_from": "2025-11-14T11:03:01",
     "date_to": "2106-12-13",
     "date_field": "published",
-    "sort": "title.desc",
+    "sort": "title.asc",
     "per_page": 13
 };
 
@@ -682,16 +682,16 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'published',
+            'status' =&gt; 'trashed',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-14T10:11:07',
+            'date_from' =&gt; '2025-11-14T11:03:01',
             'date_to' =&gt; '2106-12-13',
             'date_field' =&gt; 'published',
-            'sort' =&gt; 'title.desc',
+            'sort' =&gt; 'title.asc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -1012,10 +1012,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="published"
+               value="trashed"
                data-component="body">
     <br>
-<p>Example: <code>published</code></p>
+<p>Example: <code>trashed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -1064,10 +1064,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-14T10:11:07"
+               value="2025-11-14T11:03:01"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-14T10:11:07</code></p>
+<p>Must be a valid date. Example: <code>2025-11-14T11:03:01</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -1102,10 +1102,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="title.desc"
+               value="title.asc"
                data-component="body">
     <br>
-<p>Example: <code>title.desc</code></p>
+<p>Example: <code>title.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -2721,7 +2721,6 @@ print_r(json_decode((string) $body));</code></pre></div>
             {
                 &quot;id&quot;: 3,
                 &quot;name&quot;: &quot;Guides&quot;,
-                &quot;slug&quot;: &quot;guides&quot;,
                 &quot;taxonomy&quot;: 1
             }
         ],
@@ -2729,8 +2728,7 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;1&quot;: [
                 {
                     &quot;id&quot;: 3,
-                    &quot;name&quot;: &quot;Guides&quot;,
-                    &quot;slug&quot;: &quot;guides&quot;
+                    &quot;name&quot;: &quot;Guides&quot;
                 }
             ]
         }
@@ -2783,12 +2781,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
     &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
-    &quot;detail&quot;: &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;,
+    &quot;detail&quot;: &quot;Taxonomy with id &#039;2&#039; is not allowed for the entry post type.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555559&quot;,
         &quot;errors&quot;: {
             &quot;term_ids&quot;: [
-                &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
+                &quot;Taxonomy with id &#039;2&#039; is not allowed for the entry post type.&quot;
             ]
         }
     },
@@ -3013,7 +3011,6 @@ print_r(json_decode((string) $body));</code></pre></div>
             {
                 &quot;id&quot;: 3,
                 &quot;name&quot;: &quot;Guides&quot;,
-                &quot;slug&quot;: &quot;guides&quot;,
                 &quot;taxonomy&quot;: 1
             }
         ],
@@ -3021,8 +3018,7 @@ print_r(json_decode((string) $body));</code></pre></div>
             &quot;1&quot;: [
                 {
                     &quot;id&quot;: 3,
-                    &quot;name&quot;: &quot;Guides&quot;,
-                    &quot;slug&quot;: &quot;guides&quot;
+                    &quot;name&quot;: &quot;Guides&quot;
                 }
             ]
         }
@@ -3075,12 +3071,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
     &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
-    &quot;detail&quot;: &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;,
+    &quot;detail&quot;: &quot;Taxonomy with id &#039;2&#039; is not allowed for the entry post type.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555558&quot;,
         &quot;errors&quot;: {
             &quot;term_ids&quot;: [
-                &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
+                &quot;Taxonomy with id &#039;2&#039; is not allowed for the entry post type.&quot;
             ]
         }
     },
@@ -3587,7 +3583,6 @@ print_r(json_decode((string) $body));</code></pre></div>
             {
                 &quot;id&quot;: 8,
                 &quot;name&quot;: &quot;Announcements&quot;,
-                &quot;slug&quot;: &quot;announcements&quot;,
                 &quot;taxonomy&quot;: 1
             }
         ]
@@ -3640,12 +3635,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
     &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
-    &quot;detail&quot;: &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;,
+    &quot;detail&quot;: &quot;Taxonomy with id &#039;2&#039; is not allowed for the entry post type.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;51111111-2222-3333-4444-555555555565&quot;,
         &quot;errors&quot;: {
             &quot;term_ids&quot;: [
-                &quot;Taxonomy &#039;tags&#039; is not allowed for the entry post type.&quot;
+                &quot;Taxonomy with id &#039;2&#039; is not allowed for the entry post type.&quot;
             ]
         }
     },
@@ -3808,12 +3803,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"image\",
+    \"kind\": \"video\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
     \"deleted\": \"only\",
-    \"sort\": \"mime\",
-    \"order\": \"desc\",
+    \"sort\": \"created_at\",
+    \"order\": \"asc\",
     \"page\": 3,
     \"per_page\": 21
 }"
@@ -3846,12 +3841,12 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "image",
+    "kind": "video",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
     "deleted": "only",
-    "sort": "mime",
-    "order": "desc",
+    "sort": "created_at",
+    "order": "asc",
     "page": 3,
     "per_page": 21
 };
@@ -3886,12 +3881,12 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'image',
+            'kind' =&gt; 'video',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
             'deleted' =&gt; 'only',
-            'sort' =&gt; 'mime',
-            'order' =&gt; 'desc',
+            'sort' =&gt; 'created_at',
+            'order' =&gt; 'asc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
         ],
@@ -4183,10 +4178,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="image"
+               value="video"
                data-component="body">
     <br>
-<p>Example: <code>image</code></p>
+<p>Example: <code>video</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -4235,10 +4230,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-media"
-               value="mime"
+               value="created_at"
                data-component="body">
     <br>
-<p>Example: <code>mime</code></p>
+<p>Example: <code>created_at</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>size_bytes</code></li> <li><code>mime</code></li></ul>
         </div>
@@ -4249,10 +4244,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-media"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -6130,7 +6125,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"namespace\": \"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",
     \"q\": \"bajwbpilpmufinllwloau\",
-    \"deleted\": \"only\",
+    \"deleted\": \"with\",
     \"page\": 87,
     \"per_page\": 4
 }"
@@ -6159,7 +6154,7 @@ const headers = {
 let body = {
     "namespace": "gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8",
     "q": "bajwbpilpmufinllwloau",
-    "deleted": "only",
+    "deleted": "with",
     "page": 87,
     "per_page": 4
 };
@@ -6190,7 +6185,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'namespace' =&gt; 'gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8',
             'q' =&gt; 'bajwbpilpmufinllwloau',
-            'deleted' =&gt; 'only',
+            'deleted' =&gt; 'with',
             'page' =&gt; 87,
             'per_page' =&gt; 4,
         ],
@@ -6457,10 +6452,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-options--namespace-"
-               value="only"
+               value="with"
                data-component="body">
     <br>
-<p>Example: <code>only</code></p>
+<p>Example: <code>with</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -8299,7 +8294,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"enabled\": \"false\",
     \"page\": 2,
     \"per_page\": 13,
-    \"sort\": \"name\",
+    \"sort\": \"updated_at\",
     \"order\": \"desc\"
 }"
 </code></pre></div>
@@ -8331,7 +8326,7 @@ let body = {
     "enabled": "false",
     "page": 2,
     "per_page": 13,
-    "sort": "name",
+    "sort": "updated_at",
     "order": "desc"
 };
 
@@ -8365,7 +8360,7 @@ $response = $client-&gt;get(
             'enabled' =&gt; 'false',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
-            'sort' =&gt; 'name',
+            'sort' =&gt; 'updated_at',
             'order' =&gt; 'desc',
         ],
     ]
@@ -8646,10 +8641,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-plugins"
-               value="name"
+               value="updated_at"
                data-component="body">
     <br>
-<p>Example: <code>name</code></p>
+<p>Example: <code>updated_at</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>slug</code></li> <li><code>version</code></li> <li><code>updated_at</code></li></ul>
         </div>
@@ -11005,7 +11000,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.asc\"
+    \"sort\": \"label.asc\"
 }"
 </code></pre></div>
 
@@ -11032,7 +11027,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.asc"
+    "sort": "label.asc"
 };
 
 fetch(url, {
@@ -11061,7 +11056,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.asc',
+            'sort' =&gt; 'label.asc',
         ],
     ]
 );
@@ -11080,7 +11075,6 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;data&quot;: [
         {
             &quot;id&quot;: 1,
-            &quot;slug&quot;: &quot;category&quot;,
             &quot;label&quot;: &quot;Categories&quot;,
             &quot;hierarchical&quot;: true,
             &quot;options_json&quot;: {},
@@ -11221,7 +11215,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="category"
                data-component="query">
     <br>
-<p>Поиск по slug/label (&lt;=255 символов). Example: <code>category</code></p>
+<p>Поиск по label (&lt;=255 символов). Example: <code>category</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
@@ -11233,7 +11227,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="consequatur"
                data-component="query">
     <br>
-<p>Сортировка. Values: created_at.desc,created_at.asc,slug.asc,slug.desc,label.asc,label.desc. Default: created_at.desc. Example: <code>consequatur</code></p>
+<p>Сортировка. Values: created_at.desc,created_at.asc,label.asc,label.desc. Default: created_at.desc. Example: <code>consequatur</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -11279,12 +11273,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="slug.asc"
+               value="label.asc"
                data-component="body">
     <br>
-<p>Example: <code>slug.asc</code></p>
+<p>Example: <code>label.asc</code></p>
 Must be one of:
-<ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
+<ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
         </form>
 
@@ -11308,7 +11302,6 @@ Must be one of:
     --header "Accept: application/json" \
     --data "{
     \"label\": \"Categories\",
-    \"slug\": \"category\",
     \"hierarchical\": false,
     \"options_json\": {
         \"color\": \"#ffcc00\"
@@ -11330,7 +11323,6 @@ const headers = {
 
 let body = {
     "label": "Categories",
-    "slug": "category",
     "hierarchical": false,
     "options_json": {
         "color": "#ffcc00"
@@ -11357,7 +11349,6 @@ $response = $client-&gt;post(
         ],
         'json' =&gt; [
             'label' =&gt; 'Categories',
-            'slug' =&gt; 'category',
             'hierarchical' =&gt; false,
             'options_json' =&gt; [
                 'color' =&gt; '#ffcc00',
@@ -11420,8 +11411,8 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;21111111-2222-3333-4444-555555555557&quot;,
         &quot;errors&quot;: {
-            &quot;slug&quot;: [
-                &quot;The slug has already been taken.&quot;
+            &quot;label&quot;: [
+                &quot;The label field is required.&quot;
             ]
         }
     },
@@ -11542,18 +11533,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Человекочитаемое название (&lt;=255). Example: <code>Categories</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="slug"                data-endpoint="POSTapi-v1-admin-taxonomies"
-               value="category"
-               data-component="body">
-    <br>
-<p>Уникальный slug (а-z0-9_-). Генерируется из label, если не указан. Example: <code>category</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>hierarchical</code></b>&nbsp;&nbsp;
@@ -12528,7 +12507,6 @@ print_r(json_decode((string) $body));</code></pre></div>
         &quot;id&quot;: 3,
         &quot;taxonomy&quot;: 1,
         &quot;name&quot;: &quot;Guides&quot;,
-        &quot;slug&quot;: &quot;guides&quot;,
         &quot;meta_json&quot;: {},
         &quot;created_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;,
         &quot;updated_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;,
@@ -12721,7 +12699,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"name\": \"Tutorials\",
-    \"slug\": \"tutorials\",
     \"meta_json\": {
         \"color\": \"#3366ff\"
     },
@@ -12743,7 +12720,6 @@ const headers = {
 
 let body = {
     "name": "Tutorials",
-    "slug": "tutorials",
     "meta_json": {
         "color": "#3366ff"
     },
@@ -12770,7 +12746,6 @@ $response = $client-&gt;put(
         ],
         'json' =&gt; [
             'name' =&gt; 'Tutorials',
-            'slug' =&gt; 'tutorials',
             'meta_json' =&gt; [
                 'color' =&gt; '#3366ff',
             ],
@@ -12794,7 +12769,6 @@ print_r(json_decode((string) $body));</code></pre></div>
         &quot;id&quot;: 3,
         &quot;taxonomy&quot;: 1,
         &quot;name&quot;: &quot;Tutorials&quot;,
-        &quot;slug&quot;: &quot;tutorials&quot;,
         &quot;meta_json&quot;: {
             &quot;color&quot;: &quot;#3366ff&quot;
         },
@@ -12850,12 +12824,12 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;title&quot;: &quot;Validation Error&quot;,
     &quot;status&quot;: 422,
     &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
-    &quot;detail&quot;: &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;,
+    &quot;detail&quot;: &quot;The given data was invalid.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;eed543b8-b7cb-6c30-033f-3f5e5ecb6c34&quot;,
         &quot;errors&quot;: {
-            &quot;slug&quot;: [
-                &quot;The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.&quot;
+            &quot;name&quot;: [
+                &quot;The name field is required.&quot;
             ]
         }
     },
@@ -13003,18 +12977,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Новое название (&lt;=255). Example: <code>Tutorials</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="slug"                data-endpoint="PUTapi-v1-admin-terms--id-"
-               value="tutorials"
-               data-component="body">
-    <br>
-<p>Новый slug (а-z0-9_-). Example: <code>tutorials</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>meta_json</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -13054,7 +13016,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/v1/api/v1/admin/terms/17?forceDetach=1" \
+    "http://localhost/api/v1/api/v1/admin/terms/1?forceDetach=1" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -13062,7 +13024,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/terms/17"
+    "http://localhost/api/v1/api/v1/admin/terms/1"
 );
 
 const params = {
@@ -13085,7 +13047,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/terms/17';
+$url = 'http://localhost/api/v1/api/v1/admin/terms/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -13276,10 +13238,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-v1-admin-terms--id-"
-               value="17"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the term. Example: <code>17</code></p>
+<p>The ID of the term. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>term</code></b>&nbsp;&nbsp;
@@ -14433,7 +14395,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"label\": \"vmqeopfuudtdsufvyvddq\",
-    \"slug\": \"amniihfqcoynlazghdtqt\",
     \"hierarchical\": false
 }"
 </code></pre></div>
@@ -14451,7 +14412,6 @@ const headers = {
 
 let body = {
     "label": "vmqeopfuudtdsufvyvddq",
-    "slug": "amniihfqcoynlazghdtqt",
     "hierarchical": false
 };
 
@@ -14474,7 +14434,6 @@ $response = $client-&gt;put(
         ],
         'json' =&gt; [
             'label' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'slug' =&gt; 'amniihfqcoynlazghdtqt',
             'hierarchical' =&gt; false,
         ],
     ]
@@ -14582,18 +14541,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must not be greater than 255 characters. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="slug"                data-endpoint="PUTapi-v1-admin-taxonomies--id-"
-               value="amniihfqcoynlazghdtqt"
-               data-component="body">
-    <br>
-<p>Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 64 characters. Example: <code>amniihfqcoynlazghdtqt</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>hierarchical</code></b>&nbsp;&nbsp;
@@ -14928,7 +14875,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"slug.asc\"
+    \"sort\": \"created_at.asc\"
 }"
 </code></pre></div>
 
@@ -14946,7 +14893,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "slug.asc"
+    "sort": "created_at.asc"
 };
 
 fetch(url, {
@@ -14969,7 +14916,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'slug.asc',
+            'sort' =&gt; 'created_at.asc',
         ],
     ]
 );
@@ -15096,12 +15043,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="slug.asc"
+               value="created_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>slug.asc</code></p>
+<p>Example: <code>created_at.asc</code></p>
 Must be one of:
-<ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li> <li><code>slug.asc</code></li> <li><code>slug.desc</code></li></ul>
+<ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li></ul>
         </div>
         </form>
 
@@ -15123,7 +15070,6 @@ Must be one of:
     --header "Accept: application/json" \
     --data "{
     \"name\": \"vmqeopfuudtdsufvyvddq\",
-    \"slug\": \"amniihfqcoynlazghdtqt\",
     \"parent_id\": 17
 }"
 </code></pre></div>
@@ -15141,7 +15087,6 @@ const headers = {
 
 let body = {
     "name": "vmqeopfuudtdsufvyvddq",
-    "slug": "amniihfqcoynlazghdtqt",
     "parent_id": 17
 };
 
@@ -15164,7 +15109,6 @@ $response = $client-&gt;post(
         ],
         'json' =&gt; [
             'name' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'slug' =&gt; 'amniihfqcoynlazghdtqt',
             'parent_id' =&gt; 17,
         ],
     ]
@@ -15274,18 +15218,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must not be greater than 255 characters. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>slug</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="slug"                data-endpoint="POSTapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="amniihfqcoynlazghdtqt"
-               data-component="body">
-    <br>
-<p>Must match the regex /^[a-z0-9][a-z0-9_-]*$/. Must not be greater than 255 characters. Example: <code>amniihfqcoynlazghdtqt</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>meta_json</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -15337,9 +15269,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
         \"amniihfqcoynlazghdtqt\"
     ],
     \"term\": [
-        \"5627:4$\\/i\"
+        \"5627:7\"
     ],
-    \"from\": \"2025-11-14T10:11:07\",
+    \"from\": \"2025-11-14T11:03:01\",
     \"to\": \"2106-12-13\",
     \"page\": 45,
     \"per_page\": 16
@@ -15375,9 +15307,9 @@ let body = {
         "amniihfqcoynlazghdtqt"
     ],
     "term": [
-        "5627:4$\/i"
+        "5627:7"
     ],
-    "from": "2025-11-14T10:11:07",
+    "from": "2025-11-14T11:03:01",
     "to": "2106-12-13",
     "page": 45,
     "per_page": 16
@@ -15415,9 +15347,9 @@ $response = $client-&gt;get(
                 'amniihfqcoynlazghdtqt',
             ],
             'term' =&gt; [
-                '5627:4$/i',
+                '5627:7',
             ],
-            'from' =&gt; '2025-11-14T10:11:07',
+            'from' =&gt; '2025-11-14T11:03:01',
             'to' =&gt; '2106-12-13',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -15655,7 +15587,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="term[1]"                data-endpoint="GETapi-v1-search"
                data-component="body">
     <br>
-<p>Must match the regex /^[0-9]+:[a-z0-9_.-]+$/i.</p>
+<p>Must match the regex /^[0-9]+:[0-9]+$/.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>from</code></b>&nbsp;&nbsp;
@@ -15664,10 +15596,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-14T10:11:07"
+               value="2025-11-14T11:03:01"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-14T10:11:07</code></p>
+<p>Must be a valid date. Example: <code>2025-11-14T11:03:01</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

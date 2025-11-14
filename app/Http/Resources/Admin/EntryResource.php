@@ -53,7 +53,6 @@ class EntryResource extends AdminJsonResource
                     return [
                         'id' => $term->id,
                         'name' => $term->name,
-                        'slug' => $term->slug,
                         'taxonomy' => $term->taxonomy_id,
                     ];
                 });

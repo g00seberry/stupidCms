@@ -88,8 +88,8 @@ final class IndexManagerTest extends TestCase
         };
 
         $postType = PostType::factory()->create(['slug' => 'page']);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'category']);
-        $term = Term::factory()->forTaxonomy($taxonomy)->create(['slug' => 'news']);
+        $taxonomy = Taxonomy::factory()->create();
+        $term = Term::factory()->forTaxonomy($taxonomy)->create();
 
         $entries = Entry::factory()
             ->count(2)

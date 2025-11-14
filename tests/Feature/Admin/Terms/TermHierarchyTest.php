@@ -19,7 +19,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $parent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Parent']);
@@ -54,7 +53,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
 
@@ -82,8 +80,8 @@ class TermHierarchyTest extends TestCase
     public function test_store_rejects_parent_from_different_taxonomy(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy1 = Taxonomy::factory()->create(['slug' => 'categories', 'hierarchical' => true]);
-        $taxonomy2 = Taxonomy::factory()->create(['slug' => 'tags', 'hierarchical' => true]);
+        $taxonomy1 = Taxonomy::factory()->create(['hierarchical' => true]);
+        $taxonomy2 = Taxonomy::factory()->create(['hierarchical' => true]);
         $parent = Term::factory()->forTaxonomy($taxonomy2)->create();
 
         $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy1->id}/terms", [
@@ -99,7 +97,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'tags',
             'hierarchical' => false,
         ]);
         $parent = Term::factory()->forTaxonomy($taxonomy)->create();
@@ -119,7 +116,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $oldParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Old Parent']);
@@ -163,7 +159,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
@@ -179,7 +174,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $parent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Parent']);
@@ -215,7 +209,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $root = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Root']);
@@ -244,7 +237,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'tags',
             'hierarchical' => false,
         ]);
         Term::factory()->count(2)->forTaxonomy($taxonomy)->create();
@@ -265,7 +257,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $parent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Parent']);
@@ -288,7 +279,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $grandparent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Grandparent']);
@@ -330,7 +320,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $oldParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Old Parent']);
@@ -391,7 +380,6 @@ class TermHierarchyTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create([
-            'slug' => 'categories',
             'hierarchical' => true,
         ]);
         $oldParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Old Parent']);

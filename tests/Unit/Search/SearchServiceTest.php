@@ -74,7 +74,7 @@ final class SearchServiceTest extends TestCase
         $query = new SearchQuery(
             query: 'about',
             postTypes: ['page'],
-            terms: [SearchTermFilter::fromString('category:news')],
+            terms: [SearchTermFilter::fromString('1:1')],
             from: CarbonImmutable::parse('2024-01-01T00:00:00Z'),
             to: CarbonImmutable::parse('2024-12-31T00:00:00Z'),
             page: 3,

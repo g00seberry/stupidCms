@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  * Может быть иерархической (hierarchical = true) или плоской (hierarchical = false).
  *
  * @property int $id
- * @property string $slug Уникальный slug таксономии
  * @property string $name Название таксономии
  * @property array|null $options_json Дополнительные опции таксономии (JSON)
  * @property bool $hierarchical Флаг иерархической структуры (true = поддерживает родитель-потомок)

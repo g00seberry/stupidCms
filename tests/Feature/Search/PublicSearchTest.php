@@ -98,7 +98,7 @@ final class PublicSearchTest extends TestCase
             ],
         ]);
 
-        $response = $this->getJson('/api/v1/search?q=about&post_type=page&term=category:news&page=2&per_page=10');
+        $response = $this->getJson('/api/v1/search?q=about&post_type=page&term=1:1&page=2&per_page=10');
 
         $response->assertOk();
         $response->assertJson([

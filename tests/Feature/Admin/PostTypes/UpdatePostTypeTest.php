@@ -347,7 +347,7 @@ class UpdatePostTypeTest extends TestCase
     public function test_update_normalizes_taxonomies_to_array_when_object_provided(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $categoryTaxonomy = Taxonomy::factory()->create(['slug' => 'categories']);
+        $categoryTaxonomy = Taxonomy::factory()->create();
         
         PostType::factory()->create([
             'slug' => 'page',
@@ -388,8 +388,8 @@ class UpdatePostTypeTest extends TestCase
     public function test_update_keeps_taxonomies_as_array_when_filled(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $categoryTaxonomy = Taxonomy::factory()->create(['slug' => 'categories']);
-        $tagsTaxonomy = Taxonomy::factory()->create(['slug' => 'tags']);
+        $categoryTaxonomy = Taxonomy::factory()->create();
+        $tagsTaxonomy = Taxonomy::factory()->create();
         
         PostType::factory()->create([
             'slug' => 'article',

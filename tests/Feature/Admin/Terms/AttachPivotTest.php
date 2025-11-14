@@ -16,7 +16,7 @@ class AttachPivotTest extends TestCase
     public function test_store_can_create_term_and_attach_to_entry(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
+        $taxonomy = Taxonomy::factory()->create();
         $postType = PostType::factory()->withOptions(['taxonomies' => [$taxonomy->id]])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
 
@@ -27,7 +27,7 @@ class AttachPivotTest extends TestCase
 
         $createResponse->assertStatus(201);
         $createResponse->assertJsonStructure([
-            'data' => ['id', 'name', 'slug'],
+            'data' => ['id', 'name'],
         ]);
 
         $termId = $createResponse->json('data.id');

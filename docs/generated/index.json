@@ -1476,7 +1476,7 @@
             "name": "SearchTermFilter",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
             "summary": "Value Object для фильтра поиска по терму.",
-            "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:slug\".",
+            "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:term_id\".",
             "meta": {
                 "methods": [
                     "fromString"
@@ -5922,7 +5922,7 @@
                 "name": "SearchTermFilter",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
                 "summary": "Value Object для фильтра поиска по терму.",
-                "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:slug\".",
+                "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:term_id\".",
                 "meta": {
                     "methods": [
                         "fromString"
@@ -11389,5 +11389,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-14T10:11:11+00:00"
+    "generated_at": "2025-11-14T11:03:04+00:00"
 }

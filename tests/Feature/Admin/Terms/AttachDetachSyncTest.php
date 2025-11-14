@@ -18,8 +18,8 @@ class AttachDetachSyncTest extends TestCase
     public function test_attach_detach_and_sync_terms_for_entry(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $topics = Taxonomy::factory()->create(['slug' => 'topics']);
-        $tags = Taxonomy::factory()->create(['slug' => 'tags']);
+        $topics = Taxonomy::factory()->create();
+        $tags = Taxonomy::factory()->create();
         $postType = PostType::factory()->withOptions(['taxonomies' => [$topics->id, $tags->id]])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
         $topicTerm = Term::factory()->forTaxonomy($topics)->create();
@@ -55,8 +55,8 @@ class AttachDetachSyncTest extends TestCase
     public function test_attach_rejects_terms_from_forbidden_taxonomy(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $allowed = Taxonomy::factory()->create(['slug' => 'topics']);
-        $forbidden = Taxonomy::factory()->create(['slug' => 'regions']);
+        $allowed = Taxonomy::factory()->create();
+        $forbidden = Taxonomy::factory()->create();
         $postType = PostType::factory()->withOptions(['taxonomies' => [$allowed->id]])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
         $allowedTerm = Term::factory()->forTaxonomy($allowed)->create();

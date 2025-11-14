@@ -18,7 +18,6 @@ class TaxonomyFactory extends Factory
         $label = Str::headline($this->faker->unique()->words(2, true));
 
         return [
-            'slug' => $this->faker->unique()->slug(2),
             'label' => $label,
             'hierarchical' => $this->faker->boolean(),
             'options_json' => [],

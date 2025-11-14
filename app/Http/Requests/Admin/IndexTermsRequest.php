@@ -35,7 +35,7 @@ class IndexTermsRequest extends FormRequest
      * Валидирует:
      * - q: опциональный поисковый запрос (максимум 255 символов)
      * - per_page: опциональное количество на странице (10-100)
-     * - sort: опциональная сортировка (created_at, name, slug)
+     * - sort: опциональная сортировка (created_at, name)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -52,8 +52,6 @@ class IndexTermsRequest extends FormRequest
                     'created_at.asc',
                     'name.asc',
                     'name.desc',
-                    'slug.asc',
-                    'slug.desc',
                 ]),
             ],
         ];
