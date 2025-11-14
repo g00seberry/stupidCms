@@ -210,7 +210,7 @@ Eloquent модель для типов записей (PostType).
 - **Table:** `post_types`
 - **Fillable:** `slug`, `name`, `options_json`
 - **Guarded:** `*`
-- **Casts:** `options_json` => `array`
+- **Casts:** `options_json` => `App\Casts\AsPostTypeOptions`
 - **Relations:**
   - `entries`: hasMany → `App\Models\Entry`
 - **Factory:** `Database\Factories\PostTypeFactory`

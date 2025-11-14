@@ -506,6 +506,28 @@ Null-реализация SearchClientInterface.
 
 ---
 
+## PostTypeOptions
+**ID:** `domain_service:PostTypes/PostTypeOptions`
+**Path:** `app/Domain/PostTypes/PostTypeOptions.php`
+
+Value Object для опций типа записи (PostType).
+
+### Details
+Представляет типобезопасную структуру options_json для PostType.
+Гарантирует валидность данных и централизованную нормализацию.
+Схема:
+- taxonomies: array<string> - массив slug таксономий, разрешённых для этого типа записи
+- fields: array<string, mixed> - произвольные поля (расширяемые)
+
+### Meta
+- **Methods:** `fromArray`, `empty`, `toArray`, `toApiArray`, `getAllowedTaxonomies`, `isTaxonomyAllowed`, `getField`, `hasField`
+
+### Tags
+`posttype`
+
+
+---
+
 ## PublishingService
 **ID:** `domain_service:Entries/PublishingService`
 **Path:** `app/Domain/Entries/PublishingService.php`

@@ -50,47 +50,16 @@ class PostTypeResource extends AdminJsonResource
      */
     public function toArray($request): array
     {
+        /** @var \App\Domain\PostTypes\PostTypeOptions $options */
+        $options = $this->options_json;
+
         return [
             'slug' => $this->slug,
             'name' => $this->name,
-            'options_json' => $this->transformOptionsJson($this->options_json),
+            'options_json' => $options->toApiArray(),
             'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),
         ];
-    }
-
-    /**
-     * Рекурсивно нормализовать options_json, чтобы JSON объекты оставались объектами ({}).
-     *
-     * Преобразует пустые массивы и null в stdClass для консистентности JSON.
-     *
-     * @param mixed $value Значение для преобразования
-     * @return mixed Преобразованное значение
-     */
-    private function transformOptionsJson(mixed $value): mixed
-    {
-        if ($value === null) {
-            return new \stdClass();
-        }
-
-        if (! is_array($value)) {
-            return $value;
-        }
-
-        if ($value === []) {
-            return new \stdClass();
-        }
-
-        if (array_is_list($value)) {
-            return array_map(fn ($item) => $this->transformOptionsJson($item), $value);
-        }
-
-        $object = new \stdClass();
-        foreach ($value as $key => $nested) {
-            $object->{$key} = $this->transformOptionsJson($nested);
-        }
-
-        return $object;
     }
 
 

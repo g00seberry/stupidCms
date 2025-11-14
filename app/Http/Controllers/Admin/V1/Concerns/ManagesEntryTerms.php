@@ -35,7 +35,14 @@ trait ManagesEntryTerms
     protected function ensureTermsAllowedForEntry(Entry $entry, iterable $terms, string $errorKey = 'term_ids'): void
     {
         $entry->loadMissing('postType');
-        $allowedTaxonomies = $entry->postType?->options_json['taxonomies'] ?? [];
+        $postType = $entry->postType;
+
+        if ($postType === null) {
+            return;
+        }
+
+        $options = $postType->options_json;
+        $allowedTaxonomies = $options->getAllowedTaxonomies();
 
         if (empty($allowedTaxonomies)) {
             return;
@@ -49,7 +56,7 @@ trait ManagesEntryTerms
             $term->loadMissing('taxonomy');
             $taxonomySlug = $term->taxonomy?->slug;
 
-            if ($taxonomySlug === null || ! in_array($taxonomySlug, $allowedTaxonomies, true)) {
+            if ($taxonomySlug === null || ! $options->isTaxonomyAllowed($taxonomySlug)) {
                 throw ValidationException::withMessages([
                     $errorKey => ["Taxonomy '{$taxonomySlug}' is not allowed for the entry post type."],
                 ]);

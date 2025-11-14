@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\V1;
 
+use App\Domain\PostTypes\PostTypeOptions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePostTypeRequest;
 use App\Http\Requests\Admin\UpdatePostTypeRequest;
@@ -106,7 +107,8 @@ class PostTypeController extends Controller
     {
         $validated = $request->validated();
 
-        $options = $validated['options_json'] ?? [];
+        $optionsData = $validated['options_json'] ?? [];
+        $options = PostTypeOptions::fromArray($optionsData);
 
         /** @var PostType $postType */
         $postType = DB::transaction(function () use ($validated, $options) {
@@ -346,7 +348,8 @@ class PostTypeController extends Controller
             if (isset($validated['name'])) {
                 $type->name = $validated['name'];
             }
-            $type->options_json = $validated['options_json'];
+            $options = PostTypeOptions::fromArray($validated['options_json']);
+            $type->options_json = $options;
             $type->save();
         });
 

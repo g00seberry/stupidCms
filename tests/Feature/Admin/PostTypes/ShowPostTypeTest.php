@@ -38,6 +38,7 @@ class ShowPostTypeTest extends TestCase
                 'options_json' => [
                     'template' => 'default',
                     'editor' => ['toolbar' => ['h2', 'bold', 'link']],
+                    'taxonomies' => [],
                 ],
             ],
         ]);
@@ -67,7 +68,7 @@ class ShowPostTypeTest extends TestCase
         $decoded = json_decode($response->getContent());
         $this->assertInstanceOf(\stdClass::class, $decoded->data->options_json);
         $this->assertEquals('article', $decoded->data->slug);
-        $this->assertSame([], (array) $decoded->data->options_json);
+        $this->assertSame(['taxonomies' => []], (array) $decoded->data->options_json);
     }
 
     public function test_show_post_type_returns_404_for_unknown_slug(): void

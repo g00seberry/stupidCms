@@ -45,10 +45,11 @@ class UpdatePostTypeTest extends TestCase
             ],
         ]);
 
-        // Verify database was updated
+        // Verify database was updated (taxonomies always present)
+        $expectedOptions = array_merge($newOptions, ['taxonomies' => []]);
         $this->assertDatabaseHas('post_types', [
             'slug' => 'page',
-            'options_json' => json_encode($newOptions),
+            'options_json' => json_encode($expectedOptions),
         ]);
     }
 
@@ -76,7 +77,8 @@ class UpdatePostTypeTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json('data');
         $this->assertEquals('article', $data['slug']);
-        $this->assertEquals($newOptions, $data['options_json']);
+        $expectedOptions = array_merge($newOptions, ['taxonomies' => []]);
+        $this->assertEquals($expectedOptions, $data['options_json']);
     }
 
     public function test_update_post_type_only_changes_options_json(): void
@@ -100,7 +102,9 @@ class UpdatePostTypeTest extends TestCase
         // Verify only options_json was changed
         $this->assertEquals('page', $postType->slug);
         $this->assertEquals('Original Name', $postType->name);
-        $this->assertEquals(['new' => 'value'], $postType->options_json);
+        $this->assertInstanceOf(\App\Domain\PostTypes\PostTypeOptions::class, $postType->options_json);
+        $expectedOptions = ['new' => 'value', 'taxonomies' => []];
+        $this->assertEquals($expectedOptions, $postType->options_json->toArray());
     }
 
     public function test_update_post_type_returns_404_for_unknown_slug(): void
@@ -193,7 +197,7 @@ class UpdatePostTypeTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $decoded = json_decode($response->getContent());
         $this->assertInstanceOf(\stdClass::class, $decoded->data->options_json);
-        $this->assertSame([], (array) $decoded->data->options_json);
+        $this->assertSame(['taxonomies' => []], (array) $decoded->data->options_json);
     }
 
     public function test_update_post_type_allows_user_with_manage_posttypes_permission(): void
@@ -295,7 +299,9 @@ class UpdatePostTypeTest extends TestCase
         
         $this->assertEquals('page', $postType->slug);
         $this->assertEquals('Pageыы', $postType->name);
-        $this->assertEquals(['new' => 'value'], $postType->options_json);
+        $this->assertInstanceOf(\App\Domain\PostTypes\PostTypeOptions::class, $postType->options_json);
+        $expectedOptions = ['new' => 'value', 'taxonomies' => []];
+        $this->assertEquals($expectedOptions, $postType->options_json->toArray());
         
         $response->assertJson([
             'data' => [
@@ -335,6 +341,92 @@ class UpdatePostTypeTest extends TestCase
                 'name' => 'Article',
             ],
         ]);
+    }
+
+    public function test_update_normalizes_taxonomies_to_array_when_object_provided(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        
+        PostType::factory()->create([
+            'slug' => 'page',
+            'options_json' => ['taxonomies' => ['categories']],
+        ]);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
+            'options_json' => [
+                'taxonomies' => (object) [], // Объект вместо массива
+            ],
+        ], $admin);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('data.options_json.taxonomies', []);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+    }
+
+    public function test_update_keeps_taxonomies_as_array_when_empty(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        
+        PostType::factory()->create([
+            'slug' => 'page',
+            'options_json' => [],
+        ]);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
+            'options_json' => [
+                'taxonomies' => [],
+            ],
+        ], $admin);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('data.options_json.taxonomies', []);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+    }
+
+    public function test_update_keeps_taxonomies_as_array_when_filled(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        
+        PostType::factory()->create([
+            'slug' => 'article',
+            'options_json' => [],
+        ]);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/article', [
+            'options_json' => [
+                'taxonomies' => ['categories', 'tags'],
+            ],
+        ], $admin);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('data.options_json.taxonomies', ['categories', 'tags']);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+    }
+
+    public function test_update_fixes_existing_taxonomies_object_in_database(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        
+        // Создаем PostType с taxonomies как объектом (симулируем старые данные)
+        $postType = PostType::factory()->create([
+            'slug' => 'page',
+            'options_json' => ['taxonomies' => (object) []],
+        ]);
+
+        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
+            'options_json' => [
+                'taxonomies' => ['categories'],
+            ],
+        ], $admin);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('data.options_json.taxonomies', ['categories']);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+        
+        $postType->refresh();
+        $this->assertInstanceOf(\App\Domain\PostTypes\PostTypeOptions::class, $postType->options_json);
+        $this->assertIsArray($postType->options_json->getAllowedTaxonomies());
+        $this->assertEquals(['categories'], $postType->options_json->getAllowedTaxonomies());
     }
 
 

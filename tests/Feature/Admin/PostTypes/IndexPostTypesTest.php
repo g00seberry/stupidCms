@@ -41,12 +41,13 @@ class IndexPostTypesTest extends TestCase
             'name' => 'Article',
             'options_json' => [
                 'template' => 'default',
+                'taxonomies' => [],
             ],
         ]);
 
         $decoded = json_decode($response->getContent());
         $this->assertInstanceOf(\stdClass::class, $decoded->data[1]->options_json);
-        $this->assertSame([], (array) $decoded->data[1]->options_json);
+        $this->assertSame(['taxonomies' => []], (array) $decoded->data[1]->options_json);
     }
 
     public function test_index_returns_401_when_not_authenticated(): void

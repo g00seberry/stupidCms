@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\AsPostTypeOptions;
+use App\Domain\PostTypes\PostTypeOptions;
 use Database\Factories\PostTypeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $slug Уникальный slug типа записи
  * @property string $name Название типа записи
- * @property array $options_json Дополнительные опции типа (JSON)
+ * @property \App\Domain\PostTypes\PostTypeOptions $options_json Опции типа записи
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  *
@@ -47,7 +49,7 @@ class PostType extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'options_json' => 'array',
+        'options_json' => AsPostTypeOptions::class,
     ];
 
     /**

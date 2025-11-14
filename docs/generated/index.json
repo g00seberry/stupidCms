@@ -275,7 +275,7 @@
                     "*"
                 ],
                 "casts": {
-                    "options_json": "array"
+                    "options_json": "App\\Casts\\AsPostTypeOptions"
                 },
                 "relations": {
                     "entries": {
@@ -1042,6 +1042,32 @@
             "tags": [
                 "plugin",
                 "service"
+            ]
+        },
+        {
+            "id": "domain_service:PostTypes/PostTypeOptions",
+            "type": "domain_service",
+            "name": "PostTypeOptions",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\PostTypes\\PostTypeOptions.php",
+            "summary": "Value Object для опций типа записи (PostType).",
+            "details": "Представляет типобезопасную структуру options_json для PostType.\nГарантирует валидность данных и централизованную нормализацию.\nСхема:\n- taxonomies: array<string> - массив slug таксономий, разрешённых для этого типа записи\n- fields: array<string, mixed> - произвольные поля (расширяемые)",
+            "meta": {
+                "methods": [
+                    "fromArray",
+                    "empty",
+                    "toArray",
+                    "toApiArray",
+                    "getAllowedTaxonomies",
+                    "isTaxonomyAllowed",
+                    "getField",
+                    "hasField"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "posttype"
             ]
         },
         {
@@ -4693,7 +4719,7 @@
                         "*"
                     ],
                     "casts": {
-                        "options_json": "array"
+                        "options_json": "App\\Casts\\AsPostTypeOptions"
                     },
                     "relations": {
                         "entries": {
@@ -5462,6 +5488,32 @@
                 "tags": [
                     "plugin",
                     "service"
+                ]
+            },
+            {
+                "id": "domain_service:PostTypes/PostTypeOptions",
+                "type": "domain_service",
+                "name": "PostTypeOptions",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\PostTypes\\PostTypeOptions.php",
+                "summary": "Value Object для опций типа записи (PostType).",
+                "details": "Представляет типобезопасную структуру options_json для PostType.\nГарантирует валидность данных и централизованную нормализацию.\nСхема:\n- taxonomies: array<string> - массив slug таксономий, разрешённых для этого типа записи\n- fields: array<string, mixed> - произвольные поля (расширяемые)",
+                "meta": {
+                    "methods": [
+                        "fromArray",
+                        "empty",
+                        "toArray",
+                        "toApiArray",
+                        "getAllowedTaxonomies",
+                        "isTaxonomyAllowed",
+                        "getField",
+                        "hasField"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "posttype"
                 ]
             },
             {
@@ -9078,6 +9130,12 @@
                 "type": "model",
                 "name": "PostType",
                 "summary": "Eloquent модель для типов записей (PostType)."
+            },
+            {
+                "id": "domain_service:PostTypes/PostTypeOptions",
+                "type": "domain_service",
+                "name": "PostTypeOptions",
+                "summary": "Value Object для опций типа записи (PostType)."
             }
         ],
         "redirect": [
@@ -11331,5 +11389,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-14T05:46:50+00:00"
+    "generated_at": "2025-11-14T08:09:35+00:00"
 }

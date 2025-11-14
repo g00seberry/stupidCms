@@ -151,6 +151,63 @@ class StorePostTypeTest extends TestCase
         $response->assertJsonPath('data.slug', 'gallery');
         $this->assertDatabaseHas('post_types', ['slug' => 'gallery']);
     }
+
+    public function test_store_normalizes_taxonomies_to_array_when_object_provided(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $payload = [
+            'slug' => 'product',
+            'name' => 'Product',
+            'options_json' => [
+                'taxonomies' => (object) [], // Объект вместо массива
+            ],
+        ];
+
+        $response = $this->postJsonAsAdmin('/api/v1/admin/post-types', $payload, $admin);
+
+        $response->assertStatus(201);
+        $response->assertJsonPath('data.options_json.taxonomies', []);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+    }
+
+    public function test_store_keeps_taxonomies_as_array_when_empty(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $payload = [
+            'slug' => 'page',
+            'name' => 'Page',
+            'options_json' => [
+                'taxonomies' => [],
+            ],
+        ];
+
+        $response = $this->postJsonAsAdmin('/api/v1/admin/post-types', $payload, $admin);
+
+        $response->assertStatus(201);
+        $response->assertJsonPath('data.options_json.taxonomies', []);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+    }
+
+    public function test_store_keeps_taxonomies_as_array_when_filled(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $payload = [
+            'slug' => 'article',
+            'name' => 'Article',
+            'options_json' => [
+                'taxonomies' => ['categories', 'tags'],
+            ],
+        ];
+
+        $response = $this->postJsonAsAdmin('/api/v1/admin/post-types', $payload, $admin);
+
+        $response->assertStatus(201);
+        $response->assertJsonPath('data.options_json.taxonomies', ['categories', 'tags']);
+        $this->assertIsArray($response->json('data.options_json.taxonomies'));
+    }
 }
 
 
