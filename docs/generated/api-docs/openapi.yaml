@@ -532,7 +532,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T05:28:30'
+                  example: '2025-11-14T05:46:46'
                   nullable: true
                 date_to:
                   type: string
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.desc
+                  example: updated_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3240,7 +3240,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -3257,7 +3257,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -6879,7 +6879,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -6898,7 +6898,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: slug
                   nullable: true
                   enum:
                     - name
@@ -6908,7 +6908,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -9132,7 +9132,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10880,7 +10880,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.asc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10900,94 +10900,41 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
+                type: object
+                example:
+                  data:
+                    id: 3
+                    taxonomy: category
+                    name: Guides
+                    slug: guides
+                    meta_json: {  }
+                    created_at: '2025-01-10T12:00:00+00:00'
+                    updated_at: '2025-01-10T12:00:00+00:00'
+                properties:
+                  data:
                     type: object
-                    example:
-                      data:
-                        id: 3
-                        taxonomy: category
-                        name: Guides
-                        slug: guides
-                        meta_json: {  }
-                        created_at: '2025-01-10T12:00:00+00:00'
-                        updated_at: '2025-01-10T12:00:00+00:00'
                     properties:
-                      data:
+                      id:
+                        type: integer
+                        example: 3
+                      taxonomy:
+                        type: string
+                        example: category
+                      name:
+                        type: string
+                        example: Guides
+                      slug:
+                        type: string
+                        example: guides
+                      meta_json:
                         type: object
-                        properties:
-                          id:
-                            type: integer
-                            example: 3
-                          taxonomy:
-                            type: string
-                            example: category
-                          name:
-                            type: string
-                            example: Guides
-                          slug:
-                            type: string
-                            example: guides
-                          meta_json:
-                            type: object
-                            properties: {  }
-                          created_at:
-                            type: string
-                            example: '2025-01-10T12:00:00+00:00'
-                          updated_at:
-                            type: string
-                            example: '2025-01-10T12:00:00+00:00'
-                  -
-                    description: attach_entry
-                    type: object
-                    example:
-                      data:
-                        ...: ...
-                      entry_terms:
-                        entry_id: 42
-                        terms:
-                          -
-                            id: 3
-                            name: Guides
-                            slug: guides
-                            taxonomy: category
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          ...:
-                            type: string
-                            example: ...
-                      entry_terms:
-                        type: object
-                        properties:
-                          entry_id:
-                            type: integer
-                            example: 42
-                          terms:
-                            type: array
-                            example:
-                              -
-                                id: 3
-                                name: Guides
-                                slug: guides
-                                taxonomy: category
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: integer
-                                  example: 3
-                                name:
-                                  type: string
-                                  example: Guides
-                                slug:
-                                  type: string
-                                  example: guides
-                                taxonomy:
-                                  type: string
-                                  example: category
+                        properties: {  }
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
+                      updated_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
         401:
           description: ''
           content:
@@ -11202,11 +11149,6 @@ paths:
                   type: integer
                   description: ''
                   example: 17
-                  nullable: true
-                attach_entry_id:
-                  type: integer
-                  description: 'Привязать к записи (ID) сразу после создания.'
-                  example: 42
                   nullable: true
               required:
                 - name
@@ -12519,7 +12461,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T05:28:30'
+                  example: '2025-11-14T05:46:46'
                   nullable: true
                 to:
                   type: string

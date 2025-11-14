@@ -11,7 +11,6 @@ use App\Http\Requests\Admin\StoreTermRequest;
 use App\Http\Requests\Admin\UpdateTermRequest;
 use App\Http\Resources\Admin\TermCollection;
 use App\Http\Resources\Admin\TermResource;
-use App\Models\Entry;
 use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Support\Errors\ErrorCode;
@@ -30,7 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Контроллер для управления термами таксономий в админ-панели.
  *
  * Предоставляет CRUD операции для термов: создание, чтение, обновление, удаление.
- * Управляет иерархией термов (родитель-потомок) и привязкой термов к записям.
+ * Управляет иерархией термов (родитель-потомок).
+ * Привязка термов к записям выполняется через EntryTermsController.
  *
  * @package App\Http\Controllers\Admin\V1
  */
@@ -230,7 +230,6 @@ class TermController extends Controller
      * @bodyParam name string required Название (<=255). Example: Guides
      * @bodyParam slug string Уникальный slug (а-z0-9_-). Генерируется из name, если не указан. Example: guides
      * @bodyParam meta_json object Мета-данные. Example: {"color":"#ffcc00"}
-     * @bodyParam attach_entry_id int Привязать к записи (ID) сразу после создания. Example: 42
      * @response status=201 {
      *   "data": {
      *     "id": 3,
@@ -240,15 +239,6 @@ class TermController extends Controller
      *     "meta_json": {},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
-     *   }
-     * }
-     * @response status=201 scenario="attach_entry" {
-     *   "data": { "...": "..." },
-     *   "entry_terms": {
-     *     "entry_id": 42,
-     *     "terms": [
-     *       { "id": 3, "name": "Guides", "slug": "guides", "taxonomy": "category" }
-     *     ]
      *   }
      * }
      * @response status=401 {
@@ -317,7 +307,6 @@ class TermController extends Controller
         $slugInput = $validated['slug'] ?? null;
         $meta = $validated['meta_json'] ?? null;
         $parentId = isset($validated['parent_id']) ? (int) $validated['parent_id'] : null;
-        $attachEntryId = $validated['attach_entry_id'] ?? null;
 
         $slugBase = $slugInput !== null && $slugInput !== ''
             ? $this->sanitizeTermSlug($slugInput)
@@ -329,7 +318,7 @@ class TermController extends Controller
 
         $term = null;
 
-        DB::transaction(function () use (&$term, $taxonomyModel, $name, $slugBase, $meta, $parentId, $attachEntryId) {
+        DB::transaction(function () use (&$term, $taxonomyModel, $name, $slugBase, $meta, $parentId) {
             $term = Term::query()->create([
                 'taxonomy_id' => $taxonomyModel->id,
                 'name' => $name,
@@ -347,10 +336,6 @@ class TermController extends Controller
                     ]);
                 }
             }
-
-            if ($attachEntryId) {
-                $this->attachTermToEntry($term, $attachEntryId);
-            }
         });
 
         $term->load('taxonomy');
@@ -360,18 +345,7 @@ class TermController extends Controller
             'taxonomy_id' => $taxonomyModel->id,
         ]);
 
-        $resource = new TermResource($term, true);
-
-        if ($attachEntryId) {
-            $entry = Entry::query()->with(['terms.taxonomy', 'postType'])->find($attachEntryId);
-            if ($entry) {
-                $resource = $resource->additional([
-                    'entry_terms' => $this->buildEntryTermsPayload($entry),
-                ]);
-            }
-        }
-
-        return $resource;
+        return new TermResource($term, true);
     }
 
     /**
@@ -742,32 +716,6 @@ class TermController extends Controller
     private function findTaxonomy(string $slug): ?Taxonomy
     {
         return Taxonomy::query()->where('slug', $slug)->first();
-    }
-
-    /**
-     * Привязать терм к записи.
-     *
-     * Валидирует, что терм разрешён для типа записи, и выполняет привязку.
-     *
-     * @param \App\Models\Term $term Терм
-     * @param int $entryId ID записи
-     * @return void
-     * @throws \Illuminate\Validation\ValidationException Если запись недоступна или терм не разрешён
-     */
-    private function attachTermToEntry(Term $term, int $entryId): void
-    {
-        $entry = Entry::query()->with(['postType', 'terms.taxonomy'])->find($entryId);
-
-        if (! $entry || $entry->deleted_at !== null) {
-            throw ValidationException::withMessages([
-                'attach_entry_id' => 'The specified entry is not available.',
-            ]);
-        }
-
-        $term->loadMissing('taxonomy');
-        $this->ensureTermsAllowedForEntry($entry, [$term], 'attach_entry_id');
-
-        $entry->terms()->syncWithoutDetaching([$term->id]);
     }
 
     /**

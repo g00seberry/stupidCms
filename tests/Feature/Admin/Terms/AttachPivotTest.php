@@ -20,22 +20,32 @@ class AttachPivotTest extends TestCase
         $postType = PostType::factory()->withOptions(['taxonomies' => ['topics']])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', [
+        // Создаём терм
+        $createResponse = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', [
             'name' => 'Analytics',
-            'attach_entry_id' => $entry->id,
         ], $admin);
 
-        $response->assertStatus(201);
-        $response->assertJsonStructure([
+        $createResponse->assertStatus(201);
+        $createResponse->assertJsonStructure([
             'data' => ['id', 'name', 'slug'],
-            'entry_terms' => [
+        ]);
+
+        $termId = $createResponse->json('data.id');
+
+        // Привязываем терм к записи через массовый метод
+        $attachResponse = $this->postJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/attach", [
+            'term_ids' => [$termId],
+        ], $admin);
+
+        $attachResponse->assertStatus(200);
+        $attachResponse->assertJsonStructure([
+            'data' => [
                 'entry_id',
                 'terms',
                 'terms_by_taxonomy',
             ],
         ]);
 
-        $termId = $response->json('data.id');
         $this->assertDatabaseHas('entry_term', [
             'entry_id' => $entry->id,
             'term_id' => $termId,

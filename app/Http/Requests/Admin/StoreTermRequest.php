@@ -16,7 +16,6 @@ use Illuminate\Validation\Rule;
  * - slug: опциональный slug (regex, уникальность гарантируется контроллером)
  * - meta_json: опциональный объект метаданных
  * - parent_id: опциональный ID родителя (для иерархических таксономий)
- * - attach_entry_id: опциональный ID записи для автоматической привязки
  *
  * @package App\Http\Requests\Admin
  */
@@ -47,7 +46,6 @@ class StoreTermRequest extends FormRequest
      * - slug: опциональный slug (regex)
      * - meta_json: опциональный объект
      * - parent_id: опциональный ID родителя (должен существовать в той же таксономии)
-     * - attach_entry_id: опциональный ID записи (должен существовать)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -73,11 +71,6 @@ class StoreTermRequest extends FormRequest
                         $query->where('taxonomy_id', $taxonomy->id);
                     }
                 }),
-            ],
-            'attach_entry_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('entries', 'id'),
             ],
         ];
     }
