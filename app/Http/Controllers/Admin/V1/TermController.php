@@ -57,7 +57,7 @@ class TermController extends Controller
      * @group Admin ▸ Terms
      * @name List terms
      * @authenticated
-     * @urlParam taxonomy string required Slug таксономии. Example: category
+     * @urlParam taxonomy int required ID таксономии. Example: 1
      * @queryParam q string Поиск по имени/slug (<=255). Example: guides
      * @queryParam sort string Сортировка. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.
      * @queryParam per_page int Размер страницы (10-100). Default: 15.
@@ -65,7 +65,7 @@ class TermController extends Controller
      *   "data": [
      *     {
      *       "id": 3,
-     *       "taxonomy": "category",
+     *       "taxonomy": 1,
      *       "name": "Guides",
      *       "slug": "guides",
      *       "meta_json": {},
@@ -91,10 +91,10 @@ class TermController extends Controller
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "detail": "Taxonomy with ID 1 does not exist.",
      *   "meta": {
      *     "request_id": "eed543b8-b7cb-6c30-033f-3f5e5e9f51ce",
-     *     "taxonomy_slug": "category"
+     *     "taxonomy_id": 1
      *   },
      *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5e9f51ce-eed543b8b7cb6c30-01"
      * }
@@ -111,7 +111,14 @@ class TermController extends Controller
      *   "trace_id": "00-eed543b8b7cb6c30033f3f5e5e9f51cf-eed543b8b7cb6c30-01"
      * }
      */
-    public function indexByTaxonomy(IndexTermsRequest $request, string $taxonomy): TermCollection
+    /**
+     * Список термов внутри таксономии.
+     *
+     * @param \App\Http\Requests\Admin\IndexTermsRequest $request Запрос с параметрами
+     * @param int $taxonomy ID таксономии
+     * @return \App\Http\Resources\Admin\TermCollection Коллекция термов
+     */
+    public function indexByTaxonomy(IndexTermsRequest $request, int $taxonomy): TermCollection
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
 
@@ -151,19 +158,19 @@ class TermController extends Controller
      * @group Admin ▸ Terms
      * @name Get terms tree
      * @authenticated
-     * @urlParam taxonomy string required Slug таксономии. Example: category
+     * @urlParam taxonomy int required ID таксономии. Example: 1
      * @response status=200 {
      *   "data": [
      *     {
      *       "id": 1,
-     *       "taxonomy": "category",
+     *       "taxonomy": 1,
      *       "name": "Технологии",
      *       "slug": "tech",
      *       "parent_id": null,
      *       "children": [
      *         {
      *           "id": 2,
-     *           "taxonomy": "category",
+     *           "taxonomy": 1,
      *           "name": "Laravel",
      *           "slug": "laravel",
      *           "parent_id": 1,
@@ -174,7 +181,13 @@ class TermController extends Controller
      *   ]
      * }
      */
-    public function tree(string $taxonomy): \Illuminate\Http\JsonResponse
+    /**
+     * Получение дерева терминов таксономии.
+     *
+     * @param int $taxonomy ID таксономии
+     * @return \Illuminate\Http\JsonResponse JSON ответ с деревом термов
+     */
+    public function tree(int $taxonomy): \Illuminate\Http\JsonResponse
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
 
@@ -226,14 +239,14 @@ class TermController extends Controller
      * @group Admin ▸ Terms
      * @name Create term
      * @authenticated
-     * @urlParam taxonomy string required Slug таксономии. Example: category
+     * @urlParam taxonomy int required ID таксономии. Example: 1
      * @bodyParam name string required Название (<=255). Example: Guides
      * @bodyParam slug string Уникальный slug (а-z0-9_-). Генерируется из name, если не указан. Example: guides
      * @bodyParam meta_json object Мета-данные. Example: {"color":"#ffcc00"}
      * @response status=201 {
      *   "data": {
      *     "id": 3,
-     *     "taxonomy": "category",
+     *     "taxonomy": 1,
      *     "name": "Guides",
      *     "slug": "guides",
      *     "meta_json": {},
@@ -258,10 +271,10 @@ class TermController extends Controller
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "detail": "Taxonomy with ID 1 does not exist.",
      *   "meta": {
      *     "request_id": "eed543b8-b7cb-6c30-033f-3f5ecb6c3003",
-     *     "taxonomy_slug": "category"
+     *     "taxonomy_id": 1
      *   },
      *   "trace_id": "00-eed543b8b7cb6c30033f3f5ecb6c3003-eed543b8b7cb6c30-01"
      * }
@@ -294,7 +307,14 @@ class TermController extends Controller
      *   "trace_id": "00-eed543b8b7cb6c30033f3f5ecb6c3005-eed543b8b7cb6c30-01"
      * }
      */
-    public function store(StoreTermRequest $request, string $taxonomy): TermResource
+    /**
+     * Создание терма.
+     *
+     * @param \App\Http\Requests\Admin\StoreTermRequest $request Запрос с данными
+     * @param int $taxonomy ID таксономии
+     * @return \App\Http\Resources\Admin\TermResource Ресурс терма
+     */
+    public function store(StoreTermRequest $request, int $taxonomy): TermResource
     {
         $taxonomyModel = $this->findTaxonomy($taxonomy);
 
@@ -358,7 +378,7 @@ class TermController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 3,
-     *     "taxonomy": "category",
+     *     "taxonomy": 1,
      *     "name": "Guides",
      *     "slug": "guides",
      *     "meta_json": {},
@@ -430,7 +450,7 @@ class TermController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 3,
-     *     "taxonomy": "category",
+     *     "taxonomy": 1,
      *     "name": "Tutorials",
      *     "slug": "tutorials",
      *     "meta_json": {
@@ -708,28 +728,28 @@ class TermController extends Controller
     }
 
     /**
-     * Найти таксономию по slug.
+     * Найти таксономию по ID.
      *
-     * @param string $slug Slug таксономии
+     * @param int $id ID таксономии
      * @return \App\Models\Taxonomy|null Таксономия или null
      */
-    private function findTaxonomy(string $slug): ?Taxonomy
+    private function findTaxonomy(int $id): ?Taxonomy
     {
-        return Taxonomy::query()->where('slug', $slug)->first();
+        return Taxonomy::query()->find($id);
     }
 
     /**
      * Выбросить ошибку "таксономия не найдена".
      *
-     * @param string $slug Slug таксономии
+     * @param int $id ID таксономии
      * @return never
      */
-    private function throwTaxonomyNotFound(string $slug): never
+    private function throwTaxonomyNotFound(int $id): never
     {
         $this->throwError(
             ErrorCode::NOT_FOUND,
-            sprintf('Taxonomy with slug %s does not exist.', $slug),
-            ['slug' => $slug],
+            sprintf('Taxonomy with ID %d does not exist.', $id),
+            ['taxonomy_id' => $id],
         );
     }
 

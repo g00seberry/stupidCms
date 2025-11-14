@@ -54,7 +54,7 @@ class EntryResource extends AdminJsonResource
                         'id' => $term->id,
                         'name' => $term->name,
                         'slug' => $term->slug,
-                        'taxonomy' => $term->taxonomy?->slug,
+                        'taxonomy' => $term->taxonomy_id,
                     ];
                 });
             }),

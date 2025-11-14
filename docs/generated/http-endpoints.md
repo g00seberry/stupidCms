@@ -683,18 +683,18 @@ POST /api/v1/admin/search/reindex (api)
 ---
 
 ## admin.v1.taxonomies.destroy
-**ID:** `http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}`
+**ID:** `http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/TaxonomyController.php`
 
-DELETE /api/v1/admin/taxonomies/{slug} (api)
+DELETE /api/v1/admin/taxonomies/{id} (api)
 
 ### Meta
 - **Method:** `DELETE`
-- **URI:** `/api/v1/admin/taxonomies/{slug}`
+- **URI:** `/api/v1/admin/taxonomies/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `taxonomies`
@@ -721,18 +721,18 @@ GET /api/v1/admin/taxonomies (api)
 ---
 
 ## admin.v1.taxonomies.show
-**ID:** `http_endpoint:GET:/api/v1/admin/taxonomies/{slug}`
+**ID:** `http_endpoint:GET:/api/v1/admin/taxonomies/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/TaxonomyController.php`
 
-GET /api/v1/admin/taxonomies/{slug} (api)
+GET /api/v1/admin/taxonomies/{id} (api)
 
 ### Meta
 - **Method:** `GET`
-- **URI:** `/api/v1/admin/taxonomies/{slug}`
+- **URI:** `/api/v1/admin/taxonomies/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `taxonomies`
@@ -819,18 +819,18 @@ GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree (api)
 ---
 
 ## admin.v1.taxonomies.update
-**ID:** `http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}`
+**ID:** `http_endpoint:PUT:/api/v1/admin/taxonomies/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/TaxonomyController.php`
 
-PUT /api/v1/admin/taxonomies/{slug} (api)
+PUT /api/v1/admin/taxonomies/{id} (api)
 
 ### Meta
 - **Method:** `PUT`
-- **URI:** `/api/v1/admin/taxonomies/{slug}`
+- **URI:** `/api/v1/admin/taxonomies/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `taxonomies`

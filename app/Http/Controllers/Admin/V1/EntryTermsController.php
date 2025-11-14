@@ -44,7 +44,7 @@ class EntryTermsController extends Controller
      *         "id": 3,
      *         "name": "Guides",
      *         "slug": "guides",
-     *         "taxonomy": "category"
+     *         "taxonomy": 1
      *       }
      *     ],
      *     "terms_by_taxonomy": {
@@ -138,7 +138,7 @@ class EntryTermsController extends Controller
      *         "id": 3,
      *         "name": "Guides",
      *         "slug": "guides",
-     *         "taxonomy": "category"
+     *         "taxonomy": 1
      *       }
      *     ],
      *     "terms_by_taxonomy": {
@@ -341,7 +341,7 @@ class EntryTermsController extends Controller
      *         "id": 8,
      *         "name": "Announcements",
      *         "slug": "announcements",
-     *         "taxonomy": "category"
+     *         "taxonomy": 1
      *       }
      *     ]
      *   }

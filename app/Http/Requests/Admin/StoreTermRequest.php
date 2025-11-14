@@ -86,9 +86,9 @@ class StoreTermRequest extends FormRequest
             return $this->resolvedTaxonomy;
         }
 
-        $slug = (string) $this->route('taxonomy');
+        $id = (int) $this->route('taxonomy');
 
-        $this->resolvedTaxonomy = Taxonomy::query()->where('slug', $slug)->first();
+        $this->resolvedTaxonomy = Taxonomy::query()->find($id);
 
         return $this->resolvedTaxonomy;
     }

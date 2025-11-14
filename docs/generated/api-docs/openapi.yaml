@@ -47,6 +47,9 @@ tags:
     name: Auth
     description: ''
   -
+    name: Endpoints
+    description: ''
+  -
     name: Search
     description: ''
 components:
@@ -532,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -560,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T09:06:13'
+                  example: '2025-11-14T10:11:07'
                   nullable: true
                 date_to:
                   type: string
@@ -578,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.desc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -937,7 +940,7 @@ paths:
                         id: 3
                         name: Guides
                         slug: guides
-                        taxonomy: category
+                        taxonomy: 1
                     created_at: '2025-02-09T10:15:00+00:00'
                     updated_at: '2025-02-10T08:05:00+00:00'
                     deleted_at: null
@@ -991,7 +994,7 @@ paths:
                             id: 3
                             name: Guides
                             slug: guides
-                            taxonomy: category
+                            taxonomy: 1
                         items:
                           type: object
                           properties:
@@ -1005,8 +1008,8 @@ paths:
                               type: string
                               example: guides
                             taxonomy:
-                              type: string
-                              example: category
+                              type: integer
+                              example: 1
                       created_at:
                         type: string
                         example: '2025-02-09T10:15:00+00:00'
@@ -1816,7 +1819,7 @@ paths:
                         id: 3
                         name: Guides
                         slug: guides
-                        taxonomy: category
+                        taxonomy: 1
                     terms_by_taxonomy:
                       '1':
                         -
@@ -1837,7 +1840,7 @@ paths:
                             id: 3
                             name: Guides
                             slug: guides
-                            taxonomy: category
+                            taxonomy: 1
                         items:
                           type: object
                           properties:
@@ -1851,8 +1854,8 @@ paths:
                               type: string
                               example: guides
                             taxonomy:
-                              type: string
-                              example: category
+                              type: integer
+                              example: 1
                       terms_by_taxonomy:
                         type: object
                         properties:
@@ -2066,7 +2069,7 @@ paths:
         in: path
         name: entry_id
         description: 'The ID of the entry.'
-        example: 17
+        example: 1
         required: true
         schema:
           type: integer
@@ -2099,7 +2102,7 @@ paths:
                         id: 3
                         name: Guides
                         slug: guides
-                        taxonomy: category
+                        taxonomy: 1
                     terms_by_taxonomy:
                       '1':
                         -
@@ -2120,7 +2123,7 @@ paths:
                             id: 3
                             name: Guides
                             slug: guides
-                            taxonomy: category
+                            taxonomy: 1
                         items:
                           type: object
                           properties:
@@ -2134,8 +2137,8 @@ paths:
                               type: string
                               example: guides
                             taxonomy:
-                              type: string
-                              example: category
+                              type: integer
+                              example: 1
                       terms_by_taxonomy:
                         type: object
                         properties:
@@ -2630,7 +2633,7 @@ paths:
                         id: 8
                         name: Announcements
                         slug: announcements
-                        taxonomy: category
+                        taxonomy: 1
                 properties:
                   data:
                     type: object
@@ -2645,7 +2648,7 @@ paths:
                             id: 8
                             name: Announcements
                             slug: announcements
-                            taxonomy: category
+                            taxonomy: 1
                         items:
                           type: object
                           properties:
@@ -2659,8 +2662,8 @@ paths:
                               type: string
                               example: announcements
                             taxonomy:
-                              type: string
-                              example: category
+                              type: integer
+                              example: 1
         401:
           description: ''
           content:
@@ -3240,7 +3243,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -3248,7 +3251,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -6879,7 +6882,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -9137,7 +9140,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug.desc
+                  example: slug.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9161,7 +9164,7 @@ paths:
                 example:
                   data:
                     id: 1
-                    slug: category
+                    taxonomy_id: 1
                     label: Categories
                     hierarchical: true
                     options_json: {  }
@@ -9174,9 +9177,9 @@ paths:
                       id:
                         type: integer
                         example: 1
-                      slug:
-                        type: string
-                        example: category
+                      taxonomy_id:
+                        type: integer
+                        example: 1
                       label:
                         type: string
                         example: Categories
@@ -9365,664 +9368,6 @@ paths:
                   properties: {  }
               required:
                 - label
-  '/api/v1/admin/taxonomies/{slug}':
-    get:
-      summary: 'Получение таксономии.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: 1
-                    slug: category
-                    label: Categories
-                    hierarchical: true
-                    options_json: {  }
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:00:00+00:00'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      slug:
-                        type: string
-                        example: category
-                      label:
-                        type: string
-                        example: Categories
-                      hierarchical:
-                        type: boolean
-                        example: true
-                      options_json:
-                        type: object
-                        properties: {  }
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555558
-                    reason: missing_token
-                  trace_id: 00-21111111222233334444555555555558-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555558
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555558-2111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Taxonomy not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555559
-                    slug: category
-                  trace_id: 00-21111111222233334444555555555559-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Taxonomy not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555559
-                      slug:
-                        type: string
-                        example: category
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555559-2111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 26666666-7777-8888-9999-000000000002
-                    retry_after: 60
-                  trace_id: 00-26666666777788889999000000000002-2666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 26666666-7777-8888-9999-000000000002
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-26666666777788889999000000000002-2666666677778888-01
-      tags:
-        - 'Admin ▸ Taxonomies'
-    put:
-      summary: 'Обновление таксономии.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: 1
-                    slug: categories
-                    label: Categories
-                    hierarchical: true
-                    options_json:
-                      color: '#ffcc00'
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:05:00+00:00'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      slug:
-                        type: string
-                        example: categories
-                      label:
-                        type: string
-                        example: Categories
-                      hierarchical:
-                        type: boolean
-                        example: true
-                      options_json:
-                        type: object
-                        properties:
-                          color:
-                            type: string
-                            example: '#ffcc00'
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:05:00+00:00'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555560
-                    reason: missing_token
-                  trace_id: 00-21111111222233334444555555555660-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555560
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555660-2111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Taxonomy not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555561
-                    slug: category
-                  trace_id: 00-21111111222233334444555555555661-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Taxonomy not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555561
-                      slug:
-                        type: string
-                        example: category
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555661-2111111122223333-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555562
-                    errors:
-                      slug:
-                        - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
-                  trace_id: 00-21111111222233334444555555555662-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555562
-                      errors:
-                        type: object
-                        properties:
-                          slug:
-                            type: array
-                            example:
-                              - 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.'
-                            items:
-                              type: string
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555662-2111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 26666666-7777-8888-9999-000000000003
-                    retry_after: 60
-                  trace_id: 00-26666666777788889999000000000003-2666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 26666666-7777-8888-9999-000000000003
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-26666666777788889999000000000003-2666666677778888-01
-      tags:
-        - 'Admin ▸ Taxonomies'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                label:
-                  type: string
-                  description: 'Новое название (<=255).'
-                  example: Categories
-                  nullable: false
-                slug:
-                  type: string
-                  description: 'Новый slug (а-z0-9_-).'
-                  example: categories
-                  nullable: true
-                hierarchical:
-                  type: boolean
-                  description: 'Иерархическая ли таксономия.'
-                  example: false
-                  nullable: false
-                options_json:
-                  type: object
-                  description: 'Дополнительные настройки.'
-                  example:
-                    color: '#ffcc00'
-                  nullable: false
-                  properties: {  }
-    delete:
-      summary: 'Удаление таксономии.'
-      operationId: ''
-      description: ''
-      parameters:
-        -
-          in: query
-          name: force
-          description: 'Каскадно удалить термы и связи.'
-          example: true
-          required: false
-          schema:
-            type: boolean
-            description: 'Каскадно удалить термы и связи.'
-            example: true
-            nullable: false
-      responses:
-        204:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example: {  }
-                properties: {  }
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555563
-                    reason: missing_token
-                  trace_id: 00-21111111222233334444555555555663-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555563
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555663-2111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Taxonomy not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555564
-                    slug: category
-                  trace_id: 00-21111111222233334444555555555664-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Taxonomy not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555564
-                      slug:
-                        type: string
-                        example: category
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555664-2111111122223333-01
-        409:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/conflict'
-                  title: 'Taxonomy has terms'
-                  status: 409
-                  code: CONFLICT
-                  detail: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.'
-                  meta:
-                    request_id: 21111111-2222-3333-4444-555555555565
-                    terms_count: 5
-                  trace_id: 00-21111111222233334444555555555665-2111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/conflict'
-                  title:
-                    type: string
-                    example: 'Taxonomy has terms'
-                  status:
-                    type: integer
-                    example: 409
-                  code:
-                    type: string
-                    example: CONFLICT
-                  detail:
-                    type: string
-                    example: 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 21111111-2222-3333-4444-555555555565
-                      terms_count:
-                        type: integer
-                        example: 5
-                  trace_id:
-                    type: string
-                    example: 00-21111111222233334444555555555665-2111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 26666666-7777-8888-9999-000000000004
-                    retry_after: 60
-                  trace_id: 00-26666666777788889999000000000004-2666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 26666666-7777-8888-9999-000000000004
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-26666666777788889999000000000004-2666666677778888-01
-      tags:
-        - 'Admin ▸ Taxonomies'
-    parameters:
-      -
-        in: path
-        name: slug
-        description: 'Slug таксономии.'
-        example: category
-        required: true
-        schema:
-          type: string
   /api/v1/admin/templates:
     get:
       summary: 'Получение списка всех доступных шаблонов.'
@@ -10544,648 +9889,6 @@ paths:
         required: true
         schema:
           type: string
-  '/api/v1/admin/taxonomies/{taxonomy}/terms/tree':
-    get:
-      summary: 'Получение дерева терминов таксономии.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    -
-                      id: 1
-                      taxonomy: category
-                      name: Технологии
-                      slug: tech
-                      parent_id: null
-                      children:
-                        -
-                          id: 2
-                          taxonomy: category
-                          name: Laravel
-                          slug: laravel
-                          parent_id: 1
-                          children: []
-                properties:
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 1
-                        taxonomy: category
-                        name: Технологии
-                        slug: tech
-                        parent_id: null
-                        children:
-                          -
-                            id: 2
-                            taxonomy: category
-                            name: Laravel
-                            slug: laravel
-                            parent_id: 1
-                            children: []
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        taxonomy:
-                          type: string
-                          example: category
-                        name:
-                          type: string
-                          example: Технологии
-                        slug:
-                          type: string
-                          example: tech
-                        parent_id:
-                          type: string
-                          example: null
-                        children:
-                          type: array
-                          example:
-                            -
-                              id: 2
-                              taxonomy: category
-                              name: Laravel
-                              slug: laravel
-                              parent_id: 1
-                              children: []
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                                example: 2
-                              taxonomy:
-                                type: string
-                                example: category
-                              name:
-                                type: string
-                                example: Laravel
-                              slug:
-                                type: string
-                                example: laravel
-                              parent_id:
-                                type: integer
-                                example: 1
-                              children:
-                                type: array
-                                example: []
-      tags:
-        - 'Admin ▸ Terms'
-    parameters:
-      -
-        in: path
-        name: taxonomy
-        description: 'Slug таксономии.'
-        example: category
-        required: true
-        schema:
-          type: string
-  '/api/v1/admin/taxonomies/{taxonomy_id}/terms':
-    get:
-      summary: 'Список термов внутри таксономии.'
-      operationId: ''
-      description: ''
-      parameters:
-        -
-          in: query
-          name: q
-          description: 'Поиск по имени/slug (<=255).'
-          example: guides
-          required: false
-          schema:
-            type: string
-            description: 'Поиск по имени/slug (<=255).'
-            example: guides
-            nullable: false
-        -
-          in: query
-          name: sort
-          description: 'Сортировка. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.'
-          example: consequatur
-          required: false
-          schema:
-            type: string
-            description: 'Сортировка. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.'
-            example: consequatur
-            nullable: false
-        -
-          in: query
-          name: per_page
-          description: 'Размер страницы (10-100). Default: 15.'
-          example: 17
-          required: false
-          schema:
-            type: integer
-            description: 'Размер страницы (10-100). Default: 15.'
-            example: 17
-            nullable: false
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    -
-                      id: 3
-                      taxonomy: category
-                      name: Guides
-                      slug: guides
-                      meta_json: {  }
-                      created_at: '2025-01-10T12:00:00+00:00'
-                      updated_at: '2025-01-10T12:00:00+00:00'
-                properties:
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 3
-                        taxonomy: category
-                        name: Guides
-                        slug: guides
-                        meta_json: []
-                        created_at: '2025-01-10T12:00:00+00:00'
-                        updated_at: '2025-01-10T12:00:00+00:00'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 3
-                        taxonomy:
-                          type: string
-                          example: category
-                        name:
-                          type: string
-                          example: Guides
-                        slug:
-                          type: string
-                          example: guides
-                        meta_json:
-                          type: object
-                          properties: {  }
-                        created_at:
-                          type: string
-                          example: '2025-01-10T12:00:00+00:00'
-                        updated_at:
-                          type: string
-                          example: '2025-01-10T12:00:00+00:00'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 5e9f51ce-7cee-d543-b8b7-cb6c30033f3f
-                    reason: missing_token
-                  trace_id: 00-5e9f51ce7ceed543b8b7cb6c30033f3f-5e9f51ce7ceed543-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 5e9f51ce-7cee-d543-b8b7-cb6c30033f3f
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-5e9f51ce7ceed543b8b7cb6c30033f3f-5e9f51ce7ceed543-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Taxonomy not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    request_id: eed543b8-b7cb-6c30-033f-3f5e5e9f51ce
-                    taxonomy_slug: category
-                  trace_id: 00-eed543b8b7cb6c30033f3f5e5e9f51ce-eed543b8b7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Taxonomy not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: eed543b8-b7cb-6c30-033f-3f5e5e9f51ce
-                      taxonomy_slug:
-                        type: string
-                        example: category
-                  trace_id:
-                    type: string
-                    example: 00-eed543b8b7cb6c30033f3f5e5e9f51ce-eed543b8b7cb6c30-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: eed543b8-b7cb-6c30-033f-3f5e5e9f51cf
-                    retry_after: 60
-                  trace_id: 00-eed543b8b7cb6c30033f3f5e5e9f51cf-eed543b8b7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: eed543b8-b7cb-6c30-033f-3f5e5e9f51cf
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-eed543b8b7cb6c30033f3f5e5e9f51cf-eed543b8b7cb6c30-01
-      tags:
-        - 'Admin ▸ Terms'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                q:
-                  type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: vmqeopfuudtdsufvyvddq
-                  nullable: false
-                per_page:
-                  type: integer
-                  description: 'Must be at least 10. Must not be greater than 100.'
-                  example: 1
-                  nullable: false
-                sort:
-                  type: string
-                  description: ''
-                  example: name.asc
-                  nullable: false
-                  enum:
-                    - created_at.desc
-                    - created_at.asc
-                    - name.asc
-                    - name.desc
-                    - slug.asc
-                    - slug.desc
-    post:
-      summary: 'Создание терма.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        201:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: 3
-                    taxonomy: category
-                    name: Guides
-                    slug: guides
-                    meta_json: {  }
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:00:00+00:00'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 3
-                      taxonomy:
-                        type: string
-                        example: category
-                      name:
-                        type: string
-                        example: Guides
-                      slug:
-                        type: string
-                        example: guides
-                      meta_json:
-                        type: object
-                        properties: {  }
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: cb6c3003-3f5e-5e9f-51ce-7ceed543b8b7
-                    reason: missing_token
-                  trace_id: 00-cb6c30033f5e5e9f51ce7ceed543b8b7-cb6c30033f5e5e9f-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: cb6c3003-3f5e-5e9f-51ce-7ceed543b8b7
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-cb6c30033f5e5e9f51ce7ceed543b8b7-cb6c30033f5e5e9f-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Taxonomy not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    request_id: eed543b8-b7cb-6c30-033f-3f5ecb6c3003
-                    taxonomy_slug: category
-                  trace_id: 00-eed543b8b7cb6c30033f3f5ecb6c3003-eed543b8b7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Taxonomy not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Taxonomy with slug category does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: eed543b8-b7cb-6c30-033f-3f5ecb6c3003
-                      taxonomy_slug:
-                        type: string
-                        example: category
-                  trace_id:
-                    type: string
-                    example: 00-eed543b8b7cb6c30033f3f5ecb6c3003-eed543b8b7cb6c30-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: 'The name field is required.'
-                  meta:
-                    request_id: eed543b8-b7cb-6c30-033f-3f5ecb6c3004
-                    errors:
-                      name:
-                        - 'The name field is required.'
-                  trace_id: 00-eed543b8b7cb6c30033f3f5ecb6c3004-eed543b8b7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: 'The name field is required.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: eed543b8-b7cb-6c30-033f-3f5ecb6c3004
-                      errors:
-                        type: object
-                        properties:
-                          name:
-                            type: array
-                            example:
-                              - 'The name field is required.'
-                            items:
-                              type: string
-                  trace_id:
-                    type: string
-                    example: 00-eed543b8b7cb6c30033f3f5ecb6c3004-eed543b8b7cb6c30-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: eed543b8-b7cb-6c30-033f-3f5ecb6c3005
-                    retry_after: 60
-                  trace_id: 00-eed543b8b7cb6c30033f3f5ecb6c3005-eed543b8b7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: eed543b8-b7cb-6c30-033f-3f5ecb6c3005
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-eed543b8b7cb6c30033f3f5ecb6c3005-eed543b8b7cb6c30-01
-      tags:
-        - 'Admin ▸ Terms'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 'Название (<=255).'
-                  example: Guides
-                  nullable: false
-                slug:
-                  type: string
-                  description: 'Уникальный slug (а-z0-9_-). Генерируется из name, если не указан.'
-                  example: guides
-                  nullable: true
-                meta_json:
-                  type: object
-                  description: Мета-данные.
-                  example:
-                    color: '#ffcc00'
-                  nullable: true
-                  properties: {  }
-                parent_id:
-                  type: integer
-                  description: ''
-                  example: 17
-                  nullable: true
-              required:
-                - name
-    parameters:
-      -
-        in: path
-        name: taxonomy_id
-        description: 'The ID of the taxonomy.'
-        example: 1
-        required: true
-        schema:
-          type: integer
-      -
-        in: path
-        name: taxonomy
-        description: 'Slug таксономии.'
-        example: category
-        required: true
-        schema:
-          type: string
   '/api/v1/admin/terms/{id}':
     get:
       summary: 'Получение терма по ID.'
@@ -11202,7 +9905,7 @@ paths:
                 example:
                   data:
                     id: 3
-                    taxonomy: category
+                    taxonomy: 1
                     name: Guides
                     slug: guides
                     meta_json: {  }
@@ -11217,8 +9920,8 @@ paths:
                         type: integer
                         example: 3
                       taxonomy:
-                        type: string
-                        example: category
+                        type: integer
+                        example: 1
                       name:
                         type: string
                         example: Guides
@@ -11386,7 +10089,7 @@ paths:
                 example:
                   data:
                     id: 3
-                    taxonomy: category
+                    taxonomy: 1
                     name: Tutorials
                     slug: tutorials
                     meta_json:
@@ -11402,8 +10105,8 @@ paths:
                         type: integer
                         example: 3
                       taxonomy:
-                        type: string
-                        example: category
+                        type: integer
+                        example: 1
                       name:
                         type: string
                         example: Tutorials
@@ -12281,6 +10984,177 @@ paths:
                     example: 'Authentication required.'
       tags:
         - Auth
+  '/api/v1/admin/taxonomies/{id}':
+    get:
+      summary: 'Получение таксономии.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Обновление таксономии.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 64 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                hierarchical:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: false
+                options_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: false
+                  properties: {  }
+      security: []
+    delete:
+      summary: 'Удаление таксономии.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the taxonomy.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/taxonomies/{taxonomy}/terms/tree':
+    get:
+      summary: 'Получение дерева терминов таксономии.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: taxonomy
+        description: 'The taxonomy.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/taxonomies/{taxonomy_id}/terms':
+    get:
+      summary: 'Список термов внутри таксономии.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                per_page:
+                  type: integer
+                  description: 'Must be at least 10. Must not be greater than 100.'
+                  example: 1
+                  nullable: false
+                sort:
+                  type: string
+                  description: ''
+                  example: slug.asc
+                  nullable: false
+                  enum:
+                    - created_at.desc
+                    - created_at.asc
+                    - name.asc
+                    - name.desc
+                    - slug.asc
+                    - slug.desc
+      security: []
+    post:
+      summary: 'Создание терма.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9][a-z0-9_-]*$/. Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                meta_json:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                parent_id:
+                  type: integer
+                  description: ''
+                  example: 17
+                  nullable: true
+              required:
+                - name
+      security: []
+    parameters:
+      -
+        in: path
+        name: taxonomy_id
+        description: 'The ID of the taxonomy.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/v1/search:
     get:
       summary: 'Поиск опубликованного контента с фильтрами.'
@@ -12470,15 +11344,15 @@ paths:
                     type: string
                 term:
                   type: array
-                  description: 'Must match the regex /^[a-z0-9_.-]+:[a-z0-9_.-]+$/i.'
+                  description: 'Must match the regex /^[0-9]+:[a-z0-9_.-]+$/i.'
                   example:
-                    - 'vxi4:4$/i'
+                    - '5627:4$/i'
                   items:
                     type: string
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T09:06:13'
+                  example: '2025-11-14T10:11:07'
                   nullable: true
                 to:
                   type: string

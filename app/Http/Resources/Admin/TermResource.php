@@ -36,6 +36,7 @@ class TermResource extends AdminJsonResource
      *
      * Включает информацию об иерархии (parent_id, children) для
      * иерархических таксономий, если связи загружены.
+     * Поле taxonomy содержит ID таксономии.
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
      * @return array<string, mixed> Массив с полями терма
@@ -44,7 +45,7 @@ class TermResource extends AdminJsonResource
     {
         $data = [
             'id' => $this->id,
-            'taxonomy' => $this->taxonomy?->slug,
+            'taxonomy' => $this->taxonomy_id,
             'name' => $this->name,
             'slug' => $this->slug,
             'meta_json' => $this->transformJson($this->meta_json),

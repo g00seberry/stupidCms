@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "b491c002-4833-4193-86e9-37b3ac62a1b5",
+        "_postman_id": "cf46b31c-48b2-4648-83e0-ce62c8b87624",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"draft\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-14T09:06:13\",\"date_to\":\"2106-12-13\",\"date_field\":\"published\",\"sort\":\"published_at.desc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-14T10:11:07\",\"date_to\":\"2106-12-13\",\"date_field\":\"published\",\"sort\":\"title.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -265,7 +265,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {},\n    \"meta_json\": {},\n    \"template_override\": null,\n    \"author\": {\n      \"id\": 7,\n      \"name\": \"Admin User\"\n    },\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"created_at\": \"2025-02-09T10:15:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 42,\n    \"post_type\": \"article\",\n    \"title\": \"Headless CMS launch checklist\",\n    \"slug\": \"launch-checklist\",\n    \"status\": \"published\",\n    \"is_published\": true,\n    \"published_at\": \"2025-02-10T08:00:00+00:00\",\n    \"content_json\": {},\n    \"meta_json\": {},\n    \"template_override\": null,\n    \"author\": {\n      \"id\": 7,\n      \"name\": \"Admin User\"\n    },\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": 1\n      }\n    ],\n    \"created_at\": \"2025-02-09T10:15:00+00:00\",\n    \"updated_at\": \"2025-02-10T08:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -489,7 +489,7 @@
                                 {
                                     "id": "entry_id",
                                     "key": "entry_id",
-                                    "value": "17",
+                                    "value": "1",
                                     "description": "The ID of the entry."
                                 },
                                 {
@@ -518,7 +518,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"1\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\",\n          \"slug\": \"guides\"\n        }\n      ]\n    }\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": 1\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"1\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\",\n          \"slug\": \"guides\"\n        }\n      ]\n    }\n  }\n}",
                             "name": ""
                         },
                         {
@@ -585,7 +585,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": \"category\"\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"1\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\",\n          \"slug\": \"guides\"\n        }\n      ]\n    }\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"slug\": \"guides\",\n        \"taxonomy\": 1\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"1\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\",\n          \"slug\": \"guides\"\n        }\n      ]\n    }\n  }\n}",
                             "name": ""
                         },
                         {
@@ -719,7 +719,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 8,\n        \"name\": \"Announcements\",\n        \"slug\": \"announcements\",\n        \"taxonomy\": \"category\"\n      }\n    ]\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 8,\n        \"name\": \"Announcements\",\n        \"slug\": \"announcements\",\n        \"taxonomy\": 1\n      }\n    ]\n  }\n}",
                             "name": ""
                         },
                         {
@@ -825,7 +825,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"image\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"image\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"mime\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -1889,7 +1889,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"name\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"name\",\"order\":\"desc\"}"
                         },
                         "description": ""
                     },
@@ -2530,7 +2530,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.asc\"}"
                         },
                         "description": ""
                     },
@@ -2585,7 +2585,7 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"slug\": \"category\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"taxonomy_id\": 1,\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
                             "name": ""
                         },
                         {
@@ -2604,202 +2604,6 @@
                             "header": [],
                             "code": 429,
                             "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"26666666-7777-8888-9999-000000000001\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-26666666777788889999000000000001-2666666677778888-01\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "category",
-                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"slug\": \"category\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555558\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-21111111222233334444555555555558-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555559\",\n    \"slug\": \"category\"\n  },\n  \"trace_id\": \"00-21111111222233334444555555555559-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 429,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"26666666-7777-8888-9999-000000000002\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-26666666777788889999000000000002-2666666677778888-01\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:slug",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "category",
-                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"label\":\"Categories\",\"slug\":\"categories\",\"hierarchical\":false,\"options_json\":{\"color\":\"#ffcc00\"}}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"slug\": \"categories\",\n    \"label\": \"Categories\",\n    \"hierarchical\": true,\n    \"options_json\": {\n      \"color\": \"#ffcc00\"\n    },\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:05:00+00:00\"\n  }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555560\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-21111111222233334444555555555660-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555561\",\n    \"slug\": \"category\"\n  },\n  \"trace_id\": \"00-21111111222233334444555555555661-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation Error\",\n  \"status\": 422,\n  \"code\": \"VALIDATION_ERROR\",\n  \"detail\": \"The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555562\",\n    \"errors\": {\n      \"slug\": [\n        \"The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.\"\n      ]\n    }\n  },\n  \"trace_id\": \"00-21111111222233334444555555555662-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 429,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"26666666-7777-8888-9999-000000000003\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-26666666777788889999000000000003-2666666677778888-01\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:slug",
-                            "query": [
-                                {
-                                    "key": "force",
-                                    "value": "1",
-                                    "description": "\u041a\u0430\u0441\u043a\u0430\u0434\u043d\u043e \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0442\u0435\u0440\u043c\u044b \u0438 \u0441\u0432\u044f\u0437\u0438.",
-                                    "disabled": false
-                                }
-                            ],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:slug?force=1",
-                            "variable": [
-                                {
-                                    "id": "slug",
-                                    "key": "slug",
-                                    "value": "category",
-                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 204,
-                            "body": "{}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555563\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-21111111222233334444555555555663-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555564\",\n    \"slug\": \"category\"\n  },\n  \"trace_id\": \"00-21111111222233334444555555555664-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 409,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/conflict\",\n  \"title\": \"Taxonomy has terms\",\n  \"status\": 409,\n  \"code\": \"CONFLICT\",\n  \"detail\": \"Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.\",\n  \"meta\": {\n    \"request_id\": \"21111111-2222-3333-4444-555555555565\",\n    \"terms_count\": 5\n  },\n  \"trace_id\": \"00-21111111222233334444555555555665-2111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 429,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"26666666-7777-8888-9999-000000000004\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-26666666777788889999000000000004-2666666677778888-01\"\n}",
                             "name": ""
                         }
                     ]
@@ -3027,205 +2831,6 @@
             "description": "",
             "item": [
                 {
-                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0434\u0435\u0440\u0435\u0432\u0430 \u0442\u0435\u0440\u043c\u0438\u043d\u043e\u0432 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy\/terms\/tree",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy\/terms\/tree",
-                            "variable": [
-                                {
-                                    "id": "taxonomy",
-                                    "key": "taxonomy",
-                                    "value": "category",
-                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"taxonomy\": \"category\",\n      \"name\": \"\u0422\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0438\",\n      \"slug\": \"tech\",\n      \"parent_id\": null,\n      \"children\": [\n        {\n          \"id\": 2,\n          \"taxonomy\": \"category\",\n          \"name\": \"Laravel\",\n          \"slug\": \"laravel\",\n          \"parent_id\": 1,\n          \"children\": []\n        }\n      ]\n    }\n  ]\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0442\u0435\u0440\u043c\u043e\u0432 \u0432\u043d\u0443\u0442\u0440\u0438 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "query": [
-                                {
-                                    "key": "q",
-                                    "value": "guides",
-                                    "description": "\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u0438\u043c\u0435\u043d\u0438\/slug (",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "sort",
-                                    "value": "consequatur",
-                                    "description": "\u0421\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0430. Values: created_at.desc,created_at.asc,name.asc,name.desc,slug.asc,slug.desc. Default: created_at.desc.",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "per_page",
-                                    "value": "17",
-                                    "description": "\u0420\u0430\u0437\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (10-100). Default: 15.",
-                                    "disabled": false
-                                }
-                            ],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms?q=guides&sort=consequatur&per_page=17",
-                            "variable": [
-                                {
-                                    "id": "taxonomy_id",
-                                    "key": "taxonomy_id",
-                                    "value": "1",
-                                    "description": "The ID of the taxonomy."
-                                },
-                                {
-                                    "id": "taxonomy",
-                                    "key": "taxonomy",
-                                    "value": "category",
-                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.asc\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": 3,\n      \"taxonomy\": \"category\",\n      \"name\": \"Guides\",\n      \"slug\": \"guides\",\n      \"meta_json\": {},\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n    }\n  ]\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"5e9f51ce-7cee-d543-b8b7-cb6c30033f3f\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-5e9f51ce7ceed543b8b7cb6c30033f3f-5e9f51ce7ceed543-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\",\n  \"meta\": {\n    \"request_id\": \"eed543b8-b7cb-6c30-033f-3f5e5e9f51ce\",\n    \"taxonomy_slug\": \"category\"\n  },\n  \"trace_id\": \"00-eed543b8b7cb6c30033f3f5e5e9f51ce-eed543b8b7cb6c30-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 429,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"eed543b8-b7cb-6c30-033f-3f5e5e9f51cf\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-eed543b8b7cb6c30033f3f5e5e9f51cf-eed543b8b7cb6c30-01\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
-                            "variable": [
-                                {
-                                    "id": "taxonomy_id",
-                                    "key": "taxonomy_id",
-                                    "value": "1",
-                                    "description": "The ID of the taxonomy."
-                                },
-                                {
-                                    "id": "taxonomy",
-                                    "key": "taxonomy",
-                                    "value": "category",
-                                    "description": "Slug \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"Guides\",\"slug\":\"guides\",\"meta_json\":{\"color\":\"#ffcc00\"},\"parent_id\":17}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Guides\",\n    \"slug\": \"guides\",\n    \"meta_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n  }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/unauthorized\",\n  \"title\": \"Unauthorized\",\n  \"status\": 401,\n  \"code\": \"UNAUTHORIZED\",\n  \"detail\": \"Authentication is required to access this resource.\",\n  \"meta\": {\n    \"request_id\": \"cb6c3003-3f5e-5e9f-51ce-7ceed543b8b7\",\n    \"reason\": \"missing_token\"\n  },\n  \"trace_id\": \"00-cb6c30033f5e5e9f51ce7ceed543b8b7-cb6c30033f5e5e9f-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Taxonomy not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Taxonomy with slug category does not exist.\",\n  \"meta\": {\n    \"request_id\": \"eed543b8-b7cb-6c30-033f-3f5ecb6c3003\",\n    \"taxonomy_slug\": \"category\"\n  },\n  \"trace_id\": \"00-eed543b8b7cb6c30033f3f5ecb6c3003-eed543b8b7cb6c30-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation Error\",\n  \"status\": 422,\n  \"code\": \"VALIDATION_ERROR\",\n  \"detail\": \"The name field is required.\",\n  \"meta\": {\n    \"request_id\": \"eed543b8-b7cb-6c30-033f-3f5ecb6c3004\",\n    \"errors\": {\n      \"name\": [\n        \"The name field is required.\"\n      ]\n    }\n  },\n  \"trace_id\": \"00-eed543b8b7cb6c30033f3f5ecb6c3004-eed543b8b7cb6c30-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 429,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/rate-limit-exceeded\",\n  \"title\": \"Too Many Requests\",\n  \"status\": 429,\n  \"code\": \"RATE_LIMIT_EXCEEDED\",\n  \"detail\": \"Too many attempts. Try again later.\",\n  \"meta\": {\n    \"request_id\": \"eed543b8-b7cb-6c30-033f-3f5ecb6c3005\",\n    \"retry_after\": 60\n  },\n  \"trace_id\": \"00-eed543b8b7cb6c30033f3f5ecb6c3005-eed543b8b7cb6c30-01\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
                     "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430 \u043f\u043e ID.",
                     "request": {
                         "url": {
@@ -3266,7 +2871,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Guides\",\n    \"slug\": \"guides\",\n    \"meta_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": 1,\n    \"name\": \"Guides\",\n    \"slug\": \"guides\",\n    \"meta_json\": {},\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -3333,7 +2938,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": \"category\",\n    \"name\": \"Tutorials\",\n    \"slug\": \"tutorials\",\n    \"meta_json\": {\n      \"color\": \"#3366ff\"\n    },\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"id\": 3,\n    \"taxonomy\": 1,\n    \"name\": \"Tutorials\",\n    \"slug\": \"tutorials\",\n    \"meta_json\": {\n      \"color\": \"#3366ff\"\n    },\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:05:00+00:00\",\n    \"deleted_at\": null\n  }\n}",
                             "name": ""
                         },
                         {
@@ -3687,6 +3292,237 @@
             ]
         },
         {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "The ID of the taxonomy."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "The ID of the taxonomy."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"slug\":\"amniihfqcoynlazghdtqt\",\"hierarchical\":false}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the taxonomy."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0435 \u0434\u0435\u0440\u0435\u0432\u0430 \u0442\u0435\u0440\u043c\u0438\u043d\u043e\u0432 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy\/terms\/tree",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy\/terms\/tree",
+                            "variable": [
+                                {
+                                    "id": "taxonomy",
+                                    "key": "taxonomy",
+                                    "value": "1",
+                                    "description": "The taxonomy."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "\u0421\u043f\u0438\u0441\u043e\u043a \u0442\u0435\u0440\u043c\u043e\u0432 \u0432\u043d\u0443\u0442\u0440\u0438 \u0442\u0430\u043a\u0441\u043e\u043d\u043e\u043c\u0438\u0438.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "variable": [
+                                {
+                                    "id": "taxonomy_id",
+                                    "key": "taxonomy_id",
+                                    "value": "1",
+                                    "description": "The ID of the taxonomy."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"slug.asc\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0442\u0435\u0440\u043c\u0430.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/taxonomies\/:taxonomy_id\/terms",
+                            "variable": [
+                                {
+                                    "id": "taxonomy_id",
+                                    "key": "taxonomy_id",
+                                    "value": "1",
+                                    "description": "The ID of the taxonomy."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"vmqeopfuudtdsufvyvddq\",\"slug\":\"amniihfqcoynlazghdtqt\",\"parent_id\":17}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
             "name": "Search",
             "description": "",
             "item": [
@@ -3755,7 +3591,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-14T09:06:13\",\"to\":\"2106-12-13\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:4$\\\/i\"],\"from\":\"2025-11-14T10:11:07\",\"to\":\"2106-12-13\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

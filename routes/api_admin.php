@@ -123,20 +123,23 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
             ->name('admin.v1.taxonomies.index');
         Route::post('/taxonomies', [TaxonomyController::class, 'store'])
             ->name('admin.v1.taxonomies.store');
-        Route::get('/taxonomies/{slug}', [TaxonomyController::class, 'show'])
+        Route::get('/taxonomies/{id}', [TaxonomyController::class, 'show'])
             ->name('admin.v1.taxonomies.show');
-        Route::put('/taxonomies/{slug}', [TaxonomyController::class, 'update'])
+        Route::put('/taxonomies/{id}', [TaxonomyController::class, 'update'])
             ->name('admin.v1.taxonomies.update');
-        Route::delete('/taxonomies/{slug}', [TaxonomyController::class, 'destroy'])
+        Route::delete('/taxonomies/{id}', [TaxonomyController::class, 'destroy'])
             ->name('admin.v1.taxonomies.destroy');
     });
 
     Route::middleware('can:manage.terms')->group(function () {
         Route::get('/taxonomies/{taxonomy}/terms/tree', [TermController::class, 'tree'])
+            ->where('taxonomy', '[0-9]+')
             ->name('admin.v1.taxonomies.terms.tree');
         Route::get('/taxonomies/{taxonomy}/terms', [TermController::class, 'indexByTaxonomy'])
+            ->where('taxonomy', '[0-9]+')
             ->name('admin.v1.taxonomies.terms.index');
         Route::post('/taxonomies/{taxonomy}/terms', [TermController::class, 'store'])
+            ->where('taxonomy', '[0-9]+')
             ->name('admin.v1.taxonomies.terms.store');
         Route::get('/terms/{term}', [TermController::class, 'show'])
             ->name('admin.v1.terms.show');

@@ -112,12 +112,12 @@ class UpdateTermRequest extends FormRequest
      */
     private function taxonomyFromRoute(): ?Taxonomy
     {
-        $slug = (string) $this->route('taxonomy');
-        if ($slug === '') {
+        $id = (int) $this->route('taxonomy');
+        if ($id === 0) {
             return null;
         }
 
-        return Taxonomy::query()->where('slug', $slug)->first();
+        return Taxonomy::query()->find($id);
     }
 }
 

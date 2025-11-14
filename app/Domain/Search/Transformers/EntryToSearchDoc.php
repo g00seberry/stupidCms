@@ -105,10 +105,10 @@ final class EntryToSearchDoc
     /**
      * Маппить термы Entry в структуру для индекса.
      *
-     * Преобразует коллекцию термов в массив с taxonomy и slug.
+     * Преобразует коллекцию термов в массив с taxonomy_id и slug.
      *
      * @param \App\Models\Entry $entry Запись с загруженными термами
-     * @return list<array{taxonomy: string, slug: string}> Список термов
+     * @return list<array{taxonomy: int, slug: string}> Список термов
      */
     private function mapTerms(Entry $entry): array
     {
@@ -118,13 +118,13 @@ final class EntryToSearchDoc
 
         return $entry->terms
             ->map(function (Term $term): ?array {
-                $taxonomy = $term->taxonomy?->slug;
-                if ($taxonomy === null) {
+                $taxonomyId = $term->taxonomy_id;
+                if ($taxonomyId === null) {
                     return null;
                 }
 
                 return [
-                    'taxonomy' => (string) $taxonomy,
+                    'taxonomy' => $taxonomyId,
                     'slug' => (string) $term->slug,
                 ];
             })

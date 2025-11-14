@@ -230,7 +230,7 @@ class EntryController extends Controller
      *         "id": 3,
      *         "name": "Guides",
      *         "slug": "guides",
-     *         "taxonomy": "category"
+     *         "taxonomy": 1
      *       }
      *     ],
      *     "created_at": "2025-02-09T10:15:00+00:00",

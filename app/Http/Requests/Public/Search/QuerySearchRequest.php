@@ -53,7 +53,7 @@ final class QuerySearchRequest extends FormRequest
             'post_type' => ['nullable', 'array', 'max:10'],
             'post_type.*' => ['string', 'max:64'],
             'term' => ['nullable', 'array', 'max:20'],
-            'term.*' => ['string', 'regex:/^[a-z0-9_.-]+:[a-z0-9_.-]+$/i'],
+            'term.*' => ['string', 'regex:/^[0-9]+:[a-z0-9_.-]+$/i'],
             'from' => ['nullable', 'date'],
             'to' => ['nullable', 'date', 'after_or_equal:from'],
             'page' => ['nullable', 'integer', 'min:1'],

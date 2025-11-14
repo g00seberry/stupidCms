@@ -20,7 +20,7 @@ class CrudTermsTest extends TestCase
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
         Term::factory()->count(2)->forTaxonomy($taxonomy)->create();
 
-        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', $admin);
+        $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", $admin);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -37,7 +37,7 @@ class CrudTermsTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Laravel',
         ], $admin);
 
@@ -53,7 +53,7 @@ class CrudTermsTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Laravel',
             'slug' => 'laravel',
         ], $admin);
@@ -123,7 +123,7 @@ class CrudTermsTest extends TestCase
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', ['name' => 'Test'], $editor);
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", ['name' => 'Test'], $editor);
         $response->assertStatus(403);
 
         $response = $this->deleteJsonAsAdmin("/api/v1/admin/terms/{$term->id}", [], $editor);

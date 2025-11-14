@@ -73,7 +73,7 @@ class CrudTaxonomiesTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics', 'label' => 'Topics']);
 
-        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/topics', $admin);
+        $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", $admin);
 
         $response->assertOk();
         $response->assertJsonPath('data.id', $taxonomy->id);
@@ -84,13 +84,13 @@ class CrudTaxonomiesTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/missing', $admin);
+        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/99999', $admin);
 
         $response->assertStatus(404);
         $response->assertHeader('Content-Type', 'application/problem+json');
         $this->assertErrorResponse($response, ErrorCode::NOT_FOUND, [
-            'detail' => 'Taxonomy with slug missing does not exist.',
-            'meta.slug' => 'missing',
+            'detail' => 'Taxonomy with ID 99999 does not exist.',
+            'meta.taxonomy_id' => 99999,
         ]);
     }
 
@@ -99,7 +99,7 @@ class CrudTaxonomiesTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics', 'label' => 'Topics']);
 
-        $response = $this->putJsonAsAdmin('/api/v1/admin/taxonomies/topics', [
+        $response = $this->putJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", [
             'label' => 'Updated Topics',
             'slug' => 'updated-topics',
             'hierarchical' => false,
@@ -116,7 +116,7 @@ class CrudTaxonomiesTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create(['slug' => 'tags', 'label' => 'Tags']);
 
-        $response = $this->putJsonAsAdmin('/api/v1/admin/taxonomies/tags', [
+        $response = $this->putJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", [
             'label' => 'Tags3',
             'slug' => 'tags',
             'hierarchical' => true,
@@ -139,7 +139,7 @@ class CrudTaxonomiesTest extends TestCase
             'options_json' => [],
         ]);
 
-        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/tags', $admin);
+        $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", $admin);
 
         $response->assertOk();
         $response->assertJsonPath('data.id', $taxonomy->id);
@@ -154,7 +154,7 @@ class CrudTaxonomiesTest extends TestCase
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
         Term::factory()->forTaxonomy($taxonomy)->create();
 
-        $response = $this->deleteJsonAsAdmin('/api/v1/admin/taxonomies/topics', [], $admin);
+        $response = $this->deleteJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", [], $admin);
 
         $response->assertStatus(409);
         $response->assertHeader('Content-Type', 'application/problem+json');
@@ -162,7 +162,7 @@ class CrudTaxonomiesTest extends TestCase
             'detail' => 'Cannot delete taxonomy while terms exist. Use force=1 to cascade delete.',
             'meta.terms_count' => 1,
         ]);
-        $this->assertDatabaseHas('taxonomies', ['slug' => 'topics']);
+        $this->assertDatabaseHas('taxonomies', ['id' => $taxonomy->id]);
     }
 
     public function test_destroy_with_force_removes_taxonomy_and_terms(): void
@@ -171,10 +171,10 @@ class CrudTaxonomiesTest extends TestCase
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
 
-        $response = $this->deleteJsonAsAdmin('/api/v1/admin/taxonomies/topics?force=1', [], $admin);
+        $response = $this->deleteJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}?force=1", [], $admin);
 
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('taxonomies', ['slug' => 'topics']);
+        $this->assertDatabaseMissing('taxonomies', ['id' => $taxonomy->id]);
         $this->assertDatabaseMissing('terms', ['id' => $term->id]);
     }
 
@@ -186,7 +186,7 @@ class CrudTaxonomiesTest extends TestCase
         $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies', ['label' => 'Test'], $editor);
         $response->assertStatus(403);
 
-        $response = $this->deleteJsonAsAdmin('/api/v1/admin/taxonomies/topics', [], $editor);
+        $response = $this->deleteJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", [], $editor);
         $response->assertStatus(403);
     }
 }

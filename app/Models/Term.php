@@ -157,15 +157,15 @@ class Term extends Model
     /**
      * Скоуп: термы определённой таксономии.
      *
-     * Фильтрует термы по slug таксономии через связь taxonomy.
+     * Фильтрует термы по ID таксономии.
      *
      * @param \Illuminate\Database\Eloquent\Builder<Term> $q
-     * @param string $taxonomySlug Slug таксономии
+     * @param int $taxonomyId ID таксономии
      * @return \Illuminate\Database\Eloquent\Builder<Term>
      */
-    public function scopeInTaxonomy(Builder $q, string $taxonomySlug): Builder
+    public function scopeInTaxonomy(Builder $q, int $taxonomyId): Builder
     {
-        return $q->whereHas('taxonomy', fn ($qq) => $qq->where('slug', $taxonomySlug));
+        return $q->where('taxonomy_id', $taxonomyId);
     }
 
     /**

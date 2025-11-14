@@ -131,7 +131,7 @@ class TaxonomyController extends Controller
      * @response status=201 {
      *   "data": {
      *     "id": 1,
-     *     "slug": "category",
+     *     "taxonomy_id": 1,
      *     "label": "Categories",
      *     "hierarchical": true,
      *     "options_json": {},
@@ -221,11 +221,11 @@ class TaxonomyController extends Controller
      * @group Admin ▸ Taxonomies
      * @name Show taxonomy
      * @authenticated
-     * @urlParam slug string required Slug таксономии. Example: category
+     * @urlParam id int required ID таксономии. Example: 1
      * @response status=200 {
      *   "data": {
      *     "id": 1,
-     *     "slug": "category",
+     *     "taxonomy_id": 1,
      *     "label": "Categories",
      *     "hierarchical": true,
      *     "options_json": {},
@@ -250,10 +250,10 @@ class TaxonomyController extends Controller
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "detail": "Taxonomy with ID 1 does not exist.",
      *   "meta": {
      *     "request_id": "21111111-2222-3333-4444-555555555559",
-     *     "slug": "category"
+     *     "taxonomy_id": 1
      *   },
      *   "trace_id": "00-21111111222233334444555555555559-2111111122223333-01"
      * }
@@ -270,15 +270,21 @@ class TaxonomyController extends Controller
      *   "trace_id": "00-26666666777788889999000000000002-2666666677778888-01"
      * }
      */
-    public function show(string $slug): TaxonomyResource
+    /**
+     * Получение таксономии.
+     *
+     * @param int $id ID таксономии
+     * @return \App\Http\Resources\Admin\TaxonomyResource Ресурс таксономии
+     */
+    public function show(int $id): TaxonomyResource
     {
-        $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
+        $taxonomy = Taxonomy::query()->find($id);
 
         if (! $taxonomy) {
             $this->throwError(
                 ErrorCode::NOT_FOUND,
-                sprintf('Taxonomy with slug %s does not exist.', $slug),
-                ['slug' => $slug],
+                sprintf('Taxonomy with ID %d does not exist.', $id),
+                ['taxonomy_id' => $id],
             );
         }
 
@@ -291,7 +297,7 @@ class TaxonomyController extends Controller
      * @group Admin ▸ Taxonomies
      * @name Update taxonomy
      * @authenticated
-     * @urlParam slug string required Slug таксономии. Example: category
+     * @urlParam id int required ID таксономии. Example: 1
      * @bodyParam label string Новое название (<=255). Example: Categories
      * @bodyParam slug string Новый slug (а-z0-9_-). Example: categories
      * @bodyParam hierarchical boolean Иерархическая ли таксономия.
@@ -326,10 +332,10 @@ class TaxonomyController extends Controller
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "detail": "Taxonomy with ID 1 does not exist.",
      *   "meta": {
      *     "request_id": "21111111-2222-3333-4444-555555555561",
-     *     "slug": "category"
+     *     "taxonomy_id": 1
      *   },
      *   "trace_id": "00-21111111222233334444555555555661-2111111122223333-01"
      * }
@@ -362,15 +368,22 @@ class TaxonomyController extends Controller
      *   "trace_id": "00-26666666777788889999000000000003-2666666677778888-01"
      * }
      */
-    public function update(UpdateTaxonomyRequest $request, string $slug): TaxonomyResource
+    /**
+     * Обновление таксономии.
+     *
+     * @param \App\Http\Requests\Admin\UpdateTaxonomyRequest $request Запрос с данными
+     * @param int $id ID таксономии
+     * @return \App\Http\Resources\Admin\TaxonomyResource Ресурс таксономии
+     */
+    public function update(UpdateTaxonomyRequest $request, int $id): TaxonomyResource
     {
-        $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
+        $taxonomy = Taxonomy::query()->find($id);
 
         if (! $taxonomy) {
             $this->throwError(
                 ErrorCode::NOT_FOUND,
-                sprintf('Taxonomy with slug %s does not exist.', $slug),
-                ['slug' => $slug],
+                sprintf('Taxonomy with ID %d does not exist.', $id),
+                ['taxonomy_id' => $id],
             );
         }
 
@@ -423,7 +436,7 @@ class TaxonomyController extends Controller
      * @group Admin ▸ Taxonomies
      * @name Delete taxonomy
      * @authenticated
-     * @urlParam slug string required Slug таксономии. Example: category
+     * @urlParam id int required ID таксономии. Example: 1
      * @queryParam force boolean Каскадно удалить термы и связи. Example: true
      * @response status=204 {}
      * @response status=401 {
@@ -443,10 +456,10 @@ class TaxonomyController extends Controller
      *   "title": "Taxonomy not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Taxonomy with slug category does not exist.",
+     *   "detail": "Taxonomy with ID 1 does not exist.",
      *   "meta": {
      *     "request_id": "21111111-2222-3333-4444-555555555564",
-     *     "slug": "category"
+     *     "taxonomy_id": 1
      *   },
      *   "trace_id": "00-21111111222233334444555555555664-2111111122223333-01"
      * }
@@ -475,15 +488,22 @@ class TaxonomyController extends Controller
      *   "trace_id": "00-26666666777788889999000000000004-2666666677778888-01"
      * }
      */
-    public function destroy(Request $request, string $slug): Response
+    /**
+     * Удаление таксономии.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param int $id ID таксономии
+     * @return \Symfony\Component\HttpFoundation\Response HTTP ответ
+     */
+    public function destroy(Request $request, int $id): Response
     {
-        $taxonomy = Taxonomy::query()->where('slug', $slug)->first();
+        $taxonomy = Taxonomy::query()->find($id);
 
         if (! $taxonomy) {
             $this->throwError(
                 ErrorCode::NOT_FOUND,
-                sprintf('Taxonomy with slug %s does not exist.', $slug),
-                ['slug' => $slug],
+                sprintf('Taxonomy with ID %d does not exist.', $id),
+                ['taxonomy_id' => $id],
             );
         }
 
@@ -592,14 +612,6 @@ class TaxonomyController extends Controller
         });
     }
 
-    private function throwNotFound(string $slug): never
-    {
-        $this->throwError(
-            ErrorCode::NOT_FOUND,
-            sprintf('Taxonomy with slug %s does not exist.', $slug),
-            ['slug' => $slug],
-        );
-    }
 }
 
 

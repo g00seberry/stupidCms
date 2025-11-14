@@ -172,7 +172,7 @@ final class SearchService
                 'query' => [
                     'bool' => [
                         'must' => [
-                            ['term' => ['terms.taxonomy' => $term->taxonomy]],
+                            ['term' => ['terms.taxonomy' => $term->taxonomyId]],
                             ['term' => ['terms.slug' => $term->slug]],
                         ],
                     ],

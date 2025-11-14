@@ -21,7 +21,7 @@ class AttachPivotTest extends TestCase
         $entry = Entry::factory()->forPostType($postType)->create();
 
         // Создаём терм
-        $createResponse = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/topics/terms', [
+        $createResponse = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Analytics',
         ], $admin);
 

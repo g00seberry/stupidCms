@@ -1476,7 +1476,7 @@
             "name": "SearchTermFilter",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
             "summary": "Value Object для фильтра поиска по терму.",
-            "details": "Представляет фильтр по терму таксономии в формате \"taxonomy:slug\".",
+            "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:slug\".",
             "meta": {
                 "methods": [
                     "fromString"
@@ -3589,19 +3589,19 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{slug}",
+            "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{id}",
             "type": "http_endpoint",
             "name": "admin.v1.taxonomies.show",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\TaxonomyController.php",
-            "summary": "GET /api/v1/admin/taxonomies/{slug} (api)",
+            "summary": "GET /api/v1/admin/taxonomies/{id} (api)",
             "details": null,
             "meta": {
                 "method": "GET",
-                "uri": "/api/v1/admin/taxonomies/{slug}",
+                "uri": "/api/v1/admin/taxonomies/{id}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "slug": {
+                    "id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -3618,19 +3618,19 @@
             }
         },
         {
-            "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}",
+            "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{id}",
             "type": "http_endpoint",
             "name": "admin.v1.taxonomies.update",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\TaxonomyController.php",
-            "summary": "PUT /api/v1/admin/taxonomies/{slug} (api)",
+            "summary": "PUT /api/v1/admin/taxonomies/{id} (api)",
             "details": null,
             "meta": {
                 "method": "PUT",
-                "uri": "/api/v1/admin/taxonomies/{slug}",
+                "uri": "/api/v1/admin/taxonomies/{id}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "slug": {
+                    "id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -3647,19 +3647,19 @@
             }
         },
         {
-            "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}",
+            "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}",
             "type": "http_endpoint",
             "name": "admin.v1.taxonomies.destroy",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\TaxonomyController.php",
-            "summary": "DELETE /api/v1/admin/taxonomies/{slug} (api)",
+            "summary": "DELETE /api/v1/admin/taxonomies/{id} (api)",
             "details": null,
             "meta": {
                 "method": "DELETE",
-                "uri": "/api/v1/admin/taxonomies/{slug}",
+                "uri": "/api/v1/admin/taxonomies/{id}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "slug": {
+                    "id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -5922,7 +5922,7 @@
                 "name": "SearchTermFilter",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
                 "summary": "Value Object для фильтра поиска по терму.",
-                "details": "Представляет фильтр по терму таксономии в формате \"taxonomy:slug\".",
+                "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:slug\".",
                 "meta": {
                     "methods": [
                         "fromString"
@@ -8041,19 +8041,19 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.show",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\TaxonomyController.php",
-                "summary": "GET /api/v1/admin/taxonomies/{slug} (api)",
+                "summary": "GET /api/v1/admin/taxonomies/{id} (api)",
                 "details": null,
                 "meta": {
                     "method": "GET",
-                    "uri": "/api/v1/admin/taxonomies/{slug}",
+                    "uri": "/api/v1/admin/taxonomies/{id}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "slug": {
+                        "id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -8070,19 +8070,19 @@
                 }
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.update",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\TaxonomyController.php",
-                "summary": "PUT /api/v1/admin/taxonomies/{slug} (api)",
+                "summary": "PUT /api/v1/admin/taxonomies/{id} (api)",
                 "details": null,
                 "meta": {
                     "method": "PUT",
-                    "uri": "/api/v1/admin/taxonomies/{slug}",
+                    "uri": "/api/v1/admin/taxonomies/{id}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "slug": {
+                        "id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -8099,19 +8099,19 @@
                 }
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.destroy",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\TaxonomyController.php",
-                "summary": "DELETE /api/v1/admin/taxonomies/{slug} (api)",
+                "summary": "DELETE /api/v1/admin/taxonomies/{id} (api)",
                 "details": null,
                 "meta": {
                     "method": "DELETE",
-                    "uri": "/api/v1/admin/taxonomies/{slug}",
+                    "uri": "/api/v1/admin/taxonomies/{id}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "slug": {
+                        "id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -10130,22 +10130,22 @@
                 "summary": "POST /api/v1/admin/taxonomies (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.show",
-                "summary": "GET /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "GET /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.update",
-                "summary": "PUT /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "PUT /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.destroy",
-                "summary": "DELETE /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/taxonomies/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{taxonomy}/terms/tree",
@@ -10480,22 +10480,22 @@
                 "summary": "POST /api/v1/admin/taxonomies (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.show",
-                "summary": "GET /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "GET /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.update",
-                "summary": "PUT /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "PUT /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.destroy",
-                "summary": "DELETE /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/taxonomies/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{taxonomy}/terms/tree",
@@ -10830,22 +10830,22 @@
                 "summary": "POST /api/v1/admin/taxonomies (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.show",
-                "summary": "GET /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "GET /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.update",
-                "summary": "PUT /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "PUT /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.destroy",
-                "summary": "DELETE /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/taxonomies/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{taxonomy}/terms/tree",
@@ -11234,22 +11234,22 @@
                 "summary": "POST /api/v1/admin/taxonomies (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.show",
-                "summary": "GET /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "GET /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.update",
-                "summary": "PUT /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "PUT /api/v1/admin/taxonomies/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/taxonomies/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.destroy",
-                "summary": "DELETE /api/v1/admin/taxonomies/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/taxonomies/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/taxonomies/{taxonomy}/terms/tree",
@@ -11389,5 +11389,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-14T09:06:17+00:00"
+    "generated_at": "2025-11-14T10:11:11+00:00"
 }

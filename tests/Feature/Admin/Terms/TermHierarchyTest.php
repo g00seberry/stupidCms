@@ -24,7 +24,7 @@ class TermHierarchyTest extends TestCase
         ]);
         $parent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Parent']);
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/categories/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Child',
             'parent_id' => $parent->id,
         ], $admin);
@@ -58,7 +58,7 @@ class TermHierarchyTest extends TestCase
             'hierarchical' => true,
         ]);
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/categories/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Root',
         ], $admin);
 
@@ -86,7 +86,7 @@ class TermHierarchyTest extends TestCase
         $taxonomy2 = Taxonomy::factory()->create(['slug' => 'tags', 'hierarchical' => true]);
         $parent = Term::factory()->forTaxonomy($taxonomy2)->create();
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/categories/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy1->id}/terms", [
             'name' => 'Child',
             'parent_id' => $parent->id,
         ], $admin);
@@ -104,7 +104,7 @@ class TermHierarchyTest extends TestCase
         ]);
         $parent = Term::factory()->forTaxonomy($taxonomy)->create();
 
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/tags/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Child',
             'parent_id' => $parent->id,
         ], $admin);
@@ -228,7 +228,7 @@ class TermHierarchyTest extends TestCase
             ['ancestor_id' => $root->id, 'descendant_id' => $child->id, 'depth' => 1],
         ]);
 
-        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/categories/terms/tree', $admin);
+        $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms/tree", $admin);
 
         $response->assertOk();
         $data = $response->json('data');
@@ -249,7 +249,7 @@ class TermHierarchyTest extends TestCase
         ]);
         Term::factory()->count(2)->forTaxonomy($taxonomy)->create();
 
-        $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/tags/terms/tree', $admin);
+        $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms/tree", $admin);
 
         $response->assertOk();
         $data = $response->json('data');
@@ -303,7 +303,7 @@ class TermHierarchyTest extends TestCase
         ]);
 
         // Добавляем child к parent
-        $response = $this->postJsonAsAdmin('/api/v1/admin/taxonomies/categories/terms', [
+        $response = $this->postJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}/terms", [
             'name' => 'Child',
             'parent_id' => $parent->id,
         ], $admin);
