@@ -532,7 +532,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -560,7 +560,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T08:57:02'
+                  example: '2025-11-14T09:06:13'
                   nullable: true
                 date_to:
                   type: string
@@ -570,7 +570,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -578,7 +578,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: published_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -3220,7 +3220,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -3248,7 +3248,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -3257,7 +3257,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -5211,7 +5211,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -6879,7 +6879,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -6898,7 +6898,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -6908,7 +6908,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -8984,6 +8984,7 @@ paths:
                 example:
                   data:
                     -
+                      id: 1
                       slug: category
                       label: Categories
                       hierarchical: true
@@ -8995,6 +8996,7 @@ paths:
                     type: array
                     example:
                       -
+                        id: 1
                         slug: category
                         label: Categories
                         hierarchical: true
@@ -9004,6 +9006,9 @@ paths:
                     items:
                       type: object
                       properties:
+                        id:
+                          type: integer
+                          example: 1
                         slug:
                           type: string
                           example: category
@@ -9132,7 +9137,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: slug.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9155,6 +9160,7 @@ paths:
                 type: object
                 example:
                   data:
+                    id: 1
                     slug: category
                     label: Categories
                     hierarchical: true
@@ -9165,6 +9171,9 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: integer
+                        example: 1
                       slug:
                         type: string
                         example: category
@@ -9371,6 +9380,7 @@ paths:
                 type: object
                 example:
                   data:
+                    id: 1
                     slug: category
                     label: Categories
                     hierarchical: true
@@ -9381,6 +9391,9 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: integer
+                        example: 1
                       slug:
                         type: string
                         example: category
@@ -9547,6 +9560,7 @@ paths:
                 type: object
                 example:
                   data:
+                    id: 1
                     slug: categories
                     label: Categories
                     hierarchical: true
@@ -9558,6 +9572,9 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: integer
+                        example: 1
                       slug:
                         type: string
                         example: categories
@@ -10880,7 +10897,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.desc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11157,7 +11174,7 @@ paths:
         in: path
         name: taxonomy_id
         description: 'The ID of the taxonomy.'
-        example: 17
+        example: 1
         required: true
         schema:
           type: integer
@@ -12461,7 +12478,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T08:57:02'
+                  example: '2025-11-14T09:06:13'
                   nullable: true
                 to:
                   type: string

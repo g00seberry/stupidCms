@@ -57,6 +57,7 @@ class TaxonomyController extends Controller
      * @response status=200 {
      *   "data": [
      *     {
+     *       "id": 1,
      *       "slug": "category",
      *       "label": "Categories",
      *       "hierarchical": true,
@@ -129,6 +130,7 @@ class TaxonomyController extends Controller
      * @bodyParam options_json object Дополнительные настройки. Example: {"color":"#ffcc00"}
      * @response status=201 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "category",
      *     "label": "Categories",
      *     "hierarchical": true,
@@ -222,6 +224,7 @@ class TaxonomyController extends Controller
      * @urlParam slug string required Slug таксономии. Example: category
      * @response status=200 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "category",
      *     "label": "Categories",
      *     "hierarchical": true,
@@ -295,6 +298,7 @@ class TaxonomyController extends Controller
      * @bodyParam options_json object Дополнительные настройки. Example: {"color":"#ffcc00"}
      * @response status=200 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "categories",
      *     "label": "Categories",
      *     "hierarchical": true,

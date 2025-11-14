@@ -24,7 +24,7 @@ class CrudTaxonomiesTest extends TestCase
         $response->assertHeader('Cache-Control', 'no-store, private');
         $response->assertJsonStructure([
             'data' => [
-                '*' => ['slug', 'label', 'hierarchical', 'options_json'],
+                '*' => ['id', 'slug', 'label', 'hierarchical', 'options_json'],
             ],
             'links',
             'meta',
@@ -45,9 +45,11 @@ class CrudTaxonomiesTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonPath('data.label', 'News Categories');
+        $id = $response->json('data.id');
         $slug = $response->json('data.slug');
+        $this->assertNotEmpty($id);
         $this->assertNotEmpty($slug);
-        $this->assertDatabaseHas('taxonomies', ['slug' => $slug, 'name' => 'News Categories']);
+        $this->assertDatabaseHas('taxonomies', ['id' => $id, 'slug' => $slug, 'name' => 'News Categories']);
     }
 
     public function test_store_respects_custom_slug(): void
@@ -61,7 +63,9 @@ class CrudTaxonomiesTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonPath('data.slug', 'regions');
-        $this->assertDatabaseHas('taxonomies', ['slug' => 'regions']);
+        $id = $response->json('data.id');
+        $this->assertNotEmpty($id);
+        $this->assertDatabaseHas('taxonomies', ['id' => $id, 'slug' => 'regions']);
     }
 
     public function test_show_returns_taxonomy_details(): void
@@ -72,6 +76,7 @@ class CrudTaxonomiesTest extends TestCase
         $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/topics', $admin);
 
         $response->assertOk();
+        $response->assertJsonPath('data.id', $taxonomy->id);
         $response->assertJsonPath('data.label', 'Topics');
     }
 
@@ -101,8 +106,9 @@ class CrudTaxonomiesTest extends TestCase
         ], $admin);
 
         $response->assertOk();
+        $response->assertJsonPath('data.id', $taxonomy->id);
         $response->assertJsonPath('data.slug', 'updated-topics');
-        $this->assertDatabaseHas('taxonomies', ['slug' => 'updated-topics', 'name' => 'Updated Topics']);
+        $this->assertDatabaseHas('taxonomies', ['id' => $taxonomy->id, 'slug' => 'updated-topics', 'name' => 'Updated Topics']);
     }
 
     public function test_update_allows_same_slug(): void
@@ -118,9 +124,10 @@ class CrudTaxonomiesTest extends TestCase
         ], $admin);
 
         $response->assertOk();
+        $response->assertJsonPath('data.id', $taxonomy->id);
         $response->assertJsonPath('data.slug', 'tags');
         $response->assertJsonPath('data.label', 'Tags3');
-        $this->assertDatabaseHas('taxonomies', ['slug' => 'tags', 'name' => 'Tags3']);
+        $this->assertDatabaseHas('taxonomies', ['id' => $taxonomy->id, 'slug' => 'tags', 'name' => 'Tags3']);
     }
 
     public function test_options_json_returns_object_not_array(): void
@@ -135,6 +142,7 @@ class CrudTaxonomiesTest extends TestCase
         $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/tags', $admin);
 
         $response->assertOk();
+        $response->assertJsonPath('data.id', $taxonomy->id);
         $decoded = json_decode($response->getContent());
         $this->assertInstanceOf(\stdClass::class, $decoded->data->options_json);
         $this->assertSame([], (array) $decoded->data->options_json);

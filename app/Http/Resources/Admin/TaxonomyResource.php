@@ -40,6 +40,7 @@ class TaxonomyResource extends AdminJsonResource
     public function toArray($request): array
     {
         return [
+            'id' => $this->id,
             'slug' => $this->slug,
             'label' => $this->label ?? $this->name,
             'hierarchical' => (bool) $this->hierarchical,
