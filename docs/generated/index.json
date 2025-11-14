@@ -3884,68 +3884,6 @@
             }
         },
         {
-            "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-            "type": "http_endpoint",
-            "name": "admin.v1.entries.terms.attach",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\EntryTermsController.php",
-            "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/entries/{entry}/terms/attach",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "entry": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "entries",
-                "7": "terms",
-                "8": "attach"
-            }
-        },
-        {
-            "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-            "type": "http_endpoint",
-            "name": "admin.v1.entries.terms.detach",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\EntryTermsController.php",
-            "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/entries/{entry}/terms/detach",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "entry": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "entries",
-                "7": "terms",
-                "8": "detach"
-            }
-        },
-        {
             "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
             "type": "http_endpoint",
             "name": "admin.v1.entries.terms.sync",
@@ -8336,68 +8274,6 @@
                 }
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\EntryTermsController.php",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/entries/{entry}/terms/attach",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "entry": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "entries",
-                    "7": "terms",
-                    "8": "attach"
-                }
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\EntryTermsController.php",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/entries/{entry}/terms/detach",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "entry": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "entries",
-                    "7": "terms",
-                    "8": "detach"
-                }
-            },
-            {
                 "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.sync",
@@ -10190,18 +10066,6 @@
                 "summary": "GET /api/v1/admin/entries/{entry}/terms (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)"
-            },
-            {
                 "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.sync",
@@ -10538,18 +10402,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.index",
                 "summary": "GET /api/v1/admin/entries/{entry}/terms (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
@@ -10890,18 +10742,6 @@
                 "summary": "GET /api/v1/admin/entries/{entry}/terms (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)"
-            },
-            {
                 "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.sync",
@@ -11174,18 +11014,6 @@
                 "summary": "GET /api/v1/admin/entries/{entry}/terms (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)"
-            },
-            {
                 "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.sync",
@@ -11314,18 +11142,6 @@
                 "summary": "GET /api/v1/admin/entries/{entry}/terms (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)"
-            },
-            {
                 "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.sync",
@@ -11338,22 +11154,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.taxonomies.terms.tree",
                 "summary": "GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree (api)"
-            }
-        ],
-        "attach": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.attach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/attach (api)"
-            }
-        ],
-        "detach": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.detach",
-                "summary": "POST /api/v1/admin/entries/{entry}/terms/detach (api)"
             }
         ],
         "preview": [
@@ -11389,5 +11189,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-14T14:49:32+00:00"
+    "generated_at": "2025-11-14T15:08:34+00:00"
 }

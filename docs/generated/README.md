@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 150
+**Всего сущностей:** 148
 
 ## Содержание
 
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (61 сущностей)
+HTTP эндпоинты API (59 сущностей)
 
 ## Быстрая навигация
 
@@ -85,10 +85,10 @@ HTTP эндпоинты API (61 сущностей)
 - [admin.v1.entries.show](./http-endpoints.md#admin-v1-entries-show) - GET /api/v1/admin/entries/{id} (api)
 - [admin.v1.entries.statuses](./http-endpoints.md#admin-v1-entries-statuses) - GET /api/v1/admin/entries/statuses (api)
 - [admin.v1.entries.store](./http-endpoints.md#admin-v1-entries-store) - POST /api/v1/admin/entries (api)
-- [admin.v1.entries.terms.attach](./http-endpoints.md#admin-v1-entries-terms-attach) - POST /api/v1/admin/entries/{entry}/terms/attach (api)
-- [admin.v1.entries.terms.detach](./http-endpoints.md#admin-v1-entries-terms-detach) - POST /api/v1/admin/entries/{entry}/terms/detach (api)
 - [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
-- *...и еще 51 сущностей*
+- [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
+- [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
+- *...и еще 49 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-14 14:49:32
+**Сгенерировано:** 2025-11-14 15:08:34
 
 Для обновления документации выполните:
 ```bash

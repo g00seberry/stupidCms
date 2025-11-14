@@ -150,10 +150,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
 
         Route::get('/entries/{entry}/terms', [EntryTermsController::class, 'index'])
             ->name('admin.v1.entries.terms.index');
-        Route::post('/entries/{entry}/terms/attach', [EntryTermsController::class, 'attach'])
-            ->name('admin.v1.entries.terms.attach');
-        Route::post('/entries/{entry}/terms/detach', [EntryTermsController::class, 'detach'])
-            ->name('admin.v1.entries.terms.detach');
         Route::put('/entries/{entry}/terms/sync', [EntryTermsController::class, 'sync'])
             ->name('admin.v1.entries.terms.sync');
     });

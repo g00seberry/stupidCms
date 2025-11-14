@@ -11,11 +11,11 @@ use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AttachDetachSyncTest extends TestCase
+class SyncTermsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_attach_detach_and_sync_terms_for_entry(): void
+    public function test_sync_terms_for_entry(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $topics = Taxonomy::factory()->create();
@@ -25,7 +25,8 @@ class AttachDetachSyncTest extends TestCase
         $topicTerm = Term::factory()->forTaxonomy($topics)->create();
         $tagTerm = Term::factory()->forTaxonomy($tags)->create();
 
-        $response = $this->postJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/attach", [
+        // Синхронизация: добавляем термы
+        $response = $this->putJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/sync", [
             'term_ids' => [$topicTerm->id, $tagTerm->id],
         ], $admin);
 
@@ -34,13 +35,16 @@ class AttachDetachSyncTest extends TestCase
         $this->assertDatabaseHas('entry_term', ['entry_id' => $entry->id, 'term_id' => $topicTerm->id]);
         $this->assertDatabaseHas('entry_term', ['entry_id' => $entry->id, 'term_id' => $tagTerm->id]);
 
-        $response = $this->postJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/detach", [
-            'term_ids' => [$tagTerm->id],
+        // Синхронизация: убираем один терм
+        $response = $this->putJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/sync", [
+            'term_ids' => [$topicTerm->id],
         ], $admin);
 
         $response->assertOk();
         $this->assertDatabaseMissing('entry_term', ['entry_id' => $entry->id, 'term_id' => $tagTerm->id]);
+        $this->assertDatabaseHas('entry_term', ['entry_id' => $entry->id, 'term_id' => $topicTerm->id]);
 
+        // Синхронизация: заменяем на другой терм
         $anotherTopicTerm = Term::factory()->forTaxonomy($topics)->create();
 
         $response = $this->putJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/sync", [
@@ -52,7 +56,7 @@ class AttachDetachSyncTest extends TestCase
         $this->assertDatabaseHas('entry_term', ['entry_id' => $entry->id, 'term_id' => $anotherTopicTerm->id]);
     }
 
-    public function test_attach_rejects_terms_from_forbidden_taxonomy(): void
+    public function test_sync_rejects_terms_from_forbidden_taxonomy(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $allowed = Taxonomy::factory()->create();
@@ -62,7 +66,7 @@ class AttachDetachSyncTest extends TestCase
         $allowedTerm = Term::factory()->forTaxonomy($allowed)->create();
         $forbiddenTerm = Term::factory()->forTaxonomy($forbidden)->create();
 
-        $response = $this->postJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/attach", [
+        $response = $this->putJsonAsAdmin("/api/v1/admin/entries/{$entry->id}/terms/sync", [
             'term_ids' => [$allowedTerm->id, $forbiddenTerm->id],
         ], $admin);
 

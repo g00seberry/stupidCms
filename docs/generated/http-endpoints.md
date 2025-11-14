@@ -132,46 +132,6 @@ POST /api/v1/admin/entries (api)
 
 ---
 
-## admin.v1.entries.terms.attach
-**ID:** `http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/attach`
-**Path:** `app/Http/Controllers/Admin/V1/EntryTermsController.php`
-
-POST /api/v1/admin/entries/{entry}/terms/attach (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/entries/{entry}/terms/attach`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `entry` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `entries`, `terms`, `attach`
-
-
----
-
-## admin.v1.entries.terms.detach
-**ID:** `http_endpoint:POST:/api/v1/admin/entries/{entry}/terms/detach`
-**Path:** `app/Http/Controllers/Admin/V1/EntryTermsController.php`
-
-POST /api/v1/admin/entries/{entry}/terms/detach (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/entries/{entry}/terms/detach`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `entry` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `entries`, `terms`, `detach`
-
-
----
-
 ## admin.v1.entries.terms.index
 **ID:** `http_endpoint:GET:/api/v1/admin/entries/{entry}/terms`
 **Path:** `app/Http/Controllers/Admin/V1/EntryTermsController.php`

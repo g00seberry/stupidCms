@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: all
+                  example: scheduled
                   nullable: true
                   enum:
                     - all
@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T14:49:27'
+                  example: '2025-11-14T15:08:32'
                   nullable: true
                 date_to:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2115,571 +2115,6 @@ paths:
         required: true
         schema:
           type: integer
-  '/api/v1/admin/entries/{entry}/terms/attach':
-    post:
-      summary: 'Привязка термов к записи (без детача существующих).'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    entry_id: 42
-                    terms_by_taxonomy:
-                      -
-                        taxonomy:
-                          id: 1
-                          label: Categories
-                          hierarchical: true
-                          options_json: {  }
-                          created_at: '2025-01-10T12:00:00+00:00'
-                          updated_at: '2025-01-10T12:00:00+00:00'
-                        terms:
-                          -
-                            id: 3
-                            name: Guides
-                            meta_json: {  }
-                            created_at: '2025-01-10T12:00:00+00:00'
-                            updated_at: '2025-01-10T12:00:00+00:00'
-                            deleted_at: null
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      entry_id:
-                        type: integer
-                        example: 42
-                      terms_by_taxonomy:
-                        type: array
-                        example:
-                          -
-                            taxonomy:
-                              id: 1
-                              label: Categories
-                              hierarchical: true
-                              options_json: []
-                              created_at: '2025-01-10T12:00:00+00:00'
-                              updated_at: '2025-01-10T12:00:00+00:00'
-                            terms:
-                              -
-                                id: 3
-                                name: Guides
-                                meta_json: []
-                                created_at: '2025-01-10T12:00:00+00:00'
-                                updated_at: '2025-01-10T12:00:00+00:00'
-                                deleted_at: null
-                        items:
-                          type: object
-                          properties:
-                            taxonomy:
-                              type: object
-                              properties:
-                                id:
-                                  type: integer
-                                  example: 1
-                                label:
-                                  type: string
-                                  example: Categories
-                                hierarchical:
-                                  type: boolean
-                                  example: true
-                                options_json:
-                                  type: object
-                                  properties: {  }
-                                created_at:
-                                  type: string
-                                  example: '2025-01-10T12:00:00+00:00'
-                                updated_at:
-                                  type: string
-                                  example: '2025-01-10T12:00:00+00:00'
-                            terms:
-                              type: array
-                              example:
-                                -
-                                  id: 3
-                                  name: Guides
-                                  meta_json: []
-                                  created_at: '2025-01-10T12:00:00+00:00'
-                                  updated_at: '2025-01-10T12:00:00+00:00'
-                                  deleted_at: null
-                              items:
-                                type: object
-                                properties:
-                                  id:
-                                    type: integer
-                                    example: 3
-                                  name:
-                                    type: string
-                                    example: Guides
-                                  meta_json:
-                                    type: object
-                                    properties: {  }
-                                  created_at:
-                                    type: string
-                                    example: '2025-01-10T12:00:00+00:00'
-                                  updated_at:
-                                    type: string
-                                    example: '2025-01-10T12:00:00+00:00'
-                                  deleted_at:
-                                    type: string
-                                    example: null
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 51111111-2222-3333-4444-555555555556
-                    reason: missing_token
-                  trace_id: 00-51111111222233334444555555555556-5111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 51111111-2222-3333-4444-555555555556
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-51111111222233334444555555555556-5111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Entry not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Entry with ID 42 does not exist.'
-                  meta:
-                    request_id: 51111111-2222-3333-4444-555555555557
-                    entry_id: 42
-                  trace_id: 00-51111111222233334444555555555557-5111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Entry not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Entry with ID 42 does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 51111111-2222-3333-4444-555555555557
-                      entry_id:
-                        type: integer
-                        example: 42
-                  trace_id:
-                    type: string
-                    example: 00-51111111222233334444555555555557-5111111122223333-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: "Taxonomy with id '2' is not allowed for the entry post type."
-                  meta:
-                    request_id: 51111111-2222-3333-4444-555555555558
-                    errors:
-                      term_ids:
-                        - "Taxonomy with id '2' is not allowed for the entry post type."
-                  trace_id: 00-51111111222233334444555555555558-5111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: "Taxonomy with id '2' is not allowed for the entry post type."
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 51111111-2222-3333-4444-555555555558
-                      errors:
-                        type: object
-                        properties:
-                          term_ids:
-                            type: array
-                            example:
-                              - "Taxonomy with id '2' is not allowed for the entry post type."
-                            items:
-                              type: string
-                  trace_id:
-                    type: string
-                    example: 00-51111111222233334444555555555558-5111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 56666666-7777-8888-9999-000000000000
-                    retry_after: 60
-                  trace_id: 00-56666666777788889999000000000000-5666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 56666666-7777-8888-9999-000000000000
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-56666666777788889999000000000000-5666666677778888-01
-      tags:
-        - 'Admin ▸ Entry terms'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                term_ids:
-                  type: array
-                  description: 'Список ID термов (>=1).'
-                  example:
-                    - 3
-                    - 8
-                  items:
-                    type: integer
-              required:
-                - term_ids
-    parameters:
-      -
-        in: path
-        name: entry
-        description: 'ID записи.'
-        example: 42
-        required: true
-        schema:
-          type: integer
-  '/api/v1/admin/entries/{entry}/terms/detach':
-    post:
-      summary: 'Отвязка выбранных термов.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    entry_id: 42
-                    terms_by_taxonomy: []
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      entry_id:
-                        type: integer
-                        example: 42
-                      terms_by_taxonomy:
-                        type: array
-                        example: []
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 51111111-2222-3333-4444-555555555560
-                    reason: missing_token
-                  trace_id: 00-51111111222233334444555555555660-5111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 51111111-2222-3333-4444-555555555560
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-51111111222233334444555555555660-5111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Entry not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Entry with ID 42 does not exist.'
-                  meta:
-                    request_id: 51111111-2222-3333-4444-555555555561
-                    entry_id: 42
-                  trace_id: 00-51111111222233334444555555555661-5111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Entry not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Entry with ID 42 does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 51111111-2222-3333-4444-555555555561
-                      entry_id:
-                        type: integer
-                        example: 42
-                  trace_id:
-                    type: string
-                    example: 00-51111111222233334444555555555661-5111111122223333-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: 'The term_ids field is required.'
-                  meta:
-                    request_id: 51111111-2222-3333-4444-555555555562
-                    errors:
-                      term_ids:
-                        - 'The term_ids field is required.'
-                  trace_id: 00-51111111222233334444555555555662-5111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: 'The term_ids field is required.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 51111111-2222-3333-4444-555555555562
-                      errors:
-                        type: object
-                        properties:
-                          term_ids:
-                            type: array
-                            example:
-                              - 'The term_ids field is required.'
-                            items:
-                              type: string
-                  trace_id:
-                    type: string
-                    example: 00-51111111222233334444555555555662-5111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 56666666-7777-8888-9999-000000000002
-                    retry_after: 60
-                  trace_id: 00-56666666777788889999000000000002-5666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 56666666-7777-8888-9999-000000000002
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-56666666777788889999000000000002-5666666677778888-01
-      tags:
-        - 'Admin ▸ Entry terms'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                term_ids:
-                  type: array
-                  description: 'Список ID термов (>=1).'
-                  example:
-                    - 3
-                    - 8
-                  items:
-                    type: integer
-              required:
-                - term_ids
-    parameters:
-      -
-        in: path
-        name: entry
-        description: 'ID записи.'
-        example: 42
-        required: true
-        schema:
-          type: integer
   '/api/v1/admin/entries/{entry}/terms/sync':
     put:
       summary: 'Полная синхронизация термов (detach + attach).'
@@ -3353,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: image
+                  example: audio
                   nullable: true
                   enum:
                     - image
@@ -3373,7 +2808,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -3381,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -5344,7 +4779,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -7012,7 +6447,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -7031,7 +6466,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -7041,7 +6476,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -11197,7 +10632,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11445,7 +10880,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T14:49:27'
+                  example: '2025-11-14T15:08:31'
                   nullable: true
                 to:
                   type: string
