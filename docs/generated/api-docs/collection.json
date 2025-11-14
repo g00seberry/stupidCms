@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "2b479935-8e2c-4d9d-839a-ab83781825f8",
+        "_postman_id": "1fc8bfd1-91be-436f-b806-f6b31856af06",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"trashed\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-14T11:03:01\",\"date_to\":\"2106-12-13\",\"date_field\":\"published\",\"sort\":\"title.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-14T11:40:42\",\"date_to\":\"2106-12-14\",\"date_field\":\"published\",\"sort\":\"published_at.asc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -518,7 +518,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"taxonomy\": 1\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"1\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\"\n        }\n      ]\n    }\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms_by_taxonomy\": [\n      {\n        \"taxonomy\": {\n          \"id\": 1,\n          \"label\": \"Categories\",\n          \"hierarchical\": true,\n          \"options_json\": {},\n          \"created_at\": \"2025-01-10T12:00:00+00:00\",\n          \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n        },\n        \"terms\": [\n          {\n            \"id\": 3,\n            \"name\": \"Guides\",\n            \"meta_json\": {},\n            \"created_at\": \"2025-01-10T12:00:00+00:00\",\n            \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n            \"deleted_at\": null\n          }\n        ]\n      }\n    ]\n  }\n}",
                             "name": ""
                         },
                         {
@@ -585,7 +585,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 3,\n        \"name\": \"Guides\",\n        \"taxonomy\": 1\n      }\n    ],\n    \"terms_by_taxonomy\": {\n      \"1\": [\n        {\n          \"id\": 3,\n          \"name\": \"Guides\"\n        }\n      ]\n    }\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms_by_taxonomy\": [\n      {\n        \"taxonomy\": {\n          \"id\": 1,\n          \"label\": \"Categories\",\n          \"hierarchical\": true,\n          \"options_json\": {},\n          \"created_at\": \"2025-01-10T12:00:00+00:00\",\n          \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n        },\n        \"terms\": [\n          {\n            \"id\": 3,\n            \"name\": \"Guides\",\n            \"meta_json\": {},\n            \"created_at\": \"2025-01-10T12:00:00+00:00\",\n            \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n            \"deleted_at\": null\n          }\n        ]\n      }\n    ]\n  }\n}",
                             "name": ""
                         },
                         {
@@ -652,7 +652,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": []\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms_by_taxonomy\": []\n  }\n}",
                             "name": ""
                         },
                         {
@@ -719,7 +719,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms\": [\n      {\n        \"id\": 8,\n        \"name\": \"Announcements\",\n        \"taxonomy\": 1\n      }\n    ]\n  }\n}",
+                            "body": "{\n  \"data\": {\n    \"entry_id\": 42,\n    \"terms_by_taxonomy\": [\n      {\n        \"taxonomy\": {\n          \"id\": 1,\n          \"label\": \"Categories\",\n          \"hierarchical\": true,\n          \"options_json\": {},\n          \"created_at\": \"2025-01-10T12:00:00+00:00\",\n          \"updated_at\": \"2025-01-10T12:00:00+00:00\"\n        },\n        \"terms\": [\n          {\n            \"id\": 8,\n            \"name\": \"Announcements\",\n            \"meta_json\": {},\n            \"created_at\": \"2025-01-10T12:00:00+00:00\",\n            \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n            \"deleted_at\": null\n          }\n        ]\n      }\n    ]\n  }\n}",
                             "name": ""
                         },
                         {
@@ -825,7 +825,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"video\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"created_at\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"video\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"size_bytes\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -1889,7 +1889,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -3361,7 +3361,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":false}"
+                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":true}"
                         },
                         "description": "",
                         "auth": {
@@ -3472,7 +3472,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.asc\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3591,7 +3591,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-14T11:03:01\",\"to\":\"2106-12-13\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-14T11:40:42\",\"to\":\"2106-12-14\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

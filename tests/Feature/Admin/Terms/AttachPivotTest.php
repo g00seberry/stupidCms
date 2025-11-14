@@ -41,8 +41,12 @@ class AttachPivotTest extends TestCase
         $attachResponse->assertJsonStructure([
             'data' => [
                 'entry_id',
-                'terms',
-                'terms_by_taxonomy',
+                'terms_by_taxonomy' => [
+                    '*' => [
+                        'taxonomy',
+                        'terms',
+                    ],
+                ],
             ],
         ]);
 

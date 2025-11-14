@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\V1\Concerns;
 
+use App\Http\Resources\Admin\TaxonomyResource;
 use App\Http\Resources\Admin\TermResource;
 use App\Models\Entry;
 use App\Models\Term;
@@ -66,30 +67,48 @@ trait ManagesEntryTerms
     /**
      * Построить payload для ответа с термами записи.
      *
-     * Формирует структуру с термами, сгруппированными по ID таксономий.
+     * Формирует структуру с термами, сгруппированными по таксономиям.
+     * Возвращает массив объектов, где каждый объект содержит таксономию и её термы.
      *
      * @param \App\Models\Entry $entry Запись с загруженными термами
-     * @return array{entry_id: int, terms: array<int, array>, terms_by_taxonomy: array<int, array>} Payload ответа
+     * @return array{entry_id: int, terms_by_taxonomy: array<int, array{taxonomy: array, terms: array}>} Payload ответа
      */
     protected function buildEntryTermsPayload(Entry $entry): array
     {
         $entry->load('terms.taxonomy');
 
-        $terms = TermResource::collection($entry->terms)->resolve();
-        $grouped = collect($entry->terms)
+        $termsByTaxonomy = collect($entry->terms)
             ->groupBy(fn (Term $term) => $term->taxonomy_id)
-            ->map(fn (Collection $items) => TermResource::collection($items)->resolve())
-            ->map(fn (array $items) => collect($items)->map(function (array $term) {
-                $copy = $term;
-                unset($copy['taxonomy']);
-                return $copy;
-            })->values()->toArray())
+            ->map(function (Collection $terms, int $taxonomyId) {
+                $firstTerm = $terms->first();
+                $taxonomy = $firstTerm?->taxonomy;
+
+                if ($taxonomy === null) {
+                    return null;
+                }
+
+                $taxonomyData = (new TaxonomyResource($taxonomy))->resolve();
+                $termsData = TermResource::collection($terms)->resolve();
+
+                // Убираем поле taxonomy из каждого терма, так как оно уже в родительском объекте
+                $termsData = collect($termsData)->map(function (array $term) {
+                    $copy = $term;
+                    unset($copy['taxonomy']);
+                    return $copy;
+                })->values()->toArray();
+
+                return [
+                    'taxonomy' => $taxonomyData,
+                    'terms' => $termsData,
+                ];
+            })
+            ->filter()
+            ->values()
             ->toArray();
 
         return [
             'entry_id' => $entry->id,
-            'terms' => array_values($terms),
-            'terms_by_taxonomy' => $grouped,
+            'terms_by_taxonomy' => $termsByTaxonomy,
         ];
     }
 }

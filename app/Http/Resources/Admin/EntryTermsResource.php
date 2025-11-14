@@ -10,13 +10,14 @@ use Illuminate\Http\Request;
  * API Resource для термов записи в админ-панели.
  *
  * Форматирует термы, привязанные к записи, с группировкой по таксономиям.
+ * Структура: entry_id и terms_by_taxonomy (массив объектов с taxonomy и terms).
  *
  * @package App\Http\Resources\Admin
  */
 class EntryTermsResource extends AdminJsonResource
 {
     /**
-     * @param array<string, mixed> $payload Payload с термами (entry_id, terms, terms_by_taxonomy)
+     * @param array<string, mixed> $payload Payload с термами (entry_id, terms_by_taxonomy)
      */
     public function __construct(private readonly array $payload)
     {

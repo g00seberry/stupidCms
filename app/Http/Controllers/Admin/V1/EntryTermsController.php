@@ -39,21 +39,28 @@ class EntryTermsController extends Controller
      * @response status=200 {
      *   "data": {
      *     "entry_id": 42,
-     *     "terms": [
+     *     "terms_by_taxonomy": [
      *       {
-     *         "id": 3,
-     *         "name": "Guides",
-     *         "taxonomy": 1
+     *         "taxonomy": {
+     *           "id": 1,
+     *           "label": "Categories",
+     *           "hierarchical": true,
+     *           "options_json": {},
+     *           "created_at": "2025-01-10T12:00:00+00:00",
+     *           "updated_at": "2025-01-10T12:00:00+00:00"
+     *         },
+     *         "terms": [
+     *           {
+     *             "id": 3,
+     *             "name": "Guides",
+     *             "meta_json": {},
+     *             "created_at": "2025-01-10T12:00:00+00:00",
+     *             "updated_at": "2025-01-10T12:00:00+00:00",
+     *             "deleted_at": null
+     *           }
+     *         ]
      *       }
-     *     ],
-     *     "terms_by_taxonomy": {
-     *       "1": [
-     *         {
-     *           "id": 3,
-     *           "name": "Guides"
-     *         }
-     *       ]
-     *     }
+     *     ]
      *   }
      * }
      * @response status=401 {
@@ -131,21 +138,28 @@ class EntryTermsController extends Controller
      * @response status=200 {
      *   "data": {
      *     "entry_id": 42,
-     *     "terms": [
+     *     "terms_by_taxonomy": [
      *       {
-     *         "id": 3,
-     *         "name": "Guides",
-     *         "taxonomy": 1
+     *         "taxonomy": {
+     *           "id": 1,
+     *           "label": "Categories",
+     *           "hierarchical": true,
+     *           "options_json": {},
+     *           "created_at": "2025-01-10T12:00:00+00:00",
+     *           "updated_at": "2025-01-10T12:00:00+00:00"
+     *         },
+     *         "terms": [
+     *           {
+     *             "id": 3,
+     *             "name": "Guides",
+     *             "meta_json": {},
+     *             "created_at": "2025-01-10T12:00:00+00:00",
+     *             "updated_at": "2025-01-10T12:00:00+00:00",
+     *             "deleted_at": null
+     *           }
+     *         ]
      *       }
-     *     ],
-     *     "terms_by_taxonomy": {
-     *       "1": [
-     *         {
-     *           "id": 3,
-     *           "name": "Guides"
-     *         }
-     *       ]
-     *     }
+     *     ]
      *   }
      * }
      * @response status=401 {
@@ -242,7 +256,7 @@ class EntryTermsController extends Controller
      * @response status=200 {
      *   "data": {
      *     "entry_id": 42,
-     *     "terms": []
+     *     "terms_by_taxonomy": []
      *   }
      * }
      * @response status=401 {
@@ -332,11 +346,26 @@ class EntryTermsController extends Controller
      * @response status=200 {
      *   "data": {
      *     "entry_id": 42,
-     *     "terms": [
+     *     "terms_by_taxonomy": [
      *       {
-     *         "id": 8,
-     *         "name": "Announcements",
-     *         "taxonomy": 1
+     *         "taxonomy": {
+     *           "id": 1,
+     *           "label": "Categories",
+     *           "hierarchical": true,
+     *           "options_json": {},
+     *           "created_at": "2025-01-10T12:00:00+00:00",
+     *           "updated_at": "2025-01-10T12:00:00+00:00"
+     *         },
+     *         "terms": [
+     *           {
+     *             "id": 8,
+     *             "name": "Announcements",
+     *             "meta_json": {},
+     *             "created_at": "2025-01-10T12:00:00+00:00",
+     *             "updated_at": "2025-01-10T12:00:00+00:00",
+     *             "deleted_at": null
+     *           }
+     *         ]
      *       }
      *     ]
      *   }

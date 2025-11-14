@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -563,12 +563,12 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T11:03:01'
+                  example: '2025-11-14T11:40:42'
                   nullable: true
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2106-12-13'
+                  example: '2106-12-14'
                   nullable: true
                 date_field:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.asc
+                  example: published_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -1814,16 +1814,23 @@ paths:
                 example:
                   data:
                     entry_id: 42
-                    terms:
-                      -
-                        id: 3
-                        name: Guides
-                        taxonomy: 1
                     terms_by_taxonomy:
-                      '1':
-                        -
-                          id: 3
-                          name: Guides
+                      -
+                        taxonomy:
+                          id: 1
+                          label: Categories
+                          hierarchical: true
+                          options_json: {  }
+                          created_at: '2025-01-10T12:00:00+00:00'
+                          updated_at: '2025-01-10T12:00:00+00:00'
+                        terms:
+                          -
+                            id: 3
+                            name: Guides
+                            meta_json: {  }
+                            created_at: '2025-01-10T12:00:00+00:00'
+                            updated_at: '2025-01-10T12:00:00+00:00'
+                            deleted_at: null
                 properties:
                   data:
                     type: object
@@ -1831,43 +1838,80 @@ paths:
                       entry_id:
                         type: integer
                         example: 42
-                      terms:
+                      terms_by_taxonomy:
                         type: array
                         example:
                           -
-                            id: 3
-                            name: Guides
-                            taxonomy: 1
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                              example: 3
-                            name:
-                              type: string
-                              example: Guides
                             taxonomy:
-                              type: integer
-                              example: 1
-                      terms_by_taxonomy:
-                        type: object
-                        properties:
-                          1:
-                            type: array
-                            example:
+                              id: 1
+                              label: Categories
+                              hierarchical: true
+                              options_json: []
+                              created_at: '2025-01-10T12:00:00+00:00'
+                              updated_at: '2025-01-10T12:00:00+00:00'
+                            terms:
                               -
                                 id: 3
                                 name: Guides
-                            items:
+                                meta_json: []
+                                created_at: '2025-01-10T12:00:00+00:00'
+                                updated_at: '2025-01-10T12:00:00+00:00'
+                                deleted_at: null
+                        items:
+                          type: object
+                          properties:
+                            taxonomy:
                               type: object
                               properties:
                                 id:
                                   type: integer
-                                  example: 3
-                                name:
+                                  example: 1
+                                label:
                                   type: string
-                                  example: Guides
+                                  example: Categories
+                                hierarchical:
+                                  type: boolean
+                                  example: true
+                                options_json:
+                                  type: object
+                                  properties: {  }
+                                created_at:
+                                  type: string
+                                  example: '2025-01-10T12:00:00+00:00'
+                                updated_at:
+                                  type: string
+                                  example: '2025-01-10T12:00:00+00:00'
+                            terms:
+                              type: array
+                              example:
+                                -
+                                  id: 3
+                                  name: Guides
+                                  meta_json: []
+                                  created_at: '2025-01-10T12:00:00+00:00'
+                                  updated_at: '2025-01-10T12:00:00+00:00'
+                                  deleted_at: null
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 3
+                                  name:
+                                    type: string
+                                    example: Guides
+                                  meta_json:
+                                    type: object
+                                    properties: {  }
+                                  created_at:
+                                    type: string
+                                    example: '2025-01-10T12:00:00+00:00'
+                                  updated_at:
+                                    type: string
+                                    example: '2025-01-10T12:00:00+00:00'
+                                  deleted_at:
+                                    type: string
+                                    example: null
         401:
           description: ''
           content:
@@ -2087,16 +2131,23 @@ paths:
                 example:
                   data:
                     entry_id: 42
-                    terms:
-                      -
-                        id: 3
-                        name: Guides
-                        taxonomy: 1
                     terms_by_taxonomy:
-                      '1':
-                        -
-                          id: 3
-                          name: Guides
+                      -
+                        taxonomy:
+                          id: 1
+                          label: Categories
+                          hierarchical: true
+                          options_json: {  }
+                          created_at: '2025-01-10T12:00:00+00:00'
+                          updated_at: '2025-01-10T12:00:00+00:00'
+                        terms:
+                          -
+                            id: 3
+                            name: Guides
+                            meta_json: {  }
+                            created_at: '2025-01-10T12:00:00+00:00'
+                            updated_at: '2025-01-10T12:00:00+00:00'
+                            deleted_at: null
                 properties:
                   data:
                     type: object
@@ -2104,43 +2155,80 @@ paths:
                       entry_id:
                         type: integer
                         example: 42
-                      terms:
+                      terms_by_taxonomy:
                         type: array
                         example:
                           -
-                            id: 3
-                            name: Guides
-                            taxonomy: 1
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                              example: 3
-                            name:
-                              type: string
-                              example: Guides
                             taxonomy:
-                              type: integer
-                              example: 1
-                      terms_by_taxonomy:
-                        type: object
-                        properties:
-                          1:
-                            type: array
-                            example:
+                              id: 1
+                              label: Categories
+                              hierarchical: true
+                              options_json: []
+                              created_at: '2025-01-10T12:00:00+00:00'
+                              updated_at: '2025-01-10T12:00:00+00:00'
+                            terms:
                               -
                                 id: 3
                                 name: Guides
-                            items:
+                                meta_json: []
+                                created_at: '2025-01-10T12:00:00+00:00'
+                                updated_at: '2025-01-10T12:00:00+00:00'
+                                deleted_at: null
+                        items:
+                          type: object
+                          properties:
+                            taxonomy:
                               type: object
                               properties:
                                 id:
                                   type: integer
-                                  example: 3
-                                name:
+                                  example: 1
+                                label:
                                   type: string
-                                  example: Guides
+                                  example: Categories
+                                hierarchical:
+                                  type: boolean
+                                  example: true
+                                options_json:
+                                  type: object
+                                  properties: {  }
+                                created_at:
+                                  type: string
+                                  example: '2025-01-10T12:00:00+00:00'
+                                updated_at:
+                                  type: string
+                                  example: '2025-01-10T12:00:00+00:00'
+                            terms:
+                              type: array
+                              example:
+                                -
+                                  id: 3
+                                  name: Guides
+                                  meta_json: []
+                                  created_at: '2025-01-10T12:00:00+00:00'
+                                  updated_at: '2025-01-10T12:00:00+00:00'
+                                  deleted_at: null
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 3
+                                  name:
+                                    type: string
+                                    example: Guides
+                                  meta_json:
+                                    type: object
+                                    properties: {  }
+                                  created_at:
+                                    type: string
+                                    example: '2025-01-10T12:00:00+00:00'
+                                  updated_at:
+                                    type: string
+                                    example: '2025-01-10T12:00:00+00:00'
+                                  deleted_at:
+                                    type: string
+                                    example: null
         401:
           description: ''
           content:
@@ -2369,7 +2457,7 @@ paths:
                 example:
                   data:
                     entry_id: 42
-                    terms: []
+                    terms_by_taxonomy: []
                 properties:
                   data:
                     type: object
@@ -2377,7 +2465,7 @@ paths:
                       entry_id:
                         type: integer
                         example: 42
-                      terms:
+                      terms_by_taxonomy:
                         type: array
                         example: []
         401:
@@ -2608,11 +2696,23 @@ paths:
                 example:
                   data:
                     entry_id: 42
-                    terms:
+                    terms_by_taxonomy:
                       -
-                        id: 8
-                        name: Announcements
-                        taxonomy: 1
+                        taxonomy:
+                          id: 1
+                          label: Categories
+                          hierarchical: true
+                          options_json: {  }
+                          created_at: '2025-01-10T12:00:00+00:00'
+                          updated_at: '2025-01-10T12:00:00+00:00'
+                        terms:
+                          -
+                            id: 8
+                            name: Announcements
+                            meta_json: {  }
+                            created_at: '2025-01-10T12:00:00+00:00'
+                            updated_at: '2025-01-10T12:00:00+00:00'
+                            deleted_at: null
                 properties:
                   data:
                     type: object
@@ -2620,25 +2720,80 @@ paths:
                       entry_id:
                         type: integer
                         example: 42
-                      terms:
+                      terms_by_taxonomy:
                         type: array
                         example:
                           -
-                            id: 8
-                            name: Announcements
-                            taxonomy: 1
+                            taxonomy:
+                              id: 1
+                              label: Categories
+                              hierarchical: true
+                              options_json: []
+                              created_at: '2025-01-10T12:00:00+00:00'
+                              updated_at: '2025-01-10T12:00:00+00:00'
+                            terms:
+                              -
+                                id: 8
+                                name: Announcements
+                                meta_json: []
+                                created_at: '2025-01-10T12:00:00+00:00'
+                                updated_at: '2025-01-10T12:00:00+00:00'
+                                deleted_at: null
                         items:
                           type: object
                           properties:
-                            id:
-                              type: integer
-                              example: 8
-                            name:
-                              type: string
-                              example: Announcements
                             taxonomy:
-                              type: integer
-                              example: 1
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                label:
+                                  type: string
+                                  example: Categories
+                                hierarchical:
+                                  type: boolean
+                                  example: true
+                                options_json:
+                                  type: object
+                                  properties: {  }
+                                created_at:
+                                  type: string
+                                  example: '2025-01-10T12:00:00+00:00'
+                                updated_at:
+                                  type: string
+                                  example: '2025-01-10T12:00:00+00:00'
+                            terms:
+                              type: array
+                              example:
+                                -
+                                  id: 8
+                                  name: Announcements
+                                  meta_json: []
+                                  created_at: '2025-01-10T12:00:00+00:00'
+                                  updated_at: '2025-01-10T12:00:00+00:00'
+                                  deleted_at: null
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 8
+                                  name:
+                                    type: string
+                                    example: Announcements
+                                  meta_json:
+                                    type: object
+                                    properties: {  }
+                                  created_at:
+                                    type: string
+                                    example: '2025-01-10T12:00:00+00:00'
+                                  updated_at:
+                                    type: string
+                                    example: '2025-01-10T12:00:00+00:00'
+                                  deleted_at:
+                                    type: string
+                                    example: null
         401:
           description: ''
           content:
@@ -3226,7 +3381,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -6857,7 +7012,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -6886,7 +7041,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -10967,7 +11122,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 options_json:
                   type: object
@@ -11042,7 +11197,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -11290,12 +11445,12 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-14T11:03:01'
+                  example: '2025-11-14T11:40:42'
                   nullable: true
                 to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
-                  example: '2106-12-13'
+                  example: '2106-12-14'
                   nullable: true
                 page:
                   type: integer
