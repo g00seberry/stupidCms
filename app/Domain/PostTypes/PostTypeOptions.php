@@ -13,7 +13,7 @@ use InvalidArgumentException;
  * Гарантирует валидность данных и централизованную нормализацию.
  *
  * Схема:
- * - taxonomies: array<string> - массив slug таксономий, разрешённых для этого типа записи
+ * - taxonomies: array<int> - массив id таксономий, разрешённых для этого типа записи
  * - fields: array<string, mixed> - произвольные поля (расширяемые)
  *
  * @package App\Domain\PostTypes
@@ -21,7 +21,7 @@ use InvalidArgumentException;
 final class PostTypeOptions
 {
     /**
-     * @param array<string> $taxonomies Массив slug таксономий
+     * @param array<int> $taxonomies Массив id таксономий
      * @param array<string, mixed> $fields Произвольные поля
      */
     private function __construct(
@@ -38,12 +38,23 @@ final class PostTypeOptions
      */
     public static function fromArray(array $data): self
     {
-        // Нормализуем taxonomies - всегда массив
+        // Извлекаем taxonomies - строго массив целых чисел
         $taxonomies = [];
         if (isset($data['taxonomies'])) {
             $taxonomiesValue = $data['taxonomies'];
             if (is_array($taxonomiesValue) && array_is_list($taxonomiesValue)) {
-                $taxonomies = array_values(array_filter($taxonomiesValue, fn ($item) => is_string($item)));
+                foreach ($taxonomiesValue as $item) {
+                    if (! is_int($item) || $item <= 0) {
+                        throw new InvalidArgumentException(
+                            'Taxonomies must be an array of positive integers.'
+                        );
+                    }
+                    $taxonomies[] = $item;
+                }
+            } else {
+                throw new InvalidArgumentException(
+                    'Taxonomies must be an array of positive integers.'
+                );
             }
         }
 
@@ -97,7 +108,7 @@ final class PostTypeOptions
     /**
      * Получить список разрешённых таксономий.
      *
-     * @return array<string> Массив slug таксономий
+     * @return array<int> Массив id таксономий
      */
     public function getAllowedTaxonomies(): array
     {
@@ -107,16 +118,16 @@ final class PostTypeOptions
     /**
      * Проверить, разрешена ли таксономия для этого типа записи.
      *
-     * @param string $taxonomySlug Slug таксономии
+     * @param int $taxonomyId ID таксономии
      * @return bool true, если таксономия разрешена
      */
-    public function isTaxonomyAllowed(string $taxonomySlug): bool
+    public function isTaxonomyAllowed(int $taxonomyId): bool
     {
         if (empty($this->taxonomies)) {
             return true; // Если список пуст, все таксономии разрешены
         }
 
-        return in_array($taxonomySlug, $this->taxonomies, true);
+        return in_array($taxonomyId, $this->taxonomies, true);
     }
 
     /**

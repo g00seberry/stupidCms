@@ -20,7 +20,7 @@ class AttachDetachSyncTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $topics = Taxonomy::factory()->create(['slug' => 'topics']);
         $tags = Taxonomy::factory()->create(['slug' => 'tags']);
-        $postType = PostType::factory()->withOptions(['taxonomies' => ['topics', 'tags']])->create();
+        $postType = PostType::factory()->withOptions(['taxonomies' => [$topics->id, $tags->id]])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
         $topicTerm = Term::factory()->forTaxonomy($topics)->create();
         $tagTerm = Term::factory()->forTaxonomy($tags)->create();
@@ -57,7 +57,7 @@ class AttachDetachSyncTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
         $allowed = Taxonomy::factory()->create(['slug' => 'topics']);
         $forbidden = Taxonomy::factory()->create(['slug' => 'regions']);
-        $postType = PostType::factory()->withOptions(['taxonomies' => ['topics']])->create();
+        $postType = PostType::factory()->withOptions(['taxonomies' => [$allowed->id]])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
         $allowedTerm = Term::factory()->forTaxonomy($allowed)->create();
         $forbiddenTerm = Term::factory()->forTaxonomy($forbidden)->create();
@@ -69,7 +69,7 @@ class AttachDetachSyncTest extends TestCase
         $response->assertStatus(422);
         $this->assertErrorResponse($response, ErrorCode::VALIDATION_ERROR);
         $this->assertValidationErrors($response, [
-            'term_ids' => "Taxonomy 'regions' is not allowed for the entry post type.",
+            'term_ids' => "Taxonomy with id '{$forbidden->id}' is not allowed for the entry post type.",
         ]);
         $this->assertDatabaseMissing('entry_term', ['entry_id' => $entry->id, 'term_id' => $allowedTerm->id]);
     }

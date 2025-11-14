@@ -17,7 +17,7 @@ class AttachPivotTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
-        $postType = PostType::factory()->withOptions(['taxonomies' => ['topics']])->create();
+        $postType = PostType::factory()->withOptions(['taxonomies' => [$taxonomy->id]])->create();
         $entry = Entry::factory()->forPostType($postType)->create();
 
         // Создаём терм

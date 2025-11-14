@@ -48,7 +48,7 @@ class EntryTermsController extends Controller
      *       }
      *     ],
      *     "terms_by_taxonomy": {
-     *       "category": [
+     *       "1": [
      *         {
      *           "id": 3,
      *           "name": "Guides",
@@ -142,7 +142,7 @@ class EntryTermsController extends Controller
      *       }
      *     ],
      *     "terms_by_taxonomy": {
-     *       "category": [
+     *       "1": [
      *         {
      *           "id": 3,
      *           "name": "Guides",

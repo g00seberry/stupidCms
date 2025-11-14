@@ -53,12 +53,11 @@ trait ManagesEntryTerms
                 continue;
             }
 
-            $term->loadMissing('taxonomy');
-            $taxonomySlug = $term->taxonomy?->slug;
+            $taxonomyId = $term->taxonomy_id;
 
-            if ($taxonomySlug === null || ! $options->isTaxonomyAllowed($taxonomySlug)) {
+            if ($taxonomyId === null || ! $options->isTaxonomyAllowed($taxonomyId)) {
                 throw ValidationException::withMessages([
-                    $errorKey => ["Taxonomy '{$taxonomySlug}' is not allowed for the entry post type."],
+                    $errorKey => ["Taxonomy with id '{$taxonomyId}' is not allowed for the entry post type."],
                 ]);
             }
         }
@@ -67,19 +66,20 @@ trait ManagesEntryTerms
     /**
      * Построить payload для ответа с термами записи.
      *
-     * Формирует структуру с термами, сгруппированными по таксономиям.
+     * Формирует структуру с термами, сгруппированными по ID таксономий.
      *
      * @param \App\Models\Entry $entry Запись с загруженными термами
-     * @return array{entry_id: int, terms: array<int, array>, terms_by_taxonomy: array<string, array>} Payload ответа
+     * @return array{entry_id: int, terms: array<int, array>, terms_by_taxonomy: array<int, array>} Payload ответа
      */
     protected function buildEntryTermsPayload(Entry $entry): array
     {
         $entry->load('terms.taxonomy');
 
         $terms = TermResource::collection($entry->terms)->resolve();
-        $grouped = collect($terms)
-            ->groupBy(fn ($term) => $term['taxonomy'] ?? 'unknown')
-            ->map(fn (Collection $items) => $items->map(function (array $term) {
+        $grouped = collect($entry->terms)
+            ->groupBy(fn (Term $term) => $term->taxonomy_id)
+            ->map(fn (Collection $items) => TermResource::collection($items)->resolve())
+            ->map(fn (array $items) => collect($items)->map(function (array $term) {
                 $copy = $term;
                 unset($copy['taxonomy']);
                 return $copy;

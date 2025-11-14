@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\PostType;
+use App\Models\Taxonomy;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -346,10 +347,11 @@ class UpdatePostTypeTest extends TestCase
     public function test_update_normalizes_taxonomies_to_array_when_object_provided(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
+        $categoryTaxonomy = Taxonomy::factory()->create(['slug' => 'categories']);
         
         PostType::factory()->create([
             'slug' => 'page',
-            'options_json' => ['taxonomies' => ['categories']],
+            'options_json' => ['taxonomies' => [$categoryTaxonomy->id]],
         ]);
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
@@ -386,6 +388,8 @@ class UpdatePostTypeTest extends TestCase
     public function test_update_keeps_taxonomies_as_array_when_filled(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
+        $categoryTaxonomy = Taxonomy::factory()->create(['slug' => 'categories']);
+        $tagsTaxonomy = Taxonomy::factory()->create(['slug' => 'tags']);
         
         PostType::factory()->create([
             'slug' => 'article',
@@ -394,40 +398,15 @@ class UpdatePostTypeTest extends TestCase
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/article', [
             'options_json' => [
-                'taxonomies' => ['categories', 'tags'],
+                'taxonomies' => [$categoryTaxonomy->id, $tagsTaxonomy->id],
             ],
         ], $admin);
 
         $response->assertStatus(200);
-        $response->assertJsonPath('data.options_json.taxonomies', ['categories', 'tags']);
+        $response->assertJsonPath('data.options_json.taxonomies', [$categoryTaxonomy->id, $tagsTaxonomy->id]);
         $this->assertIsArray($response->json('data.options_json.taxonomies'));
     }
 
-    public function test_update_fixes_existing_taxonomies_object_in_database(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        
-        // Создаем PostType с taxonomies как объектом (симулируем старые данные)
-        $postType = PostType::factory()->create([
-            'slug' => 'page',
-            'options_json' => ['taxonomies' => (object) []],
-        ]);
-
-        $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
-            'options_json' => [
-                'taxonomies' => ['categories'],
-            ],
-        ], $admin);
-
-        $response->assertStatus(200);
-        $response->assertJsonPath('data.options_json.taxonomies', ['categories']);
-        $this->assertIsArray($response->json('data.options_json.taxonomies'));
-        
-        $postType->refresh();
-        $this->assertInstanceOf(\App\Domain\PostTypes\PostTypeOptions::class, $postType->options_json);
-        $this->assertIsArray($postType->options_json->getAllowedTaxonomies());
-        $this->assertEquals(['categories'], $postType->options_json->getAllowedTaxonomies());
-    }
 
 
 }

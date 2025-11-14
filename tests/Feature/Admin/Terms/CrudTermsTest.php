@@ -91,9 +91,9 @@ class CrudTermsTest extends TestCase
     public function test_destroy_requires_force_when_term_attached(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
-        $postType = PostType::factory()->withOptions(['taxonomies' => ['topics']])->create(['slug' => 'article']);
-        $entry = Entry::factory()->forPostType($postType)->create();
         $taxonomy = Taxonomy::factory()->create(['slug' => 'topics']);
+        $postType = PostType::factory()->withOptions(['taxonomies' => [$taxonomy->id]])->create(['slug' => 'article']);
+        $entry = Entry::factory()->forPostType($postType)->create();
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
         $entry->terms()->attach($term->id);
 

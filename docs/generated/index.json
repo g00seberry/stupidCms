@@ -1050,7 +1050,7 @@
             "name": "PostTypeOptions",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\PostTypes\\PostTypeOptions.php",
             "summary": "Value Object для опций типа записи (PostType).",
-            "details": "Представляет типобезопасную структуру options_json для PostType.\nГарантирует валидность данных и централизованную нормализацию.\nСхема:\n- taxonomies: array<string> - массив slug таксономий, разрешённых для этого типа записи\n- fields: array<string, mixed> - произвольные поля (расширяемые)",
+            "details": "Представляет типобезопасную структуру options_json для PostType.\nГарантирует валидность данных и централизованную нормализацию.\nСхема:\n- taxonomies: array<int> - массив id таксономий, разрешённых для этого типа записи\n- fields: array<string, mixed> - произвольные поля (расширяемые)",
             "meta": {
                 "methods": [
                     "fromArray",
@@ -5496,7 +5496,7 @@
                 "name": "PostTypeOptions",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\PostTypes\\PostTypeOptions.php",
                 "summary": "Value Object для опций типа записи (PostType).",
-                "details": "Представляет типобезопасную структуру options_json для PostType.\nГарантирует валидность данных и централизованную нормализацию.\nСхема:\n- taxonomies: array<string> - массив slug таксономий, разрешённых для этого типа записи\n- fields: array<string, mixed> - произвольные поля (расширяемые)",
+                "details": "Представляет типобезопасную структуру options_json для PostType.\nГарантирует валидность данных и централизованную нормализацию.\nСхема:\n- taxonomies: array<int> - массив id таксономий, разрешённых для этого типа записи\n- fields: array<string, mixed> - произвольные поля (расширяемые)",
                 "meta": {
                     "methods": [
                         "fromArray",
@@ -11389,5 +11389,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-14T08:09:35+00:00"
+    "generated_at": "2025-11-14T08:57:05+00:00"
 }

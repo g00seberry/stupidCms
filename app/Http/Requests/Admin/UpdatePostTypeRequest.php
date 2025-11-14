@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Taxonomy;
 use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -104,6 +105,7 @@ class UpdatePostTypeRequest extends FormRequest
     /**
      * Настроить валидатор с дополнительной логикой.
      *
+     * Валидирует taxonomies в options_json: массив целых чисел, существование таксономий.
      * Warnings не блокируют валидацию, только предупреждают.
      *
      * @param \Illuminate\Validation\Validator $validator Валидатор
@@ -111,6 +113,35 @@ class UpdatePostTypeRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
+        $validator->sometimes('options_json.taxonomies', [
+            'array',
+            function ($attribute, $value, $fail) {
+                if (! is_array($value) || ! array_is_list($value)) {
+                    $fail('The taxonomies must be an array.');
+                    return;
+                }
+
+                foreach ($value as $item) {
+                    if (! is_numeric($item) || (int) $item <= 0) {
+                        $fail('The taxonomies must be an array of positive integers.');
+                        return;
+                    }
+                }
+
+                // Проверяем существование таксономий
+                $taxonomyIds = array_map(fn ($item) => (int) $item, $value);
+                $existingIds = Taxonomy::query()
+                    ->whereIn('id', $taxonomyIds)
+                    ->pluck('id')
+                    ->toArray();
+
+                $missingIds = array_diff($taxonomyIds, $existingIds);
+                if (! empty($missingIds)) {
+                    $fail('The following taxonomy IDs do not exist: ' . implode(', ', $missingIds) . '.');
+                }
+            },
+        ], fn ($input) => isset($input['options_json']['taxonomies']));
+
         // Warnings не блокируют валидацию, только предупреждают
         // Реальная передача warnings происходит через метод warnings() в контроллере
     }

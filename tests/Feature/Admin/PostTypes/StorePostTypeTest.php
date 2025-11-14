@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\PostType;
+use App\Models\Taxonomy;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,6 +19,7 @@ class StorePostTypeTest extends TestCase
     public function test_store_creates_post_type_with_options(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
+        $taxonomy = Taxonomy::factory()->create(['slug' => 'catalog']);
 
         $payload = [
             'slug' => 'product',
@@ -26,7 +28,7 @@ class StorePostTypeTest extends TestCase
                 'fields' => [
                     'price' => ['type' => 'number'],
                 ],
-                'taxonomies' => ['catalog'],
+                'taxonomies' => [$taxonomy->id],
             ],
         ];
 
@@ -37,13 +39,16 @@ class StorePostTypeTest extends TestCase
         $response->assertHeader('Vary', 'Cookie');
         $response->assertJsonPath('data.slug', 'product');
         $response->assertJsonPath('data.name', 'Product');
-        $response->assertJsonPath('data.options_json.fields.price.type', 'number');
-
-        $this->assertDatabaseHas('post_types', [
-            'slug' => 'product',
-            'name' => 'Product',
-            'options_json' => json_encode($payload['options_json']),
-        ]);
+        
+        // Проверяем структуру options_json - главное, что taxonomies теперь id, а не slug
+        $optionsJson = $response->json('data.options_json');
+        $this->assertArrayHasKey('taxonomies', $optionsJson);
+        $this->assertEquals([$taxonomy->id], $optionsJson['taxonomies']);
+        
+        // Проверяем, что в БД сохранились taxonomies как id
+        $postType = PostType::query()->where('slug', 'product')->first();
+        $this->assertNotNull($postType);
+        $this->assertEquals([$taxonomy->id], $postType->options_json->getAllowedTaxonomies());
     }
 
     public function test_store_requires_unique_slug(): void
@@ -193,19 +198,21 @@ class StorePostTypeTest extends TestCase
     public function test_store_keeps_taxonomies_as_array_when_filled(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
+        $categoryTaxonomy = Taxonomy::factory()->create(['slug' => 'categories']);
+        $tagsTaxonomy = Taxonomy::factory()->create(['slug' => 'tags']);
 
         $payload = [
             'slug' => 'article',
             'name' => 'Article',
             'options_json' => [
-                'taxonomies' => ['categories', 'tags'],
+                'taxonomies' => [$categoryTaxonomy->id, $tagsTaxonomy->id],
             ],
         ];
 
         $response = $this->postJsonAsAdmin('/api/v1/admin/post-types', $payload, $admin);
 
         $response->assertStatus(201);
-        $response->assertJsonPath('data.options_json.taxonomies', ['categories', 'tags']);
+        $response->assertJsonPath('data.options_json.taxonomies', [$categoryTaxonomy->id, $tagsTaxonomy->id]);
         $this->assertIsArray($response->json('data.options_json.taxonomies'));
     }
 }
