@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "9f9f3fbb-7794-4441-86e4-c567fd885864",
+        "_postman_id": "c8e7bd78-b5a7-4dbb-8f40-dcdc0b37cd7e",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"published\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-14T04:48:01\",\"date_to\":\"2106-12-13\",\"date_field\":\"published\",\"sort\":\"updated_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-14T05:28:30\",\"date_to\":\"2106-12-13\",\"date_field\":\"updated\",\"sort\":\"title.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -825,7 +825,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"video\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"video\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"created_at\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -1364,7 +1364,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"with\",\"page\":87,\"per_page\":4}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"only\",\"page\":87,\"per_page\":4}"
                         },
                         "description": ""
                     },
@@ -1889,7 +1889,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"any\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"any\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -2530,7 +2530,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"label.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
                         },
                         "description": ""
                     },
@@ -3121,7 +3121,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.asc\"}"
                         },
                         "description": ""
                     },
@@ -3761,7 +3761,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-14T04:48:00\",\"to\":\"2106-12-13\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"vxi4:4$\\\/i\"],\"from\":\"2025-11-14T05:28:30\",\"to\":\"2106-12-13\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

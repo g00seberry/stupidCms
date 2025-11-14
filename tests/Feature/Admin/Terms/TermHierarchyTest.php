@@ -325,5 +325,157 @@ class TermHierarchyTest extends TestCase
             'depth' => 2,
         ]);
     }
+
+    public function test_update_preserves_children_when_moving_term(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $taxonomy = Taxonomy::factory()->create([
+            'slug' => 'categories',
+            'hierarchical' => true,
+        ]);
+        $oldParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Old Parent']);
+        $newParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'New Parent']);
+        $term = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Term']);
+        $child = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Child']);
+        
+        // Создаём иерархию: oldParent -> term -> child
+        \DB::table('term_tree')->insert([
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $oldParent->id, 'depth' => 0],
+            ['ancestor_id' => $term->id, 'descendant_id' => $term->id, 'depth' => 0],
+            ['ancestor_id' => $child->id, 'descendant_id' => $child->id, 'depth' => 0],
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $term->id, 'depth' => 1],
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $child->id, 'depth' => 2],
+            ['ancestor_id' => $term->id, 'descendant_id' => $child->id, 'depth' => 1],
+        ]);
+
+        // Переносим term под newParent
+        $response = $this->putJsonAsAdmin("/api/v1/admin/terms/{$term->id}", [
+            'parent_id' => $newParent->id,
+        ], $admin);
+
+        $response->assertOk();
+        
+        // Проверяем, что term теперь под newParent
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $newParent->id,
+            'descendant_id' => $term->id,
+            'depth' => 1,
+        ]);
+        
+        // Проверяем, что child остался под term
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $term->id,
+            'descendant_id' => $child->id,
+            'depth' => 1,
+        ]);
+        
+        // Проверяем, что child теперь под newParent (через term)
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $newParent->id,
+            'descendant_id' => $child->id,
+            'depth' => 2,
+        ]);
+        
+        // Проверяем, что старые связи удалены
+        $this->assertDatabaseMissing('term_tree', [
+            'ancestor_id' => $oldParent->id,
+            'descendant_id' => $term->id,
+        ]);
+        $this->assertDatabaseMissing('term_tree', [
+            'ancestor_id' => $oldParent->id,
+            'descendant_id' => $child->id,
+        ]);
+    }
+
+    public function test_update_preserves_multilevel_children_when_moving_term(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $taxonomy = Taxonomy::factory()->create([
+            'slug' => 'categories',
+            'hierarchical' => true,
+        ]);
+        $oldParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Old Parent']);
+        $newParent = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'New Parent']);
+        $term = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Term']);
+        $child = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Child']);
+        $grandchild = Term::factory()->forTaxonomy($taxonomy)->create(['name' => 'Grandchild']);
+        
+        // Создаём иерархию: oldParent -> term -> child -> grandchild
+        \DB::table('term_tree')->insert([
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $oldParent->id, 'depth' => 0],
+            ['ancestor_id' => $term->id, 'descendant_id' => $term->id, 'depth' => 0],
+            ['ancestor_id' => $child->id, 'descendant_id' => $child->id, 'depth' => 0],
+            ['ancestor_id' => $grandchild->id, 'descendant_id' => $grandchild->id, 'depth' => 0],
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $term->id, 'depth' => 1],
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $child->id, 'depth' => 2],
+            ['ancestor_id' => $oldParent->id, 'descendant_id' => $grandchild->id, 'depth' => 3],
+            ['ancestor_id' => $term->id, 'descendant_id' => $child->id, 'depth' => 1],
+            ['ancestor_id' => $term->id, 'descendant_id' => $grandchild->id, 'depth' => 2],
+            ['ancestor_id' => $child->id, 'descendant_id' => $grandchild->id, 'depth' => 1],
+        ]);
+
+        // Переносим term под newParent
+        $response = $this->putJsonAsAdmin("/api/v1/admin/terms/{$term->id}", [
+            'parent_id' => $newParent->id,
+        ], $admin);
+
+        $response->assertOk();
+        
+        // Проверяем, что term теперь под newParent
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $newParent->id,
+            'descendant_id' => $term->id,
+            'depth' => 1,
+        ]);
+        
+        // Проверяем, что child остался под term
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $term->id,
+            'descendant_id' => $child->id,
+            'depth' => 1,
+        ]);
+        
+        // Проверяем, что grandchild остался под child
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $child->id,
+            'descendant_id' => $grandchild->id,
+            'depth' => 1,
+        ]);
+        
+        // Проверяем, что child теперь под newParent (через term)
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $newParent->id,
+            'descendant_id' => $child->id,
+            'depth' => 2,
+        ]);
+        
+        // Проверяем, что grandchild теперь под newParent (через term и child)
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $newParent->id,
+            'descendant_id' => $grandchild->id,
+            'depth' => 3,
+        ]);
+        
+        // Проверяем, что grandchild остался под term
+        $this->assertDatabaseHas('term_tree', [
+            'ancestor_id' => $term->id,
+            'descendant_id' => $grandchild->id,
+            'depth' => 2,
+        ]);
+        
+        // Проверяем, что старые связи удалены
+        $this->assertDatabaseMissing('term_tree', [
+            'ancestor_id' => $oldParent->id,
+            'descendant_id' => $term->id,
+        ]);
+        $this->assertDatabaseMissing('term_tree', [
+            'ancestor_id' => $oldParent->id,
+            'descendant_id' => $child->id,
+        ]);
+        $this->assertDatabaseMissing('term_tree', [
+            'ancestor_id' => $oldParent->id,
+            'descendant_id' => $grandchild->id,
+        ]);
+    }
 }
 
