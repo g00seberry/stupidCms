@@ -23,26 +23,6 @@
 
 ---
 
-## DefaultEntrySlugService
-**ID:** `domain_service:Entries/DefaultEntrySlugService`
-**Path:** `app/Domain/Entries/DefaultEntrySlugService.php`
-
-Сервис для управления историей slug'ов записей.
-
-### Details
-Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.
-Гарантирует атомарность операций и корректность флага is_current.
-
-### Meta
-- **Methods:** `onCreated`, `onUpdated`, `currentSlug`
-- **Interface:** `App\Domain\Entries\EntrySlugService`
-
-### Tags
-`entry`
-
-
----
-
 ## ElasticsearchSearchClient
 **ID:** `domain_service:Search/Clients/ElasticsearchSearchClient`
 **Path:** `app/Domain/Search/Clients/ElasticsearchSearchClient.php`

@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Контроллер для отображения публичных страниц по плоскому URL /{slug}.
  *
- * Обрабатывает все опубликованные entries (любого типа) через entry_slugs с is_current=true.
+ * Обрабатывает все опубликованные entries (любого типа) по slug из entries.slug.
  * Зарезервированные пути исключаются на уровне роутинга через ReservedPattern.
  *
  * @package App\Http\Controllers
@@ -34,6 +34,8 @@ final class PageController extends Controller
     /**
      * Отобразить страницу по slug.
      *
+     * Ищет entry по slug напрямую из таблицы entries.
+     *
      * @param \App\Http\Requests\PageShowRequest $request Запрос
      * @param string $slug Slug страницы
      * @return \Illuminate\Contracts\View\View Представление
@@ -41,10 +43,8 @@ final class PageController extends Controller
      */
     public function show(PageShowRequest $request, string $slug): View
     {
-        // Ищем entry через entry_slugs с is_current=true (как в документации)
-        // Поддерживаем все типы, не только 'page'
         $entry = Entry::published()
-            ->whereHas('slugs', fn($q) => $q->where('slug', $slug)->where('is_current', true))
+            ->where('slug', $slug)
             ->with('postType')
             ->first();
 

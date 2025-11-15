@@ -53,10 +53,6 @@
                         "type": "belongsTo",
                         "related": "App\\Models\\User"
                     },
-                    "slugs": {
-                        "type": "hasMany",
-                        "related": "App\\Models\\EntrySlug"
-                    },
                     "terms": {
                         "type": "belongsToMany",
                         "related": "App\\Models\\Term"
@@ -93,34 +89,6 @@
             "related": [],
             "tags": [
                 "entrymedia"
-            ]
-        },
-        {
-            "id": "model:App\\Models\\EntrySlug",
-            "type": "model",
-            "name": "EntrySlug",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntrySlug.php",
-            "summary": "Eloquent модель для истории slug'ов записей (EntrySlug).",
-            "details": "Хранит историю изменений slug'ов для каждой записи Entry.\nПозволяет отслеживать все предыдущие URL и обеспечивает редиректы.",
-            "meta": {
-                "table": "entry_slugs",
-                "fillable": [],
-                "guarded": [],
-                "casts": {
-                    "is_current": "boolean",
-                    "created_at": "datetime"
-                },
-                "relations": {
-                    "entry": {
-                        "type": "belongsTo",
-                        "related": "App\\Models\\Entry"
-                    }
-                },
-                "factory": null
-            },
-            "related": [],
-            "tags": [
-                "entryslug"
             ]
         },
         {
@@ -603,27 +571,6 @@
             "related": [],
             "tags": [
                 "auth"
-            ]
-        },
-        {
-            "id": "domain_service:Entries/DefaultEntrySlugService",
-            "type": "domain_service",
-            "name": "DefaultEntrySlugService",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Entries\\DefaultEntrySlugService.php",
-            "summary": "Сервис для управления историей slug'ов записей.",
-            "details": "Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.\nГарантирует атомарность операций и корректность флага is_current.",
-            "meta": {
-                "methods": [
-                    "onCreated",
-                    "onUpdated",
-                    "currentSlug"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Entries\\EntrySlugService"
-            },
-            "related": [],
-            "tags": [
-                "entry"
             ]
         },
         {
@@ -4435,10 +4382,6 @@
                             "type": "belongsTo",
                             "related": "App\\Models\\User"
                         },
-                        "slugs": {
-                            "type": "hasMany",
-                            "related": "App\\Models\\EntrySlug"
-                        },
                         "terms": {
                             "type": "belongsToMany",
                             "related": "App\\Models\\Term"
@@ -4475,34 +4418,6 @@
                 "related": [],
                 "tags": [
                     "entrymedia"
-                ]
-            },
-            {
-                "id": "model:App\\Models\\EntrySlug",
-                "type": "model",
-                "name": "EntrySlug",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntrySlug.php",
-                "summary": "Eloquent модель для истории slug'ов записей (EntrySlug).",
-                "details": "Хранит историю изменений slug'ов для каждой записи Entry.\nПозволяет отслеживать все предыдущие URL и обеспечивает редиректы.",
-                "meta": {
-                    "table": "entry_slugs",
-                    "fillable": [],
-                    "guarded": [],
-                    "casts": {
-                        "is_current": "boolean",
-                        "created_at": "datetime"
-                    },
-                    "relations": {
-                        "entry": {
-                            "type": "belongsTo",
-                            "related": "App\\Models\\Entry"
-                        }
-                    },
-                    "factory": null
-                },
-                "related": [],
-                "tags": [
-                    "entryslug"
                 ]
             },
             {
@@ -4987,27 +4902,6 @@
                 "related": [],
                 "tags": [
                     "auth"
-                ]
-            },
-            {
-                "id": "domain_service:Entries/DefaultEntrySlugService",
-                "type": "domain_service",
-                "name": "DefaultEntrySlugService",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Entries\\DefaultEntrySlugService.php",
-                "summary": "Сервис для управления историей slug'ов записей.",
-                "details": "Отслеживает изменения slug'ов Entry и сохраняет историю в таблице entry_slugs.\nГарантирует атомарность операций и корректность флага is_current.",
-                "meta": {
-                    "methods": [
-                        "onCreated",
-                        "onUpdated",
-                        "currentSlug"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Entries\\EntrySlugService"
-                },
-                "related": [],
-                "tags": [
-                    "entry"
                 ]
             },
             {
@@ -8788,12 +8682,6 @@
                 "summary": "Eloquent модель для записей контента (Entry)."
             },
             {
-                "id": "domain_service:Entries/DefaultEntrySlugService",
-                "type": "domain_service",
-                "name": "DefaultEntrySlugService",
-                "summary": "Сервис для управления историей slug'ов записей."
-            },
-            {
                 "id": "domain_service:Entries/PublishingService",
                 "type": "domain_service",
                 "name": "PublishingService",
@@ -8806,14 +8694,6 @@
                 "type": "model",
                 "name": "EntryMedia",
                 "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia)."
-            }
-        ],
-        "entryslug": [
-            {
-                "id": "model:App\\Models\\EntrySlug",
-                "type": "model",
-                "name": "EntrySlug",
-                "summary": "Eloquent модель для истории slug'ов записей (EntrySlug)."
             }
         ],
         "media": [
@@ -11189,5 +11069,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-14T15:16:35+00:00"
+    "generated_at": "2025-11-15T05:03:30+00:00"
 }

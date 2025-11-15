@@ -459,7 +459,7 @@ class PostTypeController extends Controller
         DB::transaction(function () use ($type, $force) {
             if ($force) {
                 // Каскадно удаляем все Entry (включая soft-deleted)
-                // Связи (entry_term, entry_media, entry_slugs) удаляются автоматически через каскад в БД
+                // Связи (entry_term, entry_media) удаляются автоматически через каскад в БД
                 Entry::query()
                     ->withTrashed()
                     ->where('post_type_id', $type->id)

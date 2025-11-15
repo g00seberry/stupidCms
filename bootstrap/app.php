@@ -15,7 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withCommands([
-        App\Console\Commands\BackfillEntrySlugsCommand::class,
         App\Console\Commands\CleanupExpiredRefreshTokens::class,
         App\Console\Commands\GenerateJwtKeys::class,
         App\Console\Commands\OptionsGetCommand::class,

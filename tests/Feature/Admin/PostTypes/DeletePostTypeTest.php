@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\Entry;
-use App\Models\EntrySlug;
 use App\Models\Media;
 use App\Models\PostType;
 use App\Models\Term;
@@ -102,28 +101,6 @@ class DeletePostTypeTest extends TestCase
         $this->assertDatabaseMissing('entries', ['id' => $entry->id]);
     }
 
-    public function test_destroy_with_force_deletes_entry_slugs(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        $postType = PostType::factory()->create(['slug' => 'article']);
-        $entry = Entry::factory()->forPostType($postType)->create(['slug' => 'test-entry']);
-        
-        // EntrySlug is created automatically by EntryObserver when Entry is created
-        // Verify it exists before deletion
-        $this->assertDatabaseHas('entry_slugs', [
-            'entry_id' => $entry->id,
-            'slug' => $entry->slug,
-            'is_current' => true,
-        ]);
-
-        $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/article?force=1', [], $admin);
-
-        $response->assertStatus(204);
-        
-        $this->assertDatabaseMissing('post_types', ['slug' => 'article']);
-        $this->assertDatabaseMissing('entries', ['id' => $entry->id]);
-        $this->assertDatabaseMissing('entry_slugs', ['entry_id' => $entry->id]);
-    }
 
     public function test_destroy_with_force_deletes_entry_term_relations(): void
     {
@@ -308,14 +285,6 @@ class DeletePostTypeTest extends TestCase
         // Attach all relations
         $entry->terms()->attach($term->id);
         $entry->media()->attach($media->id, ['field_key' => 'hero', 'order' => 0]);
-        
-        // EntrySlug is created automatically by EntryObserver when Entry is created
-        // Create an additional historical slug to test deletion of all slugs
-        EntrySlug::create([
-            'entry_id' => $entry->id,
-            'slug' => 'old-test-entry',
-            'is_current' => false,
-        ]);
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/article?force=1', [], $admin);
 
@@ -325,7 +294,6 @@ class DeletePostTypeTest extends TestCase
         $this->assertDatabaseMissing('entries', ['id' => $entry->id]);
         $this->assertDatabaseMissing('entry_term', ['entry_id' => $entry->id]);
         $this->assertDatabaseMissing('entry_media', ['entry_id' => $entry->id]);
-        $this->assertDatabaseMissing('entry_slugs', ['entry_id' => $entry->id]);
     }
 }
 

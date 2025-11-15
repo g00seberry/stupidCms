@@ -2,15 +2,15 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 148
+**Всего сущностей:** 146
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (18 сущностей)
+Eloquent-модели для работы с БД (17 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (40 сущностей)
+Доменные сервисы, действия, репозитории (39 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -28,19 +28,18 @@ HTTP эндпоинты API (59 сущностей)
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
 - [EntryMedia](./models.md#entrymedia) - Pivot модель для связи записей и медиа-файлов (EntryMedia).
-- [EntrySlug](./models.md#entryslug) - Eloquent модель для истории slug'ов записей (EntrySlug).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
 - [Option](./models.md#option) - Eloquent модель для опций системы (Option).
 - [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
 - [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
 - [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
-- *...и еще 8 сущностей*
+- [Redirect](./models.md#redirect) - Eloquent модель для редиректов (Redirect).
+- *...и еще 7 сущностей*
 
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
-- [DefaultEntrySlugService](./domain-services.md#defaultentryslugservice) - Сервис для управления историей slug'ов записей.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
 - [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
@@ -49,7 +48,8 @@ HTTP эндпоинты API (59 сущностей)
 - [MediaMetadataExtractor](./domain-services.md#mediametadataextractor) - Сервис для извлечения метаданных из медиа-файлов.
 - [MediaStoreAction](./domain-services.md#mediastoreaction) - Действие для сохранения медиа-файла.
 - [NotReservedRoute](./domain-services.md#notreservedroute) - Правило валидации: slug не должен быть зарезервированным путём.
-- *...и еще 30 сущностей*
+- [NullSearchClient](./domain-services.md#nullsearchclient) - Null-реализация SearchClientInterface.
+- *...и еще 29 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (59 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-14 15:16:35
+**Сгенерировано:** 2025-11-15 05:03:30
 
 Для обновления документации выполните:
 ```bash

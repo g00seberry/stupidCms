@@ -64,12 +64,6 @@ class FlatUrlRoutingTest extends TestCase
         $this->assertNotNull($entry->id);
         $this->assertEquals('about', $entry->slug);
 
-        // Проверяем, что Entry находится через entry_slugs с is_current=true
-        $found = Entry::published()
-            ->whereHas('slugs', fn($q) => $q->where('slug', 'about')->where('is_current', true))
-            ->first();
-        $this->assertNotNull($found, 'Entry should be found by slug via entry_slugs');
-
         $response = $this->get('/about');
 
         $response->assertStatus(200);
@@ -377,5 +371,6 @@ class FlatUrlRoutingTest extends TestCase
         $response->assertStatus(301);
         $response->assertRedirect('/about');
     }
+
 }
 

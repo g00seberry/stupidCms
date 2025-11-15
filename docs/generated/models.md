@@ -37,7 +37,6 @@ Eloquent модель для записей контента (Entry).
 - **Relations:**
   - `postType`: belongsTo → `App\Models\PostType`
   - `author`: belongsTo → `App\Models\User`
-  - `slugs`: hasMany → `App\Models\EntrySlug`
   - `terms`: belongsToMany → `App\Models\Term`
   - `media`: belongsToMany → `App\Models\Media`
 - **Factory:** `Database\Factories\EntryFactory`
@@ -64,28 +63,6 @@ field_key (ключ поля в структуре контента) и order (�
 
 ### Tags
 `entrymedia`
-
-
----
-
-## EntrySlug
-**ID:** `model:App\Models\EntrySlug`
-**Path:** `app/Models/EntrySlug.php`
-
-Eloquent модель для истории slug'ов записей (EntrySlug).
-
-### Details
-Хранит историю изменений slug'ов для каждой записи Entry.
-Позволяет отслеживать все предыдущие URL и обеспечивает редиректы.
-
-### Meta
-- **Table:** `entry_slugs`
-- **Casts:** `is_current` => `boolean`, `created_at` => `datetime`
-- **Relations:**
-  - `entry`: belongsTo → `App\Models\Entry`
-
-### Tags
-`entryslug`
 
 
 ---

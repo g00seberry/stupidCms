@@ -6,7 +6,6 @@ namespace App\Observers;
 
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Models\Entry;
-use App\Domain\Entries\EntrySlugService;
 use App\Models\ReservedRoute;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\SlugOptions;
@@ -21,7 +20,6 @@ use Illuminate\Support\Str;
  * - Генерация slug из title (если не указан)
  * - Проверка уникальности slug в рамках типа записи
  * - Проверка зарезервированных путей
- * - Синхронизация истории slug'ов через EntrySlugService
  * - Санитизация HTML полей (body_html, excerpt_html) в data_json
  *
  * @package App\Observers
@@ -29,24 +27,13 @@ use Illuminate\Support\Str;
 class EntryObserver
 {
     /**
-     * Временное хранилище для старых slug'ов (по ID записи).
-     *
-     * Используется для передачи старого slug из updating() в updated().
-     *
-     * @var array<int, string>
-     */
-    private static array $oldSlugs = [];
-
-    /**
      * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
      * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис уникальности slug'ов
-     * @param \App\Domain\Entries\EntrySlugService $entrySlugService Сервис управления slug'ами записей
      * @param \App\Domain\Sanitizer\RichTextSanitizer $sanitizer Санитизатор HTML
      */
     public function __construct(
         private Slugifier $slugifier,
         private UniqueSlugService $uniqueSlugService,
-        private EntrySlugService $entrySlugService,
         private RichTextSanitizer $sanitizer,
     ) {}
 
@@ -68,7 +55,6 @@ class EntryObserver
      * Обработать событие "updating" для Entry.
      *
      * Пересчитывает slug при изменении title или slug.
-     * Сохраняет старый slug для истории (через временное хранилище).
      * Санитизирует HTML поля при изменении data_json.
      *
      * @param \App\Models\Entry $entry Обновляемая запись
@@ -78,51 +64,12 @@ class EntryObserver
     {
         // Если изменился title или slug, пересчитываем
         if ($entry->isDirty(['title', 'slug'])) {
-            // Сохраняем оригинальный slug ДО изменения (для истории)
-            // Важно: читаем getOriginal() до вызова ensureSlug(), так как ensureSlug может изменить slug
-            $oldSlug = $entry->getOriginal('slug');
             $this->ensureSlug($entry);
-            // Сохраняем старый slug во временном хранилище для использования в updated()
-            if ($entry->exists) {
-                self::$oldSlugs[$entry->id] = $oldSlug;
-            }
         }
 
         // Санитизируем richtext поля при изменении data_json
         if ($entry->isDirty('data_json')) {
             $this->sanitizeRichTextFields($entry);
-        }
-    }
-
-    /**
-     * Обработать событие "created" для Entry.
-     *
-     * Синхронизирует slug через EntrySlugService.
-     *
-     * @param \App\Models\Entry $entry Созданная запись
-     * @return void
-     */
-    public function created(Entry $entry): void
-    {
-        $this->entrySlugService->onCreated($entry);
-    }
-
-    /**
-     * Обработать событие "updated" для Entry.
-     *
-     * Синхронизирует историю slug'ов через EntrySlugService при изменении slug.
-     *
-     * @param \App\Models\Entry $entry Обновлённая запись
-     * @return void
-     */
-    public function updated(Entry $entry): void
-    {
-        if ($entry->wasChanged('slug')) {
-            // Используем сохраненный оригинальный slug из временного хранилища
-            $oldSlug = self::$oldSlugs[$entry->id] ?? $entry->getOriginal('slug');
-            $this->entrySlugService->onUpdated($entry, $oldSlug);
-            // Очищаем временное хранилище
-            unset(self::$oldSlugs[$entry->id]);
         }
     }
 

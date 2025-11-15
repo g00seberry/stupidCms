@@ -33,7 +33,6 @@ use Illuminate\Support\Carbon;
  *
  * @property-read \App\Models\PostType $postType Тип записи
  * @property-read \App\Models\User $author Автор записи
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EntrySlug> $slugs История slug'ов записи
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms Привязанные термы (категории, теги)
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $media Привязанные медиа-файлы
  */
@@ -100,16 +99,6 @@ class Entry extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
-    }
-
-    /**
-     * Связь с историей slug'ов записи.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\EntrySlug, \App\Models\Entry>
-     */
-    public function slugs()
-    {
-        return $this->hasMany(EntrySlug::class);
     }
 
     /**
