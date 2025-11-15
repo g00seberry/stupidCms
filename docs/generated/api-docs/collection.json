@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "a448b23a-f276-4c28-aff5-cd63636575bb",
+        "_postman_id": "719e7542-9fa9-48c0-9e43-33c5c670f762",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"draft\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-15T06:07:47\",\"date_to\":\"2106-12-14\",\"date_field\":\"updated\",\"sort\":\"updated_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"trashed\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-15T15:10:47\",\"date_to\":\"2106-12-15\",\"date_field\":\"updated\",\"sort\":\"title.asc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -691,7 +691,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"video\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"created_at\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -960,12 +960,6 @@
                             "header": [],
                             "code": 404,
                             "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555563\",\n    \"media_id\": \"uuid-media\"\n  },\n  \"trace_id\": \"00-11111111222233334444555555555663-1111111122223333-01\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 409,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/media-in-use\",\n  \"title\": \"Media in use\",\n  \"status\": 409,\n  \"code\": \"MEDIA_IN_USE\",\n  \"detail\": \"Media is referenced by content and cannot be deleted.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555564\",\n    \"references\": [\n      {\n        \"entry_id\": 42,\n        \"title\": \"Landing page\"\n      }\n    ]\n  },\n  \"trace_id\": \"00-11111111222233334444555555555664-1111111122223333-01\"\n}",
                             "name": ""
                         },
                         {
@@ -1614,7 +1608,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"name\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"updated_at\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -2255,7 +2249,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"label.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
                         },
                         "description": ""
                     },
@@ -3197,7 +3191,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.desc\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3388,7 +3382,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-15T06:07:46\",\"to\":\"2106-12-14\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-15T15:10:47\",\"to\":\"2106-12-15\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

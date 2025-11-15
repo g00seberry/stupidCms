@@ -129,12 +129,6 @@ return [
             'status' => 500,
             'detail' => 'Failed to reload plugin routes.',
         ],
-        ErrorCode::MEDIA_IN_USE->value => [
-            'uri' => 'https://stupidcms.dev/problems/media-in-use',
-            'title' => 'Media in use',
-            'status' => 409,
-            'detail' => 'Media is referenced by content and cannot be deleted.',
-        ],
         ErrorCode::MEDIA_DOWNLOAD_ERROR->value => [
             'uri' => 'https://stupidcms.dev/problems/media-download-error',
             'title' => 'Failed to download media',

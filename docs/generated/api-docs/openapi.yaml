@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: trashed
                   nullable: true
                   enum:
                     - all
@@ -563,12 +563,12 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-15T06:07:47'
+                  example: '2025-11-15T15:10:47'
                   nullable: true
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2106-12-14'
+                  example: '2106-12-15'
                   nullable: true
                 date_field:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.asc
+                  example: title.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: video
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -2808,7 +2808,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -2825,7 +2825,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -3674,65 +3674,6 @@ paths:
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555663-1111111122223333-01
-        409:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/media-in-use'
-                  title: 'Media in use'
-                  status: 409
-                  code: MEDIA_IN_USE
-                  detail: 'Media is referenced by content and cannot be deleted.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555564
-                    references:
-                      -
-                        entry_id: 42
-                        title: 'Landing page'
-                  trace_id: 00-11111111222233334444555555555664-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/media-in-use'
-                  title:
-                    type: string
-                    example: 'Media in use'
-                  status:
-                    type: integer
-                    example: 409
-                  code:
-                    type: string
-                    example: MEDIA_IN_USE
-                  detail:
-                    type: string
-                    example: 'Media is referenced by content and cannot be deleted.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555564
-                      references:
-                        type: array
-                        example:
-                          -
-                            entry_id: 42
-                            title: 'Landing page'
-                        items:
-                          type: object
-                          properties:
-                            entry_id:
-                              type: integer
-                              example: 42
-                            title:
-                              type: string
-                              example: 'Landing page'
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555664-1111111122223333-01
         429:
           description: ''
           content:
@@ -5988,7 +5929,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -6007,7 +5948,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -6017,7 +5958,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -8241,7 +8182,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.desc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10173,7 +10114,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10459,12 +10400,12 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-15T06:07:46'
+                  example: '2025-11-15T15:10:47'
                   nullable: true
                 to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
-                  example: '2106-12-14'
+                  example: '2106-12-15'
                   nullable: true
                 page:
                   type: integer

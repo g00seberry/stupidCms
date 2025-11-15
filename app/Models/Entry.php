@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
  * Eloquent модель для записей контента (Entry).
  *
  * Представляет единицу контента в CMS: статьи, страницы, посты и т.д.
- * Поддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.
+ * Поддерживает мягкое удаление, публикацию по расписанию, связи с термами.
  *
  * @property int $id
  * @property int $post_type_id ID типа записи
@@ -34,7 +34,6 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\PostType $postType Тип записи
  * @property-read \App\Models\User $author Автор записи
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms Привязанные термы (категории, теги)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Media> $media Привязанные медиа-файлы
  */
 class Entry extends Model
 {
@@ -112,17 +111,6 @@ class Entry extends Model
             ->withTimestamps();
     }
 
-    /**
-     * Связь с медиа-файлами, привязанными к записи.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Media, \App\Models\Entry>
-     */
-    public function media()
-    {
-        return $this->belongsToMany(Media::class, 'entry_media', 'entry_id', 'media_id')
-            ->using(EntryMedia::class)
-            ->withPivot(['field_key', 'order']);
-    }
 
     /**
      * Скоуп: только опубликованные записи.

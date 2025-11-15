@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\Entry;
-use App\Models\Media;
 use App\Models\PostType;
 use App\Models\Term;
 use App\Models\User;
@@ -121,24 +120,6 @@ class DeletePostTypeTest extends TestCase
         $this->assertDatabaseMissing('entry_term', ['entry_id' => $entry->id]);
     }
 
-    public function test_destroy_with_force_deletes_entry_media_relations(): void
-    {
-        $admin = User::factory()->create(['is_admin' => true]);
-        $postType = PostType::factory()->create(['slug' => 'article']);
-        $entry = Entry::factory()->forPostType($postType)->create();
-        $media = Media::factory()->create();
-        
-        // Attach media to entry
-        $entry->media()->attach($media->id, ['field_key' => 'hero', 'order' => 0]);
-
-        $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/article?force=1', [], $admin);
-
-        $response->assertStatus(204);
-        
-        $this->assertDatabaseMissing('post_types', ['slug' => 'article']);
-        $this->assertDatabaseMissing('entries', ['id' => $entry->id]);
-        $this->assertDatabaseMissing('entry_media', ['entry_id' => $entry->id]);
-    }
 
     public function test_destroy_returns_404_for_unknown_slug(): void
     {
@@ -280,11 +261,9 @@ class DeletePostTypeTest extends TestCase
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create(['slug' => 'test-entry']);
         $term = Term::factory()->create();
-        $media = Media::factory()->create();
         
-        // Attach all relations
+        // Attach term relation
         $entry->terms()->attach($term->id);
-        $entry->media()->attach($media->id, ['field_key' => 'hero', 'order' => 0]);
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/article?force=1', [], $admin);
 
@@ -293,7 +272,6 @@ class DeletePostTypeTest extends TestCase
         $this->assertDatabaseMissing('post_types', ['slug' => 'article']);
         $this->assertDatabaseMissing('entries', ['id' => $entry->id]);
         $this->assertDatabaseMissing('entry_term', ['entry_id' => $entry->id]);
-        $this->assertDatabaseMissing('entry_media', ['entry_id' => $entry->id]);
     }
 }
 

@@ -11,7 +11,6 @@ use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
 use App\Http\Resources\Admin\MediaCollection;
 use App\Http\Resources\MediaResource;
-use App\Models\Entry;
 use App\Models\Media;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
@@ -479,23 +478,6 @@ class MediaController extends Controller
      *   },
      *   "trace_id": "00-11111111222233334444555555555663-1111111122223333-01"
      * }
-     * @response status=409 {
-     *   "type": "https://stupidcms.dev/problems/media-in-use",
-     *   "title": "Media in use",
-     *   "status": 409,
-     *   "code": "MEDIA_IN_USE",
-     *   "detail": "Media is referenced by content and cannot be deleted.",
-     *   "meta": {
-     *     "request_id": "11111111-2222-3333-4444-555555555564",
-     *     "references": [
-     *       {
-     *         "entry_id": 42,
-     *         "title": "Landing page"
-     *       }
-     *     ]
-     *   },
-     *   "trace_id": "00-11111111222233334444555555555664-1111111122223333-01"
-     * }
      * @response status=429 {
      *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
      *   "title": "Too Many Requests",
@@ -518,28 +500,6 @@ class MediaController extends Controller
         }
 
         $this->authorize('delete', $media);
-
-        $references = Entry::query()
-            ->select(['entries.id', 'entries.title'])
-            ->whereHas('media', function ($q) use ($media) {
-                $q->where('media.id', $media->id);
-            })
-            ->limit(3)
-            ->get();
-
-        if ($references->isNotEmpty()) {
-            $this->throwError(
-                ErrorCode::MEDIA_IN_USE,
-                meta: [
-                    'references' => $references
-                        ->map(fn ($entry) => [
-                            'entry_id' => $entry->id,
-                            'title' => $entry->title,
-                        ])
-                        ->all(),
-                ],
-            );
-        }
 
         $media->delete();
 

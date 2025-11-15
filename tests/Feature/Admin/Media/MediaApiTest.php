@@ -2,10 +2,8 @@
 
 namespace Tests\Feature\Admin\Media;
 
-use App\Models\Entry;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use App\Models\PostType;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -145,27 +143,6 @@ class MediaApiTest extends TestCase
         $listResponse = $this->getJsonAsAdmin('/api/v1/admin/media', $admin);
         $listResponse->assertOk();
         $listResponse->assertJsonMissing(['id' => $media->id]);
-    }
-
-    public function test_it_returns_409_when_media_is_in_use(): void
-    {
-        Storage::fake('media');
-        $admin = $this->admin(['media.read', 'media.delete']);
-
-        $postType = PostType::factory()->create();
-        $entry = Entry::factory()->forPostType($postType)->create();
-        $media = Media::factory()->create();
-        $entry->media()->attach($media->id, ['field_key' => 'gallery', 'order' => 0]);
-
-        $response = $this->deleteJsonAsAdmin("/api/v1/admin/media/{$media->id}", [], $admin);
-
-        $response->assertStatus(409);
-        $response->assertHeader('Content-Type', 'application/problem+json');
-        $response->assertJson([
-            'type' => $this->typeUri(ErrorCode::MEDIA_IN_USE),
-            'code' => ErrorCode::MEDIA_IN_USE->value,
-            'status' => 409,
-        ]);
     }
 
     public function test_it_restores_soft_deleted_media(): void

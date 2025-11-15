@@ -34,7 +34,7 @@
             "name": "Entry",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Entry.php",
             "summary": "Eloquent модель для записей контента (Entry).",
-            "details": "Представляет единицу контента в CMS: статьи, страницы, посты и т.д.\nПоддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.",
+            "details": "Представляет единицу контента в CMS: статьи, страницы, посты и т.д.\nПоддерживает мягкое удаление, публикацию по расписанию, связи с термами.",
             "meta": {
                 "table": "entries",
                 "fillable": [],
@@ -56,10 +56,6 @@
                     "terms": {
                         "type": "belongsToMany",
                         "related": "App\\Models\\Term"
-                    },
-                    "media": {
-                        "type": "belongsToMany",
-                        "related": "App\\Models\\Media"
                     }
                 },
                 "factory": "Database\\Factories\\EntryFactory"
@@ -67,28 +63,6 @@
             "related": [],
             "tags": [
                 "entry"
-            ]
-        },
-        {
-            "id": "model:App\\Models\\EntryMedia",
-            "type": "model",
-            "name": "EntryMedia",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntryMedia.php",
-            "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia).",
-            "details": "Представляет связь many-to-many между Entry и Media с дополнительными полями:\nfield_key (ключ поля в структуре контента) и order (порядок сортировки).",
-            "meta": {
-                "table": "entry_media",
-                "fillable": [],
-                "guarded": [],
-                "casts": {
-                    "order": "integer"
-                },
-                "relations": [],
-                "factory": null
-            },
-            "related": [],
-            "tags": [
-                "entrymedia"
             ]
         },
         {
@@ -110,10 +84,6 @@
                     "variants": {
                         "type": "hasMany",
                         "related": "App\\Models\\MediaVariant"
-                    },
-                    "entries": {
-                        "type": "belongsToMany",
-                        "related": "App\\Models\\Entry"
                     }
                 },
                 "factory": null
@@ -4363,7 +4333,7 @@
                 "name": "Entry",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Entry.php",
                 "summary": "Eloquent модель для записей контента (Entry).",
-                "details": "Представляет единицу контента в CMS: статьи, страницы, посты и т.д.\nПоддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.",
+                "details": "Представляет единицу контента в CMS: статьи, страницы, посты и т.д.\nПоддерживает мягкое удаление, публикацию по расписанию, связи с термами.",
                 "meta": {
                     "table": "entries",
                     "fillable": [],
@@ -4385,10 +4355,6 @@
                         "terms": {
                             "type": "belongsToMany",
                             "related": "App\\Models\\Term"
-                        },
-                        "media": {
-                            "type": "belongsToMany",
-                            "related": "App\\Models\\Media"
                         }
                     },
                     "factory": "Database\\Factories\\EntryFactory"
@@ -4396,28 +4362,6 @@
                 "related": [],
                 "tags": [
                     "entry"
-                ]
-            },
-            {
-                "id": "model:App\\Models\\EntryMedia",
-                "type": "model",
-                "name": "EntryMedia",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/EntryMedia.php",
-                "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia).",
-                "details": "Представляет связь many-to-many между Entry и Media с дополнительными полями:\nfield_key (ключ поля в структуре контента) и order (порядок сортировки).",
-                "meta": {
-                    "table": "entry_media",
-                    "fillable": [],
-                    "guarded": [],
-                    "casts": {
-                        "order": "integer"
-                    },
-                    "relations": [],
-                    "factory": null
-                },
-                "related": [],
-                "tags": [
-                    "entrymedia"
                 ]
             },
             {
@@ -4439,10 +4383,6 @@
                         "variants": {
                             "type": "hasMany",
                             "related": "App\\Models\\MediaVariant"
-                        },
-                        "entries": {
-                            "type": "belongsToMany",
-                            "related": "App\\Models\\Entry"
                         }
                     },
                     "factory": null
@@ -8688,14 +8628,6 @@
                 "summary": "Сервис для применения правил публикации записей."
             }
         ],
-        "entrymedia": [
-            {
-                "id": "model:App\\Models\\EntryMedia",
-                "type": "model",
-                "name": "EntryMedia",
-                "summary": "Pivot модель для связи записей и медиа-файлов (EntryMedia)."
-            }
-        ],
         "media": [
             {
                 "id": "model:App\\Models\\Media",
@@ -11069,5 +11001,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-15T06:07:51+00:00"
+    "generated_at": "2025-11-15T15:10:51+00:00"
 }

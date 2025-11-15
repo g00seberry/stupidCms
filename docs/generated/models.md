@@ -29,7 +29,7 @@ Eloquent модель для записей контента (Entry).
 
 ### Details
 Представляет единицу контента в CMS: статьи, страницы, посты и т.д.
-Поддерживает мягкое удаление, публикацию по расписанию, связи с термами и медиа.
+Поддерживает мягкое удаление, публикацию по расписанию, связи с термами.
 
 ### Meta
 - **Table:** `entries`
@@ -38,31 +38,10 @@ Eloquent модель для записей контента (Entry).
   - `postType`: belongsTo → `App\Models\PostType`
   - `author`: belongsTo → `App\Models\User`
   - `terms`: belongsToMany → `App\Models\Term`
-  - `media`: belongsToMany → `App\Models\Media`
 - **Factory:** `Database\Factories\EntryFactory`
 
 ### Tags
 `entry`
-
-
----
-
-## EntryMedia
-**ID:** `model:App\Models\EntryMedia`
-**Path:** `app/Models/EntryMedia.php`
-
-Pivot модель для связи записей и медиа-файлов (EntryMedia).
-
-### Details
-Представляет связь many-to-many между Entry и Media с дополнительными полями:
-field_key (ключ поля в структуре контента) и order (порядок сортировки).
-
-### Meta
-- **Table:** `entry_media`
-- **Casts:** `order` => `integer`
-
-### Tags
-`entrymedia`
 
 
 ---
@@ -82,7 +61,6 @@ Eloquent модель для медиа-файлов (Media).
 - **Casts:** `exif_json` => `array`, `deleted_at` => `datetime`
 - **Relations:**
   - `variants`: hasMany → `App\Models\MediaVariant`
-  - `entries`: belongsToMany → `App\Models\Entry`
 
 ### Tags
 `media`

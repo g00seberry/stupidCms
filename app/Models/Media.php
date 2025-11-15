@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * @property \Illuminate\Support\Carbon|null $deleted_at Дата мягкого удаления
  *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MediaVariant> $variants Варианты файла (превью, миниатюры)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries Записи, использующие этот медиа-файл
  */
 class Media extends Model
 {
@@ -75,17 +74,6 @@ class Media extends Model
         return $this->hasMany(MediaVariant::class);
     }
 
-    /**
-     * Связь с записями, использующими этот медиа-файл.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Entry, \App\Models\Media>
-     */
-    public function entries()
-    {
-        return $this->belongsToMany(Entry::class, 'entry_media', 'media_id', 'entry_id')
-            ->using(EntryMedia::class)
-            ->withPivot(['field_key', 'order']);
-    }
 
     /**
      * Определить тип медиа-файла по MIME-типу.

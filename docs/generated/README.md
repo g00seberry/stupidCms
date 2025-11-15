@@ -2,12 +2,12 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 146
+**Всего сущностей:** 145
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (17 сущностей)
+Eloquent-модели для работы с БД (16 сущностей)
 
 ### [Domain Services](./domain-services.md)
 Доменные сервисы, действия, репозитории (39 сущностей)
@@ -27,7 +27,6 @@ HTTP эндпоинты API (59 сущностей)
 
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
-- [EntryMedia](./models.md#entrymedia) - Pivot модель для связи записей и медиа-файлов (EntryMedia).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
 - [Option](./models.md#option) - Eloquent модель для опций системы (Option).
@@ -35,7 +34,8 @@ HTTP эндпоинты API (59 сущностей)
 - [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
 - [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
 - [Redirect](./models.md#redirect) - Eloquent модель для редиректов (Redirect).
-- *...и еще 7 сущностей*
+- [RefreshToken](./models.md#refreshtoken) - Eloquent модель для JWT refresh токенов (RefreshToken).
+- *...и еще 6 сущностей*
 
 ### Domain Services
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (59 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-15 06:07:51
+**Сгенерировано:** 2025-11-15 15:10:51
 
 Для обновления документации выполните:
 ```bash
