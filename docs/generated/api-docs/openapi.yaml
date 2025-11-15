@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-15T05:03:28'
+                  example: '2025-11-15T06:07:47'
                   nullable: true
                 date_to:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.asc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: video
                   nullable: true
                   enum:
                     - image
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -3788,465 +3788,6 @@ paths:
         required: true
         schema:
           type: string
-  '/api/v1/admin/media/{media}/preview':
-    get:
-      summary: 'Генерация временного предпросмотра для изображения.'
-      operationId: ''
-      description: ''
-      parameters:
-        -
-          in: query
-          name: variant
-          description: 'Вариант изображения. Default: thumbnail.'
-          example: consequatur
-          required: false
-          schema:
-            type: string
-            description: 'Вариант изображения. Default: thumbnail.'
-            example: consequatur
-            nullable: false
-      responses:
-        302:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example: {  }
-                properties: {  }
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b01
-                    reason: missing_token
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b01-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b01
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b01-0b0b0b0bb7cb6c30-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b02
-                    media_id: uuid-media
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b02-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Media not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b02
-                      media_id:
-                        type: string
-                        example: uuid-media
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b02-0b0b0b0bb7cb6c30-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: 'Variant foo is not configured.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b03
-                    variant: foo
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b03-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: 'Variant foo is not configured.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b03
-                      variant:
-                        type: string
-                        example: foo
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b03-0b0b0b0bb7cb6c30-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b05
-                    retry_after: 60
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b05-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b05
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b05-0b0b0b0bb7cb6c30-01
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/media-variant-error'
-                  title: 'Failed to generate media variant'
-                  status: 500
-                  code: MEDIA_VARIANT_ERROR
-                  detail: 'Failed to generate media variant.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b04
-                    variant: thumbnail
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b04-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/media-variant-error'
-                  title:
-                    type: string
-                    example: 'Failed to generate media variant'
-                  status:
-                    type: integer
-                    example: 500
-                  code:
-                    type: string
-                    example: MEDIA_VARIANT_ERROR
-                  detail:
-                    type: string
-                    example: 'Failed to generate media variant.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b04
-                      variant:
-                        type: string
-                        example: thumbnail
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b04-0b0b0b0bb7cb6c30-01
-      tags:
-        - 'Admin ▸ Media'
-    parameters:
-      -
-        in: path
-        name: media
-        description: 'UUID медиа.'
-        example: uuid-media
-        required: true
-        schema:
-          type: string
-  '/api/v1/admin/media/{media}/download':
-    get:
-      summary: 'Получение временной ссылки на оригинал.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        302:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example: {  }
-                properties: {  }
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b06
-                    reason: missing_token
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b06-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b06
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b06-0b0b0b0bb7cb6c30-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b07
-                    media_id: uuid-media
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b07-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Media not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b07
-                      media_id:
-                        type: string
-                        example: uuid-media
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b07-0b0b0b0bb7cb6c30-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b09
-                    retry_after: 60
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b09-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b09
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b09-0b0b0b0bb7cb6c30-01
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/media-download-error'
-                  title: 'Failed to generate download URL'
-                  status: 500
-                  code: MEDIA_DOWNLOAD_ERROR
-                  detail: 'Failed to generate download URL.'
-                  meta:
-                    request_id: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b08
-                    media_id: uuid-media
-                  trace_id: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b08-0b0b0b0bb7cb6c30-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/media-download-error'
-                  title:
-                    type: string
-                    example: 'Failed to generate download URL'
-                  status:
-                    type: integer
-                    example: 500
-                  code:
-                    type: string
-                    example: MEDIA_DOWNLOAD_ERROR
-                  detail:
-                    type: string
-                    example: 'Failed to generate download URL.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b08
-                      media_id:
-                        type: string
-                        example: uuid-media
-                  trace_id:
-                    type: string
-                    example: 00-0b0b0b0bb7cb6c30033f3f5e0b0b0b08-0b0b0b0bb7cb6c30-01
-      tags:
-        - 'Admin ▸ Media'
-    parameters:
-      -
-        in: path
-        name: media
-        description: 'UUID медиа.'
-        example: uuid-media
-        required: true
-        schema:
-          type: string
   '/api/v1/admin/media/{media}/restore':
     post:
       summary: 'Восстановление удалённого медиа.'
@@ -4779,7 +4320,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -6447,7 +5988,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -6466,7 +6007,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -8700,7 +8241,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: label.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10683,6 +10224,44 @@ paths:
         required: true
         schema:
           type: integer
+  '/api/v1/admin/media/{media}/preview':
+    get:
+      summary: 'Генерация временного предпросмотра для изображения.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/media/{media}/download':
+    get:
+      summary: 'Получение временной ссылки на оригинал.'
+      operationId: ''
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
   /api/v1/search:
     get:
       summary: 'Поиск опубликованного контента с фильтрами.'
@@ -10880,7 +10459,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-15T05:03:27'
+                  example: '2025-11-15T06:07:46'
                   nullable: true
                 to:
                   type: string

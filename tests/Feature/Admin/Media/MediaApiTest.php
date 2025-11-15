@@ -215,8 +215,9 @@ class MediaApiTest extends TestCase
         $media = Media::findOrFail($mediaId);
 
         $previewResponse = $this->getJsonAsAdmin("/api/v1/admin/media/{$mediaId}/preview?variant=thumbnail", $admin);
-        $previewResponse->assertStatus(302);
-        $this->assertNotNull($previewResponse->headers->get('Location'));
+        // Для локального диска (fake) возвращается файл напрямую (200), для облачных - редирект (302)
+        $previewResponse->assertStatus(200);
+        $previewResponse->assertHeader('Content-Type', 'image/jpeg');
 
         $variant = MediaVariant::where('media_id', $mediaId)
             ->where('variant', 'thumbnail')
@@ -226,8 +227,9 @@ class MediaApiTest extends TestCase
         Storage::disk('media')->assertExists($variant->path);
 
         $downloadResponse = $this->getJsonAsAdmin("/api/v1/admin/media/{$mediaId}/download", $admin);
-        $downloadResponse->assertStatus(302);
-        $this->assertNotNull($downloadResponse->headers->get('Location'));
+        // Для локального диска (fake) возвращается файл напрямую (200), для облачных - редирект (302)
+        $downloadResponse->assertStatus(200);
+        $downloadResponse->assertHeader('Content-Type', 'image/jpeg');
     }
 
     private function admin(array $permissions): User

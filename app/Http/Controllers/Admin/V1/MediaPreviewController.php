@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
 /**
@@ -40,6 +41,9 @@ class MediaPreviewController extends Controller
     /**
      * Генерация временного предпросмотра для изображения.
      *
+     * Для локального диска возвращает файл напрямую через response()->file().
+     * Для облачных дисков (S3) возвращает редирект на подписанный URL.
+     *
      * @group Admin ▸ Media
      * @name Preview media
      * @authenticated
@@ -47,6 +51,7 @@ class MediaPreviewController extends Controller
      * @queryParam variant string Вариант изображения. Default: thumbnail.
      * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
      * @response status=302 {}
+     * @response status=200 file
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
@@ -108,7 +113,14 @@ class MediaPreviewController extends Controller
      *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b05-0b0b0b0bb7cb6c30-01"
      * }
      */
-    public function preview(Request $request, string $mediaId): RedirectResponse
+    /**
+     * Генерация временного предпросмотра для изображения.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param string $mediaId UUID медиа-файла
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function preview(Request $request, string $mediaId): RedirectResponse|BinaryFileResponse
     {
         $variant = $request->query('variant', 'thumbnail');
 
@@ -140,13 +152,14 @@ class MediaPreviewController extends Controller
             );
         }
 
-        $url = $this->temporaryUrl($media->disk, $variantModel->path);
-
-        return redirect()->away($url);
+        return $this->serveFile($media->disk, $variantModel->path);
     }
 
     /**
      * Получение временной ссылки на оригинал.
+     *
+     * Для локального диска возвращает файл напрямую через response()->file().
+     * Для облачных дисков (S3) возвращает редирект на подписанный URL.
      *
      * @group Admin ▸ Media
      * @name Download media
@@ -154,6 +167,7 @@ class MediaPreviewController extends Controller
      * @urlParam media string required UUID медиа. Example: uuid-media
      * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
      * @response status=302 {}
+     * @response status=200 file
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
@@ -203,7 +217,13 @@ class MediaPreviewController extends Controller
      *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b09-0b0b0b0bb7cb6c30-01"
      * }
      */
-    public function download(string $mediaId): RedirectResponse
+    /**
+     * Получение временной ссылки на оригинал.
+     *
+     * @param string $mediaId UUID медиа-файла
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download(string $mediaId): RedirectResponse|BinaryFileResponse
     {
         $media = Media::withTrashed()->find($mediaId);
 
@@ -214,7 +234,7 @@ class MediaPreviewController extends Controller
         $this->authorize('view', $media);
 
         try {
-            $url = $this->temporaryUrl($media->disk, $media->path);
+            return $this->serveFile($media->disk, $media->path);
         } catch (Throwable $exception) {
             report($exception);
 
@@ -224,36 +244,52 @@ class MediaPreviewController extends Controller
                 ['media_id' => $mediaId],
             );
         }
-
-        return redirect()->away($url);
     }
 
     /**
-     * Создать временный подписанный URL для медиа-файла.
+     * Отдать файл через контроллер или редирект на подписанный URL.
      *
-     * Пытается создать временный URL с TTL из конфига. При ошибке
-     * возвращает обычный URL.
+     * Для локального диска возвращает файл напрямую через response()->file().
+     * Для облачных дисков (S3) возвращает редирект на подписанный URL.
      *
-     * @param string $diskName Имя диска (storage)
+     * @param string $diskName Имя диска
      * @param string $path Путь к файлу
-     * @return string URL для доступа к файлу
-     * @throws \InvalidArgumentException Если не удалось создать URL
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \InvalidArgumentException Если не удалось создать URL или файл не найден
      */
-    private function temporaryUrl(string $diskName, string $path): string
+    private function serveFile(string $diskName, string $path): RedirectResponse|BinaryFileResponse
     {
         $disk = Storage::disk($diskName);
         $expiry = now('UTC')->addSeconds((int) config('media.signed_ttl', 300));
 
+        // Для локального диска отдаём файл напрямую
+        // Проверяем, поддерживает ли диск метод path() (только для локальных дисков)
         try {
-            return $disk->temporaryUrl($path, $expiry);
+            $filePath = $disk->path($path);
+
+            if (! file_exists($filePath)) {
+                throw new InvalidArgumentException('File not found on disk.');
+            }
+
+            return response()->file($filePath);
         } catch (Throwable) {
+            // Если path() не поддерживается (облачные диски), используем подписанный URL
+        }
+
+        // Для облачных дисков используем подписанный URL
+        try {
+            $url = $disk->temporaryUrl($path, $expiry);
+
+            return redirect()->away($url);
+        } catch (Throwable) {
+            // Fallback на обычный URL для облачных дисков
             $url = $disk->url($path);
 
             if (! $url) {
                 throw new InvalidArgumentException('Unable to generate media URL.');
             }
 
-            return $url;
+            return redirect()->away($url);
         }
     }
 
