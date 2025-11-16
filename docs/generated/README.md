@@ -2,15 +2,15 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 148
+**Всего сущностей:** 153
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (15 сущностей)
+Eloquent-модели для работы с БД (16 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (43 сущностей)
+Доменные сервисы, действия, репозитории (47 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -28,14 +28,14 @@ HTTP эндпоинты API (59 сущностей)
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
+- [MediaMetadata](./models.md#mediametadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).
 - [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
 - [Option](./models.md#option) - Eloquent модель для опций системы (Option).
 - [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
 - [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
 - [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
 - [Redirect](./models.md#redirect) - Eloquent модель для редиректов (Redirect).
-- [RefreshToken](./models.md#refreshtoken) - Eloquent модель для JWT refresh токенов (RefreshToken).
-- *...и еще 5 сущностей*
+- *...и еще 6 сущностей*
 
 ### Domain Services
 
@@ -43,13 +43,13 @@ HTTP эндпоинты API (59 сущностей)
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
+- [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
+- [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
 - [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
+- [GlideImageProcessor](./domain-services.md#glideimageprocessor) - Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека).
+- [ImageRef](./domain-services.md#imageref) - Opaque-хэндл изображения для разных бэкендов.
 - [IndexManager](./domain-services.md#indexmanager) - Менеджер для управления индексами поиска.
-- [JwtService](./domain-services.md#jwtservice) - Service for issuing and verifying JWT access and refresh tokens.
-- [ListMediaAction](./domain-services.md#listmediaaction) - CQRS-действие: выборка списка медиа по параметрам запроса.
-- [MediaMetadataExtractor](./domain-services.md#mediametadataextractor) - Сервис для извлечения метаданных из медиа-файлов.
-- [MediaQuery](./domain-services.md#mediaquery) - Value Object для параметров выборки медиа.
-- *...и еще 33 сущностей*
+- *...и еще 37 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (59 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-16 15:07:11
+**Сгенерировано:** 2025-11-16 16:41:38
 
 Для обновления документации выполните:
 ```bash

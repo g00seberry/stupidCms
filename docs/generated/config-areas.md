@@ -183,8 +183,8 @@ Configuration: Mail
 Configuration: Media
 
 ### Meta
-- **Keys:** `disk`, `max_upload_mb`, `allowed_mimes`, `variants`, `thumbnail`, `max`, `medium`, `signed_ttl`, `path_strategy`
-- **Sections:** `allowed_mimes`, `variants`, `thumbnail`, `medium`
+- **Keys:** `disk`, `max_upload_mb`, `allowed_mimes`, `variants`, `thumbnail`, `max`, `medium`, `signed_ttl`, `path_strategy`, `image`, `driver`, `quality`, `glide_driver`, `metadata`, `ffprobe`, `enabled`, `binary`
+- **Sections:** `allowed_mimes`, `variants`, `thumbnail`, `medium`, `image`, `metadata`, `ffprobe`
 
 ### Tags
 `config`, `media`

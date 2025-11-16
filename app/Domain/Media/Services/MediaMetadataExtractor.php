@@ -17,11 +17,15 @@ use Illuminate\Http\UploadedFile;
  */
 class MediaMetadataExtractor
 {
-    /**
-     * @param \App\Domain\Media\Images\ImageProcessor $images Процессор изображений
-     */
     public function __construct(
-        private readonly ImageProcessor $images
+        /**
+         * @var \App\Domain\Media\Images\ImageProcessor Процессор изображений
+         */
+        private readonly ImageProcessor $images,
+        /**
+         * @var iterable<\App\Domain\Media\Services\MediaMetadataPlugin> Плагины для извлечения медиаметаданных
+         */
+        private readonly iterable $plugins = []
     ) {
     }
 
@@ -29,11 +33,22 @@ class MediaMetadataExtractor
      * Извлечь метаданные из медиа-файла.
      *
      * Для изображений извлекает размеры и EXIF данные (если доступны).
-     * Для видео/аудио может извлекать длительность (не реализовано).
+     * Для видео/аудио использует плагины (ffprobe/mediainfo и т.п.) для извлечения
+     * длительности и дополнительных нормализованных полей.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
      * @param string|null $mime MIME-тип файла (если не указан, определяется автоматически)
-     * @return array{width: ?int, height: ?int, duration_ms: ?int, exif: ?array} Метаданные файла
+     * @return array{
+     *     width: ?int,
+     *     height: ?int,
+     *     duration_ms: ?int,
+     *     exif: ?array,
+     *     bitrate_kbps?: ?int,
+     *     frame_rate?: ?float,
+     *     frame_count?: ?int,
+     *     video_codec?: ?string,
+     *     audio_codec?: ?string
+     * } Метаданные файла
      */
     public function extract(UploadedFile $file, ?string $mime = null): array
     {
@@ -43,6 +58,11 @@ class MediaMetadataExtractor
         $height = null;
         $duration = null;
         $exif = null;
+        $bitrateKbps = null;
+        $frameRate = null;
+        $frameCount = null;
+        $videoCodec = null;
+        $audioCodec = null;
 
         if (is_string($mime) && str_starts_with($mime, 'image/')) {
             // Пытаемся через универсальный процессор (даже если GD не поддерживает формат)
@@ -67,6 +87,49 @@ class MediaMetadataExtractor
             if ($this->canReadExif($mime)) {
                 $exif = $this->readExif($file);
             }
+        } elseif (is_string($mime) && (str_starts_with($mime, 'video/') || str_starts_with($mime, 'audio/'))) {
+            $path = $file->getRealPath() ?: $file->getPathname() ?: null;
+
+            if (is_string($path) && $path !== '') {
+                foreach ($this->plugins as $plugin) {
+                    if (! $plugin instanceof MediaMetadataPlugin) {
+                        continue;
+                    }
+
+                    if (! $plugin->supports($mime)) {
+                        continue;
+                    }
+
+                    $pluginData = $plugin->extract($path);
+
+                    if (isset($pluginData['duration_ms']) && is_int($pluginData['duration_ms'])) {
+                        $duration = $pluginData['duration_ms'];
+                    }
+
+                    if (isset($pluginData['bitrate_kbps']) && is_int($pluginData['bitrate_kbps'])) {
+                        $bitrateKbps = $pluginData['bitrate_kbps'];
+                    }
+
+                    if (isset($pluginData['frame_rate']) && is_float($pluginData['frame_rate'])) {
+                        $frameRate = $pluginData['frame_rate'];
+                    }
+
+                    if (isset($pluginData['frame_count']) && is_int($pluginData['frame_count'])) {
+                        $frameCount = $pluginData['frame_count'];
+                    }
+
+                    if (isset($pluginData['video_codec']) && is_string($pluginData['video_codec'])) {
+                        $videoCodec = $pluginData['video_codec'];
+                    }
+
+                    if (isset($pluginData['audio_codec']) && is_string($pluginData['audio_codec'])) {
+                        $audioCodec = $pluginData['audio_codec'];
+                    }
+
+                    // Используем первый успешный плагин.
+                    break;
+                }
+            }
         }
 
         return [
@@ -74,6 +137,11 @@ class MediaMetadataExtractor
             'height' => $height,
             'duration_ms' => $duration,
             'exif' => $exif,
+            'bitrate_kbps' => $bitrateKbps,
+            'frame_rate' => $frameRate,
+            'frame_count' => $frameCount,
+            'video_codec' => $videoCodec,
+            'audio_codec' => $audioCodec,
         ];
     }
 

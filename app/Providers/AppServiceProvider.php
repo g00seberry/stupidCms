@@ -7,6 +7,9 @@ namespace App\Providers;
 use App\Domain\Media\Images\GdImageProcessor;
 use App\Domain\Media\Images\GlideImageProcessor;
 use App\Domain\Media\Images\ImageProcessor;
+use App\Domain\Media\Services\FfprobeMediaMetadataPlugin;
+use App\Domain\Media\Services\MediaMetadataExtractor;
+use App\Domain\Media\Services\MediaMetadataPlugin;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
@@ -101,6 +104,24 @@ class AppServiceProvider extends ServiceProvider
                 default:
                     return new GdImageProcessor();
             }
+        });
+
+        // MediaMetadataExtractor с плагинами (ffprobe по умолчанию)
+        $this->app->singleton(MediaMetadataExtractor::class, function ($app): MediaMetadataExtractor {
+            /** @var \App\Domain\Media\Images\ImageProcessor $images */
+            $images = $app->make(ImageProcessor::class);
+
+            $plugins = [];
+
+            if (config('media.metadata.ffprobe.enabled', true)) {
+                $binary = config('media.metadata.ffprobe.binary', null);
+                $plugins[] = new FfprobeMediaMetadataPlugin($binary);
+            }
+
+            /** @var iterable<MediaMetadataPlugin> $pluginsIterable */
+            $pluginsIterable = $plugins;
+
+            return new MediaMetadataExtractor($images, $pluginsIterable);
         });
     }
 

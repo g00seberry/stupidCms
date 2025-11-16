@@ -6,6 +6,7 @@ namespace Tests\Unit\Media;
 
 use App\Domain\Media\Images\GdImageProcessor;
 use App\Domain\Media\Services\MediaMetadataExtractor;
+use App\Domain\Media\Services\MediaMetadataPlugin;
 use Illuminate\Http\UploadedFile;
 use PHPUnit\Framework\TestCase;
 
@@ -32,6 +33,48 @@ final class MediaMetadataExtractorTest extends TestCase
         $this->assertSame(3, $meta['width']);
         $this->assertSame(5, $meta['height']);
         $this->assertNull($meta['exif']);
+    }
+
+    public function test_uses_plugins_for_video_duration_and_bitrate(): void
+    {
+        $images = new GdImageProcessor();
+
+        $plugin = new class implements MediaMetadataPlugin {
+            public function supports(string $mime): bool
+            {
+                return $mime === 'video/mp4';
+            }
+
+            public function extract(string $path): array
+            {
+                return [
+                    'duration_ms' => 123_456,
+                    'bitrate_kbps' => 789,
+                    'frame_rate' => 29.97,
+                    'frame_count' => 3_700,
+                    'video_codec' => 'h264',
+                    'audio_codec' => 'aac',
+                ];
+            }
+        };
+
+        $extractor = new MediaMetadataExtractor($images, [$plugin]);
+
+        $tmp = tempnam(sys_get_temp_dir(), 'vid');
+        file_put_contents($tmp, 'dummy');
+
+        $file = new UploadedFile($tmp, 't.mp4', 'video/mp4', null, true);
+        $meta = $extractor->extract($file, 'video/mp4');
+
+        $this->assertNull($meta['width']);
+        $this->assertNull($meta['height']);
+        $this->assertNull($meta['exif']);
+        $this->assertSame(123_456, $meta['duration_ms']);
+        $this->assertSame(789, $meta['bitrate_kbps']);
+        $this->assertSame(29.97, $meta['frame_rate']);
+        $this->assertSame(3_700, $meta['frame_count']);
+        $this->assertSame('h264', $meta['video_codec']);
+        $this->assertSame('aac', $meta['audio_codec']);
     }
 }
 

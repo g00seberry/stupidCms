@@ -59,17 +59,24 @@
 
 ### 4. Нет извлечения длительности видео/аудио
 
-**Проблема**:  
-- В документации указано: "Для видео/аудио: длительность (не реализовано)"
-- `MediaMetadataExtractor@extract` всегда возвращает `duration_ms => null`
+**Статус: исправлено**  
+
+**Изначальная проблема**:  
+- В документации было указано: "Для видео/аудио: длительность (не реализовано)"
+- `MediaMetadataExtractor@extract` всегда возвращал `duration_ms => null`
 - Результат: неполные метаданные для медиа
 
-**Где**: `app/Domain/Media/Services/MediaMetadataExtractor.php:35,54`
+**Текущее состояние**:  
+- Добавлен плагин `FfprobeMediaMetadataPlugin`, реализующий интерфейс `MediaMetadataPlugin`
+- `MediaMetadataExtractor` для `video/*` и `audio/*` использует плагины для извлечения:
+  - `duration_ms`, `bitrate_kbps`, `frame_rate`, `frame_count`, `video_codec`, `audio_codec`
+- Нормализованные AV-метаданные сохраняются в отдельной таблице `media_metadata` через модель `MediaMetadata`
 
-**Решение**:  
-- Использовать `getid3/getid3` или `ffprobe` для извлечения длительности
-- Добавить опциональную зависимость в `composer.json`
-- Обрабатывать ошибки gracefully (если библиотека недоступна)
+**Где**:  
+- `app/Domain/Media/Services/MediaMetadataExtractor.php`
+- `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`
+- `app/Domain/Media/Actions/MediaStoreAction.php`
+- `app/Models/MediaMetadata.php`
 
 ---
 

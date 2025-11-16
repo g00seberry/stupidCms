@@ -28,5 +28,12 @@ return [
         // Настройки для Glide/Intervention
         'glide_driver' => env('MEDIA_GLIDE_DRIVER', 'gd'), // gd | imagick
     ],
+
+    'metadata' => [
+        'ffprobe' => [
+            'enabled' => env('MEDIA_FFPROBE_ENABLED', true),
+            'binary' => env('MEDIA_FFPROBE_BINARY', null),
+        ],
+    ],
 ];
 

@@ -431,11 +431,12 @@ collection: uploads
 
 3. **Извлечение метаданных** (`MediaMetadataExtractor@extract`):
 
-    - Для изображений: размеры (`getimagesize`), EXIF данные
-    - Для видео/аудио: длительность (не реализовано)
+    - Для изображений: размеры (`getimagesize`/`ImageProcessor`), EXIF данные
+    - Для видео/аудио: длительность, битрейт, частота и количество кадров, кодеки через плагины (ffprobe)
 
 4. **Создание записи** (`Media::create`):
-    - Сохранение всех метаданных в БД
+    - Сохранение основных метаданных в таблице `media` (`width`, `height`, `duration_ms`, `exif_json`)
+    - Сохранение нормализованных AV-метаданных в таблице `media_metadata` (через `MediaMetadata`)
 
 **Файл**: `app/Domain/Media/Actions/MediaStoreAction.php`
 
@@ -481,8 +482,14 @@ collection: uploads
 [
     'width' => ?int,           // Ширина (для изображений)
     'height' => ?int,          // Высота (для изображений)
-    'duration_ms' => ?int,     // Длительность (для видео/аудио, не реализовано)
+    'duration_ms' => ?int,     // Длительность (для видео/аудио)
     'exif' => ?array,          // EXIF данные (для JPEG/TIFF)
+    // Дополнительно для видео/аудио (через плагины):
+    'bitrate_kbps' => ?int,
+    'frame_rate' => ?float,
+    'frame_count' => ?int,
+    'video_codec' => ?string,
+    'audio_codec' => ?string,
 ]
 ```
 

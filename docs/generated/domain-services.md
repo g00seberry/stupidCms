@@ -79,6 +79,45 @@
 
 ---
 
+## FfprobeMediaMetadataPlugin
+**ID:** `domain_service:Media/Services/FfprobeMediaMetadataPlugin`
+**Path:** `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`
+
+Плагин метаданных, основанный на утилите ffprobe.
+
+### Details
+Использует ffprobe для извлечения длительности, битрейта и фреймов
+для аудио/видео файлов и возвращает нормализованный набор полей.
+
+### Meta
+- **Methods:** `supports`, `extract`
+- **Interface:** `App\Domain\Media\Services\MediaMetadataPlugin`
+
+### Tags
+`media`, `service`
+
+
+---
+
+## GdImageProcessor
+**ID:** `domain_service:Media/Images/GdImageProcessor`
+**Path:** `app/Domain/Media/Images/GdImageProcessor.php`
+
+Реализация ImageProcessor на базе GD.
+
+### Details
+Ограничения: отсутствует поддержка HEIC/AVIF для open/encode.
+
+### Meta
+- **Methods:** `open`, `width`, `height`, `resize`, `encode`, `destroy`, `supports`
+- **Interface:** `App\Domain\Media\Images\ImageProcessor`
+
+### Tags
+`media`, `image`
+
+
+---
+
 ## GenerateVariantJob
 **ID:** `domain_service:Media/Jobs/GenerateVariantJob`
 **Path:** `app/Domain/Media/Jobs/GenerateVariantJob.php`
@@ -90,11 +129,50 @@ Job для генерации варианта медиа-файла.
 в фоновом режиме через очередь.
 
 ### Meta
-- **Methods:** `handle`, `dispatch`, `dispatchIf`, `dispatchUnless`, `dispatchSync`, `dispatchAfterResponse`, `withChain`, `attempts`, `delete`, `fail`, `release`, `withFakeQueueInteractions`, `assertDeleted`, `assertNotDeleted`, `assertFailed`, `assertFailedWith`, `assertNotFailed`, `assertReleased`, `assertNotReleased`, `setJob`, `onConnection`, `onQueue`, `onGroup`, `withDeduplicator`, `allOnConnection`, `allOnQueue`, `delay`, `withoutDelay`, `afterCommit`, `beforeCommit`, `through`, `chain`, `prependToChain`, `appendToChain`, `dispatchNextJobInChain`, `invokeChainCatchCallbacks`, `assertHasChain`, `assertDoesntHaveChain`, `restoreModel`
+- **Methods:** `backoff`, `handle`, `dispatch`, `dispatchIf`, `dispatchUnless`, `dispatchSync`, `dispatchAfterResponse`, `withChain`, `attempts`, `delete`, `fail`, `release`, `withFakeQueueInteractions`, `assertDeleted`, `assertNotDeleted`, `assertFailed`, `assertFailedWith`, `assertNotFailed`, `assertReleased`, `assertNotReleased`, `setJob`, `onConnection`, `onQueue`, `onGroup`, `withDeduplicator`, `allOnConnection`, `allOnQueue`, `delay`, `withoutDelay`, `afterCommit`, `beforeCommit`, `through`, `chain`, `prependToChain`, `appendToChain`, `dispatchNextJobInChain`, `invokeChainCatchCallbacks`, `assertHasChain`, `assertDoesntHaveChain`, `restoreModel`
 - **Interface:** `Illuminate\Contracts\Queue\ShouldQueue`
 
 ### Tags
 `media`, `job`
+
+
+---
+
+## GlideImageProcessor
+**ID:** `domain_service:Media/Images/GlideImageProcessor`
+**Path:** `app/Domain/Media/Images/GlideImageProcessor.php`
+
+Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека).
+
+### Details
+Поддержка форматов зависит от выбранного драйвера (gd/imagick).
+Для AVIF/HEIC нужен imagick с соответствующими кодеками.
+
+### Meta
+- **Methods:** `open`, `width`, `height`, `resize`, `encode`, `destroy`, `supports`
+- **Dependencies:** `Intervention\Image\ImageManager`
+- **Interface:** `App\Domain\Media\Images\ImageProcessor`
+
+### Tags
+`media`, `image`
+
+
+---
+
+## ImageRef
+**ID:** `domain_service:Media/Images/ImageRef`
+**Path:** `app/Domain/Media/Images/ImageProcessor.php`
+
+Opaque-хэндл изображения для разных бэкендов.
+
+### Details
+Нельзя полагаться на конкретный тип $native вне драйвера.
+
+### Meta
+
+
+### Tags
+`media`, `image`
 
 
 ---
@@ -165,6 +243,7 @@ CQRS-действие: выборка списка медиа по параме�
 
 ### Meta
 - **Methods:** `extract`
+- **Dependencies:** `App\Domain\Media\Images\ImageProcessor`
 
 ### Tags
 `media`, `service`
@@ -196,7 +275,8 @@ Value Object для параметров выборки медиа.
 
 ### Details
 Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
-создание записи Media в БД.
+создание записи Media в БД и (опционально) нормализованных AV-метаданных
+в отдельной таблице.
 
 ### Meta
 - **Methods:** `execute`
@@ -256,11 +336,12 @@ Null-реализация SearchClientInterface.
 Сервис для генерации вариантов медиа-файлов по требованию.
 
 ### Details
-Генерирует варианты изображений (thumbnails, resized) на лету,
-используя GD для обработки изображений.
+Генерирует варианты изображений (thumbnails, resized) на лету
+через абстракцию ImageProcessor (gd/imagick/glide/external).
 
 ### Meta
 - **Methods:** `ensureVariant`, `generateVariant`
+- **Dependencies:** `App\Domain\Media\Images\ImageProcessor`
 
 ### Tags
 `media`, `service`

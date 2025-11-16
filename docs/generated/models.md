@@ -58,12 +58,35 @@ Eloquent модель для медиа-файлов (Media).
 
 ### Meta
 - **Table:** `media`
-- **Casts:** `exif_json` => `array`, `deleted_at` => `datetime`
+- **Casts:** `exif_json` => `array`, `deleted_at` => `datetime`, `width` => `integer`, `height` => `integer`, `duration_ms` => `integer`, `size_bytes` => `integer`
 - **Relations:**
   - `variants`: hasMany → `App\Models\MediaVariant`
+  - `metadata`: hasOne → `App\Models\MediaMetadata`
 
 ### Tags
 `media`
+
+
+---
+
+## MediaMetadata
+**ID:** `model:App\Models\MediaMetadata`
+**Path:** `app/Models/MediaMetadata.php`
+
+Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).
+
+### Details
+Хранит технические характеристики аудио/видео:
+длительность, битрейт, частоту кадров, количество кадров и кодеки.
+
+### Meta
+- **Table:** `media_metadata`
+- **Casts:** `duration_ms` => `integer`, `bitrate_kbps` => `integer`, `frame_rate` => `float`, `frame_count` => `integer`
+- **Relations:**
+  - `media`: belongsTo → `App\Models\Media`
+
+### Tags
+`mediametadata`
 
 
 ---
@@ -80,6 +103,7 @@ Eloquent модель для вариантов медиа-файлов (MediaVa
 
 ### Meta
 - **Table:** `media_variants`
+- **Casts:** `status` => `App\Domain\Media\MediaVariantStatus`, `started_at` => `immutable_datetime`, `finished_at` => `immutable_datetime`
 - **Relations:**
   - `media`: belongsTo → `App\Models\Media`
 

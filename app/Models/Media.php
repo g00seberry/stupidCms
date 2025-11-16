@@ -16,16 +16,26 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
  *
  * @property string $id ULID идентификатор
- * @property string $filename Имя файла
  * @property string $path Путь к файлу в хранилище
+ * @property string $disk Диск хранения
+ * @property string $original_name Оригинальное имя файла
+ * @property string|null $ext Расширение файла
  * @property string $mime MIME-тип файла
- * @property int $size Размер файла в байтах
+ * @property int $size_bytes Размер файла в байтах
+ * @property int|null $width Ширина изображения в пикселях
+ * @property int|null $height Высота изображения в пикселях
+ * @property int|null $duration_ms Длительность медиа в миллисекундах
+ * @property string|null $checksum_sha256 SHA256 checksum файла
  * @property array|null $exif_json EXIF метаданные (для изображений)
+ * @property string|null $title Заголовок медиа
+ * @property string|null $alt Альтернативный текст
+ * @property string|null $collection Коллекция/группа медиа
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at Дата мягкого удаления
  *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MediaVariant> $variants Варианты файла (превью, миниатюры)
+ * @property-read \App\Models\MediaMetadata|null $metadata Нормализованные AV-метаданные
  */
 class Media extends Model
 {
@@ -62,6 +72,10 @@ class Media extends Model
     protected $casts = [
         'exif_json' => 'array',
         'deleted_at' => 'datetime',
+        'width' => 'integer',
+        'height' => 'integer',
+        'duration_ms' => 'integer',
+        'size_bytes' => 'integer',
     ];
 
     /**
@@ -72,6 +86,16 @@ class Media extends Model
     public function variants()
     {
         return $this->hasMany(MediaVariant::class);
+    }
+
+    /**
+     * Нормализованные AV-метаданные (один-к-одному).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\MediaMetadata, \App\Models\Media>
+     */
+    public function metadata()
+    {
+        return $this->hasOne(MediaMetadata::class);
     }
 
 

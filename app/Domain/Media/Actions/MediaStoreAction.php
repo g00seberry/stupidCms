@@ -6,6 +6,7 @@ namespace App\Domain\Media\Actions;
 
 use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Models\Media;
+use App\Models\MediaMetadata;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,8 @@ use RuntimeException;
  * Действие для сохранения медиа-файла.
  *
  * Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
- * создание записи Media в БД.
+ * создание записи Media в БД и (опционально) нормализованных AV-метаданных
+ * в отдельной таблице.
  *
  * @package App\Domain\Media\Actions
  */
@@ -33,8 +35,10 @@ class MediaStoreAction
     /**
      * Выполнить сохранение медиа-файла.
      *
-     * Сохраняет файл на диск, извлекает метаданные (размеры, EXIF и т.д.),
+     * Сохраняет файл на диск, извлекает метаданные (размеры, EXIF, длительность и т.д.),
      * вычисляет checksum и создаёт запись Media в БД.
+     * Для видео/аудио дополнительно сохраняет нормализованные AV-метаданные
+     * (длительность, битрейт, кадры, кодеки) в таблице media_metadata.
      * Если файл с таким же checksum уже существует, возвращает существующую запись
      * без сохранения дубликата на диск (дедупликация).
      *
@@ -89,7 +93,7 @@ class MediaStoreAction
 
         $metadata = $this->metadataExtractor->extract($file, $mime);
 
-        return Media::create([
+        $media = Media::create([
             'disk' => $diskName,
             'path' => $path,
             'original_name' => $originalName,
@@ -105,6 +109,31 @@ class MediaStoreAction
             'alt' => $payload['alt'] ?? null,
             'collection' => $payload['collection'] ?? null,
         ]);
+
+        // Нормализованные AV-метаданные (для видео/аудио).
+        $normalized = [
+            'duration_ms' => $metadata['duration_ms'],
+            'bitrate_kbps' => $metadata['bitrate_kbps'] ?? null,
+            'frame_rate' => $metadata['frame_rate'] ?? null,
+            'frame_count' => $metadata['frame_count'] ?? null,
+            'video_codec' => $metadata['video_codec'] ?? null,
+            'audio_codec' => $metadata['audio_codec'] ?? null,
+        ];
+
+        $hasNormalized = array_reduce(
+            $normalized,
+            static fn (bool $carry, $value): bool => $carry || $value !== null,
+            false
+        );
+
+        if ($hasNormalized) {
+            MediaMetadata::create(array_merge(
+                ['media_id' => $media->id],
+                $normalized
+            ));
+        }
+
+        return $media;
     }
 
     /**

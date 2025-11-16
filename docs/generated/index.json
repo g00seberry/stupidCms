@@ -78,12 +78,20 @@
                 "guarded": [],
                 "casts": {
                     "exif_json": "array",
-                    "deleted_at": "datetime"
+                    "deleted_at": "datetime",
+                    "width": "integer",
+                    "height": "integer",
+                    "duration_ms": "integer",
+                    "size_bytes": "integer"
                 },
                 "relations": {
                     "variants": {
                         "type": "hasMany",
                         "related": "App\\Models\\MediaVariant"
+                    },
+                    "metadata": {
+                        "type": "hasOne",
+                        "related": "App\\Models\\MediaMetadata"
                     }
                 },
                 "factory": null
@@ -91,6 +99,36 @@
             "related": [],
             "tags": [
                 "media"
+            ]
+        },
+        {
+            "id": "model:App\\Models\\MediaMetadata",
+            "type": "model",
+            "name": "MediaMetadata",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaMetadata.php",
+            "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).",
+            "details": "Хранит технические характеристики аудио/видео:\nдлительность, битрейт, частоту кадров, количество кадров и кодеки.",
+            "meta": {
+                "table": "media_metadata",
+                "fillable": [],
+                "guarded": [],
+                "casts": {
+                    "duration_ms": "integer",
+                    "bitrate_kbps": "integer",
+                    "frame_rate": "float",
+                    "frame_count": "integer"
+                },
+                "relations": {
+                    "media": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Media"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "mediametadata"
             ]
         },
         {
@@ -104,7 +142,11 @@
                 "table": "media_variants",
                 "fillable": [],
                 "guarded": [],
-                "casts": [],
+                "casts": {
+                    "status": "App\\Domain\\Media\\MediaVariantStatus",
+                    "started_at": "immutable_datetime",
+                    "finished_at": "immutable_datetime"
+                },
                 "relations": {
                     "media": {
                         "type": "belongsTo",
@@ -561,7 +603,7 @@
             "name": "MediaStoreAction",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
             "summary": "Действие для сохранения медиа-файла.",
-            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД.",
+            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.",
             "meta": {
                 "methods": [
                     "execute"
@@ -619,6 +661,78 @@
             ]
         },
         {
+            "id": "domain_service:Media/Images/GdImageProcessor",
+            "type": "domain_service",
+            "name": "GdImageProcessor",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Images\\GdImageProcessor.php",
+            "summary": "Реализация ImageProcessor на базе GD.",
+            "details": "Ограничения: отсутствует поддержка HEIC/AVIF для open/encode.",
+            "meta": {
+                "methods": [
+                    "open",
+                    "width",
+                    "height",
+                    "resize",
+                    "encode",
+                    "destroy",
+                    "supports"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "image"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Images/GlideImageProcessor",
+            "type": "domain_service",
+            "name": "GlideImageProcessor",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Images\\GlideImageProcessor.php",
+            "summary": "Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека).",
+            "details": "Поддержка форматов зависит от выбранного драйвера (gd/imagick).\nДля AVIF/HEIC нужен imagick с соответствующими кодеками.",
+            "meta": {
+                "methods": [
+                    "open",
+                    "width",
+                    "height",
+                    "resize",
+                    "encode",
+                    "destroy",
+                    "supports"
+                ],
+                "dependencies": [
+                    "Intervention\\Image\\ImageManager"
+                ],
+                "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "image"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Images/ImageRef",
+            "type": "domain_service",
+            "name": "ImageRef",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Images\\ImageProcessor.php",
+            "summary": "Opaque-хэндл изображения для разных бэкендов.",
+            "details": "Нельзя полагаться на конкретный тип $native вне драйвера.",
+            "meta": {
+                "methods": [],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "image"
+            ]
+        },
+        {
             "id": "domain_service:Media/Jobs/GenerateVariantJob",
             "type": "domain_service",
             "name": "GenerateVariantJob",
@@ -627,6 +741,7 @@
             "details": "Выполняет генерацию варианта изображения (thumbnail, resize и т.д.)\nв фоновом режиме через очередь.",
             "meta": {
                 "methods": [
+                    "backoff",
                     "handle",
                     "dispatch",
                     "dispatchIf",
@@ -706,6 +821,27 @@
             ]
         },
         {
+            "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
+            "type": "domain_service",
+            "name": "FfprobeMediaMetadataPlugin",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\FfprobeMediaMetadataPlugin.php",
+            "summary": "Плагин метаданных, основанный на утилите ffprobe.",
+            "details": "Использует ffprobe для извлечения длительности, битрейта и фреймов\nдля аудио/видео файлов и возвращает нормализованный набор полей.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "extract"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
             "id": "domain_service:Media/Services/MediaMetadataExtractor",
             "type": "domain_service",
             "name": "MediaMetadataExtractor",
@@ -716,7 +852,9 @@
                 "methods": [
                     "extract"
                 ],
-                "dependencies": [],
+                "dependencies": [
+                    "App\\Domain\\Media\\Images\\ImageProcessor"
+                ],
                 "interface": null
             },
             "related": [],
@@ -731,13 +869,15 @@
             "name": "OnDemandVariantService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\OnDemandVariantService.php",
             "summary": "Сервис для генерации вариантов медиа-файлов по требованию.",
-            "details": "Генерирует варианты изображений (thumbnails, resized) на лету,\nиспользуя GD для обработки изображений.",
+            "details": "Генерирует варианты изображений (thumbnails, resized) на лету\nчерез абстракцию ImageProcessor (gd/imagick/glide/external).",
             "meta": {
                 "methods": [
                     "ensureVariant",
                     "generateVariant"
                 ],
-                "dependencies": [],
+                "dependencies": [
+                    "App\\Domain\\Media\\Images\\ImageProcessor"
+                ],
                 "interface": null
             },
             "related": [],
@@ -2196,13 +2336,24 @@
                     "max",
                     "medium",
                     "signed_ttl",
-                    "path_strategy"
+                    "path_strategy",
+                    "image",
+                    "driver",
+                    "quality",
+                    "glide_driver",
+                    "metadata",
+                    "ffprobe",
+                    "enabled",
+                    "binary"
                 ],
                 "sections": [
                     "allowed_mimes",
                     "variants",
                     "thumbnail",
-                    "medium"
+                    "medium",
+                    "image",
+                    "metadata",
+                    "ffprobe"
                 ]
             },
             "related": [],
@@ -4440,12 +4591,20 @@
                     "guarded": [],
                     "casts": {
                         "exif_json": "array",
-                        "deleted_at": "datetime"
+                        "deleted_at": "datetime",
+                        "width": "integer",
+                        "height": "integer",
+                        "duration_ms": "integer",
+                        "size_bytes": "integer"
                     },
                     "relations": {
                         "variants": {
                             "type": "hasMany",
                             "related": "App\\Models\\MediaVariant"
+                        },
+                        "metadata": {
+                            "type": "hasOne",
+                            "related": "App\\Models\\MediaMetadata"
                         }
                     },
                     "factory": null
@@ -4453,6 +4612,36 @@
                 "related": [],
                 "tags": [
                     "media"
+                ]
+            },
+            {
+                "id": "model:App\\Models\\MediaMetadata",
+                "type": "model",
+                "name": "MediaMetadata",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaMetadata.php",
+                "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).",
+                "details": "Хранит технические характеристики аудио/видео:\nдлительность, битрейт, частоту кадров, количество кадров и кодеки.",
+                "meta": {
+                    "table": "media_metadata",
+                    "fillable": [],
+                    "guarded": [],
+                    "casts": {
+                        "duration_ms": "integer",
+                        "bitrate_kbps": "integer",
+                        "frame_rate": "float",
+                        "frame_count": "integer"
+                    },
+                    "relations": {
+                        "media": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Media"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "mediametadata"
                 ]
             },
             {
@@ -4466,7 +4655,11 @@
                     "table": "media_variants",
                     "fillable": [],
                     "guarded": [],
-                    "casts": [],
+                    "casts": {
+                        "status": "App\\Domain\\Media\\MediaVariantStatus",
+                        "started_at": "immutable_datetime",
+                        "finished_at": "immutable_datetime"
+                    },
                     "relations": {
                         "media": {
                             "type": "belongsTo",
@@ -4925,7 +5118,7 @@
                 "name": "MediaStoreAction",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
                 "summary": "Действие для сохранения медиа-файла.",
-                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД.",
+                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.",
                 "meta": {
                     "methods": [
                         "execute"
@@ -4983,6 +5176,78 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Images/GdImageProcessor",
+                "type": "domain_service",
+                "name": "GdImageProcessor",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Images\\GdImageProcessor.php",
+                "summary": "Реализация ImageProcessor на базе GD.",
+                "details": "Ограничения: отсутствует поддержка HEIC/AVIF для open/encode.",
+                "meta": {
+                    "methods": [
+                        "open",
+                        "width",
+                        "height",
+                        "resize",
+                        "encode",
+                        "destroy",
+                        "supports"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "image"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Images/GlideImageProcessor",
+                "type": "domain_service",
+                "name": "GlideImageProcessor",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Images\\GlideImageProcessor.php",
+                "summary": "Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека).",
+                "details": "Поддержка форматов зависит от выбранного драйвера (gd/imagick).\nДля AVIF/HEIC нужен imagick с соответствующими кодеками.",
+                "meta": {
+                    "methods": [
+                        "open",
+                        "width",
+                        "height",
+                        "resize",
+                        "encode",
+                        "destroy",
+                        "supports"
+                    ],
+                    "dependencies": [
+                        "Intervention\\Image\\ImageManager"
+                    ],
+                    "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "image"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Images/ImageRef",
+                "type": "domain_service",
+                "name": "ImageRef",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Images\\ImageProcessor.php",
+                "summary": "Opaque-хэндл изображения для разных бэкендов.",
+                "details": "Нельзя полагаться на конкретный тип $native вне драйвера.",
+                "meta": {
+                    "methods": [],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "image"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
@@ -4991,6 +5256,7 @@
                 "details": "Выполняет генерацию варианта изображения (thumbnail, resize и т.д.)\nв фоновом режиме через очередь.",
                 "meta": {
                     "methods": [
+                        "backoff",
                         "handle",
                         "dispatch",
                         "dispatchIf",
@@ -5070,6 +5336,27 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "FfprobeMediaMetadataPlugin",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\FfprobeMediaMetadataPlugin.php",
+                "summary": "Плагин метаданных, основанный на утилите ffprobe.",
+                "details": "Использует ffprobe для извлечения длительности, битрейта и фреймов\nдля аудио/видео файлов и возвращает нормализованный набор полей.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "extract"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
@@ -5080,7 +5367,9 @@
                     "methods": [
                         "extract"
                     ],
-                    "dependencies": [],
+                    "dependencies": [
+                        "App\\Domain\\Media\\Images\\ImageProcessor"
+                    ],
                     "interface": null
                 },
                 "related": [],
@@ -5095,13 +5384,15 @@
                 "name": "OnDemandVariantService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\OnDemandVariantService.php",
                 "summary": "Сервис для генерации вариантов медиа-файлов по требованию.",
-                "details": "Генерирует варианты изображений (thumbnails, resized) на лету,\nиспользуя GD для обработки изображений.",
+                "details": "Генерирует варианты изображений (thumbnails, resized) на лету\nчерез абстракцию ImageProcessor (gd/imagick/glide/external).",
                 "meta": {
                     "methods": [
                         "ensureVariant",
                         "generateVariant"
                     ],
-                    "dependencies": [],
+                    "dependencies": [
+                        "App\\Domain\\Media\\Images\\ImageProcessor"
+                    ],
                     "interface": null
                 },
                 "related": [],
@@ -6564,13 +6855,24 @@
                         "max",
                         "medium",
                         "signed_ttl",
-                        "path_strategy"
+                        "path_strategy",
+                        "image",
+                        "driver",
+                        "quality",
+                        "glide_driver",
+                        "metadata",
+                        "ffprobe",
+                        "enabled",
+                        "binary"
                     ],
                     "sections": [
                         "allowed_mimes",
                         "variants",
                         "thumbnail",
-                        "medium"
+                        "medium",
+                        "image",
+                        "metadata",
+                        "ffprobe"
                     ]
                 },
                 "related": [],
@@ -8786,6 +9088,24 @@
                 "summary": "Реализация MediaRepository на базе Eloquent."
             },
             {
+                "id": "domain_service:Media/Images/GdImageProcessor",
+                "type": "domain_service",
+                "name": "GdImageProcessor",
+                "summary": "Реализация ImageProcessor на базе GD."
+            },
+            {
+                "id": "domain_service:Media/Images/GlideImageProcessor",
+                "type": "domain_service",
+                "name": "GlideImageProcessor",
+                "summary": "Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека)."
+            },
+            {
+                "id": "domain_service:Media/Images/ImageRef",
+                "type": "domain_service",
+                "name": "ImageRef",
+                "summary": "Opaque-хэндл изображения для разных бэкендов."
+            },
+            {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
@@ -8796,6 +9116,12 @@
                 "type": "domain_service",
                 "name": "MediaQuery",
                 "summary": "Value Object для параметров выборки медиа."
+            },
+            {
+                "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "FfprobeMediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на утилите ffprobe."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -8862,6 +9188,14 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.restore",
                 "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+            }
+        ],
+        "mediametadata": [
+            {
+                "id": "model:App\\Models\\MediaMetadata",
+                "type": "model",
+                "name": "MediaMetadata",
+                "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata)."
             }
         ],
         "mediavariant": [
@@ -9102,6 +9436,26 @@
                 "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
             }
         ],
+        "image": [
+            {
+                "id": "domain_service:Media/Images/GdImageProcessor",
+                "type": "domain_service",
+                "name": "GdImageProcessor",
+                "summary": "Реализация ImageProcessor на базе GD."
+            },
+            {
+                "id": "domain_service:Media/Images/GlideImageProcessor",
+                "type": "domain_service",
+                "name": "GlideImageProcessor",
+                "summary": "Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека)."
+            },
+            {
+                "id": "domain_service:Media/Images/ImageRef",
+                "type": "domain_service",
+                "name": "ImageRef",
+                "summary": "Opaque-хэндл изображения для разных бэкендов."
+            }
+        ],
         "job": [
             {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
@@ -9117,6 +9471,12 @@
             }
         ],
         "service": [
+            {
+                "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "FfprobeMediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на утилите ffprobe."
+            },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
                 "type": "domain_service",
@@ -11155,5 +11515,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-16T15:07:11+00:00"
+    "generated_at": "2025-11-16T16:41:38+00:00"
 }
