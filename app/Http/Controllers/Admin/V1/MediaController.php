@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Media\Actions\MediaStoreAction;
+use App\Domain\Media\EloquentMediaRepository;
+use App\Domain\Media\MediaDeletedFilter;
+use App\Domain\Media\MediaQuery;
+use App\Domain\Media\MediaRepository;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
@@ -35,9 +39,11 @@ class MediaController extends Controller
 
     /**
      * @param \App\Domain\Media\Actions\MediaStoreAction $storeAction Действие для сохранения медиа-файлов
+     * @param \App\Domain\Media\MediaRepository $mediaRepository Репозиторий выборки медиа
      */
     public function __construct(
-        private readonly MediaStoreAction $storeAction
+        private readonly MediaStoreAction $storeAction,
+        private readonly MediaRepository $mediaRepository,
     ) {
     }
 
@@ -121,62 +127,32 @@ class MediaController extends Controller
     {
         $this->authorize('viewAny', Media::class);
 
-        $validated = $request->validated();
-        $query = Media::query();
-
-        match ($validated['deleted'] ?? null) {
-            'with' => $query->withTrashed(),
-            'only' => $query->onlyTrashed(),
-            default => null,
+        $v = $request->validated();
+        $deletedFilter = match ($v['deleted'] ?? null) {
+            'with' => MediaDeletedFilter::WithDeleted,
+            'only' => MediaDeletedFilter::OnlyDeleted,
+            default => MediaDeletedFilter::DefaultOnlyNotDeleted,
         };
 
-        if (! empty($validated['q'])) {
-            $term = $validated['q'];
-            $query->where(function ($builder) use ($term) {
-                $builder->where('title', 'like', "%{$term}%")
-                    ->orWhere('original_name', 'like', "%{$term}%");
-            });
-        }
-
-        if (! empty($validated['kind'])) {
-            $kind = $validated['kind'];
-            if ($kind === 'document') {
-                $query->where(function ($builder) {
-                    $builder->where('mime', 'not like', 'image/%')
-                        ->where('mime', 'not like', 'video/%')
-                        ->where('mime', 'not like', 'audio/%');
-                });
-            } else {
-                $prefix = match ($kind) {
-                    'image' => 'image/%',
-                    'video' => 'video/%',
-                    'audio' => 'audio/%',
-                    default => null,
-                };
-
-                if ($prefix) {
-                    $query->where('mime', 'like', $prefix);
-                }
-            }
-        }
-
-        if (! empty($validated['mime'])) {
-            $query->where('mime', 'like', $validated['mime'].'%');
-        }
-
-        if (! empty($validated['collection'])) {
-            $query->where('collection', $validated['collection']);
-        }
-
-        $sort = $validated['sort'] ?? 'created_at';
-        $order = $validated['order'] ?? 'desc';
-
-        $query->orderBy($sort, $order);
-
-        $perPage = (int) ($validated['per_page'] ?? 15);
+        $sort = $v['sort'] ?? 'created_at';
+        $order = $v['order'] ?? 'desc';
+        $perPage = (int) ($v['per_page'] ?? 15);
         $perPage = max(1, min(100, $perPage));
+        $page = (int) ($v['page'] ?? (int) ($request->query('page', 1)));
 
-        $paginator = $query->paginate($perPage)->appends($validated);
+        $mq = new MediaQuery(
+            search: $v['q'] ?? null,
+            kind: $v['kind'] ?? null,
+            mimePrefix: $v['mime'] ?? null,
+            collection: $v['collection'] ?? null,
+            deletedFilter: $deletedFilter,
+            sort: $sort,
+            order: $order,
+            page: $page,
+            perPage: $perPage,
+        );
+
+        $paginator = $this->mediaRepository->paginate($mq)->appends($v);
 
         return new MediaCollection($paginator);
     }

@@ -241,27 +241,6 @@ Eloquent модель для зарезервированных путей (Rese
 
 ---
 
-## RouteReservation
-**ID:** `model:App\Models\RouteReservation`
-**Path:** `app/Models/RouteReservation.php`
-
-Eloquent модель для зарезервированных путей (RouteReservation).
-
-### Details
-Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.
-
-### Meta
-- **Table:** `reserved_routes`
-- **Fillable:** `path`, `kind`, `source`
-- **Guarded:** `*`
-- **Casts:** `created_at` => `datetime`, `updated_at` => `datetime`
-
-### Tags
-`routereservation`
-
-
----
-
 ## Taxonomy
 **ID:** `model:App\Models\Taxonomy`
 **Path:** `app/Models/Taxonomy.php`

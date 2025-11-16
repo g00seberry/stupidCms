@@ -44,6 +44,22 @@
 
 ---
 
+## EloquentMediaRepository
+**ID:** `domain_service:Media/EloquentMediaRepository`
+**Path:** `app/Domain/Media/EloquentMediaRepository.php`
+
+Реализация MediaRepository на базе Eloquent.
+
+### Meta
+- **Methods:** `buildQuery`, `paginate`, `get`
+- **Interface:** `App\Domain\Media\MediaRepository`
+
+### Tags
+`media`
+
+
+---
+
 ## EntryToSearchDoc
 **ID:** `domain_service:Search/Transformers/EntryToSearchDoc`
 **Path:** `app/Domain/Search/Transformers/EntryToSearchDoc.php`
@@ -136,6 +152,22 @@ Uses HS256 (HMAC with SHA-256) algorithm with a secret key.
 
 ### Tags
 `media`, `service`
+
+
+---
+
+## MediaQuery
+**ID:** `domain_service:Media/MediaQuery`
+**Path:** `app/Domain/Media/MediaQuery.php`
+
+Value Object для параметров выборки медиа.
+
+### Meta
+- **Methods:** `search`, `kind`, `mimePrefix`, `collection`, `deletedFilter`, `sort`, `order`, `page`, `perPage`
+- **Dependencies:** `App\Domain\Media\MediaDeletedFilter`
+
+### Tags
+`media`
 
 
 ---

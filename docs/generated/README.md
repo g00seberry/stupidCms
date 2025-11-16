@@ -2,15 +2,15 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 145
+**Всего сущностей:** 146
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (16 сущностей)
+Eloquent-модели для работы с БД (15 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (39 сущностей)
+Доменные сервисы, действия, репозитории (41 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -35,21 +35,21 @@ HTTP эндпоинты API (59 сущностей)
 - [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
 - [Redirect](./models.md#redirect) - Eloquent модель для редиректов (Redirect).
 - [RefreshToken](./models.md#refreshtoken) - Eloquent модель для JWT refresh токенов (RefreshToken).
-- *...и еще 6 сущностей*
+- *...и еще 5 сущностей*
 
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
+- [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
 - [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
 - [IndexManager](./domain-services.md#indexmanager) - Менеджер для управления индексами поиска.
 - [JwtService](./domain-services.md#jwtservice) - Service for issuing and verifying JWT access and refresh tokens.
 - [MediaMetadataExtractor](./domain-services.md#mediametadataextractor) - Сервис для извлечения метаданных из медиа-файлов.
+- [MediaQuery](./domain-services.md#mediaquery) - Value Object для параметров выборки медиа.
 - [MediaStoreAction](./domain-services.md#mediastoreaction) - Действие для сохранения медиа-файла.
-- [NotReservedRoute](./domain-services.md#notreservedroute) - Правило валидации: slug не должен быть зарезервированным путём.
-- [NullSearchClient](./domain-services.md#nullsearchclient) - Null-реализация SearchClientInterface.
-- *...и еще 29 сущностей*
+- *...и еще 31 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (59 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-15 15:34:24
+**Сгенерировано:** 2025-11-16 15:05:38
 
 Для обновления документации выполните:
 ```bash

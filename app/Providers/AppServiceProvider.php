@@ -7,6 +7,8 @@ namespace App\Providers;
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
 use App\Domain\Auth\RefreshTokenRepositoryImpl;
+use App\Domain\Media\EloquentMediaRepository;
+use App\Domain\Media\MediaRepository;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
@@ -46,6 +48,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OptionsRepository::class, function ($app) {
             return new OptionsRepository($app->make(CacheRepository::class));
         });
+
+        // MediaRepository
+        $this->app->singleton(MediaRepository::class, EloquentMediaRepository::class);
 
         // Регистрация TemplateResolver
         // Используем scoped вместо singleton для совместимости с Octane/Swoole

@@ -316,35 +316,6 @@
             ]
         },
         {
-            "id": "model:App\\Models\\RouteReservation",
-            "type": "model",
-            "name": "RouteReservation",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/RouteReservation.php",
-            "summary": "Eloquent модель для зарезервированных путей (RouteReservation).",
-            "details": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.",
-            "meta": {
-                "table": "reserved_routes",
-                "fillable": [
-                    "path",
-                    "kind",
-                    "source"
-                ],
-                "guarded": [
-                    "*"
-                ],
-                "casts": {
-                    "created_at": "datetime",
-                    "updated_at": "datetime"
-                },
-                "relations": [],
-                "factory": null
-            },
-            "related": [],
-            "tags": [
-                "routereservation"
-            ]
-        },
-        {
             "id": "model:App\\Models\\Taxonomy",
             "type": "model",
             "name": "Taxonomy",
@@ -585,6 +556,27 @@
             ]
         },
         {
+            "id": "domain_service:Media/EloquentMediaRepository",
+            "type": "domain_service",
+            "name": "EloquentMediaRepository",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\EloquentMediaRepository.php",
+            "summary": "Реализация MediaRepository на базе Eloquent.",
+            "details": null,
+            "meta": {
+                "methods": [
+                    "buildQuery",
+                    "paginate",
+                    "get"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\MediaRepository"
+            },
+            "related": [],
+            "tags": [
+                "media"
+            ]
+        },
+        {
             "id": "domain_service:Media/Jobs/GenerateVariantJob",
             "type": "domain_service",
             "name": "GenerateVariantJob",
@@ -640,6 +632,35 @@
             "tags": [
                 "media",
                 "job"
+            ]
+        },
+        {
+            "id": "domain_service:Media/MediaQuery",
+            "type": "domain_service",
+            "name": "MediaQuery",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\MediaQuery.php",
+            "summary": "Value Object для параметров выборки медиа.",
+            "details": null,
+            "meta": {
+                "methods": [
+                    "search",
+                    "kind",
+                    "mimePrefix",
+                    "collection",
+                    "deletedFilter",
+                    "sort",
+                    "order",
+                    "page",
+                    "perPage"
+                ],
+                "dependencies": [
+                    "App\\Domain\\Media\\MediaDeletedFilter"
+                ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media"
             ]
         },
         {
@@ -4615,35 +4636,6 @@
                 ]
             },
             {
-                "id": "model:App\\Models\\RouteReservation",
-                "type": "model",
-                "name": "RouteReservation",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/RouteReservation.php",
-                "summary": "Eloquent модель для зарезервированных путей (RouteReservation).",
-                "details": "Эта модель оставлена для обратной совместимости и указывает на таблицу reserved_routes.",
-                "meta": {
-                    "table": "reserved_routes",
-                    "fillable": [
-                        "path",
-                        "kind",
-                        "source"
-                    ],
-                    "guarded": [
-                        "*"
-                    ],
-                    "casts": {
-                        "created_at": "datetime",
-                        "updated_at": "datetime"
-                    },
-                    "relations": [],
-                    "factory": null
-                },
-                "related": [],
-                "tags": [
-                    "routereservation"
-                ]
-            },
-            {
                 "id": "model:App\\Models\\Taxonomy",
                 "type": "model",
                 "name": "Taxonomy",
@@ -4886,6 +4878,27 @@
                 ]
             },
             {
+                "id": "domain_service:Media/EloquentMediaRepository",
+                "type": "domain_service",
+                "name": "EloquentMediaRepository",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\EloquentMediaRepository.php",
+                "summary": "Реализация MediaRepository на базе Eloquent.",
+                "details": null,
+                "meta": {
+                    "methods": [
+                        "buildQuery",
+                        "paginate",
+                        "get"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\MediaRepository"
+                },
+                "related": [],
+                "tags": [
+                    "media"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
@@ -4941,6 +4954,35 @@
                 "tags": [
                     "media",
                     "job"
+                ]
+            },
+            {
+                "id": "domain_service:Media/MediaQuery",
+                "type": "domain_service",
+                "name": "MediaQuery",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\MediaQuery.php",
+                "summary": "Value Object для параметров выборки медиа.",
+                "details": null,
+                "meta": {
+                    "methods": [
+                        "search",
+                        "kind",
+                        "mimePrefix",
+                        "collection",
+                        "deletedFilter",
+                        "sort",
+                        "order",
+                        "page",
+                        "perPage"
+                    ],
+                    "dependencies": [
+                        "App\\Domain\\Media\\MediaDeletedFilter"
+                    ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media"
                 ]
             },
             {
@@ -8642,10 +8684,22 @@
                 "summary": "Действие для сохранения медиа-файла."
             },
             {
+                "id": "domain_service:Media/EloquentMediaRepository",
+                "type": "domain_service",
+                "name": "EloquentMediaRepository",
+                "summary": "Реализация MediaRepository на базе Eloquent."
+            },
+            {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
                 "summary": "Job для генерации варианта медиа-файла."
+            },
+            {
+                "id": "domain_service:Media/MediaQuery",
+                "type": "domain_service",
+                "name": "MediaQuery",
+                "summary": "Value Object для параметров выборки медиа."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -8848,14 +8902,6 @@
                 "type": "model",
                 "name": "ReservedRoute",
                 "summary": "Eloquent модель для зарезервированных путей (ReservedRoute)."
-            }
-        ],
-        "routereservation": [
-            {
-                "id": "model:App\\Models\\RouteReservation",
-                "type": "model",
-                "name": "RouteReservation",
-                "summary": "Eloquent модель для зарезервированных путей (RouteReservation)."
             }
         ],
         "taxonomy": [
@@ -11001,5 +11047,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-15T15:34:24+00:00"
+    "generated_at": "2025-11-16T15:05:38+00:00"
 }

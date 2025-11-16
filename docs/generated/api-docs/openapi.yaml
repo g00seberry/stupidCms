@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -563,17 +563,17 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-15T15:34:19'
+                  example: '2025-11-16T15:05:43'
                   nullable: true
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2106-12-15'
+                  example: '2106-12-16'
                   nullable: true
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: image
+                  example: video
                   nullable: true
                   enum:
                     - image
@@ -2825,7 +2825,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -4261,7 +4261,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -5948,7 +5948,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -5958,7 +5958,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -8182,7 +8182,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10039,7 +10039,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 options_json:
                   type: object
@@ -10114,7 +10114,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10400,12 +10400,12 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-15T15:34:19'
+                  example: '2025-11-16T15:05:42'
                   nullable: true
                 to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
-                  example: '2106-12-15'
+                  example: '2106-12-16'
                   nullable: true
                 page:
                   type: integer
