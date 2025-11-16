@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Domain\Media\MediaVariantStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -58,6 +59,17 @@ class MediaVariant extends Model
      * @var string
      */
     protected $table = 'media_variants';
+
+    /**
+     * Преобразования типов атрибутов.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'status' => MediaVariantStatus::class,
+        'started_at' => 'immutable_datetime',
+        'finished_at' => 'immutable_datetime',
+    ];
 
     /**
      * Связь с исходным медиа-файлом.

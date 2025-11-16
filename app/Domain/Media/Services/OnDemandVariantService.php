@@ -43,9 +43,15 @@ class OnDemandVariantService
             return $existing;
         }
 
-        GenerateVariantJob::dispatchSync($media->id, $variant);
+        // Переводим генерацию в асинхронный пайплайн.
+        // Для sync-драйвера очереди и в тестах выполняем синхронно без очереди.
+        if (config('queue.default') === 'sync' || app()->runningUnitTests()) {
+            return $this->generateVariant($media, $variant);
+        } else {
+            GenerateVariantJob::dispatch($media->id, $variant);
+        }
 
-        return $media->variants()
+        return MediaVariant::where('media_id', $media->id)
             ->where('variant', $variant)
             ->firstOrFail();
     }
@@ -115,6 +121,7 @@ class OnDemandVariantService
 
         $sizeBytes = $disk->size($variantPath);
 
+        // Обновляем/создаём запись варианта и фиксируем прогресс
         $variantModel = MediaVariant::updateOrCreate(
             ['media_id' => $media->id, 'variant' => $variant],
             [
@@ -122,6 +129,9 @@ class OnDemandVariantService
                 'width' => imagesx($resized),
                 'height' => imagesy($resized),
                 'size_bytes' => $sizeBytes ?: strlen($encoded),
+                'status' => \App\Domain\Media\MediaVariantStatus::Ready,
+                'error_message' => null,
+                'finished_at' => now('UTC'),
             ]
         );
 
