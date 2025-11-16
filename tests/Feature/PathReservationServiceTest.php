@@ -6,7 +6,7 @@ use App\Domain\Routing\Exceptions\ForbiddenReservationRelease;
 use App\Domain\Routing\Exceptions\InvalidPathException;
 use App\Domain\Routing\Exceptions\PathAlreadyReservedException;
 use App\Domain\Routing\PathReservationService;
-use App\Models\RouteReservation;
+use App\Models\ReservedRoute;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -210,7 +210,7 @@ class PathReservationServiceTest extends TestCase
     public function test_model_mutator_normalizes_path(): void
     {
         // Прямое создание модели должно нормализовать путь через мутатор
-        $reservation = RouteReservation::create([
+        $reservation = ReservedRoute::create([
             'path' => '/Test//Path',
             'kind' => 'path',
             'source' => 'system:core',

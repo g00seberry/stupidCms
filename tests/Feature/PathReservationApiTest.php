@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\RouteReservation;
+use App\Models\ReservedRoute;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,7 +42,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_store_duplicate_returns_409(): void
     {
-        RouteReservation::create([
+        ReservedRoute::create([
             'path' => '/feed.xml',
             'source' => 'system:feeds',
         ]);
@@ -92,7 +92,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_destroy_releases_reservation(): void
     {
-        RouteReservation::create([
+        ReservedRoute::create([
             'path' => '/feed.xml',
             'source' => 'system:feeds',
         ]);
@@ -113,7 +113,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_destroy_with_multi_segment_path(): void
     {
-        RouteReservation::create([
+        ReservedRoute::create([
             'path' => '/blog/rss',
             'source' => 'system:feeds',
         ]);
@@ -130,7 +130,7 @@ class PathReservationApiTest extends TestCase
 
     public function test_destroy_wrong_source_returns_403(): void
     {
-        RouteReservation::create([
+        ReservedRoute::create([
             'path' => '/feed.xml',
             'source' => 'system:feeds',
         ]);
@@ -168,11 +168,11 @@ class PathReservationApiTest extends TestCase
 
     public function test_index_lists_reservations(): void
     {
-        RouteReservation::create([
+        ReservedRoute::create([
             'path' => '/feed.xml',
             'source' => 'system:feeds',
         ]);
-        RouteReservation::create([
+        ReservedRoute::create([
             'path' => '/sitemap.xml',
             'source' => 'system:sitemap',
         ]);
