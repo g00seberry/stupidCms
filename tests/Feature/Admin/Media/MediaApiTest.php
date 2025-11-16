@@ -19,7 +19,11 @@ class MediaApiTest extends TestCase
     {
         parent::setUp();
 
-        config()->set('media.disk', 'media');
+        config()->set('media.disks', [
+            'default' => 'media',
+            'collections' => [],
+            'kinds' => [],
+        ]);
         config()->set('media.allowed_mimes', [
             'image/jpeg',
             'image/png',
@@ -56,6 +60,62 @@ class MediaApiTest extends TestCase
         $this->assertSame(1920, $media->width);
         $this->assertSame(1080, $media->height);
         $this->assertSame('image/jpeg', $media->mime);
+        Storage::disk('media')->assertExists($media->path);
+    }
+
+    public function test_it_routes_media_to_collection_specific_disk(): void
+    {
+        Storage::fake('media_videos');
+        config()->set('media.disks', [
+            'default' => 'media',
+            'collections' => [
+                'videos' => 'media_videos',
+            ],
+            'kinds' => [],
+        ]);
+
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        $file = UploadedFile::fake()->create('clip.mp4', 512, 'video/mp4');
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'collection' => 'videos',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+
+        $media = Media::firstOrFail();
+        $this->assertSame('media_videos', $media->disk);
+        Storage::disk('media_videos')->assertExists($media->path);
+    }
+
+    public function test_it_uses_default_disk_for_unknown_collection(): void
+    {
+        Storage::fake('media');
+        config()->set('media.disks', [
+            'default' => 'media',
+            'collections' => [
+                'videos' => 'media_videos',
+            ],
+            'kinds' => [],
+        ]);
+
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'collection' => 'other',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+
+        $media = Media::firstOrFail();
+        $this->assertSame('media', $media->disk);
         Storage::disk('media')->assertExists($media->path);
     }
 

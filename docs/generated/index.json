@@ -609,7 +609,8 @@
                     "execute"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Media\\Services\\MediaMetadataExtractor"
+                    "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
+                    "App\\Domain\\Media\\Services\\StorageResolver"
                 ],
                 "interface": null
             },
@@ -878,6 +879,27 @@
                 "dependencies": [
                     "App\\Domain\\Media\\Images\\ImageProcessor"
                 ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Services/StorageResolver",
+            "type": "domain_service",
+            "name": "StorageResolver",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\StorageResolver.php",
+            "summary": "Резолвер дисков для медиа-хранилища.",
+            "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default\n- media.disk (legacy fallback)",
+            "meta": {
+                "methods": [
+                    "resolveDiskName",
+                    "filesystemForUpload"
+                ],
+                "dependencies": [],
                 "interface": null
             },
             "related": [],
@@ -2329,6 +2351,14 @@
             "meta": {
                 "keys": [
                     "disk",
+                    "disks",
+                    "default",
+                    "collections",
+                    "videos",
+                    "documents",
+                    "kinds",
+                    "image",
+                    "video",
                     "max_upload_mb",
                     "allowed_mimes",
                     "variants",
@@ -2337,7 +2367,6 @@
                     "medium",
                     "signed_ttl",
                     "path_strategy",
-                    "image",
                     "driver",
                     "quality",
                     "glide_driver",
@@ -2347,6 +2376,9 @@
                     "binary"
                 ],
                 "sections": [
+                    "disks",
+                    "collections",
+                    "kinds",
                     "allowed_mimes",
                     "variants",
                     "thumbnail",
@@ -5124,7 +5156,8 @@
                         "execute"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Media\\Services\\MediaMetadataExtractor"
+                        "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
+                        "App\\Domain\\Media\\Services\\StorageResolver"
                     ],
                     "interface": null
                 },
@@ -5393,6 +5426,27 @@
                     "dependencies": [
                         "App\\Domain\\Media\\Images\\ImageProcessor"
                     ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Services/StorageResolver",
+                "type": "domain_service",
+                "name": "StorageResolver",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\StorageResolver.php",
+                "summary": "Резолвер дисков для медиа-хранилища.",
+                "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default\n- media.disk (legacy fallback)",
+                "meta": {
+                    "methods": [
+                        "resolveDiskName",
+                        "filesystemForUpload"
+                    ],
+                    "dependencies": [],
                     "interface": null
                 },
                 "related": [],
@@ -6848,6 +6902,14 @@
                 "meta": {
                     "keys": [
                         "disk",
+                        "disks",
+                        "default",
+                        "collections",
+                        "videos",
+                        "documents",
+                        "kinds",
+                        "image",
+                        "video",
                         "max_upload_mb",
                         "allowed_mimes",
                         "variants",
@@ -6856,7 +6918,6 @@
                         "medium",
                         "signed_ttl",
                         "path_strategy",
-                        "image",
                         "driver",
                         "quality",
                         "glide_driver",
@@ -6866,6 +6927,9 @@
                         "binary"
                     ],
                     "sections": [
+                        "disks",
+                        "collections",
+                        "kinds",
                         "allowed_mimes",
                         "variants",
                         "thumbnail",
@@ -9136,6 +9200,12 @@
                 "summary": "Сервис для генерации вариантов медиа-файлов по требованию."
             },
             {
+                "id": "domain_service:Media/Services/StorageResolver",
+                "type": "domain_service",
+                "name": "StorageResolver",
+                "summary": "Резолвер дисков для медиа-хранилища."
+            },
+            {
                 "id": "config_area:media",
                 "type": "config_area",
                 "name": "Media",
@@ -9488,6 +9558,12 @@
                 "type": "domain_service",
                 "name": "OnDemandVariantService",
                 "summary": "Сервис для генерации вариантов медиа-файлов по требованию."
+            },
+            {
+                "id": "domain_service:Media/Services/StorageResolver",
+                "type": "domain_service",
+                "name": "StorageResolver",
+                "summary": "Резолвер дисков для медиа-хранилища."
             },
             {
                 "id": "domain_service:Plugins/Services/PluginAutoloader",
@@ -11515,5 +11591,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-16T16:41:38+00:00"
+    "generated_at": "2025-11-16T17:00:22+00:00"
 }

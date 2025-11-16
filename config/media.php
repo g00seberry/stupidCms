@@ -1,7 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 return [
-    'disk' => env('MEDIA_DISK', 'media'),
+    /*
+    |--------------------------------------------------------------------------
+    | Media disks routing
+    |--------------------------------------------------------------------------
+    |
+    | Конфигурация маршрутизации медиа по дискам.
+    |
+    | - default: диск по умолчанию для всех медиа (если не переопределён).
+    | - collections: маппинг коллекций (payload.collection) на диски.
+    | - kinds: маппинг типов медиа (image, video, audio, document) на диски.
+    |
+    | Все имена дисков должны существовать в config/filesystems.php.
+    |
+    */
+    'disks' => [
+        // Основной диск по умолчанию.
+        'default' => env('MEDIA_DEFAULT_DISK', env('MEDIA_DISK', 'media')),
+
+        // Маршрутизация по коллекциям (например, videos → media_videos).
+        'collections' => [
+            // 'videos' => 'media_videos',
+            // 'documents' => 'media_documents',
+        ],
+
+        // Маршрутизация по типу медиа (image/video/audio/document).
+        'kinds' => [
+            // 'image' => 'media_images',
+            // 'video' => 'media_videos',
+        ],
+    ],
+
     'max_upload_mb' => env('MEDIA_MAX_UPLOAD_MB', 25),
     'allowed_mimes' => [
         'image/jpeg',

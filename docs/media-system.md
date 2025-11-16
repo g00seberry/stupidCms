@@ -617,8 +617,18 @@ GenerateVariantJob::dispatchSync($mediaId, $variant); // Синхронно
 
 ```php
 return [
-    // Имя диска для хранения медиа
-    'disk' => env('MEDIA_DISK', 'media'),
+    // Маршрутизация медиа по дискам
+    'disks' => [
+        'default' => env('MEDIA_DEFAULT_DISK', 'media'),
+        'collections' => [
+            // 'videos' => 'media_videos',
+            // 'documents' => 'media_documents',
+        ],
+        'kinds' => [
+            // 'image' => 'media_images',
+            // 'video' => 'media_videos',
+        ],
+    ],
 
     // Максимальный размер загружаемого файла (MB)
     'max_upload_mb' => env('MEDIA_MAX_UPLOAD_MB', 25),
@@ -647,6 +657,20 @@ return [
     'path_strategy' => env('MEDIA_PATH_STRATEGY', 'by-date'),
 ];
 ```
+
+### StorageResolver
+
+Для выбора диска при загрузке используется `App\Domain\Media\Services\StorageResolver`:
+
+-   Приоритет:
+    1. `media.disks.collections[collection]`
+    2. `media.disks.kinds[kind]`, где `kind` выводится из MIME (`image/*`, `video/*`, `audio/*`, иначе `document`)
+    3. `media.disks.default`
+    4. `'media'` (жёсткий fallback, если конфиг не задан)
+-   Результирующее имя диска записывается в `Media::disk` и далее используется для:
+    - генерации вариантов (`OnDemandVariantService`);
+    - предпросмотра/скачивания (`MediaPreviewController`).
+
 
 ---
 

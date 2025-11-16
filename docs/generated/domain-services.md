@@ -280,7 +280,7 @@ Value Object для параметров выборки медиа.
 
 ### Meta
 - **Methods:** `execute`
-- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`
+- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`
 
 ### Tags
 `media`, `action`
@@ -881,6 +881,29 @@ Value Object для фильтра поиска по терму.
 
 ### Tags
 `search`, `valueobject`
+
+
+---
+
+## StorageResolver
+**ID:** `domain_service:Media/Services/StorageResolver`
+**Path:** `app/Domain/Media/Services/StorageResolver.php`
+
+Резолвер дисков для медиа-хранилища.
+
+### Details
+Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),
+используя конфигурацию config/media.php:
+- media.disks.collections
+- media.disks.kinds
+- media.disks.default
+- media.disk (legacy fallback)
+
+### Meta
+- **Methods:** `resolveDiskName`, `filesystemForUpload`
+
+### Tags
+`media`, `service`
 
 
 ---

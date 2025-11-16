@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Actions;
 
+use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Models\Media;
 use App\Models\MediaMetadata;
@@ -26,9 +27,11 @@ class MediaStoreAction
 {
     /**
      * @param \App\Domain\Media\Services\MediaMetadataExtractor $metadataExtractor Извлекатель метаданных
+     * @param \App\Domain\Media\Services\StorageResolver $storageResolver Резолвер дисков для медиа
      */
     public function __construct(
-        private readonly MediaMetadataExtractor $metadataExtractor
+        private readonly MediaMetadataExtractor $metadataExtractor,
+        private readonly StorageResolver $storageResolver
     ) {
     }
 
@@ -49,9 +52,6 @@ class MediaStoreAction
      */
     public function execute(UploadedFile $file, array $payload = []): Media
     {
-        $diskName = config('media.disk', 'media');
-        $disk = Storage::disk($diskName);
-
         $mime = $file->getMimeType() ?? $file->getClientMimeType() ?? 'application/octet-stream';
         $sizeBytes = (int) ($file->getSize() ?? 0);
         $originalName = $file->getClientOriginalName() ?: $file->getFilename();
@@ -88,6 +88,13 @@ class MediaStoreAction
                 return $existing;
             }
         }
+
+        $collection = isset($payload['collection']) && is_string($payload['collection'])
+            ? $payload['collection']
+            : null;
+
+        $diskName = $this->storageResolver->resolveDiskName($collection, $mime);
+        $disk = Storage::disk($diskName);
 
         $path = $this->storeFile($disk, $file, $extension, $checksum);
 

@@ -6,6 +6,7 @@ namespace Tests\Feature\Admin\Media;
 
 use App\Domain\Media\Actions\MediaStoreAction;
 use App\Domain\Media\Services\MediaMetadataExtractor;
+use App\Domain\Media\Services\StorageResolver;
 use App\Models\Media;
 use App\Models\MediaMetadata;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,7 +44,10 @@ final class MediaTechnicalMetadataTest extends TestCase
             }
         };
 
-        $action = new MediaStoreAction($extractor);
+        $action = new MediaStoreAction(
+            $extractor,
+            new StorageResolver(),
+        );
 
         $file = UploadedFile::fake()->create('video.mp4', 1024, 'video/mp4');
 

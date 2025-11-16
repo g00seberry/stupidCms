@@ -69,7 +69,6 @@ final class OnDemandVariantServiceVariantConfigTest extends TestCase
     public function test_applies_variant_format_and_quality_when_generating(): void
     {
         Storage::fake('media');
-        Config::set('media.disk', 'media');
         Config::set('media.image.quality', 50); // глобальное качество
         Config::set('media.variants.thumbnail', ['max' => 320, 'format' => 'png', 'quality' => 77]);
 
