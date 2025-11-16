@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Services;
 
+use App\Domain\Media\Images\ImageProcessor;
+use App\Domain\Media\Images\ImageRef;
 use App\Domain\Media\Jobs\GenerateVariantJob;
 use App\Models\Media;
 use App\Models\MediaVariant;
@@ -14,13 +16,21 @@ use RuntimeException;
 /**
  * Сервис для генерации вариантов медиа-файлов по требованию.
  *
- * Генерирует варианты изображений (thumbnails, resized) на лету,
- * используя GD для обработки изображений.
+ * Генерирует варианты изображений (thumbnails, resized) на лету
+ * через абстракцию ImageProcessor (gd/imagick/glide/external).
  *
  * @package App\Domain\Media\Services
  */
 class OnDemandVariantService
 {
+    /**
+     * @param \App\Domain\Media\Images\ImageProcessor $images Процессор изображений
+     */
+    public function __construct(
+        private readonly ImageProcessor $images
+    ) {
+    }
+
     /**
      * Убедиться, что вариант существует на диске и в БД.
      *
@@ -74,6 +84,8 @@ class OnDemandVariantService
 
         $config = config("media.variants.{$variant}");
         $targetMax = (int) ($config['max'] ?? 0);
+        $variantFormat = isset($config['format']) ? (string) $config['format'] : null;
+        $variantQuality = isset($config['quality']) ? (int) $config['quality'] : null;
 
         $disk = Storage::disk($media->disk);
 
@@ -90,14 +102,10 @@ class OnDemandVariantService
             throw new RuntimeException('Unable to load media contents for variant generation.');
         }
 
-        $image = @imagecreatefromstring($contents);
+        $image = $this->images->open($contents);
 
-        if (! $image) {
-            throw new RuntimeException('Unsupported image data for variant generation.');
-        }
-
-        $originalWidth = imagesx($image);
-        $originalHeight = imagesy($image);
+        $originalWidth = $this->images->width($image);
+        $originalHeight = $this->images->height($image);
 
         $targetWidth = $originalWidth;
         $targetHeight = $originalHeight;
@@ -112,12 +120,14 @@ class OnDemandVariantService
             }
         }
 
-        $resized = $this->resizeImage($image, $targetWidth, $targetHeight);
+        $resized = $this->images->resize($image, $targetWidth, $targetHeight);
 
-        [$encoded, $extension] = $this->encodeImage($resized, $media->ext ?? pathinfo($media->path, PATHINFO_EXTENSION));
-        $variantPath = $this->buildVariantPath($media, $variant, $extension);
+        $preferredExt = $variantFormat ?: ($media->ext ?? pathinfo($media->path, PATHINFO_EXTENSION));
+        $quality = $variantQuality ?? (int) (config('media.image.quality', 82));
+        $encoded = $this->images->encode($resized, (string) $preferredExt, $quality);
+        $variantPath = $this->buildVariantPath($media, $variant, $encoded['extension']);
 
-        $disk->put($variantPath, $encoded);
+        $disk->put($variantPath, $encoded['data']);
 
         $sizeBytes = $disk->size($variantPath);
 
@@ -126,16 +136,16 @@ class OnDemandVariantService
             ['media_id' => $media->id, 'variant' => $variant],
             [
                 'path' => $variantPath,
-                'width' => imagesx($resized),
-                'height' => imagesy($resized),
-                'size_bytes' => $sizeBytes ?: strlen($encoded),
+                'width' => $this->images->width($resized),
+                'height' => $this->images->height($resized),
+                'size_bytes' => $sizeBytes ?: strlen($encoded['data']),
                 'status' => \App\Domain\Media\MediaVariantStatus::Ready,
                 'error_message' => null,
                 'finished_at' => now('UTC'),
             ]
         );
 
-        imagedestroy($resized);
+        $this->images->destroy($resized);
 
         return $variantModel;
     }
@@ -159,93 +169,6 @@ class OnDemandVariantService
         if (! array_key_exists($variant, $variants)) {
             throw new InvalidArgumentException("Variant [{$variant}] is not configured.");
         }
-    }
-
-    /**
-     * Изменить размер изображения.
-     *
-     * Использует imagecopyresampled для качественного изменения размера
-     * с сохранением прозрачности.
-     *
-     * @param \GdImage $image Исходное изображение
-     * @param int $targetWidth Целевая ширина
-     * @param int $targetHeight Целевая высота
-     * @return \GdImage Изменённое изображение
-     */
-    private function resizeImage(\GdImage $image, int $targetWidth, int $targetHeight): \GdImage
-    {
-        if (imagesx($image) === $targetWidth && imagesy($image) === $targetHeight) {
-            return $image;
-        }
-
-        $resampled = imagecreatetruecolor($targetWidth, $targetHeight);
-
-        imagealphablending($resampled, false);
-        imagesavealpha($resampled, true);
-
-        imagecopyresampled(
-            $resampled,
-            $image,
-            0,
-            0,
-            0,
-            0,
-            $targetWidth,
-            $targetHeight,
-            imagesx($image),
-            imagesy($image)
-        );
-
-        imagedestroy($image);
-
-        return $resampled;
-    }
-
-    /**
-     * Закодировать изображение в нужный формат.
-     *
-     * Поддерживает PNG, GIF, WebP (с fallback на JPEG) и JPEG.
-     *
-     * @param \GdImage $image Изображение для кодирования
-     * @param string|null $extension Желаемое расширение
-     * @return array{0: string, 1: string} Массив [данные, расширение]
-     * @throws \RuntimeException Если не удалось закодировать изображение
-     */
-    private function encodeImage(\GdImage $image, ?string $extension): array
-    {
-        $extension = strtolower((string) $extension);
-        $extension = $extension !== '' ? $extension : 'jpg';
-
-        ob_start();
-
-        switch ($extension) {
-            case 'png':
-                imagepng($image);
-                break;
-            case 'gif':
-                imagegif($image);
-                break;
-            case 'webp':
-                if (function_exists('imagewebp')) {
-                    imagewebp($image, null, 90);
-                    break;
-                }
-                // Fallback to jpeg if webp not supported
-                imagejpeg($image, null, 90);
-                $extension = 'jpg';
-                break;
-            default:
-                imagejpeg($image, null, 90);
-                $extension = 'jpg';
-        }
-
-        $data = ob_get_clean();
-
-        if ($data === false) {
-            throw new RuntimeException('Failed to encode variant image.');
-        }
-
-        return [$data, $extension];
     }
 
     /**

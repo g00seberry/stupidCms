@@ -8,6 +8,9 @@ return [
         'image/png',
         'image/webp',
         'image/gif',
+        'image/avif',
+        'image/heic',
+        'image/heif',
         'video/mp4',
         'audio/mpeg',
         'application/pdf',
@@ -18,5 +21,12 @@ return [
     ],
     'signed_ttl' => env('MEDIA_SIGNED_TTL', 300),
     'path_strategy' => env('MEDIA_PATH_STRATEGY', 'by-date'), // by-date | hash-shard
+
+    'image' => [
+        'driver' => env('MEDIA_IMAGE_DRIVER', 'gd'), // gd | glide | imagick | external
+        'quality' => (int) env('MEDIA_IMAGE_QUALITY', 82), // 0-100
+        // Настройки для Glide/Intervention
+        'glide_driver' => env('MEDIA_GLIDE_DRIVER', 'gd'), // gd | imagick
+    ],
 ];
 

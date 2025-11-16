@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Services;
 
+use App\Domain\Media\Images\ImageProcessor;
 use Illuminate\Http\UploadedFile;
 
 /**
@@ -16,6 +17,14 @@ use Illuminate\Http\UploadedFile;
  */
 class MediaMetadataExtractor
 {
+    /**
+     * @param \App\Domain\Media\Images\ImageProcessor $images Процессор изображений
+     */
+    public function __construct(
+        private readonly ImageProcessor $images
+    ) {
+    }
+
     /**
      * Извлечь метаданные из медиа-файла.
      *
@@ -36,11 +45,23 @@ class MediaMetadataExtractor
         $exif = null;
 
         if (is_string($mime) && str_starts_with($mime, 'image/')) {
-            $imageInfo = @getimagesize($file->getRealPath() ?: $file->getPathname() ?: '');
+            // Пытаемся через универсальный процессор (даже если GD не поддерживает формат)
+            $bytes = @file_get_contents($file->getRealPath() ?: $file->getPathname() ?: '');
+            if (is_string($bytes) && $bytes !== '') {
+                try {
+                    $img = $this->images->open($bytes);
+                    $width = $this->images->width($img);
+                    $height = $this->images->height($img);
+                    $this->images->destroy($img);
+                } catch (\Throwable) {
+                    // Fallback на getimagesize, если драйвер не смог открыть
+                    $imageInfo = @getimagesize($file->getRealPath() ?: $file->getPathname() ?: '');
 
-            if (is_array($imageInfo)) {
-                $width = isset($imageInfo[0]) ? (int) $imageInfo[0] : null;
-                $height = isset($imageInfo[1]) ? (int) $imageInfo[1] : null;
+                    if (is_array($imageInfo)) {
+                        $width = isset($imageInfo[0]) ? (int) $imageInfo[0] : null;
+                        $height = isset($imageInfo[1]) ? (int) $imageInfo[1] : null;
+                    }
+                }
             }
 
             if ($this->canReadExif($mime)) {

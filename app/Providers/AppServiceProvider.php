@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Domain\Media\Images\GdImageProcessor;
+use App\Domain\Media\Images\GlideImageProcessor;
+use App\Domain\Media\Images\ImageProcessor;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
 use App\Domain\Auth\RefreshTokenRepositoryImpl;
@@ -80,6 +86,22 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ErrorFactory::class, static fn ($app): ErrorFactory => $app->make(ErrorKernel::class)->factory());
+
+        // ImageProcessor — выбор драйвера по конфигу
+        $this->app->singleton(ImageProcessor::class, function () {
+            $driver = (string) config('media.image.driver', 'gd');
+            // Точка расширения: gd | glide | imagick | external
+            switch ($driver) {
+                case 'glide':
+                    // Создаём Intervention ImageManager с корректным драйвером
+                    $drv = (string) config('media.image.glide_driver', 'gd'); // gd|imagick
+                    $driverInstance = $drv === 'imagick' ? new ImagickDriver() : new GdDriver();
+                    return new GlideImageProcessor(new ImageManager(driver: $driverInstance));
+                case 'gd':
+                default:
+                    return new GdImageProcessor();
+            }
+        });
     }
 
     /**
