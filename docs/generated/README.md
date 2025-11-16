@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 146
+**Всего сущностей:** 148
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (15 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (41 сущностей)
+Доменные сервисы, действия, репозитории (43 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -46,10 +46,10 @@ HTTP эндпоинты API (59 сущностей)
 - [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
 - [IndexManager](./domain-services.md#indexmanager) - Менеджер для управления индексами поиска.
 - [JwtService](./domain-services.md#jwtservice) - Service for issuing and verifying JWT access and refresh tokens.
+- [ListMediaAction](./domain-services.md#listmediaaction) - CQRS-действие: выборка списка медиа по параметрам запроса.
 - [MediaMetadataExtractor](./domain-services.md#mediametadataextractor) - Сервис для извлечения метаданных из медиа-файлов.
 - [MediaQuery](./domain-services.md#mediaquery) - Value Object для параметров выборки медиа.
-- [MediaStoreAction](./domain-services.md#mediastoreaction) - Действие для сохранения медиа-файла.
-- *...и еще 31 сущностей*
+- *...и еще 33 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (59 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-16 15:05:38
+**Сгенерировано:** 2025-11-16 15:07:11
 
 Для обновления документации выполните:
 ```bash

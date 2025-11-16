@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\V1;
 
 use App\Domain\Media\Actions\MediaStoreAction;
+use App\Domain\Media\Actions\ListMediaAction;
+use App\Domain\Media\Actions\UpdateMediaMetadataAction;
 use App\Domain\Media\EloquentMediaRepository;
 use App\Domain\Media\MediaDeletedFilter;
 use App\Domain\Media\MediaQuery;
@@ -39,11 +41,13 @@ class MediaController extends Controller
 
     /**
      * @param \App\Domain\Media\Actions\MediaStoreAction $storeAction Действие для сохранения медиа-файлов
-     * @param \App\Domain\Media\MediaRepository $mediaRepository Репозиторий выборки медиа
+     * @param \App\Domain\Media\Actions\ListMediaAction $listAction Действие для выборки медиа
+     * @param \App\Domain\Media\Actions\UpdateMediaMetadataAction $updateMetadataAction Действие для обновления метаданных
      */
     public function __construct(
         private readonly MediaStoreAction $storeAction,
-        private readonly MediaRepository $mediaRepository,
+        private readonly ListMediaAction $listAction,
+        private readonly UpdateMediaMetadataAction $updateMetadataAction,
     ) {
     }
 
@@ -152,7 +156,7 @@ class MediaController extends Controller
             perPage: $perPage,
         );
 
-        $paginator = $this->mediaRepository->paginate($mq)->appends($v);
+        $paginator = $this->listAction->execute($mq)->appends($v);
 
         return new MediaCollection($paginator);
     }
@@ -420,10 +424,8 @@ class MediaController extends Controller
 
         $this->authorize('update', $media);
 
-        $media->fill($request->validated());
-        $media->save();
-
-        return new MediaResource($media->fresh());
+        $updated = $this->updateMetadataAction->execute($mediaId, $request->validated());
+        return new MediaResource($updated);
     }
 
     /**

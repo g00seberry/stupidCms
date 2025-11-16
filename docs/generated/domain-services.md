@@ -137,6 +137,22 @@ Uses HS256 (HMAC with SHA-256) algorithm with a secret key.
 
 ---
 
+## ListMediaAction
+**ID:** `domain_service:Media/Actions/ListMediaAction`
+**Path:** `app/Domain/Media/Actions/ListMediaAction.php`
+
+CQRS-действие: выборка списка медиа по параметрам запроса.
+
+### Meta
+- **Methods:** `execute`
+- **Dependencies:** `App\Domain\Media\MediaRepository`
+
+### Tags
+`media`, `action`
+
+
+---
+
 ## MediaMetadataExtractor
 **ID:** `domain_service:Media/Services/MediaMetadataExtractor`
 **Path:** `app/Domain/Media/Services/MediaMetadataExtractor.php`
@@ -784,6 +800,21 @@ Value Object для фильтра поиска по терму.
 
 ### Tags
 `search`, `valueobject`
+
+
+---
+
+## UpdateMediaMetadataAction
+**ID:** `domain_service:Media/Actions/UpdateMediaMetadataAction`
+**Path:** `app/Domain/Media/Actions/UpdateMediaMetadataAction.php`
+
+CQRS-действие: обновление метаданных медиа (title, alt, collection).
+
+### Meta
+- **Methods:** `execute`
+
+### Tags
+`media`, `action`
 
 
 ---

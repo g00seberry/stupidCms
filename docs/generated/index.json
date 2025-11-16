@@ -534,6 +534,28 @@
             ]
         },
         {
+            "id": "domain_service:Media/Actions/ListMediaAction",
+            "type": "domain_service",
+            "name": "ListMediaAction",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\ListMediaAction.php",
+            "summary": "CQRS-действие: выборка списка медиа по параметрам запроса.",
+            "details": null,
+            "meta": {
+                "methods": [
+                    "execute"
+                ],
+                "dependencies": [
+                    "App\\Domain\\Media\\MediaRepository"
+                ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "action"
+            ]
+        },
+        {
             "id": "domain_service:Media/Actions/MediaStoreAction",
             "type": "domain_service",
             "name": "MediaStoreAction",
@@ -547,6 +569,26 @@
                 "dependencies": [
                     "App\\Domain\\Media\\Services\\MediaMetadataExtractor"
                 ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "action"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
+            "type": "domain_service",
+            "name": "UpdateMediaMetadataAction",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\UpdateMediaMetadataAction.php",
+            "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection).",
+            "details": null,
+            "meta": {
+                "methods": [
+                    "execute"
+                ],
+                "dependencies": [],
                 "interface": null
             },
             "related": [],
@@ -4856,6 +4898,28 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Actions/ListMediaAction",
+                "type": "domain_service",
+                "name": "ListMediaAction",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\ListMediaAction.php",
+                "summary": "CQRS-действие: выборка списка медиа по параметрам запроса.",
+                "details": null,
+                "meta": {
+                    "methods": [
+                        "execute"
+                    ],
+                    "dependencies": [
+                        "App\\Domain\\Media\\MediaRepository"
+                    ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "action"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
                 "type": "domain_service",
                 "name": "MediaStoreAction",
@@ -4869,6 +4933,26 @@
                     "dependencies": [
                         "App\\Domain\\Media\\Services\\MediaMetadataExtractor"
                     ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "action"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
+                "type": "domain_service",
+                "name": "UpdateMediaMetadataAction",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\UpdateMediaMetadataAction.php",
+                "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection).",
+                "details": null,
+                "meta": {
+                    "methods": [
+                        "execute"
+                    ],
+                    "dependencies": [],
                     "interface": null
                 },
                 "related": [],
@@ -8678,10 +8762,22 @@
                 "summary": "Eloquent модель для медиа-файлов (Media)."
             },
             {
+                "id": "domain_service:Media/Actions/ListMediaAction",
+                "type": "domain_service",
+                "name": "ListMediaAction",
+                "summary": "CQRS-действие: выборка списка медиа по параметрам запроса."
+            },
+            {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
                 "type": "domain_service",
                 "name": "MediaStoreAction",
                 "summary": "Действие для сохранения медиа-файла."
+            },
+            {
+                "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
+                "type": "domain_service",
+                "name": "UpdateMediaMetadataAction",
+                "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
             },
             {
                 "id": "domain_service:Media/EloquentMediaRepository",
@@ -8988,10 +9084,22 @@
         ],
         "action": [
             {
+                "id": "domain_service:Media/Actions/ListMediaAction",
+                "type": "domain_service",
+                "name": "ListMediaAction",
+                "summary": "CQRS-действие: выборка списка медиа по параметрам запроса."
+            },
+            {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
                 "type": "domain_service",
                 "name": "MediaStoreAction",
                 "summary": "Действие для сохранения медиа-файла."
+            },
+            {
+                "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
+                "type": "domain_service",
+                "name": "UpdateMediaMetadataAction",
+                "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
             }
         ],
         "job": [
@@ -11047,5 +11155,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-16T15:05:38+00:00"
+    "generated_at": "2025-11-16T15:07:11+00:00"
 }
