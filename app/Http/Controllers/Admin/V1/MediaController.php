@@ -16,6 +16,7 @@ use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
@@ -256,7 +257,7 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000001-6666666677778888-01"
      * }
      */
-    public function store(StoreMediaRequest $request): MediaResource
+    public function store(StoreMediaRequest $request): JsonResponse
     {
         $this->authorize('create', Media::class);
 
@@ -277,7 +278,10 @@ class MediaController extends Controller
 
         $media = $this->storeAction->execute($file, $validated);
 
-        return new MediaResource($media);
+        // При дедупликации возвращаем 200, при создании - 201
+        $statusCode = $media->wasRecentlyCreated ? HttpResponse::HTTP_CREATED : HttpResponse::HTTP_OK;
+
+        return (new MediaResource($media))->response()->setStatusCode($statusCode);
     }
 
     /**

@@ -216,6 +216,99 @@ class MediaApiTest extends TestCase
         ]);
     }
 
+    public function test_it_deduplicates_files_by_checksum(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Создаём первый файл с известным содержимым
+        $file1 = UploadedFile::fake()->image('test.jpg', 100, 100);
+        $checksum1 = hash_file('sha256', $file1->getRealPath());
+
+        $response1 = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => 'First Upload',
+            'collection' => 'test',
+        ], [
+            'file' => $file1,
+        ], $admin);
+
+        $response1->assertCreated();
+        $mediaId1 = $response1->json('data.id');
+        $media1 = Media::findOrFail($mediaId1);
+        $this->assertSame($checksum1, $media1->checksum_sha256);
+        $this->assertSame('First Upload', $media1->title);
+        $this->assertSame('test', $media1->collection);
+
+        $filesCountBefore = Storage::disk('media')->allFiles();
+        $this->assertCount(1, $filesCountBefore);
+
+        // Загружаем тот же файл повторно (с другим именем и метаданными)
+        $file2 = UploadedFile::fake()->image('test2.jpg', 100, 100);
+        // Убеждаемся, что это тот же файл (для fake файлов нужно создать идентичный)
+        // В реальности это будет тот же файл, но для теста создадим файл с тем же содержимым
+        $tempPath = sys_get_temp_dir() . '/' . uniqid('test_', true) . '.jpg';
+        copy($file1->getRealPath(), $tempPath);
+        $file2 = new UploadedFile($tempPath, 'test2.jpg', 'image/jpeg', null, true);
+
+        $response2 = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => 'Second Upload',
+            'alt' => 'Alt text',
+            'collection' => 'other',
+        ], [
+            'file' => $file2,
+        ], $admin);
+
+        // При дедупликации возвращается существующая запись (200, а не 201)
+        $response2->assertOk();
+        $mediaId2 = $response2->json('data.id');
+
+        // Должна быть возвращена та же запись
+        $this->assertSame($mediaId1, $mediaId2);
+
+        // Файл не должен быть сохранён повторно
+        $filesCountAfter = Storage::disk('media')->allFiles();
+        $this->assertCount(1, $filesCountAfter);
+
+        // Метаданные должны быть обновлены
+        $media1->refresh();
+        $this->assertSame('Second Upload', $media1->title);
+        $this->assertSame('Alt text', $media1->alt);
+        $this->assertSame('other', $media1->collection);
+
+        // В БД должна быть только одна запись
+        $this->assertDatabaseCount('media', 1);
+
+        unlink($tempPath);
+    }
+
+    public function test_it_creates_new_media_for_different_files(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        $file1 = UploadedFile::fake()->image('test1.jpg', 100, 100);
+        $file2 = UploadedFile::fake()->image('test2.jpg', 200, 200);
+
+        $response1 = $this->postMultipartAsAdmin('/api/v1/admin/media', [], ['file' => $file1], $admin);
+        $response1->assertCreated();
+
+        $response2 = $this->postMultipartAsAdmin('/api/v1/admin/media', [], ['file' => $file2], $admin);
+        $response2->assertCreated();
+
+        $mediaId1 = $response1->json('data.id');
+        $mediaId2 = $response2->json('data.id');
+
+        // Должны быть созданы разные записи
+        $this->assertNotSame($mediaId1, $mediaId2);
+
+        // В БД должно быть 2 записи
+        $this->assertDatabaseCount('media', 2);
+
+        // На диске должно быть 2 файла
+        $files = Storage::disk('media')->allFiles();
+        $this->assertCount(2, $files);
+    }
+
     private function typeUri(ErrorCode $code): string
     {
         return config('errors.types.' . $code->value . '.uri');

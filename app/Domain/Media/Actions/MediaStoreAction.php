@@ -35,10 +35,12 @@ class MediaStoreAction
      *
      * Сохраняет файл на диск, извлекает метаданные (размеры, EXIF и т.д.),
      * вычисляет checksum и создаёт запись Media в БД.
+     * Если файл с таким же checksum уже существует, возвращает существующую запись
+     * без сохранения дубликата на диск (дедупликация).
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
      * @param array<string, mixed> $payload Дополнительные данные (title, alt, collection)
-     * @return \App\Models\Media Созданная запись Media
+     * @return \App\Models\Media Созданная или существующая запись Media
      * @throws \RuntimeException Если не удалось сохранить файл на диск
      */
     public function execute(UploadedFile $file, array $payload = []): Media
@@ -51,6 +53,37 @@ class MediaStoreAction
         $originalName = $file->getClientOriginalName() ?: $file->getFilename();
         $extension = strtolower($file->getClientOriginalExtension() ?: pathinfo($originalName, PATHINFO_EXTENSION) ?: $file->extension() ?: 'bin');
         $checksum = $this->checksum($file);
+
+        // Дедупликация: проверка существующего файла по checksum
+        if ($checksum !== null) {
+            $existing = Media::where('checksum_sha256', $checksum)->first();
+            if ($existing !== null) {
+                // Обновить метаданные, если они переданы в payload
+                $shouldUpdate = false;
+                $updates = [];
+
+                if (isset($payload['title']) && $existing->title !== ($payload['title'] ?? null)) {
+                    $updates['title'] = $payload['title'] ?? null;
+                    $shouldUpdate = true;
+                }
+
+                if (isset($payload['alt']) && $existing->alt !== ($payload['alt'] ?? null)) {
+                    $updates['alt'] = $payload['alt'] ?? null;
+                    $shouldUpdate = true;
+                }
+
+                if (isset($payload['collection']) && $existing->collection !== ($payload['collection'] ?? null)) {
+                    $updates['collection'] = $payload['collection'] ?? null;
+                    $shouldUpdate = true;
+                }
+
+                if ($shouldUpdate) {
+                    $existing->update($updates);
+                }
+
+                return $existing;
+            }
+        }
 
         $path = $this->storeFile($disk, $file, $extension, $checksum);
 
