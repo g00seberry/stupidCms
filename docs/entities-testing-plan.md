@@ -27,11 +27,11 @@
 
 ### Общие показатели
 
--   ✅ **Всего тестов:** 552
--   ✅ **Assertions:** 1272
+-   ✅ **Всего тестов:** 683
+-   ✅ **Assertions:** 1782
 -   ⏭️ **Skipped:** 2
 -   ❌ **Failed:** 0
--   ⏱️ **Время выполнения:** ~31 сек
+-   ⏱️ **Время выполнения:** ~42 сек
 
 ### По фазам
 
@@ -54,16 +54,16 @@
 -   ⏳ **Media (полное):** MediaStoreAction требует доработки
 -   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
 
-#### Фаза 3: HTTP Controllers 🔄 (15%)
+#### Фаза 3: HTTP Controllers 🔄 (36%)
 
 -   ✅ **Auth API:** 31 тест (Login, CurrentUser, Refresh, Logout)
 -   ✅ **Entries API:** 53 теста (List, Create, Show, Update, Delete, Restore)
 -   ✅ **Media API:** 35 тестов (List, Show, Update, Delete, Restore)
--   ⏳ **PostTypes API:** 0 тестов
--   ⏳ **Plugins API:** 0 тестов
--   ⏳ **Options API:** 0 тестов
--   ⏳ **Taxonomies & Terms API:** 0 тестов
--   ⏳ **Search API:** 0 тестов
+-   ✅ **PostTypes API:** 17 тестов (List, Create, Show, Update, Delete)
+-   ✅ **Plugins API:** 31 тест (List, Enable, Disable, Sync)
+-   ✅ **Options API:** 22 теста (List, Show, Upsert, Delete, Restore)
+-   ✅ **Taxonomies & Terms API:** 37 тестов (Taxonomies 19, Terms 18)
+-   ✅ **Search API:** 24 теста (Public 15, Admin 9)
 -   ⏳ **Path Reservation API:** 0 тестов
 
 ---
@@ -2149,155 +2149,319 @@
 
 ---
 
-### 3.4. PostTypes API (5 эндпоинтов)
+### 3.4. PostTypes API
 
-#### Приоритет: 🟡 Средний
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/PostTypes/PostTypesManagementTest.php`)
+**Feature-тесты** (17 тестов, 57 assertions)
 
-```php
-// GET /api/v1/admin/post-types
-- test('admin can list post types')
+// GET /api/v1/admin/post-types (PostTypesTest.php) - 2 теста ✅
+✅ test('admin can list post types')
+✅ test('post types are sorted by slug')
 
-// POST /api/v1/admin/post-types
-- test('admin can create post type')
-- test('post type slug is unique')
+// POST /api/v1/admin/post-types (PostTypesTest.php) - 5 тестов ✅
+✅ test('admin can create post type')
+✅ test('post type slug is unique')
+✅ test('post type validation fails with missing slug')
+✅ test('post type validation fails with missing name')
+✅ test('post type can be created with custom fields in options')
 
-// GET /api/v1/admin/post-types/{id}
-- test('admin can view post type')
+// GET /api/v1/admin/post-types/{slug} (PostTypesTest.php) - 2 теста ✅
+✅ test('admin can view post type')
+✅ test('show not found returns 404')
 
-// PUT /api/v1/admin/post-types/{id}
-- test('admin can update post type')
+// PUT /api/v1/admin/post-types/{slug} (PostTypesTest.php) - 4 теста ✅
+✅ test('admin can update post type')
+✅ test('post type slug can be updated')
+✅ test('post type options can be updated')
+✅ test('update not found returns 404')
 
-// DELETE /api/v1/admin/post-types/{id}
-- test('admin can delete post type')
-- test('cannot delete post type with entries')
-```
+// DELETE /api/v1/admin/post-types/{slug} (PostTypesTest.php) - 4 теста ✅
+✅ test('admin can delete post type')
+✅ test('cannot delete post type with entries')
+✅ test('can force delete post type with entries')
+✅ test('delete not found returns 404')
 
----
+**Примечания:**
 
-### 3.5. Plugins API (4 эндпоинта)
-
-#### Приоритет: 🟡 Средний
-
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/Plugins/PluginsManagementTest.php`)
-
-```php
-// GET /api/v1/admin/plugins
-- test('admin can list plugins')
-- test('plugins include enabled status')
-
-// POST /api/v1/admin/plugins/{id}/enable
-- test('admin can enable plugin')
-- test('plugin routes are loaded')
-
-// POST /api/v1/admin/plugins/{id}/disable
-- test('admin can disable plugin')
-- test('plugin routes are removed')
-
-// POST /api/v1/admin/plugins/sync
-- test('admin can sync plugins from filesystem')
-- test('new plugins are discovered')
-- test('removed plugins are deleted')
-```
+-   17 Feature тестов покрывают все CRUD операции для post types
+-   Тестируется уникальность slug
+-   Проверяется валидация (требуются slug и name)
+-   Тестируется работа с options_json (custom fields)
+-   Проверяется защита от удаления типов с связанными entries
+-   Тестируется принудительное удаление (`force=1`) с каскадным удалением entries
+-   Middleware `JwtAuth`, `VerifyApiCsrf` и `EnsureCanManagePostTypes` отключены в тестах
 
 ---
 
-### 3.6. Options API (3 эндпоинта)
+### 3.5. Plugins API
 
-#### Приоритет: 🟢 Низкий
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/Options/OptionsManagementTest.php`)
+**Feature-тесты** (31 тест, 136 assertions)
 
-```php
-// GET /api/v1/admin/options
-- test('admin can get options')
-- test('options can be filtered by namespace')
+// GET /api/v1/admin/plugins (ListPluginsTest.php) - 11 тестов ✅
+✅ test('admin can list plugins')
+✅ test('plugins list is paginated')
+✅ test('plugins can be filtered by enabled status')
+✅ test('plugins can be filtered by disabled status')
+✅ test('plugins can be searched by slug')
+✅ test('plugins can be searched by name')
+✅ test('plugins can be sorted by name')
+✅ test('plugins can be sorted by slug')
+✅ test('plugins can be sorted by version')
+✅ test('plugins include routes_active flag')
+✅ test('plugins include all metadata fields')
 
-// PUT /api/v1/admin/options
-- test('admin can update options')
-- test('multiple options can be updated at once')
+// POST /api/v1/admin/plugins/{slug}/enable (EnableDisablePluginTest.php) - 6 тестов ✅
+✅ test('admin can enable plugin')
+✅ test('enabling already enabled plugin returns conflict')
+✅ test('enable returns 404 for non-existent plugin')
+✅ test('enable triggers route reload')
+✅ test('enable returns plugin resource with correct structure')
+✅ test('enable dispatches plugin enabled event')
 
-// DELETE /api/v1/admin/options/{id}
-- test('admin can delete option')
-```
+// POST /api/v1/admin/plugins/{slug}/disable (EnableDisablePluginTest.php) - 6 тестов ✅
+✅ test('admin can disable plugin')
+✅ test('disabling already disabled plugin returns conflict')
+✅ test('disable returns 404 for non-existent plugin')
+✅ test('disable triggers route reload')
+✅ test('disable returns plugin resource with correct structure')
+✅ test('disable dispatches plugin disabled event')
 
----
+// POST /api/v1/admin/plugins/sync (SyncPluginsTest.php) - 8 тестов ✅
+✅ test('admin can sync plugins')
+✅ test('sync returns accepted status code 202')
+✅ test('sync returns summary with added plugins')
+✅ test('sync returns summary with updated plugins')
+✅ test('sync returns summary with removed plugins')
+✅ test('sync returns summary with providers')
+✅ test('sync returns correct structure')
+✅ test('sync handles empty summary gracefully')
 
-### 3.7. Taxonomies & Terms API (8 эндпоинтов)
+**Примечания:**
 
-#### Приоритет: 🟡 Средний
-
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/Taxonomies/TaxonomiesManagementTest.php`)
-
-```php
-// GET /api/v1/admin/taxonomies
-- test('admin can list taxonomies')
-
-// POST /api/v1/admin/taxonomies
-- test('admin can create taxonomy')
-
-// GET /api/v1/admin/taxonomies/{id}
-- test('admin can view taxonomy')
-
-// PUT /api/v1/admin/taxonomies/{id}
-- test('admin can update taxonomy')
-
-// DELETE /api/v1/admin/taxonomies/{id}
-- test('admin can delete taxonomy')
-```
-
-**Feature-тesты** (`tests/Feature/Api/Admin/V1/Terms/TermsManagementTest.php`)
-
-```php
-// GET /api/v1/admin/terms
-- test('admin can list terms')
-- test('terms can be filtered by taxonomy')
-
-// POST /api/v1/admin/terms
-- test('admin can create term')
-- test('term can have parent')
-
-// GET /api/v1/admin/terms/{id}
-- test('admin can view term')
-- test('term includes ancestors and descendants')
-
-// PUT /api/v1/admin/terms/{id}
-- test('admin can update term')
-- test('term hierarchy can be changed')
-- test('circular hierarchy is prevented')
-
-// DELETE /api/v1/admin/terms/{id}
-- test('admin can delete term')
-- test('term children are handled correctly')
-```
+-   31 Feature тест покрывают все 4 эндпоинта Plugins API
+-   **Архитектурное решение:** Созданы интерфейсы для тестируемости:
+    -   `RouteReloader` (для `PluginsRouteReloader`)
+    -   `PluginsSynchronizerInterface` (для `PluginsSynchronizer`)
+    -   `PluginActivatorInterface` (для `PluginActivator`)
+-   Интерфейсы зарегистрированы в `AppServiceProvider::register()`
+-   Тестируется:
+    -   Пагинация, фильтрация, поиск, сортировка (LIST)
+    -   Enable/Disable с проверкой конфликтов (409)
+    -   Перезагрузка маршрутов (mock `RouteReloader`)
+    -   События: `PluginEnabled`, `PluginDisabled`
+    -   Sync с полной статистикой (added, updated, removed, providers)
+    -   404 для несуществующих плагинов
+-   Middleware `JwtAuth`, `VerifyApiCsrf` отключены в тестах
 
 ---
 
-### 3.8. Search API (2 эндпоинта)
+### 3.6. Options API
 
-#### Приоритет: 🟡 Средний
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/Search/SearchAdminTest.php`)
+**Feature-тесты** (22 теста, 81 assertion)
+
+// GET /api/v1/admin/options/{namespace} (OptionsTest.php) - 8 тестов ✅
+✅ test('admin can list options by namespace')
+✅ test('options list is paginated')
+✅ test('options can be searched by key')
+✅ test('options can be searched by description')
+✅ test('options list can include soft deleted')
+✅ test('options list can show only soft deleted')
+✅ test('options are sorted by key')
+
+// GET /api/v1/admin/options/{namespace}/{key} (OptionsTest.php) - 2 теста ✅
+✅ test('admin can view single option')
+✅ test('show returns 404 for non-existent option')
+
+// PUT /api/v1/admin/options/{namespace}/{key} (OptionsTest.php) - 6 тестов ✅
+✅ test('admin can create new option')
+✅ test('admin can update existing option')
+✅ test('option can store array values')
+✅ test('option can store object values')
+✅ test('option description is optional')
+✅ test('put dispatches option changed event')
+
+// DELETE /api/v1/admin/options/{namespace}/{key} (OptionsTest.php) - 2 теста ✅
+✅ test('admin can delete option')
+✅ test('delete returns 404 for non-existent option')
+
+// POST /api/v1/admin/options/{namespace}/{key}/restore (OptionsTest.php) - 3 теста ✅
+✅ test('admin can restore deleted option')
+✅ test('restore returns 404 for non-existent option')
+✅ test('restore on non-deleted option returns the option unchanged')
+
+// VALIDATION (OptionsTest.php) - 2 теста ✅
+✅ test('invalid namespace returns validation error')
+✅ test('invalid key returns validation error')
+
+**Примечания:**
+
+-   22 Feature теста покрывают все 5 эндпоинтов Options API
+-   Тестируется:
+    -   Пагинация, поиск (по key/description)
+    -   Фильтрация soft-deleted опций (with/only)
+    -   Сортировка по ключу
+    -   Upsert (создание/обновление) опций
+    -   Хранение различных типов значений (string, array, object)
+    -   Soft delete и restore опций
+    -   Событие `OptionChanged`
+    -   Валидация namespace/key (regex pattern)
+    -   404 для несуществующих опций
+-   При создании новой опции возвращается 201 (Created)
+-   При обновлении существующей опции возвращается 200 (OK)
+-   OptionResource преобразует JSON в объекты (stdClass)
+-   Middleware `JwtAuth`, `VerifyApiCsrf` отключены в тестах
+
+---
+
+### 3.7. Taxonomies & Terms API
+
+#### Статус: ✅ Завершено (2025-11-17)
+
+**Feature-тесты** (37 тестов, 143 assertions)
+
+**Taxonomies API** (TaxonomiesTest.php) - 19 тестов, 72 assertions
+
+// GET /api/v1/admin/taxonomies - 5 тестов ✅
+✅ test('admin can list taxonomies')
+✅ test('taxonomies list is paginated')
+✅ test('taxonomies can be searched by name')
+✅ test('taxonomies can be sorted by created_at desc')
+✅ test('taxonomies can be sorted by label asc')
+
+// POST /api/v1/admin/taxonomies - 4 теста ✅
+✅ test('admin can create taxonomy')
+✅ test('taxonomy defaults to non-hierarchical')
+✅ test('taxonomy can have options_json')
+✅ test('taxonomy label is required')
+
+// GET /api/v1/admin/taxonomies/{id} - 2 теста ✅
+✅ test('admin can view taxonomy')
+✅ test('show returns 404 for non-existent taxonomy')
+
+// PUT /api/v1/admin/taxonomies/{id} - 4 теста ✅
+✅ test('admin can update taxonomy label')
+✅ test('admin can update taxonomy hierarchical flag')
+✅ test('admin can update taxonomy options_json')
+✅ test('update returns 404 for non-existent taxonomy')
+
+// DELETE /api/v1/admin/taxonomies/{id} - 4 теста ✅
+✅ test('admin can delete taxonomy without terms')
+✅ test('cannot delete taxonomy with terms')
+✅ test('can force delete taxonomy with terms')
+✅ test('delete returns 404 for non-existent taxonomy')
+
+**Terms API** (TermsTest.php) - 18 тестов, 71 assertion
+
+// GET /api/v1/admin/taxonomies/{taxonomy}/terms - 5 тестов ✅
+✅ test('admin can list terms by taxonomy')
+✅ test('terms list is paginated')
+✅ test('terms can be searched by name')
+✅ test('terms can be sorted by name asc')
+✅ test('returns 404 for non-existent taxonomy')
+
+// GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree - 1 тест ✅
+✅ test('admin can get terms tree')
+
+// POST /api/v1/admin/taxonomies/{taxonomy}/terms - 4 теста ✅
+✅ test('admin can create term')
+✅ test('term can have meta_json')
+✅ test('term can have parent')
+✅ test('term name is required')
+
+// GET /api/v1/admin/terms/{term} - 2 теста ✅
+✅ test('admin can view term')
+✅ test('show returns 404 for non-existent term')
+
+// PUT /api/v1/admin/terms/{term} - 4 теста ✅
+✅ test('admin can update term name')
+✅ test('admin can update term meta_json')
+✅ test('admin can change term parent')
+✅ test('update returns 404 for non-existent term')
+
+// DELETE /api/v1/admin/terms/{term} - 2 теста ✅
+✅ test('admin can delete term')
+✅ test('delete returns 404 for non-existent term')
+
+**Примечания:**
+
+-   37 Feature тестов покрывают 10 эндпоинтов (5 Taxonomies + 5 Terms)
+-   **Taxonomies:**
+    -   Пагинация, поиск, сортировка (created_at, label)
+    -   Иерархические и плоские таксономии
+    -   options_json для дополнительных настроек
+    -   Защита от удаления таксономий с термами
+    -   Force delete с каскадным удалением термов
+-   **Terms:**
+    -   Пагинация, поиск по имени, сортировка
+    -   Иерархия термов (parent_id, tree endpoint)
+    -   meta_json для метаданных
+    -   Управление иерархией через `TermHierarchyService`
+-   Taxonomy использует поле `name` в БД, но возвращает `label` в API
+-   Terms поддерживают древовидную структуру для иерархических таксономий
+-   Middleware `JwtAuth`, `VerifyApiCsrf` отключены в тестах
+
+---
+
+### 3.8. Search API
+
+#### Статус: ✅ Завершено (2025-11-17)
+
+**Feature-тесты** (`tests/Feature/Api/Admin/Search/SearchAdminTest.php`) — 9 тестов:
 
 ```php
-// GET /api/v1/admin/search
-- test('admin can search entries')
-- test('search returns relevant results')
-
 // POST /api/v1/admin/search/reindex
-- test('admin can trigger reindex')
-- test('reindex job is dispatched')
+✅ test('admin can trigger reindex')
+✅ test('reindex job is dispatched with tracking id')
+✅ test('reindex returns batch size from config')
+✅ test('reindex returns estimated total from published entries')
+✅ test('reindex fails when search is disabled')
+✅ test('reindex requires authentication')
+✅ test('reindex returns unique job id')
+✅ test('reindex job id is a valid ulid')
+✅ test('reindex with zero published entries returns zero estimated total')
 ```
 
-**Feature-тесты** (`tests/Feature/Api/Public/Search/PublicSearchTest.php`)
+**Feature-тесты** (`tests/Feature/Api/Public/Search/PublicSearchTest.php`) — 15 тестов:
 
 ```php
 // GET /api/v1/search
-- test('public can search published entries')
-- test('draft entries are not in results')
-- test('search results are paginated')
+✅ test('public can search published entries')
+✅ test('draft entries are not in results')
+✅ test('search results are paginated')
+✅ test('search returns etag header')
+✅ test('search returns cache control headers')
+✅ test('search accepts post type filter')
+✅ test('search accepts term filter')
+✅ test('search accepts date range filter')
+✅ test('search validates query min length')
+✅ test('search validates query max length')
+✅ test('search validates date range')
+✅ test('search without query parameter works')
+✅ test('search highlights matches in results')
+✅ test('search returns score for relevance sorting')
+✅ test('search returns took ms in meta')
 ```
+
+**Изменения в архитектуре:**
+
+-   **Создан интерфейс** `SearchServiceInterface` для возможности мокирования `final` класса `SearchService`
+-   **Обновлён** `SearchServiceProvider`: добавлен биндинг `SearchServiceInterface → SearchService`
+-   **Обновлён** `SearchController`: теперь использует `SearchServiceInterface` вместо конкретного `SearchService`
+
+**Примечания:**
+
+-   Публичный Search API не требует авторизации (для опубликованного контента)
+-   Admin Reindex API диспатчит `ReindexSearchJob` в фоновом режиме
+-   Возвращает 202 (Accepted) с `job_id`, `batch_size`, `estimated_total`
+-   Проверяет `config('search.enabled')` перед диспатчем джобы
+-   Публичный поиск поддерживает фильтры: `post_type[]`, `term[]`, `from`, `to`, `page`, `per_page`
+-   Возвращает ETag и Cache-Control заголовки для оптимизации кэширования
+-   Поддерживает подсветку (highlighting) совпадений в результатах поиска
 
 ---
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\V1;
 
-use App\Domain\Plugins\PluginActivator;
-use App\Domain\Plugins\Services\PluginsSynchronizer;
+use App\Domain\Plugins\Contracts\PluginActivatorInterface;
+use App\Domain\Plugins\Contracts\PluginsSynchronizerInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Plugins\IndexPluginsRequest;
 use App\Http\Resources\PluginCollection;
@@ -205,7 +205,7 @@ final class PluginsController extends Controller
      *   "trace_id": "00-76666666777788889999000000000001-7666666677778888-01"
      * }
      */
-    public function enable(string $slug, PluginActivator $activator): PluginResource
+    public function enable(string $slug, PluginActivatorInterface $activator): PluginResource
     {
         $plugin = $this->findPluginOrFail($slug);
 
@@ -293,7 +293,7 @@ final class PluginsController extends Controller
      *   "trace_id": "00-76666666777788889999000000000002-7666666677778888-01"
      * }
      */
-    public function disable(string $slug, PluginActivator $activator): PluginResource
+    public function disable(string $slug, PluginActivatorInterface $activator): PluginResource
     {
         $plugin = $this->findPluginOrFail($slug);
 
@@ -370,7 +370,7 @@ final class PluginsController extends Controller
      *   "trace_id": "00-76666666777788889999000000000003-7666666677778888-01"
      * }
      */
-    public function sync(PluginsSynchronizer $synchronizer): PluginSyncResource
+    public function sync(PluginsSynchronizerInterface $synchronizer): PluginSyncResource
     {
         Gate::authorize('sync', Plugin::class);
 

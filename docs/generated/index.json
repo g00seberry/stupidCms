@@ -1319,7 +1319,7 @@
                     "handle"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Plugins\\Services\\PluginsSynchronizer"
+                    "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
                 ],
                 "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
             },
@@ -1442,9 +1442,9 @@
                     "disable"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                    "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Plugins\\Contracts\\PluginActivatorInterface"
             },
             "related": [],
             "tags": [
@@ -1507,7 +1507,7 @@
                     "App\\Domain\\Plugins\\PluginRegistry",
                     "App\\Domain\\Plugins\\Services\\PluginAutoloader"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Plugins\\Contracts\\RouteReloader"
             },
             "related": [],
             "tags": [
@@ -1527,9 +1527,9 @@
                     "sync"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                    "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
             },
             "related": [],
             "tags": [
@@ -1936,7 +1936,7 @@
                     "App\\Domain\\Search\\SearchClientInterface",
                     "App\\Support\\Errors\\ErrorFactory"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Search\\Contracts\\SearchServiceInterface"
             },
             "related": [],
             "tags": [
@@ -6260,7 +6260,7 @@
                         "handle"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Plugins\\Services\\PluginsSynchronizer"
+                        "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
                     ],
                     "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
                 },
@@ -6383,9 +6383,9 @@
                         "disable"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                        "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Plugins\\Contracts\\PluginActivatorInterface"
                 },
                 "related": [],
                 "tags": [
@@ -6448,7 +6448,7 @@
                         "App\\Domain\\Plugins\\PluginRegistry",
                         "App\\Domain\\Plugins\\Services\\PluginAutoloader"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                 },
                 "related": [],
                 "tags": [
@@ -6468,9 +6468,9 @@
                         "sync"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                        "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
                 },
                 "related": [],
                 "tags": [
@@ -6877,7 +6877,7 @@
                         "App\\Domain\\Search\\SearchClientInterface",
                         "App\\Support\\Errors\\ErrorFactory"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Search\\Contracts\\SearchServiceInterface"
                 },
                 "related": [],
                 "tags": [
@@ -12581,5 +12581,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T13:43:11+00:00"
+    "generated_at": "2025-11-17T14:18:37+00:00"
 }

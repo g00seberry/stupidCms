@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Plugins\Services;
 
+use App\Domain\Plugins\Contracts\RouteReloader;
 use App\Domain\Plugins\Events\PluginsRoutesReloaded;
 use App\Domain\Plugins\Exceptions\RoutesReloadFailed;
 use App\Domain\Plugins\PluginRegistry;
@@ -20,7 +21,7 @@ use Throwable;
  *
  * @package App\Domain\Plugins\Services
  */
-final class PluginsRouteReloader
+final class PluginsRouteReloader implements RouteReloader
 {
     /**
      * @param \Illuminate\Contracts\Foundation\Application $app Приложение Laravel

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Plugins;
 
+use App\Domain\Plugins\Contracts\PluginActivatorInterface;
+use App\Domain\Plugins\Contracts\RouteReloader;
 use App\Domain\Plugins\Events\PluginDisabled;
 use App\Domain\Plugins\Events\PluginEnabled;
 use App\Domain\Plugins\Exceptions\PluginAlreadyDisabledException;
@@ -20,13 +22,13 @@ use Illuminate\Support\Facades\Event;
  *
  * @package App\Domain\Plugins
  */
-final class PluginActivator
+final class PluginActivator implements PluginActivatorInterface
 {
     /**
-     * @param \App\Domain\Plugins\Services\PluginsRouteReloader $routeReloader Перезагрузчик маршрутов
+     * @param \App\Domain\Plugins\Contracts\RouteReloader $routeReloader Перезагрузчик маршрутов
      */
     public function __construct(
-        private readonly Services\PluginsRouteReloader $routeReloader,
+        private readonly RouteReloader $routeReloader,
     ) {
     }
 
