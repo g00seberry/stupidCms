@@ -60,6 +60,7 @@ class GenerateVariantJob implements ShouldQueue
      *
      * Загружает медиа-файл (включая удалённые) и генерирует вариант.
      * Если медиа-файл не найден, job завершается без ошибки.
+     * Событие MediaProcessed отправляется автоматически из OnDemandVariantService::generateVariant.
      *
      * @param \App\Domain\Media\Services\OnDemandVariantService $service Сервис для генерации вариантов
      * @return void

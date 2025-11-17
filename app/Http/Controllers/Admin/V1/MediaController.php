@@ -8,6 +8,7 @@ use App\Domain\Media\Actions\MediaStoreAction;
 use App\Domain\Media\Actions\ListMediaAction;
 use App\Domain\Media\Actions\UpdateMediaMetadataAction;
 use App\Domain\Media\EloquentMediaRepository;
+use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\MediaDeletedFilter;
 use App\Domain\Media\MediaQuery;
 use App\Domain\Media\MediaRepository;
@@ -24,6 +25,7 @@ use App\Support\Http\AdminResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 /**
@@ -431,6 +433,8 @@ class MediaController extends Controller
     /**
      * Удаление медиа (soft delete).
      *
+     * Выполняет мягкое удаление медиа-файла и отправляет событие MediaDeleted.
+     *
      * @group Admin ▸ Media
      * @name Delete media
      * @authenticated
@@ -484,6 +488,9 @@ class MediaController extends Controller
         $this->authorize('delete', $media);
 
         $media->delete();
+
+        // Отправляем событие удаления медиа-файла
+        Event::dispatch(new MediaDeleted($media));
 
         return AdminResponse::noContent();
     }

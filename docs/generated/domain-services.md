@@ -231,6 +231,47 @@ CQRS-действие: выборка списка медиа по параме�
 
 ---
 
+## LogMediaEvent
+**ID:** `domain_service:Media/Listeners/LogMediaEvent`
+**Path:** `app/Domain/Media/Listeners/LogMediaEvent.php`
+
+Слушатель для логирования событий медиа-файлов.
+
+### Details
+Логирует все события жизненного цикла медиа-файлов:
+- загрузка (MediaUploaded)
+- обработка вариантов (MediaProcessed)
+- удаление (MediaDeleted)
+
+### Meta
+- **Methods:** `handleMediaUploaded`, `handleMediaProcessed`, `handleMediaDeleted`
+
+### Tags
+`media`, `listener`
+
+
+---
+
+## MediaDeleted
+**ID:** `domain_service:Media/Events/MediaDeleted`
+**Path:** `app/Domain/Media/Events/MediaDeleted.php`
+
+Событие: медиа-файл удалён.
+
+### Details
+Отправляется после мягкого удаления (soft delete) медиа-файла.
+Используется для логирования, уведомлений и автоматических интеграций (CDN purge).
+
+### Meta
+- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
+- **Dependencies:** `App\Models\Media`
+
+### Tags
+`media`, `event`
+
+
+---
+
 ## MediaMetadataExtractor
 **ID:** `domain_service:Media/Services/MediaMetadataExtractor`
 **Path:** `app/Domain/Media/Services/MediaMetadataExtractor.php`
@@ -247,6 +288,26 @@ CQRS-действие: выборка списка медиа по параме�
 
 ### Tags
 `media`, `service`
+
+
+---
+
+## MediaProcessed
+**ID:** `domain_service:Media/Events/MediaProcessed`
+**Path:** `app/Domain/Media/Events/MediaProcessed.php`
+
+Событие: медиа-файл обработан (сгенерирован вариант).
+
+### Details
+Отправляется после успешной генерации варианта медиа-файла.
+Используется для логирования, уведомлений и автоматических интеграций (CDN purge).
+
+### Meta
+- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
+- **Dependencies:** `App\Models\Media`, `App\Models\MediaVariant`
+
+### Tags
+`media`, `event`
 
 
 ---
@@ -288,6 +349,26 @@ Value Object для параметров выборки медиа.
 
 ---
 
+## MediaUploaded
+**ID:** `domain_service:Media/Events/MediaUploaded`
+**Path:** `app/Domain/Media/Events/MediaUploaded.php`
+
+Событие: медиа-файл загружен.
+
+### Details
+Отправляется после успешной загрузки и сохранения медиа-файла в БД.
+Используется для логирования, уведомлений и автоматических интеграций (CDN purge).
+
+### Meta
+- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
+- **Dependencies:** `App\Models\Media`
+
+### Tags
+`media`, `event`
+
+
+---
+
 ## NotReservedRoute
 **ID:** `domain_service:Pages/Validation/NotReservedRoute`
 **Path:** `app/Domain/Pages/Validation/NotReservedRoute.php`
@@ -305,6 +386,25 @@ Value Object для параметров выборки медиа.
 
 ### Tags
 `page`, `validation`
+
+
+---
+
+## NotifyMediaEvent
+**ID:** `domain_service:Media/Listeners/NotifyMediaEvent`
+**Path:** `app/Domain/Media/Listeners/NotifyMediaEvent.php`
+
+Слушатель для отправки уведомлений о событиях медиа-файлов.
+
+### Details
+Отправляет уведомления при событиях жизненного цикла медиа-файлов.
+Может быть расширен для интеграции с email, Slack, webhooks и т.д.
+
+### Meta
+- **Methods:** `handleMediaUploaded`, `handleMediaProcessed`, `handleMediaDeleted`
+
+### Tags
+`media`, `listener`
 
 
 ---
@@ -656,6 +756,25 @@ Value Object для опций типа записи (PostType).
 
 ---
 
+## PurgeCdnCache
+**ID:** `domain_service:Media/Listeners/PurgeCdnCache`
+**Path:** `app/Domain/Media/Listeners/PurgeCdnCache.php`
+
+Слушатель для очистки кэша CDN при событиях медиа-файлов.
+
+### Details
+Очищает кэш CDN при загрузке, обработке и удалении медиа-файлов.
+Поддерживает различные CDN провайдеры через конфигурацию.
+
+### Meta
+- **Methods:** `handleMediaUploaded`, `handleMediaProcessed`, `handleMediaDeleted`
+
+### Tags
+`media`, `listener`
+
+
+---
+
 ## RefreshTokenDto
 **ID:** `domain_service:Auth/RefreshTokenDto`
 **Path:** `app/Domain/Auth/RefreshTokenDto.php`
@@ -897,7 +1016,6 @@ Value Object для фильтра поиска по терму.
 - media.disks.collections
 - media.disks.kinds
 - media.disks.default
-- media.disk (legacy fallback)
 
 ### Meta
 - **Methods:** `resolveDiskName`, `filesystemForUpload`

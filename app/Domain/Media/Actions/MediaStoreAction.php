@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Actions;
 
+use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Models\Media;
 use App\Models\MediaMetadata;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -44,6 +46,7 @@ class MediaStoreAction
      * (длительность, битрейт, кадры, кодеки) в таблице media_metadata.
      * Если файл с таким же checksum уже существует, возвращает существующую запись
      * без сохранения дубликата на диск (дедупликация).
+     * После успешного создания новой записи отправляет событие MediaUploaded.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
      * @param array<string, mixed> $payload Дополнительные данные (title, alt, collection)
@@ -139,6 +142,9 @@ class MediaStoreAction
                 $normalized
             ));
         }
+
+        // Отправляем событие загрузки медиа-файла
+        Event::dispatch(new MediaUploaded($media));
 
         return $media;
     }

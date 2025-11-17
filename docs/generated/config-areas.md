@@ -183,7 +183,7 @@ Configuration: Mail
 Configuration: Media
 
 ### Meta
-- **Keys:** `disk`, `disks`, `default`, `collections`, `videos`, `documents`, `kinds`, `image`, `video`, `max_upload_mb`, `allowed_mimes`, `variants`, `thumbnail`, `max`, `medium`, `signed_ttl`, `path_strategy`, `driver`, `quality`, `glide_driver`, `metadata`, `ffprobe`, `enabled`, `binary`
+- **Keys:** `disks`, `default`, `collections`, `videos`, `documents`, `kinds`, `image`, `video`, `max_upload_mb`, `allowed_mimes`, `variants`, `thumbnail`, `max`, `medium`, `signed_ttl`, `path_strategy`, `driver`, `quality`, `glide_driver`, `metadata`, `ffprobe`, `enabled`, `binary`
 - **Sections:** `disks`, `collections`, `kinds`, `allowed_mimes`, `variants`, `thumbnail`, `medium`, `image`, `metadata`, `ffprobe`
 
 ### Tags

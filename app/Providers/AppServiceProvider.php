@@ -17,6 +17,12 @@ use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
 use App\Domain\Auth\RefreshTokenRepositoryImpl;
 use App\Domain\Media\EloquentMediaRepository;
+use App\Domain\Media\Events\MediaDeleted;
+use App\Domain\Media\Events\MediaProcessed;
+use App\Domain\Media\Events\MediaUploaded;
+use App\Domain\Media\Listeners\LogMediaEvent;
+use App\Domain\Media\Listeners\NotifyMediaEvent;
+use App\Domain\Media\Listeners\PurgeCdnCache;
 use App\Domain\Media\MediaRepository;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
@@ -27,6 +33,7 @@ use App\Observers\EntryObserver;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -129,6 +136,7 @@ class AppServiceProvider extends ServiceProvider
      * Загрузить сервисы приложения.
      *
      * Регистрирует EntryObserver для модели Entry.
+     * Регистрирует слушателей событий медиа-файлов.
      * Создаёт директорию для кэша HTMLPurifier.
      * Устанавливает JWT leeway для учёта расхождения часов.
      *
@@ -137,6 +145,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Entry::observe(EntryObserver::class);
+
+        // Регистрация слушателей событий медиа-файлов
+        Event::listen(MediaUploaded::class, [LogMediaEvent::class, 'handleMediaUploaded']);
+        Event::listen(MediaUploaded::class, [NotifyMediaEvent::class, 'handleMediaUploaded']);
+        Event::listen(MediaUploaded::class, [PurgeCdnCache::class, 'handleMediaUploaded']);
+
+        Event::listen(MediaProcessed::class, [LogMediaEvent::class, 'handleMediaProcessed']);
+        Event::listen(MediaProcessed::class, [NotifyMediaEvent::class, 'handleMediaProcessed']);
+        Event::listen(MediaProcessed::class, [PurgeCdnCache::class, 'handleMediaProcessed']);
+
+        Event::listen(MediaDeleted::class, [LogMediaEvent::class, 'handleMediaDeleted']);
+        Event::listen(MediaDeleted::class, [NotifyMediaEvent::class, 'handleMediaDeleted']);
+        Event::listen(MediaDeleted::class, [PurgeCdnCache::class, 'handleMediaDeleted']);
         
         // Создаем директорию для кэша HTMLPurifier (idempotent)
         app('files')->ensureDirectoryExists(storage_path('app/purifier'));

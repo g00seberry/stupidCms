@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Services;
 
+use App\Domain\Media\Events\MediaProcessed;
 use App\Domain\Media\Images\ImageProcessor;
 use App\Domain\Media\Images\ImageRef;
 use App\Domain\Media\Jobs\GenerateVariantJob;
 use App\Models\Media;
 use App\Models\MediaVariant;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 use RuntimeException;
@@ -71,6 +73,7 @@ class OnDemandVariantService
      *
      * Читает оригинальный файл, изменяет размер (если нужно),
      * кодирует в нужный формат и сохраняет на диск.
+     * После успешной генерации отправляет событие MediaProcessed.
      *
      * @param \App\Models\Media $media Медиа-файл
      * @param string $variant Имя варианта
@@ -146,6 +149,9 @@ class OnDemandVariantService
         );
 
         $this->images->destroy($resized);
+
+        // Отправляем событие обработки медиа-файла
+        Event::dispatch(new MediaProcessed($media, $variantModel));
 
         return $variantModel;
     }

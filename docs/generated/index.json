@@ -662,6 +662,85 @@
             ]
         },
         {
+            "id": "domain_service:Media/Events/MediaDeleted",
+            "type": "domain_service",
+            "name": "MediaDeleted",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Events\\MediaDeleted.php",
+            "summary": "Событие: медиа-файл удалён.",
+            "details": "Отправляется после мягкого удаления (soft delete) медиа-файла.\nИспользуется для логирования, уведомлений и автоматических интеграций (CDN purge).",
+            "meta": {
+                "methods": [
+                    "dispatch",
+                    "dispatchIf",
+                    "dispatchUnless",
+                    "broadcast",
+                    "restoreModel"
+                ],
+                "dependencies": [
+                    "App\\Models\\Media"
+                ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "event"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Events/MediaProcessed",
+            "type": "domain_service",
+            "name": "MediaProcessed",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Events\\MediaProcessed.php",
+            "summary": "Событие: медиа-файл обработан (сгенерирован вариант).",
+            "details": "Отправляется после успешной генерации варианта медиа-файла.\nИспользуется для логирования, уведомлений и автоматических интеграций (CDN purge).",
+            "meta": {
+                "methods": [
+                    "dispatch",
+                    "dispatchIf",
+                    "dispatchUnless",
+                    "broadcast",
+                    "restoreModel"
+                ],
+                "dependencies": [
+                    "App\\Models\\Media",
+                    "App\\Models\\MediaVariant"
+                ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "event"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Events/MediaUploaded",
+            "type": "domain_service",
+            "name": "MediaUploaded",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Events\\MediaUploaded.php",
+            "summary": "Событие: медиа-файл загружен.",
+            "details": "Отправляется после успешной загрузки и сохранения медиа-файла в БД.\nИспользуется для логирования, уведомлений и автоматических интеграций (CDN purge).",
+            "meta": {
+                "methods": [
+                    "dispatch",
+                    "dispatchIf",
+                    "dispatchUnless",
+                    "broadcast",
+                    "restoreModel"
+                ],
+                "dependencies": [
+                    "App\\Models\\Media"
+                ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "event"
+            ]
+        },
+        {
             "id": "domain_service:Media/Images/GdImageProcessor",
             "type": "domain_service",
             "name": "GdImageProcessor",
@@ -793,6 +872,72 @@
             ]
         },
         {
+            "id": "domain_service:Media/Listeners/LogMediaEvent",
+            "type": "domain_service",
+            "name": "LogMediaEvent",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Listeners\\LogMediaEvent.php",
+            "summary": "Слушатель для логирования событий медиа-файлов.",
+            "details": "Логирует все события жизненного цикла медиа-файлов:\n- загрузка (MediaUploaded)\n- обработка вариантов (MediaProcessed)\n- удаление (MediaDeleted)",
+            "meta": {
+                "methods": [
+                    "handleMediaUploaded",
+                    "handleMediaProcessed",
+                    "handleMediaDeleted"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "listener"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Listeners/NotifyMediaEvent",
+            "type": "domain_service",
+            "name": "NotifyMediaEvent",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Listeners\\NotifyMediaEvent.php",
+            "summary": "Слушатель для отправки уведомлений о событиях медиа-файлов.",
+            "details": "Отправляет уведомления при событиях жизненного цикла медиа-файлов.\nМожет быть расширен для интеграции с email, Slack, webhooks и т.д.",
+            "meta": {
+                "methods": [
+                    "handleMediaUploaded",
+                    "handleMediaProcessed",
+                    "handleMediaDeleted"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "listener"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Listeners/PurgeCdnCache",
+            "type": "domain_service",
+            "name": "PurgeCdnCache",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Listeners\\PurgeCdnCache.php",
+            "summary": "Слушатель для очистки кэша CDN при событиях медиа-файлов.",
+            "details": "Очищает кэш CDN при загрузке, обработке и удалении медиа-файлов.\nПоддерживает различные CDN провайдеры через конфигурацию.",
+            "meta": {
+                "methods": [
+                    "handleMediaUploaded",
+                    "handleMediaProcessed",
+                    "handleMediaDeleted"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "listener"
+            ]
+        },
+        {
             "id": "domain_service:Media/MediaQuery",
             "type": "domain_service",
             "name": "MediaQuery",
@@ -893,7 +1038,7 @@
             "name": "StorageResolver",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\StorageResolver.php",
             "summary": "Резолвер дисков для медиа-хранилища.",
-            "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default\n- media.disk (legacy fallback)",
+            "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default",
             "meta": {
                 "methods": [
                     "resolveDiskName",
@@ -2350,7 +2495,6 @@
             "details": null,
             "meta": {
                 "keys": [
-                    "disk",
                     "disks",
                     "default",
                     "collections",
@@ -5209,6 +5353,85 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Events/MediaDeleted",
+                "type": "domain_service",
+                "name": "MediaDeleted",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Events\\MediaDeleted.php",
+                "summary": "Событие: медиа-файл удалён.",
+                "details": "Отправляется после мягкого удаления (soft delete) медиа-файла.\nИспользуется для логирования, уведомлений и автоматических интеграций (CDN purge).",
+                "meta": {
+                    "methods": [
+                        "dispatch",
+                        "dispatchIf",
+                        "dispatchUnless",
+                        "broadcast",
+                        "restoreModel"
+                    ],
+                    "dependencies": [
+                        "App\\Models\\Media"
+                    ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "event"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Events/MediaProcessed",
+                "type": "domain_service",
+                "name": "MediaProcessed",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Events\\MediaProcessed.php",
+                "summary": "Событие: медиа-файл обработан (сгенерирован вариант).",
+                "details": "Отправляется после успешной генерации варианта медиа-файла.\nИспользуется для логирования, уведомлений и автоматических интеграций (CDN purge).",
+                "meta": {
+                    "methods": [
+                        "dispatch",
+                        "dispatchIf",
+                        "dispatchUnless",
+                        "broadcast",
+                        "restoreModel"
+                    ],
+                    "dependencies": [
+                        "App\\Models\\Media",
+                        "App\\Models\\MediaVariant"
+                    ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "event"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Events/MediaUploaded",
+                "type": "domain_service",
+                "name": "MediaUploaded",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Events\\MediaUploaded.php",
+                "summary": "Событие: медиа-файл загружен.",
+                "details": "Отправляется после успешной загрузки и сохранения медиа-файла в БД.\nИспользуется для логирования, уведомлений и автоматических интеграций (CDN purge).",
+                "meta": {
+                    "methods": [
+                        "dispatch",
+                        "dispatchIf",
+                        "dispatchUnless",
+                        "broadcast",
+                        "restoreModel"
+                    ],
+                    "dependencies": [
+                        "App\\Models\\Media"
+                    ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "event"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Images/GdImageProcessor",
                 "type": "domain_service",
                 "name": "GdImageProcessor",
@@ -5340,6 +5563,72 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Listeners/LogMediaEvent",
+                "type": "domain_service",
+                "name": "LogMediaEvent",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Listeners\\LogMediaEvent.php",
+                "summary": "Слушатель для логирования событий медиа-файлов.",
+                "details": "Логирует все события жизненного цикла медиа-файлов:\n- загрузка (MediaUploaded)\n- обработка вариантов (MediaProcessed)\n- удаление (MediaDeleted)",
+                "meta": {
+                    "methods": [
+                        "handleMediaUploaded",
+                        "handleMediaProcessed",
+                        "handleMediaDeleted"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "listener"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Listeners/NotifyMediaEvent",
+                "type": "domain_service",
+                "name": "NotifyMediaEvent",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Listeners\\NotifyMediaEvent.php",
+                "summary": "Слушатель для отправки уведомлений о событиях медиа-файлов.",
+                "details": "Отправляет уведомления при событиях жизненного цикла медиа-файлов.\nМожет быть расширен для интеграции с email, Slack, webhooks и т.д.",
+                "meta": {
+                    "methods": [
+                        "handleMediaUploaded",
+                        "handleMediaProcessed",
+                        "handleMediaDeleted"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "listener"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Listeners/PurgeCdnCache",
+                "type": "domain_service",
+                "name": "PurgeCdnCache",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Listeners\\PurgeCdnCache.php",
+                "summary": "Слушатель для очистки кэша CDN при событиях медиа-файлов.",
+                "details": "Очищает кэш CDN при загрузке, обработке и удалении медиа-файлов.\nПоддерживает различные CDN провайдеры через конфигурацию.",
+                "meta": {
+                    "methods": [
+                        "handleMediaUploaded",
+                        "handleMediaProcessed",
+                        "handleMediaDeleted"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "listener"
+                ]
+            },
+            {
                 "id": "domain_service:Media/MediaQuery",
                 "type": "domain_service",
                 "name": "MediaQuery",
@@ -5440,7 +5729,7 @@
                 "name": "StorageResolver",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\StorageResolver.php",
                 "summary": "Резолвер дисков для медиа-хранилища.",
-                "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default\n- media.disk (legacy fallback)",
+                "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default",
                 "meta": {
                     "methods": [
                         "resolveDiskName",
@@ -6901,7 +7190,6 @@
                 "details": null,
                 "meta": {
                     "keys": [
-                        "disk",
                         "disks",
                         "default",
                         "collections",
@@ -9152,6 +9440,24 @@
                 "summary": "Реализация MediaRepository на базе Eloquent."
             },
             {
+                "id": "domain_service:Media/Events/MediaDeleted",
+                "type": "domain_service",
+                "name": "MediaDeleted",
+                "summary": "Событие: медиа-файл удалён."
+            },
+            {
+                "id": "domain_service:Media/Events/MediaProcessed",
+                "type": "domain_service",
+                "name": "MediaProcessed",
+                "summary": "Событие: медиа-файл обработан (сгенерирован вариант)."
+            },
+            {
+                "id": "domain_service:Media/Events/MediaUploaded",
+                "type": "domain_service",
+                "name": "MediaUploaded",
+                "summary": "Событие: медиа-файл загружен."
+            },
+            {
                 "id": "domain_service:Media/Images/GdImageProcessor",
                 "type": "domain_service",
                 "name": "GdImageProcessor",
@@ -9174,6 +9480,24 @@
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
                 "summary": "Job для генерации варианта медиа-файла."
+            },
+            {
+                "id": "domain_service:Media/Listeners/LogMediaEvent",
+                "type": "domain_service",
+                "name": "LogMediaEvent",
+                "summary": "Слушатель для логирования событий медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Listeners/NotifyMediaEvent",
+                "type": "domain_service",
+                "name": "NotifyMediaEvent",
+                "summary": "Слушатель для отправки уведомлений о событиях медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Listeners/PurgeCdnCache",
+                "type": "domain_service",
+                "name": "PurgeCdnCache",
+                "summary": "Слушатель для очистки кэша CDN при событиях медиа-файлов."
             },
             {
                 "id": "domain_service:Media/MediaQuery",
@@ -9506,6 +9830,50 @@
                 "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
             }
         ],
+        "event": [
+            {
+                "id": "domain_service:Media/Events/MediaDeleted",
+                "type": "domain_service",
+                "name": "MediaDeleted",
+                "summary": "Событие: медиа-файл удалён."
+            },
+            {
+                "id": "domain_service:Media/Events/MediaProcessed",
+                "type": "domain_service",
+                "name": "MediaProcessed",
+                "summary": "Событие: медиа-файл обработан (сгенерирован вариант)."
+            },
+            {
+                "id": "domain_service:Media/Events/MediaUploaded",
+                "type": "domain_service",
+                "name": "MediaUploaded",
+                "summary": "Событие: медиа-файл загружен."
+            },
+            {
+                "id": "domain_service:Plugins/Events/PluginDisabled",
+                "type": "domain_service",
+                "name": "PluginDisabled",
+                "summary": "Событие: плагин отключён."
+            },
+            {
+                "id": "domain_service:Plugins/Events/PluginEnabled",
+                "type": "domain_service",
+                "name": "PluginEnabled",
+                "summary": "Событие: плагин включён."
+            },
+            {
+                "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
+                "type": "domain_service",
+                "name": "PluginsRoutesReloaded",
+                "summary": "Событие: маршруты плагинов перезагружены."
+            },
+            {
+                "id": "domain_service:Plugins/Events/PluginsSynced",
+                "type": "domain_service",
+                "name": "PluginsSynced",
+                "summary": "Событие: плагины синхронизированы."
+            }
+        ],
         "image": [
             {
                 "id": "domain_service:Media/Images/GdImageProcessor",
@@ -9538,6 +9906,26 @@
                 "type": "domain_service",
                 "name": "ReindexSearchJob",
                 "summary": "Job для реиндексации поискового индекса в фоновом режиме."
+            }
+        ],
+        "listener": [
+            {
+                "id": "domain_service:Media/Listeners/LogMediaEvent",
+                "type": "domain_service",
+                "name": "LogMediaEvent",
+                "summary": "Слушатель для логирования событий медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Listeners/NotifyMediaEvent",
+                "type": "domain_service",
+                "name": "NotifyMediaEvent",
+                "summary": "Слушатель для отправки уведомлений о событиях медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Listeners/PurgeCdnCache",
+                "type": "domain_service",
+                "name": "PurgeCdnCache",
+                "summary": "Слушатель для очистки кэша CDN при событиях медиа-файлов."
             }
         ],
         "service": [
@@ -9660,32 +10048,6 @@
                 "type": "domain_service",
                 "name": "SearchReindexCommand",
                 "summary": "Команда для реиндексации поискового индекса."
-            }
-        ],
-        "event": [
-            {
-                "id": "domain_service:Plugins/Events/PluginDisabled",
-                "type": "domain_service",
-                "name": "PluginDisabled",
-                "summary": "Событие: плагин отключён."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginEnabled",
-                "type": "domain_service",
-                "name": "PluginEnabled",
-                "summary": "Событие: плагин включён."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
-                "type": "domain_service",
-                "name": "PluginsRoutesReloaded",
-                "summary": "Событие: маршруты плагинов перезагружены."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsSynced",
-                "type": "domain_service",
-                "name": "PluginsSynced",
-                "summary": "Событие: плагины синхронизированы."
             }
         ],
         "routing": [
@@ -11591,5 +11953,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-16T17:00:22+00:00"
+    "generated_at": "2025-11-17T03:12:53+00:00"
 }
