@@ -610,7 +610,10 @@
                 ],
                 "dependencies": [
                     "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
-                    "App\\Domain\\Media\\Services\\StorageResolver"
+                    "App\\Domain\\Media\\Services\\StorageResolver",
+                    "App\\Domain\\Media\\Services\\CollectionRulesResolver",
+                    "App\\Domain\\Media\\Validation\\MediaValidationPipeline",
+                    "App\\Domain\\Media\\Services\\ExifManager"
                 ],
                 "interface": null
             },
@@ -638,6 +641,27 @@
             "tags": [
                 "media",
                 "action"
+            ]
+        },
+        {
+            "id": "domain_service:Media/DTO/MediaMetadataDTO",
+            "type": "domain_service",
+            "name": "MediaMetadataDTO",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\DTO\\MediaMetadataDTO.php",
+            "summary": "DTO для нормализованных метаданных медиа-файла.",
+            "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).",
+            "meta": {
+                "methods": [
+                    "toArray",
+                    "fromArray"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "dto"
             ]
         },
         {
@@ -967,6 +991,74 @@
             ]
         },
         {
+            "id": "domain_service:Media/Services/CollectionRulesResolver",
+            "type": "domain_service",
+            "name": "CollectionRulesResolver",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\CollectionRulesResolver.php",
+            "summary": "Резолвер правил валидации для коллекций медиа.",
+            "details": "Получает правила валидации (MIME, размеры, длительность, битрейт)\nдля конкретной коллекции из конфигурации. Если правила не заданы\nдля коллекции, возвращает глобальные значения.",
+            "meta": {
+                "methods": [
+                    "getRules",
+                    "getAllowedMimes",
+                    "getMaxSizeBytes"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Services/ExifManager",
+            "type": "domain_service",
+            "name": "ExifManager",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\ExifManager.php",
+            "summary": "Менеджер для управления EXIF данными изображений.",
+            "details": "Поддерживает операции:\n- Автоматический поворот изображения на основе EXIF Orientation\n- Удаление (strip) EXIF данных\n- Фильтрация EXIF полей по whitelist\n- Сохранение цветового профиля (ICC)",
+            "meta": {
+                "methods": [
+                    "autoRotate",
+                    "stripExif",
+                    "filterExif",
+                    "extractColorProfile"
+                ],
+                "dependencies": [
+                    "App\\Domain\\Media\\Images\\ImageProcessor"
+                ],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Services/ExiftoolMediaMetadataPlugin",
+            "type": "domain_service",
+            "name": "ExiftoolMediaMetadataPlugin",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\ExiftoolMediaMetadataPlugin.php",
+            "summary": "Плагин метаданных, основанный на утилите exiftool.",
+            "details": "Использует exiftool для извлечения детальных метаданных из изображений,\nвидео и аудио файлов. Особенно полезен для EXIF данных и метаданных,\nнедоступных через другие инструменты.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "extract"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
             "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
             "type": "domain_service",
             "name": "FfprobeMediaMetadataPlugin",
@@ -993,15 +1085,37 @@
             "name": "MediaMetadataExtractor",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
             "summary": "Сервис для извлечения метаданных из медиа-файлов.",
-            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов.",
+            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
             "meta": {
                 "methods": [
                     "extract"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Media\\Images\\ImageProcessor"
+                    "App\\Domain\\Media\\Images\\ImageProcessor",
+                    "Illuminate\\Contracts\\Cache\\Repository"
                 ],
                 "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Services/MediainfoMediaMetadataPlugin",
+            "type": "domain_service",
+            "name": "MediainfoMediaMetadataPlugin",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediainfoMediaMetadataPlugin.php",
+            "summary": "Плагин метаданных, основанный на утилите mediainfo.",
+            "details": "Использует mediainfo для извлечения метаданных видео/аудио файлов\nс более детальной информацией, чем ffprobe (например, для некоторых форматов).",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "extract"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
             },
             "related": [],
             "tags": [
@@ -1051,6 +1165,91 @@
             "tags": [
                 "media",
                 "service"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Validation/CorruptionValidator",
+            "type": "domain_service",
+            "name": "CorruptionValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\CorruptionValidator.php",
+            "summary": "Валидатор проверки целостности (corruption) медиа-файлов.",
+            "details": "Проверяет, что файл не повреждён и может быть корректно обработан.\nДля изображений пытается открыть файл через ImageProcessor.\nДля видео/аудио проверка выполняется через плагины метаданных.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "validate"
+                ],
+                "dependencies": [
+                    "App\\Domain\\Media\\Images\\ImageProcessor"
+                ],
+                "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "validation"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Validation/MediaValidationPipeline",
+            "type": "domain_service",
+            "name": "MediaValidationPipeline",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MediaValidationPipeline.php",
+            "summary": "Pipeline валидации медиа-файлов.",
+            "details": "Последовательно применяет все зарегистрированные валидаторы к файлу.\nОстанавливается на первой ошибке валидации.",
+            "meta": {
+                "methods": [
+                    "validate"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "validation"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Validation/MimeSignatureValidator",
+            "type": "domain_service",
+            "name": "MimeSignatureValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MimeSignatureValidator.php",
+            "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes).",
+            "details": "Определяет реальный MIME-тип файла по его сигнатурам и сравнивает\nс заявленным типом. Защищает от подмены расширения файла.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "validate"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "validation"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Validation/SizeLimitValidator",
+            "type": "domain_service",
+            "name": "SizeLimitValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\SizeLimitValidator.php",
+            "summary": "Валидатор ограничений размера файла и размеров изображений/видео.",
+            "details": "Проверяет, что размер файла и размеры контента (ширина/высота для изображений,\nдлительность для видео/аудио) не превышают установленные лимиты.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "validate"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "validation"
             ]
         },
         {
@@ -2518,7 +2717,21 @@
                     "metadata",
                     "ffprobe",
                     "enabled",
-                    "binary"
+                    "binary",
+                    "mediainfo",
+                    "exiftool",
+                    "cache_ttl",
+                    "max_size_bytes",
+                    "max_duration_ms",
+                    "max_bitrate_kbps",
+                    "thumbnails",
+                    "max_width",
+                    "max_height",
+                    "exif",
+                    "auto_rotate",
+                    "strip",
+                    "whitelist",
+                    "preserve_color_profile"
                 ],
                 "sections": [
                     "disks",
@@ -2530,7 +2743,12 @@
                     "medium",
                     "image",
                     "metadata",
-                    "ffprobe"
+                    "ffprobe",
+                    "mediainfo",
+                    "exiftool",
+                    "videos",
+                    "thumbnails",
+                    "exif"
                 ]
             },
             "related": [],
@@ -5330,7 +5548,10 @@
                     ],
                     "dependencies": [
                         "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
-                        "App\\Domain\\Media\\Services\\StorageResolver"
+                        "App\\Domain\\Media\\Services\\StorageResolver",
+                        "App\\Domain\\Media\\Services\\CollectionRulesResolver",
+                        "App\\Domain\\Media\\Validation\\MediaValidationPipeline",
+                        "App\\Domain\\Media\\Services\\ExifManager"
                     ],
                     "interface": null
                 },
@@ -5358,6 +5579,27 @@
                 "tags": [
                     "media",
                     "action"
+                ]
+            },
+            {
+                "id": "domain_service:Media/DTO/MediaMetadataDTO",
+                "type": "domain_service",
+                "name": "MediaMetadataDTO",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\DTO\\MediaMetadataDTO.php",
+                "summary": "DTO для нормализованных метаданных медиа-файла.",
+                "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).",
+                "meta": {
+                    "methods": [
+                        "toArray",
+                        "fromArray"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "dto"
                 ]
             },
             {
@@ -5687,6 +5929,74 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Services/CollectionRulesResolver",
+                "type": "domain_service",
+                "name": "CollectionRulesResolver",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\CollectionRulesResolver.php",
+                "summary": "Резолвер правил валидации для коллекций медиа.",
+                "details": "Получает правила валидации (MIME, размеры, длительность, битрейт)\nдля конкретной коллекции из конфигурации. Если правила не заданы\nдля коллекции, возвращает глобальные значения.",
+                "meta": {
+                    "methods": [
+                        "getRules",
+                        "getAllowedMimes",
+                        "getMaxSizeBytes"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Services/ExifManager",
+                "type": "domain_service",
+                "name": "ExifManager",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\ExifManager.php",
+                "summary": "Менеджер для управления EXIF данными изображений.",
+                "details": "Поддерживает операции:\n- Автоматический поворот изображения на основе EXIF Orientation\n- Удаление (strip) EXIF данных\n- Фильтрация EXIF полей по whitelist\n- Сохранение цветового профиля (ICC)",
+                "meta": {
+                    "methods": [
+                        "autoRotate",
+                        "stripExif",
+                        "filterExif",
+                        "extractColorProfile"
+                    ],
+                    "dependencies": [
+                        "App\\Domain\\Media\\Images\\ImageProcessor"
+                    ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Services/ExiftoolMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "ExiftoolMediaMetadataPlugin",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\ExiftoolMediaMetadataPlugin.php",
+                "summary": "Плагин метаданных, основанный на утилите exiftool.",
+                "details": "Использует exiftool для извлечения детальных метаданных из изображений,\nвидео и аудио файлов. Особенно полезен для EXIF данных и метаданных,\nнедоступных через другие инструменты.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "extract"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
@@ -5713,15 +6023,37 @@
                 "name": "MediaMetadataExtractor",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
                 "summary": "Сервис для извлечения метаданных из медиа-файлов.",
-                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов.",
+                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
                 "meta": {
                     "methods": [
                         "extract"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Media\\Images\\ImageProcessor"
+                        "App\\Domain\\Media\\Images\\ImageProcessor",
+                        "Illuminate\\Contracts\\Cache\\Repository"
                     ],
                     "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Services/MediainfoMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "MediainfoMediaMetadataPlugin",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediainfoMediaMetadataPlugin.php",
+                "summary": "Плагин метаданных, основанный на утилите mediainfo.",
+                "details": "Использует mediainfo для извлечения метаданных видео/аудио файлов\nс более детальной информацией, чем ffprobe (например, для некоторых форматов).",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "extract"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
                 },
                 "related": [],
                 "tags": [
@@ -5771,6 +6103,91 @@
                 "tags": [
                     "media",
                     "service"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Validation/CorruptionValidator",
+                "type": "domain_service",
+                "name": "CorruptionValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\CorruptionValidator.php",
+                "summary": "Валидатор проверки целостности (corruption) медиа-файлов.",
+                "details": "Проверяет, что файл не повреждён и может быть корректно обработан.\nДля изображений пытается открыть файл через ImageProcessor.\nДля видео/аудио проверка выполняется через плагины метаданных.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "validate"
+                    ],
+                    "dependencies": [
+                        "App\\Domain\\Media\\Images\\ImageProcessor"
+                    ],
+                    "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "validation"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaValidationPipeline",
+                "type": "domain_service",
+                "name": "MediaValidationPipeline",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MediaValidationPipeline.php",
+                "summary": "Pipeline валидации медиа-файлов.",
+                "details": "Последовательно применяет все зарегистрированные валидаторы к файлу.\nОстанавливается на первой ошибке валидации.",
+                "meta": {
+                    "methods": [
+                        "validate"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "validation"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Validation/MimeSignatureValidator",
+                "type": "domain_service",
+                "name": "MimeSignatureValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MimeSignatureValidator.php",
+                "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes).",
+                "details": "Определяет реальный MIME-тип файла по его сигнатурам и сравнивает\nс заявленным типом. Защищает от подмены расширения файла.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "validate"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "validation"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Validation/SizeLimitValidator",
+                "type": "domain_service",
+                "name": "SizeLimitValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\SizeLimitValidator.php",
+                "summary": "Валидатор ограничений размера файла и размеров изображений/видео.",
+                "details": "Проверяет, что размер файла и размеры контента (ширина/высота для изображений,\nдлительность для видео/аудио) не превышают установленные лимиты.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "validate"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "validation"
                 ]
             },
             {
@@ -7242,7 +7659,21 @@
                         "metadata",
                         "ffprobe",
                         "enabled",
-                        "binary"
+                        "binary",
+                        "mediainfo",
+                        "exiftool",
+                        "cache_ttl",
+                        "max_size_bytes",
+                        "max_duration_ms",
+                        "max_bitrate_kbps",
+                        "thumbnails",
+                        "max_width",
+                        "max_height",
+                        "exif",
+                        "auto_rotate",
+                        "strip",
+                        "whitelist",
+                        "preserve_color_profile"
                     ],
                     "sections": [
                         "disks",
@@ -7254,7 +7685,12 @@
                         "medium",
                         "image",
                         "metadata",
-                        "ffprobe"
+                        "ffprobe",
+                        "mediainfo",
+                        "exiftool",
+                        "videos",
+                        "thumbnails",
+                        "exif"
                     ]
                 },
                 "related": [],
@@ -9492,6 +9928,12 @@
                 "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
             },
             {
+                "id": "domain_service:Media/DTO/MediaMetadataDTO",
+                "type": "domain_service",
+                "name": "MediaMetadataDTO",
+                "summary": "DTO для нормализованных метаданных медиа-файла."
+            },
+            {
                 "id": "domain_service:Media/EloquentMediaRepository",
                 "type": "domain_service",
                 "name": "EloquentMediaRepository",
@@ -9564,6 +10006,24 @@
                 "summary": "Value Object для параметров выборки медиа."
             },
             {
+                "id": "domain_service:Media/Services/CollectionRulesResolver",
+                "type": "domain_service",
+                "name": "CollectionRulesResolver",
+                "summary": "Резолвер правил валидации для коллекций медиа."
+            },
+            {
+                "id": "domain_service:Media/Services/ExifManager",
+                "type": "domain_service",
+                "name": "ExifManager",
+                "summary": "Менеджер для управления EXIF данными изображений."
+            },
+            {
+                "id": "domain_service:Media/Services/ExiftoolMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "ExiftoolMediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на утилите exiftool."
+            },
+            {
                 "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
@@ -9576,6 +10036,12 @@
                 "summary": "Сервис для извлечения метаданных из медиа-файлов."
             },
             {
+                "id": "domain_service:Media/Services/MediainfoMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "MediainfoMediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на утилите mediainfo."
+            },
+            {
                 "id": "domain_service:Media/Services/OnDemandVariantService",
                 "type": "domain_service",
                 "name": "OnDemandVariantService",
@@ -9586,6 +10052,30 @@
                 "type": "domain_service",
                 "name": "StorageResolver",
                 "summary": "Резолвер дисков для медиа-хранилища."
+            },
+            {
+                "id": "domain_service:Media/Validation/CorruptionValidator",
+                "type": "domain_service",
+                "name": "CorruptionValidator",
+                "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaValidationPipeline",
+                "type": "domain_service",
+                "name": "MediaValidationPipeline",
+                "summary": "Pipeline валидации медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MimeSignatureValidator",
+                "type": "domain_service",
+                "name": "MimeSignatureValidator",
+                "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes)."
+            },
+            {
+                "id": "domain_service:Media/Validation/SizeLimitValidator",
+                "type": "domain_service",
+                "name": "SizeLimitValidator",
+                "summary": "Валидатор ограничений размера файла и размеров изображений/видео."
             },
             {
                 "id": "config_area:media",
@@ -9894,6 +10384,14 @@
                 "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
             }
         ],
+        "dto": [
+            {
+                "id": "domain_service:Media/DTO/MediaMetadataDTO",
+                "type": "domain_service",
+                "name": "MediaMetadataDTO",
+                "summary": "DTO для нормализованных метаданных медиа-файла."
+            }
+        ],
         "event": [
             {
                 "id": "domain_service:Media/Events/MediaDeleted",
@@ -9994,6 +10492,24 @@
         ],
         "service": [
             {
+                "id": "domain_service:Media/Services/CollectionRulesResolver",
+                "type": "domain_service",
+                "name": "CollectionRulesResolver",
+                "summary": "Резолвер правил валидации для коллекций медиа."
+            },
+            {
+                "id": "domain_service:Media/Services/ExifManager",
+                "type": "domain_service",
+                "name": "ExifManager",
+                "summary": "Менеджер для управления EXIF данными изображений."
+            },
+            {
+                "id": "domain_service:Media/Services/ExiftoolMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "ExiftoolMediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на утилите exiftool."
+            },
+            {
                 "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
@@ -10004,6 +10520,12 @@
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
                 "summary": "Сервис для извлечения метаданных из медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Services/MediainfoMediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "MediainfoMediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на утилите mediainfo."
             },
             {
                 "id": "domain_service:Media/Services/OnDemandVariantService",
@@ -10034,6 +10556,38 @@
                 "type": "domain_service",
                 "name": "PluginsSynchronizer",
                 "summary": "Синхронизатор плагинов."
+            }
+        ],
+        "validation": [
+            {
+                "id": "domain_service:Media/Validation/CorruptionValidator",
+                "type": "domain_service",
+                "name": "CorruptionValidator",
+                "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaValidationPipeline",
+                "type": "domain_service",
+                "name": "MediaValidationPipeline",
+                "summary": "Pipeline валидации медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MimeSignatureValidator",
+                "type": "domain_service",
+                "name": "MimeSignatureValidator",
+                "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes)."
+            },
+            {
+                "id": "domain_service:Media/Validation/SizeLimitValidator",
+                "type": "domain_service",
+                "name": "SizeLimitValidator",
+                "summary": "Валидатор ограничений размера файла и размеров изображений/видео."
+            },
+            {
+                "id": "domain_service:Pages/Validation/NotReservedRoute",
+                "type": "domain_service",
+                "name": "NotReservedRoute",
+                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
             }
         ],
         "page": [
@@ -10090,14 +10644,6 @@
                 "type": "blade_view",
                 "name": "header",
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\partials\\header.blade.php"
-            }
-        ],
-        "validation": [
-            {
-                "id": "domain_service:Pages/Validation/NotReservedRoute",
-                "type": "domain_service",
-                "name": "NotReservedRoute",
-                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
             }
         ],
         "command": [
@@ -12029,5 +12575,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T03:33:26+00:00"
+    "generated_at": "2025-11-17T04:10:58+00:00"
 }

@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 161
+**Всего сущностей:** 170
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (16 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (54 сущностей)
+Доменные сервисы, действия, репозитории (63 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -40,16 +40,16 @@ HTTP эндпоинты API (60 сущностей)
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
+- [CollectionRulesResolver](./domain-services.md#collectionrulesresolver) - Резолвер правил валидации для коллекций медиа.
+- [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
+- [ExifManager](./domain-services.md#exifmanager) - Менеджер для управления EXIF данными изображений.
+- [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
 - [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
 - [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
-- [GlideImageProcessor](./domain-services.md#glideimageprocessor) - Реализация ImageProcessor на базе Intervention Image (как backend для Glide-стека).
-- [ImageRef](./domain-services.md#imageref) - Opaque-хэндл изображения для разных бэкендов.
-- [IndexManager](./domain-services.md#indexmanager) - Менеджер для управления индексами поиска.
-- *...и еще 44 сущностей*
+- *...и еще 53 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (60 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-17 03:33:26
+**Сгенерировано:** 2025-11-17 04:10:58
 
 Для обновления документации выполните:
 ```bash

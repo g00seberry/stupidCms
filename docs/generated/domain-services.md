@@ -23,6 +23,48 @@
 
 ---
 
+## CollectionRulesResolver
+**ID:** `domain_service:Media/Services/CollectionRulesResolver`
+**Path:** `app/Domain/Media/Services/CollectionRulesResolver.php`
+
+Резолвер правил валидации для коллекций медиа.
+
+### Details
+Получает правила валидации (MIME, размеры, длительность, битрейт)
+для конкретной коллекции из конфигурации. Если правила не заданы
+для коллекции, возвращает глобальные значения.
+
+### Meta
+- **Methods:** `getRules`, `getAllowedMimes`, `getMaxSizeBytes`
+
+### Tags
+`media`, `service`
+
+
+---
+
+## CorruptionValidator
+**ID:** `domain_service:Media/Validation/CorruptionValidator`
+**Path:** `app/Domain/Media/Validation/CorruptionValidator.php`
+
+Валидатор проверки целостности (corruption) медиа-файлов.
+
+### Details
+Проверяет, что файл не повреждён и может быть корректно обработан.
+Для изображений пытается открыть файл через ImageProcessor.
+Для видео/аудио проверка выполняется через плагины метаданных.
+
+### Meta
+- **Methods:** `supports`, `validate`
+- **Dependencies:** `App\Domain\Media\Images\ImageProcessor`
+- **Interface:** `App\Domain\Media\Validation\MediaValidatorInterface`
+
+### Tags
+`media`, `validation`
+
+
+---
+
 ## ElasticsearchSearchClient
 **ID:** `domain_service:Search/Clients/ElasticsearchSearchClient`
 **Path:** `app/Domain/Search/Clients/ElasticsearchSearchClient.php`
@@ -75,6 +117,50 @@
 
 ### Tags
 `search`, `transformer`
+
+
+---
+
+## ExifManager
+**ID:** `domain_service:Media/Services/ExifManager`
+**Path:** `app/Domain/Media/Services/ExifManager.php`
+
+Менеджер для управления EXIF данными изображений.
+
+### Details
+Поддерживает операции:
+- Автоматический поворот изображения на основе EXIF Orientation
+- Удаление (strip) EXIF данных
+- Фильтрация EXIF полей по whitelist
+- Сохранение цветового профиля (ICC)
+
+### Meta
+- **Methods:** `autoRotate`, `stripExif`, `filterExif`, `extractColorProfile`
+- **Dependencies:** `App\Domain\Media\Images\ImageProcessor`
+
+### Tags
+`media`, `service`
+
+
+---
+
+## ExiftoolMediaMetadataPlugin
+**ID:** `domain_service:Media/Services/ExiftoolMediaMetadataPlugin`
+**Path:** `app/Domain/Media/Services/ExiftoolMediaMetadataPlugin.php`
+
+Плагин метаданных, основанный на утилите exiftool.
+
+### Details
+Использует exiftool для извлечения детальных метаданных из изображений,
+видео и аудио файлов. Особенно полезен для EXIF данных и метаданных,
+недоступных через другие инструменты.
+
+### Meta
+- **Methods:** `supports`, `extract`
+- **Interface:** `App\Domain\Media\Services\MediaMetadataPlugin`
+
+### Tags
+`media`, `service`
 
 
 ---
@@ -272,6 +358,25 @@ CQRS-действие: выборка списка медиа по параме�
 
 ---
 
+## MediaMetadataDTO
+**ID:** `domain_service:Media/DTO/MediaMetadataDTO`
+**Path:** `app/Domain/Media/DTO/MediaMetadataDTO.php`
+
+DTO для нормализованных метаданных медиа-файла.
+
+### Details
+Представляет унифицированную структуру метаданных, извлечённых
+из различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).
+
+### Meta
+- **Methods:** `toArray`, `fromArray`
+
+### Tags
+`media`, `dto`
+
+
+---
+
 ## MediaMetadataExtractor
 **ID:** `domain_service:Media/Services/MediaMetadataExtractor`
 **Path:** `app/Domain/Media/Services/MediaMetadataExtractor.php`
@@ -280,11 +385,12 @@ CQRS-действие: выборка списка медиа по параме�
 
 ### Details
 Извлекает размеры изображений, EXIF данные и другую информацию
-из загруженных файлов.
+из загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)
+с graceful fallback и кэшированием результатов.
 
 ### Meta
 - **Methods:** `extract`
-- **Dependencies:** `App\Domain\Media\Images\ImageProcessor`
+- **Dependencies:** `App\Domain\Media\Images\ImageProcessor`, `Illuminate\Contracts\Cache\Repository`
 
 ### Tags
 `media`, `service`
@@ -341,7 +447,7 @@ Value Object для параметров выборки медиа.
 
 ### Meta
 - **Methods:** `execute`
-- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`
+- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Services\CollectionRulesResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Domain\Media\Services\ExifManager`
 
 ### Tags
 `media`, `action`
@@ -365,6 +471,65 @@ Value Object для параметров выборки медиа.
 
 ### Tags
 `media`, `event`
+
+
+---
+
+## MediaValidationPipeline
+**ID:** `domain_service:Media/Validation/MediaValidationPipeline`
+**Path:** `app/Domain/Media/Validation/MediaValidationPipeline.php`
+
+Pipeline валидации медиа-файлов.
+
+### Details
+Последовательно применяет все зарегистрированные валидаторы к файлу.
+Останавливается на первой ошибке валидации.
+
+### Meta
+- **Methods:** `validate`
+
+### Tags
+`media`, `validation`
+
+
+---
+
+## MediainfoMediaMetadataPlugin
+**ID:** `domain_service:Media/Services/MediainfoMediaMetadataPlugin`
+**Path:** `app/Domain/Media/Services/MediainfoMediaMetadataPlugin.php`
+
+Плагин метаданных, основанный на утилите mediainfo.
+
+### Details
+Использует mediainfo для извлечения метаданных видео/аудио файлов
+с более детальной информацией, чем ffprobe (например, для некоторых форматов).
+
+### Meta
+- **Methods:** `supports`, `extract`
+- **Interface:** `App\Domain\Media\Services\MediaMetadataPlugin`
+
+### Tags
+`media`, `service`
+
+
+---
+
+## MimeSignatureValidator
+**ID:** `domain_service:Media/Validation/MimeSignatureValidator`
+**Path:** `app/Domain/Media/Validation/MimeSignatureValidator.php`
+
+Валидатор MIME-типа по сигнатурам файла (magic bytes).
+
+### Details
+Определяет реальный MIME-тип файла по его сигнатурам и сравнивает
+с заявленным типом. Защищает от подмены расширения файла.
+
+### Meta
+- **Methods:** `supports`, `validate`
+- **Interface:** `App\Domain\Media\Validation\MediaValidatorInterface`
+
+### Tags
+`media`, `validation`
 
 
 ---
@@ -1000,6 +1165,26 @@ Value Object для фильтра поиска по терму.
 
 ### Tags
 `search`, `valueobject`
+
+
+---
+
+## SizeLimitValidator
+**ID:** `domain_service:Media/Validation/SizeLimitValidator`
+**Path:** `app/Domain/Media/Validation/SizeLimitValidator.php`
+
+Валидатор ограничений размера файла и размеров изображений/видео.
+
+### Details
+Проверяет, что размер файла и размеры контента (ширина/высота для изображений,
+длительность для видео/аудио) не превышают установленные лимиты.
+
+### Meta
+- **Methods:** `supports`, `validate`
+- **Interface:** `App\Domain\Media\Validation\MediaValidatorInterface`
+
+### Tags
+`media`, `validation`
 
 
 ---
