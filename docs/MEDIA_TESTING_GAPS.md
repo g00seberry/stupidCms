@@ -250,18 +250,18 @@
 
 ### 8.1. MediaUploaded Event (`tests/Unit/Domain/Media/Events/MediaUploadedTest.php`)
 
--   [ ] **test_event_contains_media_model** — событие содержит модель Media
--   [ ] **test_event_is_serializable** — событие сериализуемо
+-   [x] **test_event_contains_media_model** — событие содержит модель Media
+-   [x] **test_event_is_serializable** — событие сериализуемо
 
 ### 8.2. MediaDeleted Event (`tests/Unit/Domain/Media/Events/MediaDeletedTest.php`)
 
--   [ ] **test_event_contains_media_model** — событие содержит модель Media
--   [ ] **test_event_is_serializable** — событие сериализуемо
+-   [x] **test_event_contains_media_model** — событие содержит модель Media
+-   [x] **test_event_is_serializable** — событие сериализуемо
 
 ### 8.3. MediaProcessed Event (`tests/Unit/Domain/Media/Events/MediaProcessedTest.php`)
 
--   [ ] **test_event_contains_media_and_variant** — событие содержит Media и MediaVariant
--   [ ] **test_event_is_serializable** — событие сериализуемо
+-   [x] **test_event_contains_media_and_variant** — событие содержит Media и MediaVariant
+-   [x] **test_event_is_serializable** — событие сериализуемо
 
 ---
 
