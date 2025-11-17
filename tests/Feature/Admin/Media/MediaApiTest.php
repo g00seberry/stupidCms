@@ -369,6 +369,161 @@ class MediaApiTest extends TestCase
         $this->assertCount(2, $files);
     }
 
+    public function test_it_validates_title_min_length(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => '',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['title']);
+    }
+
+    public function test_it_validates_alt_min_length(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'alt' => '',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['alt']);
+    }
+
+    public function test_it_validates_title_max_length(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => str_repeat('a', 256),
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['title']);
+    }
+
+    public function test_it_validates_alt_max_length(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'alt' => str_repeat('a', 256),
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['alt']);
+    }
+
+    public function test_it_automatically_slugifies_collection_on_store(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'collection' => 'My Collection Name!',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+        $media = Media::firstOrFail();
+        $this->assertSame('my-collection-name', $media->collection);
+    }
+
+    public function test_it_automatically_slugifies_collection_on_update(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.read', 'media.update']);
+        $media = Media::factory()->create([
+            'collection' => 'old',
+        ]);
+
+        $response = $this->putJsonAsAdmin("/api/v1/admin/media/{$media->id}", [
+            'collection' => 'New Collection Name!',
+        ], $admin);
+
+        $response->assertOk();
+        $media->refresh();
+        $this->assertSame('new-collection-name', $media->collection);
+    }
+
+    public function test_it_normalizes_empty_collection_to_null(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'collection' => '   ',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+        $media = Media::firstOrFail();
+        $this->assertNull($media->collection);
+    }
+
+    public function test_it_validates_title_min_length_on_update(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.update']);
+        $media = Media::factory()->create();
+
+        $response = $this->putJsonAsAdmin("/api/v1/admin/media/{$media->id}", [
+            'title' => '',
+        ], $admin);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['title']);
+    }
+
+    public function test_it_validates_alt_min_length_on_update(): void
+    {
+        Storage::fake('media');
+        $admin = $this->admin(['media.update']);
+        $media = Media::factory()->create();
+
+        $response = $this->putJsonAsAdmin("/api/v1/admin/media/{$media->id}", [
+            'alt' => '',
+        ], $admin);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('code', ErrorCode::VALIDATION_ERROR->value);
+        $this->assertValidationErrors($response, ['alt']);
+    }
+
     private function typeUri(ErrorCode $code): string
     {
         return config('errors.types.' . $code->value . '.uri');
