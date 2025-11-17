@@ -12,8 +12,7 @@
                 "fillable": [],
                 "guarded": [],
                 "casts": {
-                    "diff_json": "array",
-                    "meta": "array"
+                    "diff_json": "array"
                 },
                 "relations": {
                     "user": {
@@ -197,7 +196,7 @@
             "summary": "Eloquent модель для исходящих сообщений (Outbox).",
             "details": "Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.\nИспользуется для реализации паттерна Outbox для гарантированной доставки.",
             "meta": {
-                "table": "outboxes",
+                "table": "outbox",
                 "fillable": [],
                 "guarded": [],
                 "casts": {
@@ -4952,8 +4951,7 @@
                     "fillable": [],
                     "guarded": [],
                     "casts": {
-                        "diff_json": "array",
-                        "meta": "array"
+                        "diff_json": "array"
                     },
                     "relations": {
                         "user": {
@@ -5137,7 +5135,7 @@
                 "summary": "Eloquent модель для исходящих сообщений (Outbox).",
                 "details": "Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.\nИспользуется для реализации паттерна Outbox для гарантированной доставки.",
                 "meta": {
-                    "table": "outboxes",
+                    "table": "outbox",
                     "fillable": [],
                     "guarded": [],
                     "casts": {
@@ -12583,5 +12581,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T12:12:09+00:00"
+    "generated_at": "2025-11-17T12:21:18+00:00"
 }

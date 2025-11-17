@@ -11,7 +11,7 @@ Eloquent модель для аудита изменений (Audit).
 
 ### Meta
 - **Table:** `audits`
-- **Casts:** `diff_json` => `array`, `meta` => `array`
+- **Casts:** `diff_json` => `array`
 - **Relations:**
   - `user`: belongsTo → `App\Models\User`
 
@@ -148,7 +148,7 @@ Eloquent модель для исходящих сообщений (Outbox).
 Используется для реализации паттерна Outbox для гарантированной доставки.
 
 ### Meta
-- **Table:** `outboxes`
+- **Table:** `outbox`
 - **Casts:** `payload_json` => `array`, `attempts` => `integer`, `available_at` => `datetime`
 
 ### Tags

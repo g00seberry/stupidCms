@@ -304,256 +304,344 @@
 
 ---
 
-#### 1.6. PostType
+#### 1.6. PostType ✅
 
 **Путь:** `app/Models/PostType.php`  
-**Factory:** `database/factories/PostTypeFactory.php`
+**Factory:** `database/factories/PostTypeFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/PostTypeTest.php`)
-
-```php
-- test('has fillable attributes')
-- test('casts options_json to PostTypeOptions')
-- test('has entries relationship')
-- test('slug is unique')
-```
-
-##### Feature-тесты (`tests/Feature/Models/PostTypeTest.php`)
+##### Unit-тесты (`tests/Unit/Models/PostTypeTest.php`) ✅
 
 ```php
-- test('post type can be created')
-- test('post type has unique slug')
-- test('post type can have multiple entries')
-- test('post type options are stored correctly')
+✅ test('has fillable attributes')
+✅ test('casts options_json to PostTypeOptions')
+✅ test('has entries relationship')
+✅ test('slug is unique')
 ```
+
+##### Feature-тесты (`tests/Feature/Models/PostTypeTest.php`) ✅
+
+```php
+✅ test('post type can be created')
+✅ test('post type has unique slug')
+✅ test('post type can have multiple entries')
+✅ test('post type options are stored correctly')
+✅ test('post type options can be empty')
+✅ test('post type options cast works on retrieval')
+✅ test('post type options taxonomy check works')
+✅ test('post type options allows all taxonomies when list is empty')
+✅ test('post type options has field check works')
+✅ test('post type options get field with default works')
+✅ test('post type can be updated')
+✅ test('post type options can be updated')
+✅ test('post type slug cannot be changed to existing slug')
+```
+
+**Примечания:**
+
+-   Протестирован cast в PostTypeOptions
+-   Протестированы все методы PostTypeOptions (taxonomies, fields)
+-   Проверена уникальность slug
 
 ---
 
-#### 1.7. Plugin
+#### 1.7. Plugin ✅
 
 **Путь:** `app/Models/Plugin.php`  
-**Factory:** `database/factories/PluginFactory.php`
+**Factory:** `database/factories/PluginFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/PluginTest.php`)
+##### Unit-тесты (`tests/Unit/Models/PluginTest.php`) ✅
 
 ```php
-- test('uses ULID as primary key')
-- test('casts enabled to boolean')
-- test('casts meta_json to array')
-- test('casts last_synced_at to immutable datetime')
-- test('has enabled scope')
-- test('has disabled scope')
+✅ test('uses ULID as primary key')
+✅ test('casts enabled to boolean')
+✅ test('casts meta_json to array')
+✅ test('casts last_synced_at to immutable_datetime')
+✅ test('has no guarded attributes')
 ```
 
-##### Feature-тесты (`tests/Feature/Models/PluginTest.php`)
+##### Feature-тесты (`tests/Feature/Models/PluginTest.php`) ✅
 
 ```php
-- test('plugin can be created')
-- test('plugin can be enabled')
-- test('plugin can be disabled')
-- test('plugin stores metadata')
-- test('plugin tracks last sync time')
+✅ test('plugin can be created')
+✅ test('plugin can be enabled')
+✅ test('plugin can be disabled')
+✅ test('plugin stores metadata')
+✅ test('plugin tracks last sync time')
 ```
 
 ---
 
-#### 1.8. Option
+#### 1.8. Option ✅
 
 **Путь:** `app/Models/Option.php`  
-**Factory:** `database/factories/OptionFactory.php`
+**Factory:** `database/factories/OptionFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/OptionTest.php`)
+##### Unit-тесты (`tests/Unit/Models/OptionTest.php`) ✅
 
 ```php
-- test('uses ULID as primary key')
-- test('has fillable attributes')
-- test('casts value_json using AsJsonValue')
-- test('has namespace scope')
-- test('has key scope')
-- test('uses soft deletes')
+✅ test('uses ULID as primary key')
+✅ test('has fillable attributes')
+✅ test('casts value_json using AsJsonValue')
+✅ test('uses soft deletes')
+✅ test('table name is options')
 ```
 
-##### Feature-тesты (`tests/Feature/Models/OptionTest.php`)
+##### Feature-тесты (`tests/Feature/Models/OptionTest.php`) ✅
 
 ```php
-- test('option can be created')
-- test('option value is stored as json')
-- test('option can be retrieved by namespace and key')
-- test('option can be soft deleted')
+✅ test('option can be created')
+✅ test('option value is stored as json')
+✅ test('option can be retrieved by namespace and key')
+✅ test('option can be soft deleted')
+✅ test('option can be restored after soft delete')
 ```
 
 ---
 
-#### 1.9. Taxonomy
+#### 1.9. Taxonomy ✅
 
 **Путь:** `app/Models/Taxonomy.php`  
-**Factory:** `database/factories/TaxonomyFactory.php`
+**Factory:** `database/factories/TaxonomyFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/TaxonomyTest.php`)
+##### Unit-тесты (`tests/Unit/Models/TaxonomyTest.php`) ✅
 
 ```php
-- test('casts options_json to array')
-- test('casts hierarchical to boolean')
-- test('has terms relationship')
-- test('has hierarchical scope')
-- test('has flat scope')
+✅ test('casts options_json to array')
+✅ test('casts hierarchical to boolean')
+✅ test('has terms relationship')
+✅ test('label accessor returns name')
+✅ test('has no guarded attributes')
 ```
 
-##### Feature-тесты (`tests/Feature/Models/TaxonomyTest.php`)
+##### Feature-тесты (`tests/Feature/Models/TaxonomyTest.php`) ✅
 
 ```php
-- test('taxonomy can be created')
-- test('taxonomy can be hierarchical')
-- test('taxonomy can be flat')
-- test('taxonomy can have multiple terms')
+✅ test('taxonomy can be created')
+✅ test('taxonomy can be hierarchical')
+✅ test('taxonomy can be flat')
+✅ test('taxonomy can have multiple terms')
+✅ test('taxonomy label accessor works')
+✅ test('taxonomy options can be stored')
 ```
 
 ---
 
-#### 1.10. Term
+#### 1.10. Term ✅
 
 **Путь:** `app/Models/Term.php`  
-**Factory:** `database/factories/TermFactory.php`
+**Factory:** `database/factories/TermFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/TermTest.php`)
+##### Unit-тесты (`tests/Unit/Models/TermTest.php`) ✅
 
 ```php
-- test('casts meta_json to array')
-- test('belongs to taxonomy')
-- test('has entries many to many relationship')
-- test('has ancestors relationship')
-- test('has descendants relationship')
-- test('has parent relationship')
-- test('has children relationship')
-- test('uses soft deletes')
+✅ test('casts meta_json to array')
+✅ test('belongs to taxonomy')
+✅ test('has entries many to many relationship')
+✅ test('has ancestors relationship')
+✅ test('has descendants relationship')
+✅ test('has parent relationship')
+✅ test('has children relationship')
+✅ test('uses soft deletes')
+✅ test('has no guarded attributes')
 ```
 
-##### Feature-тесты (`tests/Feature/Models/TermTest.php`)
+##### Feature-тесты (`tests/Feature/Models/TermTest.php`) ✅
 
 ```php
-- test('term belongs to taxonomy')
-- test('term can have parent')
-- test('term can have children')
-- test('term can have multiple ancestors')
-- test('term can have multiple descendants')
-- test('term can be attached to entries')
-- test('term hierarchy is maintained via closure table')
+✅ test('term belongs to taxonomy')
+✅ test('term can be attached to entries')
+✅ test('term can be soft deleted')
+✅ test('term meta json stores additional data')
+✅ test('in taxonomy scope filters by taxonomy id')
+```
+
+**Примечания:**
+
+-   Тесты иерархии проверяются через TermTree (closure table)
+-   Связи с Entry и Taxonomy полностью протестированы
+
+---
+
+#### 1.11. TermTree ✅
+
+**Путь:** `app/Models/TermTree.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+##### Unit-тесты (`tests/Unit/Models/TermTreeTest.php`) ✅
+
+```php
+✅ test('table name is term_tree')
+✅ test('does not use timestamps')
+✅ test('does not use incrementing')
+✅ test('has no guarded attributes')
+✅ test('has no primary key')
+```
+
+##### Feature-тесты (`tests/Feature/Models/TermTreeTest.php`) ✅
+
+```php
+✅ test('term tree stores term relationships')
+✅ test('term tree implements closure table pattern')
+```
+
+**Примечания:**
+
+-   Реализует closure table паттерн для иерархии термов
+-   Проверяется хранение транзитивных связей (depth > 1)
+
+---
+
+#### 1.12. RefreshToken ✅
+
+**Путь:** `app/Models/RefreshToken.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+##### Unit-тесты (`tests/Unit/Models/RefreshTokenTest.php`) ✅
+
+```php
+✅ test('has fillable attributes')
+✅ test('casts timestamps to datetime')
+✅ test('belongs to user')
+✅ test('is valid when not used not revoked and not expired')
+✅ test('is invalid when used')
+✅ test('is invalid when revoked')
+✅ test('is invalid when expired')
+```
+
+##### Feature-тесты (`tests/Feature/Models/RefreshTokenTest.php`) ✅
+
+```php
+✅ test('refresh token can be created')
+✅ test('refresh token belongs to user')
+✅ test('refresh token can be used once')
+✅ test('refresh token can be revoked')
+✅ test('refresh token supports rotation')
+```
+
+**Примечания:**
+
+-   Проверены методы `isValid()` и `isInvalid()`
+-   Протестирована ротация токенов через `parent_jti`
+
+---
+
+#### 1.13. ReservedRoute ✅
+
+**Путь:** `app/Models/ReservedRoute.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+##### Unit-тесты (`tests/Unit/Models/ReservedRouteTest.php`) ✅
+
+```php
+✅ test('has fillable attributes')
+✅ test('supports path type')
+✅ test('supports prefix type')
+```
+
+##### Feature-тесты (`tests/Feature/Models/ReservedRouteTest.php`) ✅
+
+```php
+✅ test('reserved route can be created')
+✅ test('path type matches exact path')
+✅ test('prefix type matches path prefix')
 ```
 
 ---
 
-#### 1.11. TermTree
+#### 1.14. Redirect ✅
 
-**Путь:** `app/Models/TermTree.php`
+**Путь:** `app/Models/Redirect.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/TermTreeTest.php`)
+##### Unit-тесты (`tests/Unit/Models/RedirectTest.php`) ✅
 
 ```php
-- test('implements closure table pattern')
-- test('stores term relationships')
+✅ test('stores redirect rules')
+✅ test('supports different http status codes')
+✅ test('has no guarded attributes')
 ```
+
+##### Feature-тесты (`tests/Feature/Models/RedirectTest.php`) ✅
+
+```php
+✅ test('redirect can be created')
+✅ test('redirect supports 301 permanent redirect')
+✅ test('redirect supports 302 temporary redirect')
+```
+
+**Примечания:**
+
+-   Модель использует `from_path` / `to_path` и `code` (не `from`/`to`/`status`)
+-   Обновлён PHPDoc для соответствия реальной схеме
 
 ---
 
-#### 1.12. RefreshToken
+#### 1.15. Audit ✅
 
-**Путь:** `app/Models/RefreshToken.php`
+**Путь:** `app/Models/Audit.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/RefreshTokenTest.php`)
-
-```php
-- test('has fillable attributes')
-- test('casts timestamps to datetime')
-- test('belongs to user')
-- test('tracks parent token via parent_jti')
-- test('can be marked as used')
-- test('can be marked as revoked')
-```
-
-##### Feature-тесты (`tests/Feature/Models/RefreshTokenTest.php`)
+##### Unit-тесты (`tests/Unit/Models/AuditTest.php`) ✅
 
 ```php
-- test('refresh token can be created')
-- test('refresh token belongs to user')
-- test('refresh token can be used once')
-- test('refresh token can be revoked')
-- test('refresh token supports rotation')
+✅ test('casts diff_json to array')
+✅ test('stores ip and user agent')
+✅ test('belongs to user')
+✅ test('tracks entity changes')
+✅ test('has no guarded attributes')
 ```
+
+##### Feature-тесты (`tests/Feature/Models/AuditTest.php`) ✅
+
+```php
+✅ test('audit records are created on entity changes')
+✅ test('audit stores diff of changes')
+✅ test('audit belongs to user who made change')
+```
+
+**Примечания:**
+
+-   Модель использует `action`/`subject_type`/`subject_id` (не `event`/`auditable_*`)
+-   Хранит `ip` и `ua` вместо `meta` JSON
+-   Обновлён PHPDoc для соответствия реальной схеме
 
 ---
 
-#### 1.13. ReservedRoute
+#### 1.16. Outbox ✅
 
-**Путь:** `app/Models/ReservedRoute.php`
+**Путь:** `app/Models/Outbox.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/ReservedRouteTest.php`)
-
-```php
-- test('has fillable attributes')
-- test('supports path type')
-- test('supports prefix type')
-- test('has path scope')
-- test('has prefix scope')
-```
-
-##### Feature-тесты (`tests/Feature/Models/ReservedRouteTest.php`)
+##### Unit-тесты (`tests/Unit/Models/OutboxTest.php`) ✅
 
 ```php
-- test('reserved route can be created')
-- test('path type matches exact path')
-- test('prefix type matches path prefix')
+✅ test('casts payload_json to array')
+✅ test('casts attempts to integer')
+✅ test('casts available_at to datetime')
+✅ test('supports retry attempts')
+✅ test('table name is outbox')
+✅ test('has no guarded attributes')
 ```
 
----
-
-#### 1.14. Redirect
-
-**Путь:** `app/Models/Redirect.php`
-
-##### Unit-тесты (`tests/Unit/Models/RedirectTest.php`)
+##### Feature-тесты (`tests/Feature/Models/OutboxTest.php`) ✅
 
 ```php
-- test('stores redirect rules')
-- test('supports different http status codes')
+✅ test('outbox message can be created')
+✅ test('outbox stores payload data')
+✅ test('outbox tracks retry attempts')
+✅ test('outbox available_at controls when task is available')
 ```
 
----
+**Примечания:**
 
-#### 1.15. Audit
-
-**Путь:** `app/Models/Audit.php`
-
-##### Unit-тесты (`tests/Unit/Models/AuditTest.php`)
-
-```php
-- test('casts diff_json to array')
-- test('casts meta to array')
-- test('belongs to user')
-- test('tracks entity changes')
-```
-
-##### Feature-тесты (`tests/Feature/Models/AuditTest.php`)
-
-```php
-- test('audit records are created on entity changes')
-- test('audit stores diff of changes')
-- test('audit belongs to user who made change')
-```
-
----
-
-#### 1.16. Outbox
-
-**Путь:** `app/Models/Outbox.php`
-
-##### Unit-тесты (`tests/Unit/Models/OutboxTest.php`)
-
-```php
-- test('casts payload_json to array')
-- test('casts attempts to integer')
-- test('casts available_at to datetime')
-- test('supports retry attempts')
-```
+-   Модель использует `topic` (не `type`)
+-   Таблица называется `outbox` (singular), а не `outboxes`
+-   Обновлён PHPDoc для соответствия реальной схеме
 
 ---
 
