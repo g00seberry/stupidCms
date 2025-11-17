@@ -647,158 +647,221 @@
 
 ## 2. Domain Services (63 сущности)
 
-### 2.1. Модуль Auth (4 сущности)
+### 2.1. Модуль Auth (4 сущности) ✅
 
 #### Приоритет: 🔴 Критичный
 
-##### 2.1.1. JwtService
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Путь:** `app/Domain/Auth/JwtService.php`
+##### 2.1.1. JwtService ✅
 
-**Unit-тесты** (`tests/Unit/Domain/Auth/JwtServiceTest.php`)
+**Путь:** `app/Domain/Auth/JwtService.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+**Unit-тесты** (`tests/Unit/Auth/JwtServiceTest.php`) ✅
 
 ```php
-- test('generates access token with correct claims')
-- test('generates refresh token with correct claims')
-- test('validates access token successfully')
-- test('validates refresh token successfully')
-- test('rejects expired token')
-- test('rejects token with invalid signature')
-- test('extracts user id from token')
-- test('extracts jti from token')
-- test('token includes correct expiration time')
+✅ test('issues access token with correct claims')
+✅ test('issues refresh token with correct claims')
+✅ test('includes extra claims in token')
+✅ test('verifies valid access token')
+✅ test('verifies valid refresh token')
+✅ test('rejects token with wrong type')
+✅ test('rejects token with invalid issuer')
+✅ test('rejects token with invalid signature')
+✅ test('extracts user id from token')
+✅ test('extracts jti from token')
+✅ test('token includes correct expiration time for access token')
+✅ test('token includes correct expiration time for refresh token')
+✅ test('throws exception when secret is not configured')
+✅ test('verify without type check accepts any token type')
+✅ test('encode includes all standard jwt claims')
 ```
+
+**Примечания:**
+
+-   15 Unit-тестов
+-   Полное покрытие функционала JWT (генерация, валидация, извлечение claims)
+-   Проверка обработки ошибок (невалидная подпись, истечение, неверный issuer)
 
 ---
 
-##### 2.1.2. RefreshTokenRepository
+##### 2.1.2. RefreshTokenRepository ✅
 
 **Путь:** `app/Domain/Auth/RefreshTokenRepository.php`  
-**Реализация:** `app/Domain/Auth/RefreshTokenRepositoryImpl.php`
+**Реализация:** `app/Domain/Auth/RefreshTokenRepositoryImpl.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Auth/RefreshTokenRepositoryTest.php`)
-
-```php
-- test('creates refresh token')
-- test('finds refresh token by jti')
-- test('marks token as used')
-- test('marks token as revoked')
-- test('revokes all tokens for user')
-- test('checks if token is valid')
-- test('checks if token is used')
-- test('checks if token is revoked')
-- test('checks if token is expired')
-- test('supports token rotation')
-```
-
-**Feature-тесты** (`tests/Feature/Domain/Auth/RefreshTokenFlowTest.php`)
+**Feature-тесты** (`tests/Feature/Auth/RefreshTokenRepositoryTest.php`) ✅
 
 ```php
-- test('refresh token flow works end to end')
-- test('token rotation creates new token')
-- test('old token is marked as used after rotation')
-- test('revoked token cannot be used')
-- test('expired token cannot be used')
+✅ test('stores refresh token')
+✅ test('finds refresh token by jti')
+✅ test('returns null when token not found')
+✅ test('marks token as used conditionally')
+✅ test('does not mark already used token')
+✅ test('does not mark revoked token')
+✅ test('does not mark expired token')
+✅ test('revokes refresh token')
+✅ test('revoke family revokes token and all descendants')
+✅ test('revoke family returns zero for non existent token')
+✅ test('deletes expired tokens')
+✅ test('supports token rotation with parent jti')
+✅ test('dto is valid when token is valid')
+✅ test('dto is invalid when token is used')
 ```
+
+**Примечания:**
+
+-   14 Feature-тестов с реальной БД
+-   Проверен алгоритм `revokeFamily` для инвалидации семейства токенов
+-   Условное обновление (`markUsedConditionally`) для защиты от race conditions
 
 ---
 
-##### 2.1.3. RefreshTokenDto
+##### 2.1.3. RefreshTokenDto ✅
 
-**Путь:** `app/Domain/Auth/RefreshTokenDto.php`
+**Путь:** `app/Domain/Auth/RefreshTokenDto.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Auth/RefreshTokenDtoTest.php`)
+**Unit-тесты** (`tests/Unit/Auth/RefreshTokenDtoTest.php`) ✅
 
 ```php
-- test('creates dto with all properties')
-- test('validates required properties')
-- test('converts to array')
+✅ test('creates dto with all properties')
+✅ test('is valid when not used not revoked and not expired')
+✅ test('is invalid when used')
+✅ test('is invalid when revoked')
+✅ test('is invalid when expired')
+✅ test('is readonly')
 ```
+
+**Примечания:**
+
+-   6 Unit-тестов
+-   Readonly DTO для типобезопасности
+-   Методы валидации `isValid()` и `isInvalid()`
 
 ---
 
-##### 2.1.4. JwtAuthenticationException
+##### 2.1.4. JwtAuthenticationException ✅
 
-**Путь:** `app/Domain/Auth/Exceptions/JwtAuthenticationException.php`
+**Путь:** `app/Domain/Auth/Exceptions/JwtAuthenticationException.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Auth/Exceptions/JwtAuthenticationExceptionTest.php`)
+**Unit-тесты** (`tests/Unit/Auth/JwtAuthExceptionTest.php`) ✅
 
 ```php
-- test('exception has correct message')
-- test('exception can be thrown and caught')
+✅ test('creates exception with reason and detail')
+✅ test('exception message includes reason and detail')
+✅ test('converts to error payload with unauthorized code')
+✅ test('exception is instance of RuntimeException')
+✅ test('reason and detail are readonly')
 ```
+
+**Примечания:**
+
+-   5 Unit-тестов
+-   Реализует `ErrorConvertible` интерфейс
+-   Readonly properties для immutability
 
 ---
 
-### 2.2. Модуль Media (34 сущности)
+### 2.2. Модуль Media (частично) ✅
 
 #### Приоритет: 🔴 Критичный
 
-##### 2.2.1. MediaStoreAction
+**Статус:** 🔄 Частично завершено (2025-11-17)
 
-**Путь:** `app/Domain/Media/Actions/MediaStoreAction.php`
+##### 2.2.0. MediaQuery (Value Object) ✅
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Actions/MediaStoreActionTest.php`)
+**Путь:** `app/Domain/Media/MediaQuery.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-```php
-- test('validates uploaded file')
-- test('extracts metadata from file')
-- test('stores file to disk')
-- test('saves media record to database')
-- test('dispatches media uploaded event')
-- test('returns media model')
-- test('handles validation errors')
-- test('handles storage errors')
-- test('supports different collections')
-- test('applies collection specific rules')
-```
-
-**Feature-тесты** (`tests/Feature/Domain/Media/MediaUploadFlowTest.php`)
+**Unit-тесты** (`tests/Unit/Media/MediaQueryTest.php`) ✅
 
 ```php
-- test('complete media upload flow')
-- test('image file is uploaded and stored')
-- test('video file is uploaded and metadata extracted')
-- test('pdf file is uploaded and validated')
-- test('corrupted file is rejected')
-- test('oversized file is rejected')
-- test('invalid mime type is rejected')
-- test('exif data is preserved')
-- test('variants are generated after upload')
+✅ test('creates media query with all parameters')
+✅ test('creates media query with minimal parameters')
+✅ test('media query is immutable value object')
+✅ test('deleted filter has correct enum values')
 ```
+
+**Примечания:**
+
+-   4 теста
+-   Value Object для параметров выборки медиа
+-   Использует MediaDeletedFilter enum
 
 ---
 
-##### 2.2.2. ListMediaAction
+##### 2.2.1. MediaStoreAction ⏳
 
-**Путь:** `app/Domain/Media/Actions/ListMediaAction.php`
+**Путь:** `app/Domain/Media/Actions/MediaStoreAction.php`  
+**Статус:** ⏳ Требует доработки (сложный, много зависимостей)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Actions/ListMediaActionTest.php`)
+**Зависимости:**
 
-```php
-- test('lists media with pagination')
-- test('filters by mime type')
-- test('filters by collection')
-- test('includes trashed when requested')
-- test('applies search query')
-- test('orders by created at')
-```
+-   MediaMetadataExtractor
+-   StorageResolver
+-   CollectionRulesResolver
+-   MediaValidationPipeline
+-   ExifManager
+
+**Feature-тесты:** ⏳ Отложено (требует настройки файловых систем и моков)
 
 ---
 
-##### 2.2.3. UpdateMediaMetadataAction
+##### 2.2.2. ListMediaAction ✅
 
-**Путь:** `app/Domain/Media/Actions/UpdateMediaMetadataAction.php`
+**Путь:** `app/Domain/Media/Actions/ListMediaAction.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Actions/UpdateMediaMetadataActionTest.php`)
+**Feature-тесты** (`tests/Feature/Media/ListMediaActionTest.php`) ✅
 
 ```php
-- test('updates media title')
-- test('updates media alt text')
-- test('updates media caption')
-- test('validates input data')
-- test('returns updated media')
+✅ test('lists media with pagination')
+✅ test('filters media by mime prefix')
+✅ test('filters media by collection')
+✅ test('searches media by title and original name')
+✅ test('excludes soft deleted media by default')
+✅ test('includes soft deleted media when requested')
+✅ test('shows only soft deleted media')
+✅ test('sorts media by different fields')
+✅ test('respects per page limit')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Пагинация, фильтрация, поиск, сортировка
+-   Поддержка soft deletes
+
+---
+
+##### 2.2.3. UpdateMediaMetadataAction ✅
+
+**Путь:** `app/Domain/Media/Actions/UpdateMediaMetadataAction.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+**Feature-тесты** (`tests/Feature/Media/UpdateMediaMetadataActionTest.php`) ✅
+
+```php
+✅ test('updates media metadata')
+✅ test('updates only title')
+✅ test('updates only alt text')
+✅ test('updates only collection')
+✅ test('can update soft deleted media')
+✅ test('throws exception for non existent media')
+✅ test('clears metadata when set to null')
+✅ test('returns fresh model instance')
+```
+
+**Примечания:**
+
+-   8 тестов
+-   Обновление метаданных: title, alt, collection
+-   Поддержка soft deleted записей
+-   Возвращает fresh instance
 
 ---
 
@@ -1155,32 +1218,49 @@
 
 ---
 
-### 2.3. Модуль Entries (1 сущность)
+### 2.3. Модуль Entries (1 сущность) ✅
 
 #### Приоритет: 🔴 Высокий
 
-##### 2.3.1. PublishingService
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Путь:** `app/Domain/Entries/PublishingService.php`
+##### 2.3.1. PublishingService ✅
 
-**Unit-тесты** (`tests/Unit/Domain/Entries/PublishingServiceTest.php`)
+**Путь:** `app/Domain/Entries/PublishingService.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-```php
-- test('publishes entry immediately')
-- test('schedules entry for future publishing')
-- test('validates publishing date')
-- test('changes entry status to published')
-- test('dispatches entry published event')
-```
-
-**Feature-тесты** (`tests/Feature/Domain/Entries/EntryPublishingTest.php`)
+**Unit-тесты** (`tests/Unit/Entries/PublishingServiceTest.php`) ✅
 
 ```php
-- test('entry can be published')
-- test('entry can be scheduled for publishing')
-- test('scheduled entry becomes published on date')
-- test('entry can be unpublished')
+✅ test('publishes entry immediately with auto published_at')
+✅ test('schedules entry with provided published_at')
+✅ test('validates published_at is not in future')
+✅ test('changes entry status to published with auto date')
+✅ test('overwrites published_at when transitioning draft to published without explicit date')
+✅ test('keeps draft status without published_at')
+✅ test('allows updating published entry without changing published_at')
+✅ test('sets published_at when creating published entry')
+✅ test('transitions from draft to published sets published_at')
+✅ test('validates published_at when explicitly provided')
 ```
+
+**Feature-тесты** (`tests/Feature/Entries/PublishingServiceTest.php`) ✅
+
+```php
+✅ test('entry can be published')
+✅ test('entry can be scheduled for publishing in past')
+✅ test('cannot publish with future date')
+✅ test('entry can be unpublished')
+✅ test('multiple entries can be published')
+✅ test('published_at uses UTC timezone')
+```
+
+**Примечания:**
+
+-   16 тестов (10 Unit + 6 Feature)
+-   Полное покрытие логики публикации записей
+-   Валидация инвариантов (дата публикации не в будущем)
+-   Автоматическое заполнение `published_at` при публикации
 
 ---
 
@@ -1312,11 +1392,13 @@
 
 ---
 
-### 2.5. Модуль Routing (9 сущностей)
+### 2.5. Модуль Routing (частично) ✅
 
 #### Приоритет: 🟡 Средний
 
-##### 2.5.1. PathReservationService
+**Статус:** 🔄 Частично завершено (2025-11-17)
+
+##### 2.5.1. PathReservationService ⏳
 
 **Путь:** `app/Domain/Routing/PathReservationServiceImpl.php`
 
@@ -1359,19 +1441,37 @@
 
 ---
 
-##### 2.5.3. PathNormalizer
+##### 2.5.3. PathNormalizer ✅
 
-**Путь:** `app/Domain/Routing/PathNormalizer.php`
+**Путь:** `app/Domain/Routing/PathNormalizer.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Routing/PathNormalizerTest.php`)
+**Unit-тесты** (`tests/Unit/Routing/PathNormalizerTest.php`) ✅
 
 ```php
-- test('normalizes path with leading slash')
-- test('normalizes path without trailing slash')
-- test('normalizes multiple slashes')
-- test('converts to lowercase')
-- test('handles unicode characters')
+✅ test('normalizes path with leading slash')
+✅ test('normalizes path without trailing slash')
+✅ test('normalizes multiple slashes')
+✅ test('converts to lowercase')
+✅ test('handles unicode characters')
+✅ test('removes query string')
+✅ test('removes fragment')
+✅ test('removes query and fragment')
+✅ test('removes relative path segments')
+✅ test('trims whitespace')
+✅ test('handles root path')
+✅ test('throws exception for empty path')
+⏭️ test('throws exception for only query string') - skipped
+✅ test('throws exception for only fragment')
+✅ test('normalizes complex path')
+✅ test('applies unicode NFC normalization if available')
 ```
+
+**Примечания:**
+
+-   16 тестов (15 passed, 1 skipped)
+-   Нормализация путей: lowercase, trim slashes, remove query/fragment
+-   Unicode NFC нормализация
 
 ---
 
@@ -1389,32 +1489,72 @@
 
 ---
 
-##### 2.5.5. ReservedPattern
+##### 2.5.5. ReservedPattern ✅
 
-**Путь:** `app/Domain/Routing/ReservedPattern.php`
+**Путь:** `app/Domain/Routing/ReservedPattern.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Routing/ReservedPatternTest.php`)
+**Unit-тесты** (`tests/Unit/Routing/ReservedPatternTest.php`) ✅
 
 ```php
-- test('creates pattern with path')
-- test('creates pattern with prefix')
-- test('matches exact path')
-- test('matches path prefix')
+✅ test('generates slug regex pattern')
+✅ test('slug regex matches valid slug')
+✅ test('slug regex rejects invalid characters')
+✅ test('slug regex rejects trailing dash')
+✅ test('slug regex rejects leading dash')
+✅ test('slug regex allows dash in middle')
+✅ test('slug regex rejects uppercase')
+✅ test('slug regex rejects empty string')
+✅ test('slug regex may include negative lookahead for reserved paths')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Генерация regex для slug с исключением зарезервированных путей
+-   Валидация формата slug: lowercase, a-z0-9-
 
 ---
 
-##### 2.5.6. Routing Exceptions
+##### 2.5.6. Routing Exceptions ✅
 
-**Путь:** `app/Domain/Routing/Exceptions/`
+**Путь:** `app/Domain/Routing/Exceptions/`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тesты**
+**Unit-тесты** ✅
+
+**InvalidPathException** (`tests/Unit/Routing/InvalidPathExceptionTest.php`):
 
 ```php
-- test('path already reserved exception')
-- test('invalid path exception')
-- test('forbidden reservation release exception')
+✅ test('creates exception with message')
+✅ test('creates exception with default message')
+✅ test('exception is instance of Exception')
+✅ test('converts to error payload with validation error code')
 ```
+
+**PathAlreadyReservedException** (`tests/Unit/Routing/PathAlreadyReservedExceptionTest.php`):
+
+```php
+✅ test('creates exception with path and owner')
+✅ test('creates exception with custom message')
+✅ test('readonly properties cannot be modified')
+✅ test('converts to error payload with conflict code')
+```
+
+**ForbiddenReservationRelease** (`tests/Unit/Routing/ForbiddenReservationReleaseTest.php`):
+
+```php
+✅ test('creates exception with path owner and attempted source')
+✅ test('creates exception with custom message')
+✅ test('readonly properties cannot be modified')
+✅ test('converts to error payload with forbidden code')
+```
+
+**Примечания:**
+
+-   12 тестов (4 + 4 + 4)
+-   Все исключения реализуют `ErrorConvertible`
+-   Readonly properties для immutability
 
 ---
 
