@@ -1,1 +1,3 @@
 *.sqlite*
+# Keep a committed SQLite database for test runs
+!testing.sqlite
