@@ -222,27 +222,27 @@
 
 ### 7.1. Media Model (`tests/Unit/Models/MediaTest.php`)
 
--   [ ] **test_kind_returns_image_for_image_mime** — kind возвращает 'image' для image/\* MIME
--   [ ] **test_kind_returns_video_for_video_mime** — kind возвращает 'video' для video/\* MIME
--   [ ] **test_kind_returns_audio_for_audio_mime** — kind возвращает 'audio' для audio/\* MIME
--   [ ] **test_kind_returns_document_for_other_mime** — kind возвращает 'document' для других MIME
--   [ ] **test_has_unique_constraint_on_disk_and_path** — проверка уникального ограничения на (disk, path)
--   [ ] **test_soft_deletes_media** — мягкое удаление медиа
--   [ ] **test_restores_soft_deleted_media** — восстановление мягко удалённого медиа
--   [ ] **test_uses_ulid_as_primary_key** — использование ULID в качестве первичного ключа
--   [ ] **test_has_variants_relationship** — наличие отношения variants
--   [ ] **test_has_metadata_relationship** — наличие отношения metadata
+-   [x] **test_kind_returns_image_for_image_mime** — kind возвращает 'image' для image/\* MIME
+-   [x] **test_kind_returns_video_for_video_mime** — kind возвращает 'video' для video/\* MIME
+-   [x] **test_kind_returns_audio_for_audio_mime** — kind возвращает 'audio' для audio/\* MIME
+-   [x] **test_kind_returns_document_for_other_mime** — kind возвращает 'document' для других MIME
+-   [x] **test_has_unique_constraint_on_disk_and_path** — проверка уникального ограничения на (disk, path)
+-   [x] **test_soft_deletes_media** — мягкое удаление медиа
+-   [x] **test_restores_soft_deleted_media** — восстановление мягко удалённого медиа
+-   [x] **test_uses_ulid_as_primary_key** — использование ULID в качестве первичного ключа
+-   [x] **test_has_variants_relationship** — наличие отношения variants
+-   [x] **test_has_metadata_relationship** — наличие отношения metadata
 
 ### 7.2. MediaMetadata Model (`tests/Unit/Models/MediaMetadataTest.php`)
 
--   [ ] **test_belongs_to_media** — проверка отношения belongsTo Media
--   [ ] **test_stores_normalized_av_metadata** — сохранение нормализованных AV метаданных
+-   [x] **test_belongs_to_media** — проверка отношения belongsTo Media
+-   [x] **test_stores_normalized_av_metadata** — сохранение нормализованных AV метаданных
 
 ### 7.3. MediaVariant Model (`tests/Unit/Models/MediaVariantTest.php`)
 
--   [ ] **test_belongs_to_media** — проверка отношения belongsTo Media
--   [ ] **test_has_status_enum** — наличие enum статуса (Processing, Ready, Failed)
--   [ ] **test_tracks_generation_timestamps** — отслеживание временных меток генерации (started_at, finished_at)
+-   [x] **test_belongs_to_media** — проверка отношения belongsTo Media
+-   [x] **test_has_status_enum** — наличие enum статуса (Processing, Ready, Failed)
+-   [x] **test_tracks_generation_timestamps** — отслеживание временных меток генерации (started_at, finished_at)
 
 ---
 
