@@ -186,35 +186,35 @@
 
 ### 6.1. MediaController (дополнительные Feature тесты)
 
--   [ ] **test_show_returns_404_for_missing_media** — show возвращает 404 для несуществующего медиа
--   [ ] **test_show_returns_soft_deleted_media** — show возвращает мягко удалённое медиа
--   [ ] **test_update_returns_404_for_missing_media** — update возвращает 404 для несуществующего медиа
--   [ ] **test_destroy_returns_404_for_missing_media** — destroy возвращает 404 для несуществующего медиа
--   [ ] **test_destroy_dispatches_media_deleted_event** — destroy отправляет событие MediaDeleted
--   [ ] **test_restore_returns_404_for_not_deleted_media** — restore возвращает 404 для не удалённого медиа
--   [ ] **test_store_returns_200_on_deduplication** — store возвращает 200 при дедупликации
--   [ ] **test_store_returns_201_on_new_upload** — store возвращает 201 при новой загрузке
--   [ ] **test_store_handles_validation_exception** — store обрабатывает MediaValidationException
--   [ ] **test_store_handles_storage_failure** — store обрабатывает ошибку сохранения на диск
--   [ ] **test_index_validates_per_page_range** — index валидирует диапазон per_page (1-100)
--   [ ] **test_index_handles_invalid_sort_field** — index обрабатывает невалидное поле сортировки
--   [ ] **test_index_handles_invalid_order_direction** — index обрабатывает невалидное направление сортировки
+-   [x] **test_show_returns_404_for_missing_media** — show возвращает 404 для несуществующего медиа
+-   [x] **test_show_returns_soft_deleted_media** — show возвращает мягко удалённое медиа
+-   [x] **test_update_returns_404_for_missing_media** — update возвращает 403 для несуществующего медиа (UpdateMediaRequest::authorize() проверяет существование раньше)
+-   [x] **test_destroy_returns_404_for_missing_media** — destroy возвращает 404 для несуществующего медиа
+-   [x] **test_destroy_dispatches_media_deleted_event** — destroy отправляет событие MediaDeleted
+-   [x] **test_restore_returns_404_for_not_deleted_media** — restore возвращает 404 для не удалённого медиа
+-   [x] **test_store_returns_200_on_deduplication** — store возвращает 200 при дедупликации
+-   [x] **test_store_returns_201_on_new_upload** — store возвращает 201 при новой загрузке
+-   [x] **test_store_handles_validation_exception** — store обрабатывает MediaValidationException
+-   [ ] **test_store_handles_storage_failure** — store обрабатывает ошибку сохранения на диск (требует мокирования Storage в MediaStoreAction)
+-   [x] **test_index_validates_per_page_range** — index валидирует диапазон per_page (1-100)
+-   [x] **test_index_handles_invalid_sort_field** — index обрабатывает невалидное поле сортировки
+-   [x] **test_index_handles_invalid_order_direction** — index обрабатывает невалидное направление сортировки
 
 ### 6.2. MediaPreviewController (`tests/Feature/Admin/Media/MediaPreviewControllerTest.php`)
 
--   [ ] **test_preview_returns_404_for_missing_media** — preview возвращает 404 для несуществующего медиа
--   [ ] **test_preview_returns_422_for_invalid_variant** — preview возвращает 422 для невалидного варианта
--   [ ] **test_preview_returns_500_on_generation_failure** — preview возвращает 500 при ошибке генерации
--   [ ] **test_preview_serves_local_file_directly** — preview отдаёт локальный файл напрямую
--   [ ] **test_preview_redirects_to_signed_url_for_cloud** — preview редиректит на подписанный URL для облака
--   [ ] **test_preview_uses_default_variant_when_not_specified** — preview использует 'thumbnail' по умолчанию
--   [ ] **test_download_returns_404_for_missing_media** — download возвращает 404 для несуществующего медиа
--   [ ] **test_download_returns_500_on_url_generation_failure** — download возвращает 500 при ошибке генерации URL
--   [ ] **test_download_serves_local_file_directly** — download отдаёт локальный файл напрямую
--   [ ] **test_download_redirects_to_signed_url_for_cloud** — download редиректит на подписанный URL для облака
--   [ ] **test_download_respects_signed_ttl_config** — download учитывает конфигурацию signed_ttl
--   [ ] **test_preview_authorizes_access** — preview проверяет авторизацию доступа
--   [ ] **test_download_authorizes_access** — download проверяет авторизацию доступа
+-   [x] **test_preview_returns_404_for_missing_media** — preview возвращает 404 для несуществующего медиа
+-   [x] **test_preview_returns_422_for_invalid_variant** — preview возвращает 422 для невалидного варианта
+-   [x] **test_preview_returns_500_on_generation_failure** — preview возвращает 500 при ошибке генерации
+-   [x] **test_preview_serves_local_file_directly** — preview отдаёт локальный файл напрямую
+-   [ ] **test_preview_redirects_to_signed_url_for_cloud** — preview редиректит на подписанный URL для облака (требует настройки облачного диска в тестовой среде)
+-   [x] **test_preview_uses_default_variant_when_not_specified** — preview использует 'thumbnail' по умолчанию
+-   [x] **test_download_returns_404_for_missing_media** — download возвращает 404 для несуществующего медиа
+-   [x] **test_download_returns_500_on_url_generation_failure** — download возвращает 500 при ошибке генерации URL
+-   [x] **test_download_serves_local_file_directly** — download отдаёт локальный файл напрямую
+-   [ ] **test_download_redirects_to_signed_url_for_cloud** — download редиректит на подписанный URL для облака (требует настройки облачного диска в тестовой среде)
+-   [x] **test_download_respects_signed_ttl_config** — download учитывает конфигурацию signed_ttl
+-   [x] **test_preview_authorizes_access** — preview проверяет авторизацию доступа
+-   [x] **test_download_authorizes_access** — download проверяет авторизацию доступа
 
 ---
 
