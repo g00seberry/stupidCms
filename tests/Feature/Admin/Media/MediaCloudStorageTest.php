@@ -13,17 +13,13 @@ use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Http\Controllers\Admin\V1\MediaPreviewController;
 use App\Models\Media;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Mockery;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-final class MediaCloudStorageTest extends TestCase
+final class MediaCloudStorageTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
     private MediaMetadataExtractor $metadataExtractor;
     private StorageResolver $storageResolver;
     private CollectionRulesResolver $collectionRulesResolver;
@@ -76,12 +72,6 @@ final class MediaCloudStorageTest extends TestCase
         );
     }
 
-    private function admin(array $permissions): User
-    {
-        return User::factory()->create([
-            'admin_permissions' => $permissions,
-        ]);
-    }
 
     /**
      * Тест: загрузка на S3 диск.

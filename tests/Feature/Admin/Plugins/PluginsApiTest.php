@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Admin\Plugins;
 
 use App\Models\Plugin;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class PluginsApiTest extends TestCase
+class PluginsApiTest extends FeatureTestCase
 {
-    use RefreshDatabase;
 
     public function test_it_lists_plugins_with_filters(): void
     {
@@ -119,15 +119,6 @@ class PluginsApiTest extends TestCase
 
         $this->getJsonAsAdmin('/api/v1/admin/plugins', $user)
             ->assertForbidden();
-    }
-
-    private function adminWithPermissions(array $permissions): User
-    {
-        $user = User::factory()->create();
-        $user->grantAdminPermissions(...$permissions);
-        $user->save();
-
-        return $user;
     }
 }
 

@@ -8,11 +8,9 @@ use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\Events\MediaProcessed;
 use App\Domain\Media\Events\MediaUploaded;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
 /**
  * Тесты для событий медиа-файлов.
@@ -20,24 +18,12 @@ use Tests\TestCase;
  * Проверяет диспатч событий MediaUploaded, MediaProcessed и MediaDeleted
  * при соответствующих операциях с медиа-файлами.
  */
-class MediaEventsTest extends TestCase
+class MediaEventsTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        config()->set('media.disks', [
-            'default' => 'media',
-            'collections' => [],
-            'kinds' => [],
-        ]);
-        config()->set('media.allowed_mimes', [
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-        ]);
         config()->set('media.variants', [
             'thumbnail' => ['max' => 150],
         ]);
@@ -50,7 +36,6 @@ class MediaEventsTest extends TestCase
     {
         Event::fake([MediaUploaded::class]);
 
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 1920, 1080)->size(1024);
@@ -78,7 +63,6 @@ class MediaEventsTest extends TestCase
     {
         Event::fake([MediaProcessed::class]);
 
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create', 'media.update']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 1920, 1080)->size(1024);
@@ -110,7 +94,6 @@ class MediaEventsTest extends TestCase
     {
         Event::fake([MediaDeleted::class]);
 
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create', 'media.delete']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 1920, 1080)->size(1024);
@@ -141,7 +124,6 @@ class MediaEventsTest extends TestCase
     {
         Event::fake([MediaUploaded::class]);
 
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 1920, 1080)->size(1024);
@@ -171,19 +153,6 @@ class MediaEventsTest extends TestCase
         Event::assertDispatched(MediaUploaded::class, 1);
     }
 
-    /**
-     * Создать админ-пользователя с указанными правами.
-     *
-     * @param array<string> $permissions Список прав доступа
-     * @return \App\Models\User
-     */
-    private function admin(array $permissions): User
-    {
-        return User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => $permissions,
-        ]);
-    }
 
     /**
      * Выполнить DELETE запрос как админ.

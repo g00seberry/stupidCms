@@ -11,6 +11,33 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        
+        <!-- Модульные тесты по доменам -->
+        <testsuite name="Media">
+            <directory>tests/Feature/Admin/Media</directory>
+            <directory>tests/Unit/Domain/Media</directory>
+            <directory>tests/Unit/Media</directory>
+        </testsuite>
+        
+        <testsuite name="Entries">
+            <directory>tests/Feature/Admin/Entries</directory>
+        </testsuite>
+        
+        <testsuite name="Auth">
+            <file>tests/Feature/AuthCsrfTest.php</file>
+            <file>tests/Feature/AuthCurrentUserTest.php</file>
+            <file>tests/Feature/AuthLoginTest.php</file>
+            <file>tests/Feature/AuthLogoutTest.php</file>
+            <file>tests/Feature/AuthRefreshTest.php</file>
+            <file>tests/Feature/AuthorizationTest.php</file>
+            <file>tests/Feature/JwtAuthTest.php</file>
+        </testsuite>
+        
+        <testsuite name="Search">
+            <directory>tests/Feature/Admin/Search</directory>
+            <directory>tests/Feature/Search</directory>
+            <directory>tests/Unit/Search</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>
@@ -24,12 +51,8 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="mysql"/>
-        <env name="DB_HOST" value="127.0.0.1"/>
-        <env name="DB_PORT" value="3306"/>
-        <env name="DB_DATABASE" value="testing"/>
-        <env name="DB_USERNAME" value="root"/>
-        <env name="DB_PASSWORD" value=""/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value="database/testing.sqlite"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

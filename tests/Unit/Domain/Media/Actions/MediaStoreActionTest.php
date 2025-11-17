@@ -202,12 +202,8 @@ final class MediaStoreActionTest extends TestCase
         $action = $this->createAction();
         $media = $action->execute($file);
 
-        // В коде есть баг: используется $exif ?? $metadata->exif
-        // Когда strip = true, $exif устанавливается в null, но затем используется fallback на $metadata->exif
-        // Поэтому exif не удаляется. Тест проверяет текущее поведение кода.
-        // В идеале должно быть: если strip = true, то exif_json = null
-        // Но из-за $exif ?? $metadata->exif, если $exif = null, вернётся $metadata->exif
-        $this->assertNotNull($media->exif_json); // Текущее поведение из-за бага в коде
+        // EXIF должен быть удалён когда strip = true
+        $this->assertNull($media->exif_json);
     }
 
     public function test_creates_media_metadata_for_video(): void

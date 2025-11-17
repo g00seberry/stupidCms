@@ -1,43 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Admin\Media;
 
 use App\Models\Media;
 use App\Models\MediaVariant;
-use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-class MediaApiTest extends TestCase
+class MediaApiTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        config()->set('media.disks', [
-            'default' => 'media',
-            'collections' => [],
-            'kinds' => [],
-        ]);
-        config()->set('media.allowed_mimes', [
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-            'video/mp4',
-            'audio/mpeg',
-            'application/pdf',
-        ]);
-    }
 
     public function test_it_uploads_image_and_extracts_metadata(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 1920, 1080)->size(1024);
@@ -94,7 +73,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_uses_default_disk_for_unknown_collection(): void
     {
-        Storage::fake('media');
         config()->set('media.disks', [
             'default' => 'media',
             'collections' => [
@@ -122,7 +100,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_mime_and_size_limits(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', ['image/jpeg']);
         $admin = $this->admin(['media.create']);
 
@@ -139,7 +116,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_lists_media_with_filters_and_pagination(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $image = Media::factory()->create([
@@ -165,7 +141,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_updates_title_alt_collection(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.update']);
         $media = Media::factory()->create([
             'title' => null,
@@ -192,7 +167,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_soft_deletes_and_excludes_from_default_scope(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.delete']);
         $media = Media::factory()->create();
 
@@ -208,7 +182,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_restores_soft_deleted_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.restore']);
         $media = Media::factory()->create();
         $media->delete();
@@ -241,7 +214,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_serves_signed_preview_and_generates_variant_on_demand(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 600, 400);
@@ -270,16 +242,8 @@ class MediaApiTest extends TestCase
         $downloadResponse->assertHeader('Content-Type', 'image/jpeg');
     }
 
-    private function admin(array $permissions): User
-    {
-        return User::factory()->create([
-            'admin_permissions' => $permissions,
-        ]);
-    }
-
     public function test_it_deduplicates_files_by_checksum(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         // Создаём первый файл с известным содержимым
@@ -344,7 +308,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_creates_new_media_for_different_files(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file1 = UploadedFile::fake()->image('test1.jpg', 100, 100);
@@ -372,7 +335,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_title_min_length(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
@@ -390,7 +352,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_alt_min_length(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
@@ -408,7 +369,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_title_max_length(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
@@ -426,7 +386,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_alt_max_length(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
@@ -444,7 +403,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_automatically_slugifies_collection_on_store(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
@@ -462,7 +420,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_automatically_slugifies_collection_on_update(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.update']);
         $media = Media::factory()->create([
             'collection' => 'old',
@@ -479,7 +436,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_normalizes_empty_collection_to_null(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('hero.jpg', 800, 600);
@@ -497,7 +453,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_title_min_length_on_update(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.update']);
         $media = Media::factory()->create();
 
@@ -512,7 +467,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_alt_min_length_on_update(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.update']);
         $media = Media::factory()->create();
 
@@ -527,7 +481,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_handles_heic_image_format(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', [
             'image/jpeg',
             'image/png',
@@ -561,7 +514,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_handles_avif_image_format(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', [
             'image/jpeg',
             'image/png',
@@ -577,7 +529,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_handles_animated_gif(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', [
             'image/gif',
             'image/jpeg',
@@ -604,7 +555,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_handles_mp4_audio_only(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', [
             'video/mp4',
             'audio/mp4',
@@ -634,7 +584,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_handles_aiff_audio_format(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', [
             'audio/aiff',
             'audio/x-aiff',
@@ -670,7 +619,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_validates_mime_signature_mismatch(): void
     {
-        Storage::fake('media');
         config()->set('media.allowed_mimes', ['image/jpeg']);
         $admin = $this->admin(['media.create']);
 
@@ -689,7 +637,6 @@ class MediaApiTest extends TestCase
 
     public function test_it_applies_collection_specific_rules(): void
     {
-        Storage::fake('media');
         config()->set('media.collections', [
             'thumbnails' => [
                 'allowed_mimes' => ['image/jpeg', 'image/png'],
@@ -718,7 +665,6 @@ class MediaApiTest extends TestCase
 
     public function test_show_returns_404_for_missing_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/media/non-existent-id', $admin);
@@ -730,7 +676,6 @@ class MediaApiTest extends TestCase
 
     public function test_show_returns_soft_deleted_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
         $media = Media::factory()->create();
         $media->delete();
@@ -744,7 +689,6 @@ class MediaApiTest extends TestCase
 
     public function test_update_returns_404_for_missing_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.update']);
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/media/non-existent-id', [
@@ -758,7 +702,6 @@ class MediaApiTest extends TestCase
 
     public function test_destroy_returns_404_for_missing_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.delete']);
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/media/non-existent-id', [], $admin);
@@ -769,7 +712,6 @@ class MediaApiTest extends TestCase
 
     public function test_destroy_dispatches_media_deleted_event(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.delete']);
         $media = Media::factory()->create();
 
@@ -785,7 +727,6 @@ class MediaApiTest extends TestCase
 
     public function test_restore_returns_404_for_not_deleted_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.restore']);
         $media = Media::factory()->create();
 
@@ -798,7 +739,6 @@ class MediaApiTest extends TestCase
 
     public function test_store_returns_200_on_deduplication(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file1 = UploadedFile::fake()->image('test.jpg', 100, 100);
@@ -834,7 +774,6 @@ class MediaApiTest extends TestCase
 
     public function test_store_returns_201_on_new_upload(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 100, 100);
@@ -853,7 +792,6 @@ class MediaApiTest extends TestCase
 
     public function test_store_handles_validation_exception(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.create']);
         config()->set('media.allowed_mimes', ['image/jpeg']);
 
@@ -879,7 +817,6 @@ class MediaApiTest extends TestCase
 
     public function test_index_validates_per_page_range(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         // per_page < 1
@@ -899,7 +836,6 @@ class MediaApiTest extends TestCase
 
     public function test_index_handles_invalid_sort_field(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/media?sort=invalid_field', $admin);
@@ -910,7 +846,6 @@ class MediaApiTest extends TestCase
 
     public function test_index_handles_invalid_order_direction(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/media?order=invalid', $admin);

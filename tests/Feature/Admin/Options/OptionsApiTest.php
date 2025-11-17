@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Admin\Options;
 
 use App\Models\Option;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class OptionsApiTest extends TestCase
+class OptionsApiTest extends FeatureTestCase
 {
-    use RefreshDatabase;
 
     public function test_it_upserts_option_value_object_and_reads_back_roundtrip(): void
     {
@@ -204,9 +204,7 @@ class OptionsApiTest extends TestCase
 
     public function test_it_observes_permissions(): void
     {
-        $user = User::factory()->create();
-        $user->grantAdminPermissions('options.read');
-        $user->save();
+        $user = $this->adminWithPermissions(['options.read']);
 
         $response = $this->putJsonAsAdmin(
             '/api/v1/admin/options/site/feature_flag_new_ui',
@@ -215,15 +213,6 @@ class OptionsApiTest extends TestCase
         );
 
         $response->assertStatus(403);
-    }
-
-    private function adminWithPermissions(array $permissions): User
-    {
-        $user = User::factory()->create();
-        $user->grantAdminPermissions(...$permissions);
-        $user->save();
-
-        return $user;
     }
 
     private function typeUri(ErrorCode $code): string

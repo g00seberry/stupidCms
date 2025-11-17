@@ -7,13 +7,11 @@ namespace Tests\Feature\Admin\Media;
 use App\Models\Media;
 use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\MediaTestCase;
 use Illuminate\Support\Facades\Gate;
 
-final class MediaIndexTest extends TestCase
+final class MediaIndexTest extends MediaTestCase
 {
-    use RefreshDatabase;
 
     protected function setUp(): void
     {

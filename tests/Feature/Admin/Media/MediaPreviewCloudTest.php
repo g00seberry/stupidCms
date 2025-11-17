@@ -5,28 +5,14 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\Media;
 
 use App\Models\Media;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-final class MediaPreviewCloudTest extends TestCase
+final class MediaPreviewCloudTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
-    private function admin(array $permissions): User
-    {
-        return \App\Models\User::factory()->create([
-            'admin_permissions' => $permissions,
-        ]);
-    }
-
     public function test_preview_redirects_for_cloud_disk(): void
     {
         $admin = $this->admin(['media.read']);
-
-        // Fake "cloud" disk: path() should fail, temporaryUrl returns URL
-        Storage::fake('media');
         $file = base_path('tests/Feature/Admin/Media/krea-edit.png');
         $storedPath = '2025/11/16/krea-edit.png';
         Storage::disk('media')->put($storedPath, file_get_contents($file));
@@ -48,7 +34,6 @@ final class MediaPreviewCloudTest extends TestCase
 
     public function test_preview_unknown_variant_returns_422(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $file = base_path('tests/Feature/Admin/Media/krea-edit.png');

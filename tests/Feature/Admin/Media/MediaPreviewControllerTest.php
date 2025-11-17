@@ -6,12 +6,9 @@ namespace Tests\Feature\Admin\Media;
 
 use App\Models\Media;
 use App\Models\MediaVariant;
-use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
 /**
  * Тесты для MediaPreviewController.
@@ -23,24 +20,12 @@ use Tests\TestCase;
  * - отдача локальных файлов и редиректы на облачные диски
  * - авторизация доступа
  */
-class MediaPreviewControllerTest extends TestCase
+class MediaPreviewControllerTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        config()->set('media.disks', [
-            'default' => 'media',
-            'collections' => [],
-            'kinds' => [],
-        ]);
-        config()->set('media.allowed_mimes', [
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-        ]);
         config()->set('media.variants', [
             'thumbnail' => ['max' => 320],
             'medium' => ['max' => 1024],
@@ -49,7 +34,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_preview_returns_404_for_missing_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/media/non-existent-id/preview', $admin);
@@ -61,7 +45,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_preview_returns_422_for_invalid_variant(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 800, 600);
@@ -76,7 +59,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_preview_returns_500_on_generation_failure(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 800, 600);
@@ -98,7 +80,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_preview_serves_local_file_directly(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 800, 600);
@@ -121,7 +102,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_preview_uses_default_variant_when_not_specified(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 800, 600);
@@ -144,7 +124,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_download_returns_404_for_missing_media(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/media/non-existent-id/download', $admin);
@@ -156,7 +135,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_download_returns_500_on_url_generation_failure(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 800, 600);
@@ -181,7 +159,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_download_serves_local_file_directly(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read', 'media.create']);
 
         $file = UploadedFile::fake()->image('test.jpg', 800, 600);
@@ -204,7 +181,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_download_respects_signed_ttl_config(): void
     {
-        Storage::fake('media');
         config()->set('media.signed_ttl', 600); // 10 минут
 
         $admin = $this->admin(['media.read', 'media.create']);
@@ -225,7 +201,6 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_preview_authorizes_access(): void
     {
-        Storage::fake('media');
         $userWithoutPermission = $this->userWithoutPermissions();
         $media = Media::factory()->create();
 
@@ -236,20 +211,12 @@ class MediaPreviewControllerTest extends TestCase
 
     public function test_download_authorizes_access(): void
     {
-        Storage::fake('media');
         $userWithoutPermission = $this->userWithoutPermissions();
         $media = Media::factory()->create();
 
         $response = $this->getJsonAsAdmin("/api/v1/admin/media/{$media->id}/download", $userWithoutPermission);
 
         $response->assertStatus(403);
-    }
-
-    private function admin(array $permissions): User
-    {
-        return User::factory()->create([
-            'admin_permissions' => $permissions,
-        ]);
     }
 
     private function userWithoutPermissions(): User

@@ -10,24 +10,19 @@ use App\Domain\Media\Images\ImageRef;
 use App\Domain\Media\Services\OnDemandVariantService;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Mockery;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-final class MediaVariantGenerationTest extends TestCase
+final class MediaVariantGenerationTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
     private ImageProcessor $imageProcessor;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        Storage::fake('media');
 
         $this->imageProcessor = Mockery::mock(ImageProcessor::class);
 

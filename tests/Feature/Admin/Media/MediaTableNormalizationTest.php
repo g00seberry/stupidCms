@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\Media;
 
 use App\Models\Media;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
 /**
  * Тесты нормализации таблицы media.
@@ -17,9 +16,8 @@ use Tests\TestCase;
  * - Работу с JSONB для exif_json (PostgreSQL)
  * - Индексацию checksum_sha256
  */
-final class MediaTableNormalizationTest extends TestCase
+final class MediaTableNormalizationTest extends MediaTestCase
 {
-    use RefreshDatabase;
 
     public function test_enforces_unique_constraint_on_disk_and_path(): void
     {

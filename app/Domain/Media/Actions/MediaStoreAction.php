@@ -164,7 +164,7 @@ class MediaStoreAction
             'height' => $metadata->height,
             'duration_ms' => $metadata->durationMs,
             'checksum_sha256' => $checksum,
-            'exif_json' => $exif ?? $metadata->exif,
+            'exif_json' => $exif,
             'title' => $payload['title'] ?? null,
             'alt' => $payload['alt'] ?? null,
             'collection' => $payload['collection'] ?? null,

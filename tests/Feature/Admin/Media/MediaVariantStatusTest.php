@@ -7,25 +7,13 @@ namespace Tests\Feature\Admin\Media;
 use App\Domain\Media\MediaVariantStatus;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-final class MediaVariantStatusTest extends TestCase
+final class MediaVariantStatusTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
-    private function admin(array $permissions): User
-    {
-        return \App\Models\User::factory()->create([
-            'admin_permissions' => $permissions,
-        ]);
-    }
-
     public function test_status_processing_and_ready_are_set(): void
     {
-        Storage::fake('media');
         $admin = $this->admin(['media.read']);
 
         $file = base_path('tests/Feature/Admin/Media/krea-edit.png');

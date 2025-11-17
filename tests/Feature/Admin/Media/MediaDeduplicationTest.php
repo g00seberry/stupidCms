@@ -12,16 +12,12 @@ use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Models\Media;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Mockery;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-final class MediaDeduplicationTest extends TestCase
+final class MediaDeduplicationTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
     private MediaMetadataExtractor $metadataExtractor;
     private StorageResolver $storageResolver;
     private CollectionRulesResolver $collectionRulesResolver;
@@ -32,19 +28,11 @@ final class MediaDeduplicationTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('media');
-
         $this->metadataExtractor = Mockery::mock(MediaMetadataExtractor::class);
         $this->storageResolver = Mockery::mock(StorageResolver::class);
         $this->collectionRulesResolver = Mockery::mock(CollectionRulesResolver::class);
         $this->validationPipeline = Mockery::mock(MediaValidationPipeline::class);
         $this->exifManager = null;
-
-        config()->set('media.disks', [
-            'default' => 'media',
-            'collections' => [],
-            'kinds' => [],
-        ]);
     }
 
     protected function tearDown(): void

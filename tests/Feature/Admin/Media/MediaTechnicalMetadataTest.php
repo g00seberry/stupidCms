@@ -12,18 +12,13 @@ use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Models\Media;
 use App\Models\MediaMetadata;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\MediaTestCase;
 
-final class MediaTechnicalMetadataTest extends TestCase
+final class MediaTechnicalMetadataTest extends MediaTestCase
 {
-    use RefreshDatabase;
-
     public function test_stores_normalized_av_metadata_in_separate_table(): void
     {
-        Storage::fake('media');
 
         $extractor = new class extends MediaMetadataExtractor {
             public function __construct()
