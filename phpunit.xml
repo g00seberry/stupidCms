@@ -5,22 +5,52 @@
          colors="true"
 >
     <testsuites>
+        <!-- Чистые Unit тесты (моки, без БД или с DatabaseTransactions) -->
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory>tests/Feature</directory>
+            <exclude>tests/Unit/Domain/Media</exclude>
+            <exclude>tests/Unit/Media</exclude>
+            <exclude>tests/Unit/Search</exclude>
         </testsuite>
         
-        <!-- Модульные тесты по доменам -->
+        <!-- Интеграционные тесты (доменная логика с БД, без HTTP) -->
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
+            <exclude>tests/Integration/Domain/Media</exclude>
+            <exclude>tests/Integration/Domain/Entries</exclude>
+            <exclude>tests/Integration/Auth</exclude>
+            <exclude>tests/Integration/Search</exclude>
+            <exclude>tests/Integration/Media</exclude>
+        </testsuite>
+        
+        <!-- Feature тесты (HTTP, контроллеры, middleware) -->
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+            <exclude>tests/Feature/Admin/Media</exclude>
+            <exclude>tests/Feature/Admin/Entries</exclude>
+            <exclude>tests/Feature/Admin/Search</exclude>
+            <exclude>tests/Feature/Search</exclude>
+            <exclude>tests/Feature/AuthCsrfTest.php</exclude>
+            <exclude>tests/Feature/AuthCurrentUserTest.php</exclude>
+            <exclude>tests/Feature/AuthLoginTest.php</exclude>
+            <exclude>tests/Feature/AuthLogoutTest.php</exclude>
+            <exclude>tests/Feature/AuthRefreshTest.php</exclude>
+            <exclude>tests/Feature/AuthorizationTest.php</exclude>
+            <exclude>tests/Feature/JwtAuthTest.php</exclude>
+        </testsuite>
+        
+        <!-- Доменные тесты БЕЗ дублирования -->
         <testsuite name="Media">
             <directory>tests/Feature/Admin/Media</directory>
             <directory>tests/Unit/Domain/Media</directory>
             <directory>tests/Unit/Media</directory>
+            <directory>tests/Integration/Domain/Media</directory>
+            <directory>tests/Integration/Media</directory>
         </testsuite>
         
         <testsuite name="Entries">
             <directory>tests/Feature/Admin/Entries</directory>
+            <directory>tests/Integration/Domain/Entries</directory>
         </testsuite>
         
         <testsuite name="Auth">
@@ -31,12 +61,14 @@
             <file>tests/Feature/AuthRefreshTest.php</file>
             <file>tests/Feature/AuthorizationTest.php</file>
             <file>tests/Feature/JwtAuthTest.php</file>
+            <directory>tests/Integration/Auth</directory>
         </testsuite>
         
         <testsuite name="Search">
             <directory>tests/Feature/Admin/Search</directory>
             <directory>tests/Feature/Search</directory>
             <directory>tests/Unit/Search</directory>
+            <directory>tests/Integration/Search</directory>
         </testsuite>
     </testsuites>
     <source>
@@ -45,14 +77,14 @@
         </include>
     </source>
     <php>
-        <ini name="memory_limit" value="512M"/>
+        <ini name="memory_limit" value="2048M"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value="database/testing.sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

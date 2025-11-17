@@ -8,16 +8,13 @@ use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class SyncTermsTest extends TestCase
+class SyncTermsTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_sync_terms_for_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $topics = Taxonomy::factory()->create();
         $tags = Taxonomy::factory()->create();
         $postType = PostType::factory()->withOptions(['taxonomies' => [$topics->id, $tags->id]])->create();
@@ -58,7 +55,7 @@ class SyncTermsTest extends TestCase
 
     public function test_sync_rejects_terms_from_forbidden_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $allowed = Taxonomy::factory()->create();
         $forbidden = Taxonomy::factory()->create();
         $postType = PostType::factory()->withOptions(['taxonomies' => [$allowed->id]])->create();

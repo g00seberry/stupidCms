@@ -8,15 +8,12 @@ use App\Domain\Auth\JwtService;
 use App\Http\Middleware\JwtAuth;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-final class JwtAuthTest extends TestCase
+final class JwtAuthTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

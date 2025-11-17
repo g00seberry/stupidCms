@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Events;
+namespace Tests\Integration\Domain\Media\Events;
 
 use App\Domain\Media\Events\MediaUploaded;
 use App\Models\Media;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для события MediaUploaded.
  *
  * Проверяет, что событие корректно содержит модель Media и является сериализуемым.
  */
-class MediaUploadedTest extends TestCase
+class MediaUploadedTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Тест: событие содержит модель Media.
@@ -80,4 +79,6 @@ class MediaUploadedTest extends TestCase
         });
     }
 }
+
+
 

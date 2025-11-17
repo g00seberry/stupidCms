@@ -6,16 +6,13 @@ namespace Tests\Feature\Admin\PostTypes;
 
 use App\Models\PostType;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class IndexPostTypesTest extends TestCase
+class IndexPostTypesTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_index_returns_all_post_types_with_expected_shape(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         PostType::factory()->create([
             'slug' => 'article',
@@ -101,10 +98,7 @@ class IndexPostTypesTest extends TestCase
 
     public function test_index_allows_user_with_manage_posttypes_permission(): void
     {
-        $editor = User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => ['manage.posttypes'],
-        ]);
+        $editor = $this->admin(['manage.posttypes']);
 
         PostType::factory()->create([
             'slug' => 'page',

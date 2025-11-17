@@ -8,17 +8,14 @@ use App\Models\PostType;
 use App\Models\Taxonomy;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class StorePostTypeTest extends TestCase
+class StorePostTypeTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_store_creates_post_type_with_options(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create();
 
         $payload = [
@@ -53,7 +50,7 @@ class StorePostTypeTest extends TestCase
 
     public function test_store_requires_unique_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         PostType::factory()->create(['slug' => 'product']);
 
@@ -73,7 +70,7 @@ class StorePostTypeTest extends TestCase
 
     public function test_store_rejects_list_options_payload(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->postJsonAsAdmin('/api/v1/admin/post-types', [
             'slug' => 'gallery',
@@ -142,10 +139,7 @@ class StorePostTypeTest extends TestCase
 
     public function test_store_allows_user_with_manage_posttypes_permission(): void
     {
-        $editor = User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => ['manage.posttypes'],
-        ]);
+        $editor = $this->admin(['manage.posttypes']);
 
         $response = $this->postJsonAsAdmin('/api/v1/admin/post-types', [
             'slug' => 'gallery',
@@ -159,7 +153,7 @@ class StorePostTypeTest extends TestCase
 
     public function test_store_normalizes_taxonomies_to_array_when_object_provided(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $payload = [
             'slug' => 'product',
@@ -178,7 +172,7 @@ class StorePostTypeTest extends TestCase
 
     public function test_store_keeps_taxonomies_as_array_when_empty(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $payload = [
             'slug' => 'page',
@@ -197,7 +191,7 @@ class StorePostTypeTest extends TestCase
 
     public function test_store_keeps_taxonomies_as_array_when_filled(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $categoryTaxonomy = Taxonomy::factory()->create();
         $tagsTaxonomy = Taxonomy::factory()->create();
 

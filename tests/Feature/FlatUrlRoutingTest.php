@@ -6,8 +6,7 @@ use App\Domain\Routing\PathReservationService;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
 /**
  * Тесты для плоской маршрутизации /{slug} (задача 30).
@@ -18,10 +17,8 @@ use Tests\TestCase;
  * - Корневой / обслуживается Home и не конфликтует
  * - Кеш роутов сохраняет порядок
  */
-class FlatUrlRoutingTest extends TestCase
+class FlatUrlRoutingTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private PostType $pageType;
     private User $author;
 

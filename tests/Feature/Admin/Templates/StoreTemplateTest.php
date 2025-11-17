@@ -6,15 +6,12 @@ namespace Tests\Feature\Admin\Templates;
 
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class StoreTemplateTest extends TestCase
+class StoreTemplateTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function tearDown(): void
     {
         // Очищаем созданные тестовые шаблоны

@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class CorsTest extends TestCase
-{
-    use RefreshDatabase;
-    public function test_preflight_request_returns_204_with_credentials(): void
+class CorsTest extends FeatureTestCase
+{    public function test_preflight_request_returns_204_with_credentials(): void
     {
         $allowedOrigin = config('cors.allowed_origins')[0] ?? 'https://app.example.com';
 

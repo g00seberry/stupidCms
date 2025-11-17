@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Actions;
+namespace Tests\Integration\Domain\Media\Actions;
 
 use App\Domain\Media\Actions\UpdateMediaMetadataAction;
 use App\Models\Media;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Tests\TestCase;
 
-final class UpdateMediaMetadataActionTest extends TestCase
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Tests\Support\IntegrationTestCase;
+
+final class UpdateMediaMetadataActionTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     private UpdateMediaMetadataAction $action;
 
@@ -110,4 +110,5 @@ final class UpdateMediaMetadataActionTest extends TestCase
         $this->assertSame('New Collection Name', $updated->collection);
     }
 }
+
 

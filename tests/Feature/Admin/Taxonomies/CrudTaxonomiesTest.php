@@ -6,16 +6,13 @@ use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class CrudTaxonomiesTest extends TestCase
+class CrudTaxonomiesTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_index_returns_paginated_taxonomies(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         Taxonomy::factory()->count(3)->create();
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies', $admin);
@@ -33,7 +30,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_store_creates_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $payload = [
             'label' => 'News Categories',
@@ -52,7 +49,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_show_returns_taxonomy_details(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create(['label' => 'Topics']);
 
         $response = $this->getJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", $admin);
@@ -64,7 +61,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_show_returns_404_for_missing_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/taxonomies/99999', $admin);
 
@@ -78,7 +75,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_update_modifies_taxonomy_fields(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create(['label' => 'Topics']);
 
         $response = $this->putJsonAsAdmin("/api/v1/admin/taxonomies/{$taxonomy->id}", [
@@ -94,7 +91,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_options_json_returns_object_not_array(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'label' => 'Tags',
             'options_json' => [],
@@ -111,7 +108,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_destroy_blocks_when_terms_exist_without_force(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create();
         Term::factory()->forTaxonomy($taxonomy)->create();
 
@@ -128,7 +125,7 @@ class CrudTaxonomiesTest extends TestCase
 
     public function test_destroy_with_force_removes_taxonomy_and_terms(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create();
         $term = Term::factory()->forTaxonomy($taxonomy)->create();
 

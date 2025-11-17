@@ -5,13 +5,10 @@ namespace Tests\Feature;
 use App\Models\RefreshToken;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class AuthLogoutTest extends TestCase
+class AuthLogoutTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

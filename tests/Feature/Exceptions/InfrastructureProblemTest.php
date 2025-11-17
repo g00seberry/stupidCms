@@ -10,9 +10,9 @@ use App\Support\Errors\HttpErrorException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Route;
 use RuntimeException;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-final class InfrastructureProblemTest extends TestCase
+final class InfrastructureProblemTest extends FeatureTestCase
 {
     public function test_query_exception_returns_neutral_detail(): void
     {

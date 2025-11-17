@@ -2,28 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Jobs;
+namespace Tests\Integration\Domain\Media\Jobs;
 
 use App\Domain\Media\Jobs\GenerateVariantJob;
 use App\Domain\Media\MediaVariantStatus;
 use App\Domain\Media\Services\OnDemandVariantService;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Mockery as m;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для GenerateVariantJob.
  *
  * Проверяет генерацию вариантов медиа-файлов в фоновом режиме через очередь.
  */
-final class GenerateVariantJobTest extends TestCase
+final class GenerateVariantJobTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     protected function tearDown(): void
     {
@@ -215,4 +214,6 @@ final class GenerateVariantJobTest extends TestCase
         $this->assertTrue(true);
     }
 }
+
+
 

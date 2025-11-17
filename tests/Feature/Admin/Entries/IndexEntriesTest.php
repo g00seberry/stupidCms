@@ -5,16 +5,13 @@ namespace Tests\Feature\Admin\Entries;
 use App\Models\Entry;
 use App\Models\PostType;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class IndexEntriesTest extends TestCase
+class IndexEntriesTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_index_returns_200_with_paginated_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
         
         Entry::factory()
@@ -60,7 +57,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_filters_by_post_type(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $pageType = PostType::factory()->create(['slug' => 'page']);
         $postType = PostType::factory()->create(['slug' => 'post']);
         
@@ -75,7 +72,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_filters_by_status_draft(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         Entry::factory()->forPostType($postType)->create(['status' => 'draft']);
@@ -90,7 +87,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_filters_by_status_published(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         Entry::factory()->forPostType($postType)->create(['status' => 'draft']);
@@ -105,7 +102,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_filters_by_status_scheduled(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         Entry::factory()->forPostType($postType)->published()->create();
@@ -119,7 +116,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_filters_by_status_trashed(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         $entry = Entry::factory()->forPostType($postType)->create();
@@ -134,7 +131,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_searches_by_title(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         Entry::factory()->forPostType($postType)->create(['title' => 'About Us Page']);
@@ -149,7 +146,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_filters_by_author(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $author1 = User::factory()->create();
         $author2 = User::factory()->create();
         $postType = PostType::factory()->create();
@@ -165,7 +162,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_sorts_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         Entry::factory()->forPostType($postType)->create(['title' => 'Zebra']);
@@ -180,7 +177,7 @@ class IndexEntriesTest extends TestCase
 
     public function test_index_respects_per_page_limit(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         
         Entry::factory()->count(25)->forPostType($postType)->create();

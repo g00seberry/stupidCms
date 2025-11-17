@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Listeners;
+namespace Tests\Integration\Domain\Media\Listeners;
 
 use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\Events\MediaProcessed;
@@ -10,19 +10,18 @@ use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\Listeners\NotifyMediaEvent;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Mockery as m;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для слушателя NotifyMediaEvent.
  *
  * Проверяет обработку событий медиа-файлов и логирование больших файлов.
  */
-final class NotifyMediaEventTest extends TestCase
+final class NotifyMediaEventTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     private NotifyMediaEvent $listener;
 
@@ -151,4 +150,6 @@ final class NotifyMediaEventTest extends TestCase
         $this->assertTrue(true);
     }
 }
+
+
 

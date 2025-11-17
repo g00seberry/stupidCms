@@ -16,11 +16,22 @@ trait HasAdminUser
     /**
      * Создать администратора с указанными разрешениями.
      *
+     * Если разрешения не указаны, создаётся полноправный администратор (is_admin = true).
+     * Если разрешения указаны, создаётся пользователь с конкретными правами.
+     *
      * @param array<string> $permissions Список разрешений для установки через admin_permissions
      * @return User Созданный пользователь
      */
     protected function admin(array $permissions = []): User
     {
+        // Если разрешения не указаны, создаём полноправного админа
+        if (empty($permissions)) {
+            return User::factory()->create([
+                'is_admin' => true,
+            ]);
+        }
+        
+        // Если указаны конкретные разрешения, создаём пользователя с этими правами
         return User::factory()->create([
             'admin_permissions' => $permissions,
         ]);
@@ -39,6 +50,21 @@ trait HasAdminUser
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * Создать обычного пользователя без административных прав.
+     *
+     * Используется для тестирования проверки прав доступа.
+     *
+     * @return User Созданный пользователь без административных прав
+     */
+    protected function regularUser(): User
+    {
+        return User::factory()->create([
+            'is_admin' => false,
+            'admin_permissions' => [],
+        ]);
     }
 }
 

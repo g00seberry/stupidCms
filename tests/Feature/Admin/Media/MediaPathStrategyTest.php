@@ -13,6 +13,7 @@ use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Models\Media;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
 use Tests\Support\MediaTestCase;
 

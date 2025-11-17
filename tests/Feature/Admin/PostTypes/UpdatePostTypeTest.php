@@ -6,16 +6,13 @@ use App\Models\PostType;
 use App\Models\Taxonomy;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class UpdatePostTypeTest extends TestCase
+class UpdatePostTypeTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_update_post_type_returns_200_and_updates_options(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'page',
@@ -56,7 +53,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_with_nested_options_is_valid(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'article',
@@ -84,7 +81,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_only_changes_options_json(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'page',
@@ -110,7 +107,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_returns_404_for_unknown_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/nonexistent', ['options_json' => ['foo' => 'bar']], $admin);
 
@@ -127,7 +124,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_returns_422_when_options_json_is_missing(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         PostType::factory()->create(['slug' => 'page']);
 
@@ -148,7 +145,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_returns_422_when_options_json_is_not_object(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         PostType::factory()->create(['slug' => 'page']);
 
@@ -171,7 +168,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_rejects_list_payload(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
@@ -187,7 +184,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_returns_empty_object_when_payload_is_empty_array(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/post-types/page', [
@@ -203,10 +200,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_allows_user_with_manage_posttypes_permission(): void
     {
-        $editor = User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => ['manage.posttypes'],
-        ]);
+        $editor = $this->admin(['manage.posttypes']);
 
         PostType::factory()->create([
             'slug' => 'page',
@@ -280,7 +274,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_updates_name_and_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'page',
@@ -315,7 +309,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_post_type_can_change_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'page',
@@ -346,7 +340,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_normalizes_taxonomies_to_array_when_object_provided(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $categoryTaxonomy = Taxonomy::factory()->create();
         
         PostType::factory()->create([
@@ -367,7 +361,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_keeps_taxonomies_as_array_when_empty(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         PostType::factory()->create([
             'slug' => 'page',
@@ -387,7 +381,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_keeps_taxonomies_as_array_when_filled(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $categoryTaxonomy = Taxonomy::factory()->create();
         $tagsTaxonomy = Taxonomy::factory()->create();
         
@@ -409,7 +403,7 @@ class UpdatePostTypeTest extends TestCase
 
     public function test_update_normalizes_string_taxonomies_to_integers(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $categoryTaxonomy = Taxonomy::factory()->create();
         $tagsTaxonomy = Taxonomy::factory()->create();
         

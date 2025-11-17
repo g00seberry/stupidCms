@@ -6,13 +6,10 @@ use App\Models\Audit;
 use App\Models\RefreshToken;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class AuthRefreshTest extends TestCase
+class AuthRefreshTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

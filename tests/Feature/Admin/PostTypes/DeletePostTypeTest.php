@@ -9,17 +9,14 @@ use App\Models\PostType;
 use App\Models\Term;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class DeletePostTypeTest extends TestCase
+class DeletePostTypeTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_destroy_deletes_post_type_without_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/article', [], $admin);
@@ -33,7 +30,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_blocks_when_entries_exist_without_force(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
         Entry::factory()->forPostType($postType)->create();
 
@@ -54,7 +51,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_with_force_deletes_post_type_and_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create();
 
@@ -69,7 +66,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_with_force_deletes_multiple_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry1 = Entry::factory()->forPostType($postType)->create();
         $entry2 = Entry::factory()->forPostType($postType)->create();
@@ -87,7 +84,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_with_force_deletes_soft_deleted_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create();
         $entry->delete(); // Soft delete
@@ -103,7 +100,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_with_force_deletes_entry_term_relations(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create();
         $term = Term::factory()->create();
@@ -123,7 +120,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_returns_404_for_unknown_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/nonexistent', [], $admin);
 
@@ -191,10 +188,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_allows_user_with_manage_posttypes_permission(): void
     {
-        $editor = User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => ['manage.posttypes'],
-        ]);
+        $editor = $this->admin(['manage.posttypes']);
         $postType = PostType::factory()->create(['slug' => 'article']);
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/post-types/article', [], $editor);
@@ -208,10 +202,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_with_force_allows_user_with_manage_posttypes_permission(): void
     {
-        $editor = User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => ['manage.posttypes'],
-        ]);
+        $editor = $this->admin(['manage.posttypes']);
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create();
 
@@ -225,7 +216,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_does_not_affect_other_post_types(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType1 = PostType::factory()->create(['slug' => 'article']);
         $postType2 = PostType::factory()->create(['slug' => 'page']);
 
@@ -239,7 +230,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_does_not_affect_entries_of_other_post_types(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType1 = PostType::factory()->create(['slug' => 'article']);
         $postType2 = PostType::factory()->create(['slug' => 'page']);
         $entry1 = Entry::factory()->forPostType($postType1)->create();
@@ -257,7 +248,7 @@ class DeletePostTypeTest extends TestCase
 
     public function test_destroy_with_force_deletes_all_entry_relations(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'article']);
         $entry = Entry::factory()->forPostType($postType)->create(['slug' => 'test-entry']);
         $term = Term::factory()->create();

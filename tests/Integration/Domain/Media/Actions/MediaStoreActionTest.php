@@ -2,59 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Actions;
+namespace Tests\Integration\Domain\Media\Actions;
 
 use App\Domain\Media\Actions\MediaStoreAction;
 use App\Domain\Media\DTO\MediaMetadataDTO;
 use App\Domain\Media\Events\MediaUploaded;
-use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\ExifManager;
-use App\Domain\Media\Services\MediaMetadataExtractor;
-use App\Domain\Media\Services\StorageResolver;
-use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Models\Media;
 use App\Models\MediaMetadata;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Storage;
 use Mockery;
-use Tests\TestCase;
+use Tests\Support\MediaActionTestCase;
 
-final class MediaStoreActionTest extends TestCase
+/**
+ * Integration тесты для MediaStoreAction.
+ *
+ * Тестируют доменную логику загрузки медиа с использованием реальной БД.
+ */
+final class MediaStoreActionTest extends MediaActionTestCase
 {
-    use RefreshDatabase;
-
-    private MediaMetadataExtractor $metadataExtractor;
-    private StorageResolver $storageResolver;
-    private CollectionRulesResolver $collectionRulesResolver;
-    private MediaValidationPipeline $validationPipeline;
-    private ?ExifManager $exifManager;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        Storage::fake('media');
-
-        $this->metadataExtractor = Mockery::mock(MediaMetadataExtractor::class);
-        $this->storageResolver = Mockery::mock(StorageResolver::class);
-        $this->collectionRulesResolver = Mockery::mock(CollectionRulesResolver::class);
-        $this->validationPipeline = Mockery::mock(MediaValidationPipeline::class);
-        $this->exifManager = null;
-
-        config()->set('media.disks', [
-            'default' => 'media',
-            'collections' => [],
-            'kinds' => [],
-        ]);
         config()->set('media.path_strategy', 'by-date');
-    }
-
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
     }
 
     private function createAction(): MediaStoreAction
@@ -76,9 +48,7 @@ final class MediaStoreActionTest extends TestCase
         $checksum = hash_file('sha256', $file->getRealPath());
         $expectedPath = substr($checksum, 0, 2).'/'.substr($checksum, 2, 2);
 
-        $this->validationPipeline->shouldReceive('validate')->once();
-        $this->collectionRulesResolver->shouldReceive('getRules')->andReturn([]);
-        $this->storageResolver->shouldReceive('resolveDiskName')->andReturn('media');
+        $this->mockSuccessfulUpload();
 
         $metadata = new MediaMetadataDTO(width: 100, height: 100);
         $this->metadataExtractor->shouldReceive('extract')->andReturn($metadata);

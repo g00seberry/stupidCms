@@ -8,16 +8,13 @@ use App\Models\Taxonomy;
 use App\Models\Term;
 use App\Models\TermTree;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class TermHierarchyTest extends TestCase
+class TermHierarchyTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_store_creates_term_with_parent_id(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -51,7 +48,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_store_creates_root_term_without_parent(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -79,7 +76,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_store_rejects_parent_from_different_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy1 = Taxonomy::factory()->create(['hierarchical' => true]);
         $taxonomy2 = Taxonomy::factory()->create(['hierarchical' => true]);
         $parent = Term::factory()->forTaxonomy($taxonomy2)->create();
@@ -95,7 +92,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_store_rejects_parent_for_non_hierarchical_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => false,
         ]);
@@ -114,7 +111,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_update_changes_parent_id(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -157,7 +154,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_update_rejects_self_as_parent(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -172,7 +169,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_update_rejects_cycle_creation(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -207,7 +204,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_tree_returns_hierarchical_structure(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -235,7 +232,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_tree_returns_flat_list_for_non_hierarchical_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => false,
         ]);
@@ -255,7 +252,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_show_returns_parent_id_for_hierarchical_taxonomy(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -277,7 +274,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_multilevel_hierarchy_creates_all_ancestor_links(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -318,7 +315,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_update_preserves_children_when_moving_term(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);
@@ -378,7 +375,7 @@ class TermHierarchyTest extends TestCase
 
     public function test_update_preserves_multilevel_children_when_moving_term(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $taxonomy = Taxonomy::factory()->create([
             'hierarchical' => true,
         ]);

@@ -7,19 +7,16 @@ use App\Models\PostType;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class CrudEntriesTest extends TestCase
+class CrudEntriesTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     // === SHOW ===
 
     public function test_show_returns_200_with_entry_details(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
         $entry = Entry::factory()
             ->forPostType($postType)
@@ -43,7 +40,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_show_returns_404_for_nonexistent_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/entries/99999', $admin);
 
@@ -60,7 +57,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_store_creates_entry_with_auto_generated_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -91,7 +88,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_store_creates_entry_with_custom_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -113,7 +110,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_store_creates_published_entry_with_published_at(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -138,7 +135,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_store_requires_post_type(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $data = [
             'title' => 'Test',
@@ -153,7 +150,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_store_requires_title(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -171,7 +168,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_update_modifies_entry_fields(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
         $entry = Entry::factory()->forPostType($postType)->create(['title' => 'Original']);
 
@@ -196,7 +193,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_update_publishes_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->create(['status' => 'draft']);
 
@@ -221,7 +218,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_update_unpublishes_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->published()->create();
 
@@ -246,7 +243,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_update_returns_404_for_nonexistent_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->putJsonAsAdmin('/api/v1/admin/entries/99999', ['title' => 'Test'], $admin);
 
@@ -258,7 +255,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_destroy_soft_deletes_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->create();
 
@@ -272,7 +269,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_destroy_returns_404_for_nonexistent_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->deleteJsonAsAdmin('/api/v1/admin/entries/99999', [], $admin);
 
@@ -284,7 +281,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_restore_recovers_soft_deleted_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->create();
         $entry->delete();
@@ -307,7 +304,7 @@ class CrudEntriesTest extends TestCase
 
     public function test_restore_returns_404_for_non_trashed_entry(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->create();
 

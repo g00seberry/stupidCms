@@ -7,19 +7,16 @@ use App\Models\PostType;
 use App\Models\ReservedRoute;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class SlugPublishValidationTest extends TestCase
+class SlugPublishValidationTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     // === SLUG VALIDATION ===
 
     public function test_slug_must_be_valid_format(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -37,7 +34,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_slug_must_be_unique_within_post_type(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
         
         Entry::factory()->forPostType($postType)->create(['slug' => 'about']);
@@ -57,7 +54,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_slug_uniqueness_includes_soft_deleted_entries(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
         
         $entry = Entry::factory()->forPostType($postType)->create(['slug' => 'deleted-page']);
@@ -78,7 +75,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_slug_can_be_reused_across_different_post_types(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $pageType = PostType::factory()->create(['slug' => 'page']);
         $postType = PostType::factory()->create(['slug' => 'post']);
         
@@ -97,7 +94,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_update_slug_validates_uniqueness(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create(['slug' => 'page']);
         
         Entry::factory()->forPostType($postType)->create(['slug' => 'about']);
@@ -114,7 +111,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_update_allows_keeping_same_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->create(['slug' => 'about', 'title' => 'About']);
 
@@ -130,7 +127,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_slug_cannot_match_reserved_path(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
         
         ReservedRoute::create([
@@ -154,7 +151,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_slug_cannot_start_with_reserved_prefix(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
         
         ReservedRoute::create([
@@ -178,7 +175,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_reserved_route_check_is_case_insensitive(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
         
         ReservedRoute::create([
@@ -204,7 +201,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_publishing_requires_valid_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -223,7 +220,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_publishing_with_auto_generated_slug_succeeds(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -247,7 +244,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_publishing_sets_published_at_automatically(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -265,7 +262,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_publishing_respects_custom_published_at(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $futureDate = now()->addDay()->toIso8601String();
@@ -286,7 +283,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_draft_entry_allows_empty_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         PostType::factory()->create(['slug' => 'page']);
 
         $data = [
@@ -308,7 +305,7 @@ class SlugPublishValidationTest extends TestCase
 
     public function test_update_to_publish_validates_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         $postType = PostType::factory()->create();
         $entry = Entry::factory()->forPostType($postType)->create([
             'slug' => '',

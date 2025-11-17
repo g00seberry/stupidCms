@@ -4,16 +4,13 @@ namespace Tests\Feature\Admin\Entries;
 
 use App\Models\Entry;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class EntryStatusesTest extends TestCase
+class EntryStatusesTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_statuses_returns_200_with_list_of_statuses(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/entries/statuses', $admin);
 
@@ -31,7 +28,7 @@ class EntryStatusesTest extends TestCase
 
     public function test_statuses_returns_correct_status_values(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/entries/statuses', $admin);
 

@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class RoutingOrderTest extends TestCase
+class RoutingOrderTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     /**
      * Тест: /admin/ping должен обрабатываться до fallback.
      * 

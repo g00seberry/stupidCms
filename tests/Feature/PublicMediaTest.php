@@ -6,9 +6,8 @@ namespace Tests\Feature;
 
 use App\Models\Media;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
 /**
  * Тесты для публичного доступа к медиа-файлам.
@@ -17,10 +16,8 @@ use Tests\TestCase;
  *
  * @package Tests\Feature
  */
-class PublicMediaTest extends TestCase
+class PublicMediaTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class AuthCsrfTest extends TestCase
+class AuthCsrfTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private function getCsrfCookieName(): string
     {
         return config('security.csrf.cookie_name');

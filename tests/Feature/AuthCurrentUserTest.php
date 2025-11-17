@@ -6,13 +6,10 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-final class AuthCurrentUserTest extends TestCase
+final class AuthCurrentUserTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_returns_current_authenticated_user(): void
     {
         $user = User::factory()->create([

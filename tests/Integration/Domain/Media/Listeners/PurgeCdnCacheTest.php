@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Listeners;
+namespace Tests\Integration\Domain\Media\Listeners;
 
 use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\Events\MediaProcessed;
@@ -10,18 +10,17 @@ use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\Listeners\PurgeCdnCache;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для слушателя PurgeCdnCache.
  *
  * Проверяет очистку кэша CDN при событиях медиа-файлов.
  */
-class PurgeCdnCacheTest extends TestCase
+class PurgeCdnCacheTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     protected function setUp(): void
     {
@@ -150,4 +149,6 @@ class PurgeCdnCacheTest extends TestCase
         $this->assertTrue(true); // Метод выполнен успешно
     }
 }
+
+
 

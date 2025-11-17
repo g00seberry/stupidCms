@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media;
+namespace Tests\Integration\Domain\Media;
 
 use App\Domain\Media\EloquentMediaRepository;
 use App\Domain\Media\MediaDeletedFilter;
 use App\Domain\Media\MediaQuery;
 use App\Models\Media;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
-final class MediaRepositoryTest extends TestCase
+final class MediaRepositoryTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     public function test_kind_document_excludes_media_types(): void
     {
@@ -502,5 +501,6 @@ final class MediaRepositoryTest extends TestCase
         $this->assertNotEquals($media2->id, $result6->first()->id);
     }
 }
+
 
 

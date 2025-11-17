@@ -5,16 +5,13 @@ namespace Tests\Feature\Admin\PostTypes;
 use App\Models\PostType;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class ShowPostTypeTest extends TestCase
+class ShowPostTypeTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_show_post_type_returns_200_with_correct_structure(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'page',
@@ -55,7 +52,7 @@ class ShowPostTypeTest extends TestCase
 
     public function test_show_post_type_with_empty_options_returns_empty_object(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
         
         $postType = PostType::factory()->create([
             'slug' => 'article',
@@ -73,7 +70,7 @@ class ShowPostTypeTest extends TestCase
 
     public function test_show_post_type_returns_404_for_unknown_slug(): void
     {
-        $admin = User::factory()->create(['is_admin' => true]);
+        $admin = $this->admin();
 
         $response = $this->getJsonAsAdmin('/api/v1/admin/post-types/nonexistent', $admin);
 
@@ -141,10 +138,7 @@ class ShowPostTypeTest extends TestCase
 
     public function test_show_post_type_allows_user_with_manage_posttypes_permission(): void
     {
-        $editor = User::factory()->create([
-            'is_admin' => false,
-            'admin_permissions' => ['manage.posttypes'],
-        ]);
+        $editor = $this->admin(['manage.posttypes']);
 
         PostType::factory()->create([
             'slug' => 'page',

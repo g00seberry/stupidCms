@@ -5,15 +5,12 @@ namespace Tests\Feature;
 use App\Http\Requests\OptionsRequest;
 use App\Models\Entry;
 use App\Models\PostType;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class OptionsValidationTest extends TestCase
+class OptionsValidationTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private PostType $postType;
 
     protected function setUp(): void

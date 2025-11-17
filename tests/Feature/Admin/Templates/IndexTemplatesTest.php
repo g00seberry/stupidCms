@@ -6,15 +6,12 @@ namespace Tests\Feature\Admin\Templates;
 
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class IndexTemplatesTest extends TestCase
+class IndexTemplatesTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_index_returns_200_with_templates_structure(): void
     {
         $admin = User::factory()->admin()->create();

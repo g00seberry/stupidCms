@@ -7,13 +7,10 @@ use App\Domain\Routing\Exceptions\InvalidPathException;
 use App\Domain\Routing\Exceptions\PathAlreadyReservedException;
 use App\Domain\Routing\PathReservationService;
 use App\Models\ReservedRoute;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class PathReservationServiceTest extends TestCase
+class PathReservationServiceTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private PathReservationService $service;
 
     protected function setUp(): void

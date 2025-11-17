@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Listeners;
+namespace Tests\Integration\Domain\Media\Listeners;
 
 use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\Events\MediaProcessed;
@@ -10,17 +10,16 @@ use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\Listeners\LogMediaEvent;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для слушателя LogMediaEvent.
  *
  * Проверяет, что слушатель корректно обрабатывает события медиа-файлов без ошибок.
  */
-class LogMediaEventTest extends TestCase
+class LogMediaEventTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Тест: обработка события MediaUploaded без ошибок.
@@ -86,4 +85,6 @@ class LogMediaEventTest extends TestCase
         $this->assertTrue(true); // Метод выполнен успешно
     }
 }
+
+
 

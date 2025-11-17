@@ -2,26 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media;
+namespace Tests\Integration\Domain\Media;
 
 use App\Domain\Media\Events\MediaProcessed;
 use App\Domain\Media\Services\OnDemandVariantService;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для OnDemandVariantService.
  *
  * Проверяет генерацию вариантов медиа-файлов с различными настройками.
  */
-final class OnDemandVariantServiceTest extends TestCase
+final class OnDemandVariantServiceTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     private OnDemandVariantService $service;
 
@@ -268,5 +267,6 @@ final class OnDemandVariantServiceTest extends TestCase
         $this->assertStringNotContainsString('./', $variant->path);
     }
 }
+
 
 

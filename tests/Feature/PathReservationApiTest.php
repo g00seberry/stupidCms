@@ -5,13 +5,10 @@ namespace Tests\Feature;
 use App\Models\ReservedRoute;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class PathReservationApiTest extends TestCase
+class PathReservationApiTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private User $admin;
     private User $regularUser;
 

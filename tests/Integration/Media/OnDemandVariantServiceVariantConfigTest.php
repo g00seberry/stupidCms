@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Media;
+namespace Tests\Integration\Media;
 
 use App\Domain\Media\Images\ImageProcessor;
 use App\Domain\Media\Images\ImageRef;
@@ -11,8 +11,7 @@ use App\Models\Media;
 use App\Models\MediaVariant;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Фейковый ImageProcessor для теста вариантов.
@@ -62,9 +61,9 @@ final class FakeImageProcessor implements ImageProcessor
     }
 }
 
-final class OnDemandVariantServiceVariantConfigTest extends TestCase
+final class OnDemandVariantServiceVariantConfigTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     public function test_applies_variant_format_and_quality_when_generating(): void
     {
@@ -102,5 +101,6 @@ final class OnDemandVariantServiceVariantConfigTest extends TestCase
         $this->assertSame('ENCODED(png,q=77)', $saved);
     }
 }
+
 
 

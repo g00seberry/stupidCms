@@ -5,15 +5,12 @@ namespace Tests\Feature;
 use App\Models\Entry;
 use App\Domain\Entries\PublishingService;
 use App\Models\PostType;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class PublishingInvariantsTest extends TestCase
+class PublishingInvariantsTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private PostType $postType;
     private PublishingService $publishingService;
 

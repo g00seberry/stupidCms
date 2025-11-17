@@ -2,15 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use App\Support\Errors\ErrorCode;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class Rfc7807ErrorTest extends TestCase
+class Rfc7807ErrorTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

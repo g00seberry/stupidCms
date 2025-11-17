@@ -6,15 +6,12 @@ namespace Tests\Feature\Search;
 
 use App\Domain\Search\SearchClientInterface;
 use App\Domain\Search\SearchService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-final class PublicSearchTest extends TestCase
+final class PublicSearchTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_returns_200_and_empty_result_when_index_is_empty(): void
     {
         Config::set('search.enabled', true);

@@ -8,16 +8,13 @@ use App\Domain\Search\Jobs\ReindexSearchJob;
 use App\Http\Middleware\JwtAuth;
 use App\Http\Middleware\VerifyApiCsrf;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-final class ReindexSearchTest extends TestCase
+final class ReindexSearchTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

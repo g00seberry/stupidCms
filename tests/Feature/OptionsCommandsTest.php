@@ -4,15 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Entry;
 use App\Models\PostType;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class OptionsCommandsTest extends TestCase
+class OptionsCommandsTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private PostType $postType;
 
     protected function setUp(): void

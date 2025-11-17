@@ -6,13 +6,10 @@ use App\Models\Entry;
 use App\Models\PostType;
 use App\Models\User;
 use App\Support\Errors\ErrorCode;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class UtilsSlugifyTest extends TestCase
+class UtilsSlugifyTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_slugify_endpoint_returns_base_and_unique(): void
     {
         $admin = User::factory()->admin()->create();

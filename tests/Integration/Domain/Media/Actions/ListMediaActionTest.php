@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Actions;
+namespace Tests\Integration\Domain\Media\Actions;
 
 use App\Domain\Media\Actions\ListMediaAction;
 use App\Domain\Media\MediaQuery;
@@ -10,9 +10,9 @@ use App\Domain\Media\MediaRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\LengthAwarePaginator as LaravelLengthAwarePaginator;
 use Mockery;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
-final class ListMediaActionTest extends TestCase
+final class ListMediaActionTest extends IntegrationTestCase
 {
     private MediaRepository $repository;
 
@@ -132,4 +132,5 @@ final class ListMediaActionTest extends TestCase
         $this->assertTrue($result->isEmpty());
     }
 }
+
 

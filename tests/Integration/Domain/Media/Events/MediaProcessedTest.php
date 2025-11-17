@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Media\Events;
+namespace Tests\Integration\Domain\Media\Events;
 
 use App\Domain\Media\Events\MediaProcessed;
 use App\Models\Media;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Tests\TestCase;
+use Tests\Support\IntegrationTestCase;
 
 /**
  * Тесты для события MediaProcessed.
  *
  * Проверяет, что событие корректно содержит модели Media и MediaVariant и является сериализуемым.
  */
-class MediaProcessedTest extends TestCase
+class MediaProcessedTest extends IntegrationTestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Тест: событие содержит Media и MediaVariant.
@@ -107,4 +106,6 @@ class MediaProcessedTest extends TestCase
         });
     }
 }
+
+
 

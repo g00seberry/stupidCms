@@ -8,14 +8,11 @@ use App\Models\PostType;
 use App\Models\Term;
 use App\Models\Taxonomy;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
-use Tests\TestCase;
+use Tests\Support\FeatureTestCase;
 
-class AuthorizationTest extends TestCase
+class AuthorizationTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     private User $admin;
     private User $regularUser;
     private Entry $entry;
