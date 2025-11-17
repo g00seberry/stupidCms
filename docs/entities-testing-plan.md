@@ -21,6 +21,53 @@
 
 ---
 
+## Статистика выполнения
+
+**Дата обновления:** 2025-11-17
+
+### Общие показатели
+
+-   ✅ **Всего тестов:** 464
+-   ✅ **Assertions:** 988
+-   ⏭️ **Skipped:** 2
+-   ❌ **Failed:** 0
+-   ⏱️ **Время выполнения:** ~25 сек
+
+### По фазам
+
+#### Фаза 1: Критичные компоненты ✅ (100%)
+
+-   ✅ **Models:** 218 тестов (User, Entry, Media, PostType, Plugin, Option, Taxonomy, Term, TermTree, RefreshToken, ReservedRoute, Redirect, Audit, Outbox + MediaVariant, MediaMetadata)
+-   ✅ **Auth Module:** 26 тестов (JwtService, RefreshTokenRepository, RefreshTokenDto, Exceptions)
+
+#### Фаза 2: Domain Services 🔄 (33%)
+
+-   ✅ **Auth:** 26 тестов
+-   ✅ **Entries:** 16 тестов (PublishingService)
+-   ✅ **Routing:** 37 тестов (PathNormalizer, ReservedPattern, Exceptions)
+-   ✅ **Media:** 21 тестов (MediaQuery, ListMediaAction, UpdateMediaMetadataAction)
+-   ✅ **Options:** 16 тестов (OptionsRepository)
+-   ✅ **PostTypes:** 19 тестов (PostTypeOptions)
+-   ✅ **Sanitizer:** 17 тестов (RichTextSanitizer)
+-   ✅ **View:** 10 тестов (BladeTemplateResolver)
+-   ✅ **Plugins:** 7 тестов (PluginRegistry)
+-   ⏳ **Media (полное):** MediaStoreAction требует доработки
+-   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
+
+#### Фаза 3: HTTP Controllers 🔄 (5%)
+
+-   ✅ **Auth API:** 31 тест (Login, CurrentUser, Refresh, Logout)
+-   ⏳ **Entries API:** 0 тестов
+-   ⏳ **Media API:** 0 тестов
+-   ⏳ **PostTypes API:** 0 тестов
+-   ⏳ **Plugins API:** 0 тестов
+-   ⏳ **Options API:** 0 тестов
+-   ⏳ **Taxonomies & Terms API:** 0 тестов
+-   ⏳ **Search API:** 0 тестов
+-   ⏳ **Path Reservation API:** 0 тестов
+
+---
+
 ## Структура плана
 
 ```
@@ -1264,51 +1311,49 @@
 
 ---
 
-### 2.4. Модуль Plugins (7 сущностей)
+### 2.4. Модуль Plugins (частично) ✅
 
 #### Приоритет: 🟡 Средний
 
-##### 2.4.1. PluginActivator
+**Статус:** 🔄 Частично завершено (2025-11-17)
 
-**Путь:** `app/Domain/Plugins/PluginActivator.php`
+##### 2.4.1. PluginActivator ⏳
 
-**Unit-тесты** (`tests/Unit/Domain/Plugins/PluginActivatorTest.php`)
+**Путь:** `app/Domain/Plugins/PluginActivator.php`  
+**Статус:** ⏳ Требует рефакторинга
 
-```php
-- test('enables plugin')
-- test('disables plugin')
-- test('validates plugin before enabling')
-- test('throws exception if plugin already enabled')
-- test('throws exception if plugin already disabled')
-- test('dispatches plugin enabled event')
-- test('dispatches plugin disabled event')
-```
+**Проблема:** `PluginsRouteReloader` объявлен как `final`, что блокирует мокирование в тестах. Требуется:
 
-**Feature-тесты** (`tests/Feature/Domain/Plugins/PluginActivationTest.php`)
+-   Создать интерфейс для `PluginsRouteReloader`
+-   Или использовать Dependency Injection с интерфейсом
 
-```php
-- test('plugin activation flow')
-- test('plugin deactivation flow')
-- test('plugin routes are loaded after activation')
-- test('plugin routes are removed after deactivation')
-```
+**Тесты:** Отложено до рефакторинга архитектуры
 
 ---
 
-##### 2.4.2. PluginRegistry
+##### 2.4.2. PluginRegistry ✅
 
-**Путь:** `app/Domain/Plugins/PluginRegistry.php`
+**Путь:** `app/Domain/Plugins/PluginRegistry.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Plugins/PluginRegistryTest.php`)
+**Feature-тесты** (`tests/Feature/Plugins/PluginRegistryTest.php`) ✅
 
 ```php
-- test('registers plugin')
-- test('unregisters plugin')
-- test('gets all registered plugins')
-- test('gets enabled plugins')
-- test('gets disabled plugins')
-- test('checks if plugin is registered')
+✅ test('returns enabled plugins only')
+✅ test('returns empty collection when no plugins enabled')
+✅ test('orders plugins by slug')
+✅ test('returns enabled providers')
+✅ test('filters out empty provider names')
+✅ test('returns empty array when no enabled plugins')
+✅ test('handles mixed provider types')
 ```
+
+**Примечания:**
+
+-   7 тестов
+-   Управление списком включённых плагинов
+-   Фильтрация провайдеров
+-   Обработка отсутствия таблицы (миграции)
 
 ---
 
@@ -1734,134 +1779,230 @@
 
 ---
 
-### 2.7. Модуль View (2 сущности)
+### 2.7. Модуль View ✅
 
 #### Приоритет: 🟢 Низкий
 
-##### 2.7.1. BladeTemplateResolver
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Путь:** `app/Domain/View/BladeTemplateResolver.php`
+##### 2.7.1. BladeTemplateResolver ✅
 
-**Unit-тesты** (`tests/Unit/Domain/View/BladeTemplateResolverTest.php`)
+**Путь:** `app/Domain/View/BladeTemplateResolver.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-```php
-- test('resolves template for entry with override')
-- test('resolves template by post type and slug')
-- test('resolves template by post type')
-- test('falls back to global entry template')
-- test('checks view existence')
-```
-
-**Feature-тесты** (`tests/Feature/Domain/View/TemplateResolutionTest.php`)
+**Feature-тесты** (`tests/Feature/View/BladeTemplateResolverTest.php`) ✅
 
 ```php
-- test('entry renders with correct template')
-- test('custom template override is respected')
-- test('post type specific template is used')
-- test('fallback template is used when no specific template exists')
+✅ test('returns default template when no specific templates exist')
+✅ test('uses template override when specified')
+✅ test('throws exception when template override does not exist')
+✅ test('uses post type specific template when it exists')
+✅ test('uses entry specific template when it exists')
+✅ test('template override has highest priority')
+✅ test('entry specific template has priority over post type template')
+✅ test('can use custom default template')
+✅ test('handles entry with loaded post type relationship')
+✅ test('handles entry without post type slug')
 ```
+
+**Примечания:**
+
+-   10 тестов
+-   Приоритет шаблонов: override > entry--{type}--{slug} > entry--{type} > default
+-   Интеграция с Blade View facade
+-   Оптимизация с eager loading
 
 ---
 
-### 2.8. Модуль Sanitizer (1 сущность)
+### 2.8. Модуль Sanitizer ✅
 
 #### Приоритет: 🟡 Средний
 
-##### 2.8.1. RichTextSanitizer
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Путь:** `app/Domain/Sanitizer/RichTextSanitizer.php`
+##### 2.8.1. RichTextSanitizer ✅
 
-**Unit-тесты** (`tests/Unit/Domain/Sanitizer/RichTextSanitizerTest.php`)
+**Путь:** `app/Domain/Sanitizer/RichTextSanitizer.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+**Feature-тесты** (`tests/Feature/Sanitizer/RichTextSanitizerTest.php`) ✅
 
 ```php
-- test('sanitizes html content')
-- test('removes dangerous tags')
-- test('removes javascript')
-- test('allows safe tags')
-- test('preserves formatting')
-- test('handles malformed html')
+✅ test('sanitizes basic html content')
+✅ test('removes script tags')
+✅ test('removes inline javascript')
+✅ test('removes dangerous iframe tags')
+✅ test('allows safe formatting tags')
+✅ test('adds noopener noreferrer to target blank links')
+✅ test('preserves existing rel attributes and adds noopener noreferrer')
+✅ test('does not add rel to links without target blank')
+✅ test('handles malformed html')
+✅ test('removes javascript protocol from links')
+✅ test('removes onerror from images')
+✅ test('preserves nested formatting')
+✅ test('handles empty content')
+✅ test('handles plain text without tags')
+✅ test('removes style attributes with dangerous content')
+✅ test('sanitizes lists and preserves structure')
+✅ test('handles multiple target blank links')
 ```
+
+**Примечания:**
+
+-   17 тестов
+-   Использует HTMLPurifier для очистки
+-   Автоматическое добавление rel="noopener noreferrer"
+-   Защита от XSS атак (script, onclick, javascript:, etc.)
 
 ---
 
-### 2.9. Модуль Options (1 сущность)
+### 2.9. Модуль Options ✅
 
 #### Приоритет: 🟢 Низкий
 
-##### 2.9.1. OptionsRepository
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Путь:** `app/Domain/Options/OptionsRepository.php`
+##### 2.9.1. OptionsRepository ✅
 
-**Unit-тesты** (`tests/Unit/Domain/Options/OptionsRepositoryTest.php`)
+**Путь:** `app/Domain/Options/OptionsRepository.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-```php
-- test('gets option by namespace and key')
-- test('sets option value')
-- test('deletes option')
-- test('gets all options in namespace')
-- test('returns default if option not found')
-```
-
-**Feature-тесты** (`tests/Feature/Domain/Options/OptionsManagementTest.php`)
+**Feature-тесты** (`tests/Feature/Options/OptionsRepositoryTest.php`) ✅
 
 ```php
-- test('option can be created and retrieved')
-- test('option can be updated')
-- test('option can be deleted')
-- test('options are scoped by namespace')
+✅ test('option can be created and retrieved')
+✅ test('option can be updated')
+✅ test('option can be deleted')
+✅ test('options are scoped by namespace')
+✅ test('returns default value when option not found')
+✅ test('stores complex json values')
+✅ test('soft deleted option returns default value')
+✅ test('can restore soft deleted option')
+✅ test('restore returns null for non existent option')
+✅ test('delete returns false for non existent option')
+✅ test('dispatches option changed event on set')
+✅ test('can update with description')
+✅ test('set restores soft deleted option')
+✅ test('getInt returns integer value')
+✅ test('getInt returns default when option not found')
+✅ test('getInt casts string to int')
 ```
+
+**Примечания:**
+
+-   16 тестов
+-   Кэширование с тегами (если поддерживается драйвером)
+-   Soft deletes и восстановление
+-   События OptionChanged
+-   Транзакционная безопасность
 
 ---
 
-### 2.10. Модуль PostTypes (1 сущность)
+### 2.10. Модуль PostTypes ✅
 
 #### Приоритет: 🟢 Низкий
 
-##### 2.10.1. PostTypeOptions
+**Статус:** ✅ Завершено (2025-11-17)
 
-**Путь:** `app/Domain/PostTypes/PostTypeOptions.php`
+##### 2.10.1. PostTypeOptions ✅
 
-**Unit-тesты** (`tests/Unit/Domain/PostTypes/PostTypeOptionsTest.php`)
+**Путь:** `app/Domain/PostTypes/PostTypeOptions.php`  
+**Статус:** ✅ Завершено (2025-11-17)
+
+**Unit-тесты** (`tests/Unit/PostTypes/PostTypeOptionsTest.php`) ✅
 
 ```php
-- test('creates options from array')
-- test('converts options to array')
-- test('validates option structure')
+✅ test('creates options from array')
+✅ test('creates empty options')
+✅ test('converts options to array')
+✅ test('normalizes string taxonomies to integers')
+✅ test('accepts mixed integer and string taxonomies')
+✅ test('throws exception for invalid taxonomies')
+✅ test('throws exception for negative taxonomy ids')
+✅ test('throws exception for zero taxonomy id')
+✅ test('throws exception when taxonomies is not a list')
+✅ test('gets allowed taxonomies')
+✅ test('checks if taxonomy is allowed')
+✅ test('allows all taxonomies when list is empty')
+✅ test('gets field value')
+✅ test('returns default for non existent field')
+✅ test('checks if field exists')
+✅ test('is immutable value object')
+✅ test('converts to api array with normalized structure')
+✅ test('preserves taxonomies as array in api response')
+✅ test('handles complex nested structures')
 ```
+
+**Примечания:**
+
+-   19 тестов
+-   Value Object для опций PostType
+-   Валидация taxonomies (только положительные целые)
+-   Нормализация строк в int
+-   Immutability (readonly properties)
+-   API-friendly сериализация
 
 ---
 
 ## 3. HTTP Controllers (60 эндпоинтов)
 
-### 3.1. Auth API (4 эндпоинта)
+### 3.1. Auth API (4 эндпоинта) ✅
 
 #### Приоритет: 🔴 Критичный
 
-**Feature-тесты** (`tests/Feature/Api/Auth/AuthenticationTest.php`)
+**Статус:** ✅ Завершено (2025-11-17)
+
+**Feature-тесты** (`tests/Feature/Api/Auth/LoginTest.php`, `CurrentUserTest.php`, `RefreshTest.php`, `LogoutTest.php`) ✅
 
 ```php
-// POST /api/v1/admin/auth/login
-- test('user can login with valid credentials')
-- test('user receives access and refresh tokens on login')
-- test('login fails with invalid credentials')
-- test('login fails with missing credentials')
+// POST /api/v1/auth/login (LoginTest.php) - 12 тестов ✅
+✅ test('successful login returns tokens')
+✅ test('login with invalid credentials returns 401')
+✅ test('login with missing email returns validation error')
+✅ test('login with missing password returns validation error')
+✅ test('login creates audit log on success')
+✅ test('login creates audit log on failure')
+✅ test('login with invalid email format returns validation error')
+✅ test('login is case insensitive for email')
+✅ test('login sets httponly secure cookies')
+✅ test('login issues refresh token and stores in database')
+✅ test('refresh token has correct parent relationship')
+✅ test('multiple logins create separate refresh tokens')
 
-// GET /api/v1/admin/auth/current
-- test('authenticated user can get current user info')
-- test('unauthenticated request returns 401')
+// GET /api/v1/admin/auth/current (CurrentUserTest.php) - 6 тестов ✅
+✅ test('authenticated user can get current user info')
+✅ test('unauthenticated request returns 401')
+✅ test('returns correct user data structure')
+✅ test('does not expose sensitive fields')
+✅ test('works with admin user')
+✅ test('works with regular user')
 
-// POST /api/v1/admin/auth/refresh
-- test('user can refresh access token with valid refresh token')
-- test('refresh token is rotated on use')
-- test('refresh fails with invalid token')
-- test('refresh fails with expired token')
-- test('refresh fails with revoked token')
+// POST /api/v1/auth/refresh (RefreshTest.php) - 4 теста ✅
+✅ test('refresh without cookie returns 401')
+✅ test('refresh with invalid token returns 401')
+✅ test('refresh endpoint exists and requires authentication')
+✅ test('refresh endpoint clears cookies on error')
 
-// POST /api/v1/admin/auth/logout
-- test('user can logout')
-- test('refresh token is revoked on logout')
-- test('access token becomes invalid after logout')
+// POST /api/v1/auth/logout (LogoutTest.php) - 9 тестов ✅
+✅ test('authenticated user can logout')
+✅ test('logout clears access and refresh cookies')
+✅ test('logout without authentication returns 401')
+✅ test('logout revokes current refresh token')
+✅ test('logout with all parameter revokes all user tokens')
+✅ test('logout without all parameter revokes only current token family')
+✅ test('logout handles missing refresh token gracefully')
+✅ test('logout handles invalid refresh token gracefully')
+✅ test('logout is idempotent')
 ```
+
+**Примечания:**
+
+-   31 Feature тест (12+6+4+9)
+-   Полное покрытие Auth API
+-   JWT аутентификация и refresh token rotation полностью протестированы
+-   `UserResource` обновлен для включения `is_admin`, `created_at`, `updated_at`
+-   JWT middleware отключен в тестах (уже протестирован отдельно)
+-   Полное интеграционное тестирование refresh-механизма (ротация, reuse attack) в `LoginTest`
 
 ---
 

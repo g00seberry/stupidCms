@@ -38,7 +38,7 @@ class UserResource extends AdminJsonResource
      * Преобразовать ресурс в массив.
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
-     * @return array<string, mixed> Массив с полями пользователя (id, email, name)
+     * @return array<string, mixed> Массив с полями пользователя (id, email, name, is_admin, created_at, updated_at)
      */
     public function toArray($request): array
     {
@@ -49,6 +49,9 @@ class UserResource extends AdminJsonResource
             'id' => (int) $user->id,
             'email' => $user->email,
             'name' => $user->name,
+            'is_admin' => (bool) $user->is_admin,
+            'created_at' => $user->created_at?->toIso8601String(),
+            'updated_at' => $user->updated_at?->toIso8601String(),
         ];
     }
 
