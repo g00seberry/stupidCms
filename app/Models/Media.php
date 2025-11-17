@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  *
  * Представляет загруженные файлы: изображения, видео, аудио, документы.
  * Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
+ * Уникальность обеспечивается по комбинации (disk, path).
+ * EXIF метаданные хранятся в JSONB колонке (PostgreSQL) или JSON (другие БД).
  *
  * @property string $id ULID идентификатор
- * @property string $path Путь к файлу в хранилище
  * @property string $disk Диск хранения
+ * @property string $path Путь к файлу в хранилище (уникален в рамках disk)
  * @property string $original_name Оригинальное имя файла
  * @property string|null $ext Расширение файла
  * @property string $mime MIME-тип файла
@@ -25,8 +27,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * @property int|null $width Ширина изображения в пикселях
  * @property int|null $height Высота изображения в пикселях
  * @property int|null $duration_ms Длительность медиа в миллисекундах
- * @property string|null $checksum_sha256 SHA256 checksum файла
- * @property array|null $exif_json EXIF метаданные (для изображений)
+ * @property string|null $checksum_sha256 SHA256 checksum файла (индексирован)
+ * @property array|null $exif_json EXIF метаданные (для изображений, JSONB в PostgreSQL)
  * @property string|null $title Заголовок медиа
  * @property string|null $alt Альтернативный текст
  * @property string|null $collection Коллекция/группа медиа
