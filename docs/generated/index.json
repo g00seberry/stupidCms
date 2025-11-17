@@ -2510,6 +2510,7 @@
                     "max",
                     "medium",
                     "signed_ttl",
+                    "public_signed_ttl",
                     "path_strategy",
                     "driver",
                     "quality",
@@ -3193,6 +3194,34 @@
                 "0": "api",
                 "3": "v1",
                 "4": "search"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/media/{id}",
+            "type": "http_endpoint",
+            "name": "api.v1.media.show",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+            "summary": "GET /api/v1/media/{id} (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/media/{id}",
+                "group": "api",
+                "auth": null,
+                "parameters": {
+                    "id": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "3": "v1",
+                "4": "media"
             }
         },
         {
@@ -7205,6 +7234,7 @@
                         "max",
                         "medium",
                         "signed_ttl",
+                        "public_signed_ttl",
                         "path_strategy",
                         "driver",
                         "quality",
@@ -7890,6 +7920,34 @@
                     "0": "api",
                     "3": "v1",
                     "4": "search"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/media/{id}",
+                "type": "http_endpoint",
+                "name": "api.v1.media.show",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+                "summary": "GET /api/v1/media/{id} (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/media/{id}",
+                    "group": "api",
+                    "auth": null,
+                    "parameters": {
+                        "id": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "3": "v1",
+                    "4": "media"
                 }
             },
             {
@@ -9536,6 +9594,12 @@
                 "summary": "Configuration: Media"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/media/{id}",
+                "type": "http_endpoint",
+                "name": "api.v1.media.show",
+                "summary": "GET /api/v1/media/{id} (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -10608,6 +10672,12 @@
                 "summary": "GET /api/v1/search (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/media/{id}",
+                "type": "http_endpoint",
+                "name": "api.v1.media.show",
+                "summary": "GET /api/v1/media/{id} (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/auth/current",
                 "type": "http_endpoint",
                 "name": "admin.v1.auth.current",
@@ -10944,6 +11014,12 @@
                 "type": "http_endpoint",
                 "name": "api.v1.search",
                 "summary": "GET /api/v1/search (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/media/{id}",
+                "type": "http_endpoint",
+                "name": "api.v1.media.show",
+                "summary": "GET /api/v1/media/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/auth/current",
@@ -11953,5 +12029,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T03:12:53+00:00"
+    "generated_at": "2025-11-17T03:17:36+00:00"
 }

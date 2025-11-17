@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: all
                   nullable: true
                   enum:
                     - all
@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T03:12:50'
+                  example: '2025-11-17T03:17:33'
                   nullable: true
                 date_to:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.asc
+                  example: published_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: image
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -2808,7 +2808,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -4261,7 +4261,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5929,7 +5929,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -5958,7 +5958,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -8182,7 +8182,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: label.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10006,6 +10006,25 @@ paths:
                     example: 'Authentication required.'
       tags:
         - Auth
+  '/api/v1/media/{id}':
+    get:
+      summary: 'Получить публичный доступ к медиа-файлу.'
+      operationId: ''
+      description: "Генерирует подписанный URL с ограниченным временем жизни (TTL из config).\nДля локальных дисков возвращает файл напрямую, для облачных - редирект на подписанный URL.\nНе требует аутентификации, но проверяет существование медиа-файла."
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the medium.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
   '/api/v1/admin/taxonomies/{id}':
     get:
       summary: 'Получение таксономии.'
@@ -10114,7 +10133,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10400,7 +10419,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T03:12:50'
+                  example: '2025-11-17T03:17:33'
                   nullable: true
                 to:
                   type: string

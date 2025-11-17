@@ -986,6 +986,25 @@ POST /api/v1/auth/refresh (api)
 
 ---
 
+## api.v1.media.show
+**ID:** `http_endpoint:GET:/api/v1/media/{id}`
+**Path:** `app/Http/Controllers/PublicMediaController.php`
+
+GET /api/v1/media/{id} (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/media/{id}`
+- **Group:** `api`
+- **Parameters:**
+  - `id` (string, required)
+
+### Tags
+`api`, `v1`, `media`
+
+
+---
+
 ## api.v1.search
 **ID:** `http_endpoint:GET:/api/v1/search`
 **Path:** `app/Http/Controllers/SearchController.php`

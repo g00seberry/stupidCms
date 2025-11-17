@@ -52,6 +52,7 @@ return [
         'medium' => ['max' => 1024],
     ],
     'signed_ttl' => env('MEDIA_SIGNED_TTL', 300),
+    'public_signed_ttl' => env('MEDIA_PUBLIC_SIGNED_TTL', 3600), // TTL для публичных подписанных URL (по умолчанию 1 час)
     'path_strategy' => env('MEDIA_PATH_STRATEGY', 'by-date'), // by-date | hash-shard
 
     'image' => [
