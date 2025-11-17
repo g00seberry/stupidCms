@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T17:34:25'
+                  example: '2025-11-17T18:20:58'
                   nullable: true
                 date_to:
                   type: string
@@ -573,7 +573,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -2808,7 +2808,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -4536,7 +4536,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -6204,7 +6204,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -6223,7 +6223,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -10300,25 +10300,6 @@ paths:
         required: true
         schema:
           type: string
-  '/api/v1/media/{id}/preview':
-    get:
-      summary: 'Получить публичный доступ к варианту изображения.'
-      operationId: ''
-      description: "Генерирует вариант изображения (thumbnail, medium, large и т.д.) по требованию\nи возвращает подписанный URL с ограниченным временем жизни (TTL из config).\nДля локальных дисков возвращает файл напрямую, для облачных - редирект на подписанный URL.\nНе требует аутентификации, но проверяет существование медиа-файла."
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-    parameters:
-      -
-        in: path
-        name: id
-        description: 'The ID of the medium.'
-        example: consequatur
-        required: true
-        schema:
-          type: string
   '/api/v1/admin/taxonomies/{id}':
     get:
       summary: 'Получение таксономии.'
@@ -10352,7 +10333,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 options_json:
                   type: object
@@ -10713,7 +10694,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T17:34:25'
+                  example: '2025-11-17T18:20:58'
                   nullable: true
                 to:
                   type: string

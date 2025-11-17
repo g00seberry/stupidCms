@@ -1000,25 +1000,6 @@ POST /api/v1/auth/refresh (api)
 
 ---
 
-## api.v1.media.preview
-**ID:** `http_endpoint:GET:/api/v1/media/{id}/preview`
-**Path:** `app/Http/Controllers/PublicMediaController.php`
-
-GET /api/v1/media/{id}/preview (api)
-
-### Meta
-- **Method:** `GET`
-- **URI:** `/api/v1/media/{id}/preview`
-- **Group:** `api`
-- **Parameters:**
-  - `id` (string, required)
-
-### Tags
-`api`, `v1`, `media`, `preview`
-
-
----
-
 ## api.v1.media.show
 **ID:** `http_endpoint:GET:/api/v1/media/{id}`
 **Path:** `app/Http/Controllers/PublicMediaController.php`
