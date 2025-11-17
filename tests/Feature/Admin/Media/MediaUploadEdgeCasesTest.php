@@ -40,8 +40,7 @@ final class MediaUploadEdgeCasesTest extends TestCase
         config()->set('media.allowed_mimes', ['image/jpeg']); // png запрещён
         $admin = $this->admin(['media.create']);
 
-        $pngPath = base_path('tests/Feature/Admin/Media/krea-edit.png');
-        $file = new UploadedFile($pngPath, 'krea-edit.png', 'image/png', null, true);
+        $file = UploadedFile::fake()->image('krea-edit.png', 100, 100);
 
         $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [], ['file' => $file], $admin);
         $response->assertStatus(422);

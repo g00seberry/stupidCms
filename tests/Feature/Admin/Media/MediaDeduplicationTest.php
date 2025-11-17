@@ -192,15 +192,13 @@ final class MediaDeduplicationTest extends TestCase
 
         $this->validationPipeline->shouldReceive('validate')->twice();
         $this->collectionRulesResolver->shouldReceive('getRules')->twice()->andReturn([]);
-        $this->storageResolver->shouldReceive('resolveDiskName')->once()->andReturn('media');
+        $this->storageResolver->shouldReceive('resolveDiskName')->twice()->andReturn('media');
 
         $metadata1 = new MediaMetadataDTO(width: 100, height: 100);
         $metadata2 = new MediaMetadataDTO(width: 200, height: 200);
         $this->metadataExtractor->shouldReceive('extract')
-            ->once()
-            ->andReturn($metadata1)
-            ->once()
-            ->andReturn($metadata2);
+            ->twice()
+            ->andReturn($metadata1, $metadata2);
 
         $action = $this->createAction();
         $media1 = $action->execute($file1);

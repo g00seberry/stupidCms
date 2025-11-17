@@ -143,9 +143,11 @@ final class MediaTest extends TestCase
         $media = Media::factory()->create();
         $variant1 = MediaVariant::factory()->create([
             'media_id' => $media->id,
+            'variant' => 'thumbnail',
         ]);
         $variant2 = MediaVariant::factory()->create([
             'media_id' => $media->id,
+            'variant' => 'medium',
         ]);
 
         $variants = $media->variants;
