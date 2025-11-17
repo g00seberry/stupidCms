@@ -8,6 +8,7 @@ use App\Domain\Media\Events\MediaProcessed;
 use App\Domain\Media\Images\ImageProcessor;
 use App\Domain\Media\Images\ImageRef;
 use App\Domain\Media\Jobs\GenerateVariantJob;
+use App\Domain\Media\MediaVariantStatus;
 use App\Models\Media;
 use App\Models\MediaVariant;
 use Illuminate\Support\Facades\Event;
@@ -36,12 +37,15 @@ class OnDemandVariantService
     /**
      * Убедиться, что вариант существует на диске и в БД.
      *
-     * Проверяет существование варианта, если отсутствует — генерирует синхронно.
+     * Проверяет существование варианта. Если вариант отсутствует или его файл не существует,
+     * генерирует вариант синхронно. Для preview-запросов всегда генерирует синхронно,
+     * чтобы обеспечить немедленную доступность файла.
      *
      * @param \App\Models\Media $media Медиа-файл
      * @param string $variant Имя варианта
      * @return \App\Models\MediaVariant Созданный или существующий вариант
      * @throws \InvalidArgumentException Если медиа не поддерживает варианты или вариант не настроен
+     * @throws \RuntimeException Если не удалось прочитать/обработать файл
      */
     public function ensureVariant(Media $media, string $variant): MediaVariant
     {
@@ -51,21 +55,13 @@ class OnDemandVariantService
             ->where('variant', $variant)
             ->first();
 
-        if ($existing && Storage::disk($media->disk)->exists($existing->path)) {
+        // Если вариант существует и файл есть на диске, возвращаем его
+        if ($existing && $existing->status === MediaVariantStatus::Ready && Storage::disk($media->disk)->exists($existing->path)) {
             return $existing;
         }
 
-        // Переводим генерацию в асинхронный пайплайн.
-        // Для sync-драйвера очереди и в тестах выполняем синхронно без очереди.
-        if (config('queue.default') === 'sync' || app()->runningUnitTests()) {
-            return $this->generateVariant($media, $variant);
-        } else {
-            GenerateVariantJob::dispatch($media->id, $variant);
-        }
-
-        return MediaVariant::where('media_id', $media->id)
-            ->where('variant', $variant)
-            ->firstOrFail();
+        // Генерируем вариант синхронно, чтобы обеспечить немедленную доступность
+        return $this->generateVariant($media, $variant);
     }
 
     /**
