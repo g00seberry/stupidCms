@@ -4,28 +4,33 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Services;
 
+use App\Domain\Media\DTO\MediaMetadataDTO;
 use App\Domain\Media\Images\ImageProcessor;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Http\UploadedFile;
 
 /**
  * Сервис для извлечения метаданных из медиа-файлов.
  *
  * Извлекает размеры изображений, EXIF данные и другую информацию
- * из загруженных файлов.
+ * из загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)
+ * с graceful fallback и кэшированием результатов.
  *
  * @package App\Domain\Media\Services
  */
 class MediaMetadataExtractor
 {
+    /**
+     * @param \App\Domain\Media\Images\ImageProcessor $images Процессор изображений
+     * @param iterable<\App\Domain\Media\Services\MediaMetadataPlugin> $plugins Плагины для извлечения медиаметаданных
+     * @param \Illuminate\Contracts\Cache\Repository|null $cache Кэш для метаданных
+     * @param int $cacheTtl TTL кэша в секундах (по умолчанию 3600)
+     */
     public function __construct(
-        /**
-         * @var \App\Domain\Media\Images\ImageProcessor Процессор изображений
-         */
         private readonly ImageProcessor $images,
-        /**
-         * @var iterable<\App\Domain\Media\Services\MediaMetadataPlugin> Плагины для извлечения медиаметаданных
-         */
-        private readonly iterable $plugins = []
+        private readonly iterable $plugins = [],
+        private readonly ?CacheRepository $cache = null,
+        private readonly int $cacheTtl = 3600
     ) {
     }
 
@@ -33,27 +38,46 @@ class MediaMetadataExtractor
      * Извлечь метаданные из медиа-файла.
      *
      * Для изображений извлекает размеры и EXIF данные (если доступны).
-     * Для видео/аудио использует плагины (ffprobe/mediainfo и т.п.) для извлечения
-     * длительности и дополнительных нормализованных полей.
+     * Для видео/аудио использует плагины (ffprobe/mediainfo/exiftool) для извлечения
+     * длительности и дополнительных нормализованных полей с graceful fallback.
+     * Результаты кэшируются для оптимизации производительности.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
      * @param string|null $mime MIME-тип файла (если не указан, определяется автоматически)
-     * @return array{
-     *     width: ?int,
-     *     height: ?int,
-     *     duration_ms: ?int,
-     *     exif: ?array,
-     *     bitrate_kbps?: ?int,
-     *     frame_rate?: ?float,
-     *     frame_count?: ?int,
-     *     video_codec?: ?string,
-     *     audio_codec?: ?string
-     * } Метаданные файла
+     * @return \App\Domain\Media\DTO\MediaMetadataDTO Метаданные файла
      */
-    public function extract(UploadedFile $file, ?string $mime = null): array
+    public function extract(UploadedFile $file, ?string $mime = null): MediaMetadataDTO
     {
-        $mime ??= $file->getMimeType() ?? $file->getClientMimeType();
+        $mime ??= $file->getMimeType() ?? $file->getClientMimeType() ?? 'application/octet-stream';
 
+        // Пытаемся получить из кэша
+        $cacheKey = $this->getCacheKey($file, $mime);
+        if ($this->cache !== null) {
+            $cached = $this->cache->get($cacheKey);
+            if ($cached instanceof MediaMetadataDTO) {
+                return $cached;
+            }
+        }
+
+        $dto = $this->extractMetadata($file, $mime);
+
+        // Сохраняем в кэш
+        if ($this->cache !== null) {
+            $this->cache->put($cacheKey, $dto, $this->cacheTtl);
+        }
+
+        return $dto;
+    }
+
+    /**
+     * Извлечь метаданные без кэширования.
+     *
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @param string $mime MIME-тип файла
+     * @return \App\Domain\Media\DTO\MediaMetadataDTO
+     */
+    private function extractMetadata(UploadedFile $file, string $mime): MediaMetadataDTO
+    {
         $width = null;
         $height = null;
         $duration = null;
@@ -64,7 +88,7 @@ class MediaMetadataExtractor
         $videoCodec = null;
         $audioCodec = null;
 
-        if (is_string($mime) && str_starts_with($mime, 'image/')) {
+        if (str_starts_with($mime, 'image/')) {
             // Пытаемся через универсальный процессор (даже если GD не поддерживает формат)
             $bytes = @file_get_contents($file->getRealPath() ?: $file->getPathname() ?: '');
             if (is_string($bytes) && $bytes !== '') {
@@ -87,10 +111,12 @@ class MediaMetadataExtractor
             if ($this->canReadExif($mime)) {
                 $exif = $this->readExif($file);
             }
-        } elseif (is_string($mime) && (str_starts_with($mime, 'video/') || str_starts_with($mime, 'audio/'))) {
+        } elseif (str_starts_with($mime, 'video/') || str_starts_with($mime, 'audio/')) {
             $path = $file->getRealPath() ?: $file->getPathname() ?: null;
 
             if (is_string($path) && $path !== '') {
+                // Пробуем плагины по порядку с graceful fallback
+                $pluginData = null;
                 foreach ($this->plugins as $plugin) {
                     if (! $plugin instanceof MediaMetadataPlugin) {
                         continue;
@@ -100,49 +126,56 @@ class MediaMetadataExtractor
                         continue;
                     }
 
-                    $pluginData = $plugin->extract($path);
-
-                    if (isset($pluginData['duration_ms']) && is_int($pluginData['duration_ms'])) {
-                        $duration = $pluginData['duration_ms'];
+                    try {
+                        $pluginData = $plugin->extract($path);
+                        // Если плагин вернул данные, используем их
+                        if (! empty($pluginData)) {
+                            break;
+                        }
+                    } catch (\Throwable) {
+                        // Продолжаем со следующим плагином
+                        continue;
                     }
+                }
 
-                    if (isset($pluginData['bitrate_kbps']) && is_int($pluginData['bitrate_kbps'])) {
-                        $bitrateKbps = $pluginData['bitrate_kbps'];
-                    }
-
-                    if (isset($pluginData['frame_rate']) && is_float($pluginData['frame_rate'])) {
-                        $frameRate = $pluginData['frame_rate'];
-                    }
-
-                    if (isset($pluginData['frame_count']) && is_int($pluginData['frame_count'])) {
-                        $frameCount = $pluginData['frame_count'];
-                    }
-
-                    if (isset($pluginData['video_codec']) && is_string($pluginData['video_codec'])) {
-                        $videoCodec = $pluginData['video_codec'];
-                    }
-
-                    if (isset($pluginData['audio_codec']) && is_string($pluginData['audio_codec'])) {
-                        $audioCodec = $pluginData['audio_codec'];
-                    }
-
-                    // Используем первый успешный плагин.
-                    break;
+                if ($pluginData !== null) {
+                    $duration = $pluginData['duration_ms'] ?? null;
+                    $bitrateKbps = $pluginData['bitrate_kbps'] ?? null;
+                    $frameRate = $pluginData['frame_rate'] ?? null;
+                    $frameCount = $pluginData['frame_count'] ?? null;
+                    $videoCodec = $pluginData['video_codec'] ?? null;
+                    $audioCodec = $pluginData['audio_codec'] ?? null;
                 }
             }
         }
 
-        return [
-            'width' => $width,
-            'height' => $height,
-            'duration_ms' => $duration,
-            'exif' => $exif,
-            'bitrate_kbps' => $bitrateKbps,
-            'frame_rate' => $frameRate,
-            'frame_count' => $frameCount,
-            'video_codec' => $videoCodec,
-            'audio_codec' => $audioCodec,
-        ];
+        return new MediaMetadataDTO(
+            width: $width,
+            height: $height,
+            durationMs: $duration,
+            exif: $exif,
+            bitrateKbps: $bitrateKbps,
+            frameRate: $frameRate,
+            frameCount: $frameCount,
+            videoCodec: $videoCodec,
+            audioCodec: $audioCodec
+        );
+    }
+
+    /**
+     * Получить ключ кэша для файла.
+     *
+     * @param \Illuminate\Http\UploadedFile $file Загруженный файл
+     * @param string $mime MIME-тип файла
+     * @return string
+     */
+    private function getCacheKey(UploadedFile $file, string $mime): string
+    {
+        $path = $file->getRealPath() ?: $file->getPathname();
+        $size = (int) ($file->getSize() ?? 0);
+        $mtime = is_file($path) ? filemtime($path) : 0;
+
+        return sprintf('media:metadata:%s:%s:%d:%d', md5($path), $mime, $size, $mtime);
     }
 
     /**

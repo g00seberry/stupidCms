@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Media;
 
+use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Models\Media;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
@@ -78,20 +79,28 @@ class StoreMediaRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует:
-     * - file: обязательный файл (размер и MIME тип из конфига media)
+     * - file: обязательный файл (размер и MIME тип из конфига media или правил коллекции)
      * - title: опциональный заголовок (минимум 1, максимум 255 символов, если указан)
      * - alt: опциональный alt текст (минимум 1, максимум 255 символов, если указан)
      * - collection: опциональная коллекция (regex, максимум 64 символа, автоматически slugify)
+     *
+     * Правила валидации файла берутся из конфигурации коллекции, если она указана,
+     * иначе используются глобальные значения.
      *
      * @return array<string, mixed>
      */
     public function rules(): array
     {
-        $maxUpload = (int) config('media.max_upload_mb', 25) * 1024;
-        $allowedMimes = implode(',', config('media.allowed_mimes', []));
+        /** @var CollectionRulesResolver $resolver */
+        $resolver = app(CollectionRulesResolver::class);
+        $collection = $this->input('collection');
+
+        $rules = $resolver->getRules($collection);
+        $maxUploadKb = (int) ($rules['max_size_bytes'] / 1024);
+        $allowedMimes = implode(',', $rules['allowed_mimes'] ?? config('media.allowed_mimes', []));
 
         return [
-            'file' => "required|file|max:{$maxUpload}|mimetypes:{$allowedMimes}",
+            'file' => "required|file|max:{$maxUploadKb}|mimetypes:{$allowedMimes}",
             'title' => 'nullable|filled|string|min:1|max:255',
             'alt' => 'nullable|filled|string|min:1|max:255',
             'collection' => 'nullable|string|max:64|regex:/^[a-z0-9-_.]+$/i',

@@ -44,7 +44,10 @@ return [
         'image/heic',
         'image/heif',
         'video/mp4',
+        'audio/mp4',
         'audio/mpeg',
+        'audio/aiff',
+        'audio/x-aiff',
         'application/pdf',
     ],
     'variants' => [
@@ -67,6 +70,65 @@ return [
             'enabled' => env('MEDIA_FFPROBE_ENABLED', true),
             'binary' => env('MEDIA_FFPROBE_BINARY', null),
         ],
+        'mediainfo' => [
+            'enabled' => env('MEDIA_MEDIAINFO_ENABLED', false),
+            'binary' => env('MEDIA_MEDIAINFO_BINARY', null),
+        ],
+        'exiftool' => [
+            'enabled' => env('MEDIA_EXIFTOOL_ENABLED', false),
+            'binary' => env('MEDIA_EXIFTOOL_BINARY', null),
+        ],
+        'cache_ttl' => (int) env('MEDIA_METADATA_CACHE_TTL', 3600),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Collection-specific rules
+    |--------------------------------------------------------------------------
+    |
+    | Правила валидации и ограничений для конкретных коллекций.
+    | Каждая коллекция может иметь свои ограничения на:
+    | - allowed_mimes: разрешённые MIME-типы
+    | - max_size_bytes: максимальный размер файла в байтах
+    | - max_width: максимальная ширина изображения (для изображений)
+    | - max_height: максимальная высота изображения (для изображений)
+    | - max_duration_ms: максимальная длительность (для видео/аудио)
+    | - max_bitrate_kbps: максимальный битрейт (для видео/аудио)
+    |
+    | Если правило не указано для коллекции, используются глобальные значения.
+    |
+    */
+    'collections' => [
+        // Пример конфигурации для коллекции 'videos':
+        // 'videos' => [
+        //     'allowed_mimes' => ['video/mp4', 'video/webm'],
+        //     'max_size_bytes' => 100 * 1024 * 1024, // 100 MB
+        //     'max_duration_ms' => 300000, // 5 минут
+        //     'max_bitrate_kbps' => 5000,
+        // ],
+        //
+        // Пример конфигурации для коллекции 'thumbnails':
+        // 'thumbnails' => [
+        //     'allowed_mimes' => ['image/jpeg', 'image/png', 'image/webp'],
+        //     'max_size_bytes' => 5 * 1024 * 1024, // 5 MB
+        //     'max_width' => 1920,
+        //     'max_height' => 1080,
+        // ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | EXIF management
+    |--------------------------------------------------------------------------
+    |
+    | Настройки управления EXIF данными изображений.
+    |
+    */
+    'exif' => [
+        'auto_rotate' => env('MEDIA_EXIF_AUTO_ROTATE', true),
+        'strip' => env('MEDIA_EXIF_STRIP', false),
+        'whitelist' => env('MEDIA_EXIF_WHITELIST', null) ? explode(',', env('MEDIA_EXIF_WHITELIST')) : [],
+        'preserve_color_profile' => env('MEDIA_EXIF_PRESERVE_COLOR_PROFILE', true),
     ],
 ];
 

@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace App\Domain\Media\Actions;
 
 use App\Domain\Media\Events\MediaUploaded;
+use App\Domain\Media\Services\CollectionRulesResolver;
+use App\Domain\Media\Services\ExifManager;
 use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Services\MediaMetadataExtractor;
+use App\Domain\Media\Validation\MediaValidationException;
+use App\Domain\Media\Validation\MediaValidationPipeline;
+use App\Domain\Media\Validation\SizeLimitValidator;
 use App\Models\Media;
 use App\Models\MediaMetadata;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -30,10 +35,16 @@ class MediaStoreAction
     /**
      * @param \App\Domain\Media\Services\MediaMetadataExtractor $metadataExtractor Извлекатель метаданных
      * @param \App\Domain\Media\Services\StorageResolver $storageResolver Резолвер дисков для медиа
+     * @param \App\Domain\Media\Services\CollectionRulesResolver $collectionRulesResolver Резолвер правил коллекций
+     * @param \App\Domain\Media\Validation\MediaValidationPipeline $validationPipeline Pipeline валидации
+     * @param \App\Domain\Media\Services\ExifManager|null $exifManager Менеджер EXIF (опционально)
      */
     public function __construct(
         private readonly MediaMetadataExtractor $metadataExtractor,
-        private readonly StorageResolver $storageResolver
+        private readonly StorageResolver $storageResolver,
+        private readonly CollectionRulesResolver $collectionRulesResolver,
+        private readonly MediaValidationPipeline $validationPipeline,
+        private readonly ?ExifManager $exifManager = null
     ) {
     }
 
@@ -56,6 +67,28 @@ class MediaStoreAction
     public function execute(UploadedFile $file, array $payload = []): Media
     {
         $mime = $file->getMimeType() ?? $file->getClientMimeType() ?? 'application/octet-stream';
+        $collection = isset($payload['collection']) && is_string($payload['collection'])
+            ? $payload['collection']
+            : null;
+
+        // Валидация через pipeline
+        try {
+            $this->validationPipeline->validate($file, $mime);
+        } catch (MediaValidationException $e) {
+            throw new RuntimeException('Media validation failed: '.$e->getMessage(), 0, $e);
+        }
+
+        // Валидация размеров на основе правил коллекции
+        $rules = $this->collectionRulesResolver->getRules($collection);
+        $sizeValidator = new SizeLimitValidator($rules);
+        if ($sizeValidator->supports($mime)) {
+            try {
+                $sizeValidator->validate($file, $mime);
+            } catch (MediaValidationException $e) {
+                throw new RuntimeException('Size validation failed: '.$e->getMessage(), 0, $e);
+            }
+        }
+
         $sizeBytes = (int) ($file->getSize() ?? 0);
         $originalName = $file->getClientOriginalName() ?: $file->getFilename();
         $extension = strtolower($file->getClientOriginalExtension() ?: pathinfo($originalName, PATHINFO_EXTENSION) ?: $file->extension() ?: 'bin');
@@ -92,16 +125,33 @@ class MediaStoreAction
             }
         }
 
-        $collection = isset($payload['collection']) && is_string($payload['collection'])
-            ? $payload['collection']
-            : null;
-
         $diskName = $this->storageResolver->resolveDiskName($collection, $mime);
         $disk = Storage::disk($diskName);
 
         $path = $this->storeFile($disk, $file, $extension, $checksum);
 
         $metadata = $this->metadataExtractor->extract($file, $mime);
+
+        // Управление EXIF (если включено)
+        $exif = $metadata->exif;
+        if ($exif !== null && $this->exifManager !== null) {
+            // Автоматический поворот
+            if (config('media.exif.auto_rotate', true)) {
+                // Поворот выполняется при обработке изображения, не здесь
+                // Это можно добавить в ImageProcessor при генерации вариантов
+            }
+
+            // Фильтрация по whitelist
+            $whitelist = config('media.exif.whitelist', []);
+            if (! empty($whitelist) && is_array($whitelist)) {
+                $exif = $this->exifManager->filterExif($exif, $whitelist);
+            }
+
+            // Strip EXIF (если включено)
+            if (config('media.exif.strip', false)) {
+                $exif = null;
+            }
+        }
 
         $media = Media::create([
             'disk' => $diskName,
@@ -110,11 +160,11 @@ class MediaStoreAction
             'ext' => $extension,
             'mime' => $mime,
             'size_bytes' => $sizeBytes > 0 ? $sizeBytes : $disk->size($path),
-            'width' => $metadata['width'],
-            'height' => $metadata['height'],
-            'duration_ms' => $metadata['duration_ms'],
+            'width' => $metadata->width,
+            'height' => $metadata->height,
+            'duration_ms' => $metadata->durationMs,
             'checksum_sha256' => $checksum,
-            'exif_json' => $metadata['exif'],
+            'exif_json' => $exif ?? $metadata->exif,
             'title' => $payload['title'] ?? null,
             'alt' => $payload['alt'] ?? null,
             'collection' => $payload['collection'] ?? null,
@@ -122,12 +172,12 @@ class MediaStoreAction
 
         // Нормализованные AV-метаданные (для видео/аудио).
         $normalized = [
-            'duration_ms' => $metadata['duration_ms'],
-            'bitrate_kbps' => $metadata['bitrate_kbps'] ?? null,
-            'frame_rate' => $metadata['frame_rate'] ?? null,
-            'frame_count' => $metadata['frame_count'] ?? null,
-            'video_codec' => $metadata['video_codec'] ?? null,
-            'audio_codec' => $metadata['audio_codec'] ?? null,
+            'duration_ms' => $metadata->durationMs,
+            'bitrate_kbps' => $metadata->bitrateKbps,
+            'frame_rate' => $metadata->frameRate,
+            'frame_count' => $metadata->frameCount,
+            'video_codec' => $metadata->videoCodec,
+            'audio_codec' => $metadata->audioCodec,
         ];
 
         $hasNormalized = array_reduce(

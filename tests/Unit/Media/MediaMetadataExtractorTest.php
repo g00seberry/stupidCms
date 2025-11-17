@@ -30,9 +30,9 @@ final class MediaMetadataExtractorTest extends TestCase
         $file = new UploadedFile($tmp, 't.png', 'image/png', null, true);
         $meta = $extractor->extract($file, 'image/png');
 
-        $this->assertSame(3, $meta['width']);
-        $this->assertSame(5, $meta['height']);
-        $this->assertNull($meta['exif']);
+        $this->assertSame(3, $meta->width);
+        $this->assertSame(5, $meta->height);
+        $this->assertNull($meta->exif);
     }
 
     public function test_uses_plugins_for_video_duration_and_bitrate(): void
@@ -66,15 +66,15 @@ final class MediaMetadataExtractorTest extends TestCase
         $file = new UploadedFile($tmp, 't.mp4', 'video/mp4', null, true);
         $meta = $extractor->extract($file, 'video/mp4');
 
-        $this->assertNull($meta['width']);
-        $this->assertNull($meta['height']);
-        $this->assertNull($meta['exif']);
-        $this->assertSame(123_456, $meta['duration_ms']);
-        $this->assertSame(789, $meta['bitrate_kbps']);
-        $this->assertSame(29.97, $meta['frame_rate']);
-        $this->assertSame(3_700, $meta['frame_count']);
-        $this->assertSame('h264', $meta['video_codec']);
-        $this->assertSame('aac', $meta['audio_codec']);
+        $this->assertNull($meta->width);
+        $this->assertNull($meta->height);
+        $this->assertNull($meta->exif);
+        $this->assertSame(123_456, $meta->durationMs);
+        $this->assertSame(789, $meta->bitrateKbps);
+        $this->assertSame(29.97, $meta->frameRate);
+        $this->assertSame(3_700, $meta->frameCount);
+        $this->assertSame('h264', $meta->videoCodec);
+        $this->assertSame('aac', $meta->audioCodec);
     }
 }
 

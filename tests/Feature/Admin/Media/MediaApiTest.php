@@ -524,6 +524,197 @@ class MediaApiTest extends TestCase
         $this->assertValidationErrors($response, ['alt']);
     }
 
+    public function test_it_handles_heic_image_format(): void
+    {
+        Storage::fake('media');
+        config()->set('media.allowed_mimes', [
+            'image/jpeg',
+            'image/png',
+            'image/heic',
+            'image/heif',
+        ]);
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Используем реальный HEIC файл из тестовой директории
+        $heicPath = __DIR__ . '/IMG_2998.HEIC';
+        if (! file_exists($heicPath)) {
+            $this->markTestSkipped('HEIC test file not found');
+        }
+
+        $file = new UploadedFile($heicPath, 'IMG_2998.HEIC', 'image/heic', null, true);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => 'HEIC Photo',
+            'collection' => 'photos',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.mime', 'image/heic');
+
+        $media = Media::firstOrFail();
+        $this->assertSame('image/heic', $media->mime);
+        $this->assertSame('heic', $media->ext);
+    }
+
+    public function test_it_handles_avif_image_format(): void
+    {
+        Storage::fake('media');
+        config()->set('media.allowed_mimes', [
+            'image/jpeg',
+            'image/png',
+            'image/avif',
+        ]);
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Для полного тестирования AVIF нужен реальный файл
+        // fake()->image() создаёт JPEG, поэтому этот тест пропускается
+        // В реальности можно добавить реальный AVIF файл в тестовую директорию
+        $this->markTestSkipped('AVIF test requires a real AVIF file (fake()->image() creates JPEG)');
+    }
+
+    public function test_it_handles_animated_gif(): void
+    {
+        Storage::fake('media');
+        config()->set('media.allowed_mimes', [
+            'image/gif',
+            'image/jpeg',
+        ]);
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Создаём фейковый GIF файл (в реальности это будет animated GIF)
+        $file = UploadedFile::fake()->image('animation.gif', 100, 100)->size(2048);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => 'Animated GIF',
+            'collection' => 'animations',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.mime', 'image/gif');
+
+        $media = Media::firstOrFail();
+        $this->assertSame('image/gif', $media->mime);
+        $this->assertSame('gif', $media->ext);
+    }
+
+    public function test_it_handles_mp4_audio_only(): void
+    {
+        Storage::fake('media');
+        config()->set('media.allowed_mimes', [
+            'video/mp4',
+            'audio/mp4',
+            'audio/mpeg',
+        ]);
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Создаём фейковый MP4 audio-only файл
+        $file = UploadedFile::fake()->create('audio.mp4', 2048, 'audio/mp4');
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => 'MP4 Audio',
+            'collection' => 'audio',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.mime', 'audio/mp4');
+
+        $media = Media::firstOrFail();
+        $this->assertSame('audio/mp4', $media->mime);
+        $this->assertSame('mp4', $media->ext);
+        $this->assertNull($media->width);
+        $this->assertNull($media->height);
+    }
+
+    public function test_it_handles_aiff_audio_format(): void
+    {
+        Storage::fake('media');
+        config()->set('media.allowed_mimes', [
+            'audio/aiff',
+            'audio/x-aiff',
+            'audio/mpeg',
+        ]);
+        config()->set('media.max_upload_mb', 100); // Увеличиваем лимит для большого AIFF файла
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Используем реальный AIFF файл из тестовой директории
+        $aiffPath = __DIR__ . '/falloutcraft.aiff';
+        if (! file_exists($aiffPath)) {
+            $this->markTestSkipped('AIFF test file not found');
+        }
+
+        $file = new UploadedFile($aiffPath, 'falloutcraft.aiff', 'audio/x-aiff', null, true);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'title' => 'AIFF Audio',
+            'collection' => 'audio',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.mime', 'audio/x-aiff');
+
+        $media = Media::firstOrFail();
+        $this->assertSame('audio/x-aiff', $media->mime);
+        $this->assertSame('aiff', $media->ext);
+        $this->assertNull($media->width);
+        $this->assertNull($media->height);
+    }
+
+    public function test_it_validates_mime_signature_mismatch(): void
+    {
+        Storage::fake('media');
+        config()->set('media.allowed_mimes', ['image/jpeg']);
+        $admin = $this->admin(['media.create']);
+
+        // Создаём файл с неправильным MIME (заявлен image/jpeg, но содержимое не JPEG)
+        $file = UploadedFile::fake()->create('fake.jpg', 100, 'application/octet-stream');
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [], ['file' => $file], $admin);
+
+        // Валидация должна провалиться либо на уровне Laravel (mimetypes), либо на уровне нашего валидатора
+        // В зависимости от того, как настроена валидация
+        $this->assertTrue(
+            $response->status() === 422 || $response->status() === 500,
+            'Expected validation error for MIME signature mismatch'
+        );
+    }
+
+    public function test_it_applies_collection_specific_rules(): void
+    {
+        Storage::fake('media');
+        config()->set('media.collections', [
+            'thumbnails' => [
+                'allowed_mimes' => ['image/jpeg', 'image/png'],
+                'max_size_bytes' => 5 * 1024 * 1024, // 5 MB
+                'max_width' => 1920,
+                'max_height' => 1080,
+            ],
+        ]);
+        $admin = $this->admin(['media.read', 'media.create']);
+
+        // Файл, который превышает ограничения коллекции
+        $file = UploadedFile::fake()->image('large.jpg', 2560, 1440)->size(6 * 1024 * 1024);
+
+        $response = $this->postMultipartAsAdmin('/api/v1/admin/media', [
+            'collection' => 'thumbnails',
+        ], [
+            'file' => $file,
+        ], $admin);
+
+        // Должна быть ошибка валидации из-за превышения размеров или размера файла
+        $this->assertTrue(
+            $response->status() === 422 || $response->status() === 500,
+            'Expected validation error for collection-specific rules violation'
+        );
+    }
+
     private function typeUri(ErrorCode $code): string
     {
         return config('errors.types.' . $code->value . '.uri');

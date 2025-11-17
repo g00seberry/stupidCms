@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin\Media;
 
 use App\Domain\Media\Actions\MediaStoreAction;
+use App\Domain\Media\DTO\MediaMetadataDTO;
+use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Domain\Media\Services\StorageResolver;
+use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Models\Media;
 use App\Models\MediaMetadata;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,25 +31,27 @@ final class MediaTechnicalMetadataTest extends TestCase
                 // Переопределяем конструктор, зависимости не нужны в фейке.
             }
 
-            public function extract(UploadedFile $file, ?string $mime = null): array
+            public function extract(UploadedFile $file, ?string $mime = null): MediaMetadataDTO
             {
-                return [
-                    'width' => null,
-                    'height' => null,
-                    'duration_ms' => 123_456,
-                    'exif' => null,
-                    'bitrate_kbps' => 789,
-                    'frame_rate' => 29.97,
-                    'frame_count' => 3_700,
-                    'video_codec' => 'h264',
-                    'audio_codec' => 'aac',
-                ];
+                return new MediaMetadataDTO(
+                    width: null,
+                    height: null,
+                    durationMs: 123_456,
+                    exif: null,
+                    bitrateKbps: 789,
+                    frameRate: 29.97,
+                    frameCount: 3_700,
+                    videoCodec: 'h264',
+                    audioCodec: 'aac'
+                );
             }
         };
 
         $action = new MediaStoreAction(
             $extractor,
             new StorageResolver(),
+            new CollectionRulesResolver(),
+            new MediaValidationPipeline([]),
         );
 
         $file = UploadedFile::fake()->create('video.mp4', 1024, 'video/mp4');

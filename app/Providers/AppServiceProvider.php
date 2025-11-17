@@ -7,9 +7,18 @@ namespace App\Providers;
 use App\Domain\Media\Images\GdImageProcessor;
 use App\Domain\Media\Images\GlideImageProcessor;
 use App\Domain\Media\Images\ImageProcessor;
+use App\Domain\Media\Services\CollectionRulesResolver;
+use App\Domain\Media\Services\ExifManager;
+use App\Domain\Media\Services\ExiftoolMediaMetadataPlugin;
 use App\Domain\Media\Services\FfprobeMediaMetadataPlugin;
 use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Domain\Media\Services\MediaMetadataPlugin;
+use App\Domain\Media\Services\MediainfoMediaMetadataPlugin;
+use App\Domain\Media\Validation\CorruptionValidator;
+use App\Domain\Media\Validation\MediaValidationPipeline;
+use App\Domain\Media\Validation\MediaValidatorInterface;
+use App\Domain\Media\Validation\MimeSignatureValidator;
+use App\Domain\Media\Validation\SizeLimitValidator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
@@ -113,22 +122,63 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        // MediaMetadataExtractor с плагинами (ffprobe по умолчанию)
+        // MediaMetadataExtractor с плагинами (ffprobe/mediainfo/exiftool) и кэшированием
         $this->app->singleton(MediaMetadataExtractor::class, function ($app): MediaMetadataExtractor {
             /** @var \App\Domain\Media\Images\ImageProcessor $images */
             $images = $app->make(ImageProcessor::class);
 
             $plugins = [];
 
+            // Порядок важен: пробуем плагины по порядку с graceful fallback
             if (config('media.metadata.ffprobe.enabled', true)) {
                 $binary = config('media.metadata.ffprobe.binary', null);
                 $plugins[] = new FfprobeMediaMetadataPlugin($binary);
             }
 
+            if (config('media.metadata.mediainfo.enabled', false)) {
+                $binary = config('media.metadata.mediainfo.binary', null);
+                $plugins[] = new MediainfoMediaMetadataPlugin($binary);
+            }
+
+            if (config('media.metadata.exiftool.enabled', false)) {
+                $binary = config('media.metadata.exiftool.binary', null);
+                $plugins[] = new ExiftoolMediaMetadataPlugin($binary);
+            }
+
             /** @var iterable<MediaMetadataPlugin> $pluginsIterable */
             $pluginsIterable = $plugins;
 
-            return new MediaMetadataExtractor($images, $pluginsIterable);
+            $cache = $app->make(CacheRepository::class);
+            $cacheTtl = (int) config('media.metadata.cache_ttl', 3600);
+
+            return new MediaMetadataExtractor($images, $pluginsIterable, $cache, $cacheTtl);
+        });
+
+        // ExifManager для управления EXIF данными
+        $this->app->singleton(ExifManager::class, function ($app): ExifManager {
+            /** @var \App\Domain\Media\Images\ImageProcessor $images */
+            $images = $app->make(ImageProcessor::class);
+
+            return new ExifManager($images);
+        });
+
+        // CollectionRulesResolver для получения правил коллекций
+        $this->app->singleton(CollectionRulesResolver::class);
+
+        // MediaValidationPipeline с валидаторами
+        $this->app->singleton(MediaValidationPipeline::class, function ($app): MediaValidationPipeline {
+            /** @var \App\Domain\Media\Images\ImageProcessor $images */
+            $images = $app->make(ImageProcessor::class);
+
+            $validators = [
+                new MimeSignatureValidator(),
+                new CorruptionValidator($images),
+            ];
+
+            /** @var iterable<MediaValidatorInterface> $validatorsIterable */
+            $validatorsIterable = $validators;
+
+            return new MediaValidationPipeline($validatorsIterable);
         });
     }
 
