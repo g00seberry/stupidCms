@@ -5,6 +5,16 @@
 
     RewriteEngine On
 
+    # Увеличение лимитов для загрузки файлов
+    # Эти настройки работают только если PHP работает как модуль Apache (mod_php)
+    # Для PHP-FPM или других SAPI нужно настраивать в php.ini
+    <IfModule mod_php.c>
+        php_value post_max_size 50M
+        php_value upload_max_filesize 50M
+        php_value max_execution_time 300
+        php_value max_input_time 300
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

@@ -2103,26 +2103,6 @@
             ]
         },
         {
-            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
-            "type": "blade_view",
-            "name": "page",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
-            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
-            "details": null,
-            "meta": {
-                "role": "page",
-                "variables": [
-                    "entry"
-                ],
-                "extends": "layouts.public",
-                "includes": []
-            },
-            "related": [],
-            "tags": [
-                "page"
-            ]
-        },
-        {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
             "type": "blade_view",
             "name": "show",
@@ -2485,6 +2465,10 @@
                     "level",
                     "message",
                     "context",
+                    "max_size",
+                    "post_max_size",
+                    "upload_max_filesize",
+                    "error_type",
                     "fallback"
                 ],
                 "sections": [
@@ -3460,6 +3444,35 @@
                 "0": "api",
                 "3": "v1",
                 "4": "media"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/media/{id}/preview",
+            "type": "http_endpoint",
+            "name": "api.v1.media.preview",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+            "summary": "GET /api/v1/media/{id}/preview (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/media/{id}/preview",
+                "group": "api",
+                "auth": null,
+                "parameters": {
+                    "id": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "3": "v1",
+                "4": "media",
+                "5": "preview"
             }
         },
         {
@@ -7063,26 +7076,6 @@
                 ]
             },
             {
-                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
-                "type": "blade_view",
-                "name": "page",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
-                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
-                "details": null,
-                "meta": {
-                    "role": "page",
-                    "variables": [
-                        "entry"
-                    ],
-                    "extends": "layouts.public",
-                    "includes": []
-                },
-                "related": [],
-                "tags": [
-                    "page"
-                ]
-            },
-            {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
                 "type": "blade_view",
                 "name": "show",
@@ -7447,6 +7440,10 @@
                         "level",
                         "message",
                         "context",
+                        "max_size",
+                        "post_max_size",
+                        "upload_max_filesize",
+                        "error_type",
                         "fallback"
                     ],
                     "sections": [
@@ -8424,6 +8421,35 @@
                     "0": "api",
                     "3": "v1",
                     "4": "media"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/media/{id}/preview",
+                "type": "http_endpoint",
+                "name": "api.v1.media.preview",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+                "summary": "GET /api/v1/media/{id}/preview (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/media/{id}/preview",
+                    "group": "api",
+                    "auth": null,
+                    "parameters": {
+                        "id": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "3": "v1",
+                    "4": "media",
+                    "5": "preview"
                 }
             },
             {
@@ -10130,6 +10156,12 @@
                 "summary": "GET /api/v1/media/{id} (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/media/{id}/preview",
+                "type": "http_endpoint",
+                "name": "api.v1.media.preview",
+                "summary": "GET /api/v1/media/{id}/preview (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -10666,12 +10698,6 @@
                 "type": "blade_view",
                 "name": "public",
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\layouts\\public.blade.php"
-            },
-            {
-                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
-                "type": "blade_view",
-                "name": "page",
-                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php"
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
@@ -11270,6 +11296,12 @@
                 "summary": "GET /api/v1/media/{id} (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/media/{id}/preview",
+                "type": "http_endpoint",
+                "name": "api.v1.media.preview",
+                "summary": "GET /api/v1/media/{id}/preview (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/auth/current",
                 "type": "http_endpoint",
                 "name": "admin.v1.auth.current",
@@ -11614,6 +11646,12 @@
                 "summary": "GET /api/v1/media/{id} (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/media/{id}/preview",
+                "type": "http_endpoint",
+                "name": "api.v1.media.preview",
+                "summary": "GET /api/v1/media/{id}/preview (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/auth/current",
                 "type": "http_endpoint",
                 "name": "admin.v1.auth.current",
@@ -11948,6 +11986,20 @@
                 "type": "http_endpoint",
                 "name": "api.auth.logout",
                 "summary": "POST /api/v1/auth/logout (api)"
+            }
+        ],
+        "preview": [
+            {
+                "id": "http_endpoint:GET:/api/v1/media/{id}/preview",
+                "type": "http_endpoint",
+                "name": "api.v1.media.preview",
+                "summary": "GET /api/v1/media/{id}/preview (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.preview",
+                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
             }
         ],
         "admin": [
@@ -12588,14 +12640,6 @@
                 "summary": "GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree (api)"
             }
         ],
-        "preview": [
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            }
-        ],
         "download": [
             {
                 "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
@@ -12621,5 +12665,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T15:13:34+00:00"
+    "generated_at": "2025-11-17T15:55:17+00:00"
 }

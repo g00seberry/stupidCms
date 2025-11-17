@@ -9,6 +9,7 @@ use App\Support\Errors\HttpErrorException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -281,6 +282,23 @@ return [
                 'level' => 'error',
                 'message' => 'Service unavailable during API request',
             ],
+        ],
+        PostTooLargeException::class => [
+            'builder' => static function (PostTooLargeException $exception, ErrorFactory $factory): ErrorPayload {
+                $postMaxSize = ini_get('post_max_size') ?: 'unknown';
+                $uploadMaxFilesize = ini_get('upload_max_filesize') ?: 'unknown';
+                $maxSize = $postMaxSize !== 'unknown' ? $postMaxSize : $uploadMaxFilesize;
+
+                return $factory->for(ErrorCode::VALIDATION_ERROR)
+                    ->detail('The uploaded file exceeds the maximum allowed size.')
+                    ->meta([
+                        'max_size' => $maxSize,
+                        'post_max_size' => $postMaxSize,
+                        'upload_max_filesize' => $uploadMaxFilesize,
+                        'error_type' => 'post_too_large',
+                    ])
+                    ->build();
+            },
         ],
     ],
 

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domain\Media\Services\OnDemandVariantService;
 use App\Models\Media;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -18,12 +20,21 @@ use Throwable;
  *
  * Предоставляет подписанные URL для доступа к медиа-файлам без аутентификации.
  * Использует TTL из конфигурации для ограничения времени жизни подписанных URL.
+ * Поддерживает доступ к оригинальным файлам и вариантам изображений (thumbnails, resized).
  *
  * @package App\Http\Controllers
  */
 class PublicMediaController extends Controller
 {
     use ThrowsErrors;
+
+    /**
+     * @param \App\Domain\Media\Services\OnDemandVariantService $variantService Сервис для генерации вариантов
+     */
+    public function __construct(
+        private readonly OnDemandVariantService $variantService
+    ) {
+    }
 
     /**
      * Получить публичный доступ к медиа-файлу.
@@ -57,6 +68,69 @@ class PublicMediaController extends Controller
                 ErrorCode::MEDIA_DOWNLOAD_ERROR,
                 'Failed to generate media URL.',
                 ['media_id' => $id],
+            );
+        }
+    }
+
+    /**
+     * Получить публичный доступ к варианту изображения.
+     *
+     * Генерирует вариант изображения (thumbnail, medium, large и т.д.) по требованию
+     * и возвращает подписанный URL с ограниченным временем жизни (TTL из config).
+     * Для локальных дисков возвращает файл напрямую, для облачных - редирект на подписанный URL.
+     * Не требует аутентификации, но проверяет существование медиа-файла.
+     *
+     * @param \Illuminate\Http\Request $request HTTP запрос
+     * @param string $id ULID идентификатор медиа-файла
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function preview(Request $request, string $id): RedirectResponse|BinaryFileResponse
+    {
+        $variant = $request->query('variant', 'thumbnail');
+
+        $media = Media::query()->find($id);
+
+        if (! $media) {
+            $this->throwMediaNotFound($id);
+        }
+
+        // Проверяем, что медиа не удалено (soft delete)
+        if ($media->trashed()) {
+            $this->throwMediaNotFound($id);
+        }
+
+        try {
+            $variantModel = $this->variantService->ensureVariant($media, $variant);
+        } catch (InvalidArgumentException $exception) {
+            $this->throwError(
+                ErrorCode::VALIDATION_ERROR,
+                $exception->getMessage(),
+                [
+                    'variant' => $variant,
+                ],
+            );
+        } catch (Throwable $exception) {
+            report($exception);
+
+            $this->throwError(
+                ErrorCode::MEDIA_VARIANT_ERROR,
+                'Failed to generate media variant.',
+                ['variant' => $variant],
+            );
+        }
+
+        try {
+            return $this->serveFile($media->disk, $variantModel->path, $media->mime);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            $this->throwError(
+                ErrorCode::MEDIA_DOWNLOAD_ERROR,
+                'Failed to generate media variant URL.',
+                [
+                    'media_id' => $id,
+                    'variant' => $variant,
+                ],
             );
         }
     }

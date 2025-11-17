@@ -48,5 +48,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/media/{id}', [PublicMediaController::class, 'show'])
         ->middleware('throttle:api')
         ->name('api.v1.media.show');
+    
+    // Public media variants (thumbnails, resized images)
+    Route::get('/media/{id}/preview', [PublicMediaController::class, 'preview'])
+        ->middleware('throttle:api')
+        ->name('api.v1.media.preview');
 });
 

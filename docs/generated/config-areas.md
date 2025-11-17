@@ -103,7 +103,7 @@ Configuration: Docs
 Configuration: Errors
 
 ### Meta
-- **Keys:** `kernel`, `enabled`, `types`, `uri`, `title`, `status`, `detail`, `mappings`, `builder`, `errors`, `sql`, `bindings`, `report`, `level`, `message`, `context`, `fallback`
+- **Keys:** `kernel`, `enabled`, `types`, `uri`, `title`, `status`, `detail`, `mappings`, `builder`, `errors`, `sql`, `bindings`, `report`, `level`, `message`, `context`, `max_size`, `post_max_size`, `upload_max_filesize`, `error_type`, `fallback`
 - **Sections:** `kernel`, `types`, `mappings`, `report`, `fallback`
 
 ### Tags

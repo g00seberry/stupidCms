@@ -13,13 +13,13 @@ Eloquent-модели для работы с БД (16 сущностей)
 Доменные сервисы, действия, репозитории (63 сущностей)
 
 ### [Blade Views](./blade-views.md)
-Blade-шаблоны для рендеринга (9 сущностей)
+Blade-шаблоны для рендеринга (8 сущностей)
 
 ### [Config Areas](./config-areas.md)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (60 сущностей)
+HTTP эндпоинты API (61 сущностей)
 
 ## Быстрая навигация
 
@@ -59,7 +59,6 @@ HTTP эндпоинты API (60 сущностей)
 - [entry](./blade-views.md#entry) - Page template: resources/views/entry.blade.php
 - [footer](./blade-views.md#footer) - Page template: resources/views/partials/footer.blade.php
 - [header](./blade-views.md#header) - Page template: resources/views/partials/header.blade.php
-- [page](./blade-views.md#page) - Page template: resources/views/pages/page.blade.php
 - [public](./blade-views.md#public) - Page template: resources/views/layouts/public.blade.php
 - [show](./blade-views.md#show) - Page template: resources/views/pages/show.blade.php
 
@@ -89,7 +88,7 @@ HTTP эндпоинты API (60 сущностей)
 - [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
 - [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
 - [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
-- *...и еще 50 сущностей*
+- *...и еще 51 сущностей*
 
 ## Популярные теги
 
@@ -97,7 +96,7 @@ HTTP эндпоинты API (60 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-17 15:13:34
+**Сгенерировано:** 2025-11-17 15:55:17
 
 Для обновления документации выполните:
 ```bash
