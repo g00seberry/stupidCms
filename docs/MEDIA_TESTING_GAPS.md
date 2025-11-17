@@ -174,11 +174,11 @@
 
 ### 5.1. NotifyMediaEvent (`tests/Unit/Domain/Media/Listeners/NotifyMediaEventTest.php`)
 
--   [ ] **test_logs_large_file_upload** — логирование загрузки большого файла (>10MB)
--   [ ] **test_handles_media_uploaded_event** — обработка события MediaUploaded
--   [ ] **test_handles_media_processed_event** — обработка события MediaProcessed (placeholder)
--   [ ] **test_handles_media_deleted_event** — обработка события MediaDeleted (placeholder)
--   [ ] **test_does_not_log_small_file_upload** — отсутствие логирования для маленьких файлов
+-   [x] **test_logs_large_file_upload** — логирование загрузки большого файла (>10MB)
+-   [x] **test_handles_media_uploaded_event** — обработка события MediaUploaded
+-   [x] **test_handles_media_processed_event** — обработка события MediaProcessed (placeholder)
+-   [x] **test_handles_media_deleted_event** — обработка события MediaDeleted (placeholder)
+-   [x] **test_does_not_log_small_file_upload** — отсутствие логирования для маленьких файлов
 
 ---
 
