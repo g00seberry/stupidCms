@@ -166,43 +166,60 @@
 
 ---
 
-#### 1.3. Media
+#### 1.3. Media ✅
 
 **Путь:** `app/Models/Media.php`  
-**Factory:** `database/factories/MediaFactory.php`
+**Factory:** `database/factories/MediaFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/MediaTest.php`)
-
-```php
-- test('uses ULID as primary key')
-- test('casts exif_json to array')
-- test('casts deleted_at to datetime')
-- test('casts dimensions to integers')
-- test('has variants relationship')
-- test('has metadata relationship')
-- test('has image scope')
-- test('has video scope')
-- test('has audio scope')
-- test('has document scope')
-- test('uses soft deletes')
-- test('has full url accessor')
-- test('has thumbnail accessor')
-- test('has is image accessor')
-- test('has is video accessor')
-```
-
-##### Feature-тесты (`tests/Feature/Models/MediaTest.php`)
+##### Unit-тесты (`tests/Unit/Models/MediaTest.php`) ✅
 
 ```php
-- test('media can be created with factory')
-- test('media has unique disk and path combination')
-- test('media can have multiple variants')
-- test('media can have metadata')
-- test('media can be soft deleted')
-- test('media exif json stores metadata')
-- test('media dimensions are stored correctly')
-- test('media file size is stored in bytes')
+✅ test('uses ULID as primary key')
+✅ test('casts exif_json to array')
+✅ test('casts deleted_at to datetime')
+✅ test('casts width to integer')
+✅ test('casts height to integer')
+✅ test('casts duration_ms to integer')
+✅ test('casts size_bytes to integer')
+✅ test('has variants relationship')
+✅ test('has metadata relationship')
+✅ test('uses soft deletes')
+✅ test('kind returns image for image mime type')
+✅ test('kind returns video for video mime type')
+✅ test('kind returns audio for audio mime type')
+✅ test('kind returns document for other mime types')
+✅ test('has no guarded attributes')
+✅ test('uses HasUlids trait')
 ```
+
+##### Feature-тесты (`tests/Feature/Models/MediaTest.php`) ✅
+
+```php
+✅ test('media can be created with factory')
+✅ test('media has unique disk and path combination')
+✅ test('media can have multiple variants')
+✅ test('media can have metadata')
+✅ test('media can be soft deleted')
+✅ test('media can be restored after soft delete')
+✅ test('media exif json stores metadata')
+✅ test('media dimensions are stored correctly')
+✅ test('media file size is stored in bytes')
+✅ test('media kind method works for images')
+✅ test('media kind method works for documents')
+✅ test('media kind method works for video')
+✅ test('media kind method works for audio')
+✅ test('media can have null dimensions for non-image files')
+✅ test('media checksum is stored correctly')
+✅ test('media collection can be set')
+✅ test('media duration_ms can be set for video')
+```
+
+**Примечания:**
+
+-   Протестированы все основные возможности модели
+-   Метод `kind()` для определения типа файла по MIME
+-   Связи с MediaVariant и MediaMetadata
 
 ---
 
