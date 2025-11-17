@@ -269,13 +269,13 @@
 
 ### 9.1. EloquentMediaRepository (дополнительные тесты)
 
--   [ ] **test_paginates_with_complex_filters** — пагинация со сложными фильтрами
--   [ ] **test_searches_by_title_and_original_name** — поиск по title и original_name
--   [ ] **test_filters_by_mime_prefix** — фильтрация по префиксу MIME
--   [ ] **test_sorts_by_custom_fields** — сортировка по кастомным полям
--   [ ] **test_handles_soft_deleted_filter_correctly** — корректная обработка фильтра soft-deleted
--   [ ] **test_handles_empty_search_query** — обработка пустого поискового запроса
--   [ ] **test_handles_special_characters_in_search** — обработка специальных символов в поиске
+-   [x] **test_paginates_with_complex_filters** — пагинация со сложными фильтрами
+-   [x] **test_searches_by_title_and_original_name** — поиск по title и original_name
+-   [x] **test_filters_by_mime_prefix** — фильтрация по префиксу MIME
+-   [x] **test_sorts_by_custom_fields** — сортировка по кастомным полям
+-   [x] **test_handles_soft_deleted_filter_correctly** — корректная обработка фильтра soft-deleted
+-   [x] **test_handles_empty_search_query** — обработка пустого поискового запроса
+-   [x] **test_handles_special_characters_in_search** — обработка специальных символов в поиске
 
 ---
 
