@@ -27,11 +27,11 @@
 
 ### Общие показатели
 
--   ✅ **Всего тестов:** 464
--   ✅ **Assertions:** 988
+-   ✅ **Всего тестов:** 552
+-   ✅ **Assertions:** 1272
 -   ⏭️ **Skipped:** 2
 -   ❌ **Failed:** 0
--   ⏱️ **Время выполнения:** ~25 сек
+-   ⏱️ **Время выполнения:** ~31 сек
 
 ### По фазам
 
@@ -54,11 +54,11 @@
 -   ⏳ **Media (полное):** MediaStoreAction требует доработки
 -   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
 
-#### Фаза 3: HTTP Controllers 🔄 (5%)
+#### Фаза 3: HTTP Controllers 🔄 (15%)
 
 -   ✅ **Auth API:** 31 тест (Login, CurrentUser, Refresh, Logout)
--   ⏳ **Entries API:** 0 тестов
--   ⏳ **Media API:** 0 тестов
+-   ✅ **Entries API:** 53 теста (List, Create, Show, Update, Delete, Restore)
+-   ✅ **Media API:** 35 тестов (List, Show, Update, Delete, Restore)
 -   ⏳ **PostTypes API:** 0 тестов
 -   ⏳ **Plugins API:** 0 тестов
 -   ⏳ **Options API:** 0 тестов
@@ -2006,120 +2006,146 @@
 
 ---
 
-### 3.2. Entries API (10 эндпоинтов)
+### 3.2. Entries API
 
-#### Приоритет: 🔴 Высокий
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/Entries/EntryManagementTest.php`)
+**Feature-тесты** (53 теста, 161 assertions)
 
-```php
-// GET /api/v1/admin/entries
-- test('admin can list entries')
-- test('entries are paginated')
-- test('entries can be filtered by post type')
-- test('entries can be filtered by status')
-- test('entries can be searched')
-- test('unauthenticated request returns 401')
+// GET /api/v1/admin/entries (ListEntriesTest.php) - 12 тестов ✅
+✅ test('admin can list entries')
+✅ test('entries are paginated')
+✅ test('entries can be filtered by post type')
+✅ test('entries can be filtered by status')
+✅ test('entries can be searched by title')
+✅ test('entries can be searched by slug')
+✅ test('unauthenticated request returns 401')
+✅ test('entries can be filtered by author')
+✅ test('entries can be sorted by updated_at')
+✅ test('entries can be sorted by title')
+✅ test('trashed entries are excluded by default')
+✅ test('trashed entries can be listed with filter')
 
-// POST /api/v1/admin/entries
-- test('admin can create entry')
-- test('entry is created with correct data')
-- test('entry validation fails with invalid data')
-- test('entry slug is auto-generated')
-- test('entry slug must be unique per post type')
-- test('unauthenticated request returns 401')
+// POST /api/v1/admin/entries (CreateEntryTest.php) - 13 тестов ✅
+✅ test('admin can create entry')
+✅ test('entry is created with correct author')
+✅ test('entry slug is auto-generated from title')
+✅ test('entry can be created with custom slug')
+✅ test('entry is created as draft by default')
+✅ test('entry can be published immediately')
+✅ test('entry can be created with content_json')
+✅ test('entry can be created with meta_json')
+✅ test('entry validation fails with missing title')
+✅ test('entry validation fails with missing post_type')
+✅ test('entry validation fails with invalid post_type')
+✅ test('entry can be created with template_override')
+✅ test('duplicate slug is made unique')
 
-// GET /api/v1/admin/entries/{id}
-- test('admin can view entry')
-- test('entry includes relationships')
-- test('not found returns 404')
+// GET /api/v1/admin/entries/{id} (ShowEntryTest.php) - 8 тестов ✅
+✅ test('admin can view entry')
+✅ test('entry includes author relationship')
+✅ test('entry includes post type relationship')
+✅ test('not found returns 404')
+✅ test('can view soft deleted entry')
+✅ test('entry includes content_json')
+✅ test('entry includes meta_json')
+✅ test('entry includes timestamps')
 
-// PUT /api/v1/admin/entries/{id}
-- test('admin can update entry')
-- test('entry data is updated correctly')
-- test('entry validation works on update')
-- test('not found returns 404')
+// PUT /api/v1/admin/entries/{id} (UpdateEntryTest.php) - 11 тестов ✅
+✅ test('admin can update entry')
+✅ test('entry data is updated correctly')
+✅ test('entry validation works on update')
+✅ test('not found returns 404')
+✅ test('can update content_json')
+✅ test('can update meta_json')
+✅ test('can publish draft entry')
+✅ test('can unpublish entry')
+✅ test('can update template_override')
+✅ test('can update soft deleted entry')
+✅ test('updated_at changes after update')
 
-// DELETE /api/v1/admin/entries/{id}
-- test('admin can soft delete entry')
-- test('deleted entry is not in default list')
-- test('not found returns 404')
+// DELETE /api/v1/admin/entries/{id} + POST /api/v1/admin/entries/{id}/restore (DeleteRestoreEntryTest.php) - 9 тестов ✅
+✅ test('admin can soft delete entry')
+✅ test('deleted entry is not in default list')
+✅ test('delete not found returns 404')
+✅ test('cannot delete already deleted entry')
+✅ test('admin can restore deleted entry')
+✅ test('restored entry appears in default list')
+✅ test('restore not found returns 404')
+✅ test('cannot restore non-deleted entry')
+✅ test('restored entry retains all data')
 
-// POST /api/v1/admin/entries/{id}/restore
-- test('admin can restore deleted entry')
-- test('restored entry appears in default list')
+**Примечания:**
 
-// GET /api/v1/admin/entries/statuses
-- test('admin can get available statuses')
-- test('returns list of valid status values')
-
-// GET /api/v1/admin/entries/{entry}/terms
-- test('admin can get entry terms')
-- test('terms are grouped by taxonomy')
-
-// PUT /api/v1/admin/entries/{entry}/terms/sync
-- test('admin can sync entry terms')
-- test('old terms are removed')
-- test('new terms are attached')
-```
+-   53 Feature теста покрывают базовые CRUD операции для записей
+-   Тестируется фильтрация, поиск, пагинация, сортировка
+-   Проверяется работа с relationships (author, postType, terms)
+-   Тестируются мягкое удаление и восстановление
+-   Проверяется auto-slug generation и uniqueness
+-   Middleware `JwtAuth` и `VerifyApiCsrf` отключены в тестах
+-   Endpoints для `/statuses`, `/terms`, `/terms/sync` - пока не протестированы
 
 ---
 
-### 3.3. Media API (13 эндпоинтов)
+### 3.3. Media API
 
-#### Приоритет: 🔴 Высокий
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тесты** (`tests/Feature/Api/Admin/V1/Media/MediaManagementTest.php`)
+**Feature-тесты** (35 тестов, 123 assertions)
 
-```php
-// GET /api/v1/admin/media
-- test('admin can list media')
-- test('media are paginated')
-- test('media can be filtered by mime type')
-- test('media can be filtered by collection')
-- test('media can be searched')
+// GET /api/v1/admin/media (ListMediaTest.php) - 13 тестов ✅
+✅ test('admin can list media')
+✅ test('media are paginated')
+✅ test('media can be filtered by mime type')
+✅ test('media can be filtered by collection')
+✅ test('media can be searched by title')
+✅ test('media can be searched by original name')
+✅ test('media can be sorted by size')
+✅ test('media can be sorted by created_at')
+✅ test('trashed media are excluded by default')
+✅ test('trashed media can be included with filter')
+✅ test('only trashed media can be shown')
+✅ test('media response includes preview and download urls')
+✅ test('unauthenticated request returns 401')
 
-// POST /api/v1/admin/media
-- test('admin can upload media')
-- test('media file is stored')
-- test('media metadata is extracted')
-- test('media validation works')
-- test('upload fails with invalid file')
-- test('upload fails with oversized file')
+// GET /api/v1/admin/media/{id} (ShowMediaTest.php) - 8 тестов ✅
+✅ test('admin can view media')
+✅ test('media includes dimensions for images')
+✅ test('media includes duration for videos')
+✅ test('not found returns 404')
+✅ test('can view soft deleted media')
+✅ test('media includes all metadata')
+✅ test('media includes timestamps')
+✅ test('media includes preview and download urls')
 
-// GET /api/v1/admin/media/{id}
-- test('admin can view media')
-- test('media includes variants')
-- test('media includes metadata')
-- test('not found returns 404')
+// PUT /api/v1/admin/media/{id} (UpdateMediaTest.php) - 7 тестов ✅
+✅ test('admin can update media metadata')
+✅ test('title can be updated')
+✅ test('alt text can be updated')
+✅ test('collection can be updated')
+✅ test('can update soft deleted media')
+✅ test('updated_at changes after update')
+✅ test('can update multiple fields at once')
 
-// PUT /api/v1/admin/media/{id}
-- test('admin can update media metadata')
-- test('title can be updated')
-- test('alt text can be updated')
+// DELETE /api/v1/admin/media/{id} + POST /api/v1/admin/media/{id}/restore (DeleteRestoreMediaTest.php) - 7 тестов ✅
+✅ test('admin can soft delete media')
+✅ test('deleted media not in default list')
+✅ test('cannot delete already deleted media')
+✅ test('admin can restore deleted media')
+✅ test('restored media appears in default list')
+✅ test('cannot restore non-deleted media')
+✅ test('restored media retains all metadata')
 
-// DELETE /api/v1/admin/media/{id}
-- test('admin can soft delete media')
-- test('media file remains on disk')
-- test('deleted media not in default list')
+**Примечания:**
 
-// POST /api/v1/admin/media/{id}/restore
-- test('admin can restore deleted media')
-
-// GET /api/v1/admin/media/{id}/variants
-- test('admin can get media variants')
-- test('variants include status information')
-
-// POST /api/v1/admin/media/{id}/variants
-- test('admin can request new variant')
-- test('variant generation job is dispatched')
-
-// GET /api/v1/media/{disk}/{path}
-- test('public can access media file')
-- test('correct file is returned')
-- test('correct mime type header')
-- test('not found returns 404')
-```
+-   35 Feature тестов покрывают базовые CRUD операции для медиафайлов
+-   Тестируется фильтрация по mime, collection, поиск по title и original_name
+-   Проверяется сортировка по size и created_at
+-   Тестируются мягкое удаление и восстановление
+-   Проверяется работа с soft-deleted медиафайлами
+-   Middleware `JwtAuth` и `VerifyApiCsrf` отключены в тестах
+-   **POST /media (upload)** - не протестирован (требует работы с реальными файлами и storage)
+-   Endpoints `/preview`, `/download`, `/variants` - пока не протестированы
 
 ---
 

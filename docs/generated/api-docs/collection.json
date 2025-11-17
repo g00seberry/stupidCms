@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "a770ecd7-e012-47c7-a01b-66d54b1eeaff",
+        "_postman_id": "83d4a349-1a25-49ee-a3d3-fd362cc2a66f",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-17T11:49:03\",\"date_to\":\"2106-12-17\",\"date_field\":\"published\",\"sort\":\"updated_at.desc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"draft\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-17T13:43:21\",\"date_to\":\"2106-12-17\",\"date_field\":\"updated\",\"sort\":\"updated_at.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -691,7 +691,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"audio\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"created_at\",\"order\":\"asc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -1083,7 +1083,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"only\",\"page\":87,\"per_page\":4}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"with\",\"page\":87,\"per_page\":4}"
                         },
                         "description": ""
                     },
@@ -1608,7 +1608,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"name\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"desc\"}"
                         },
                         "description": ""
                     },
@@ -3116,7 +3116,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":false}"
+                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":true}"
                         },
                         "description": "",
                         "auth": {
@@ -3227,7 +3227,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.desc\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3418,7 +3418,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-17T11:49:03\",\"to\":\"2106-12-17\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-17T13:43:20\",\"to\":\"2106-12-17\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {
