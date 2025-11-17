@@ -472,6 +472,14 @@
                 ],
                 "casts": [],
                 "relations": {
+                    "entries": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\Entry"
+                    },
+                    "refreshTokens": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\RefreshToken"
+                    },
                     "notifications": {
                         "type": "morphMany",
                         "related": "App\\Models\\DatabaseNotification"
@@ -5404,6 +5412,14 @@
                     ],
                     "casts": [],
                     "relations": {
+                        "entries": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\Entry"
+                        },
+                        "refreshTokens": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\RefreshToken"
+                        },
                         "notifications": {
                             "type": "morphMany",
                             "related": "App\\Models\\DatabaseNotification"
@@ -12567,5 +12583,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T11:00:23+00:00"
+    "generated_at": "2025-11-17T12:00:21+00:00"
 }

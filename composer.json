@@ -21,7 +21,10 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
-        "nunomaduro/collision": "^8.6"
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -32,6 +35,11 @@
         "files": [
             "app/Helpers/options.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
         "setup": [
@@ -49,6 +57,21 @@
         "scribe:gen": [
             "@php artisan scribe:generate --force --no-interaction"
         ],
+        "test": "php artisan test",
+        "test:unit": "php artisan test --testsuite=Unit",
+        "test:feature": "php artisan test --testsuite=Feature",
+        "test:coverage": "php artisan test --coverage",
+        "test:parallel": "php artisan test --parallel",
+        "test:module:auth": "php artisan test --group=module:auth",
+        "test:module:entries": "php artisan test --group=module:entries",
+        "test:module:media": "php artisan test --group=module:media",
+        "test:module:options": "php artisan test --group=module:options",
+        "test:module:plugins": "php artisan test --group=module:plugins",
+        "test:module:post-types": "php artisan test --group=module:post-types",
+        "test:module:routing": "php artisan test --group=module:routing",
+        "test:module:sanitizer": "php artisan test --group=module:sanitizer",
+        "test:module:search": "php artisan test --group=module:search",
+        "test:module:view": "php artisan test --group=module:view",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -78,7 +101,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "stable",

@@ -353,6 +353,8 @@ Eloquent модель для пользователей (User).
 - **Fillable:** `name`, `email`, `password`, `email_verified_at`
 - **Guarded:** `is_admin`
 - **Relations:**
+  - `entries`: hasMany → `App\Models\Entry`
+  - `refreshTokens`: hasMany → `App\Models\RefreshToken`
   - `notifications`: morphMany → `App\Models\DatabaseNotification`
 
 ### Tags
