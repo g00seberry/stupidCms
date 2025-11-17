@@ -27,11 +27,11 @@
 
 ### Общие показатели
 
--   ✅ **Всего тестов:** 683
--   ✅ **Assertions:** 1782
+-   ✅ **Всего тестов:** 746
+-   ✅ **Assertions:** 1952
 -   ⏭️ **Skipped:** 2
 -   ❌ **Failed:** 0
--   ⏱️ **Время выполнения:** ~42 сек
+-   ⏱️ **Время выполнения:** ~47 сек
 
 ### По фазам
 
@@ -54,7 +54,7 @@
 -   ⏳ **Media (полное):** MediaStoreAction требует доработки
 -   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
 
-#### Фаза 3: HTTP Controllers 🔄 (36%)
+#### Фаза 3: HTTP Controllers ✅ (100%)
 
 -   ✅ **Auth API:** 31 тест (Login, CurrentUser, Refresh, Logout)
 -   ✅ **Entries API:** 53 теста (List, Create, Show, Update, Delete, Restore)
@@ -64,7 +64,9 @@
 -   ✅ **Options API:** 22 теста (List, Show, Upsert, Delete, Restore)
 -   ✅ **Taxonomies & Terms API:** 37 тестов (Taxonomies 19, Terms 18)
 -   ✅ **Search API:** 24 теста (Public 15, Admin 9)
--   ⏳ **Path Reservation API:** 0 тестов
+-   ✅ **Path Reservation API:** 21 тест (List, Reserve, Release)
+-   ✅ **Utils & Templates API:** 27 тестов (Utils 10, Templates 17)
+-   ✅ **Web Controllers:** 15 тестов (Home 5, Page 7, Ping 2, Routing 1)
 
 ---
 
@@ -2465,62 +2467,154 @@
 
 ---
 
-### 3.9. Path Reservation API (3 эндпоинта)
+### 3.9. Path Reservation API
 
-#### Приоритет: 🟡 Средний
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тesты** (`tests/Feature/Api/Admin/V1/PathReservations/PathReservationTest.php`)
+**Feature-тесты** (`tests/Feature/Api/Admin/PathReservations/PathReservationsTest.php`) — 21 тест:
 
 ```php
-// GET /api/v1/admin/reserved-paths
-- test('admin can list reserved paths')
+// GET /api/v1/admin/reservations
+✅ test('admin can list reserved paths')
+✅ test('list returns empty array when no reservations')
+✅ test('list is sorted by path')
+✅ test('list requires authentication')
+✅ test('list includes reservation metadata')
 
-// POST /api/v1/admin/reserved-paths
-- test('admin can reserve path')
-- test('duplicate path returns error')
+// POST /api/v1/admin/reservations
+✅ test('admin can reserve path')
+✅ test('reservation creates audit log')
+✅ test('duplicate path returns conflict error')
+✅ test('reservation validates required fields')
+✅ test('reservation validates path max length')
+✅ test('reservation validates source max length')
+✅ test('reservation reason is optional')
+✅ test('reservation requires admin permissions')
+✅ test('paths are normalized before reservation')
 
-// DELETE /api/v1/admin/reserved-paths/{id}
-- test('admin can release path reservation')
-- test('system paths cannot be released')
+// DELETE /api/v1/admin/reservations/{path}
+✅ test('admin can release path reservation')
+✅ test('release creates audit log')
+✅ test('release from wrong source returns forbidden')
+✅ test('release validates required source')
+✅ test('release path can be in body if not in url')
+✅ test('release requires authentication')
+✅ test('release requires admin permissions')
 ```
+
+**Примечания:**
+
+-   Пути автоматически нормализуются перед резервацией (lowercase, без trailing slash)
+-   Создаётся audit log для `reserve` и `release` действий
+-   Конфликт (409) при попытке зарезервировать уже занятый путь
+-   Forbidden (403) при попытке освободить путь с неправильным `source`
+-   Требует `is_admin = true` для всех операций
+-   Путь может быть указан как в URL, так и в теле запроса (для DELETE)
+-   Middleware `JwtAuth`, `VerifyApiCsrf` отключены в тестах
 
 ---
 
-### 3.10. Utils & Templates API (3 эндпоинта)
+### 3.10. Utils & Templates API
 
-#### Приоритет: 🟢 Низкий
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тesты** (`tests/Feature/Api/Admin/V1/Utils/UtilsTest.php`)
+**Feature-тесты** (`tests/Feature/Api/Admin/Utils/UtilsTest.php`) — 10 тестов:
 
 ```php
-// GET /api/v1/admin/utils/slug
-- test('generates slug from title')
+// GET /api/v1/admin/utils/slugify
+✅ test('generates slug from title')
+✅ test('ensures unique slug when base exists')
+✅ test('checks reserved routes when generating slug')
+✅ test('slug scoped by post type')
+✅ test('handles empty title')
+✅ test('handles special characters in title')
+✅ test('slugify requires authentication')
+✅ test('defaults to page post type when not specified')
+✅ test('handles very long titles')
+✅ test('generates incremental suffixes for multiple duplicates')
+```
 
+**Feature-тесты** (`tests/Feature/Api/Admin/Templates/TemplatesTest.php`) — 17 тестов:
+
+```php
 // GET /api/v1/admin/templates
-- test('lists available blade templates')
+✅ test('admin can list templates')
+✅ test('list excludes system directories')
+✅ test('list returns sorted templates')
+✅ test('list requires authentication')
+
+// GET /api/v1/admin/templates/{name}
+✅ test('admin can view template content')
+✅ test('show returns 404 for non-existent template')
+✅ test('show requires authentication')
+
+// POST /api/v1/admin/templates
+✅ test('admin can create template')
+✅ test('create returns conflict if template exists')
+✅ test('create validates required fields')
+✅ test('create automatically creates directories')
+✅ test('create requires authentication')
+
+// PUT /api/v1/admin/templates/{name}
+✅ test('admin can update template')
+✅ test('update returns 404 for non-existent template')
+✅ test('update validates content required')
+✅ test('update requires authentication')
+✅ test('template name converts to correct path')
 ```
+
+**Примечания:**
+
+-   `slugify` генерирует `base` (базовый slug) и `unique` (уникальный с учётом коллизий)
+-   Проверяет уникальность в scope post_type
+-   Проверяет конфликты с `ReservedRoute`
+-   Templates API предоставляет CRUD для Blade шаблонов
+-   Исключает системные директории: `admin`, `errors`, `layouts`, `partials`, `vendor`
+-   Автоматически создаёт директории при создании шаблонов
+-   Middleware `JwtAuth`, `VerifyApiCsrf` отключены в тестах
 
 ---
 
-### 3.11. Web Controllers (3 контроллера)
+### 3.11. Web Controllers
 
-#### Приоритет: 🟢 Низкий
+#### Статус: ✅ Завершено (2025-11-17)
 
-**Feature-тesты** (`tests/Feature/Web/PagesTest.php`)
+**Feature-тесты** (`tests/Feature/Web/PagesTest.php`) — 15 тестов:
 
 ```php
-// GET /
-- test('homepage renders')
-- test('homepage uses correct template')
+// GET / (HomeController)
+✅ test('homepage renders default template')
+✅ test('homepage renders entry when home_entry_id is set')
+✅ test('homepage falls back to default when entry is not published')
+✅ test('homepage falls back to default when entry is scheduled')
+✅ test('homepage uses correct template resolver')
 
-// GET /{slug}
-- test('entry page renders')
-- test('entry uses correct template')
-- test('not found returns 404')
+// GET /{slug} (PageController)
+✅ test('entry page renders published entry')
+✅ test('entry page returns 404 for non-existent slug')
+✅ test('entry page returns 404 for draft entry')
+✅ test('entry page returns 404 for scheduled entry')
+✅ test('entry uses correct template for post type')
+✅ test('entry page loads with post type relationship')
+✅ test('entry page uses template override if specified')
 
-// GET /admin (ping)
-- test('admin ping returns ok')
+// GET /admin/ping (AdminPingController)
+✅ test('admin ping returns ok')
+✅ test('admin ping confirms route priority')
+
+// Routing
+✅ test('reserved paths are rejected by middleware')
 ```
+
+**Примечания:**
+
+-   `HomeController`: рендерит главную страницу, поддерживает `site:home_entry_id` опцию
+-   `PageController`: catch-all роут для `/{slug}`, рендерит опубликованные entries
+-   `AdminPingController`: тестовый эндпоинт для проверки порядка загрузки роутов
+-   Используется `TemplateResolver` для выбора Blade шаблонов
+-   Проверяет статус `published` и `published_at <= now()`
+-   Поддерживает `template_override` для custom шаблонов
+-   Зарезервированные пути защищены через `ReservedPattern` и `RejectReservedIfMatched` middleware
 
 ---
 
