@@ -177,17 +177,17 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->middleware('throttle:20,1')
         ->name('admin.v1.media.update');
 
-    Route::delete('/media/{media}', [MediaController::class, 'destroy'])
+    Route::delete('/media/bulk', [MediaController::class, 'bulkDestroy'])
         ->middleware('throttle:20,1')
-        ->name('admin.v1.media.destroy');
+        ->name('admin.v1.media.bulkDestroy');
 
-    Route::post('/media/{media}/restore', [MediaController::class, 'restore'])
+    Route::post('/media/bulk/restore', [MediaController::class, 'bulkRestore'])
         ->middleware('throttle:20,1')
-        ->name('admin.v1.media.restore');
+        ->name('admin.v1.media.bulkRestore');
 
-    Route::delete('/media/{media}/force', [MediaController::class, 'forceDestroy'])
+    Route::delete('/media/bulk/force', [MediaController::class, 'bulkForceDestroy'])
         ->middleware('throttle:20,1')
-        ->name('admin.v1.media.forceDestroy');
+        ->name('admin.v1.media.bulkForceDestroy');
 
     Route::prefix('/options')->group(function () {
         Route::get('/{namespace}', [OptionsController::class, 'index'])

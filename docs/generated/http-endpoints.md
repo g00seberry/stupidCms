@@ -192,22 +192,56 @@ PUT /api/v1/admin/entries/{id} (api)
 
 ---
 
-## admin.v1.media.destroy
-**ID:** `http_endpoint:DELETE:/api/v1/admin/media/{media}`
+## admin.v1.media.bulkDestroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/media/bulk`
 **Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
 
-DELETE /api/v1/admin/media/{media} (api)
+DELETE /api/v1/admin/media/bulk (api)
 
 ### Meta
 - **Method:** `DELETE`
-- **URI:** `/api/v1/admin/media/{media}`
+- **URI:** `/api/v1/admin/media/bulk`
 - **Group:** `api`
 - **Auth:** `jwt`
-- **Parameters:**
-  - `media` (string, required)
 
 ### Tags
-`api`, `admin`, `v1`, `media`
+`api`, `admin`, `v1`, `media`, `bulk`
+
+
+---
+
+## admin.v1.media.bulkForceDestroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/media/bulk/force`
+**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
+
+DELETE /api/v1/admin/media/bulk/force (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/media/bulk/force`
+- **Group:** `api`
+- **Auth:** `jwt`
+
+### Tags
+`api`, `admin`, `v1`, `media`, `bulk`, `force`
+
+
+---
+
+## admin.v1.media.bulkRestore
+**ID:** `http_endpoint:POST:/api/v1/admin/media/bulk/restore`
+**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
+
+POST /api/v1/admin/media/bulk/restore (api)
+
+### Meta
+- **Method:** `POST`
+- **URI:** `/api/v1/admin/media/bulk/restore`
+- **Group:** `api`
+- **Auth:** `jwt`
+
+### Tags
+`api`, `admin`, `v1`, `media`, `bulk`, `restore`
 
 
 ---
@@ -228,26 +262,6 @@ GET /api/v1/admin/media/{media}/download (api)
 
 ### Tags
 `api`, `admin`, `v1`, `media`, `download`
-
-
----
-
-## admin.v1.media.forceDestroy
-**ID:** `http_endpoint:DELETE:/api/v1/admin/media/{media}/force`
-**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
-
-DELETE /api/v1/admin/media/{media}/force (api)
-
-### Meta
-- **Method:** `DELETE`
-- **URI:** `/api/v1/admin/media/{media}/force`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `media` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `media`, `force`
 
 
 ---
@@ -286,26 +300,6 @@ GET /api/v1/admin/media/{media}/preview (api)
 
 ### Tags
 `api`, `admin`, `v1`, `media`, `preview`
-
-
----
-
-## admin.v1.media.restore
-**ID:** `http_endpoint:POST:/api/v1/admin/media/{media}/restore`
-**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
-
-POST /api/v1/admin/media/{media}/restore (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/media/{media}/restore`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `media` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `media`, `restore`
 
 
 ---

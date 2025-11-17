@@ -14,6 +14,9 @@ use App\Domain\Media\MediaDeletedFilter;
 use App\Domain\Media\MediaQuery;
 use App\Domain\Media\MediaRepository;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Media\BulkDeleteMediaRequest;
+use App\Http\Requests\Admin\Media\BulkForceDeleteMediaRequest;
+use App\Http\Requests\Admin\Media\BulkRestoreMediaRequest;
 use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
@@ -25,7 +28,6 @@ use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
@@ -33,8 +35,8 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  * Контроллер для управления медиа-файлами в админ-панели.
  *
  * Предоставляет CRUD операции для медиа-файлов: загрузка, просмотр, обновление,
- * мягкое удаление, окончательное удаление, восстановление, управление вариантами
- * и привязкой к записям.
+ * массовое мягкое удаление, массовое окончательное удаление, массовое восстановление,
+ * управление вариантами и привязкой к записям.
  *
  * @package App\Http\Controllers\Admin\V1
  */
@@ -435,14 +437,16 @@ class MediaController extends Controller
     }
 
     /**
-     * Удаление медиа (soft delete).
+     * Массовое мягкое удаление медиа-файлов.
      *
-     * Выполняет мягкое удаление медиа-файла и отправляет событие MediaDeleted.
+     * Выполняет мягкое удаление медиа-файлов по массиву идентификаторов
+     * и отправляет событие MediaDeleted для каждого удалённого файла.
      *
      * @group Admin ▸ Media
-     * @name Delete media
+     * @name Bulk delete media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @bodyParam ids array required Массив идентификаторов медиа-файлов (1-100 элементов). Example: ["01HXZYXQJ123456789ABCDEF", "01HXZYXQJ987654321FEDCBA"]
+     * @bodyParam ids.* string required ULID идентификатор медиа-файла (26 символов). Example: 01HXZYXQJ123456789ABCDEF
      * @response status=204 {}
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
@@ -456,15 +460,19 @@ class MediaController extends Controller
      *   },
      *   "trace_id": "00-11111111222233334444555555555662-1111111122223333-01"
      * }
-     * @response status=404 {
-     *   "type": "https://stupidcms.dev/problems/not-found",
-     *   "title": "Media not found",
-     *   "status": 404,
-     *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The media payload failed validation constraints.",
      *   "meta": {
      *     "request_id": "11111111-2222-3333-4444-555555555563",
-     *     "media_id": "uuid-media"
+     *     "errors": {
+     *       "ids": [
+     *         "The ids field is required."
+     *       ]
+     *     }
      *   },
      *   "trace_id": "00-11111111222233334444555555555663-1111111122223333-01"
      * }
@@ -481,35 +489,125 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000004-6666666677778888-01"
      * }
      */
-    public function destroy(Request $request, string $mediaId): HttpResponse
+    public function bulkDestroy(BulkDeleteMediaRequest $request): HttpResponse
     {
-        $media = Media::query()->find($mediaId);
+        $ids = $request->validated()['ids'];
+        $mediaItems = Media::query()->whereIn('id', $ids)->get();
 
-        if (! $media) {
-            $this->throwMediaNotFound($mediaId);
+        foreach ($mediaItems as $media) {
+            $this->authorize('delete', $media);
+            $media->delete();
+            Event::dispatch(new MediaDeleted($media));
         }
-
-        $this->authorize('delete', $media);
-
-        $media->delete();
-
-        // Отправляем событие удаления медиа-файла
-        Event::dispatch(new MediaDeleted($media));
 
         return AdminResponse::noContent();
     }
 
     /**
-     * Окончательное удаление медиа (hard delete).
+     * Массовое восстановление удалённых медиа-файлов.
      *
-     * Выполняет полное удаление медиа-файла: удаляет физические файлы
-     * (основной файл и все варианты) с диска, затем удаляет записи из БД.
-     * Операция необратима.
+     * Выполняет восстановление мягко удалённых медиа-файлов по массиву идентификаторов.
      *
      * @group Admin ▸ Media
-     * @name Force delete media
+     * @name Bulk restore media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @bodyParam ids array required Массив идентификаторов удалённых медиа-файлов (1-100 элементов). Example: ["01HXZYXQJ123456789ABCDEF", "01HXZYXQJ987654321FEDCBA"]
+     * @bodyParam ids.* string required ULID идентификатор медиа-файла (26 символов). Example: 01HXZYXQJ123456789ABCDEF
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": "01HXZYXQJ123456789ABCDEF",
+     *       "kind": "image",
+     *       "name": "hero.jpg",
+     *       "ext": "jpg",
+     *       "mime": "image/jpeg",
+     *       "size_bytes": 235678,
+     *       "width": 1920,
+     *       "height": 1080,
+     *       "duration_ms": null,
+     *       "title": "Hero image",
+     *       "alt": "Hero cover",
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null,
+     *       "preview_urls": {
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *       },
+     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *     }
+     *   ]
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555565",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555665-1111111122223333-01"
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The media payload failed validation constraints.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555566",
+     *     "errors": {
+     *       "ids": [
+     *         "The ids field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555666-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000005",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000005-6666666677778888-01"
+     * }
+     */
+    public function bulkRestore(BulkRestoreMediaRequest $request): MediaCollection
+    {
+        $ids = $request->validated()['ids'];
+        $mediaItems = Media::onlyTrashed()->whereIn('id', $ids)->get();
+
+        $restoredMedia = [];
+
+        foreach ($mediaItems as $media) {
+            $this->authorize('restore', $media);
+            $media->restore();
+            $media->refresh();
+            $restoredMedia[] = $media;
+        }
+
+        return new MediaCollection($restoredMedia);
+    }
+
+    /**
+     * Массовое окончательное удаление медиа-файлов.
+     *
+     * Выполняет полное удаление медиа-файлов по массиву идентификаторов:
+     * удаляет физические файлы (основной файл и все варианты) с диска,
+     * затем удаляет записи из БД. Операция необратима.
+     *
+     * @group Admin ▸ Media
+     * @name Bulk force delete media
+     * @authenticated
+     * @bodyParam ids array required Массив идентификаторов медиа-файлов (1-100 элементов). Example: ["01HXZYXQJ123456789ABCDEF", "01HXZYXQJ987654321FEDCBA"]
+     * @bodyParam ids.* string required ULID идентификатор медиа-файла (26 символов). Example: 01HXZYXQJ123456789ABCDEF
      * @response status=204 {}
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
@@ -530,20 +628,23 @@ class MediaController extends Controller
      *   "code": "FORBIDDEN",
      *   "detail": "You do not have permission to force delete media.",
      *   "meta": {
-     *     "request_id": "11111111-2222-3333-4444-555555555568",
-     *     "media_id": "uuid-media"
+     *     "request_id": "11111111-2222-3333-4444-555555555568"
      *   },
      *   "trace_id": "00-11111111222233334444555555555668-1111111122223333-01"
      * }
-     * @response status=404 {
-     *   "type": "https://stupidcms.dev/problems/not-found",
-     *   "title": "Media not found",
-     *   "status": 404,
-     *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The media payload failed validation constraints.",
      *   "meta": {
      *     "request_id": "11111111-2222-3333-4444-555555555569",
-     *     "media_id": "uuid-media"
+     *     "errors": {
+     *       "ids": [
+     *         "The ids field is required."
+     *       ]
+     *     }
      *   },
      *   "trace_id": "00-11111111222233334444555555555669-1111111122223333-01"
      * }
@@ -560,103 +661,17 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000006-6666666677778888-01"
      * }
      */
-    public function forceDestroy(Request $request, string $mediaId): HttpResponse
+    public function bulkForceDestroy(BulkForceDeleteMediaRequest $request): HttpResponse
     {
-        $media = Media::withTrashed()->find($mediaId);
+        $ids = $request->validated()['ids'];
+        $mediaItems = Media::withTrashed()->whereIn('id', $ids)->get();
 
-        if (! $media) {
-            $this->throwMediaNotFound($mediaId);
+        foreach ($mediaItems as $media) {
+            $this->authorize('forceDelete', $media);
+            $this->forceDeleteAction->execute($media);
         }
-
-        $this->authorize('forceDelete', $media);
-
-        $this->forceDeleteAction->execute($media);
 
         return AdminResponse::noContent();
-    }
-
-    /**
-     * Восстановление удалённого медиа.
-     *
-     * @group Admin ▸ Media
-     * @name Restore media
-     * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
-     * @response status=200 {
-     *   "data": {
-     *     "id": "uuid-media",
-     *     "kind": "image",
-     *     "name": "hero.jpg",
-     *     "ext": "jpg",
-     *     "mime": "image/jpeg",
-     *     "size_bytes": 235678,
-     *     "width": 1920,
-     *     "height": 1080,
-     *     "duration_ms": null,
-     *     "title": "Hero image",
-     *     "alt": "Hero cover",
-     *     "collection": "uploads",
-     *     "created_at": "2025-01-10T12:00:00+00:00",
-     *     "updated_at": "2025-01-10T12:00:00+00:00",
-     *     "deleted_at": null,
-     *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
-     *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
-     *   }
-     * }
-     * @response status=401 {
-     *   "type": "https://stupidcms.dev/problems/unauthorized",
-     *   "title": "Unauthorized",
-     *   "status": 401,
-     *   "code": "UNAUTHORIZED",
-     *   "detail": "Authentication is required to access this resource.",
-     *   "meta": {
-     *     "request_id": "11111111-2222-3333-4444-555555555565",
-     *     "reason": "missing_token"
-     *   },
-     *   "trace_id": "00-11111111222233334444555555555665-1111111122223333-01"
-     * }
-     * @response status=404 {
-     *   "type": "https://stupidcms.dev/problems/not-found",
-     *   "title": "Media not found",
-     *   "status": 404,
-     *   "code": "NOT_FOUND",
-     *   "detail": "Deleted media with ID uuid-media does not exist.",
-     *   "meta": {
-     *     "request_id": "11111111-2222-3333-4444-555555555566",
-     *     "media_id": "uuid-media",
-     *     "trashed": true
-     *   },
-     *   "trace_id": "00-11111111222233334444555555555666-1111111122223333-01"
-     * }
-     * @response status=429 {
-     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
-     *   "title": "Too Many Requests",
-     *   "status": 429,
-     *   "code": "RATE_LIMIT_EXCEEDED",
-     *   "detail": "Too many attempts. Try again later.",
-     *   "meta": {
-     *     "request_id": "66666666-7777-8888-9999-000000000005",
-     *     "retry_after": 60
-     *   },
-     *   "trace_id": "00-66666666777788889999000000000005-6666666677778888-01"
-     * }
-     */
-    public function restore(Request $request, string $mediaId): MediaResource
-    {
-        $media = Media::onlyTrashed()->find($mediaId);
-
-        if (! $media) {
-            $this->throwMediaNotFound($mediaId, 'deleted');
-        }
-
-        $this->authorize('restore', $media);
-
-        $media->restore();
-        $media->refresh();
-
-        return new MediaResource($media);
     }
 
     private function notFound(string $mediaId): never

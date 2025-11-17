@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "6db27066-1011-4b84-bd43-48565e3e5086",
+        "_postman_id": "041f90d6-4b90-49ff-b69b-e36bdbdfea4a",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-17T16:46:49\",\"date_to\":\"2106-12-17\",\"date_field\":\"updated\",\"sort\":\"published_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-17T17:34:25\",\"date_to\":\"2106-12-17\",\"date_field\":\"published\",\"sort\":\"title.desc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -691,7 +691,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"audio\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"mime\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"with\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
                         },
                         "description": ""
                     },
@@ -913,21 +913,13 @@
                     ]
                 },
                 {
-                    "name": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430 (soft delete).",
+                    "name": "\u041c\u0430\u0441\u0441\u043e\u0432\u043e\u0435 \u043c\u044f\u0433\u043a\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u043e\u0432.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/media\/:media",
+                            "path": "api\/v1\/admin\/media\/bulk",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/:media",
-                            "variable": [
-                                {
-                                    "id": "media",
-                                    "key": "media",
-                                    "value": "uuid-media",
-                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/bulk"
                         },
                         "method": "DELETE",
                         "header": [
@@ -940,8 +932,11 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
-                        "description": "\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u043c\u044f\u0433\u043a\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u0430 \u0438 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u0441\u043e\u0431\u044b\u0442\u0438\u0435 MediaDeleted."
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"ids\":[\"01HXZYXQJ123456789ABCDEF\",\"01HXZYXQJ987654321FEDCBA\"]}"
+                        },
+                        "description": "\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u043c\u044f\u0433\u043a\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u043e\u0432 \u043f\u043e \u043c\u0430\u0441\u0441\u0438\u0432\u0443 \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u043e\u0432\n\u0438 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u0441\u043e\u0431\u044b\u0442\u0438\u0435 MediaDeleted \u0434\u043b\u044f \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u043e\u0433\u043e \u0444\u0430\u0439\u043b\u0430."
                     },
                     "response": [
                         {
@@ -958,8 +953,8 @@
                         },
                         {
                             "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555563\",\n    \"media_id\": \"uuid-media\"\n  },\n  \"trace_id\": \"00-11111111222233334444555555555663-1111111122223333-01\"\n}",
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation Error\",\n  \"status\": 422,\n  \"code\": \"VALIDATION_ERROR\",\n  \"detail\": \"The media payload failed validation constraints.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555563\",\n    \"errors\": {\n      \"ids\": [\n        \"The ids field is required.\"\n      ]\n    }\n  },\n  \"trace_id\": \"00-11111111222233334444555555555663-1111111122223333-01\"\n}",
                             "name": ""
                         },
                         {
@@ -971,21 +966,13 @@
                     ]
                 },
                 {
-                    "name": "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u043e\u0433\u043e \u043c\u0435\u0434\u0438\u0430.",
+                    "name": "\u041c\u0430\u0441\u0441\u043e\u0432\u043e\u0435 \u0432\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u044b\u0445 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u043e\u0432.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/media\/:media\/restore",
+                            "path": "api\/v1\/admin\/media\/bulk\/restore",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/:media\/restore",
-                            "variable": [
-                                {
-                                    "id": "media",
-                                    "key": "media",
-                                    "value": "uuid-media",
-                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/bulk\/restore"
                         },
                         "method": "POST",
                         "header": [
@@ -998,14 +985,17 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
-                        "description": ""
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"ids\":[\"01HXZYXQJ123456789ABCDEF\",\"01HXZYXQJ987654321FEDCBA\"]}"
+                        },
+                        "description": "\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u0432\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043c\u044f\u0433\u043a\u043e \u0443\u0434\u0430\u043b\u0451\u043d\u043d\u044b\u0445 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u043e\u0432 \u043f\u043e \u043c\u0430\u0441\u0441\u0438\u0432\u0443 \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u043e\u0432."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n    \"id\": \"uuid-media\",\n    \"kind\": \"image\",\n    \"name\": \"hero.jpg\",\n    \"ext\": \"jpg\",\n    \"mime\": \"image\/jpeg\",\n    \"size_bytes\": 235678,\n    \"width\": 1920,\n    \"height\": 1080,\n    \"duration_ms\": null,\n    \"title\": \"Hero image\",\n    \"alt\": \"Hero cover\",\n    \"collection\": \"uploads\",\n    \"created_at\": \"2025-01-10T12:00:00+00:00\",\n    \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n    \"deleted_at\": null,\n    \"preview_urls\": {\n      \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/preview?variant=thumbnail\"\n    },\n    \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/uuid-media\/download\"\n  }\n}",
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"01HXZYXQJ123456789ABCDEF\",\n      \"kind\": \"image\",\n      \"name\": \"hero.jpg\",\n      \"ext\": \"jpg\",\n      \"mime\": \"image\/jpeg\",\n      \"size_bytes\": 235678,\n      \"width\": 1920,\n      \"height\": 1080,\n      \"duration_ms\": null,\n      \"title\": \"Hero image\",\n      \"alt\": \"Hero cover\",\n      \"collection\": \"uploads\",\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n      \"deleted_at\": null,\n      \"preview_urls\": {\n        \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/01HXZYXQJ123456789ABCDEF\/preview?variant=thumbnail\"\n      },\n      \"download_url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/admin\/media\/01HXZYXQJ123456789ABCDEF\/download\"\n    }\n  ]\n}",
                             "name": ""
                         },
                         {
@@ -1016,8 +1006,8 @@
                         },
                         {
                             "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Deleted media with ID uuid-media does not exist.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555566\",\n    \"media_id\": \"uuid-media\",\n    \"trashed\": true\n  },\n  \"trace_id\": \"00-11111111222233334444555555555666-1111111122223333-01\"\n}",
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation Error\",\n  \"status\": 422,\n  \"code\": \"VALIDATION_ERROR\",\n  \"detail\": \"The media payload failed validation constraints.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555566\",\n    \"errors\": {\n      \"ids\": [\n        \"The ids field is required.\"\n      ]\n    }\n  },\n  \"trace_id\": \"00-11111111222233334444555555555666-1111111122223333-01\"\n}",
                             "name": ""
                         },
                         {
@@ -1029,21 +1019,13 @@
                     ]
                 },
                 {
-                    "name": "\u041e\u043a\u043e\u043d\u0447\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430 (hard delete).",
+                    "name": "\u041c\u0430\u0441\u0441\u043e\u0432\u043e\u0435 \u043e\u043a\u043e\u043d\u0447\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u043e\u0432.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/v1\/admin\/media\/:media\/force",
+                            "path": "api\/v1\/admin\/media\/bulk\/force",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/:media\/force",
-                            "variable": [
-                                {
-                                    "id": "media",
-                                    "key": "media",
-                                    "value": "uuid-media",
-                                    "description": "UUID \u043c\u0435\u0434\u0438\u0430."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media\/bulk\/force"
                         },
                         "method": "DELETE",
                         "header": [
@@ -1056,8 +1038,11 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
-                        "description": "\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u0430: \u0443\u0434\u0430\u043b\u044f\u0435\u0442 \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0444\u0430\u0439\u043b\u044b\n(\u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0444\u0430\u0439\u043b \u0438 \u0432\u0441\u0435 \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b) \u0441 \u0434\u0438\u0441\u043a\u0430, \u0437\u0430\u0442\u0435\u043c \u0443\u0434\u0430\u043b\u044f\u0435\u0442 \u0437\u0430\u043f\u0438\u0441\u0438 \u0438\u0437 \u0411\u0414.\n\u041e\u043f\u0435\u0440\u0430\u0446\u0438\u044f \u043d\u0435\u043e\u0431\u0440\u0430\u0442\u0438\u043c\u0430."
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"ids\":[\"01HXZYXQJ123456789ABCDEF\",\"01HXZYXQJ987654321FEDCBA\"]}"
+                        },
+                        "description": "\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u043c\u0435\u0434\u0438\u0430-\u0444\u0430\u0439\u043b\u043e\u0432 \u043f\u043e \u043c\u0430\u0441\u0441\u0438\u0432\u0443 \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u043e\u0432:\n\u0443\u0434\u0430\u043b\u044f\u0435\u0442 \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0444\u0430\u0439\u043b\u044b (\u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0444\u0430\u0439\u043b \u0438 \u0432\u0441\u0435 \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b) \u0441 \u0434\u0438\u0441\u043a\u0430,\n\u0437\u0430\u0442\u0435\u043c \u0443\u0434\u0430\u043b\u044f\u0435\u0442 \u0437\u0430\u043f\u0438\u0441\u0438 \u0438\u0437 \u0411\u0414. \u041e\u043f\u0435\u0440\u0430\u0446\u0438\u044f \u043d\u0435\u043e\u0431\u0440\u0430\u0442\u0438\u043c\u0430."
                     },
                     "response": [
                         {
@@ -1075,13 +1060,13 @@
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"code\": \"FORBIDDEN\",\n  \"detail\": \"You do not have permission to force delete media.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555568\",\n    \"media_id\": \"uuid-media\"\n  },\n  \"trace_id\": \"00-11111111222233334444555555555668-1111111122223333-01\"\n}",
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/forbidden\",\n  \"title\": \"Forbidden\",\n  \"status\": 403,\n  \"code\": \"FORBIDDEN\",\n  \"detail\": \"You do not have permission to force delete media.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555568\"\n  },\n  \"trace_id\": \"00-11111111222233334444555555555668-1111111122223333-01\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
-                            "code": 404,
-                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/not-found\",\n  \"title\": \"Media not found\",\n  \"status\": 404,\n  \"code\": \"NOT_FOUND\",\n  \"detail\": \"Media with ID uuid-media does not exist.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555569\",\n    \"media_id\": \"uuid-media\"\n  },\n  \"trace_id\": \"00-11111111222233334444555555555669-1111111122223333-01\"\n}",
+                            "code": 422,
+                            "body": "{\n  \"type\": \"https:\/\/stupidcms.dev\/problems\/validation-error\",\n  \"title\": \"Validation Error\",\n  \"status\": 422,\n  \"code\": \"VALIDATION_ERROR\",\n  \"detail\": \"The media payload failed validation constraints.\",\n  \"meta\": {\n    \"request_id\": \"11111111-2222-3333-4444-555555555569\",\n    \"errors\": {\n      \"ids\": [\n        \"The ids field is required.\"\n      ]\n    }\n  },\n  \"trace_id\": \"00-11111111222233334444555555555669-1111111122223333-01\"\n}",
                             "name": ""
                         },
                         {
@@ -1672,7 +1657,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"true\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"desc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"desc\"}"
                         },
                         "description": ""
                     },
@@ -2313,7 +2298,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"label.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
                         },
                         "description": ""
                     },
@@ -3216,7 +3201,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":true}"
+                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":false}"
                         },
                         "description": "",
                         "auth": {
@@ -3327,7 +3312,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"name.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"created_at.asc\"}"
                         },
                         "description": "",
                         "auth": {
@@ -3518,7 +3503,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-17T16:46:49\",\"to\":\"2106-12-17\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-17T17:34:25\",\"to\":\"2106-12-17\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

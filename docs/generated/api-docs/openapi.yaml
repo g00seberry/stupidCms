@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T16:46:49'
+                  example: '2025-11-17T17:34:25'
                   nullable: true
                 date_to:
                   type: string
@@ -573,7 +573,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -2808,7 +2808,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: mime
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -3572,10 +3572,20 @@ paths:
                   description: Коллекция.
                   example: uploads
                   nullable: true
+    parameters:
+      -
+        in: path
+        name: media
+        description: 'UUID медиа.'
+        example: uuid-media
+        required: true
+        schema:
+          type: string
+  /api/v1/admin/media/bulk:
     delete:
-      summary: 'Удаление медиа (soft delete).'
-      operationId: softDelete
-      description: 'Выполняет мягкое удаление медиа-файла и отправляет событие MediaDeleted.'
+      summary: 'Массовое мягкое удаление медиа-файлов.'
+      operationId: ''
+      description: "Выполняет мягкое удаление медиа-файлов по массиву идентификаторов\nи отправляет событие MediaDeleted для каждого удалённого файла."
       parameters: []
       responses:
         204:
@@ -3630,47 +3640,55 @@ paths:
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555662-1111111122223333-01
-        404:
+        422:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Media with ID uuid-media does not exist.'
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: 'The media payload failed validation constraints.'
                   meta:
                     request_id: 11111111-2222-3333-4444-555555555563
-                    media_id: uuid-media
+                    errors:
+                      ids:
+                        - 'The ids field is required.'
                   trace_id: 00-11111111222233334444555555555663-1111111122223333-01
                 properties:
                   type:
                     type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
+                    example: 'https://stupidcms.dev/problems/validation-error'
                   title:
                     type: string
-                    example: 'Media not found'
+                    example: 'Validation Error'
                   status:
                     type: integer
-                    example: 404
+                    example: 422
                   code:
                     type: string
-                    example: NOT_FOUND
+                    example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: 'Media with ID uuid-media does not exist.'
+                    example: 'The media payload failed validation constraints.'
                   meta:
                     type: object
                     properties:
                       request_id:
                         type: string
                         example: 11111111-2222-3333-4444-555555555563
-                      media_id:
-                        type: string
-                        example: uuid-media
+                      errors:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            example:
+                              - 'The ids field is required.'
+                            items:
+                              type: string
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555663-1111111122223333-01
@@ -3720,20 +3738,28 @@ paths:
                     example: 00-66666666777788889999000000000004-6666666677778888-01
       tags:
         - 'Admin ▸ Media'
-    parameters:
-      -
-        in: path
-        name: media
-        description: 'UUID медиа.'
-        example: uuid-media
+      requestBody:
         required: true
-        schema:
-          type: string
-  '/api/v1/admin/media/{media}/restore':
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: 'Массив идентификаторов медиа-файлов (1-100 элементов).'
+                  example:
+                    - 01HXZYXQJ123456789ABCDEF
+                    - 01HXZYXQJ987654321FEDCBA
+                  items:
+                    type: string
+              required:
+                - ids
+  /api/v1/admin/media/bulk/restore:
     post:
-      summary: 'Восстановление удалённого медиа.'
+      summary: 'Массовое восстановление удалённых медиа-файлов.'
       operationId: ''
-      description: ''
+      description: 'Выполняет восстановление мягко удалённых медиа-файлов по массиву идентификаторов.'
       parameters: []
       responses:
         200:
@@ -3744,82 +3770,105 @@ paths:
                 type: object
                 example:
                   data:
-                    id: uuid-media
-                    kind: image
-                    name: hero.jpg
-                    ext: jpg
-                    mime: image/jpeg
-                    size_bytes: 235678
-                    width: 1920
-                    height: 1080
-                    duration_ms: null
-                    title: 'Hero image'
-                    alt: 'Hero cover'
-                    collection: uploads
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:00:00+00:00'
-                    deleted_at: null
-                    preview_urls:
-                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
+                    -
+                      id: 01HXZYXQJ123456789ABCDEF
+                      kind: image
+                      name: hero.jpg
+                      ext: jpg
+                      mime: image/jpeg
+                      size_bytes: 235678
+                      width: 1920
+                      height: 1080
+                      duration_ms: null
+                      title: 'Hero image'
+                      alt: 'Hero cover'
+                      collection: uploads
+                      created_at: '2025-01-10T12:00:00+00:00'
+                      updated_at: '2025-01-10T12:00:00+00:00'
+                      deleted_at: null
+                      preview_urls:
+                        thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
+                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
                 properties:
                   data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: uuid-media
-                      kind:
-                        type: string
-                        example: image
-                      name:
-                        type: string
-                        example: hero.jpg
-                      ext:
-                        type: string
-                        example: jpg
-                      mime:
-                        type: string
-                        example: image/jpeg
-                      size_bytes:
-                        type: integer
-                        example: 235678
-                      width:
-                        type: integer
-                        example: 1920
-                      height:
-                        type: integer
-                        example: 1080
-                      duration_ms:
-                        type: string
-                        example: null
-                      title:
-                        type: string
-                        example: 'Hero image'
-                      alt:
-                        type: string
-                        example: 'Hero cover'
-                      collection:
-                        type: string
-                        example: uploads
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      deleted_at:
-                        type: string
-                        example: null
-                      preview_urls:
-                        type: object
-                        properties:
-                          thumbnail:
-                            type: string
-                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                      download_url:
-                        type: string
-                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
+                    type: array
+                    example:
+                      -
+                        id: 01HXZYXQJ123456789ABCDEF
+                        kind: image
+                        name: hero.jpg
+                        ext: jpg
+                        mime: image/jpeg
+                        size_bytes: 235678
+                        width: 1920
+                        height: 1080
+                        duration_ms: null
+                        title: 'Hero image'
+                        alt: 'Hero cover'
+                        collection: uploads
+                        created_at: '2025-01-10T12:00:00+00:00'
+                        updated_at: '2025-01-10T12:00:00+00:00'
+                        deleted_at: null
+                        preview_urls:
+                          thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
+                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 01HXZYXQJ123456789ABCDEF
+                        kind:
+                          type: string
+                          example: image
+                        name:
+                          type: string
+                          example: hero.jpg
+                        ext:
+                          type: string
+                          example: jpg
+                        mime:
+                          type: string
+                          example: image/jpeg
+                        size_bytes:
+                          type: integer
+                          example: 235678
+                        width:
+                          type: integer
+                          example: 1920
+                        height:
+                          type: integer
+                          example: 1080
+                        duration_ms:
+                          type: string
+                          example: null
+                        title:
+                          type: string
+                          example: 'Hero image'
+                        alt:
+                          type: string
+                          example: 'Hero cover'
+                        collection:
+                          type: string
+                          example: uploads
+                        created_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
+                        updated_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
+                        deleted_at:
+                          type: string
+                          example: null
+                        preview_urls:
+                          type: object
+                          properties:
+                            thumbnail:
+                              type: string
+                              example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
+                        download_url:
+                          type: string
+                          example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
         401:
           description: ''
           content:
@@ -3864,51 +3913,55 @@ paths:
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555665-1111111122223333-01
-        404:
+        422:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Deleted media with ID uuid-media does not exist.'
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: 'The media payload failed validation constraints.'
                   meta:
                     request_id: 11111111-2222-3333-4444-555555555566
-                    media_id: uuid-media
-                    trashed: true
+                    errors:
+                      ids:
+                        - 'The ids field is required.'
                   trace_id: 00-11111111222233334444555555555666-1111111122223333-01
                 properties:
                   type:
                     type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
+                    example: 'https://stupidcms.dev/problems/validation-error'
                   title:
                     type: string
-                    example: 'Media not found'
+                    example: 'Validation Error'
                   status:
                     type: integer
-                    example: 404
+                    example: 422
                   code:
                     type: string
-                    example: NOT_FOUND
+                    example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: 'Deleted media with ID uuid-media does not exist.'
+                    example: 'The media payload failed validation constraints.'
                   meta:
                     type: object
                     properties:
                       request_id:
                         type: string
                         example: 11111111-2222-3333-4444-555555555566
-                      media_id:
-                        type: string
-                        example: uuid-media
-                      trashed:
-                        type: boolean
-                        example: true
+                      errors:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            example:
+                              - 'The ids field is required.'
+                            items:
+                              type: string
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555666-1111111122223333-01
@@ -3958,20 +4011,28 @@ paths:
                     example: 00-66666666777788889999000000000005-6666666677778888-01
       tags:
         - 'Admin ▸ Media'
-    parameters:
-      -
-        in: path
-        name: media
-        description: 'UUID медиа.'
-        example: uuid-media
+      requestBody:
         required: true
-        schema:
-          type: string
-  '/api/v1/admin/media/{media}/force':
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: 'Массив идентификаторов удалённых медиа-файлов (1-100 элементов).'
+                  example:
+                    - 01HXZYXQJ123456789ABCDEF
+                    - 01HXZYXQJ987654321FEDCBA
+                  items:
+                    type: string
+              required:
+                - ids
+  /api/v1/admin/media/bulk/force:
     delete:
-      summary: 'Окончательное удаление медиа (hard delete).'
-      operationId: hardDelete
-      description: "Выполняет полное удаление медиа-файла: удаляет физические файлы\n(основной файл и все варианты) с диска, затем удаляет записи из БД.\nОперация необратима."
+      summary: 'Массовое окончательное удаление медиа-файлов.'
+      operationId: ''
+      description: "Выполняет полное удаление медиа-файлов по массиву идентификаторов:\nудаляет физические файлы (основной файл и все варианты) с диска,\nзатем удаляет записи из БД. Операция необратима."
       parameters: []
       responses:
         204:
@@ -4040,7 +4101,6 @@ paths:
                   detail: 'You do not have permission to force delete media.'
                   meta:
                     request_id: 11111111-2222-3333-4444-555555555568
-                    media_id: uuid-media
                   trace_id: 00-11111111222233334444555555555668-1111111122223333-01
                 properties:
                   type:
@@ -4064,53 +4124,58 @@ paths:
                       request_id:
                         type: string
                         example: 11111111-2222-3333-4444-555555555568
-                      media_id:
-                        type: string
-                        example: uuid-media
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555668-1111111122223333-01
-        404:
+        422:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Media with ID uuid-media does not exist.'
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: 'The media payload failed validation constraints.'
                   meta:
                     request_id: 11111111-2222-3333-4444-555555555569
-                    media_id: uuid-media
+                    errors:
+                      ids:
+                        - 'The ids field is required.'
                   trace_id: 00-11111111222233334444555555555669-1111111122223333-01
                 properties:
                   type:
                     type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
+                    example: 'https://stupidcms.dev/problems/validation-error'
                   title:
                     type: string
-                    example: 'Media not found'
+                    example: 'Validation Error'
                   status:
                     type: integer
-                    example: 404
+                    example: 422
                   code:
                     type: string
-                    example: NOT_FOUND
+                    example: VALIDATION_ERROR
                   detail:
                     type: string
-                    example: 'Media with ID uuid-media does not exist.'
+                    example: 'The media payload failed validation constraints.'
                   meta:
                     type: object
                     properties:
                       request_id:
                         type: string
                         example: 11111111-2222-3333-4444-555555555569
-                      media_id:
-                        type: string
-                        example: uuid-media
+                      errors:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            example:
+                              - 'The ids field is required.'
+                            items:
+                              type: string
                   trace_id:
                     type: string
                     example: 00-11111111222233334444555555555669-1111111122223333-01
@@ -4160,15 +4225,23 @@ paths:
                     example: 00-66666666777788889999000000000006-6666666677778888-01
       tags:
         - 'Admin ▸ Media'
-    parameters:
-      -
-        in: path
-        name: media
-        description: 'UUID медиа.'
-        example: uuid-media
+      requestBody:
         required: true
-        schema:
-          type: string
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: 'Массив идентификаторов медиа-файлов (1-100 элементов).'
+                  example:
+                    - 01HXZYXQJ123456789ABCDEF
+                    - 01HXZYXQJ987654321FEDCBA
+                  items:
+                    type: string
+              required:
+                - ids
   '/api/v1/admin/options/{namespace}':
     get:
       summary: 'Список опций по namespace.'
@@ -6131,7 +6204,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -8384,7 +8457,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10279,7 +10352,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 options_json:
                   type: object
@@ -10354,7 +10427,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10640,7 +10713,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T16:46:49'
+                  example: '2025-11-17T17:34:25'
                   nullable: true
                 to:
                   type: string

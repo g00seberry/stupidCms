@@ -4686,24 +4686,18 @@
             }
         },
         {
-            "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}",
+            "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
             "type": "http_endpoint",
-            "name": "admin.v1.media.destroy",
+            "name": "admin.v1.media.bulkDestroy",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
-            "summary": "DELETE /api/v1/admin/media/{media} (api)",
+            "summary": "DELETE /api/v1/admin/media/bulk (api)",
             "details": null,
             "meta": {
                 "method": "DELETE",
-                "uri": "/api/v1/admin/media/{media}",
+                "uri": "/api/v1/admin/media/bulk",
                 "group": "api",
                 "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
+                "parameters": [],
                 "responses": []
             },
             "related": [],
@@ -4711,28 +4705,23 @@
                 "0": "api",
                 "2": "admin",
                 "4": "v1",
-                "6": "media"
+                "6": "media",
+                "7": "bulk"
             }
         },
         {
-            "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+            "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
             "type": "http_endpoint",
-            "name": "admin.v1.media.restore",
+            "name": "admin.v1.media.bulkRestore",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
-            "summary": "POST /api/v1/admin/media/{media}/restore (api)",
+            "summary": "POST /api/v1/admin/media/bulk/restore (api)",
             "details": null,
             "meta": {
                 "method": "POST",
-                "uri": "/api/v1/admin/media/{media}/restore",
+                "uri": "/api/v1/admin/media/bulk/restore",
                 "group": "api",
                 "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
+                "parameters": [],
                 "responses": []
             },
             "related": [],
@@ -4741,28 +4730,23 @@
                 "2": "admin",
                 "4": "v1",
                 "6": "media",
-                "7": "restore"
+                "7": "bulk",
+                "8": "restore"
             }
         },
         {
-            "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+            "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
             "type": "http_endpoint",
-            "name": "admin.v1.media.forceDestroy",
+            "name": "admin.v1.media.bulkForceDestroy",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
-            "summary": "DELETE /api/v1/admin/media/{media}/force (api)",
+            "summary": "DELETE /api/v1/admin/media/bulk/force (api)",
             "details": null,
             "meta": {
                 "method": "DELETE",
-                "uri": "/api/v1/admin/media/{media}/force",
+                "uri": "/api/v1/admin/media/bulk/force",
                 "group": "api",
                 "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
+                "parameters": [],
                 "responses": []
             },
             "related": [],
@@ -4771,7 +4755,8 @@
                 "2": "admin",
                 "4": "v1",
                 "6": "media",
-                "7": "force"
+                "7": "bulk",
+                "8": "force"
             }
         },
         {
@@ -9713,24 +9698,18 @@
                 }
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.destroy",
+                "name": "admin.v1.media.bulkDestroy",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
-                "summary": "DELETE /api/v1/admin/media/{media} (api)",
+                "summary": "DELETE /api/v1/admin/media/bulk (api)",
                 "details": null,
                 "meta": {
                     "method": "DELETE",
-                    "uri": "/api/v1/admin/media/{media}",
+                    "uri": "/api/v1/admin/media/bulk",
                     "group": "api",
                     "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
+                    "parameters": [],
                     "responses": []
                 },
                 "related": [],
@@ -9738,28 +9717,23 @@
                     "0": "api",
                     "2": "admin",
                     "4": "v1",
-                    "6": "media"
+                    "6": "media",
+                    "7": "bulk"
                 }
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.restore",
+                "name": "admin.v1.media.bulkRestore",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
-                "summary": "POST /api/v1/admin/media/{media}/restore (api)",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)",
                 "details": null,
                 "meta": {
                     "method": "POST",
-                    "uri": "/api/v1/admin/media/{media}/restore",
+                    "uri": "/api/v1/admin/media/bulk/restore",
                     "group": "api",
                     "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
+                    "parameters": [],
                     "responses": []
                 },
                 "related": [],
@@ -9768,28 +9742,23 @@
                     "2": "admin",
                     "4": "v1",
                     "6": "media",
-                    "7": "restore"
+                    "7": "bulk",
+                    "8": "restore"
                 }
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.forceDestroy",
+                "name": "admin.v1.media.bulkForceDestroy",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
-                "summary": "DELETE /api/v1/admin/media/{media}/force (api)",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)",
                 "details": null,
                 "meta": {
                     "method": "DELETE",
-                    "uri": "/api/v1/admin/media/{media}/force",
+                    "uri": "/api/v1/admin/media/bulk/force",
                     "group": "api",
                     "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
+                    "parameters": [],
                     "responses": []
                 },
                 "related": [],
@@ -9798,7 +9767,8 @@
                     "2": "admin",
                     "4": "v1",
                     "6": "media",
-                    "7": "force"
+                    "7": "bulk",
+                    "8": "force"
                 }
             },
             {
@@ -10304,22 +10274,22 @@
                 "summary": "PUT /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.destroy",
-                "summary": "DELETE /api/v1/admin/media/{media} (api)"
+                "name": "admin.v1.media.bulkDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.restore",
-                "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+                "name": "admin.v1.media.bulkRestore",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.forceDestroy",
-                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+                "name": "admin.v1.media.bulkForceDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             }
         ],
         "mediametadata": [
@@ -11684,22 +11654,22 @@
                 "summary": "PUT /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.destroy",
-                "summary": "DELETE /api/v1/admin/media/{media} (api)"
+                "name": "admin.v1.media.bulkDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.restore",
-                "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+                "name": "admin.v1.media.bulkRestore",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.forceDestroy",
-                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+                "name": "admin.v1.media.bulkForceDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
@@ -12040,22 +12010,22 @@
                 "summary": "PUT /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.destroy",
-                "summary": "DELETE /api/v1/admin/media/{media} (api)"
+                "name": "admin.v1.media.bulkDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.restore",
-                "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+                "name": "admin.v1.media.bulkRestore",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.forceDestroy",
-                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+                "name": "admin.v1.media.bulkForceDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
@@ -12398,22 +12368,22 @@
                 "summary": "PUT /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.destroy",
-                "summary": "DELETE /api/v1/admin/media/{media} (api)"
+                "name": "admin.v1.media.bulkDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.restore",
-                "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+                "name": "admin.v1.media.bulkRestore",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.forceDestroy",
-                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+                "name": "admin.v1.media.bulkForceDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
@@ -12656,10 +12626,10 @@
                 "summary": "POST /api/v1/admin/entries/{id}/restore (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/media/{media}/restore",
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.restore",
-                "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+                "name": "admin.v1.media.bulkRestore",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)"
             },
             {
                 "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
@@ -12784,12 +12754,32 @@
                 "summary": "GET /api/v1/admin/media/{media}/download (api)"
             }
         ],
+        "bulk": [
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk/restore",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkRestore",
+                "summary": "POST /api/v1/admin/media/bulk/restore (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkForceDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
+            }
+        ],
         "force": [
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk/force",
                 "type": "http_endpoint",
-                "name": "admin.v1.media.forceDestroy",
-                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+                "name": "admin.v1.media.bulkForceDestroy",
+                "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             }
         ],
         "reindex": [
@@ -12809,5 +12799,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T16:46:58+00:00"
+    "generated_at": "2025-11-17T17:34:30+00:00"
 }

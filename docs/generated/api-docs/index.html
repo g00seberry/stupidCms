@@ -126,14 +126,14 @@
                                                                                 <li class="tocify-item level-2" data-unique="admin-media-PUTapi-v1-admin-media--media-">
                                 <a href="#admin-media-PUTapi-v1-admin-media--media-">Обновление метаданных медиа.</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="admin-media-DELETEapi-v1-admin-media--media-">
-                                <a href="#admin-media-DELETEapi-v1-admin-media--media-">Удаление медиа (soft delete).</a>
+                                                                                <li class="tocify-item level-2" data-unique="admin-media-DELETEapi-v1-admin-media-bulk">
+                                <a href="#admin-media-DELETEapi-v1-admin-media-bulk">Массовое мягкое удаление медиа-файлов.</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="admin-media-POSTapi-v1-admin-media--media--restore">
-                                <a href="#admin-media-POSTapi-v1-admin-media--media--restore">Восстановление удалённого медиа.</a>
+                                                                                <li class="tocify-item level-2" data-unique="admin-media-POSTapi-v1-admin-media-bulk-restore">
+                                <a href="#admin-media-POSTapi-v1-admin-media-bulk-restore">Массовое восстановление удалённых медиа-файлов.</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="admin-media-DELETEapi-v1-admin-media--media--force">
-                                <a href="#admin-media-DELETEapi-v1-admin-media--media--force">Окончательное удаление медиа (hard delete).</a>
+                                                                                <li class="tocify-item level-2" data-unique="admin-media-DELETEapi-v1-admin-media-bulk-force">
+                                <a href="#admin-media-DELETEapi-v1-admin-media-bulk-force">Массовое окончательное удаление медиа-файлов.</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -364,7 +364,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-17 16:46</li>
+        <li>Last updated: 2025-11-17 17:34</li>
     </ul>
 </div>
 
@@ -603,10 +603,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-17T16:46:49\",
+    \"date_from\": \"2025-11-17T17:34:25\",
     \"date_to\": \"2106-12-17\",
-    \"date_field\": \"updated\",
-    \"sort\": \"published_at.asc\",
+    \"date_field\": \"published\",
+    \"sort\": \"title.desc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -646,10 +646,10 @@ let body = {
     "term": [
         17
     ],
-    "date_from": "2025-11-17T16:46:49",
+    "date_from": "2025-11-17T17:34:25",
     "date_to": "2106-12-17",
-    "date_field": "updated",
-    "sort": "published_at.asc",
+    "date_field": "published",
+    "sort": "title.desc",
     "per_page": 13
 };
 
@@ -691,10 +691,10 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-17T16:46:49',
+            'date_from' =&gt; '2025-11-17T17:34:25',
             'date_to' =&gt; '2106-12-17',
-            'date_field' =&gt; 'updated',
-            'sort' =&gt; 'published_at.asc',
+            'date_field' =&gt; 'published',
+            'sort' =&gt; 'title.desc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -1067,10 +1067,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-17T16:46:49"
+               value="2025-11-17T17:34:25"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-17T16:46:49</code></p>
+<p>Must be a valid date. Example: <code>2025-11-17T17:34:25</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -1091,10 +1091,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_field"                data-endpoint="GETapi-v1-admin-entries"
-               value="updated"
+               value="published"
                data-component="body">
     <br>
-<p>Example: <code>updated</code></p>
+<p>Example: <code>published</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated</code></li> <li><code>published</code></li></ul>
         </div>
@@ -1105,10 +1105,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="published_at.asc"
+               value="title.desc"
                data-component="body">
     <br>
-<p>Example: <code>published_at.asc</code></p>
+<p>Example: <code>title.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -3256,11 +3256,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"audio\",
+    \"kind\": \"document\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
-    \"deleted\": \"only\",
-    \"sort\": \"mime\",
+    \"deleted\": \"with\",
+    \"sort\": \"size_bytes\",
     \"order\": \"desc\",
     \"page\": 3,
     \"per_page\": 21
@@ -3294,11 +3294,11 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "audio",
+    "kind": "document",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
-    "deleted": "only",
-    "sort": "mime",
+    "deleted": "with",
+    "sort": "size_bytes",
     "order": "desc",
     "page": 3,
     "per_page": 21
@@ -3334,11 +3334,11 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'audio',
+            'kind' =&gt; 'document',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
-            'deleted' =&gt; 'only',
-            'sort' =&gt; 'mime',
+            'deleted' =&gt; 'with',
+            'sort' =&gt; 'size_bytes',
             'order' =&gt; 'desc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
@@ -3631,10 +3631,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="audio"
+               value="document"
                data-component="body">
     <br>
-<p>Example: <code>audio</code></p>
+<p>Example: <code>document</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -3669,10 +3669,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-media"
-               value="only"
+               value="with"
                data-component="body">
     <br>
-<p>Example: <code>only</code></p>
+<p>Example: <code>with</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -3683,10 +3683,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-media"
-               value="mime"
+               value="size_bytes"
                data-component="body">
     <br>
-<p>Example: <code>mime</code></p>
+<p>Example: <code>size_bytes</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>size_bytes</code></li> <li><code>mime</code></li></ul>
         </div>
@@ -4568,29 +4568,37 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="admin-media-DELETEapi-v1-admin-media--media-">Удаление медиа (soft delete).</h2>
+                    <h2 id="admin-media-DELETEapi-v1-admin-media-bulk">Массовое мягкое удаление медиа-файлов.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Выполняет мягкое удаление медиа-файла и отправляет событие MediaDeleted.</p>
+<p>Выполняет мягкое удаление медиа-файлов по массиву идентификаторов
+и отправляет событие MediaDeleted для каждого удалённого файла.</p>
 
-<span id="example-requests-DELETEapi-v1-admin-media--media-">
+<span id="example-requests-DELETEapi-v1-admin-media-bulk">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/v1/api/v1/admin/media/uuid-media" \
+    "http://localhost/api/v1/api/v1/admin/media/bulk" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"ids\": [
+        \"01HXZYXQJ123456789ABCDEF\",
+        \"01HXZYXQJ987654321FEDCBA\"
+    ]
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/media/uuid-media"
+    "http://localhost/api/v1/api/v1/admin/media/bulk"
 );
 
 const headers = {
@@ -4599,15 +4607,23 @@ const headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "ids": [
+        "01HXZYXQJ123456789ABCDEF",
+        "01HXZYXQJ987654321FEDCBA"
+    ]
+};
+
 fetch(url, {
     method: "DELETE",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/media/uuid-media';
+$url = 'http://localhost/api/v1/api/v1/admin/media/bulk';
 $response = $client-&gt;delete(
     $url,
     [
@@ -4616,6 +4632,12 @@ $response = $client-&gt;delete(
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
+        'json' =&gt; [
+            'ids' =&gt; [
+                '01HXZYXQJ123456789ABCDEF',
+                '01HXZYXQJ987654321FEDCBA',
+            ],
+        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -4623,7 +4645,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 </span>
 
-<span id="example-responses-DELETEapi-v1-admin-media--media-">
+<span id="example-responses-DELETEapi-v1-admin-media-bulk">
             <blockquote>
             <p>Example response (204):</p>
         </blockquote>
@@ -4649,19 +4671,23 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (422):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
-    &quot;title&quot;: &quot;Media not found&quot;,
-    &quot;status&quot;: 404,
-    &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The media payload failed validation constraints.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555563&quot;,
-        &quot;media_id&quot;: &quot;uuid-media&quot;
+        &quot;errors&quot;: {
+            &quot;ids&quot;: [
+                &quot;The ids field is required.&quot;
+            ]
+        }
     },
     &quot;trace_id&quot;: &quot;00-11111111222233334444555555555663-1111111122223333-01&quot;
 }</code>
@@ -4685,43 +4711,43 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
     </span>
-<span id="execution-results-DELETEapi-v1-admin-media--media-" hidden>
+<span id="execution-results-DELETEapi-v1-admin-media-bulk" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-DELETEapi-v1-admin-media--media-"></span>:
+                id="execution-response-status-DELETEapi-v1-admin-media-bulk"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-media--media-"
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-media-bulk"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-DELETEapi-v1-admin-media--media-" hidden>
+<span id="execution-error-DELETEapi-v1-admin-media-bulk" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-DELETEapi-v1-admin-media--media-">
+    <pre><code id="execution-error-message-DELETEapi-v1-admin-media-bulk">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-DELETEapi-v1-admin-media--media-" data-method="DELETE"
-      data-path="api/v1/admin/media/{media}"
+<form id="form-DELETEapi-v1-admin-media-bulk" data-method="DELETE"
+      data-path="api/v1/admin/media/bulk"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-media--media-', this);">
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-media-bulk', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-DELETEapi-v1-admin-media--media-"
-                    onclick="tryItOut('DELETEapi-v1-admin-media--media-');">Try it out ⚡
+                    id="btn-tryout-DELETEapi-v1-admin-media-bulk"
+                    onclick="tryItOut('DELETEapi-v1-admin-media-bulk');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-DELETEapi-v1-admin-media--media-"
-                    onclick="cancelTryOut('DELETEapi-v1-admin-media--media-');" hidden>Cancel 🛑
+                    id="btn-canceltryout-DELETEapi-v1-admin-media-bulk"
+                    onclick="cancelTryOut('DELETEapi-v1-admin-media-bulk');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-DELETEapi-v1-admin-media--media-"
+                    id="btn-executetryout-DELETEapi-v1-admin-media-bulk"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -4729,7 +4755,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-red">DELETE</small>
-            <b><code>api/v1/admin/media/{media}</code></b>
+            <b><code>api/v1/admin/media/bulk</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -4738,7 +4764,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-admin-media--media-"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-admin-media-bulk"
                value="Bearer Bearer {JWT}"
                data-component="header">
     <br>
@@ -4750,7 +4776,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-media--media-"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-media-bulk"
                value="application/json"
                data-component="header">
     <br>
@@ -4762,50 +4788,69 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="DELETEapi-v1-admin-media--media-"
+                              name="Accept"                data-endpoint="DELETEapi-v1-admin-media-bulk"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>media</code></b>&nbsp;&nbsp;
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>ids</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Массив идентификаторов медиа-файлов (1-100 элементов).</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>*</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="media"                data-endpoint="DELETEapi-v1-admin-media--media-"
-               value="uuid-media"
-               data-component="url">
+                              name="ids.*"                data-endpoint="DELETEapi-v1-admin-media-bulk"
+               value="01HXZYXQJ123456789ABCDEF"
+               data-component="body">
     <br>
-<p>UUID медиа. Example: <code>uuid-media</code></p>
-            </div>
-                    </form>
+<p>ULID идентификатор медиа-файла (26 символов). Example: <code>01HXZYXQJ123456789ABCDEF</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
 
-                    <h2 id="admin-media-POSTapi-v1-admin-media--media--restore">Восстановление удалённого медиа.</h2>
+                    <h2 id="admin-media-POSTapi-v1-admin-media-bulk-restore">Массовое восстановление удалённых медиа-файлов.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
+<p>Выполняет восстановление мягко удалённых медиа-файлов по массиву идентификаторов.</p>
 
-
-<span id="example-requests-POSTapi-v1-admin-media--media--restore">
+<span id="example-requests-POSTapi-v1-admin-media-bulk-restore">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/v1/api/v1/admin/media/uuid-media/restore" \
+    "http://localhost/api/v1/api/v1/admin/media/bulk/restore" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"ids\": [
+        \"01HXZYXQJ123456789ABCDEF\",
+        \"01HXZYXQJ987654321FEDCBA\"
+    ]
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/media/uuid-media/restore"
+    "http://localhost/api/v1/api/v1/admin/media/bulk/restore"
 );
 
 const headers = {
@@ -4814,15 +4859,23 @@ const headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "ids": [
+        "01HXZYXQJ123456789ABCDEF",
+        "01HXZYXQJ987654321FEDCBA"
+    ]
+};
+
 fetch(url, {
     method: "POST",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/media/uuid-media/restore';
+$url = 'http://localhost/api/v1/api/v1/admin/media/bulk/restore';
 $response = $client-&gt;post(
     $url,
     [
@@ -4831,6 +4884,12 @@ $response = $client-&gt;post(
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
+        'json' =&gt; [
+            'ids' =&gt; [
+                '01HXZYXQJ123456789ABCDEF',
+                '01HXZYXQJ987654321FEDCBA',
+            ],
+        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -4838,34 +4897,36 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 </span>
 
-<span id="example-responses-POSTapi-v1-admin-media--media--restore">
+<span id="example-responses-POSTapi-v1-admin-media-bulk-restore">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: {
-        &quot;id&quot;: &quot;uuid-media&quot;,
-        &quot;kind&quot;: &quot;image&quot;,
-        &quot;name&quot;: &quot;hero.jpg&quot;,
-        &quot;ext&quot;: &quot;jpg&quot;,
-        &quot;mime&quot;: &quot;image/jpeg&quot;,
-        &quot;size_bytes&quot;: 235678,
-        &quot;width&quot;: 1920,
-        &quot;height&quot;: 1080,
-        &quot;duration_ms&quot;: null,
-        &quot;title&quot;: &quot;Hero image&quot;,
-        &quot;alt&quot;: &quot;Hero cover&quot;,
-        &quot;collection&quot;: &quot;uploads&quot;,
-        &quot;created_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;,
-        &quot;updated_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;,
-        &quot;deleted_at&quot;: null,
-        &quot;preview_urls&quot;: {
-            &quot;thumbnail&quot;: &quot;https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail&quot;
-        },
-        &quot;download_url&quot;: &quot;https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download&quot;
-    }
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: &quot;01HXZYXQJ123456789ABCDEF&quot;,
+            &quot;kind&quot;: &quot;image&quot;,
+            &quot;name&quot;: &quot;hero.jpg&quot;,
+            &quot;ext&quot;: &quot;jpg&quot;,
+            &quot;mime&quot;: &quot;image/jpeg&quot;,
+            &quot;size_bytes&quot;: 235678,
+            &quot;width&quot;: 1920,
+            &quot;height&quot;: 1080,
+            &quot;duration_ms&quot;: null,
+            &quot;title&quot;: &quot;Hero image&quot;,
+            &quot;alt&quot;: &quot;Hero cover&quot;,
+            &quot;collection&quot;: &quot;uploads&quot;,
+            &quot;created_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;,
+            &quot;updated_at&quot;: &quot;2025-01-10T12:00:00+00:00&quot;,
+            &quot;deleted_at&quot;: null,
+            &quot;preview_urls&quot;: {
+                &quot;thumbnail&quot;: &quot;https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail&quot;
+            },
+            &quot;download_url&quot;: &quot;https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download&quot;
+        }
+    ]
 }</code>
  </pre>
             <blockquote>
@@ -4887,20 +4948,23 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (422):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
-    &quot;title&quot;: &quot;Media not found&quot;,
-    &quot;status&quot;: 404,
-    &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Deleted media with ID uuid-media does not exist.&quot;,
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The media payload failed validation constraints.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555566&quot;,
-        &quot;media_id&quot;: &quot;uuid-media&quot;,
-        &quot;trashed&quot;: true
+        &quot;errors&quot;: {
+            &quot;ids&quot;: [
+                &quot;The ids field is required.&quot;
+            ]
+        }
     },
     &quot;trace_id&quot;: &quot;00-11111111222233334444555555555666-1111111122223333-01&quot;
 }</code>
@@ -4924,43 +4988,43 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
     </span>
-<span id="execution-results-POSTapi-v1-admin-media--media--restore" hidden>
+<span id="execution-results-POSTapi-v1-admin-media-bulk-restore" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-POSTapi-v1-admin-media--media--restore"></span>:
+                id="execution-response-status-POSTapi-v1-admin-media-bulk-restore"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-v1-admin-media--media--restore"
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-admin-media-bulk-restore"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-POSTapi-v1-admin-media--media--restore" hidden>
+<span id="execution-error-POSTapi-v1-admin-media-bulk-restore" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-v1-admin-media--media--restore">
+    <pre><code id="execution-error-message-POSTapi-v1-admin-media-bulk-restore">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-POSTapi-v1-admin-media--media--restore" data-method="POST"
-      data-path="api/v1/admin/media/{media}/restore"
+<form id="form-POSTapi-v1-admin-media-bulk-restore" data-method="POST"
+      data-path="api/v1/admin/media/bulk/restore"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-admin-media--media--restore', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-admin-media-bulk-restore', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-v1-admin-media--media--restore"
-                    onclick="tryItOut('POSTapi-v1-admin-media--media--restore');">Try it out ⚡
+                    id="btn-tryout-POSTapi-v1-admin-media-bulk-restore"
+                    onclick="tryItOut('POSTapi-v1-admin-media-bulk-restore');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-v1-admin-media--media--restore"
-                    onclick="cancelTryOut('POSTapi-v1-admin-media--media--restore');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-v1-admin-media-bulk-restore"
+                    onclick="cancelTryOut('POSTapi-v1-admin-media-bulk-restore');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-v1-admin-media--media--restore"
+                    id="btn-executetryout-POSTapi-v1-admin-media-bulk-restore"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -4968,7 +5032,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-black">POST</small>
-            <b><code>api/v1/admin/media/{media}/restore</code></b>
+            <b><code>api/v1/admin/media/bulk/restore</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -4977,7 +5041,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-admin-media--media--restore"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-admin-media-bulk-restore"
                value="Bearer Bearer {JWT}"
                data-component="header">
     <br>
@@ -4989,7 +5053,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-admin-media--media--restore"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-admin-media-bulk-restore"
                value="application/json"
                data-component="header">
     <br>
@@ -5001,52 +5065,71 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-v1-admin-media--media--restore"
+                              name="Accept"                data-endpoint="POSTapi-v1-admin-media-bulk-restore"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>media</code></b>&nbsp;&nbsp;
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>ids</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Массив идентификаторов удалённых медиа-файлов (1-100 элементов).</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>*</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="media"                data-endpoint="POSTapi-v1-admin-media--media--restore"
-               value="uuid-media"
-               data-component="url">
+                              name="ids.*"                data-endpoint="POSTapi-v1-admin-media-bulk-restore"
+               value="01HXZYXQJ123456789ABCDEF"
+               data-component="body">
     <br>
-<p>UUID медиа. Example: <code>uuid-media</code></p>
-            </div>
-                    </form>
+<p>ULID идентификатор медиа-файла (26 символов). Example: <code>01HXZYXQJ123456789ABCDEF</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
 
-                    <h2 id="admin-media-DELETEapi-v1-admin-media--media--force">Окончательное удаление медиа (hard delete).</h2>
+                    <h2 id="admin-media-DELETEapi-v1-admin-media-bulk-force">Массовое окончательное удаление медиа-файлов.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Выполняет полное удаление медиа-файла: удаляет физические файлы
-(основной файл и все варианты) с диска, затем удаляет записи из БД.
-Операция необратима.</p>
+<p>Выполняет полное удаление медиа-файлов по массиву идентификаторов:
+удаляет физические файлы (основной файл и все варианты) с диска,
+затем удаляет записи из БД. Операция необратима.</p>
 
-<span id="example-requests-DELETEapi-v1-admin-media--media--force">
+<span id="example-requests-DELETEapi-v1-admin-media-bulk-force">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/v1/api/v1/admin/media/uuid-media/force" \
+    "http://localhost/api/v1/api/v1/admin/media/bulk/force" \
     --header "Authorization: Bearer Bearer {JWT}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"ids\": [
+        \"01HXZYXQJ123456789ABCDEF\",
+        \"01HXZYXQJ987654321FEDCBA\"
+    ]
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/media/uuid-media/force"
+    "http://localhost/api/v1/api/v1/admin/media/bulk/force"
 );
 
 const headers = {
@@ -5055,15 +5138,23 @@ const headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "ids": [
+        "01HXZYXQJ123456789ABCDEF",
+        "01HXZYXQJ987654321FEDCBA"
+    ]
+};
+
 fetch(url, {
     method: "DELETE",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/media/uuid-media/force';
+$url = 'http://localhost/api/v1/api/v1/admin/media/bulk/force';
 $response = $client-&gt;delete(
     $url,
     [
@@ -5072,6 +5163,12 @@ $response = $client-&gt;delete(
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
+        'json' =&gt; [
+            'ids' =&gt; [
+                '01HXZYXQJ123456789ABCDEF',
+                '01HXZYXQJ987654321FEDCBA',
+            ],
+        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -5079,7 +5176,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 </span>
 
-<span id="example-responses-DELETEapi-v1-admin-media--media--force">
+<span id="example-responses-DELETEapi-v1-admin-media-bulk-force">
             <blockquote>
             <p>Example response (204):</p>
         </blockquote>
@@ -5116,26 +5213,29 @@ print_r(json_decode((string) $body));</code></pre></div>
     &quot;code&quot;: &quot;FORBIDDEN&quot;,
     &quot;detail&quot;: &quot;You do not have permission to force delete media.&quot;,
     &quot;meta&quot;: {
-        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555568&quot;,
-        &quot;media_id&quot;: &quot;uuid-media&quot;
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555568&quot;
     },
     &quot;trace_id&quot;: &quot;00-11111111222233334444555555555668-1111111122223333-01&quot;
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (422):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
-    &quot;title&quot;: &quot;Media not found&quot;,
-    &quot;status&quot;: 404,
-    &quot;code&quot;: &quot;NOT_FOUND&quot;,
-    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/validation-error&quot;,
+    &quot;title&quot;: &quot;Validation Error&quot;,
+    &quot;status&quot;: 422,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;detail&quot;: &quot;The media payload failed validation constraints.&quot;,
     &quot;meta&quot;: {
         &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555569&quot;,
-        &quot;media_id&quot;: &quot;uuid-media&quot;
+        &quot;errors&quot;: {
+            &quot;ids&quot;: [
+                &quot;The ids field is required.&quot;
+            ]
+        }
     },
     &quot;trace_id&quot;: &quot;00-11111111222233334444555555555669-1111111122223333-01&quot;
 }</code>
@@ -5159,43 +5259,43 @@ print_r(json_decode((string) $body));</code></pre></div>
 }</code>
  </pre>
     </span>
-<span id="execution-results-DELETEapi-v1-admin-media--media--force" hidden>
+<span id="execution-results-DELETEapi-v1-admin-media-bulk-force" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-DELETEapi-v1-admin-media--media--force"></span>:
+                id="execution-response-status-DELETEapi-v1-admin-media-bulk-force"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-media--media--force"
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-media-bulk-force"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-DELETEapi-v1-admin-media--media--force" hidden>
+<span id="execution-error-DELETEapi-v1-admin-media-bulk-force" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-DELETEapi-v1-admin-media--media--force">
+    <pre><code id="execution-error-message-DELETEapi-v1-admin-media-bulk-force">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-DELETEapi-v1-admin-media--media--force" data-method="DELETE"
-      data-path="api/v1/admin/media/{media}/force"
+<form id="form-DELETEapi-v1-admin-media-bulk-force" data-method="DELETE"
+      data-path="api/v1/admin/media/bulk/force"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-media--media--force', this);">
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-media-bulk-force', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-DELETEapi-v1-admin-media--media--force"
-                    onclick="tryItOut('DELETEapi-v1-admin-media--media--force');">Try it out ⚡
+                    id="btn-tryout-DELETEapi-v1-admin-media-bulk-force"
+                    onclick="tryItOut('DELETEapi-v1-admin-media-bulk-force');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-DELETEapi-v1-admin-media--media--force"
-                    onclick="cancelTryOut('DELETEapi-v1-admin-media--media--force');" hidden>Cancel 🛑
+                    id="btn-canceltryout-DELETEapi-v1-admin-media-bulk-force"
+                    onclick="cancelTryOut('DELETEapi-v1-admin-media-bulk-force');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-DELETEapi-v1-admin-media--media--force"
+                    id="btn-executetryout-DELETEapi-v1-admin-media-bulk-force"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -5203,7 +5303,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-red">DELETE</small>
-            <b><code>api/v1/admin/media/{media}/force</code></b>
+            <b><code>api/v1/admin/media/bulk/force</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -5212,7 +5312,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-admin-media--media--force"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-admin-media-bulk-force"
                value="Bearer Bearer {JWT}"
                data-component="header">
     <br>
@@ -5224,7 +5324,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-media--media--force"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-media-bulk-force"
                value="application/json"
                data-component="header">
     <br>
@@ -5236,26 +5336,38 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="DELETEapi-v1-admin-media--media--force"
+                              name="Accept"                data-endpoint="DELETEapi-v1-admin-media-bulk-force"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>media</code></b>&nbsp;&nbsp;
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>ids</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+<br>
+<p>Массив идентификаторов медиа-файлов (1-100 элементов).</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>*</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="media"                data-endpoint="DELETEapi-v1-admin-media--media--force"
-               value="uuid-media"
-               data-component="url">
+                              name="ids.*"                data-endpoint="DELETEapi-v1-admin-media-bulk-force"
+               value="01HXZYXQJ123456789ABCDEF"
+               data-component="body">
     <br>
-<p>UUID медиа. Example: <code>uuid-media</code></p>
-            </div>
-                    </form>
+<p>ULID идентификатор медиа-файла (26 символов). Example: <code>01HXZYXQJ123456789ABCDEF</code></p>
+                    </div>
+                                    </details>
+        </div>
+        </form>
 
                 <h1 id="admin-options">Admin ▸ Options</h1>
 
@@ -7448,7 +7560,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"true\",
+    \"enabled\": \"false\",
     \"page\": 2,
     \"per_page\": 13,
     \"sort\": \"version\",
@@ -7480,7 +7592,7 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "true",
+    "enabled": "false",
     "page": 2,
     "per_page": 13,
     "sort": "version",
@@ -7514,7 +7626,7 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'true',
+            'enabled' =&gt; 'false',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
             'sort' =&gt; 'version',
@@ -7760,10 +7872,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="true"
+               value="false"
                data-component="body">
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -10158,7 +10270,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"label.asc\"
+    \"sort\": \"created_at.asc\"
 }"
 </code></pre></div>
 
@@ -10185,7 +10297,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "label.asc"
+    "sort": "created_at.asc"
 };
 
 fetch(url, {
@@ -10214,7 +10326,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'label.asc',
+            'sort' =&gt; 'created_at.asc',
         ],
     ]
 );
@@ -10431,10 +10543,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="label.asc"
+               value="created_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>label.asc</code></p>
+<p>Example: <code>created_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
@@ -13836,7 +13948,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"label\": \"vmqeopfuudtdsufvyvddq\",
-    \"hierarchical\": true
+    \"hierarchical\": false
 }"
 </code></pre></div>
 
@@ -13853,7 +13965,7 @@ const headers = {
 
 let body = {
     "label": "vmqeopfuudtdsufvyvddq",
-    "hierarchical": true
+    "hierarchical": false
 };
 
 fetch(url, {
@@ -13875,7 +13987,7 @@ $response = $client-&gt;put(
         ],
         'json' =&gt; [
             'label' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'hierarchical' =&gt; true,
+            'hierarchical' =&gt; false,
         ],
     ]
 );
@@ -14003,7 +14115,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>options_json</code></b>&nbsp;&nbsp;
@@ -14316,7 +14428,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"name.asc\"
+    \"sort\": \"created_at.asc\"
 }"
 </code></pre></div>
 
@@ -14334,7 +14446,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "name.asc"
+    "sort": "created_at.asc"
 };
 
 fetch(url, {
@@ -14357,7 +14469,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'name.asc',
+            'sort' =&gt; 'created_at.asc',
         ],
     ]
 );
@@ -14484,10 +14596,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="name.asc"
+               value="created_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>name.asc</code></p>
+<p>Example: <code>created_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li></ul>
         </div>
@@ -14990,7 +15102,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"5627:7\"
     ],
-    \"from\": \"2025-11-17T16:46:49\",
+    \"from\": \"2025-11-17T17:34:25\",
     \"to\": \"2106-12-17\",
     \"page\": 45,
     \"per_page\": 16
@@ -15028,7 +15140,7 @@ let body = {
     "term": [
         "5627:7"
     ],
-    "from": "2025-11-17T16:46:49",
+    "from": "2025-11-17T17:34:25",
     "to": "2106-12-17",
     "page": 45,
     "per_page": 16
@@ -15068,7 +15180,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 '5627:7',
             ],
-            'from' =&gt; '2025-11-17T16:46:49',
+            'from' =&gt; '2025-11-17T17:34:25',
             'to' =&gt; '2106-12-17',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -15315,10 +15427,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-17T16:46:49"
+               value="2025-11-17T17:34:25"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-17T16:46:49</code></p>
+<p>Must be a valid date. Example: <code>2025-11-17T17:34:25</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
