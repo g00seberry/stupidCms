@@ -232,6 +232,26 @@ GET /api/v1/admin/media/{media}/download (api)
 
 ---
 
+## admin.v1.media.forceDestroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/media/{media}/force`
+**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
+
+DELETE /api/v1/admin/media/{media}/force (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/media/{media}/force`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `media` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `media`, `force`
+
+
+---
+
 ## admin.v1.media.index
 **ID:** `http_endpoint:GET:/api/v1/admin/media`
 **Path:** `app/Http/Controllers/Admin/V1/MediaController.php`

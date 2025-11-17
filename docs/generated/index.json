@@ -605,6 +605,26 @@
             ]
         },
         {
+            "id": "domain_service:Media/Actions/MediaForceDeleteAction",
+            "type": "domain_service",
+            "name": "MediaForceDeleteAction",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaForceDeleteAction.php",
+            "summary": "Действие для окончательного удаления медиа-файла.",
+            "details": "Выполняет полное (hard) удаление медиа-файла: удаляет физические файлы\n(основной файл и все варианты) с диска, затем удаляет записи из БД.\nОтправляет событие MediaDeleted после успешного удаления.",
+            "meta": {
+                "methods": [
+                    "execute"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "action"
+            ]
+        },
+        {
             "id": "domain_service:Media/Actions/MediaStoreAction",
             "type": "domain_service",
             "name": "MediaStoreAction",
@@ -4725,6 +4745,36 @@
             }
         },
         {
+            "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+            "type": "http_endpoint",
+            "name": "admin.v1.media.forceDestroy",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+            "summary": "DELETE /api/v1/admin/media/{media}/force (api)",
+            "details": null,
+            "meta": {
+                "method": "DELETE",
+                "uri": "/api/v1/admin/media/{media}/force",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "media": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "media",
+                "7": "force"
+            }
+        },
+        {
             "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
             "type": "http_endpoint",
             "name": "admin.v1.options.index",
@@ -5567,6 +5617,26 @@
                     "dependencies": [
                         "App\\Domain\\Media\\MediaRepository"
                     ],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "action"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Actions/MediaForceDeleteAction",
+                "type": "domain_service",
+                "name": "MediaForceDeleteAction",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaForceDeleteAction.php",
+                "summary": "Действие для окончательного удаления медиа-файла.",
+                "details": "Выполняет полное (hard) удаление медиа-файла: удаляет физические файлы\n(основной файл и все варианты) с диска, затем удаляет записи из БД.\nОтправляет событие MediaDeleted после успешного удаления.",
+                "meta": {
+                    "methods": [
+                        "execute"
+                    ],
+                    "dependencies": [],
                     "interface": null
                 },
                 "related": [],
@@ -9702,6 +9772,36 @@
                 }
             },
             {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.forceDestroy",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+                "summary": "DELETE /api/v1/admin/media/{media}/force (api)",
+                "details": null,
+                "meta": {
+                    "method": "DELETE",
+                    "uri": "/api/v1/admin/media/{media}/force",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "media": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "media",
+                    "7": "force"
+                }
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
                 "type": "http_endpoint",
                 "name": "admin.v1.options.index",
@@ -9982,6 +10082,12 @@
                 "summary": "CQRS-действие: выборка списка медиа по параметрам запроса."
             },
             {
+                "id": "domain_service:Media/Actions/MediaForceDeleteAction",
+                "type": "domain_service",
+                "name": "MediaForceDeleteAction",
+                "summary": "Действие для окончательного удаления медиа-файла."
+            },
+            {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
                 "type": "domain_service",
                 "name": "MediaStoreAction",
@@ -10208,6 +10314,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.restore",
                 "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.forceDestroy",
+                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
             }
         ],
         "mediametadata": [
@@ -10442,6 +10554,12 @@
                 "type": "domain_service",
                 "name": "ListMediaAction",
                 "summary": "CQRS-действие: выборка списка медиа по параметрам запроса."
+            },
+            {
+                "id": "domain_service:Media/Actions/MediaForceDeleteAction",
+                "type": "domain_service",
+                "name": "MediaForceDeleteAction",
+                "summary": "Действие для окончательного удаления медиа-файла."
             },
             {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
@@ -11578,6 +11696,12 @@
                 "summary": "POST /api/v1/admin/media/{media}/restore (api)"
             },
             {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.forceDestroy",
+                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
                 "type": "http_endpoint",
                 "name": "admin.v1.options.index",
@@ -11926,6 +12050,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.restore",
                 "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.forceDestroy",
+                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
@@ -12278,6 +12408,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.restore",
                 "summary": "POST /api/v1/admin/media/{media}/restore (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.forceDestroy",
+                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
@@ -12648,6 +12784,14 @@
                 "summary": "GET /api/v1/admin/media/{media}/download (api)"
             }
         ],
+        "force": [
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/media/{media}/force",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.forceDestroy",
+                "summary": "DELETE /api/v1/admin/media/{media}/force (api)"
+            }
+        ],
         "reindex": [
             {
                 "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
@@ -12665,5 +12809,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T15:55:17+00:00"
+    "generated_at": "2025-11-17T16:46:58+00:00"
 }

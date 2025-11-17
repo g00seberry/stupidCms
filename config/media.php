@@ -34,7 +34,7 @@ return [
         ],
     ],
 
-    'max_upload_mb' => env('MEDIA_MAX_UPLOAD_MB', 25),
+    'max_upload_mb' => env('MEDIA_MAX_UPLOAD_MB', 1024),
     'allowed_mimes' => [
         'image/jpeg',
         'image/png',

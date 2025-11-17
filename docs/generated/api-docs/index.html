@@ -132,6 +132,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="admin-media-POSTapi-v1-admin-media--media--restore">
                                 <a href="#admin-media-POSTapi-v1-admin-media--media--restore">Восстановление удалённого медиа.</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="admin-media-DELETEapi-v1-admin-media--media--force">
+                                <a href="#admin-media-DELETEapi-v1-admin-media--media--force">Окончательное удаление медиа (hard delete).</a>
+                            </li>
                                                                         </ul>
                             </ul>
                     <ul id="tocify-header-admin-options" class="tocify-header">
@@ -361,7 +364,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-17 15:49</li>
+        <li>Last updated: 2025-11-17 16:46</li>
     </ul>
 </div>
 
@@ -594,16 +597,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"trashed\",
+    \"status\": \"scheduled\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-17T15:49:11\",
+    \"date_from\": \"2025-11-17T16:46:49\",
     \"date_to\": \"2106-12-17\",
-    \"date_field\": \"published\",
-    \"sort\": \"updated_at.desc\",
+    \"date_field\": \"updated\",
+    \"sort\": \"published_at.asc\",
     \"per_page\": 13
 }"
 </code></pre></div>
@@ -637,16 +640,16 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "trashed",
+    "status": "scheduled",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-17T15:49:11",
+    "date_from": "2025-11-17T16:46:49",
     "date_to": "2106-12-17",
-    "date_field": "published",
-    "sort": "updated_at.desc",
+    "date_field": "updated",
+    "sort": "published_at.asc",
     "per_page": 13
 };
 
@@ -682,16 +685,16 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'trashed',
+            'status' =&gt; 'scheduled',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-17T15:49:11',
+            'date_from' =&gt; '2025-11-17T16:46:49',
             'date_to' =&gt; '2106-12-17',
-            'date_field' =&gt; 'published',
-            'sort' =&gt; 'updated_at.desc',
+            'date_field' =&gt; 'updated',
+            'sort' =&gt; 'published_at.asc',
             'per_page' =&gt; 13,
         ],
     ]
@@ -1012,10 +1015,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="trashed"
+               value="scheduled"
                data-component="body">
     <br>
-<p>Example: <code>trashed</code></p>
+<p>Example: <code>scheduled</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -1064,10 +1067,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-17T15:49:11"
+               value="2025-11-17T16:46:49"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-17T15:49:11</code></p>
+<p>Must be a valid date. Example: <code>2025-11-17T16:46:49</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -1088,10 +1091,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_field"                data-endpoint="GETapi-v1-admin-entries"
-               value="published"
+               value="updated"
                data-component="body">
     <br>
-<p>Example: <code>published</code></p>
+<p>Example: <code>updated</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated</code></li> <li><code>published</code></li></ul>
         </div>
@@ -1102,10 +1105,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-entries"
-               value="updated_at.desc"
+               value="published_at.asc"
                data-component="body">
     <br>
-<p>Example: <code>updated_at.desc</code></p>
+<p>Example: <code>published_at.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated_at.desc</code></li> <li><code>updated_at.asc</code></li> <li><code>published_at.desc</code></li> <li><code>published_at.asc</code></li> <li><code>title.asc</code></li> <li><code>title.desc</code></li></ul>
         </div>
@@ -3253,12 +3256,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"document\",
+    \"kind\": \"audio\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
-    \"deleted\": \"with\",
-    \"sort\": \"created_at\",
-    \"order\": \"asc\",
+    \"deleted\": \"only\",
+    \"sort\": \"mime\",
+    \"order\": \"desc\",
     \"page\": 3,
     \"per_page\": 21
 }"
@@ -3291,12 +3294,12 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "document",
+    "kind": "audio",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
-    "deleted": "with",
-    "sort": "created_at",
-    "order": "asc",
+    "deleted": "only",
+    "sort": "mime",
+    "order": "desc",
     "page": 3,
     "per_page": 21
 };
@@ -3331,12 +3334,12 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'document',
+            'kind' =&gt; 'audio',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
-            'deleted' =&gt; 'with',
-            'sort' =&gt; 'created_at',
-            'order' =&gt; 'asc',
+            'deleted' =&gt; 'only',
+            'sort' =&gt; 'mime',
+            'order' =&gt; 'desc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
         ],
@@ -3628,10 +3631,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="document"
+               value="audio"
                data-component="body">
     <br>
-<p>Example: <code>document</code></p>
+<p>Example: <code>audio</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -3666,10 +3669,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="deleted"                data-endpoint="GETapi-v1-admin-media"
-               value="with"
+               value="only"
                data-component="body">
     <br>
-<p>Example: <code>with</code></p>
+<p>Example: <code>only</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>with</code></li> <li><code>only</code></li></ul>
         </div>
@@ -3680,10 +3683,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-media"
-               value="created_at"
+               value="mime"
                data-component="body">
     <br>
-<p>Example: <code>created_at</code></p>
+<p>Example: <code>mime</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>size_bytes</code></li> <li><code>mime</code></li></ul>
         </div>
@@ -3694,10 +3697,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-media"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -5012,6 +5015,241 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="media"                data-endpoint="POSTapi-v1-admin-media--media--restore"
+               value="uuid-media"
+               data-component="url">
+    <br>
+<p>UUID медиа. Example: <code>uuid-media</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="admin-media-DELETEapi-v1-admin-media--media--force">Окончательное удаление медиа (hard delete).</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Выполняет полное удаление медиа-файла: удаляет физические файлы
+(основной файл и все варианты) с диска, затем удаляет записи из БД.
+Операция необратима.</p>
+
+<span id="example-requests-DELETEapi-v1-admin-media--media--force">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost/api/v1/api/v1/admin/media/uuid-media/force" \
+    --header "Authorization: Bearer Bearer {JWT}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/v1/api/v1/admin/media/uuid-media/force"
+);
+
+const headers = {
+    "Authorization": "Bearer Bearer {JWT}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/v1/api/v1/admin/media/uuid-media/force';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer Bearer {JWT}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-v1-admin-media--media--force">
+            <blockquote>
+            <p>Example response (204):</p>
+        </blockquote>
+                <pre>
+<code>Empty response</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/unauthorized&quot;,
+    &quot;title&quot;: &quot;Unauthorized&quot;,
+    &quot;status&quot;: 401,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;,
+    &quot;detail&quot;: &quot;Authentication is required to access this resource.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555567&quot;,
+        &quot;reason&quot;: &quot;missing_token&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555667-1111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/forbidden&quot;,
+    &quot;title&quot;: &quot;Forbidden&quot;,
+    &quot;status&quot;: 403,
+    &quot;code&quot;: &quot;FORBIDDEN&quot;,
+    &quot;detail&quot;: &quot;You do not have permission to force delete media.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555568&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555668-1111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/not-found&quot;,
+    &quot;title&quot;: &quot;Media not found&quot;,
+    &quot;status&quot;: 404,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;,
+    &quot;detail&quot;: &quot;Media with ID uuid-media does not exist.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;11111111-2222-3333-4444-555555555569&quot;,
+        &quot;media_id&quot;: &quot;uuid-media&quot;
+    },
+    &quot;trace_id&quot;: &quot;00-11111111222233334444555555555669-1111111122223333-01&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (429):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;type&quot;: &quot;https://stupidcms.dev/problems/rate-limit-exceeded&quot;,
+    &quot;title&quot;: &quot;Too Many Requests&quot;,
+    &quot;status&quot;: 429,
+    &quot;code&quot;: &quot;RATE_LIMIT_EXCEEDED&quot;,
+    &quot;detail&quot;: &quot;Too many attempts. Try again later.&quot;,
+    &quot;meta&quot;: {
+        &quot;request_id&quot;: &quot;66666666-7777-8888-9999-000000000006&quot;,
+        &quot;retry_after&quot;: 60
+    },
+    &quot;trace_id&quot;: &quot;00-66666666777788889999000000000006-6666666677778888-01&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-v1-admin-media--media--force" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-v1-admin-media--media--force"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-media--media--force"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-v1-admin-media--media--force" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-v1-admin-media--media--force">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-v1-admin-media--media--force" data-method="DELETE"
+      data-path="api/v1/admin/media/{media}/force"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-media--media--force', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-v1-admin-media--media--force"
+                    onclick="tryItOut('DELETEapi-v1-admin-media--media--force');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-v1-admin-media--media--force"
+                    onclick="cancelTryOut('DELETEapi-v1-admin-media--media--force');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-v1-admin-media--media--force"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/v1/admin/media/{media}/force</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-admin-media--media--force"
+               value="Bearer Bearer {JWT}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer Bearer {JWT}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-media--media--force"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-v1-admin-media--media--force"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>media</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="media"                data-endpoint="DELETEapi-v1-admin-media--media--force"
                value="uuid-media"
                data-component="url">
     <br>
@@ -7210,11 +7448,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"any\",
+    \"enabled\": \"true\",
     \"page\": 2,
     \"per_page\": 13,
-    \"sort\": \"updated_at\",
-    \"order\": \"asc\"
+    \"sort\": \"version\",
+    \"order\": \"desc\"
 }"
 </code></pre></div>
 
@@ -7242,11 +7480,11 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "any",
+    "enabled": "true",
     "page": 2,
     "per_page": 13,
-    "sort": "updated_at",
-    "order": "asc"
+    "sort": "version",
+    "order": "desc"
 };
 
 fetch(url, {
@@ -7276,11 +7514,11 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'any',
+            'enabled' =&gt; 'true',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
-            'sort' =&gt; 'updated_at',
-            'order' =&gt; 'asc',
+            'sort' =&gt; 'version',
+            'order' =&gt; 'desc',
         ],
     ]
 );
@@ -7522,10 +7760,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="any"
+               value="true"
                data-component="body">
     <br>
-<p>Example: <code>any</code></p>
+<p>Example: <code>true</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -7560,10 +7798,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-plugins"
-               value="updated_at"
+               value="version"
                data-component="body">
     <br>
-<p>Example: <code>updated_at</code></p>
+<p>Example: <code>version</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>slug</code></li> <li><code>version</code></li> <li><code>updated_at</code></li></ul>
         </div>
@@ -7574,10 +7812,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-plugins"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -9920,7 +10158,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"label.desc\"
+    \"sort\": \"label.asc\"
 }"
 </code></pre></div>
 
@@ -9947,7 +10185,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "label.desc"
+    "sort": "label.asc"
 };
 
 fetch(url, {
@@ -9976,7 +10214,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'label.desc',
+            'sort' =&gt; 'label.asc',
         ],
     ]
 );
@@ -10193,10 +10431,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies"
-               value="label.desc"
+               value="label.asc"
                data-component="body">
     <br>
-<p>Example: <code>label.desc</code></p>
+<p>Example: <code>label.asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>label.asc</code></li> <li><code>label.desc</code></li></ul>
         </div>
@@ -14752,7 +14990,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"5627:7\"
     ],
-    \"from\": \"2025-11-17T15:49:10\",
+    \"from\": \"2025-11-17T16:46:49\",
     \"to\": \"2106-12-17\",
     \"page\": 45,
     \"per_page\": 16
@@ -14790,7 +15028,7 @@ let body = {
     "term": [
         "5627:7"
     ],
-    "from": "2025-11-17T15:49:10",
+    "from": "2025-11-17T16:46:49",
     "to": "2106-12-17",
     "page": 45,
     "per_page": 16
@@ -14830,7 +15068,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 '5627:7',
             ],
-            'from' =&gt; '2025-11-17T15:49:10',
+            'from' =&gt; '2025-11-17T16:46:49',
             'to' =&gt; '2106-12-17',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -15077,10 +15315,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-17T15:49:10"
+               value="2025-11-17T16:46:49"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-17T15:49:10</code></p>
+<p>Must be a valid date. Example: <code>2025-11-17T16:46:49</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

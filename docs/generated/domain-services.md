@@ -358,6 +358,26 @@ CQRS-действие: выборка списка медиа по параме�
 
 ---
 
+## MediaForceDeleteAction
+**ID:** `domain_service:Media/Actions/MediaForceDeleteAction`
+**Path:** `app/Domain/Media/Actions/MediaForceDeleteAction.php`
+
+Действие для окончательного удаления медиа-файла.
+
+### Details
+Выполняет полное (hard) удаление медиа-файла: удаляет физические файлы
+(основной файл и все варианты) с диска, затем удаляет записи из БД.
+Отправляет событие MediaDeleted после успешного удаления.
+
+### Meta
+- **Methods:** `execute`
+
+### Tags
+`media`, `action`
+
+
+---
+
 ## MediaMetadataDTO
 **ID:** `domain_service:Media/DTO/MediaMetadataDTO`
 **Path:** `app/Domain/Media/DTO/MediaMetadataDTO.php`

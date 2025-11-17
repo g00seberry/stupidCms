@@ -74,14 +74,14 @@ class MediaResource extends AdminJsonResource
      * Сформировать preview URLs для вариантов изображения.
      *
      * Возвращает массив URL для всех настроенных вариантов изображения
-     * (thumbnail, medium, large и т.д.). Для не-изображений возвращает пустой массив.
+     * (thumbnail, medium, large и т.д.). Для не-изображений возвращает null.
      *
-     * @return array<string, string> Массив [variant => URL] или пустой массив
+     * @return array<string, string>|null Массив [variant => URL] или null для не-изображений
      */
-    private function previewUrls(): array
+    private function previewUrls(): ?array
     {
         if ($this->resource->kind() !== 'image') {
-            return [];
+            return null;
         }
 
         $urls = [];

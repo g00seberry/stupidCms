@@ -102,7 +102,7 @@ class MediaPolicy
     /**
      * Определить, может ли пользователь окончательно удалять медиа-файл.
      *
-     * Всегда возвращает false (окончательное удаление запрещено).
+     * Требует права 'media.forceDelete'.
      *
      * @param \App\Models\User $user Пользователь
      * @param \App\Models\Media $media Медиа-файл
@@ -110,7 +110,7 @@ class MediaPolicy
      */
     public function forceDelete(User $user, Media $media): bool
     {
-        return false;
+        return $user->hasAdminPermission('media.forceDelete');
     }
 
     /**

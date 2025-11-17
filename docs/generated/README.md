@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 171
+**Всего сущностей:** 173
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (16 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (63 сущностей)
+Доменные сервисы, действия, репозитории (64 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (61 сущностей)
+HTTP эндпоинты API (62 сущностей)
 
 ## Быстрая навигация
 
@@ -49,7 +49,7 @@ HTTP эндпоинты API (61 сущностей)
 - [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
 - [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
 - [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- *...и еще 53 сущностей*
+- *...и еще 54 сущностей*
 
 ### Blade Views
 
@@ -88,7 +88,7 @@ HTTP эндпоинты API (61 сущностей)
 - [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
 - [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
 - [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
-- *...и еще 51 сущностей*
+- *...и еще 52 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-17 15:55:17
+**Сгенерировано:** 2025-11-17 16:46:58
 
 Для обновления документации выполните:
 ```bash

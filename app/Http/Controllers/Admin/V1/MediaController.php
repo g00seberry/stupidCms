@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\V1;
 use App\Domain\Media\Actions\MediaStoreAction;
 use App\Domain\Media\Actions\ListMediaAction;
 use App\Domain\Media\Actions\UpdateMediaMetadataAction;
+use App\Domain\Media\Actions\MediaForceDeleteAction;
 use App\Domain\Media\EloquentMediaRepository;
 use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\MediaDeletedFilter;
@@ -32,7 +33,8 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  * Контроллер для управления медиа-файлами в админ-панели.
  *
  * Предоставляет CRUD операции для медиа-файлов: загрузка, просмотр, обновление,
- * удаление, восстановление, управление вариантами и привязкой к записям.
+ * мягкое удаление, окончательное удаление, восстановление, управление вариантами
+ * и привязкой к записям.
  *
  * @package App\Http\Controllers\Admin\V1
  */
@@ -45,11 +47,13 @@ class MediaController extends Controller
      * @param \App\Domain\Media\Actions\MediaStoreAction $storeAction Действие для сохранения медиа-файлов
      * @param \App\Domain\Media\Actions\ListMediaAction $listAction Действие для выборки медиа
      * @param \App\Domain\Media\Actions\UpdateMediaMetadataAction $updateMetadataAction Действие для обновления метаданных
+     * @param \App\Domain\Media\Actions\MediaForceDeleteAction $forceDeleteAction Действие для окончательного удаления медиа
      */
     public function __construct(
         private readonly MediaStoreAction $storeAction,
         private readonly ListMediaAction $listAction,
         private readonly UpdateMediaMetadataAction $updateMetadataAction,
+        private readonly MediaForceDeleteAction $forceDeleteAction,
     ) {
     }
 
@@ -491,6 +495,82 @@ class MediaController extends Controller
 
         // Отправляем событие удаления медиа-файла
         Event::dispatch(new MediaDeleted($media));
+
+        return AdminResponse::noContent();
+    }
+
+    /**
+     * Окончательное удаление медиа (hard delete).
+     *
+     * Выполняет полное удаление медиа-файла: удаляет физические файлы
+     * (основной файл и все варианты) с диска, затем удаляет записи из БД.
+     * Операция необратима.
+     *
+     * @group Admin ▸ Media
+     * @name Force delete media
+     * @authenticated
+     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555567",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555667-1111111122223333-01"
+     * }
+     * @response status=403 {
+     *   "type": "https://stupidcms.dev/problems/forbidden",
+     *   "title": "Forbidden",
+     *   "status": 403,
+     *   "code": "FORBIDDEN",
+     *   "detail": "You do not have permission to force delete media.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555568",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555668-1111111122223333-01"
+     * }
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555569",
+     *     "media_id": "uuid-media"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555669-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000006",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000006-6666666677778888-01"
+     * }
+     */
+    public function forceDestroy(Request $request, string $mediaId): HttpResponse
+    {
+        $media = Media::withTrashed()->find($mediaId);
+
+        if (! $media) {
+            $this->throwMediaNotFound($mediaId);
+        }
+
+        $this->authorize('forceDelete', $media);
+
+        $this->forceDeleteAction->execute($media);
 
         return AdminResponse::noContent();
     }

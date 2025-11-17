@@ -185,6 +185,10 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->middleware('throttle:20,1')
         ->name('admin.v1.media.restore');
 
+    Route::delete('/media/{media}/force', [MediaController::class, 'forceDestroy'])
+        ->middleware('throttle:20,1')
+        ->name('admin.v1.media.forceDestroy');
+
     Route::prefix('/options')->group(function () {
         Route::get('/{namespace}', [OptionsController::class, 'index'])
             ->middleware(['can:viewAny,' . Option::class, 'can:options.read', 'throttle:120,1'])

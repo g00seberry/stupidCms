@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: scheduled
                   nullable: true
                   enum:
                     - all
@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T15:49:11'
+                  example: '2025-11-17T16:46:49'
                   nullable: true
                 date_to:
                   type: string
@@ -573,7 +573,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.desc
+                  example: published_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: audio
                   nullable: true
                   enum:
                     - image
@@ -2808,7 +2808,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -2825,7 +2825,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -3956,6 +3956,208 @@ paths:
                   trace_id:
                     type: string
                     example: 00-66666666777788889999000000000005-6666666677778888-01
+      tags:
+        - 'Admin ▸ Media'
+    parameters:
+      -
+        in: path
+        name: media
+        description: 'UUID медиа.'
+        example: uuid-media
+        required: true
+        schema:
+          type: string
+  '/api/v1/admin/media/{media}/force':
+    delete:
+      summary: 'Окончательное удаление медиа (hard delete).'
+      operationId: hardDelete
+      description: "Выполняет полное удаление медиа-файла: удаляет физические файлы\n(основной файл и все варианты) с диска, затем удаляет записи из БД.\nОперация необратима."
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: 11111111-2222-3333-4444-555555555567
+                    reason: missing_token
+                  trace_id: 00-11111111222233334444555555555667-1111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 11111111-2222-3333-4444-555555555567
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-11111111222233334444555555555667-1111111122223333-01
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/forbidden'
+                  title: Forbidden
+                  status: 403
+                  code: FORBIDDEN
+                  detail: 'You do not have permission to force delete media.'
+                  meta:
+                    request_id: 11111111-2222-3333-4444-555555555568
+                    media_id: uuid-media
+                  trace_id: 00-11111111222233334444555555555668-1111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/forbidden'
+                  title:
+                    type: string
+                    example: Forbidden
+                  status:
+                    type: integer
+                    example: 403
+                  code:
+                    type: string
+                    example: FORBIDDEN
+                  detail:
+                    type: string
+                    example: 'You do not have permission to force delete media.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 11111111-2222-3333-4444-555555555568
+                      media_id:
+                        type: string
+                        example: uuid-media
+                  trace_id:
+                    type: string
+                    example: 00-11111111222233334444555555555668-1111111122223333-01
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Media not found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Media with ID uuid-media does not exist.'
+                  meta:
+                    request_id: 11111111-2222-3333-4444-555555555569
+                    media_id: uuid-media
+                  trace_id: 00-11111111222233334444555555555669-1111111122223333-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Media not found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Media with ID uuid-media does not exist.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 11111111-2222-3333-4444-555555555569
+                      media_id:
+                        type: string
+                        example: uuid-media
+                  trace_id:
+                    type: string
+                    example: 00-11111111222233334444555555555669-1111111122223333-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: 66666666-7777-8888-9999-000000000006
+                    retry_after: 60
+                  trace_id: 00-66666666777788889999000000000006-6666666677778888-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 66666666-7777-8888-9999-000000000006
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-66666666777788889999000000000006-6666666677778888-01
       tags:
         - 'Admin ▸ Media'
     parameters:
@@ -5929,7 +6131,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -5948,7 +6150,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -5958,7 +6160,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -8182,7 +8384,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.desc
+                  example: label.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10438,7 +10640,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T15:49:10'
+                  example: '2025-11-17T16:46:49'
                   nullable: true
                 to:
                   type: string
