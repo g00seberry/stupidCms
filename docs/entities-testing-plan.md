@@ -223,59 +223,83 @@
 
 ---
 
-#### 1.4. MediaVariant
+#### 1.4. MediaVariant ✅
 
 **Путь:** `app/Models/MediaVariant.php`  
-**Factory:** `database/factories/MediaVariantFactory.php`
+**Factory:** `database/factories/MediaVariantFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/MediaVariantTest.php`)
+##### Unit-тесты (`tests/Unit/Models/MediaVariantTest.php`) ✅
 
 ```php
-- test('uses ULID as primary key')
-- test('casts status to MediaVariantStatus enum')
-- test('casts timestamps to immutable datetime')
-- test('belongs to media')
-- test('has pending scope')
-- test('has processing scope')
-- test('has completed scope')
-- test('has failed scope')
+✅ test('uses ULID as primary key')
+✅ test('casts status to MediaVariantStatus enum')
+✅ test('casts started_at to immutable_datetime')
+✅ test('casts finished_at to immutable_datetime')
+✅ test('belongs to media')
+✅ test('has no guarded attributes')
+✅ test('uses HasUlids trait')
+✅ test('table name is media_variants')
 ```
 
-##### Feature-тесты (`tests/Feature/Models/MediaVariantTest.php`)
+##### Feature-тесты (`tests/Feature/Models/MediaVariantTest.php`) ✅
 
 ```php
-- test('variant belongs to media')
-- test('variant status transitions correctly')
-- test('variant can be marked as processing')
-- test('variant can be marked as completed')
-- test('variant can be marked as failed')
+✅ test('variant can be created with factory')
+✅ test('variant belongs to media')
+✅ test('variant status is cast to enum')
+✅ test('variant can have queued status')
+✅ test('variant can have processing status')
+✅ test('variant can have ready status')
+✅ test('variant can have failed status')
+✅ test('variant status transitions correctly')
+✅ test('variant can be marked as processing')
+✅ test('variant can be marked as ready')
+✅ test('variant can be marked as failed')
+✅ test('variant dimensions are stored correctly')
+✅ test('variant size_bytes is stored correctly')
+✅ test('variant path is unique')
+✅ test('variant name and media_id combination is unique')
+✅ test('variant started_at is immutable datetime')
+✅ test('variant finished_at is immutable datetime')
 ```
 
 ---
 
-#### 1.5. MediaMetadata
+#### 1.5. MediaMetadata ✅
 
 **Путь:** `app/Models/MediaMetadata.php`  
-**Factory:** `database/factories/MediaMetadataFactory.php`
+**Factory:** `database/factories/MediaMetadataFactory.php`  
+**Статус:** ✅ Завершено (2025-11-17)
 
-##### Unit-тесты (`tests/Unit/Models/MediaMetadataTest.php`)
+##### Unit-тесты (`tests/Unit/Models/MediaMetadataTest.php`) ✅
 
 ```php
-- test('casts duration_ms to integer')
-- test('casts bitrate_kbps to integer')
-- test('casts frame_rate to float')
-- test('casts frame_count to integer')
-- test('belongs to media')
-- test('has duration accessor in seconds')
+✅ test('uses ULID as primary key')
+✅ test('casts duration_ms to integer')
+✅ test('casts bitrate_kbps to integer')
+✅ test('casts frame_rate to float')
+✅ test('casts frame_count to integer')
+✅ test('belongs to media')
+✅ test('has no guarded attributes')
 ```
 
-##### Feature-тесты (`tests/Feature/Models/MediaMetadataTest.php`)
+##### Feature-тесты (`tests/Feature/Models/MediaMetadataTest.php`) ✅
 
 ```php
-- test('metadata belongs to media')
-- test('metadata stores av technical details')
-- test('metadata can store video codec')
-- test('metadata can store audio codec')
+✅ test('metadata can be created with factory')
+✅ test('metadata belongs to media')
+✅ test('metadata stores av technical details')
+✅ test('metadata can store video codec')
+✅ test('metadata can store audio codec')
+✅ test('metadata duration_ms is cast to integer')
+✅ test('metadata bitrate_kbps is cast to integer')
+✅ test('metadata frame_rate is cast to float')
+✅ test('metadata frame_count is cast to integer')
+✅ test('metadata can have null values for optional fields')
+✅ test('metadata auto generates ULID on creation')
+✅ test('metadata supports common video codecs')
+✅ test('metadata supports common audio codecs')
 ```
 
 ---
