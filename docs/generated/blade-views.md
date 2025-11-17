@@ -32,6 +32,22 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\layouts
 
 ---
 
+## default
+**ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/home/default.blade.php`
+**Path:** `resources/views/home/default.blade.php`
+
+Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\home\default.blade.php
+
+### Meta
+- **Role:** `page`
+- **Extends:** `layouts.public`
+
+### Tags
+`page`
+
+
+---
+
 ## entry
 **ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/entry.blade.php`
 **Path:** `resources/views/entry.blade.php`
@@ -79,6 +95,23 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\partial
 
 ---
 
+## page
+**ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php`
+**Path:** `resources/views/pages/page.blade.php`
+
+Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\pages\page.blade.php
+
+### Meta
+- **Role:** `page`
+- **Variables:** `entry`
+- **Extends:** `layouts.public`
+
+### Tags
+`page`
+
+
+---
+
 ## public
 **ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/public.blade.php`
 **Path:** `resources/views/layouts/public.blade.php`
@@ -87,6 +120,23 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\layouts
 
 ### Meta
 - **Role:** `page`
+
+### Tags
+`page`
+
+
+---
+
+## show
+**ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php`
+**Path:** `resources/views/pages/show.blade.php`
+
+Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\pages\show.blade.php
+
+### Meta
+- **Role:** `page`
+- **Variables:** `entry`
+- **Extends:** `layouts.public`
 
 ### Tags
 `page`

@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 168
+**Всего сущностей:** 171
 
 ## Содержание
 
@@ -13,7 +13,7 @@ Eloquent-модели для работы с БД (16 сущностей)
 Доменные сервисы, действия, репозитории (63 сущностей)
 
 ### [Blade Views](./blade-views.md)
-Blade-шаблоны для рендеринга (6 сущностей)
+Blade-шаблоны для рендеринга (9 сущностей)
 
 ### [Config Areas](./config-areas.md)
 Логические секции конфигурации (23 сущностей)
@@ -55,10 +55,13 @@ HTTP эндпоинты API (60 сущностей)
 
 - [404](./blade-views.md#404) - Page template: resources/views/errors/404.blade.php
 - [app](./blade-views.md#app) - Page template: resources/views/layouts/app.blade.php
+- [default](./blade-views.md#default) - Page template: resources/views/home/default.blade.php
 - [entry](./blade-views.md#entry) - Page template: resources/views/entry.blade.php
 - [footer](./blade-views.md#footer) - Page template: resources/views/partials/footer.blade.php
 - [header](./blade-views.md#header) - Page template: resources/views/partials/header.blade.php
+- [page](./blade-views.md#page) - Page template: resources/views/pages/page.blade.php
 - [public](./blade-views.md#public) - Page template: resources/views/layouts/public.blade.php
+- [show](./blade-views.md#show) - Page template: resources/views/pages/show.blade.php
 
 ### Config Areas
 
@@ -94,7 +97,7 @@ HTTP эндпоинты API (60 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-17 14:30:56
+**Сгенерировано:** 2025-11-17 14:42:10
 
 Для обновления документации выполните:
 ```bash

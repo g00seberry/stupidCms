@@ -2046,6 +2046,24 @@
             ]
         },
         {
+            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/home/default.blade.php",
+            "type": "blade_view",
+            "name": "default",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\home\\default.blade.php",
+            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\home\\default.blade.php",
+            "details": null,
+            "meta": {
+                "role": "page",
+                "variables": [],
+                "extends": "layouts.public",
+                "includes": []
+            },
+            "related": [],
+            "tags": [
+                "page"
+            ]
+        },
+        {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/app.blade.php",
             "type": "blade_view",
             "name": "app",
@@ -2077,6 +2095,46 @@
                 "role": "page",
                 "variables": [],
                 "extends": null,
+                "includes": []
+            },
+            "related": [],
+            "tags": [
+                "page"
+            ]
+        },
+        {
+            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
+            "type": "blade_view",
+            "name": "page",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+            "details": null,
+            "meta": {
+                "role": "page",
+                "variables": [
+                    "entry"
+                ],
+                "extends": "layouts.public",
+                "includes": []
+            },
+            "related": [],
+            "tags": [
+                "page"
+            ]
+        },
+        {
+            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
+            "type": "blade_view",
+            "name": "show",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\show.blade.php",
+            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\show.blade.php",
+            "details": null,
+            "meta": {
+                "role": "page",
+                "variables": [
+                    "entry"
+                ],
+                "extends": "layouts.public",
                 "includes": []
             },
             "related": [],
@@ -6948,6 +7006,24 @@
                 ]
             },
             {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/home/default.blade.php",
+                "type": "blade_view",
+                "name": "default",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\home\\default.blade.php",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\home\\default.blade.php",
+                "details": null,
+                "meta": {
+                    "role": "page",
+                    "variables": [],
+                    "extends": "layouts.public",
+                    "includes": []
+                },
+                "related": [],
+                "tags": [
+                    "page"
+                ]
+            },
+            {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/app.blade.php",
                 "type": "blade_view",
                 "name": "app",
@@ -6979,6 +7055,46 @@
                     "role": "page",
                     "variables": [],
                     "extends": null,
+                    "includes": []
+                },
+                "related": [],
+                "tags": [
+                    "page"
+                ]
+            },
+            {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
+                "type": "blade_view",
+                "name": "page",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+                "details": null,
+                "meta": {
+                    "role": "page",
+                    "variables": [
+                        "entry"
+                    ],
+                    "extends": "layouts.public",
+                    "includes": []
+                },
+                "related": [],
+                "tags": [
+                    "page"
+                ]
+            },
+            {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
+                "type": "blade_view",
+                "name": "show",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\show.blade.php",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\show.blade.php",
+                "details": null,
+                "meta": {
+                    "role": "page",
+                    "variables": [
+                        "entry"
+                    ],
+                    "extends": "layouts.public",
                     "includes": []
                 },
                 "related": [],
@@ -10534,6 +10650,12 @@
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\errors\\404.blade.php"
             },
             {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/home/default.blade.php",
+                "type": "blade_view",
+                "name": "default",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\home\\default.blade.php"
+            },
+            {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/app.blade.php",
                 "type": "blade_view",
                 "name": "app",
@@ -10544,6 +10666,18 @@
                 "type": "blade_view",
                 "name": "public",
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\layouts\\public.blade.php"
+            },
+            {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
+                "type": "blade_view",
+                "name": "page",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php"
+            },
+            {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
+                "type": "blade_view",
+                "name": "show",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\show.blade.php"
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/partials/footer.blade.php",
@@ -12487,5 +12621,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T14:30:56+00:00"
+    "generated_at": "2025-11-17T14:42:10+00:00"
 }
