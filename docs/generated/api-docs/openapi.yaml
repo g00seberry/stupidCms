@@ -563,7 +563,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T07:48:53'
+                  example: '2025-11-17T11:00:19'
                   nullable: true
                 date_to:
                   type: string
@@ -573,7 +573,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2103,7 +2103,7 @@ paths:
         in: path
         name: entry_id
         description: 'The ID of the entry.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -2816,7 +2816,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -2825,7 +2825,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -4261,7 +4261,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5929,7 +5929,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -5948,7 +5948,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -8182,7 +8182,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10058,7 +10058,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 options_json:
                   type: object
@@ -10100,7 +10100,7 @@ paths:
         in: path
         name: taxonomy
         description: 'The taxonomy.'
-        example: 1
+        example: 1562
         required: true
         schema:
           type: integer
@@ -10133,7 +10133,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10180,7 +10180,7 @@ paths:
         in: path
         name: taxonomy_id
         description: 'The ID of the taxonomy.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -10419,7 +10419,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T07:48:53'
+                  example: '2025-11-17T11:00:19'
                   nullable: true
                 to:
                   type: string

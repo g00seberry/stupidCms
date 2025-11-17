@@ -2342,10 +2342,6 @@
                     "database",
                     "prefix",
                     "foreign_key_constraints",
-                    "busy_timeout",
-                    "journal_mode",
-                    "synchronous",
-                    "transaction_mode",
                     "mysql",
                     "host",
                     "port",
@@ -7284,10 +7280,6 @@
                         "database",
                         "prefix",
                         "foreign_key_constraints",
-                        "busy_timeout",
-                        "journal_mode",
-                        "synchronous",
-                        "transaction_mode",
                         "mysql",
                         "host",
                         "port",
@@ -12575,5 +12567,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T07:49:01+00:00"
+    "generated_at": "2025-11-17T11:00:23+00:00"
 }
