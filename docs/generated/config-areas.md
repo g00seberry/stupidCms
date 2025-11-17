@@ -71,7 +71,7 @@ Configuration: Cors
 Configuration: Database
 
 ### Meta
-- **Keys:** `default`, `connections`, `sqlite`, `driver`, `url`, `database`, `prefix`, `foreign_key_constraints`, `busy_timeout`, `journal_mode`, `synchronous`, `transaction_mode`, `mysql`, `host`, `port`, `username`, `password`, `unix_socket`, `charset`, `collation`, `prefix_indexes`, `strict`, `engine`, `options`, `mariadb`, `pgsql`, `search_path`, `sslmode`, `sqlsrv`, `encrypt`, `trust_server_certificate`, `migrations`, `table`, `update_date_on_publish`, `redis`, `client`, `cluster`, `persistent`, `max_retries`, `backoff_algorithm`, `backoff_base`, `backoff_cap`, `cache`
+- **Keys:** `default`, `connections`, `sqlite`, `driver`, `url`, `database`, `prefix`, `foreign_key_constraints`, `mysql`, `host`, `port`, `username`, `password`, `unix_socket`, `charset`, `collation`, `prefix_indexes`, `strict`, `engine`, `options`, `mariadb`, `pgsql`, `search_path`, `sslmode`, `sqlsrv`, `encrypt`, `trust_server_certificate`, `migrations`, `table`, `update_date_on_publish`, `redis`, `client`, `cluster`, `persistent`, `max_retries`, `backoff_algorithm`, `backoff_base`, `backoff_cap`, `cache`
 - **Sections:** `connections`, `sqlite`, `mysql`, `mariadb`, `pgsql`, `sqlsrv`, `migrations`, `redis`, `options`, `default`, `cache`
 
 ### Tags

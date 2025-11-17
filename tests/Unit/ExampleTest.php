@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\Unit;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+/**
+ * Пример Unit-теста для проверки работоспособности системы тестирования.
+ */
 
-class ExampleTest extends TestCase
-{
-    /**
-     * A basic test example.
-     */
-    public function test_that_true_is_true(): void
-    {
-        $this->assertTrue(true);
-    }
-}
+test('basic assertion example', function () {
+    expect(true)->toBeTrue();
+});
+
+test('basic math works', function () {
+    expect(2 + 2)->toBe(4);
+});
+

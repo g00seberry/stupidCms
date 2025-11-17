@@ -4,13 +4,11 @@
 .env.backup
 .env.production
 .phpactor.json
-.phpunit.result.cache
 /.legacy-docs
 /.fleet
 /.idea
 /.nova
 /.scribe
-/.phpunit.cache
 /.vscode
 /.zed
 /auth.json

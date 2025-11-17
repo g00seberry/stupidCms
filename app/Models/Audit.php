@@ -13,11 +13,12 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int|null $user_id ID пользователя, выполнившего действие
- * @property string $event Тип события (created, updated, deleted и т.д.)
- * @property string $auditable_type Тип изменяемой сущности (класс модели)
- * @property int|string $auditable_id ID изменяемой сущности
+ * @property string $action Тип действия (created, updated, deleted и т.д.)
+ * @property string $subject_type Тип изменяемой сущности (класс модели)
+ * @property int|string $subject_id ID изменяемой сущности
  * @property array|null $diff_json Различия между старым и новым состоянием
- * @property array|null $meta Дополнительные метаданные события
+ * @property string|null $ip IP-адрес пользователя
+ * @property string|null $ua User-Agent пользователя
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  *
@@ -39,7 +40,6 @@ class Audit extends Model
      */
     protected $casts = [
         'diff_json' => 'array',
-        'meta' => 'array',
     ];
 
     /**

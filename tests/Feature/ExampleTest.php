@@ -1,20 +1,14 @@
 <?php
 
-namespace Tests\Feature;
+declare(strict_types=1);
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+/**
+ * Пример Feature-теста для проверки работоспособности HTTP тестирования.
+ */
 
-class ExampleTest extends TestCase
-{
-    use RefreshDatabase;
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
+test('application returns successful response', function () {
+    $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
-}
+    $response->assertStatus(200);
+});
+

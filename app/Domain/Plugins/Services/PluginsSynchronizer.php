@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Plugins\Services;
 
+use App\Domain\Plugins\Contracts\PluginsSynchronizerInterface;
+use App\Domain\Plugins\Contracts\RouteReloader;
 use App\Domain\Plugins\Events\PluginsSynced;
 use App\Domain\Plugins\Exceptions\InvalidPluginManifest;
 use App\Models\Plugin;
@@ -22,13 +24,13 @@ use Symfony\Component\Finder\Finder;
  *
  * @package App\Domain\Plugins\Services
  */
-final class PluginsSynchronizer
+final class PluginsSynchronizer implements PluginsSynchronizerInterface
 {
     /**
-     * @param \App\Domain\Plugins\Services\PluginsRouteReloader $routeReloader Перезагрузчик маршрутов
+     * @param \App\Domain\Plugins\Contracts\RouteReloader $routeReloader Перезагрузчик маршрутов
      */
     public function __construct(
-        private readonly PluginsRouteReloader $routeReloader,
+        private readonly RouteReloader $routeReloader,
     ) {
     }
 

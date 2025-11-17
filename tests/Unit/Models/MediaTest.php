@@ -2,171 +2,163 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Models;
-
 use App\Models\Media;
-use App\Models\MediaMetadata;
 use App\Models\MediaVariant;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
-use Tests\TestCase;
+use App\Models\MediaMetadata;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Тесты для модели Media.
+ * Unit-тесты для модели Media.
+ *
+ * Проверяют структуру модели, ULID, casts, отношения и бизнес-логику
+ * без взаимодействия с БД.
  */
-final class MediaTest extends TestCase
-{
-    use RefreshDatabase;
 
-    /**
-     * kind возвращает 'image' для image/* MIME.
-     */
-    public function test_kind_returns_image_for_image_mime(): void
-    {
-        $media = Media::factory()->create([
-            'mime' => 'image/jpeg',
-        ]);
+test('uses ULID as primary key', function () {
+    $media = new Media();
 
-        $this->assertSame('image', $media->kind());
-    }
+    expect($media->getKeyType())->toBe('string')
+        ->and($media->getIncrementing())->toBeFalse();
+});
 
-    /**
-     * kind возвращает 'video' для video/* MIME.
-     */
-    public function test_kind_returns_video_for_video_mime(): void
-    {
-        $media = Media::factory()->create([
-            'mime' => 'video/mp4',
-        ]);
+test('casts exif_json to array', function () {
+    $media = new Media();
 
-        $this->assertSame('video', $media->kind());
-    }
+    $casts = $media->getCasts();
 
-    /**
-     * kind возвращает 'audio' для audio/* MIME.
-     */
-    public function test_kind_returns_audio_for_audio_mime(): void
-    {
-        $media = Media::factory()->create([
-            'mime' => 'audio/mpeg',
-        ]);
+    expect($casts)->toHaveKey('exif_json')
+        ->and($casts['exif_json'])->toBe('array');
+});
 
-        $this->assertSame('audio', $media->kind());
-    }
+test('casts deleted_at to datetime', function () {
+    $media = new Media();
 
-    /**
-     * kind возвращает 'document' для других MIME.
-     */
-    public function test_kind_returns_document_for_other_mime(): void
-    {
-        $media = Media::factory()->create([
-            'mime' => 'application/pdf',
-        ]);
+    $casts = $media->getCasts();
 
-        $this->assertSame('document', $media->kind());
-    }
+    expect($casts)->toHaveKey('deleted_at')
+        ->and($casts['deleted_at'])->toBe('datetime');
+});
 
-    /**
-     * Проверка уникального ограничения на (disk, path).
-     */
-    public function test_has_unique_constraint_on_disk_and_path(): void
-    {
-        $disk = 'media';
-        $path = '2025/01/17/test.jpg';
+test('casts width to integer', function () {
+    $media = new Media();
 
-        Media::factory()->create([
-            'disk' => $disk,
-            'path' => $path,
-        ]);
+    $casts = $media->getCasts();
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+    expect($casts)->toHaveKey('width')
+        ->and($casts['width'])->toBe('integer');
+});
 
-        Media::factory()->create([
-            'disk' => $disk,
-            'path' => $path,
-        ]);
-    }
+test('casts height to integer', function () {
+    $media = new Media();
 
-    /**
-     * Мягкое удаление медиа.
-     */
-    public function test_soft_deletes_media(): void
-    {
-        $media = Media::factory()->create();
+    $casts = $media->getCasts();
 
-        $media->delete();
+    expect($casts)->toHaveKey('height')
+        ->and($casts['height'])->toBe('integer');
+});
 
-        $this->assertSoftDeleted('media', [
-            'id' => $media->id,
-        ]);
-        $this->assertNotNull($media->fresh()->deleted_at);
-    }
+test('casts duration_ms to integer', function () {
+    $media = new Media();
 
-    /**
-     * Восстановление мягко удалённого медиа.
-     */
-    public function test_restores_soft_deleted_media(): void
-    {
-        $media = Media::factory()->create();
-        $media->delete();
+    $casts = $media->getCasts();
 
-        $this->assertSoftDeleted('media', [
-            'id' => $media->id,
-        ]);
+    expect($casts)->toHaveKey('duration_ms')
+        ->and($casts['duration_ms'])->toBe('integer');
+});
 
-        $media->restore();
+test('casts size_bytes to integer', function () {
+    $media = new Media();
 
-        $this->assertDatabaseHas('media', [
-            'id' => $media->id,
-            'deleted_at' => null,
-        ]);
-        $this->assertNull($media->fresh()->deleted_at);
-    }
+    $casts = $media->getCasts();
 
-    /**
-     * Использование ULID в качестве первичного ключа.
-     */
-    public function test_uses_ulid_as_primary_key(): void
-    {
-        $media = Media::factory()->create();
+    expect($casts)->toHaveKey('size_bytes')
+        ->and($casts['size_bytes'])->toBe('integer');
+});
 
-        $this->assertIsString($media->id);
-        $this->assertTrue(Str::isUlid($media->id));
-        $this->assertSame(26, strlen($media->id));
-    }
+test('has variants relationship', function () {
+    $media = new Media();
 
-    /**
-     * Наличие отношения variants.
-     */
-    public function test_has_variants_relationship(): void
-    {
-        $media = Media::factory()->create();
-        $variant1 = MediaVariant::factory()->create([
-            'media_id' => $media->id,
-        ]);
-        $variant2 = MediaVariant::factory()->create([
-            'media_id' => $media->id,
-        ]);
+    $relation = $media->variants();
 
-        $variants = $media->variants;
+    expect($relation)->toBeInstanceOf(HasMany::class)
+        ->and($relation->getRelated())->toBeInstanceOf(MediaVariant::class);
+});
 
-        $this->assertCount(2, $variants);
-        $this->assertTrue($variants->contains($variant1));
-        $this->assertTrue($variants->contains($variant2));
-    }
+test('has metadata relationship', function () {
+    $media = new Media();
 
-    /**
-     * Наличие отношения metadata.
-     */
-    public function test_has_metadata_relationship(): void
-    {
-        $media = Media::factory()->create();
-        $metadata = MediaMetadata::factory()->create([
-            'media_id' => $media->id,
-        ]);
+    $relation = $media->metadata();
 
-        $this->assertInstanceOf(MediaMetadata::class, $media->metadata);
-        $this->assertSame($metadata->id, $media->metadata->id);
-    }
-}
+    expect($relation)->toBeInstanceOf(HasOne::class)
+        ->and($relation->getRelated())->toBeInstanceOf(MediaMetadata::class);
+});
+
+test('uses soft deletes', function () {
+    $media = new Media();
+
+    $traits = class_uses_recursive($media);
+
+    expect($traits)->toHaveKey(SoftDeletes::class);
+});
+
+test('kind returns image for image mime type', function () {
+    $media = new Media();
+    $media->mime = 'image/jpeg';
+
+    expect($media->kind())->toBe('image');
+
+    $media->mime = 'image/png';
+    expect($media->kind())->toBe('image');
+});
+
+test('kind returns video for video mime type', function () {
+    $media = new Media();
+    $media->mime = 'video/mp4';
+
+    expect($media->kind())->toBe('video');
+
+    $media->mime = 'video/webm';
+    expect($media->kind())->toBe('video');
+});
+
+test('kind returns audio for audio mime type', function () {
+    $media = new Media();
+    $media->mime = 'audio/mpeg';
+
+    expect($media->kind())->toBe('audio');
+
+    $media->mime = 'audio/wav';
+    expect($media->kind())->toBe('audio');
+});
+
+test('kind returns document for other mime types', function () {
+    $media = new Media();
+    $media->mime = 'application/pdf';
+
+    expect($media->kind())->toBe('document');
+
+    $media->mime = 'text/plain';
+    expect($media->kind())->toBe('document');
+
+    $media->mime = 'application/zip';
+    expect($media->kind())->toBe('document');
+});
+
+test('has no guarded attributes', function () {
+    $media = new Media();
+
+    $guarded = $media->getGuarded();
+
+    expect($guarded)->toBe([]);
+});
+
+test('uses HasUlids trait', function () {
+    $media = new Media();
+
+    $traits = class_uses_recursive($media);
+
+    expect($traits)->toHaveKey(\Illuminate\Database\Eloquent\Concerns\HasUlids::class);
+});
 

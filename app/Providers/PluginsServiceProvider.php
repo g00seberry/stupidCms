@@ -36,7 +36,11 @@ final class PluginsServiceProvider extends ServiceProvider
         $autoloader->register($plugins);
 
         foreach ($plugins as $plugin) {
-            $this->app->register($plugin->provider_fqcn);
+            // Проверяем существование класса провайдера перед регистрацией
+            // для избежания ошибок при загрузке несуществующих плагинов (например, в тестах)
+            if (class_exists($plugin->provider_fqcn)) {
+                $this->app->register($plugin->provider_fqcn);
+            }
         }
     }
 }

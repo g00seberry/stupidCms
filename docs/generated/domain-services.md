@@ -705,7 +705,8 @@ Null-реализация SearchClientInterface.
 
 ### Meta
 - **Methods:** `enable`, `disable`
-- **Dependencies:** `App\Domain\Plugins\Services\PluginsRouteReloader`
+- **Dependencies:** `App\Domain\Plugins\Contracts\RouteReloader`
+- **Interface:** `App\Domain\Plugins\Contracts\PluginActivatorInterface`
 
 ### Tags
 `plugin`
@@ -800,6 +801,7 @@ Null-реализация SearchClientInterface.
 ### Meta
 - **Methods:** `reload`
 - **Dependencies:** `Illuminate\Contracts\Foundation\Application`, `App\Domain\Plugins\PluginRegistry`, `App\Domain\Plugins\Services\PluginAutoloader`
+- **Interface:** `App\Domain\Plugins\Contracts\RouteReloader`
 
 ### Tags
 `plugin`, `service`
@@ -833,7 +835,7 @@ Null-реализация SearchClientInterface.
 
 ### Meta
 - **Methods:** `handle`
-- **Dependencies:** `App\Domain\Plugins\Services\PluginsSynchronizer`
+- **Dependencies:** `App\Domain\Plugins\Contracts\PluginsSynchronizerInterface`
 - **Interface:** `Symfony\Component\Console\Command\SignalableCommandInterface`
 
 ### Tags
@@ -872,7 +874,8 @@ Null-реализация SearchClientInterface.
 
 ### Meta
 - **Methods:** `sync`
-- **Dependencies:** `App\Domain\Plugins\Services\PluginsRouteReloader`
+- **Dependencies:** `App\Domain\Plugins\Contracts\RouteReloader`
+- **Interface:** `App\Domain\Plugins\Contracts\PluginsSynchronizerInterface`
 
 ### Tags
 `plugin`, `service`
@@ -1144,6 +1147,7 @@ Value Object для поискового запроса.
 ### Meta
 - **Methods:** `search`
 - **Dependencies:** `App\Domain\Search\SearchClientInterface`, `App\Support\Errors\ErrorFactory`
+- **Interface:** `App\Domain\Search\Contracts\SearchServiceInterface`
 
 ### Tags
 `search`

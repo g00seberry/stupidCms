@@ -12,8 +12,7 @@
                 "fillable": [],
                 "guarded": [],
                 "casts": {
-                    "diff_json": "array",
-                    "meta": "array"
+                    "diff_json": "array"
                 },
                 "relations": {
                     "user": {
@@ -197,7 +196,7 @@
             "summary": "Eloquent модель для исходящих сообщений (Outbox).",
             "details": "Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.\nИспользуется для реализации паттерна Outbox для гарантированной доставки.",
             "meta": {
-                "table": "outboxes",
+                "table": "outbox",
                 "fillable": [],
                 "guarded": [],
                 "casts": {
@@ -472,6 +471,14 @@
                 ],
                 "casts": [],
                 "relations": {
+                    "entries": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\Entry"
+                    },
+                    "refreshTokens": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\RefreshToken"
+                    },
                     "notifications": {
                         "type": "morphMany",
                         "related": "App\\Models\\DatabaseNotification"
@@ -1312,7 +1319,7 @@
                     "handle"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Plugins\\Services\\PluginsSynchronizer"
+                    "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
                 ],
                 "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
             },
@@ -1435,9 +1442,9 @@
                     "disable"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                    "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Plugins\\Contracts\\PluginActivatorInterface"
             },
             "related": [],
             "tags": [
@@ -1500,7 +1507,7 @@
                     "App\\Domain\\Plugins\\PluginRegistry",
                     "App\\Domain\\Plugins\\Services\\PluginAutoloader"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Plugins\\Contracts\\RouteReloader"
             },
             "related": [],
             "tags": [
@@ -1520,9 +1527,9 @@
                     "sync"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                    "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
             },
             "related": [],
             "tags": [
@@ -1929,7 +1936,7 @@
                     "App\\Domain\\Search\\SearchClientInterface",
                     "App\\Support\\Errors\\ErrorFactory"
                 ],
-                "interface": null
+                "interface": "App\\Domain\\Search\\Contracts\\SearchServiceInterface"
             },
             "related": [],
             "tags": [
@@ -2048,7 +2055,7 @@
             "meta": {
                 "role": "page",
                 "variables": [],
-                "extends": "layouts.app",
+                "extends": "layouts.public",
                 "includes": []
             },
             "related": [],
@@ -2096,6 +2103,26 @@
             ]
         },
         {
+            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
+            "type": "blade_view",
+            "name": "page",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+            "details": null,
+            "meta": {
+                "role": "page",
+                "variables": [
+                    "entry"
+                ],
+                "extends": "layouts.public",
+                "includes": []
+            },
+            "related": [],
+            "tags": [
+                "page"
+            ]
+        },
+        {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
             "type": "blade_view",
             "name": "show",
@@ -2105,12 +2132,9 @@
             "meta": {
                 "role": "page",
                 "variables": [
-                    "entry",
-                    "html",
-                    "content",
-                    "bodyHtml"
+                    "entry"
                 ],
-                "extends": "layouts.app",
+                "extends": "layouts.public",
                 "includes": []
             },
             "related": [],
@@ -2342,10 +2366,6 @@
                     "database",
                     "prefix",
                     "foreign_key_constraints",
-                    "busy_timeout",
-                    "journal_mode",
-                    "synchronous",
-                    "transaction_mode",
                     "mysql",
                     "host",
                     "port",
@@ -4948,8 +4968,7 @@
                     "fillable": [],
                     "guarded": [],
                     "casts": {
-                        "diff_json": "array",
-                        "meta": "array"
+                        "diff_json": "array"
                     },
                     "relations": {
                         "user": {
@@ -5133,7 +5152,7 @@
                 "summary": "Eloquent модель для исходящих сообщений (Outbox).",
                 "details": "Хранит задачи/сообщения для асинхронной обработки с поддержкой повторных попыток.\nИспользуется для реализации паттерна Outbox для гарантированной доставки.",
                 "meta": {
-                    "table": "outboxes",
+                    "table": "outbox",
                     "fillable": [],
                     "guarded": [],
                     "casts": {
@@ -5408,6 +5427,14 @@
                     ],
                     "casts": [],
                     "relations": {
+                        "entries": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\Entry"
+                        },
+                        "refreshTokens": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\RefreshToken"
+                        },
                         "notifications": {
                             "type": "morphMany",
                             "related": "App\\Models\\DatabaseNotification"
@@ -6250,7 +6277,7 @@
                         "handle"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Plugins\\Services\\PluginsSynchronizer"
+                        "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
                     ],
                     "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
                 },
@@ -6373,9 +6400,9 @@
                         "disable"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                        "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Plugins\\Contracts\\PluginActivatorInterface"
                 },
                 "related": [],
                 "tags": [
@@ -6438,7 +6465,7 @@
                         "App\\Domain\\Plugins\\PluginRegistry",
                         "App\\Domain\\Plugins\\Services\\PluginAutoloader"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                 },
                 "related": [],
                 "tags": [
@@ -6458,9 +6485,9 @@
                         "sync"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Plugins\\Services\\PluginsRouteReloader"
+                        "App\\Domain\\Plugins\\Contracts\\RouteReloader"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
                 },
                 "related": [],
                 "tags": [
@@ -6867,7 +6894,7 @@
                         "App\\Domain\\Search\\SearchClientInterface",
                         "App\\Support\\Errors\\ErrorFactory"
                     ],
-                    "interface": null
+                    "interface": "App\\Domain\\Search\\Contracts\\SearchServiceInterface"
                 },
                 "related": [],
                 "tags": [
@@ -6988,7 +7015,7 @@
                 "meta": {
                     "role": "page",
                     "variables": [],
-                    "extends": "layouts.app",
+                    "extends": "layouts.public",
                     "includes": []
                 },
                 "related": [],
@@ -7036,6 +7063,26 @@
                 ]
             },
             {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
+                "type": "blade_view",
+                "name": "page",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php",
+                "details": null,
+                "meta": {
+                    "role": "page",
+                    "variables": [
+                        "entry"
+                    ],
+                    "extends": "layouts.public",
+                    "includes": []
+                },
+                "related": [],
+                "tags": [
+                    "page"
+                ]
+            },
+            {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
                 "type": "blade_view",
                 "name": "show",
@@ -7045,12 +7092,9 @@
                 "meta": {
                     "role": "page",
                     "variables": [
-                        "entry",
-                        "html",
-                        "content",
-                        "bodyHtml"
+                        "entry"
                     ],
-                    "extends": "layouts.app",
+                    "extends": "layouts.public",
                     "includes": []
                 },
                 "related": [],
@@ -7284,10 +7328,6 @@
                         "database",
                         "prefix",
                         "foreign_key_constraints",
-                        "busy_timeout",
-                        "journal_mode",
-                        "synchronous",
-                        "transaction_mode",
                         "mysql",
                         "host",
                         "port",
@@ -10628,6 +10668,12 @@
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\layouts\\public.blade.php"
             },
             {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php",
+                "type": "blade_view",
+                "name": "page",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\pages\\page.blade.php"
+            },
+            {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
                 "type": "blade_view",
                 "name": "show",
@@ -12575,5 +12621,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T05:08:21+00:00"
+    "generated_at": "2025-11-17T14:42:10+00:00"
 }

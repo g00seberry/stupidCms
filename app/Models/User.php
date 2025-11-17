@@ -25,6 +25,10 @@ use Illuminate\Notifications\Notifiable;
  * @property array $admin_permissions Список административных разрешений
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries Записи пользователя
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RefreshToken> $refreshTokens Refresh токены пользователя
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications Уведомления пользователя
  */
 class User extends Authenticatable
 {
@@ -134,5 +138,29 @@ class User extends Authenticatable
         }
 
         $this->setAttribute('admin_permissions', $current);
+    }
+
+    /**
+     * Get entries authored by this user.
+     *
+     * Получает все записи (Entry), созданные данным пользователем.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Entry, $this>
+     */
+    public function entries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Entry::class, 'author_id');
+    }
+
+    /**
+     * Get refresh tokens for this user.
+     *
+     * Получает все refresh токены пользователя.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\RefreshToken, $this>
+     */
+    public function refreshTokens(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\RefreshToken::class);
     }
 }

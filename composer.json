@@ -17,14 +17,14 @@
         "mews/purifier": "^3.4"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
         "knuckleswtf/scribe": "^5.5",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -54,13 +54,24 @@
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
         ],
-        "test": [
-            "@php artisan config:clear --ansi",
-            "@php artisan test"
-        ],
         "scribe:gen": [
             "@php artisan scribe:generate --force --no-interaction"
         ],
+        "test": "php artisan test",
+        "test:unit": "php artisan test --testsuite=Unit",
+        "test:feature": "php artisan test --testsuite=Feature",
+        "test:coverage": "php artisan test --coverage",
+        "test:parallel": "php artisan test --parallel",
+        "test:module:auth": "php artisan test --group=module:auth",
+        "test:module:entries": "php artisan test --group=module:entries",
+        "test:module:media": "php artisan test --group=module:media",
+        "test:module:options": "php artisan test --group=module:options",
+        "test:module:plugins": "php artisan test --group=module:plugins",
+        "test:module:post-types": "php artisan test --group=module:post-types",
+        "test:module:routing": "php artisan test --group=module:routing",
+        "test:module:sanitizer": "php artisan test --group=module:sanitizer",
+        "test:module:search": "php artisan test --group=module:search",
+        "test:module:view": "php artisan test --group=module:view",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -90,8 +101,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "stable",

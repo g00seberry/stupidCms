@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Domain\Search\Clients\ElasticsearchSearchClient;
 use App\Domain\Search\Clients\NullSearchClient;
+use App\Domain\Search\Contracts\SearchServiceInterface;
 use App\Domain\Search\IndexManager;
 use App\Domain\Search\SearchClientInterface;
 use App\Domain\Search\SearchService;
@@ -18,7 +19,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Service Provider для поисковых сервисов.
  *
- * Регистрирует SearchClientInterface, IndexManager и SearchService как singleton.
+ * Регистрирует SearchClientInterface, SearchServiceInterface, IndexManager и SearchService как singleton.
  * Если поиск отключён в конфиге, использует NullSearchClient.
  *
  * @package App\Providers
@@ -33,6 +34,7 @@ final class SearchServiceProvider extends ServiceProvider
      * - EntryToSearchDoc (singleton)
      * - IndexManager (singleton)
      * - SearchService (singleton)
+     * - SearchServiceInterface → SearchService (binding)
      *
      * @return void
      */
@@ -77,6 +79,9 @@ final class SearchServiceProvider extends ServiceProvider
                 errors: $app->make(ErrorFactory::class),
             );
         });
+
+        // Bind interface to concrete implementation
+        $this->app->bind(SearchServiceInterface::class, SearchService::class);
     }
 }
 

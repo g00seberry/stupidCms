@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -563,12 +563,12 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T05:08:17'
+                  example: '2025-11-17T14:29:25'
                   nullable: true
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2106-12-16'
+                  example: '2106-12-17'
                   nullable: true
                 date_field:
                   type: string
@@ -581,7 +581,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: title.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2103,7 +2103,7 @@ paths:
         in: path
         name: entry_id
         description: 'The ID of the entry.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -2788,7 +2788,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -4261,7 +4261,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5929,7 +5929,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -5948,7 +5948,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -8182,7 +8182,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10100,7 +10100,7 @@ paths:
         in: path
         name: taxonomy
         description: 'The taxonomy.'
-        example: 1
+        example: 1562
         required: true
         schema:
           type: integer
@@ -10133,7 +10133,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10180,7 +10180,7 @@ paths:
         in: path
         name: taxonomy_id
         description: 'The ID of the taxonomy.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -10419,12 +10419,12 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-17T05:08:16'
+                  example: '2025-11-17T14:29:25'
                   nullable: true
                 to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
-                  example: '2106-12-16'
+                  example: '2106-12-17'
                   nullable: true
                 page:
                   type: integer

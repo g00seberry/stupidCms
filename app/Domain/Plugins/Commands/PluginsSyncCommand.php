@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Plugins\Commands;
 
+use App\Domain\Plugins\Contracts\PluginsSynchronizerInterface;
 use App\Domain\Plugins\Exceptions\InvalidPluginManifest;
 use App\Domain\Plugins\Exceptions\RoutesReloadFailed;
-use App\Domain\Plugins\Services\PluginsSynchronizer;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -28,9 +28,9 @@ final class PluginsSyncCommand extends Command
     protected $description = 'Synchronize plugins from filesystem into database.';
 
     /**
-     * @param \App\Domain\Plugins\Services\PluginsSynchronizer $synchronizer Синхронизатор плагинов
+     * @param \App\Domain\Plugins\Contracts\PluginsSynchronizerInterface $synchronizer Синхронизатор плагинов
      */
-    public function __construct(private readonly PluginsSynchronizer $synchronizer)
+    public function __construct(private readonly PluginsSynchronizerInterface $synchronizer)
     {
         parent::__construct();
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Domain\Search\SearchService;
+use App\Domain\Search\Contracts\SearchServiceInterface;
 use App\Http\Requests\Public\Search\QuerySearchRequest;
 use App\Http\Resources\SearchHitResource;
 use Illuminate\Http\JsonResponse;
@@ -20,10 +20,10 @@ use Illuminate\Http\JsonResponse;
 final class SearchController extends Controller
 {
     /**
-     * @param \App\Domain\Search\SearchService $search Сервис поиска
+     * @param \App\Domain\Search\Contracts\SearchServiceInterface $search Сервис поиска
      */
     public function __construct(
-        private readonly SearchService $search
+        private readonly SearchServiceInterface $search
     ) {
     }
 

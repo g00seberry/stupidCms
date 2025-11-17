@@ -40,7 +40,7 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\home\de
 
 ### Meta
 - **Role:** `page`
-- **Extends:** `layouts.app`
+- **Extends:** `layouts.public`
 
 ### Tags
 `page`
@@ -95,6 +95,23 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\partial
 
 ---
 
+## page
+**ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/page.blade.php`
+**Path:** `resources/views/pages/page.blade.php`
+
+Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\pages\page.blade.php
+
+### Meta
+- **Role:** `page`
+- **Variables:** `entry`
+- **Extends:** `layouts.public`
+
+### Tags
+`page`
+
+
+---
+
 ## public
 **ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/public.blade.php`
 **Path:** `resources/views/layouts/public.blade.php`
@@ -118,8 +135,8 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\pages\s
 
 ### Meta
 - **Role:** `page`
-- **Variables:** `entry`, `html`, `content`, `bodyHtml`
-- **Extends:** `layouts.app`
+- **Variables:** `entry`
+- **Extends:** `layouts.public`
 
 ### Tags
 `page`

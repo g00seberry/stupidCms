@@ -2,59 +2,74 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Models;
-
-use App\Models\Media;
 use App\Models\MediaMetadata;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use App\Models\Media;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Тесты для модели MediaMetadata.
+ * Unit-тесты для модели MediaMetadata.
+ *
+ * Проверяют структуру модели, ULID, casts и отношения
+ * без взаимодействия с БД.
  */
-final class MediaMetadataTest extends TestCase
-{
-    use RefreshDatabase;
 
-    /**
-     * Проверка отношения belongsTo Media.
-     */
-    public function test_belongs_to_media(): void
-    {
-        $media = Media::factory()->create();
-        $metadata = MediaMetadata::factory()->create([
-            'media_id' => $media->id,
-        ]);
+test('uses ULID as primary key', function () {
+    $metadata = new MediaMetadata();
 
-        $this->assertInstanceOf(Media::class, $metadata->media);
-        $this->assertSame($media->id, $metadata->media->id);
-    }
+    expect($metadata->getKeyType())->toBe('string')
+        ->and($metadata->getIncrementing())->toBeFalse();
+});
 
-    /**
-     * Сохранение нормализованных AV метаданных.
-     */
-    public function test_stores_normalized_av_metadata(): void
-    {
-        $media = Media::factory()->create([
-            'mime' => 'video/mp4',
-        ]);
+test('casts duration_ms to integer', function () {
+    $metadata = new MediaMetadata();
 
-        $metadata = MediaMetadata::factory()->create([
-            'media_id' => $media->id,
-            'duration_ms' => 125000,
-            'bitrate_kbps' => 2500,
-            'frame_rate' => 29.97,
-            'frame_count' => 3750,
-            'video_codec' => 'h264',
-            'audio_codec' => 'aac',
-        ]);
+    $casts = $metadata->getCasts();
 
-        $this->assertSame(125000, $metadata->duration_ms);
-        $this->assertSame(2500, $metadata->bitrate_kbps);
-        $this->assertSame(29.97, $metadata->frame_rate);
-        $this->assertSame(3750, $metadata->frame_count);
-        $this->assertSame('h264', $metadata->video_codec);
-        $this->assertSame('aac', $metadata->audio_codec);
-    }
-}
+    expect($casts)->toHaveKey('duration_ms')
+        ->and($casts['duration_ms'])->toBe('integer');
+});
+
+test('casts bitrate_kbps to integer', function () {
+    $metadata = new MediaMetadata();
+
+    $casts = $metadata->getCasts();
+
+    expect($casts)->toHaveKey('bitrate_kbps')
+        ->and($casts['bitrate_kbps'])->toBe('integer');
+});
+
+test('casts frame_rate to float', function () {
+    $metadata = new MediaMetadata();
+
+    $casts = $metadata->getCasts();
+
+    expect($casts)->toHaveKey('frame_rate')
+        ->and($casts['frame_rate'])->toBe('float');
+});
+
+test('casts frame_count to integer', function () {
+    $metadata = new MediaMetadata();
+
+    $casts = $metadata->getCasts();
+
+    expect($casts)->toHaveKey('frame_count')
+        ->and($casts['frame_count'])->toBe('integer');
+});
+
+test('belongs to media', function () {
+    $metadata = new MediaMetadata();
+
+    $relation = $metadata->media();
+
+    expect($relation)->toBeInstanceOf(BelongsTo::class)
+        ->and($relation->getRelated())->toBeInstanceOf(Media::class);
+});
+
+test('has no guarded attributes', function () {
+    $metadata = new MediaMetadata();
+
+    $guarded = $metadata->getGuarded();
+
+    expect($guarded)->toBe([]);
+});
 

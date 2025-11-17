@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Search;
 
+use App\Domain\Search\Contracts\SearchServiceInterface;
 use App\Domain\Search\ValueObjects\SearchTermFilter;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
@@ -20,7 +21,7 @@ use Illuminate\Support\Arr;
  *
  * @package App\Domain\Search
  */
-final class SearchService
+final class SearchService implements SearchServiceInterface
 {
     /**
      * @param \App\Domain\Search\SearchClientInterface $client Клиент поискового движка

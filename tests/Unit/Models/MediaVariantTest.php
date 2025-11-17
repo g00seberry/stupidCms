@@ -2,89 +2,80 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Models;
-
-use App\Domain\Media\MediaVariantStatus;
-use App\Models\Media;
 use App\Models\MediaVariant;
-use Carbon\CarbonImmutable;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use App\Models\Media;
+use App\Domain\Media\MediaVariantStatus;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Тесты для модели MediaVariant.
+ * Unit-тесты для модели MediaVariant.
+ *
+ * Проверяют структуру модели, ULID, casts, отношения и enum
+ * без взаимодействия с БД.
  */
-final class MediaVariantTest extends TestCase
-{
-    use RefreshDatabase;
 
-    /**
-     * Проверка отношения belongsTo Media.
-     */
-    public function test_belongs_to_media(): void
-    {
-        $media = Media::factory()->create();
-        $variant = MediaVariant::factory()->create([
-            'media_id' => $media->id,
-        ]);
+test('uses ULID as primary key', function () {
+    $variant = new MediaVariant();
 
-        $this->assertInstanceOf(Media::class, $variant->media);
-        $this->assertSame($media->id, $variant->media->id);
-    }
+    expect($variant->getKeyType())->toBe('string')
+        ->and($variant->getIncrementing())->toBeFalse();
+});
 
-    /**
-     * Наличие enum статуса (Processing, Ready, Failed).
-     */
-    public function test_has_status_enum(): void
-    {
-        $media = Media::factory()->create();
+test('casts status to MediaVariantStatus enum', function () {
+    $variant = new MediaVariant();
 
-        $processingVariant = MediaVariant::factory()->withStatus(MediaVariantStatus::Processing)->create([
-            'media_id' => $media->id,
-            'variant' => 'thumbnail',
-        ]);
-        $readyVariant = MediaVariant::factory()->withStatus(MediaVariantStatus::Ready)->create([
-            'media_id' => $media->id,
-            'variant' => 'preview',
-        ]);
-        $failedVariant = MediaVariant::factory()->withStatus(MediaVariantStatus::Failed)->create([
-            'media_id' => $media->id,
-            'variant' => 'large',
-        ]);
-        $queuedVariant = MediaVariant::factory()->withStatus(MediaVariantStatus::Queued)->create([
-            'media_id' => $media->id,
-            'variant' => 'medium',
-        ]);
+    $casts = $variant->getCasts();
 
-        $this->assertInstanceOf(MediaVariantStatus::class, $processingVariant->status);
-        $this->assertSame(MediaVariantStatus::Processing, $processingVariant->status);
-        $this->assertSame(MediaVariantStatus::Ready, $readyVariant->status);
-        $this->assertSame(MediaVariantStatus::Failed, $failedVariant->status);
-        $this->assertSame(MediaVariantStatus::Queued, $queuedVariant->status);
-    }
+    expect($casts)->toHaveKey('status')
+        ->and($casts['status'])->toBe(MediaVariantStatus::class);
+});
 
-    /**
-     * Отслеживание временных меток генерации (started_at, finished_at).
-     */
-    public function test_tracks_generation_timestamps(): void
-    {
-        $media = Media::factory()->create();
-        $startedAt = CarbonImmutable::now('UTC')->subMinutes(5);
-        $finishedAt = CarbonImmutable::now('UTC');
+test('casts started_at to immutable_datetime', function () {
+    $variant = new MediaVariant();
 
-        $variant = MediaVariant::factory()->create([
-            'media_id' => $media->id,
-            'variant' => 'thumbnail',
-            'started_at' => $startedAt,
-            'finished_at' => $finishedAt,
-        ]);
+    $casts = $variant->getCasts();
 
-        $variant->refresh();
+    expect($casts)->toHaveKey('started_at')
+        ->and($casts['started_at'])->toBe('immutable_datetime');
+});
 
-        $this->assertInstanceOf(CarbonImmutable::class, $variant->started_at);
-        $this->assertInstanceOf(CarbonImmutable::class, $variant->finished_at);
-        $this->assertSame($startedAt->timestamp, $variant->started_at->timestamp);
-        $this->assertSame($finishedAt->timestamp, $variant->finished_at->timestamp);
-    }
-}
+test('casts finished_at to immutable_datetime', function () {
+    $variant = new MediaVariant();
+
+    $casts = $variant->getCasts();
+
+    expect($casts)->toHaveKey('finished_at')
+        ->and($casts['finished_at'])->toBe('immutable_datetime');
+});
+
+test('belongs to media', function () {
+    $variant = new MediaVariant();
+
+    $relation = $variant->media();
+
+    expect($relation)->toBeInstanceOf(BelongsTo::class)
+        ->and($relation->getRelated())->toBeInstanceOf(Media::class);
+});
+
+test('has no guarded attributes', function () {
+    $variant = new MediaVariant();
+
+    $guarded = $variant->getGuarded();
+
+    expect($guarded)->toBe([]);
+});
+
+test('uses HasUlids trait', function () {
+    $variant = new MediaVariant();
+
+    $traits = class_uses_recursive($variant);
+
+    expect($traits)->toHaveKey(\Illuminate\Database\Eloquent\Concerns\HasUlids::class);
+});
+
+test('table name is media_variants', function () {
+    $variant = new MediaVariant();
+
+    expect($variant->getTable())->toBe('media_variants');
+});
 

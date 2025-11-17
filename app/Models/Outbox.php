@@ -13,15 +13,23 @@ use Illuminate\Database\Eloquent\Model;
  * Используется для реализации паттерна Outbox для гарантированной доставки.
  *
  * @property int $id
- * @property string $type Тип задачи/сообщения
+ * @property string $topic Топик/тип задачи/сообщения
  * @property array $payload_json Данные задачи (JSON)
+ * @property string $status Статус задачи (pending, sent, failed)
  * @property int $attempts Количество попыток обработки
- * @property \Illuminate\Support\Carbon $available_at Дата, когда задача становится доступной для обработки
+ * @property \Illuminate\Support\Carbon|null $available_at Дата, когда задача становится доступной для обработки
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
 class Outbox extends Model
 {
+    /**
+     * Имя таблицы.
+     *
+     * @var string
+     */
+    protected $table = 'outbox';
+
     /**
      * Все поля доступны для массового присвоения.
      *
