@@ -90,7 +90,12 @@ class PublicMediaController extends Controller
                 throw new InvalidArgumentException('File not found on disk.');
             }
 
-            return response()->file($filePath, ['Content-Type' => $mimeType]);
+            // Для локальных дисков TTL не применим, но добавляем заголовки для консистентности
+            return response()->file($filePath, [
+                'Content-Type' => $mimeType,
+                'X-URL-TTL' => (string) $ttl,
+                'X-URL-Expires-At' => $expiry->toIso8601String(),
+            ]);
         } catch (Throwable) {
             // Если path() не поддерживается (облачные диски), используем подписанный URL
         }
@@ -99,7 +104,10 @@ class PublicMediaController extends Controller
         try {
             $url = $disk->temporaryUrl($path, $expiry);
 
-            return redirect()->away($url);
+            return redirect()->away($url)->withHeaders([
+                'X-URL-TTL' => (string) $ttl,
+                'X-URL-Expires-At' => $expiry->toIso8601String(),
+            ]);
         } catch (Throwable) {
             // Fallback на обычный URL для облачных дисков
             $url = $disk->url($path);
@@ -108,7 +116,10 @@ class PublicMediaController extends Controller
                 throw new InvalidArgumentException('Unable to generate media URL.');
             }
 
-            return redirect()->away($url);
+            return redirect()->away($url)->withHeaders([
+                'X-URL-TTL' => (string) $ttl,
+                'X-URL-Expires-At' => $expiry->toIso8601String(),
+            ]);
         }
     }
 
