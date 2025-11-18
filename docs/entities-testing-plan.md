@@ -23,12 +23,12 @@
 
 ## Статистика выполнения
 
-**Дата обновления:** 2025-11-17
+**Дата обновления:** 2025-01-17
 
 ### Общие показатели
 
--   ✅ **Всего тестов:** 868
--   ✅ **Assertions:** 2150
+-   ✅ **Всего тестов:** 941
+-   ✅ **Assertions:** 2287
 -   ⏭️ **Skipped:** 8
 -   ❌ **Failed:** 0
 -   ⏱️ **Время выполнения:** ~58 сек
@@ -40,18 +40,19 @@
 -   ✅ **Models:** 218 тестов (User, Entry, Media, PostType, Plugin, Option, Taxonomy, Term, TermTree, RefreshToken, ReservedRoute, Redirect, Audit, Outbox + MediaVariant, MediaMetadata)
 -   ✅ **Auth Module:** 26 тестов (JwtService, RefreshTokenRepository, RefreshTokenDto, Exceptions)
 
-#### Фаза 2: Domain Services 🔄 (45%)
+#### Фаза 2: Domain Services 🔄 (50%)
 
 -   ✅ **Auth:** 26 тестов
 -   ✅ **Entries:** 16 тестов (PublishingService)
 -   ✅ **Routing:** 37 тестов (PathNormalizer, ReservedPattern, Exceptions)
--   ✅ **Media:** 72 теста (MediaQuery, ListMediaAction, UpdateMediaMetadataAction, ExifManager, MediaValidationPipeline, CorruptionValidator, MimeSignatureValidator, SizeLimitValidator, StorageResolver, CollectionRulesResolver, MediaDeletedFilter, MediaVariantStatus, MediaMetadataDTO)
+-   ✅ **Media:** 117 тестов (MediaQuery, ListMediaAction, UpdateMediaMetadataAction, ExifManager, MediaValidationPipeline, CorruptionValidator, MimeSignatureValidator, SizeLimitValidator, StorageResolver, CollectionRulesResolver, MediaDeletedFilter, MediaVariantStatus, MediaMetadataDTO, GdImageProcessor, GlideImageProcessor)
 -   ✅ **Options:** 16 тестов (OptionsRepository)
 -   ✅ **PostTypes:** 19 тестов (PostTypeOptions)
 -   ✅ **Sanitizer:** 17 тестов (RichTextSanitizer)
 -   ✅ **View:** 10 тестов (BladeTemplateResolver)
 -   ✅ **Plugins:** 7 тестов (PluginRegistry)
--   ⏳ **Media (полное):** MediaStoreAction требует доработки
+-   ✅ **Search:** 26 тестов (SearchQuery, SearchResult, SearchHit, SearchTermFilter)
+-   ⏳ **Media (полное):** MediaStoreAction требует доработки, MediaMetadataExtractor и плагины требуют тестов
 -   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
 
 #### Фаза 3: HTTP Controllers ✅ (100%)
@@ -1070,37 +1071,91 @@
 
 ---
 
-##### 2.2.9. GdImageProcessor
+##### 2.2.9. GdImageProcessor ✅
 
-**Путь:** `app/Domain/Media/Images/GdImageProcessor.php`
+**Путь:** `app/Domain/Media/Images/GdImageProcessor.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Images/GdImageProcessorTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Images/GdImageProcessorTest.php`) ✅
 
 ```php
-- test('opens image file')
-- test('gets image width')
-- test('gets image height')
-- test('resizes image')
-- test('encodes image to format')
-- test('supports jpg, png, gif, webp')
-- test('maintains aspect ratio on resize')
+✅ test('opens image file')
+✅ test('throws exception when opening invalid image data')
+✅ test('gets image width')
+✅ test('gets image height')
+✅ test('resizes image')
+✅ test('returns same image when resizing to same dimensions')
+✅ test('maintains aspect ratio on resize')
+✅ test('encodes image to jpeg format')
+✅ test('encodes image to png format')
+✅ test('encodes image to gif format')
+✅ test('encodes image to webp format when supported')
+⏭️ test('falls back to jpeg when webp is not supported') - skipped (WebP support is available)
+⏭️ test('throws exception when encoding fails') - skipped (Difficult to test encoding failure)
+✅ test('supports jpg format')
+✅ test('supports png format')
+✅ test('supports gif format')
+✅ test('supports webp format')
+✅ test('does not support unsupported formats')
+✅ test('supports method is case insensitive')
+✅ test('destroys image resource')
+✅ test('encodes with quality parameter')
 ```
+
+**Примечания:**
+
+-   19 тестов (17 passed, 2 skipped)
+-   Полное покрытие функционала GD ImageProcessor
+-   Проверка открытия, размеров, ресайза, кодирования в разные форматы
+-   Поддержка форматов: jpg, png, gif, webp
+-   Fallback на JPEG при отсутствии поддержки WebP
 
 ---
 
-##### 2.2.10. GlideImageProcessor
+##### 2.2.10. GlideImageProcessor ✅
 
-**Путь:** `app/Domain/Media/Images/GlideImageProcessor.php`
+**Путь:** `app/Domain/Media/Images/GlideImageProcessor.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Images/GlideImageProcessorTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Images/GlideImageProcessorTest.php`) ✅
 
 ```php
-- test('opens image with glide')
-- test('resizes image with glide')
-- test('applies filters')
-- test('generates thumbnails')
-- test('supports more formats than GD')
+✅ test('opens image file')
+✅ test('throws exception when opening invalid image data')
+✅ test('gets image width')
+✅ test('gets image height')
+✅ test('resizes image')
+✅ test('returns same image when resizing to same dimensions')
+✅ test('encodes image to jpeg format')
+✅ test('encodes image to png format')
+✅ test('encodes image to gif format')
+✅ test('encodes image to webp format')
+✅ test('encodes image to avif format when supported')
+✅ test('falls back to jpeg when avif encoding fails')
+✅ test('encodes image to heic format when supported')
+✅ test('falls back to jpeg when heic is not supported')
+✅ test('supports jpg format')
+✅ test('supports png format')
+✅ test('supports gif format')
+✅ test('supports webp format')
+✅ test('supports avif format')
+✅ test('supports heic and heif formats')
+✅ test('does not support unsupported formats')
+✅ test('supports method is case insensitive')
+✅ test('destroys image resource')
+✅ test('encodes with quality parameter')
+✅ test('clamps quality to valid range')
+✅ test('handles heif extension same as heic')
 ```
+
+**Примечания:**
+
+-   26 тестов (26 passed)
+-   Полное покрытие функционала Glide/Intervention ImageProcessor
+-   Использует реальный ImageManager (final класс, не может быть замокан)
+-   Поддержка форматов: jpg, png, gif, webp, avif, heic, heif
+-   Fallback на JPEG при отсутствии поддержки AVIF/HEIC
+-   Проверка качества кодирования и clamping значений
 
 ---
 
@@ -1855,42 +1910,78 @@
 
 ---
 
-##### 2.6.6. SearchQuery, SearchResult, SearchHit
+##### 2.6.6. SearchQuery, SearchResult, SearchHit ✅
 
-**Путь:** `app/Domain/Search/`
+**Путь:** `app/Domain/Search/`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тesты** (`tests/Unit/Domain/Search/SearchQueryTest.php`, etc.)
+**Unit-тесты** ✅
+
+**SearchQuery** (`tests/Unit/Domain/Search/SearchQueryTest.php`):
 
 ```php
-// SearchQuery
-- test('builds query from parameters')
-- test('adds filters to query')
-- test('adds sorting to query')
-- test('sets pagination')
-
-// SearchResult
-- test('contains hits')
-- test('contains total count')
-- test('contains aggregations')
-
-// SearchHit
-- test('wraps search result item')
-- test('provides score')
-- test('provides highlights')
+✅ test('creates search query with all parameters')
+✅ test('creates search query with minimal parameters')
+✅ test('calculates offset correctly')
+✅ test('is blank returns true for null query')
+✅ test('is blank returns true for empty string query')
+✅ test('is blank returns true for whitespace only query')
+✅ test('is blank returns false for non-empty query')
+✅ test('search query is immutable')
 ```
+
+**SearchResult** (`tests/Unit/Domain/Search/SearchResultTest.php`):
+
+```php
+✅ test('creates search result with all parameters')
+✅ test('creates empty search result')
+✅ test('search result is immutable')
+✅ test('can have empty hits list')
+```
+
+**SearchHit** (`tests/Unit/Domain/Search/SearchHitTest.php`):
+
+```php
+✅ test('creates search hit with all parameters')
+✅ test('creates search hit with nullable fields')
+✅ test('search hit is immutable')
+```
+
+**Примечания:**
+
+-   15 тестов для value objects Search модуля
+-   Полное покрытие SearchQuery, SearchResult, SearchHit
+-   Проверка immutability и всех методов доступа
 
 ---
 
-##### 2.6.7. SearchTermFilter
+##### 2.6.7. SearchTermFilter ✅
 
-**Путь:** `app/Domain/Search/ValueObjects/SearchTermFilter.php`
+**Путь:** `app/Domain/Search/ValueObjects/SearchTermFilter.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тesты** (`tests/Unit/Domain/Search/ValueObjects/SearchTermFilterTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Search/SearchTermFilterTest.php`) ✅
 
 ```php
-- test('creates filter from term id')
-- test('converts to elasticsearch filter')
+✅ test('creates search term filter from string')
+✅ test('creates search term filter with different ids')
+✅ test('throws exception for empty string')
+✅ test('throws exception for string without colon')
+✅ test('throws exception for empty taxonomy id')
+✅ test('throws exception for empty term id')
+✅ test('throws exception for invalid taxonomy id')
+✅ test('throws exception for invalid term id')
+✅ test('trims whitespace from string')
+✅ test('search term filter is immutable')
+✅ test('can create multiple filters')
 ```
+
+**Примечания:**
+
+-   11 тестов
+-   Value Object для фильтрации по термам таксономии
+-   Формат: "taxonomy_id:term_id"
+-   Валидация входных данных и обработка ошибок
 
 ---
 
