@@ -47,7 +47,7 @@ class MediaPreviewController extends Controller
      * @group Admin ▸ Media
      * @name Preview media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
      * @queryParam variant string Вариант изображения. Default: thumbnail.
      * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
      * @response status=302 {}
@@ -69,10 +69,10 @@ class MediaPreviewController extends Controller
      *   "title": "Media not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "detail": "Media with ID 01HXZYXQJ123456789ABCDEF does not exist.",
      *   "meta": {
      *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b02",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b02-0b0b0b0bb7cb6c30-01"
      * }
@@ -117,7 +117,7 @@ class MediaPreviewController extends Controller
      * Генерация временного предпросмотра для изображения.
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
-     * @param string $mediaId UUID медиа-файла
+     * @param string $mediaId ULID идентификатор медиа-файла
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function preview(Request $request, string $mediaId): RedirectResponse|BinaryFileResponse
@@ -164,7 +164,7 @@ class MediaPreviewController extends Controller
      * @group Admin ▸ Media
      * @name Download media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
      * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
      * @response status=302 {}
      * @response status=200 file
@@ -185,10 +185,10 @@ class MediaPreviewController extends Controller
      *   "title": "Media not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "detail": "Media with ID 01HXZYXQJ123456789ABCDEF does not exist.",
      *   "meta": {
      *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b07",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b07-0b0b0b0bb7cb6c30-01"
      * }
@@ -200,7 +200,7 @@ class MediaPreviewController extends Controller
      *   "detail": "Failed to generate download URL.",
      *   "meta": {
      *     "request_id": "0b0b0b0b-b7cb-6c30-033f-3f5e0b0b0b08",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-0b0b0b0bb7cb6c30033f3f5e0b0b0b08-0b0b0b0bb7cb6c30-01"
      * }
@@ -220,7 +220,7 @@ class MediaPreviewController extends Controller
     /**
      * Получение временной ссылки на оригинал.
      *
-     * @param string $mediaId UUID медиа-файла
+     * @param string $mediaId ULID идентификатор медиа-файла
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download(string $mediaId): RedirectResponse|BinaryFileResponse

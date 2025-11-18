@@ -77,7 +77,7 @@ class MediaController extends Controller
      * @response status=200 {
      *   "data": [
      *     {
-     *       "id": "uuid-media",
+     *       "id": "01HXZYXQJ123456789ABCDEF",
      *       "kind": "image",
      *       "name": "hero.jpg",
      *       "ext": "jpg",
@@ -92,11 +92,65 @@ class MediaController extends Controller
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
      *       "preview_urls": {
-     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail",
-     *         "medium": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium",
-     *         "large": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large"
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail",
+     *         "medium": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=medium",
+     *         "large": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=large"
      *       },
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJ987654321FEDCBA",
+     *       "kind": "video",
+     *       "name": "video.mp4",
+     *       "ext": "mp4",
+     *       "mime": "video/mp4",
+     *       "size_bytes": 5242880,
+     *       "duration_ms": 120000,
+     *       "bitrate_kbps": 3500,
+     *       "frame_rate": 30,
+     *       "frame_count": 3600,
+     *       "video_codec": "h264",
+     *       "audio_codec": "aac",
+     *       "title": "Video title",
+     *       "alt": null,
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:01:00+00:00",
+     *       "updated_at": "2025-01-10T12:01:00+00:00",
+     *       "deleted_at": null,
+     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJABCDEF1234567890",
+     *       "kind": "audio",
+     *       "name": "audio.mp3",
+     *       "ext": "mp3",
+     *       "mime": "audio/mpeg",
+     *       "size_bytes": 3145728,
+     *       "duration_ms": 180000,
+     *       "bitrate_kbps": 256,
+     *       "audio_codec": "mp3",
+     *       "title": "Audio title",
+     *       "alt": null,
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:02:00+00:00",
+     *       "updated_at": "2025-01-10T12:02:00+00:00",
+     *       "deleted_at": null,
+     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJFEDCBA9876543210",
+     *       "kind": "document",
+     *       "name": "document.pdf",
+     *       "ext": "pdf",
+     *       "mime": "application/pdf",
+     *       "size_bytes": 102400,
+     *       "title": "Document title",
+     *       "alt": null,
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:03:00+00:00",
+     *       "updated_at": "2025-01-10T12:03:00+00:00",
+     *       "deleted_at": null,
+     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download"
      *     }
      *   ],
      *   "links": {
@@ -109,7 +163,7 @@ class MediaController extends Controller
      *     "current_page": 1,
      *     "last_page": 1,
      *     "per_page": 15,
-     *     "total": 1
+     *     "total": 4
      *   }
      * }
      * @response status=401 {
@@ -186,9 +240,9 @@ class MediaController extends Controller
      * @bodyParam collection string Коллекция (slug). Example: uploads
      * @responseHeader Cache-Control "no-store, private"
      * @responseHeader Vary "Cookie"
-     * @response status=201 scenario="Изображение" {
+     * @response status=200 scenario="Дедупликация" {
      *   "data": {
-     *     "id": "uuid-media",
+     *     "id": "01HXZYXQJ123456789ABCDEF",
      *     "kind": "image",
      *     "name": "hero.jpg",
      *     "ext": "jpg",
@@ -203,9 +257,31 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *   }
+     * }
+     * @response status=201 scenario="Изображение" {
+     *   "data": {
+     *     "id": "01HXZYXQJ123456789ABCDEF",
+     *     "kind": "image",
+     *     "name": "hero.jpg",
+     *     "ext": "jpg",
+     *     "mime": "image/jpeg",
+     *     "size_bytes": 235678,
+     *     "width": 1920,
+     *     "height": 1080,
+     *     "title": "Hero image",
+     *     "alt": "Hero cover",
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "preview_urls": {
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *     },
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
      *   }
      * }
      * @response status=401 {
@@ -310,10 +386,10 @@ class MediaController extends Controller
      * @group Admin ▸ Media
      * @name Show media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
      * @response status=200 scenario="Изображение" {
      *   "data": {
-     *     "id": "uuid-media",
+     *     "id": "01HXZYXQJ123456789ABCDEF",
      *     "kind": "image",
      *     "name": "hero.jpg",
      *     "ext": "jpg",
@@ -328,14 +404,14 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
      *   }
      * }
      * @response status=200 scenario="Видео" {
      *   "data": {
-     *     "id": "uuid-video",
+     *     "id": "01HXZYXQJ987654321FEDCBA",
      *     "kind": "video",
      *     "name": "video.mp4",
      *     "ext": "mp4",
@@ -353,12 +429,12 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-video/download"
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download"
      *   }
      * }
      * @response status=200 scenario="Аудио" {
      *   "data": {
-     *     "id": "uuid-audio",
+     *     "id": "01HXZYXQJABCDEF1234567890",
      *     "kind": "audio",
      *     "name": "audio.mp3",
      *     "ext": "mp3",
@@ -373,12 +449,12 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-audio/download"
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download"
      *   }
      * }
      * @response status=200 scenario="Документ" {
      *   "data": {
-     *     "id": "uuid-document",
+     *     "id": "01HXZYXQJFEDCBA9876543210",
      *     "kind": "document",
      *     "name": "document.pdf",
      *     "ext": "pdf",
@@ -390,7 +466,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-document/download"
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download"
      *   }
      * }
      * @response status=401 {
@@ -410,10 +486,10 @@ class MediaController extends Controller
      *   "title": "Media not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "detail": "Media with ID 01HXZYXQJ123456789ABCDEF does not exist.",
      *   "meta": {
      *     "request_id": "11111111-2222-3333-4444-555555555559",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-11111111222233334444555555555559-1111111122223333-01"
      * }
@@ -462,13 +538,13 @@ class MediaController extends Controller
      * @group Admin ▸ Media
      * @name Update media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
      * @bodyParam title string Новый заголовок. Example: Updated hero image
      * @bodyParam alt string Alt-текст. Example: Updated hero cover
      * @bodyParam collection string Коллекция. Example: uploads
-     * @response status=200 {
+     * @response status=200 scenario="Изображение" {
      *   "data": {
-     *     "id": "uuid-media",
+     *     "id": "01HXZYXQJ123456789ABCDEF",
      *     "kind": "image",
      *     "name": "hero.jpg",
      *     "ext": "jpg",
@@ -484,9 +560,69 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *   }
+     * }
+     * @response status=200 scenario="Видео" {
+     *   "data": {
+     *     "id": "01HXZYXQJ987654321FEDCBA",
+     *     "kind": "video",
+     *     "name": "video.mp4",
+     *     "ext": "mp4",
+     *     "mime": "video/mp4",
+     *     "size_bytes": 5242880,
+     *     "duration_ms": 120000,
+     *     "bitrate_kbps": 3500,
+     *     "frame_rate": 30,
+     *     "frame_count": 3600,
+     *     "video_codec": "h264",
+     *     "audio_codec": "aac",
+     *     "title": "Updated video title",
+     *     "alt": null,
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download"
+     *   }
+     * }
+     * @response status=200 scenario="Аудио" {
+     *   "data": {
+     *     "id": "01HXZYXQJABCDEF1234567890",
+     *     "kind": "audio",
+     *     "name": "audio.mp3",
+     *     "ext": "mp3",
+     *     "mime": "audio/mpeg",
+     *     "size_bytes": 3145728,
+     *     "duration_ms": 180000,
+     *     "bitrate_kbps": 256,
+     *     "audio_codec": "mp3",
+     *     "title": "Updated audio title",
+     *     "alt": null,
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download"
+     *   }
+     * }
+     * @response status=200 scenario="Документ" {
+     *   "data": {
+     *     "id": "01HXZYXQJFEDCBA9876543210",
+     *     "kind": "document",
+     *     "name": "document.pdf",
+     *     "ext": "pdf",
+     *     "mime": "application/pdf",
+     *     "size_bytes": 102400,
+     *     "title": "Updated document title",
+     *     "alt": null,
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download"
      *   }
      * }
      * @response status=401 {
@@ -506,10 +642,10 @@ class MediaController extends Controller
      *   "title": "Media not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "detail": "Media with ID 01HXZYXQJ123456789ABCDEF does not exist.",
      *   "meta": {
      *     "request_id": "11111111-2222-3333-4444-555555555561",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-11111111222233334444555555555661-1111111122223333-01"
      * }

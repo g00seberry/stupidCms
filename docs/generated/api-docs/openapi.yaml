@@ -568,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: published
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T15:07:46'
+                  example: '2025-11-18T15:22:00'
                   nullable: true
                 date_to:
                   type: string
@@ -606,7 +606,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -614,7 +614,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.asc
+                  example: published_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2573,7 +2573,7 @@ paths:
                 example:
                   data:
                     -
-                      id: uuid-media
+                      id: 01HXZYXQJ123456789ABCDEF
                       kind: image
                       name: hero.jpg
                       ext: jpg
@@ -2588,10 +2588,61 @@ paths:
                       updated_at: '2025-01-10T12:00:00+00:00'
                       deleted_at: null
                       preview_urls:
-                        thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                        medium: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium'
-                        large: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large'
-                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
+                        thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
+                        medium: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=medium'
+                        large: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=large'
+                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
+                    -
+                      id: 01HXZYXQJ987654321FEDCBA
+                      kind: video
+                      name: video.mp4
+                      ext: mp4
+                      mime: video/mp4
+                      size_bytes: 5242880
+                      duration_ms: 120000
+                      bitrate_kbps: 3500
+                      frame_rate: 30
+                      frame_count: 3600
+                      video_codec: h264
+                      audio_codec: aac
+                      title: 'Video title'
+                      alt: null
+                      collection: uploads
+                      created_at: '2025-01-10T12:01:00+00:00'
+                      updated_at: '2025-01-10T12:01:00+00:00'
+                      deleted_at: null
+                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download'
+                    -
+                      id: 01HXZYXQJABCDEF1234567890
+                      kind: audio
+                      name: audio.mp3
+                      ext: mp3
+                      mime: audio/mpeg
+                      size_bytes: 3145728
+                      duration_ms: 180000
+                      bitrate_kbps: 256
+                      audio_codec: mp3
+                      title: 'Audio title'
+                      alt: null
+                      collection: uploads
+                      created_at: '2025-01-10T12:02:00+00:00'
+                      updated_at: '2025-01-10T12:02:00+00:00'
+                      deleted_at: null
+                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download'
+                    -
+                      id: 01HXZYXQJFEDCBA9876543210
+                      kind: document
+                      name: document.pdf
+                      ext: pdf
+                      mime: application/pdf
+                      size_bytes: 102400
+                      title: 'Document title'
+                      alt: null
+                      collection: uploads
+                      created_at: '2025-01-10T12:03:00+00:00'
+                      updated_at: '2025-01-10T12:03:00+00:00'
+                      deleted_at: null
+                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download'
                   links:
                     first: …
                     last: …
@@ -2601,13 +2652,13 @@ paths:
                     current_page: 1
                     last_page: 1
                     per_page: 15
-                    total: 1
+                    total: 4
                 properties:
                   data:
                     type: array
                     example:
                       -
-                        id: uuid-media
+                        id: 01HXZYXQJ123456789ABCDEF
                         kind: image
                         name: hero.jpg
                         ext: jpg
@@ -2622,16 +2673,67 @@ paths:
                         updated_at: '2025-01-10T12:00:00+00:00'
                         deleted_at: null
                         preview_urls:
-                          thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                          medium: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium'
-                          large: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large'
-                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
+                          thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
+                          medium: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=medium'
+                          large: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=large'
+                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
+                      -
+                        id: 01HXZYXQJ987654321FEDCBA
+                        kind: video
+                        name: video.mp4
+                        ext: mp4
+                        mime: video/mp4
+                        size_bytes: 5242880
+                        duration_ms: 120000
+                        bitrate_kbps: 3500
+                        frame_rate: 30
+                        frame_count: 3600
+                        video_codec: h264
+                        audio_codec: aac
+                        title: 'Video title'
+                        alt: null
+                        collection: uploads
+                        created_at: '2025-01-10T12:01:00+00:00'
+                        updated_at: '2025-01-10T12:01:00+00:00'
+                        deleted_at: null
+                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download'
+                      -
+                        id: 01HXZYXQJABCDEF1234567890
+                        kind: audio
+                        name: audio.mp3
+                        ext: mp3
+                        mime: audio/mpeg
+                        size_bytes: 3145728
+                        duration_ms: 180000
+                        bitrate_kbps: 256
+                        audio_codec: mp3
+                        title: 'Audio title'
+                        alt: null
+                        collection: uploads
+                        created_at: '2025-01-10T12:02:00+00:00'
+                        updated_at: '2025-01-10T12:02:00+00:00'
+                        deleted_at: null
+                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download'
+                      -
+                        id: 01HXZYXQJFEDCBA9876543210
+                        kind: document
+                        name: document.pdf
+                        ext: pdf
+                        mime: application/pdf
+                        size_bytes: 102400
+                        title: 'Document title'
+                        alt: null
+                        collection: uploads
+                        created_at: '2025-01-10T12:03:00+00:00'
+                        updated_at: '2025-01-10T12:03:00+00:00'
+                        deleted_at: null
+                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download'
                     items:
                       type: object
                       properties:
                         id:
                           type: string
-                          example: uuid-media
+                          example: 01HXZYXQJ123456789ABCDEF
                         kind:
                           type: string
                           example: image
@@ -2676,16 +2778,16 @@ paths:
                           properties:
                             thumbnail:
                               type: string
-                              example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                              example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
                             medium:
                               type: string
-                              example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium'
+                              example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=medium'
                             large:
                               type: string
-                              example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large'
+                              example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=large'
                         download_url:
                           type: string
-                          example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
+                          example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
                   links:
                     type: object
                     properties:
@@ -2715,7 +2817,7 @@ paths:
                         example: 15
                       total:
                         type: integer
-                        example: 1
+                        example: 4
         401:
           description: ''
           content:
@@ -2821,7 +2923,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: video
                   nullable: true
                   enum:
                     - image
@@ -2849,7 +2951,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: size_bytes
                   nullable: true
                   enum:
                     - created_at
@@ -2858,7 +2960,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -3598,7 +3700,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -5301,7 +5403,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -7540,7 +7642,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: label.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9738,7 +9840,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10222,7 +10324,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T15:07:45'
+                  example: '2025-11-18T15:22:00'
                   nullable: true
                 to:
                   type: string
