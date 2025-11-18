@@ -2761,6 +2761,7 @@
                     "thumbnail",
                     "max",
                     "medium",
+                    "large",
                     "signed_ttl",
                     "public_signed_ttl",
                     "path_strategy",
@@ -2794,6 +2795,7 @@
                     "variants",
                     "thumbnail",
                     "medium",
+                    "large",
                     "image",
                     "metadata",
                     "ffprobe",
@@ -7771,6 +7773,7 @@
                         "thumbnail",
                         "max",
                         "medium",
+                        "large",
                         "signed_ttl",
                         "public_signed_ttl",
                         "path_strategy",
@@ -7804,6 +7807,7 @@
                         "variants",
                         "thumbnail",
                         "medium",
+                        "large",
                         "image",
                         "metadata",
                         "ffprobe",
@@ -12783,5 +12787,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-18T06:58:34+00:00"
+    "generated_at": "2025-11-18T14:43:35+00:00"
 }

@@ -21,6 +21,7 @@ use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
 use App\Http\Resources\Admin\MediaCollection;
+use App\Http\Resources\Media\BaseMediaResource;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use App\Support\Errors\ErrorCode;
@@ -84,7 +85,6 @@ class MediaController extends Controller
      *       "size_bytes": 235678,
      *       "width": 1920,
      *       "height": 1080,
-     *       "duration_ms": null,
      *       "title": "Hero image",
      *       "alt": "Hero cover",
      *       "collection": "uploads",
@@ -186,7 +186,7 @@ class MediaController extends Controller
      * @bodyParam collection string Коллекция (slug). Example: uploads
      * @responseHeader Cache-Control "no-store, private"
      * @responseHeader Vary "Cookie"
-     * @response status=201 {
+     * @response status=201 scenario="Изображение" {
      *   "data": {
      *     "id": "uuid-media",
      *     "kind": "image",
@@ -196,7 +196,6 @@ class MediaController extends Controller
      *     "size_bytes": 235678,
      *     "width": 1920,
      *     "height": 1080,
-     *     "duration_ms": null,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
      *     "collection": "uploads",
@@ -250,6 +249,24 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000001-6666666677778888-01"
      * }
      */
+    /**
+     * Загрузка нового медиа-файла.
+     *
+     * Сохраняет файл на диск, извлекает метаданные и создает запись Media в БД.
+     * Возвращает специализированный ресурс в зависимости от типа медиа:
+     * - MediaImageResource для изображений (с width, height, preview_urls)
+     * - MediaVideoResource для видео (с duration_ms, bitrate_kbps, frame_rate и т.д.)
+     * - MediaAudioResource для аудио (с duration_ms, bitrate_kbps, audio_codec)
+     * - MediaDocumentResource для документов (только базовые поля)
+     *
+     * При дедупликации (файл с таким же checksum уже существует) возвращает 200,
+     * при создании новой записи - 201.
+     *
+     * @param \App\Http\Requests\Admin\Media\StoreMediaRequest $request HTTP запрос с файлом и метаданными
+     * @return \Illuminate\Http\JsonResponse JSON ответ со специализированным ресурсом медиа-файла
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на создание
+     * @throws \App\Domain\Media\Validation\MediaValidationException Если файл не прошел валидацию
+     */
     public function store(StoreMediaRequest $request): JsonResponse
     {
         $this->authorize('create', Media::class);
@@ -277,17 +294,24 @@ class MediaController extends Controller
         // При дедупликации возвращаем 200, при создании - 201
         $statusCode = $media->wasRecentlyCreated ? HttpResponse::HTTP_CREATED : HttpResponse::HTTP_OK;
 
-        return (new MediaResource($media))->response()->setStatusCode($statusCode);
+        return MediaResource::make($media)->response()->setStatusCode($statusCode);
     }
 
     /**
      * Просмотр информации о медиафайле.
      *
+     * Возвращает специализированный ресурс в зависимости от типа медиа.
+     * Структура ответа различается для разных типов:
+     * - Изображения: width, height, preview_urls
+     * - Видео: duration_ms, bitrate_kbps, frame_rate, frame_count, video_codec, audio_codec
+     * - Аудио: duration_ms, bitrate_kbps, audio_codec
+     * - Документы: только базовые поля
+     *
      * @group Admin ▸ Media
      * @name Show media
      * @authenticated
      * @urlParam media string required UUID медиа. Example: uuid-media
-     * @response status=200 {
+     * @response status=200 scenario="Изображение" {
      *   "data": {
      *     "id": "uuid-media",
      *     "kind": "image",
@@ -297,7 +321,6 @@ class MediaController extends Controller
      *     "size_bytes": 235678,
      *     "width": 1920,
      *     "height": 1080,
-     *     "duration_ms": null,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
      *     "collection": "uploads",
@@ -308,6 +331,66 @@ class MediaController extends Controller
      *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
      *     },
      *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *   }
+     * }
+     * @response status=200 scenario="Видео" {
+     *   "data": {
+     *     "id": "uuid-video",
+     *     "kind": "video",
+     *     "name": "video.mp4",
+     *     "ext": "mp4",
+     *     "mime": "video/mp4",
+     *     "size_bytes": 5242880,
+     *     "duration_ms": 120000,
+     *     "bitrate_kbps": 3500,
+     *     "frame_rate": 30,
+     *     "frame_count": 3600,
+     *     "video_codec": "h264",
+     *     "audio_codec": "aac",
+     *     "title": "Video title",
+     *     "alt": null,
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-video/download"
+     *   }
+     * }
+     * @response status=200 scenario="Аудио" {
+     *   "data": {
+     *     "id": "uuid-audio",
+     *     "kind": "audio",
+     *     "name": "audio.mp3",
+     *     "ext": "mp3",
+     *     "mime": "audio/mpeg",
+     *     "size_bytes": 3145728,
+     *     "duration_ms": 180000,
+     *     "bitrate_kbps": 256,
+     *     "audio_codec": "mp3",
+     *     "title": "Audio title",
+     *     "alt": null,
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-audio/download"
+     *   }
+     * }
+     * @response status=200 scenario="Документ" {
+     *   "data": {
+     *     "id": "uuid-document",
+     *     "kind": "document",
+     *     "name": "document.pdf",
+     *     "ext": "pdf",
+     *     "mime": "application/pdf",
+     *     "size_bytes": 102400,
+     *     "title": "Document title",
+     *     "alt": null,
+     *     "collection": "uploads",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-document/download"
      *   }
      * }
      * @response status=401 {
@@ -347,7 +430,20 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000002-6666666677778888-01"
      * }
      */
-    public function show(string $mediaId): MediaResource
+    /**
+     * Просмотр информации о медиа-файле.
+     *
+     * Возвращает специализированный ресурс в зависимости от типа медиа:
+     * - MediaImageResource для изображений (с width, height, preview_urls)
+     * - MediaVideoResource для видео (с duration_ms, bitrate_kbps, frame_rate и т.д.)
+     * - MediaAudioResource для аудио (с duration_ms, bitrate_kbps, audio_codec)
+     * - MediaDocumentResource для документов (только базовые поля)
+     *
+     * @param string $mediaId ULID идентификатор медиа-файла
+     * @return \App\Http\Resources\Media\BaseMediaResource Специализированный ресурс медиа-файла
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на просмотр
+     */
+    public function show(string $mediaId): BaseMediaResource
     {
         $media = Media::withTrashed()->with(['image', 'avMetadata'])->find($mediaId);
 
@@ -357,7 +453,7 @@ class MediaController extends Controller
 
         $this->authorize('view', $media);
 
-        return new MediaResource($media);
+        return MediaResource::make($media);
     }
 
     /**
@@ -430,7 +526,18 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000003-6666666677778888-01"
      * }
      */
-    public function update(UpdateMediaRequest $request, string $mediaId): MediaResource
+    /**
+     * Обновление метаданных медиа-файла.
+     *
+     * Обновляет title, alt, collection и возвращает специализированный ресурс
+     * в зависимости от типа медиа (изображение, видео, аудио, документ).
+     *
+     * @param \App\Http\Requests\Admin\Media\UpdateMediaRequest $request HTTP запрос с валидированными данными
+     * @param string $mediaId ULID идентификатор медиа-файла
+     * @return \App\Http\Resources\Media\BaseMediaResource Обновленный специализированный ресурс медиа-файла
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на обновление
+     */
+    public function update(UpdateMediaRequest $request, string $mediaId): BaseMediaResource
     {
         $media = Media::withTrashed()->find($mediaId);
 
@@ -445,7 +552,7 @@ class MediaController extends Controller
         // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
         $updated->load(['image', 'avMetadata']);
         
-        return new MediaResource($updated);
+        return MediaResource::make($updated);
     }
 
     /**
@@ -536,7 +643,6 @@ class MediaController extends Controller
      *       "size_bytes": 235678,
      *       "width": 1920,
      *       "height": 1080,
-     *       "duration_ms": null,
      *       "title": "Hero image",
      *       "alt": "Hero cover",
      *       "collection": "uploads",
@@ -590,6 +696,16 @@ class MediaController extends Controller
      *   },
      *   "trace_id": "00-66666666777788889999000000000005-6666666677778888-01"
      * }
+     */
+    /**
+     * Массовое восстановление удаленных медиа-файлов.
+     *
+     * Восстанавливает мягко удаленные медиа-файлы по массиву идентификаторов.
+     * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
+     *
+     * @param \App\Http\Requests\Admin\Media\BulkRestoreMediaRequest $request HTTP запрос с массивом ids
+     * @return \App\Http\Resources\Admin\MediaCollection Коллекция восстановленных медиа-файлов
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на восстановление
      */
     public function bulkRestore(BulkRestoreMediaRequest $request): MediaCollection
     {

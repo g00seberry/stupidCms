@@ -41,8 +41,18 @@ test('media includes dimensions for images via image relationship', function () 
         ->getJson("/api/v1/admin/media/{$media->id}");
 
     $response->assertOk()
+        ->assertJsonPath('data.kind', 'image')
         ->assertJsonPath('data.width', 1920)
-        ->assertJsonPath('data.height', 1080);
+        ->assertJsonPath('data.height', 1080)
+        ->assertJsonStructure([
+            'data' => ['preview_urls'],
+        ])
+        // Для изображений не должно быть duration_ms и AV-полей
+        ->assertJsonMissingPath('data.duration_ms')
+        ->assertJsonMissingPath('data.bitrate_kbps')
+        ->assertJsonMissingPath('data.frame_rate')
+        ->assertJsonMissingPath('data.video_codec')
+        ->assertJsonMissingPath('data.audio_codec');
 });
 
 test('media includes duration for videos via avMetadata relationship', function () {
@@ -50,6 +60,11 @@ test('media includes duration for videos via avMetadata relationship', function 
 
     \App\Models\MediaAvMetadata::factory()->for($media)->create([
         'duration_ms' => 120000,
+        'bitrate_kbps' => 3500,
+        'frame_rate' => 30.0,
+        'frame_count' => 3600,
+        'video_codec' => 'h264',
+        'audio_codec' => 'aac',
     ]);
 
     $response = $this->actingAs($this->user)
@@ -57,7 +72,44 @@ test('media includes duration for videos via avMetadata relationship', function 
         ->getJson("/api/v1/admin/media/{$media->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.duration_ms', 120000);
+        ->assertJsonPath('data.kind', 'video')
+        ->assertJsonPath('data.duration_ms', 120000)
+        ->assertJsonPath('data.bitrate_kbps', 3500)
+        ->assertJsonPath('data.frame_rate', 30)
+        ->assertJsonPath('data.frame_count', 3600)
+        ->assertJsonPath('data.video_codec', 'h264')
+        ->assertJsonPath('data.audio_codec', 'aac')
+        // Для видео не должно быть width, height, preview_urls
+        ->assertJsonMissingPath('data.width')
+        ->assertJsonMissingPath('data.height')
+        ->assertJsonMissingPath('data.preview_urls');
+});
+
+test('media includes audio metadata for audio files', function () {
+    $media = Media::factory()->audio()->create();
+
+    \App\Models\MediaAvMetadata::factory()->for($media)->create([
+        'duration_ms' => 180000,
+        'bitrate_kbps' => 256,
+        'audio_codec' => 'mp3',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/media/{$media->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('data.kind', 'audio')
+        ->assertJsonPath('data.duration_ms', 180000)
+        ->assertJsonPath('data.bitrate_kbps', 256)
+        ->assertJsonPath('data.audio_codec', 'mp3')
+        // Для аудио не должно быть видео-специфичных полей
+        ->assertJsonMissingPath('data.width')
+        ->assertJsonMissingPath('data.height')
+        ->assertJsonMissingPath('data.preview_urls')
+        ->assertJsonMissingPath('data.frame_rate')
+        ->assertJsonMissingPath('data.frame_count')
+        ->assertJsonMissingPath('data.video_codec');
 });
 
 test('not found returns 404', function () {
@@ -110,15 +162,31 @@ test('media includes timestamps', function () {
 });
 
 test('media includes preview and download urls', function () {
-    $media = Media::factory()->create();
+    // Для изображений должны быть preview_urls
+    $image = Media::factory()->image()->create();
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson("/api/v1/admin/media/{$media->id}");
+        ->getJson("/api/v1/admin/media/{$image->id}");
 
     $response->assertOk()
         ->assertJsonStructure([
             'data' => ['preview_urls', 'download_url'],
-        ]);
+        ])
+        ->assertJsonPath('data.kind', 'image');
+
+    // Для документов preview_urls не должно быть
+    $document = Media::factory()->document()->create();
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/media/{$document->id}");
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => ['download_url'],
+        ])
+        ->assertJsonMissingPath('data.preview_urls')
+        ->assertJsonPath('data.kind', 'document');
 });
 

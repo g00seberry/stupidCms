@@ -535,7 +535,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: all
+                  example: trashed
                   nullable: true
                   enum:
                     - all
@@ -563,17 +563,17 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T06:58:30'
+                  example: '2025-11-18T14:51:01'
                   nullable: true
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2106-12-17'
+                  example: '2106-12-18'
                   nullable: true
                 date_field:
                   type: string
                   description: ''
-                  example: updated
+                  example: published
                   nullable: true
                   enum:
                     - updated
@@ -2553,7 +2553,6 @@ paths:
                       size_bytes: 235678
                       width: 1920
                       height: 1080
-                      duration_ms: null
                       title: 'Hero image'
                       alt: 'Hero cover'
                       collection: uploads
@@ -2562,6 +2561,8 @@ paths:
                       deleted_at: null
                       preview_urls:
                         thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                        medium: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium'
+                        large: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large'
                       download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
                   links:
                     first: …
@@ -2586,7 +2587,6 @@ paths:
                         size_bytes: 235678
                         width: 1920
                         height: 1080
-                        duration_ms: null
                         title: 'Hero image'
                         alt: 'Hero cover'
                         collection: uploads
@@ -2595,6 +2595,8 @@ paths:
                         deleted_at: null
                         preview_urls:
                           thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                          medium: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium'
+                          large: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large'
                         download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
                     items:
                       type: object
@@ -2623,9 +2625,6 @@ paths:
                         height:
                           type: integer
                           example: 1080
-                        duration_ms:
-                          type: string
-                          example: null
                         title:
                           type: string
                           example: 'Hero image'
@@ -2650,6 +2649,12 @@ paths:
                             thumbnail:
                               type: string
                               example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
+                            medium:
+                              type: string
+                              example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium'
+                            large:
+                              type: string
+                              example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large'
                         download_url:
                           type: string
                           example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
@@ -2788,7 +2793,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: video
                   nullable: true
                   enum:
                     - image
@@ -2808,7 +2813,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -2841,237 +2846,13 @@ paths:
                   example: 21
                   nullable: true
     post:
-      summary: 'Загрузка нового медиафайла.'
+      summary: 'Загрузка нового медиа-файла.'
       operationId: ''
-      description: ''
+      description: "Сохраняет файл на диск, извлекает метаданные и создает запись Media в БД.\nВозвращает специализированный ресурс в зависимости от типа медиа:\n- MediaImageResource для изображений (с width, height, preview_urls)\n- MediaVideoResource для видео (с duration_ms, bitrate_kbps, frame_rate и т.д.)\n- MediaAudioResource для аудио (с duration_ms, bitrate_kbps, audio_codec)\n- MediaDocumentResource для документов (только базовые поля)\n\nПри дедупликации (файл с таким же checksum уже существует) возвращает 200,\nпри создании новой записи - 201."
       parameters: []
-      responses:
-        201:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: uuid-media
-                    kind: image
-                    name: hero.jpg
-                    ext: jpg
-                    mime: image/jpeg
-                    size_bytes: 235678
-                    width: 1920
-                    height: 1080
-                    duration_ms: null
-                    title: 'Hero image'
-                    alt: 'Hero cover'
-                    collection: uploads
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:00:00+00:00'
-                    deleted_at: null
-                    preview_urls:
-                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: uuid-media
-                      kind:
-                        type: string
-                        example: image
-                      name:
-                        type: string
-                        example: hero.jpg
-                      ext:
-                        type: string
-                        example: jpg
-                      mime:
-                        type: string
-                        example: image/jpeg
-                      size_bytes:
-                        type: integer
-                        example: 235678
-                      width:
-                        type: integer
-                        example: 1920
-                      height:
-                        type: integer
-                        example: 1080
-                      duration_ms:
-                        type: string
-                        example: null
-                      title:
-                        type: string
-                        example: 'Hero image'
-                      alt:
-                        type: string
-                        example: 'Hero cover'
-                      collection:
-                        type: string
-                        example: uploads
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      deleted_at:
-                        type: string
-                        example: null
-                      preview_urls:
-                        type: object
-                        properties:
-                          thumbnail:
-                            type: string
-                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                      download_url:
-                        type: string
-                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555556
-                    reason: missing_token
-                  trace_id: 00-11111111222233334444555555555556-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555556
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555556-1111111122223333-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: 'The media payload failed validation constraints.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555557
-                    errors:
-                      file:
-                        - 'The file field is required.'
-                  trace_id: 00-11111111222233334444555555555557-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: 'The media payload failed validation constraints.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555557
-                      errors:
-                        type: object
-                        properties:
-                          file:
-                            type: array
-                            example:
-                              - 'The file field is required.'
-                            items:
-                              type: string
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555557-1111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 66666666-7777-8888-9999-000000000001
-                    retry_after: 60
-                  trace_id: 00-66666666777788889999000000000001-6666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 66666666-7777-8888-9999-000000000001
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-66666666777788889999000000000001-6666666677778888-01
+      responses: {  }
       tags:
-        - 'Admin ▸ Media'
+        - Endpoints
       requestBody:
         required: true
         content:
@@ -3082,505 +2863,26 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: "Файл (mimetype из `config('media.allowed_mimes')`)."
+                  description: 'Must be a file. Must not be greater than 1048576 kilobytes.'
                   nullable: false
                 title:
                   type: string
-                  description: 'Пользовательский заголовок.'
-                  example: 'Hero image'
+                  description: 'Must be at least 1 character. Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
                   nullable: true
                 alt:
                   type: string
-                  description: 'Alt-текст для изображений.'
-                  example: 'Hero cover'
+                  description: 'Must be at least 1 character. Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
                   nullable: true
                 collection:
                   type: string
-                  description: 'Коллекция (slug).'
-                  example: uploads
+                  description: 'Must match the regex /^[a-z0-9-_.]+$/i. Must not be greater than 64 characters.'
+                  example: qxbajwbpilpmufinllwlo
                   nullable: true
               required:
                 - file
-  '/api/v1/admin/media/{media}':
-    get:
-      summary: 'Просмотр информации о медиафайле.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: uuid-media
-                    kind: image
-                    name: hero.jpg
-                    ext: jpg
-                    mime: image/jpeg
-                    size_bytes: 235678
-                    width: 1920
-                    height: 1080
-                    duration_ms: null
-                    title: 'Hero image'
-                    alt: 'Hero cover'
-                    collection: uploads
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:00:00+00:00'
-                    deleted_at: null
-                    preview_urls:
-                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: uuid-media
-                      kind:
-                        type: string
-                        example: image
-                      name:
-                        type: string
-                        example: hero.jpg
-                      ext:
-                        type: string
-                        example: jpg
-                      mime:
-                        type: string
-                        example: image/jpeg
-                      size_bytes:
-                        type: integer
-                        example: 235678
-                      width:
-                        type: integer
-                        example: 1920
-                      height:
-                        type: integer
-                        example: 1080
-                      duration_ms:
-                        type: string
-                        example: null
-                      title:
-                        type: string
-                        example: 'Hero image'
-                      alt:
-                        type: string
-                        example: 'Hero cover'
-                      collection:
-                        type: string
-                        example: uploads
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      deleted_at:
-                        type: string
-                        example: null
-                      preview_urls:
-                        type: object
-                        properties:
-                          thumbnail:
-                            type: string
-                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                      download_url:
-                        type: string
-                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555558
-                    reason: missing_token
-                  trace_id: 00-11111111222233334444555555555558-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555558
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555558-1111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555559
-                    media_id: uuid-media
-                  trace_id: 00-11111111222233334444555555555559-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Media not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555559
-                      media_id:
-                        type: string
-                        example: uuid-media
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555559-1111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 66666666-7777-8888-9999-000000000002
-                    retry_after: 60
-                  trace_id: 00-66666666777788889999000000000002-6666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 66666666-7777-8888-9999-000000000002
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-66666666777788889999000000000002-6666666677778888-01
-      tags:
-        - 'Admin ▸ Media'
-    put:
-      summary: 'Обновление метаданных медиа.'
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: uuid-media
-                    kind: image
-                    name: hero.jpg
-                    ext: jpg
-                    mime: image/jpeg
-                    size_bytes: 235678
-                    width: 1920
-                    height: 1080
-                    duration_ms: null
-                    title: 'Updated hero image'
-                    alt: 'Updated hero cover'
-                    collection: uploads
-                    created_at: '2025-01-10T12:00:00+00:00'
-                    updated_at: '2025-01-10T12:05:00+00:00'
-                    deleted_at: null
-                    preview_urls:
-                      thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                    download_url: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: uuid-media
-                      kind:
-                        type: string
-                        example: image
-                      name:
-                        type: string
-                        example: hero.jpg
-                      ext:
-                        type: string
-                        example: jpg
-                      mime:
-                        type: string
-                        example: image/jpeg
-                      size_bytes:
-                        type: integer
-                        example: 235678
-                      width:
-                        type: integer
-                        example: 1920
-                      height:
-                        type: integer
-                        example: 1080
-                      duration_ms:
-                        type: string
-                        example: null
-                      title:
-                        type: string
-                        example: 'Updated hero image'
-                      alt:
-                        type: string
-                        example: 'Updated hero cover'
-                      collection:
-                        type: string
-                        example: uploads
-                      created_at:
-                        type: string
-                        example: '2025-01-10T12:00:00+00:00'
-                      updated_at:
-                        type: string
-                        example: '2025-01-10T12:05:00+00:00'
-                      deleted_at:
-                        type: string
-                        example: null
-                      preview_urls:
-                        type: object
-                        properties:
-                          thumbnail:
-                            type: string
-                            example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail'
-                      download_url:
-                        type: string
-                        example: 'https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555560
-                    reason: missing_token
-                  trace_id: 00-11111111222233334444555555555660-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555560
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555660-1111111122223333-01
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/not-found'
-                  title: 'Media not found'
-                  status: 404
-                  code: NOT_FOUND
-                  detail: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555561
-                    media_id: uuid-media
-                  trace_id: 00-11111111222233334444555555555661-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/not-found'
-                  title:
-                    type: string
-                    example: 'Media not found'
-                  status:
-                    type: integer
-                    example: 404
-                  code:
-                    type: string
-                    example: NOT_FOUND
-                  detail:
-                    type: string
-                    example: 'Media with ID uuid-media does not exist.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555561
-                      media_id:
-                        type: string
-                        example: uuid-media
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555661-1111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 66666666-7777-8888-9999-000000000003
-                    retry_after: 60
-                  trace_id: 00-66666666777788889999000000000003-6666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 66666666-7777-8888-9999-000000000003
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-66666666777788889999000000000003-6666666677778888-01
-      tags:
-        - 'Admin ▸ Media'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  description: 'Новый заголовок.'
-                  example: 'Updated hero image'
-                  nullable: true
-                alt:
-                  type: string
-                  description: Alt-текст.
-                  example: 'Updated hero cover'
-                  nullable: true
-                collection:
-                  type: string
-                  description: Коллекция.
-                  example: uploads
-                  nullable: true
-    parameters:
-      -
-        in: path
-        name: media
-        description: 'UUID медиа.'
-        example: uuid-media
-        required: true
-        schema:
-          type: string
+      security: []
   /api/v1/admin/media/bulk:
     delete:
       summary: 'Массовое мягкое удаление медиа-файлов.'
@@ -3748,279 +3050,6 @@ paths:
                 ids:
                   type: array
                   description: 'Массив идентификаторов медиа-файлов (1-100 элементов).'
-                  example:
-                    - 01HXZYXQJ123456789ABCDEF
-                    - 01HXZYXQJ987654321FEDCBA
-                  items:
-                    type: string
-              required:
-                - ids
-  /api/v1/admin/media/bulk/restore:
-    post:
-      summary: 'Массовое восстановление удалённых медиа-файлов.'
-      operationId: ''
-      description: 'Выполняет восстановление мягко удалённых медиа-файлов по массиву идентификаторов.'
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    -
-                      id: 01HXZYXQJ123456789ABCDEF
-                      kind: image
-                      name: hero.jpg
-                      ext: jpg
-                      mime: image/jpeg
-                      size_bytes: 235678
-                      width: 1920
-                      height: 1080
-                      duration_ms: null
-                      title: 'Hero image'
-                      alt: 'Hero cover'
-                      collection: uploads
-                      created_at: '2025-01-10T12:00:00+00:00'
-                      updated_at: '2025-01-10T12:00:00+00:00'
-                      deleted_at: null
-                      preview_urls:
-                        thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
-                      download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
-                properties:
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 01HXZYXQJ123456789ABCDEF
-                        kind: image
-                        name: hero.jpg
-                        ext: jpg
-                        mime: image/jpeg
-                        size_bytes: 235678
-                        width: 1920
-                        height: 1080
-                        duration_ms: null
-                        title: 'Hero image'
-                        alt: 'Hero cover'
-                        collection: uploads
-                        created_at: '2025-01-10T12:00:00+00:00'
-                        updated_at: '2025-01-10T12:00:00+00:00'
-                        deleted_at: null
-                        preview_urls:
-                          thumbnail: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
-                        download_url: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          example: 01HXZYXQJ123456789ABCDEF
-                        kind:
-                          type: string
-                          example: image
-                        name:
-                          type: string
-                          example: hero.jpg
-                        ext:
-                          type: string
-                          example: jpg
-                        mime:
-                          type: string
-                          example: image/jpeg
-                        size_bytes:
-                          type: integer
-                          example: 235678
-                        width:
-                          type: integer
-                          example: 1920
-                        height:
-                          type: integer
-                          example: 1080
-                        duration_ms:
-                          type: string
-                          example: null
-                        title:
-                          type: string
-                          example: 'Hero image'
-                        alt:
-                          type: string
-                          example: 'Hero cover'
-                        collection:
-                          type: string
-                          example: uploads
-                        created_at:
-                          type: string
-                          example: '2025-01-10T12:00:00+00:00'
-                        updated_at:
-                          type: string
-                          example: '2025-01-10T12:00:00+00:00'
-                        deleted_at:
-                          type: string
-                          example: null
-                        preview_urls:
-                          type: object
-                          properties:
-                            thumbnail:
-                              type: string
-                              example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail'
-                        download_url:
-                          type: string
-                          example: 'https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download'
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/unauthorized'
-                  title: Unauthorized
-                  status: 401
-                  code: UNAUTHORIZED
-                  detail: 'Authentication is required to access this resource.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555565
-                    reason: missing_token
-                  trace_id: 00-11111111222233334444555555555665-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/unauthorized'
-                  title:
-                    type: string
-                    example: Unauthorized
-                  status:
-                    type: integer
-                    example: 401
-                  code:
-                    type: string
-                    example: UNAUTHORIZED
-                  detail:
-                    type: string
-                    example: 'Authentication is required to access this resource.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555565
-                      reason:
-                        type: string
-                        example: missing_token
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555665-1111111122223333-01
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/validation-error'
-                  title: 'Validation Error'
-                  status: 422
-                  code: VALIDATION_ERROR
-                  detail: 'The media payload failed validation constraints.'
-                  meta:
-                    request_id: 11111111-2222-3333-4444-555555555566
-                    errors:
-                      ids:
-                        - 'The ids field is required.'
-                  trace_id: 00-11111111222233334444555555555666-1111111122223333-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/validation-error'
-                  title:
-                    type: string
-                    example: 'Validation Error'
-                  status:
-                    type: integer
-                    example: 422
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  detail:
-                    type: string
-                    example: 'The media payload failed validation constraints.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 11111111-2222-3333-4444-555555555566
-                      errors:
-                        type: object
-                        properties:
-                          ids:
-                            type: array
-                            example:
-                              - 'The ids field is required.'
-                            items:
-                              type: string
-                  trace_id:
-                    type: string
-                    example: 00-11111111222233334444555555555666-1111111122223333-01
-        429:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title: 'Too Many Requests'
-                  status: 429
-                  code: RATE_LIMIT_EXCEEDED
-                  detail: 'Too many attempts. Try again later.'
-                  meta:
-                    request_id: 66666666-7777-8888-9999-000000000005
-                    retry_after: 60
-                  trace_id: 00-66666666777788889999000000000005-6666666677778888-01
-                properties:
-                  type:
-                    type: string
-                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
-                  title:
-                    type: string
-                    example: 'Too Many Requests'
-                  status:
-                    type: integer
-                    example: 429
-                  code:
-                    type: string
-                    example: RATE_LIMIT_EXCEEDED
-                  detail:
-                    type: string
-                    example: 'Too many attempts. Try again later.'
-                  meta:
-                    type: object
-                    properties:
-                      request_id:
-                        type: string
-                        example: 66666666-7777-8888-9999-000000000005
-                      retry_after:
-                        type: integer
-                        example: 60
-                  trace_id:
-                    type: string
-                    example: 00-66666666777788889999000000000005-6666666677778888-01
-      tags:
-        - 'Admin ▸ Media'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ids:
-                  type: array
-                  description: 'Массив идентификаторов удалённых медиа-файлов (1-100 элементов).'
                   example:
                     - 01HXZYXQJ123456789ABCDEF
                     - 01HXZYXQJ987654321FEDCBA
@@ -6204,7 +5233,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -6233,7 +5262,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -10459,6 +9488,56 @@ paths:
         required: true
         schema:
           type: integer
+  '/api/v1/admin/media/{media}':
+    get:
+      summary: 'Просмотр информации о медиа-файле.'
+      operationId: ''
+      description: "Возвращает специализированный ресурс в зависимости от типа медиа:\n- MediaImageResource для изображений (с width, height, preview_urls)\n- MediaVideoResource для видео (с duration_ms, bitrate_kbps, frame_rate и т.д.)\n- MediaAudioResource для аудио (с duration_ms, bitrate_kbps, audio_codec)\n- MediaDocumentResource для документов (только базовые поля)"
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Обновление метаданных медиа-файла.'
+      operationId: ''
+      description: "Обновляет title, alt, collection и возвращает специализированный ресурс\nв зависимости от типа медиа (изображение, видео, аудио, документ)."
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must be at least 1 character. Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                alt:
+                  type: string
+                  description: 'Must be at least 1 character. Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                collection:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9-_.]+$/i. Must not be greater than 64 characters.'
+                  example: qxbajwbpilpmufinllwlo
+                  nullable: true
+      security: []
+    parameters:
+      -
+        in: path
+        name: media
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
   '/api/v1/admin/media/{media}/preview':
     get:
       summary: 'Генерация временного предпросмотра для изображения.'
@@ -10497,6 +9576,32 @@ paths:
         required: true
         schema:
           type: string
+  /api/v1/admin/media/bulk/restore:
+    post:
+      summary: 'Массовое восстановление удаленных медиа-файлов.'
+      operationId: ''
+      description: "Восстанавливает мягко удаленные медиа-файлы по массиву идентификаторов.\nВозвращает коллекцию с специализированными ресурсами для каждого типа медиа."
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: 'Must be 26 characters.'
+                  example:
+                    - vmqeopfuudtdsufvyvddqamnii
+                  items:
+                    type: string
+              required:
+                - ids
+      security: []
   /api/v1/search:
     get:
       summary: 'Поиск опубликованного контента с фильтрами.'
@@ -10694,12 +9799,12 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T06:58:30'
+                  example: '2025-11-18T14:51:01'
                   nullable: true
                 to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>from</code>.'
-                  example: '2106-12-17'
+                  example: '2106-12-18'
                   nullable: true
                 page:
                   type: integer
