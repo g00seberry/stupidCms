@@ -1247,6 +1247,26 @@
             ]
         },
         {
+            "id": "domain_service:Media/Validation/MediaConfigValidator",
+            "type": "domain_service",
+            "name": "MediaConfigValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MediaConfigValidator.php",
+            "summary": "Валидатор конфигурации медиа-файлов.",
+            "details": "Проверяет корректность конфигурации, включая обязательные варианты изображений.",
+            "meta": {
+                "methods": [
+                    "validate"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "validation"
+            ]
+        },
+        {
             "id": "domain_service:Media/Validation/MediaValidationPipeline",
             "type": "domain_service",
             "name": "MediaValidationPipeline",
@@ -6219,6 +6239,26 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MediaConfigValidator.php",
+                "summary": "Валидатор конфигурации медиа-файлов.",
+                "details": "Проверяет корректность конфигурации, включая обязательные варианты изображений.",
+                "meta": {
+                    "methods": [
+                        "validate"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "validation"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Validation/MediaValidationPipeline",
                 "type": "domain_service",
                 "name": "MediaValidationPipeline",
@@ -10134,6 +10174,12 @@
                 "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
             },
             {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "summary": "Валидатор конфигурации медиа-файлов."
+            },
+            {
                 "id": "domain_service:Media/Validation/MediaValidationPipeline",
                 "type": "domain_service",
                 "name": "MediaValidationPipeline",
@@ -10652,6 +10698,12 @@
                 "type": "domain_service",
                 "name": "CorruptionValidator",
                 "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "summary": "Валидатор конфигурации медиа-файлов."
             },
             {
                 "id": "domain_service:Media/Validation/MediaValidationPipeline",
@@ -12681,5 +12733,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-18T15:50:06+00:00"
+    "generated_at": "2025-11-18T16:23:23+00:00"
 }

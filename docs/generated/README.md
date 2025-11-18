@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 172
+**Всего сущностей:** 173
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (17 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (64 сущностей)
+Доменные сервисы, действия, репозитории (65 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -49,7 +49,7 @@ HTTP эндпоинты API (60 сущностей)
 - [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
 - [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
 - [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- *...и еще 54 сущностей*
+- *...и еще 55 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (60 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-18 15:50:06
+**Сгенерировано:** 2025-11-18 16:23:23
 
 Для обновления документации выполните:
 ```bash

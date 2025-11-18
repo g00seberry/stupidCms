@@ -15,6 +15,7 @@ use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Domain\Media\Services\MediaMetadataPlugin;
 use App\Domain\Media\Services\MediainfoMediaMetadataPlugin;
 use App\Domain\Media\Validation\CorruptionValidator;
+use App\Domain\Media\Validation\MediaConfigValidator;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Domain\Media\Validation\MediaValidatorInterface;
 use App\Domain\Media\Validation\MimeSignatureValidator;
@@ -198,6 +199,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * Регистрирует EntryObserver для модели Entry.
      * Регистрирует слушателей событий медиа-файлов.
+     * Валидирует конфигурацию медиа-файлов.
      * Создаёт директорию для кэша HTMLPurifier.
      * Устанавливает JWT leeway для учёта расхождения часов.
      *
@@ -219,6 +221,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(MediaDeleted::class, [LogMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [NotifyMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [PurgeCdnCache::class, 'handleMediaDeleted']);
+
+        // Валидация конфигурации медиа-файлов
+        (new MediaConfigValidator())->validate();
         
         // Создаем директорию для кэша HTMLPurifier (idempotent)
         app('files')->ensureDirectoryExists(storage_path('app/purifier'));

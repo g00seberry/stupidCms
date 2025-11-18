@@ -27,8 +27,8 @@
 
 ### Общие показатели
 
--   ✅ **Всего тестов:** 941
--   ✅ **Assertions:** 2287
+-   ✅ **Всего тестов:** 982
+-   ✅ **Assertions:** 2375
 -   ⏭️ **Skipped:** 8
 -   ❌ **Failed:** 0
 -   ⏱️ **Время выполнения:** ~58 сек
@@ -40,19 +40,19 @@
 -   ✅ **Models:** 218 тестов (User, Entry, Media, PostType, Plugin, Option, Taxonomy, Term, TermTree, RefreshToken, ReservedRoute, Redirect, Audit, Outbox + MediaVariant, MediaMetadata)
 -   ✅ **Auth Module:** 26 тестов (JwtService, RefreshTokenRepository, RefreshTokenDto, Exceptions)
 
-#### Фаза 2: Domain Services 🔄 (50%)
+#### Фаза 2: Domain Services 🔄 (55%)
 
 -   ✅ **Auth:** 26 тестов
 -   ✅ **Entries:** 16 тестов (PublishingService)
 -   ✅ **Routing:** 37 тестов (PathNormalizer, ReservedPattern, Exceptions)
--   ✅ **Media:** 117 тестов (MediaQuery, ListMediaAction, UpdateMediaMetadataAction, ExifManager, MediaValidationPipeline, CorruptionValidator, MimeSignatureValidator, SizeLimitValidator, StorageResolver, CollectionRulesResolver, MediaDeletedFilter, MediaVariantStatus, MediaMetadataDTO, GdImageProcessor, GlideImageProcessor)
+-   ✅ **Media:** 158 тестов (MediaQuery, ListMediaAction, UpdateMediaMetadataAction, ExifManager, MediaValidationPipeline, CorruptionValidator, MimeSignatureValidator, SizeLimitValidator, StorageResolver, CollectionRulesResolver, MediaDeletedFilter, MediaVariantStatus, MediaMetadataDTO, GdImageProcessor, GlideImageProcessor, MediaMetadataExtractor, ExiftoolMediaMetadataPlugin, FfprobeMediaMetadataPlugin, MediainfoMediaMetadataPlugin)
 -   ✅ **Options:** 16 тестов (OptionsRepository)
 -   ✅ **PostTypes:** 19 тестов (PostTypeOptions)
 -   ✅ **Sanitizer:** 17 тестов (RichTextSanitizer)
 -   ✅ **View:** 10 тестов (BladeTemplateResolver)
 -   ✅ **Plugins:** 7 тестов (PluginRegistry)
 -   ✅ **Search:** 26 тестов (SearchQuery, SearchResult, SearchHit, SearchTermFilter)
--   ⏳ **Media (полное):** MediaStoreAction требует доработки, MediaMetadataExtractor и плагины требуют тестов
+-   ⏳ **Media (полное):** MediaStoreAction требует доработки
 -   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
 
 #### Фаза 3: HTTP Controllers ✅ (100%)
@@ -1159,65 +1159,125 @@
 
 ---
 
-##### 2.2.11. MediaMetadataExtractor
+##### 2.2.11. MediaMetadataExtractor ✅
 
-**Путь:** `app/Domain/Media/Services/MediaMetadataExtractor.php`
+**Путь:** `app/Domain/Media/Services/MediaMetadataExtractor.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тesты** (`tests/Unit/Domain/Media/Services/MediaMetadataExtractorTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/MediaMetadataExtractorTest.php`) ✅
 
 ```php
-- test('extracts metadata using available plugins')
-- test('tries plugins in order')
-- test('returns null if no plugin supports file')
-- test('handles plugin errors gracefully')
+✅ test('extracts image dimensions from jpeg file')
+✅ test('extracts image dimensions from png file')
+✅ test('returns null dimensions for non-image files')
+✅ test('uses provided mime type instead of auto-detection')
+✅ test('tries plugins in order for video files')
+✅ test('skips plugins that do not support mime type')
+✅ test('handles plugin errors gracefully')
+✅ test('skips non-plugin objects in plugins list')
+✅ test('uses cache when available')
+✅ test('stores result in cache after extraction')
+✅ test('uses custom cache ttl when provided')
+✅ test('extracts plugin data correctly')
+✅ test('stops on first plugin that returns data')
+✅ test('continues to next plugin when plugin returns empty data')
 ```
+
+**Примечания:**
+
+-   14 тестов
+-   Извлечение размеров изображений через ImageProcessor
+-   Fallback на getimagesize при ошибках ImageProcessor
+-   Использование плагинов для видео/аудио с graceful fallback
+-   Кэширование результатов извлечения метаданных
+-   Обработка ошибок плагинов и пустых результатов
 
 ---
 
-##### 2.2.12. ExiftoolMediaMetadataPlugin
+##### 2.2.12. ExiftoolMediaMetadataPlugin ✅
 
-**Путь:** `app/Domain/Media/Services/ExiftoolMediaMetadataPlugin.php`
+**Путь:** `app/Domain/Media/Services/ExiftoolMediaMetadataPlugin.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Services/ExiftoolMediaMetadataPluginTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/ExiftoolMediaMetadataPluginTest.php`) ✅
 
 ```php
-- test('supports images')
-- test('extracts metadata using exiftool')
-- test('parses exiftool json output')
-- test('handles exiftool errors')
-- test('requires exiftool binary')
+✅ test('supports image mime types')
+✅ test('supports video mime types')
+✅ test('supports audio mime types')
+✅ test('does not support non-media mime types')
+✅ test('returns empty array for non-existent file')
+✅ test('returns empty array for empty path')
+✅ test('uses custom binary path when provided')
+✅ test('uses default binary when null provided')
+✅ test('uses default binary when empty string provided')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Поддержка изображений, видео и аудио
+-   Использование exiftool для извлечения метаданных
+-   Обработка несуществующих файлов и пустых путей
+-   Настройка пути к бинарнику exiftool
 
 ---
 
-##### 2.2.13. FfprobeMediaMetadataPlugin
+##### 2.2.13. FfprobeMediaMetadataPlugin ✅
 
-**Путь:** `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`
+**Путь:** `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Services/FfprobeMediaMetadataPluginTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/FfprobeMediaMetadataPluginTest.php`) ✅
 
 ```php
-- test('supports video and audio')
-- test('extracts duration from video')
-- test('extracts bitrate from video')
-- test('extracts frame rate from video')
-- test('extracts codec information')
-- test('requires ffprobe binary')
+✅ test('supports video mime types')
+✅ test('supports audio mime types')
+✅ test('does not support image mime types')
+✅ test('does not support non-media mime types')
+✅ test('returns empty array for non-existent file')
+✅ test('returns empty array for empty path')
+✅ test('uses custom binary path when provided')
+✅ test('uses default binary when null provided')
+✅ test('uses default binary when empty string provided')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Поддержка только видео и аудио (не изображений)
+-   Использование ffprobe для извлечения метаданных
+-   Обработка несуществующих файлов и пустых путей
+-   Настройка пути к бинарнику ffprobe
 
 ---
 
-##### 2.2.14. MediainfoMediaMetadataPlugin
+##### 2.2.14. MediainfoMediaMetadataPlugin ✅
 
-**Путь:** `app/Domain/Media/Services/MediainfoMediaMetadataPlugin.php`
+**Путь:** `app/Domain/Media/Services/MediainfoMediaMetadataPlugin.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Services/MediainfoMediaMetadataPluginTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/MediainfoMediaMetadataPluginTest.php`) ✅
 
 ```php
-- test('supports video and audio')
-- test('extracts detailed av metadata')
-- test('requires mediainfo binary')
+✅ test('supports video mime types')
+✅ test('supports audio mime types')
+✅ test('does not support image mime types')
+✅ test('does not support non-media mime types')
+✅ test('returns empty array for non-existent file')
+✅ test('returns empty array for empty path')
+✅ test('uses custom binary path when provided')
+✅ test('uses default binary when null provided')
+✅ test('uses default binary when empty string provided')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Поддержка только видео и аудио (не изображений)
+-   Использование mediainfo для извлечения детальных метаданных
+-   Обработка несуществующих файлов и пустых путей
+-   Настройка пути к бинарнику mediainfo
 
 ---
 

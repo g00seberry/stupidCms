@@ -338,6 +338,24 @@ CQRS-действие: выборка списка медиа по параме�
 
 ---
 
+## MediaConfigValidator
+**ID:** `domain_service:Media/Validation/MediaConfigValidator`
+**Path:** `app/Domain/Media/Validation/MediaConfigValidator.php`
+
+Валидатор конфигурации медиа-файлов.
+
+### Details
+Проверяет корректность конфигурации, включая обязательные варианты изображений.
+
+### Meta
+- **Methods:** `validate`
+
+### Tags
+`media`, `validation`
+
+
+---
+
 ## MediaDeleted
 **ID:** `domain_service:Media/Events/MediaDeleted`
 **Path:** `app/Domain/Media/Events/MediaDeleted.php`
