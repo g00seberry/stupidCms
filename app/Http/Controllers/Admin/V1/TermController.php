@@ -63,7 +63,8 @@ class TermController extends Controller
      *       "name": "Guides",
      *       "meta_json": {},
      *       "created_at": "2025-01-10T12:00:00+00:00",
-     *       "updated_at": "2025-01-10T12:00:00+00:00"
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null
      *     }
      *   ]
      * }
@@ -154,13 +155,21 @@ class TermController extends Controller
      *       "id": 1,
      *       "taxonomy": 1,
      *       "name": "Технологии",
+     *       "meta_json": {},
      *       "parent_id": null,
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null,
      *       "children": [
      *         {
      *           "id": 2,
      *           "taxonomy": 1,
      *           "name": "Laravel",
+     *           "meta_json": {},
      *           "parent_id": 1,
+     *           "created_at": "2025-01-10T12:05:00+00:00",
+     *           "updated_at": "2025-01-10T12:05:00+00:00",
+     *           "deleted_at": null,
      *           "children": []
      *         }
      *       ]

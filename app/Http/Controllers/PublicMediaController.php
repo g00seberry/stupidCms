@@ -33,6 +33,40 @@ class PublicMediaController extends Controller
      * Для локальных дисков возвращает файл напрямую, для облачных - редирект на подписанный URL.
      * Не требует аутентификации, но проверяет существование медиа-файла.
      *
+     * @group Media
+     * @name Get public media
+     * @unauthenticated
+     * @urlParam id string required ULID идентификатор медиа-файла. Example: 01HZYQNGQK74ZP6YVZ6E7SFJ2D
+     * @responseHeader X-URL-TTL "300"
+     * @responseHeader X-URL-Expires-At "2025-01-10T12:05:00+00:00"
+     * @responseHeader Location "https://cdn.stupidcms.dev/...signed..."
+     * @response status=200 file
+     * @response status=302 {}
+     * @response status=404 {
+     *   "type": "https://stupidcms.dev/problems/not-found",
+     *   "title": "Media not found",
+     *   "status": 404,
+     *   "code": "NOT_FOUND",
+     *   "detail": "Media with ID 01HZYQNGQK74ZP6YVZ6E7SFJ2D does not exist.",
+     *   "meta": {
+     *     "request_id": "0c0c0c0c-0c0c-0c0c-0c0c-0c0c0c0c0c01",
+     *     "media_id": "01HZYQNGQK74ZP6YVZ6E7SFJ2D"
+     *   },
+     *   "trace_id": "00-0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c01-0c0c0c0c0c0c0c0c-01"
+     * }
+     * @response status=500 {
+     *   "type": "https://stupidcms.dev/problems/media-download-error",
+     *   "title": "Failed to generate media URL",
+     *   "status": 500,
+     *   "code": "MEDIA_DOWNLOAD_ERROR",
+     *   "detail": "Failed to generate media URL.",
+     *   "meta": {
+     *     "request_id": "0c0c0c0c-0c0c-0c0c-0c0c-0c0c0c0c0c02",
+     *     "media_id": "01HZYQNGQK74ZP6YVZ6E7SFJ2D"
+     *   },
+     *   "trace_id": "00-0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c02-0c0c0c0c0c0c0c0c-01"
+     * }
+     *
      * @param string $id ULID идентификатор медиа-файла
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */

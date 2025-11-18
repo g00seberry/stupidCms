@@ -50,6 +50,9 @@ tags:
     name: Endpoints
     description: ''
   -
+    name: Media
+    description: ''
+  -
     name: Search
     description: ''
 components:
@@ -308,8 +311,14 @@ paths:
                       title: 'Headless CMS launch checklist'
                       slug: launch-checklist
                       status: draft
+                      content_json: {  }
+                      meta_json: {  }
                       is_published: false
                       published_at: null
+                      template_override: null
+                      created_at: '2025-01-10T12:00:00+00:00'
+                      updated_at: '2025-01-10T12:00:00+00:00'
+                      deleted_at: null
                   links:
                     first: 'https://api.stupidcms.dev/api/v1/admin/entries?page=1'
                     last: 'https://api.stupidcms.dev/api/v1/admin/entries?page=5'
@@ -330,8 +339,14 @@ paths:
                         title: 'Headless CMS launch checklist'
                         slug: launch-checklist
                         status: draft
+                        content_json: []
+                        meta_json: []
                         is_published: false
                         published_at: null
+                        template_override: null
+                        created_at: '2025-01-10T12:00:00+00:00'
+                        updated_at: '2025-01-10T12:00:00+00:00'
+                        deleted_at: null
                     items:
                       type: object
                       properties:
@@ -350,10 +365,28 @@ paths:
                         status:
                           type: string
                           example: draft
+                        content_json:
+                          type: object
+                          properties: {  }
+                        meta_json:
+                          type: object
+                          properties: {  }
                         is_published:
                           type: boolean
                           example: false
                         published_at:
+                          type: string
+                          example: null
+                        template_override:
+                          type: string
+                          example: null
+                        created_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
+                        updated_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
+                        deleted_at:
                           type: string
                           example: null
                   links:
@@ -535,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -563,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T14:51:01'
+                  example: '2025-11-18T15:07:46'
                   nullable: true
                 date_to:
                   type: string
@@ -573,7 +606,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -939,7 +972,6 @@ paths:
                       -
                         id: 3
                         name: Guides
-                        slug: guides
                         taxonomy: 1
                     created_at: '2025-02-09T10:15:00+00:00'
                     updated_at: '2025-02-10T08:05:00+00:00'
@@ -993,7 +1025,6 @@ paths:
                           -
                             id: 3
                             name: Guides
-                            slug: guides
                             taxonomy: 1
                         items:
                           type: object
@@ -1004,9 +1035,6 @@ paths:
                             name:
                               type: string
                               example: Guides
-                            slug:
-                              type: string
-                              example: guides
                             taxonomy:
                               type: integer
                               example: 1
@@ -2793,7 +2821,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: video
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -2821,7 +2849,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: created_at
                   nullable: true
                   enum:
                     - created_at
@@ -2830,7 +2858,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -3325,6 +3353,7 @@ paths:
                       key: hero.title
                       value: 'Launch the future'
                       description: 'Hero headline'
+                      created_at: '2025-01-10T12:00:00+00:00'
                       updated_at: '2025-01-10T12:00:00+00:00'
                       deleted_at: null
                   links:
@@ -3347,6 +3376,7 @@ paths:
                         key: hero.title
                         value: 'Launch the future'
                         description: 'Hero headline'
+                        created_at: '2025-01-10T12:00:00+00:00'
                         updated_at: '2025-01-10T12:00:00+00:00'
                         deleted_at: null
                     items:
@@ -3367,6 +3397,9 @@ paths:
                         description:
                           type: string
                           example: 'Hero headline'
+                        created_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
                         updated_at:
                           type: string
                           example: '2025-01-10T12:00:00+00:00'
@@ -3611,7 +3644,9 @@ paths:
                     key: hero.title
                     value: 'Launch the future'
                     description: 'Hero headline'
+                    created_at: '2025-01-10T12:00:00+00:00'
                     updated_at: '2025-01-10T12:00:00+00:00'
+                    deleted_at: null
                 properties:
                   data:
                     type: object
@@ -3631,9 +3666,15 @@ paths:
                       description:
                         type: string
                         example: 'Hero headline'
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
                       updated_at:
                         type: string
                         example: '2025-01-10T12:00:00+00:00'
+                      deleted_at:
+                        type: string
+                        example: null
         401:
           description: ''
           content:
@@ -3792,6 +3833,7 @@ paths:
                     value:
                       title: Launch
                     description: 'Hero headline'
+                    created_at: '2025-01-10T12:00:00+00:00'
                     updated_at: '2025-01-10T12:00:00+00:00'
                     deleted_at: null
                 properties:
@@ -3816,6 +3858,9 @@ paths:
                       description:
                         type: string
                         example: 'Hero headline'
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
                       updated_at:
                         type: string
                         example: '2025-01-10T12:00:00+00:00'
@@ -4184,6 +4229,7 @@ paths:
                     key: hero.title
                     value: 'Launch the future'
                     description: 'Hero headline'
+                    created_at: '2025-01-10T12:00:00+00:00'
                     updated_at: '2025-01-10T12:00:00+00:00'
                     deleted_at: null
                 properties:
@@ -4205,6 +4251,9 @@ paths:
                       description:
                         type: string
                         example: 'Hero headline'
+                      created_at:
+                        type: string
+                        example: '2025-01-10T12:00:00+00:00'
                       updated_at:
                         type: string
                         example: '2025-01-10T12:00:00+00:00'
@@ -5252,7 +5301,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at
+                  example: name
                   nullable: true
                   enum:
                     - name
@@ -5262,7 +5311,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -6316,6 +6365,7 @@ paths:
                       slug: article
                       name: Articles
                       options_json: {  }
+                      created_at: '2025-01-10T12:00:00+00:00'
                       updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
                   data:
@@ -6325,6 +6375,7 @@ paths:
                         slug: article
                         name: Articles
                         options_json: []
+                        created_at: '2025-01-10T12:00:00+00:00'
                         updated_at: '2025-01-10T12:45:00+00:00'
                     items:
                       type: object
@@ -6338,6 +6389,9 @@ paths:
                         options_json:
                           type: object
                           properties: {  }
+                        created_at:
+                          type: string
+                          example: '2025-01-10T12:00:00+00:00'
                         updated_at:
                           type: string
                           example: '2025-01-10T12:45:00+00:00'
@@ -7486,7 +7540,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -7508,7 +7562,6 @@ paths:
                 example:
                   data:
                     id: 1
-                    taxonomy_id: 1
                     label: Categories
                     hierarchical: true
                     options_json: {  }
@@ -7519,9 +7572,6 @@ paths:
                     type: object
                     properties:
                       id:
-                        type: integer
-                        example: 1
-                      taxonomy_id:
                         type: integer
                         example: 1
                       label:
@@ -7726,10 +7776,14 @@ paths:
                       name: pages.show
                       path: pages/show.blade.php
                       exists: true
+                      created_at: null
+                      updated_at: null
                     -
                       name: home.default
                       path: home/default.blade.php
                       exists: true
+                      created_at: null
+                      updated_at: null
                 properties:
                   data:
                     type: array
@@ -7738,10 +7792,14 @@ paths:
                         name: pages.show
                         path: pages/show.blade.php
                         exists: true
+                        created_at: null
+                        updated_at: null
                       -
                         name: home.default
                         path: home/default.blade.php
                         exists: true
+                        created_at: null
+                        updated_at: null
                     items:
                       type: object
                       properties:
@@ -7754,6 +7812,12 @@ paths:
                         exists:
                           type: boolean
                           example: true
+                        created_at:
+                          type: string
+                          example: null
+                        updated_at:
+                          type: string
+                          example: null
         401:
           description: ''
           content:
@@ -7862,6 +7926,7 @@ paths:
                     path: pages/article.blade.php
                     exists: true
                     created_at: '2025-01-10T12:45:00+00:00'
+                    updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
                   data:
                     type: object
@@ -7876,6 +7941,9 @@ paths:
                         type: boolean
                         example: true
                       created_at:
+                        type: string
+                        example: '2025-01-10T12:45:00+00:00'
+                      updated_at:
                         type: string
                         example: '2025-01-10T12:45:00+00:00'
         401:
@@ -8102,6 +8170,7 @@ paths:
                     name: pages.article
                     path: pages/article.blade.php
                     exists: true
+                    created_at: null
                     updated_at: '2025-01-10T12:45:00+00:00'
                 properties:
                   data:
@@ -8116,6 +8185,9 @@ paths:
                       exists:
                         type: boolean
                         example: true
+                      created_at:
+                        type: string
+                        example: null
                       updated_at:
                         type: string
                         example: '2025-01-10T12:45:00+00:00'
@@ -9135,6 +9207,110 @@ paths:
                   detail:
                     type: string
                     example: 'Invalid credentials.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/validation-error'
+                  title: 'Validation Error'
+                  status: 422
+                  code: VALIDATION_ERROR
+                  detail: 'The given data was invalid.'
+                  meta:
+                    request_id: dddddddd-dddd-dddd-dddd-dddddddddddd
+                    errors:
+                      email:
+                        - 'The email field is required.'
+                      password:
+                        - 'The password field is required.'
+                  trace_id: 00-dddddddddddddddddddddddddddddddd-dddddddddddd-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/validation-error'
+                  title:
+                    type: string
+                    example: 'Validation Error'
+                  status:
+                    type: integer
+                    example: 422
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  detail:
+                    type: string
+                    example: 'The given data was invalid.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: dddddddd-dddd-dddd-dddd-dddddddddddd
+                      errors:
+                        type: object
+                        properties:
+                          email:
+                            type: array
+                            example:
+                              - 'The email field is required.'
+                            items:
+                              type: string
+                          password:
+                            type: array
+                            example:
+                              - 'The password field is required.'
+                            items:
+                              type: string
+                  trace_id:
+                    type: string
+                    example: 00-dddddddddddddddddddddddddddddddd-dddddddddddd-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee
+                    retry_after: 60
+                  trace_id: 00-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-eeeeeeeeeeee-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-eeeeeeeeeeee-01
       tags:
         - Auth
       requestBody:
@@ -9201,6 +9377,50 @@ paths:
                   detail:
                     type: string
                     example: 'Missing refresh token.'
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+                    retry_after: 60
+                  trace_id: 00-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaa-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaa-01
         500:
           description: ''
           content:
@@ -9243,6 +9463,94 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/unauthorized'
+                  title: Unauthorized
+                  status: 401
+                  code: UNAUTHORIZED
+                  detail: 'Authentication is required to access this resource.'
+                  meta:
+                    request_id: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+                    reason: missing_token
+                  trace_id: 00-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-bbbbbbbbbbbb-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/unauthorized'
+                  title:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: integer
+                    example: 401
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  detail:
+                    type: string
+                    example: 'Authentication is required to access this resource.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+                      reason:
+                        type: string
+                        example: missing_token
+                  trace_id:
+                    type: string
+                    example: 00-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-bbbbbbbbbbbb-01
+        429:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title: 'Too Many Requests'
+                  status: 429
+                  code: RATE_LIMIT_EXCEEDED
+                  detail: 'Too many attempts. Try again later.'
+                  meta:
+                    request_id: cccccccc-cccc-cccc-cccc-cccccccccccc
+                    retry_after: 60
+                  trace_id: 00-cccccccccccccccccccccccccccccccc-cccccccccccc-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/rate-limit-exceeded'
+                  title:
+                    type: string
+                    example: 'Too Many Requests'
+                  status:
+                    type: integer
+                    example: 429
+                  code:
+                    type: string
+                    example: RATE_LIMIT_EXCEEDED
+                  detail:
+                    type: string
+                    example: 'Too many attempts. Try again later.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: cccccccc-cccc-cccc-cccc-cccccccccccc
+                      retry_after:
+                        type: integer
+                        example: 60
+                  trace_id:
+                    type: string
+                    example: 00-cccccccccccccccccccccccccccccccc-cccccccccccc-01
       tags:
         - Auth
       requestBody:
@@ -9274,6 +9582,9 @@ paths:
                   id: 1
                   email: admin@stupidcms.dev
                   name: Admin
+                  is_admin: true
+                  created_at: '2025-01-10T12:00:00+00:00'
+                  updated_at: '2025-01-10T12:00:00+00:00'
                 properties:
                   id:
                     type: integer
@@ -9284,6 +9595,15 @@ paths:
                   name:
                     type: string
                     example: Admin
+                  is_admin:
+                    type: boolean
+                    example: true
+                  created_at:
+                    type: string
+                    example: '2025-01-10T12:00:00+00:00'
+                  updated_at:
+                    type: string
+                    example: '2025-01-10T12:00:00+00:00'
         401:
           description: ''
           content:
@@ -9310,25 +9630,6 @@ paths:
                     example: 'Authentication required.'
       tags:
         - Auth
-  '/api/v1/media/{id}':
-    get:
-      summary: 'Получить публичный доступ к медиа-файлу.'
-      operationId: ''
-      description: "Генерирует подписанный URL с ограниченным временем жизни (TTL из config).\nДля локальных дисков возвращает файл напрямую, для облачных - редирект на подписанный URL.\nНе требует аутентификации, но проверяет существование медиа-файла."
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-    parameters:
-      -
-        in: path
-        name: id
-        description: 'The ID of the medium.'
-        example: consequatur
-        required: true
-        schema:
-          type: string
   '/api/v1/admin/taxonomies/{id}':
     get:
       summary: 'Получение таксономии.'
@@ -9437,7 +9738,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9602,6 +9903,128 @@ paths:
               required:
                 - ids
       security: []
+  '/api/v1/media/{id}':
+    get:
+      summary: 'Получить публичный доступ к медиа-файлу.'
+      operationId: ''
+      description: "Генерирует подписанный URL с ограниченным временем жизни (TTL из config).\nДля локальных дисков возвращает файл напрямую, для облачных - редирект на подписанный URL.\nНе требует аутентификации, но проверяет существование медиа-файла."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: file
+        302:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/not-found'
+                  title: 'Media not found'
+                  status: 404
+                  code: NOT_FOUND
+                  detail: 'Media with ID 01HZYQNGQK74ZP6YVZ6E7SFJ2D does not exist.'
+                  meta:
+                    request_id: 0c0c0c0c-0c0c-0c0c-0c0c-0c0c0c0c0c01
+                    media_id: 01HZYQNGQK74ZP6YVZ6E7SFJ2D
+                  trace_id: 00-0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c01-0c0c0c0c0c0c0c0c-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/not-found'
+                  title:
+                    type: string
+                    example: 'Media not found'
+                  status:
+                    type: integer
+                    example: 404
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  detail:
+                    type: string
+                    example: 'Media with ID 01HZYQNGQK74ZP6YVZ6E7SFJ2D does not exist.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 0c0c0c0c-0c0c-0c0c-0c0c-0c0c0c0c0c01
+                      media_id:
+                        type: string
+                        example: 01HZYQNGQK74ZP6YVZ6E7SFJ2D
+                  trace_id:
+                    type: string
+                    example: 00-0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c01-0c0c0c0c0c0c0c0c-01
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: 'https://stupidcms.dev/problems/media-download-error'
+                  title: 'Failed to generate media URL'
+                  status: 500
+                  code: MEDIA_DOWNLOAD_ERROR
+                  detail: 'Failed to generate media URL.'
+                  meta:
+                    request_id: 0c0c0c0c-0c0c-0c0c-0c0c-0c0c0c0c0c02
+                    media_id: 01HZYQNGQK74ZP6YVZ6E7SFJ2D
+                  trace_id: 00-0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c02-0c0c0c0c0c0c0c0c-01
+                properties:
+                  type:
+                    type: string
+                    example: 'https://stupidcms.dev/problems/media-download-error'
+                  title:
+                    type: string
+                    example: 'Failed to generate media URL'
+                  status:
+                    type: integer
+                    example: 500
+                  code:
+                    type: string
+                    example: MEDIA_DOWNLOAD_ERROR
+                  detail:
+                    type: string
+                    example: 'Failed to generate media URL.'
+                  meta:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: 0c0c0c0c-0c0c-0c0c-0c0c-0c0c0c0c0c02
+                      media_id:
+                        type: string
+                        example: 01HZYQNGQK74ZP6YVZ6E7SFJ2D
+                  trace_id:
+                    type: string
+                    example: 00-0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c02-0c0c0c0c0c0c0c0c-01
+      tags:
+        - Media
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ULID идентификатор медиа-файла.'
+        example: 01HZYQNGQK74ZP6YVZ6E7SFJ2D
+        required: true
+        schema:
+          type: string
   /api/v1/search:
     get:
       summary: 'Поиск опубликованного контента с фильтрами.'
@@ -9799,7 +10222,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T14:51:01'
+                  example: '2025-11-18T15:07:45'
                   nullable: true
                 to:
                   type: string

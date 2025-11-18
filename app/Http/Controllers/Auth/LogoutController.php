@@ -47,6 +47,30 @@ final class LogoutController
      * @responseHeader Set-Cookie "access=; Path=/; HttpOnly; Secure; Max-Age=0"
      * @responseHeader Set-Cookie "refresh=; Path=/; HttpOnly; Secure; Max-Age=0"
      * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-bbbbbbbbbbbb-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-cccccccccccccccccccccccccccccccc-cccccccccccc-01"
+     * }
      */
     public function logout(LogoutRequest $request): LogoutResource
     {

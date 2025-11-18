@@ -72,8 +72,14 @@ class EntryController extends Controller
      *       "title": "Headless CMS launch checklist",
      *       "slug": "launch-checklist",
      *       "status": "draft",
+     *       "content_json": {},
+     *       "meta_json": {},
      *       "is_published": false,
-     *       "published_at": null
+     *       "published_at": null,
+     *       "template_override": null,
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null
      *     }
      *   ],
      *   "links": {
@@ -229,7 +235,6 @@ class EntryController extends Controller
      *       {
      *         "id": 3,
      *         "name": "Guides",
-     *         "slug": "guides",
      *         "taxonomy": 1
      *       }
      *     ],

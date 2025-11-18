@@ -22,7 +22,14 @@ class AdminPingController extends Controller
      * Простой эндпоинт для проверки, что системные маршруты
      * обрабатываются раньше fallback.
      *
-     * @return \App\Http\Resources\Admin\AdminPingResource Ресурс с информацией о статусе
+     * @group Admin ▸ System
+     * @name Ping
+     * @unauthenticated
+     * @response status=200 {
+     *   "status": "OK",
+     *   "message": "Admin ping route is working",
+     *   "route": "/admin/ping"
+     * }
      */
     public function ping(): AdminPingResource
     {

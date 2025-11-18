@@ -63,6 +63,7 @@ class OptionsController extends Controller
      *       "key": "hero.title",
      *       "value": "Launch the future",
      *       "description": "Hero headline",
+     *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null
      *     }
@@ -169,7 +170,9 @@ class OptionsController extends Controller
      *     "key": "hero.title",
      *     "value": "Launch the future",
      *     "description": "Hero headline",
-     *     "updated_at": "2025-01-10T12:00:00+00:00"
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null
      *   }
      * }
      * @response status=401 {
@@ -247,6 +250,7 @@ class OptionsController extends Controller
      *       "title": "Launch"
      *     },
      *     "description": "Hero headline",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null
      *   }
@@ -399,6 +403,7 @@ class OptionsController extends Controller
      *     "key": "hero.title",
      *     "value": "Launch the future",
      *     "description": "Hero headline",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null
      *   }

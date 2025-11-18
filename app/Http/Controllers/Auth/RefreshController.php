@@ -54,6 +54,18 @@ final class RefreshController
      * @response status=200 {
      *   "message": "Tokens refreshed successfully."
      * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaa-01"
+     * }
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
      *   "title": "Unauthorized",
