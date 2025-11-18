@@ -155,6 +155,9 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     });
 
     Route::middleware('can:viewAny,' . Media::class)->group(function () {
+        Route::get('/media/config', [MediaController::class, 'config'])
+            ->middleware('throttle:60,1')
+            ->name('admin.v1.media.config');
         Route::get('/media', [MediaController::class, 'index'])
             ->middleware('throttle:60,1')
             ->name('admin.v1.media.index');

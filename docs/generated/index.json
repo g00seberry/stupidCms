@@ -4524,6 +4524,30 @@
             }
         },
         {
+            "id": "http_endpoint:GET:/api/v1/admin/media/config",
+            "type": "http_endpoint",
+            "name": "admin.v1.media.config",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+            "summary": "GET /api/v1/admin/media/config (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/media/config",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": [],
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "media",
+                "7": "config"
+            }
+        },
+        {
             "id": "http_endpoint:GET:/api/v1/admin/media",
             "type": "http_endpoint",
             "name": "admin.v1.media.index",
@@ -9538,6 +9562,30 @@
                 }
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+                "summary": "GET /api/v1/admin/media/config (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/media/config",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": [],
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "media",
+                    "7": "config"
+                }
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -10234,6 +10282,12 @@
                 "type": "http_endpoint",
                 "name": "api.v1.media.show",
                 "summary": "GET /api/v1/media/{id} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
@@ -11128,6 +11182,12 @@
                 "type": "config_area",
                 "name": "View_templates",
                 "summary": "Configuration: View_templates"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
             }
         ],
         "app": [
@@ -11618,6 +11678,12 @@
                 "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -11968,6 +12034,12 @@
                 "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -12310,6 +12382,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.entries.terms.sync",
                 "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
@@ -12787,5 +12865,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-18T15:05:20+00:00"
+    "generated_at": "2025-11-18T15:27:49+00:00"
 }

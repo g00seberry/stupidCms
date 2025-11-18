@@ -21,6 +21,7 @@ use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
 use App\Http\Resources\Admin\MediaCollection;
+use App\Http\Resources\Admin\MediaConfigResource;
 use App\Http\Resources\Media\BaseMediaResource;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
@@ -58,6 +59,91 @@ class MediaController extends Controller
         private readonly UpdateMediaMetadataAction $updateMetadataAction,
         private readonly MediaForceDeleteAction $forceDeleteAction,
     ) {
+    }
+
+    /**
+     * Получение конфигурации системы медиа-файлов.
+     *
+     * Возвращает информацию о разрешенных типах файлов (MIME-типы),
+     * максимальном размере загрузки и доступных вариантах изображений.
+     *
+     * @group Admin ▸ Media
+     * @name Get media config
+     * @authenticated
+     * @response status=200 {
+     *   "allowed_mimes": [
+     *     "image/jpeg",
+     *     "image/png",
+     *     "image/webp",
+     *     "image/gif",
+     *     "image/avif",
+     *     "image/heic",
+     *     "image/heif",
+     *     "video/mp4",
+     *     "audio/mp4",
+     *     "audio/mpeg",
+     *     "audio/aiff",
+     *     "audio/x-aiff",
+     *     "application/pdf"
+     *   ],
+     *   "max_upload_mb": 1024,
+     *   "image_variants": {
+     *     "thumbnail": {
+     *       "max": 320,
+     *       "format": null,
+     *       "quality": null
+     *     },
+     *     "medium": {
+     *       "max": 1024,
+     *       "format": null,
+     *       "quality": null
+     *     },
+     *     "large": {
+     *       "max": 2048,
+     *       "format": null,
+     *       "quality": null
+     *     }
+     *   }
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555555-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000000-6666666677778888-01"
+     * }
+     */
+    /**
+     * Получение конфигурации системы медиа-файлов.
+     *
+     * Возвращает информацию о разрешенных типах файлов (MIME-типы),
+     * максимальном размере загрузки и доступных вариантах изображений.
+     *
+     * @return \App\Http\Resources\Admin\MediaConfigResource Ресурс с конфигурацией медиа
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на просмотр
+     */
+    public function config(): MediaConfigResource
+    {
+        $this->authorize('viewAny', Media::class);
+
+        return new MediaConfigResource(null);
     }
 
     /**

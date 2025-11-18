@@ -568,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: scheduled
                   nullable: true
                   enum:
                     - all
@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T15:22:00'
+                  example: '2025-11-18T15:27:39'
                   nullable: true
                 date_to:
                   type: string
@@ -606,7 +606,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -3700,7 +3700,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5384,7 +5384,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -5403,7 +5403,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: version
+                  example: slug
                   nullable: true
                   enum:
                     - name
@@ -5413,7 +5413,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -7642,7 +7642,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9765,7 +9765,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 options_json:
                   type: object
@@ -9840,7 +9840,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9891,6 +9891,16 @@ paths:
         required: true
         schema:
           type: integer
+  /api/v1/admin/media/config:
+    get:
+      summary: 'Получение конфигурации системы медиа-файлов.'
+      operationId: ''
+      description: "Возвращает информацию о разрешенных типах файлов (MIME-типы),\nмаксимальном размере загрузки и доступных вариантах изображений."
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
   '/api/v1/admin/media/{media}':
     get:
       summary: 'Просмотр информации о медиа-файле.'
@@ -10324,7 +10334,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T15:22:00'
+                  example: '2025-11-18T15:27:39'
                   nullable: true
                 to:
                   type: string

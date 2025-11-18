@@ -246,6 +246,24 @@ POST /api/v1/admin/media/bulk/restore (api)
 
 ---
 
+## admin.v1.media.config
+**ID:** `http_endpoint:GET:/api/v1/admin/media/config`
+**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
+
+GET /api/v1/admin/media/config (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/media/config`
+- **Group:** `api`
+- **Auth:** `jwt`
+
+### Tags
+`api`, `admin`, `v1`, `media`, `config`
+
+
+---
+
 ## admin.v1.media.download
 **ID:** `http_endpoint:GET:/api/v1/admin/media/{media}/download`
 **Path:** `app/Http/Controllers/Admin/V1/MediaPreviewController.php`
