@@ -178,11 +178,11 @@ class MediaController extends Controller
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
      *       "preview_urls": {
-     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail",
-     *         "medium": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=medium",
-     *         "large": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=large"
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail",
+     *         "medium": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=medium",
+     *         "large": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=large"
      *       },
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *     },
      *     {
      *       "id": "01HXZYXQJ987654321FEDCBA",
@@ -203,7 +203,7 @@ class MediaController extends Controller
      *       "created_at": "2025-01-10T12:01:00+00:00",
      *       "updated_at": "2025-01-10T12:01:00+00:00",
      *       "deleted_at": null,
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
      *     },
      *     {
      *       "id": "01HXZYXQJABCDEF1234567890",
@@ -221,7 +221,7 @@ class MediaController extends Controller
      *       "created_at": "2025-01-10T12:02:00+00:00",
      *       "updated_at": "2025-01-10T12:02:00+00:00",
      *       "deleted_at": null,
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJABCDEF1234567890"
      *     },
      *     {
      *       "id": "01HXZYXQJFEDCBA9876543210",
@@ -236,7 +236,7 @@ class MediaController extends Controller
      *       "created_at": "2025-01-10T12:03:00+00:00",
      *       "updated_at": "2025-01-10T12:03:00+00:00",
      *       "deleted_at": null,
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJFEDCBA9876543210"
      *     }
      *   ],
      *   "links": {
@@ -343,9 +343,9 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *   }
      * }
      * @response status=201 scenario="Изображение" {
@@ -365,9 +365,9 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *   }
      * }
      * @response status=401 {
@@ -490,9 +490,9 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *   }
      * }
      * @response status=200 scenario="Видео" {
@@ -515,7 +515,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
      *   }
      * }
      * @response status=200 scenario="Аудио" {
@@ -535,7 +535,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJABCDEF1234567890"
      *   }
      * }
      * @response status=200 scenario="Документ" {
@@ -552,7 +552,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJFEDCBA9876543210"
      *   }
      * }
      * @response status=401 {
@@ -646,9 +646,9 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *   }
      * }
      * @response status=200 scenario="Видео" {
@@ -671,7 +671,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ987654321FEDCBA/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
      *   }
      * }
      * @response status=200 scenario="Аудио" {
@@ -691,7 +691,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJABCDEF1234567890/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJABCDEF1234567890"
      *   }
      * }
      * @response status=200 scenario="Документ" {
@@ -708,7 +708,7 @@ class MediaController extends Controller
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJFEDCBA9876543210/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJFEDCBA9876543210"
      *   }
      * }
      * @response status=401 {
@@ -872,9 +872,9 @@ class MediaController extends Controller
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
      *       "preview_urls": {
-     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *       },
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *     }
      *   ]
      * }

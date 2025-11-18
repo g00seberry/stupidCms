@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 174
+**Всего сущностей:** 172
 
 ## Содержание
 
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (62 сущностей)
+HTTP эндпоинты API (60 сущностей)
 
 ## Быстрая навигация
 
@@ -88,7 +88,7 @@ HTTP эндпоинты API (62 сущностей)
 - [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
 - [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
 - [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
-- *...и еще 52 сущностей*
+- *...и еще 50 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (62 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-18 15:29:25
+**Сгенерировано:** 2025-11-18 15:50:06
 
 Для обновления документации выполните:
 ```bash

@@ -68,8 +68,8 @@ class MediaImageResource extends BaseMediaResource
         $urls = [];
 
         foreach (array_keys(config('media.variants', [])) as $variant) {
-            $urls[$variant] = route('admin.v1.media.preview', [
-                'media' => $media->id,
+            $urls[$variant] = route('api.v1.media.show', [
+                'id' => $media->id,
                 'variant' => $variant,
             ]);
         }

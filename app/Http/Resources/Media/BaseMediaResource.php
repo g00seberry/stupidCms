@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Базовый абстрактный ресурс для медиа-файлов.
  *
  * Содержит общие поля для всех типов медиа:
- * id, kind, name, ext, mime, size_bytes, title, alt, collection, timestamps, download_url.
+ * id, kind, name, ext, mime, size_bytes, title, alt, collection, timestamps, url.
  *
  * @package App\Http\Resources\Media
  * @property-read \App\Models\Media $resource Медиа-файл
@@ -46,7 +46,7 @@ abstract class BaseMediaResource extends AdminJsonResource
             'created_at' => $media->created_at?->toIso8601String(),
             'updated_at' => $media->updated_at?->toIso8601String(),
             'deleted_at' => $media->deleted_at?->toIso8601String(),
-            'download_url' => route('admin.v1.media.download', ['media' => $media->id]),
+            'url' => route('api.v1.media.show', ['id' => $media->id]),
         ];
     }
 

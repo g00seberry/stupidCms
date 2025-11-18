@@ -173,7 +173,7 @@ test('media response includes preview and download urls', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['download_url'],
+                '*' => ['url'],
             ],
         ]);
 

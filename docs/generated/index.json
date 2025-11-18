@@ -3473,7 +3473,7 @@
             "id": "http_endpoint:GET:/api/v1/media/{id}",
             "type": "http_endpoint",
             "name": "api.v1.media.show",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\MediaPreviewController.php",
             "summary": "GET /api/v1/media/{id} (api)",
             "details": null,
             "meta": {
@@ -4597,66 +4597,6 @@
                 "2": "admin",
                 "4": "v1",
                 "6": "media"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-            "type": "http_endpoint",
-            "name": "admin.v1.media.preview",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-            "summary": "GET /api/v1/admin/media/{media}/preview (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/media/{media}/preview",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "media",
-                "7": "preview"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-            "type": "http_endpoint",
-            "name": "admin.v1.media.download",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-            "summary": "GET /api/v1/admin/media/{media}/download (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/media/{media}/download",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "media",
-                "7": "download"
             }
         },
         {
@@ -8511,7 +8451,7 @@
                 "id": "http_endpoint:GET:/api/v1/media/{id}",
                 "type": "http_endpoint",
                 "name": "api.v1.media.show",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\MediaPreviewController.php",
                 "summary": "GET /api/v1/media/{id} (api)",
                 "details": null,
                 "meta": {
@@ -9638,66 +9578,6 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/media/{media}/preview",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "media",
-                    "7": "preview"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/media/{media}/download",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "media",
-                    "7": "download"
-                }
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
@@ -10300,18 +10180,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.show",
                 "summary": "GET /api/v1/admin/media/{media} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
             },
             {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
@@ -11696,18 +11564,6 @@
                 "summary": "GET /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
@@ -12052,18 +11908,6 @@
                 "summary": "GET /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
@@ -12400,18 +12244,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.show",
                 "summary": "GET /api/v1/admin/media/{media} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
             },
             {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
@@ -12804,22 +12636,6 @@
                 "summary": "GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree (api)"
             }
         ],
-        "preview": [
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            }
-        ],
-        "download": [
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            }
-        ],
         "bulk": [
             {
                 "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
@@ -12865,5 +12681,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-18T15:29:25+00:00"
+    "generated_at": "2025-11-18T15:50:06+00:00"
 }

@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
 use App\Http\Controllers\Admin\V1\MediaController;
-use App\Http\Controllers\Admin\V1\MediaPreviewController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
@@ -164,12 +163,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         Route::get('/media/{media}', [MediaController::class, 'show'])
             ->middleware('throttle:60,1')
             ->name('admin.v1.media.show');
-        Route::get('/media/{media}/preview', [MediaPreviewController::class, 'preview'])
-            ->middleware('throttle:60,1')
-            ->name('admin.v1.media.preview');
-        Route::get('/media/{media}/download', [MediaPreviewController::class, 'download'])
-            ->middleware('throttle:60,1')
-            ->name('admin.v1.media.download');
     });
 
     Route::post('/media', [MediaController::class, 'store'])

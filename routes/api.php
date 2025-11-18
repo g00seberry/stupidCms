@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RefreshController;
-use App\Http\Controllers\PublicMediaController;
+use App\Http\Controllers\MediaPreviewController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,8 +44,8 @@ Route::prefix('v1')->group(function () {
         ->middleware('throttle:search-public')
         ->name('api.v1.search');
 
-    // Public media access with signed URLs
-    Route::get('/media/{id}', [PublicMediaController::class, 'show'])
+    // Public media access with signed URLs (supports variants via ?variant=thumbnail)
+    Route::get('/media/{id}', [MediaPreviewController::class, 'show'])
         ->middleware('throttle:api')
         ->name('api.v1.media.show');
 });

@@ -171,7 +171,7 @@ test('media includes preview and download urls', function () {
 
     $response->assertOk()
         ->assertJsonStructure([
-            'data' => ['preview_urls', 'download_url'],
+            'data' => ['preview_urls', 'url'],
         ])
         ->assertJsonPath('data.kind', 'image');
 
@@ -184,7 +184,7 @@ test('media includes preview and download urls', function () {
 
     $response->assertOk()
         ->assertJsonStructure([
-            'data' => ['download_url'],
+            'data' => ['url'],
         ])
         ->assertJsonMissingPath('data.preview_urls')
         ->assertJsonPath('data.kind', 'document');
