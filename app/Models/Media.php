@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Domain\Media\MediaKind;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
@@ -15,7 +17,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * Представляет загруженные файлы: изображения, видео, аудио, документы.
  * Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
  * Уникальность обеспечивается по комбинации (disk, path).
- * EXIF метаданные хранятся в JSONB колонке (PostgreSQL) или JSON (другие БД).
+ * Специфичные метаданные хранятся в связанных таблицах:
+ * - MediaImage для изображений (width, height, exif_json)
+ * - MediaAvMetadata для видео/аудио (duration_ms, bitrate, codecs и т.д.)
  *
  * @property string $id ULID идентификатор
  * @property string $disk Диск хранения
@@ -24,11 +28,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * @property string|null $ext Расширение файла
  * @property string $mime MIME-тип файла
  * @property int $size_bytes Размер файла в байтах
- * @property int|null $width Ширина изображения в пикселях
- * @property int|null $height Высота изображения в пикселях
- * @property int|null $duration_ms Длительность медиа в миллисекундах
  * @property string|null $checksum_sha256 SHA256 checksum файла (индексирован)
- * @property array|null $exif_json EXIF метаданные (для изображений, JSONB в PostgreSQL)
  * @property string|null $title Заголовок медиа
  * @property string|null $alt Альтернативный текст
  * @property string|null $collection Коллекция/группа медиа
@@ -37,7 +37,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * @property \Illuminate\Support\Carbon|null $deleted_at Дата мягкого удаления
  *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MediaVariant> $variants Варианты файла (превью, миниатюры)
- * @property-read \App\Models\MediaMetadata|null $metadata Нормализованные AV-метаданные
+ * @property-read \App\Models\MediaImage|null $image Метаданные изображения (только для изображений)
+ * @property-read \App\Models\MediaAvMetadata|null $avMetadata Нормализованные AV-метаданные (только для видео/аудио)
  */
 class Media extends Model
 {
@@ -72,11 +73,7 @@ class Media extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'exif_json' => 'array',
         'deleted_at' => 'datetime',
-        'width' => 'integer',
-        'height' => 'integer',
-        'duration_ms' => 'integer',
         'size_bytes' => 'integer',
     ];
 
@@ -91,31 +88,41 @@ class Media extends Model
     }
 
     /**
-     * Нормализованные AV-метаданные (один-к-одному).
+     * Метаданные изображения (один-к-одному).
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\MediaMetadata, \App\Models\Media>
+     * Связь с таблицей media_images, содержащей специфичные метаданные для изображений:
+     * width, height, exif_json.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\MediaImage, \App\Models\Media>
      */
-    public function metadata()
+    public function image(): HasOne
     {
-        return $this->hasOne(MediaMetadata::class);
+        return $this->hasOne(MediaImage::class);
     }
 
+    /**
+     * Нормализованные AV-метаданные (один-к-одному).
+     *
+     * Связь с таблицей media_av_metadata, содержащей технические характеристики
+     * аудио/видео: длительность, битрейт, частоту кадров, кодеки.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\MediaAvMetadata, \App\Models\Media>
+     */
+    public function avMetadata(): HasOne
+    {
+        return $this->hasOne(MediaAvMetadata::class);
+    }
 
     /**
      * Определить тип медиа-файла по MIME-типу.
      *
-     * Возвращает 'image', 'video', 'audio' или 'document' в зависимости от MIME-типа.
+     * Возвращает MediaKind enum в зависимости от MIME-типа.
      *
-     * @return string Тип медиа-файла: 'image', 'video', 'audio' или 'document'
+     * @return \App\Domain\Media\MediaKind Тип медиа-файла
      */
-    public function kind(): string
+    public function kind(): MediaKind
     {
-        return match (true) {
-            str_starts_with($this->mime, 'image/') => 'image',
-            str_starts_with($this->mime, 'video/') => 'video',
-            str_starts_with($this->mime, 'audio/') => 'audio',
-            default => 'document',
-        };
+        return MediaKind::fromMime($this->mime);
     }
 }
 

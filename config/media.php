@@ -53,6 +53,7 @@ return [
     'variants' => [
         'thumbnail' => ['max' => 320],
         'medium' => ['max' => 1024],
+        'large' => ['max' => 2048],
     ],
     'signed_ttl' => env('MEDIA_SIGNED_TTL', 300),
     'public_signed_ttl' => env('MEDIA_PUBLIC_SIGNED_TTL', 3600), // TTL для публичных подписанных URL (по умолчанию 1 час)

@@ -30,12 +30,11 @@ test('admin can view media', function () {
         ->assertJsonPath('data.title', 'Test Image');
 });
 
-test('media includes dimensions for images', function () {
-    $media = Media::factory()->create([
-        'mime' => 'image/jpeg',
+test('media includes dimensions for images via image relationship', function () {
+    $media = Media::factory()->image()->withImage([
         'width' => 1920,
         'height' => 1080,
-    ]);
+    ])->create();
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
@@ -46,9 +45,10 @@ test('media includes dimensions for images', function () {
         ->assertJsonPath('data.height', 1080);
 });
 
-test('media includes duration for videos', function () {
-    $media = Media::factory()->create([
-        'mime' => 'video/mp4',
+test('media includes duration for videos via avMetadata relationship', function () {
+    $media = Media::factory()->video()->create();
+
+    \App\Models\MediaAvMetadata::factory()->for($media)->create([
         'duration_ms' => 120000,
     ]);
 

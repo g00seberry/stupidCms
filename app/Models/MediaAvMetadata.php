@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
- * Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).
+ * Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
  *
  * Хранит технические характеристики аудио/видео:
  * длительность, битрейт, частоту кадров, количество кадров и кодеки.
@@ -23,12 +23,21 @@ use Illuminate\Support\Str;
  * @property int|null $frame_count Количество кадров
  * @property string|null $video_codec Видео кодек
  * @property string|null $audio_codec Аудио кодек
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
  *
  * @property-read \App\Models\Media $media Связанный медиа-файл
  */
-class MediaMetadata extends Model
+class MediaAvMetadata extends Model
 {
     use HasFactory;
+
+    /**
+     * Имя таблицы.
+     *
+     * @var string
+     */
+    protected $table = 'media_av_metadata';
 
     /**
      * Все поля доступны для массового присвоения.
@@ -70,7 +79,7 @@ class MediaMetadata extends Model
      */
     protected static function booted(): void
     {
-        static::creating(static function (MediaMetadata $model): void {
+        static::creating(static function (MediaAvMetadata $model): void {
             if ($model->getKey() === null) {
                 $model->setAttribute($model->getKeyName(), (string) Str::ulid());
             }
@@ -80,12 +89,11 @@ class MediaMetadata extends Model
     /**
      * Связанный медиа-файл.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Media, \App\Models\MediaMetadata>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Media, \App\Models\MediaAvMetadata>
      */
     public function media(): BelongsTo
     {
         return $this->belongsTo(Media::class);
     }
 }
-
 

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 use App\Models\Media;
 use App\Models\MediaVariant;
-use App\Models\MediaMetadata;
+use App\Models\MediaAvMetadata;
+use App\Models\MediaImage;
 
 /**
  * Feature-тесты для модели Media.
@@ -73,10 +74,10 @@ test('media can have multiple variants', function () {
         ->and($media->variants->pluck('id')->toArray())->toContain($variant1->id, $variant2->id);
 });
 
-test('media can have metadata', function () {
+test('media can have avMetadata', function () {
     $media = Media::factory()->create();
 
-    $metadata = MediaMetadata::create([
+    $metadata = MediaAvMetadata::create([
         'media_id' => $media->id,
         'duration_ms' => 120000,
         'bitrate_kbps' => 1500,
@@ -84,11 +85,11 @@ test('media can have metadata', function () {
         'audio_codec' => 'aac',
     ]);
 
-    $media->load('metadata');
+    $media->load('avMetadata');
 
-    expect($media->metadata)->toBeInstanceOf(MediaMetadata::class)
-        ->and($media->metadata->id)->toBe($metadata->id)
-        ->and($media->metadata->duration_ms)->toBe(120000);
+    expect($media->avMetadata)->toBeInstanceOf(MediaAvMetadata::class)
+        ->and($media->avMetadata->id)->toBe($metadata->id)
+        ->and($media->avMetadata->duration_ms)->toBe(120000);
 });
 
 test('media can be soft deleted', function () {
@@ -118,7 +119,9 @@ test('media can be restored after soft delete', function () {
     ]);
 });
 
-test('media exif json stores metadata', function () {
+test('media can have image metadata', function () {
+    $media = Media::factory()->image()->create();
+
     $exifData = [
         'Make' => 'Canon',
         'Model' => 'EOS 5D',
@@ -126,29 +129,36 @@ test('media exif json stores metadata', function () {
         'GPS' => ['Latitude' => 55.7558, 'Longitude' => 37.6173],
     ];
 
-    $media = Media::factory()->create([
+    $image = \App\Models\MediaImage::factory()->for($media)->create([
+        'width' => 1920,
+        'height' => 1080,
         'exif_json' => $exifData,
     ]);
 
+    $media->load('image');
     $media->refresh();
 
-    expect($media->exif_json)->toBe($exifData)
-        ->and($media->exif_json['Make'])->toBe('Canon')
-        ->and($media->exif_json['GPS']['Latitude'])->toBe(55.7558);
+    expect($media->image)->toBeInstanceOf(\App\Models\MediaImage::class)
+        ->and($media->image->id)->toBe($image->id)
+        ->and($media->image->width)->toBe(1920)
+        ->and($media->image->height)->toBe(1080)
+        ->and($media->image->exif_json)->toBe($exifData)
+        ->and($media->image->exif_json['Make'])->toBe('Canon')
+        ->and($media->image->exif_json['GPS']['Latitude'])->toBe(55.7558);
 });
 
-test('media dimensions are stored correctly', function () {
-    $media = Media::factory()->create([
+test('media dimensions are stored correctly via image relationship', function () {
+    $media = Media::factory()->image()->withImage([
         'width' => 1920,
         'height' => 1080,
-    ]);
+    ])->create();
 
-    $media->refresh();
+    $media->load('image');
 
-    expect($media->width)->toBe(1920)
-        ->and($media->height)->toBe(1080)
-        ->and($media->width)->toBeInt()
-        ->and($media->height)->toBeInt();
+    expect($media->image->width)->toBe(1920)
+        ->and($media->image->height)->toBe(1080)
+        ->and($media->image->width)->toBeInt()
+        ->and($media->image->height)->toBeInt();
 });
 
 test('media file size is stored in bytes', function () {
@@ -165,39 +175,36 @@ test('media file size is stored in bytes', function () {
 test('media kind method works for images', function () {
     $media = Media::factory()->image()->create();
 
-    expect($media->kind())->toBe('image')
+    expect($media->kind())->toBe(\App\Domain\Media\MediaKind::Image)
         ->and($media->mime)->toStartWith('image/');
 });
 
 test('media kind method works for documents', function () {
     $media = Media::factory()->document()->create();
 
-    expect($media->kind())->toBe('document')
+    expect($media->kind())->toBe(\App\Domain\Media\MediaKind::Document)
         ->and($media->mime)->toBe('application/pdf');
 });
 
 test('media kind method works for video', function () {
     $media = Media::factory()->create(['mime' => 'video/mp4']);
 
-    expect($media->kind())->toBe('video');
+    expect($media->kind())->toBe(\App\Domain\Media\MediaKind::Video);
 });
 
 test('media kind method works for audio', function () {
     $media = Media::factory()->create(['mime' => 'audio/mpeg']);
 
-    expect($media->kind())->toBe('audio');
+    expect($media->kind())->toBe(\App\Domain\Media\MediaKind::Audio);
 });
 
 test('media can have null dimensions for non-image files', function () {
-    $media = Media::factory()->document()->create([
-        'width' => null,
-        'height' => null,
-    ]);
+    $media = Media::factory()->document()->create();
 
-    $media->refresh();
+    $media->load('image');
 
-    expect($media->width)->toBeNull()
-        ->and($media->height)->toBeNull();
+    // Для документов нет связанной записи MediaImage
+    expect($media->image)->toBeNull();
 });
 
 test('media checksum is stored correctly', function () {
@@ -226,15 +233,18 @@ test('media collection can be set', function () {
     ]);
 });
 
-test('media duration_ms can be set for video', function () {
-    $media = Media::factory()->create([
-        'mime' => 'video/mp4',
+test('media duration_ms can be set for video via avMetadata relationship', function () {
+    $media = Media::factory()->video()->create();
+
+    $avMetadata = MediaAvMetadata::factory()->for($media)->create([
         'duration_ms' => 45000, // 45 seconds
     ]);
 
-    $media->refresh();
+    $media->load('avMetadata');
 
-    expect($media->duration_ms)->toBe(45000)
-        ->and($media->duration_ms)->toBeInt();
+    expect($media->avMetadata)->toBeInstanceOf(MediaAvMetadata::class)
+        ->and($media->avMetadata->id)->toBe($avMetadata->id)
+        ->and($media->avMetadata->duration_ms)->toBe(45000)
+        ->and($media->avMetadata->duration_ms)->toBeInt();
 });
 

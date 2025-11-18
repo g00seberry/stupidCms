@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Media\Actions;
 
 use App\Domain\Media\Events\MediaUploaded;
+use App\Domain\Media\MediaKind;
 use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\ExifManager;
 use App\Domain\Media\Services\StorageResolver;
@@ -13,7 +14,8 @@ use App\Domain\Media\Validation\MediaValidationException;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Domain\Media\Validation\SizeLimitValidator;
 use App\Models\Media;
-use App\Models\MediaMetadata;
+use App\Models\MediaAvMetadata;
+use App\Models\MediaImage;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
@@ -53,8 +55,9 @@ class MediaStoreAction
      *
      * Сохраняет файл на диск, извлекает метаданные (размеры, EXIF, длительность и т.д.),
      * вычисляет checksum и создаёт запись Media в БД.
-     * Для видео/аудио дополнительно сохраняет нормализованные AV-метаданные
-     * (длительность, битрейт, кадры, кодеки) в таблице media_metadata.
+     * Для изображений создаёт запись в media_images с width, height, exif_json.
+     * Для видео/аудио создаёт запись в media_av_metadata с нормализованными AV-метаданными
+     * (длительность, битрейт, кадры, кодеки).
      * Если файл с таким же checksum уже существует, возвращает существующую запись
      * без сохранения дубликата на диск (дедупликация).
      * После успешного создания новой записи отправляет событие MediaUploaded.
@@ -160,37 +163,51 @@ class MediaStoreAction
             'ext' => $extension,
             'mime' => $mime,
             'size_bytes' => $sizeBytes > 0 ? $sizeBytes : $disk->size($path),
-            'width' => $metadata->width,
-            'height' => $metadata->height,
-            'duration_ms' => $metadata->durationMs,
             'checksum_sha256' => $checksum,
-            'exif_json' => $exif,
             'title' => $payload['title'] ?? null,
             'alt' => $payload['alt'] ?? null,
             'collection' => $payload['collection'] ?? null,
         ]);
 
-        // Нормализованные AV-метаданные (для видео/аудио).
-        $normalized = [
-            'duration_ms' => $metadata->durationMs,
-            'bitrate_kbps' => $metadata->bitrateKbps,
-            'frame_rate' => $metadata->frameRate,
-            'frame_count' => $metadata->frameCount,
-            'video_codec' => $metadata->videoCodec,
-            'audio_codec' => $metadata->audioCodec,
-        ];
+        // Определить тип медиа для создания связанных записей
+        $kind = $media->kind();
 
-        $hasNormalized = array_reduce(
-            $normalized,
-            static fn (bool $carry, $value): bool => $carry || $value !== null,
-            false
-        );
+        // Для изображений: создать запись в media_images
+        if ($kind === MediaKind::Image && ($metadata->width !== null || $metadata->height !== null || $exif !== null)) {
+            // Проверяем, что width и height не null перед созданием
+            if ($metadata->width !== null && $metadata->height !== null) {
+                MediaImage::create([
+                    'media_id' => $media->id,
+                    'width' => $metadata->width,
+                    'height' => $metadata->height,
+                    'exif_json' => $exif,
+                ]);
+            }
+        }
 
-        if ($hasNormalized) {
-            MediaMetadata::create(array_merge(
-                ['media_id' => $media->id],
-                $normalized
-            ));
+        // Для видео/аудио: создать запись в media_av_metadata
+        if ($kind === MediaKind::Video || $kind === MediaKind::Audio) {
+            $normalized = [
+                'duration_ms' => $metadata->durationMs,
+                'bitrate_kbps' => $metadata->bitrateKbps,
+                'frame_rate' => $metadata->frameRate,
+                'frame_count' => $metadata->frameCount,
+                'video_codec' => $metadata->videoCodec,
+                'audio_codec' => $metadata->audioCodec,
+            ];
+
+            $hasNormalized = array_reduce(
+                $normalized,
+                static fn (bool $carry, $value): bool => $carry || $value !== null,
+                false
+            );
+
+            if ($hasNormalized) {
+                MediaAvMetadata::create(array_merge(
+                    ['media_id' => $media->id],
+                    $normalized
+                ));
+            }
         }
 
         // Отправляем событие загрузки медиа-файла

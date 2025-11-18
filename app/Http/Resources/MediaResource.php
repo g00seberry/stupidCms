@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Domain\Media\MediaKind;
 use App\Http\Resources\Admin\AdminJsonResource;
 use App\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,10 @@ class MediaResource extends AdminJsonResource
      * Включает метаданные файла, preview URLs для вариантов изображений
      * и download URL.
      *
+     * Получает width, height из связанной таблицы MediaImage,
+     * duration_ms из связанной таблицы MediaAvMetadata.
+     * Для корректной работы необходимо загружать связи через eager loading.
+     *
      * @param \Illuminate\Http\Request $request HTTP запрос
      * @return array<string, mixed> Массив с полями медиа-файла
      */
@@ -31,16 +36,20 @@ class MediaResource extends AdminJsonResource
     {
         $previewUrls = $this->previewUrls();
 
+        // Прямой доступ к связанным таблицам
+        $image = $this->image;
+        $avMetadata = $this->avMetadata;
+
         return [
             'id' => $this->id,
-            'kind' => $this->resource->kind(),
+            'kind' => $this->resource->kind()->value,
             'name' => $this->original_name,
             'ext' => $this->ext,
             'mime' => $this->mime,
             'size_bytes' => (int) $this->size_bytes,
-            'width' => $this->width ? (int) $this->width : null,
-            'height' => $this->height ? (int) $this->height : null,
-            'duration_ms' => $this->duration_ms ? (int) $this->duration_ms : null,
+            'width' => $image?->width ? (int) $image->width : null,
+            'height' => $image?->height ? (int) $image->height : null,
+            'duration_ms' => $avMetadata?->duration_ms ? (int) $avMetadata->duration_ms : null,
             'title' => $this->title,
             'alt' => $this->alt,
             'collection' => $this->collection,
@@ -80,7 +89,7 @@ class MediaResource extends AdminJsonResource
      */
     private function previewUrls(): ?array
     {
-        if ($this->resource->kind() !== 'image') {
+        if ($this->resource->kind() !== MediaKind::Image) {
             return null;
         }
 

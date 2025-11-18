@@ -56,14 +56,17 @@ Eloquent модель для медиа-файлов (Media).
 Представляет загруженные файлы: изображения, видео, аудио, документы.
 Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
 Уникальность обеспечивается по комбинации (disk, path).
-EXIF метаданные хранятся в JSONB колонке (PostgreSQL) или JSON (другие БД).
+Специфичные метаданные хранятся в связанных таблицах:
+- MediaImage для изображений (width, height, exif_json)
+- MediaAvMetadata для видео/аудио (duration_ms, bitrate, codecs и т.д.)
 
 ### Meta
 - **Table:** `media`
-- **Casts:** `exif_json` => `array`, `deleted_at` => `datetime`, `width` => `integer`, `height` => `integer`, `duration_ms` => `integer`, `size_bytes` => `integer`
+- **Casts:** `deleted_at` => `datetime`, `size_bytes` => `integer`
 - **Relations:**
   - `variants`: hasMany → `App\Models\MediaVariant`
-  - `metadata`: hasOne → `App\Models\MediaMetadata`
+  - `image`: hasOne → `App\Models\MediaImage`
+  - `avMetadata`: hasOne → `App\Models\MediaAvMetadata`
 
 ### Tags
 `media`
@@ -71,24 +74,47 @@ EXIF метаданные хранятся в JSONB колонке (PostgreSQL) 
 
 ---
 
-## MediaMetadata
-**ID:** `model:App\Models\MediaMetadata`
-**Path:** `app/Models/MediaMetadata.php`
+## MediaAvMetadata
+**ID:** `model:App\Models\MediaAvMetadata`
+**Path:** `app/Models/MediaAvMetadata.php`
 
-Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).
+Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 
 ### Details
 Хранит технические характеристики аудио/видео:
 длительность, битрейт, частоту кадров, количество кадров и кодеки.
 
 ### Meta
-- **Table:** `media_metadata`
+- **Table:** `media_av_metadata`
 - **Casts:** `duration_ms` => `integer`, `bitrate_kbps` => `integer`, `frame_rate` => `float`, `frame_count` => `integer`
 - **Relations:**
   - `media`: belongsTo → `App\Models\Media`
 
 ### Tags
-`mediametadata`
+`mediaavmetadata`
+
+
+---
+
+## MediaImage
+**ID:** `model:App\Models\MediaImage`
+**Path:** `app/Models/MediaImage.php`
+
+Eloquent модель для метаданных изображений (MediaImage).
+
+### Details
+Хранит специфичные метаданные для изображений:
+размеры (width, height) и EXIF метаданные.
+Связана с Media через отношение один-к-одному.
+
+### Meta
+- **Table:** `media_images`
+- **Casts:** `width` => `integer`, `height` => `integer`, `exif_json` => `array`
+- **Relations:**
+  - `media`: belongsTo → `App\Models\Media`
+
+### Tags
+`mediaimage`
 
 
 ---

@@ -37,9 +37,16 @@ class MediaMetadataExtractor
     /**
      * Извлечь метаданные из медиа-файла.
      *
-     * Для изображений извлекает размеры и EXIF данные (если доступны).
+     * Для изображений извлекает размеры (width, height) и EXIF данные (если доступны).
      * Для видео/аудио использует плагины (ffprobe/mediainfo/exiftool) для извлечения
-     * длительности и дополнительных нормализованных полей с graceful fallback.
+     * длительности и дополнительных нормализованных полей (bitrate, frameRate, codecs)
+     * с graceful fallback.
+     *
+     * Извлечённые данные возвращаются в виде MediaMetadataDTO, который затем используется
+     * для создания записей в специализированных таблицах:
+     * - MediaImage (width, height, exif_json) для изображений
+     * - MediaAvMetadata (duration_ms, bitrate_kbps, frame_rate, codecs) для видео/аудио
+     *
      * Результаты кэшируются для оптимизации производительности.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл

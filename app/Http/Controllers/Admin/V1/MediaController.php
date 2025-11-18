@@ -92,7 +92,9 @@ class MediaController extends Controller
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
      *       "preview_urls": {
-     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail",
+     *         "medium": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=medium",
+     *         "large": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=large"
      *       },
      *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
      *     }
@@ -165,6 +167,9 @@ class MediaController extends Controller
         );
 
         $paginator = $this->listAction->execute($mq)->appends($v);
+        
+        // Загружаем связи для избежания N+1 проблем
+        $paginator->getCollection()->load(['image', 'avMetadata']);
 
         return new MediaCollection($paginator);
     }
@@ -265,6 +270,9 @@ class MediaController extends Controller
         }
 
         $media = $this->storeAction->execute($file, $validated);
+        
+        // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+        $media->load(['image', 'avMetadata']);
 
         // При дедупликации возвращаем 200, при создании - 201
         $statusCode = $media->wasRecentlyCreated ? HttpResponse::HTTP_CREATED : HttpResponse::HTTP_OK;
@@ -341,7 +349,7 @@ class MediaController extends Controller
      */
     public function show(string $mediaId): MediaResource
     {
-        $media = Media::withTrashed()->find($mediaId);
+        $media = Media::withTrashed()->with(['image', 'avMetadata'])->find($mediaId);
 
         if (! $media) {
             $this->throwMediaNotFound($mediaId);
@@ -433,6 +441,10 @@ class MediaController extends Controller
         $this->authorize('update', $media);
 
         $updated = $this->updateMetadataAction->execute($mediaId, $request->validated());
+        
+        // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+        $updated->load(['image', 'avMetadata']);
+        
         return new MediaResource($updated);
     }
 
@@ -590,6 +602,10 @@ class MediaController extends Controller
             $this->authorize('restore', $media);
             $media->restore();
             $media->refresh();
+            
+            // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+            $media->load(['image', 'avMetadata']);
+            
             $restoredMedia[] = $media;
         }
 

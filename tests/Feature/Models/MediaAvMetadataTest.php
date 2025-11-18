@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-use App\Models\MediaMetadata;
 use App\Models\Media;
+use App\Models\MediaAvMetadata;
 
 /**
- * Feature-тесты для модели MediaMetadata.
+ * Feature-тесты для модели MediaAvMetadata.
  *
  * Проверяют реальное взаимодействие модели с базой данных,
  * создание, связи и хранение AV метаданных.
  */
 
 test('metadata can be created with factory', function () {
-    $metadata = MediaMetadata::factory()->create();
+    $metadata = MediaAvMetadata::factory()->create();
 
-    expect($metadata)->toBeInstanceOf(MediaMetadata::class)
+    expect($metadata)->toBeInstanceOf(MediaAvMetadata::class)
         ->and($metadata->exists)->toBeTrue()
         ->and($metadata->id)->toBeString()
         ->and(strlen($metadata->id))->toBeGreaterThan(20); // ULID length check
 
-    $this->assertDatabaseHas('media_metadata', [
+    $this->assertDatabaseHas('media_av_metadata', [
         'id' => $metadata->id,
     ]);
 });
 
 test('metadata belongs to media', function () {
     $media = Media::factory()->create();
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'media_id' => $media->id,
     ]);
 
@@ -38,7 +38,7 @@ test('metadata belongs to media', function () {
 });
 
 test('metadata stores av technical details', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'duration_ms' => 120000,
         'bitrate_kbps' => 1500,
         'frame_rate' => 29.97,
@@ -54,7 +54,7 @@ test('metadata stores av technical details', function () {
 });
 
 test('metadata can store video codec', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'video_codec' => 'h264',
     ]);
 
@@ -62,14 +62,14 @@ test('metadata can store video codec', function () {
 
     expect($metadata->video_codec)->toBe('h264');
 
-    $this->assertDatabaseHas('media_metadata', [
+    $this->assertDatabaseHas('media_av_metadata', [
         'id' => $metadata->id,
         'video_codec' => 'h264',
     ]);
 });
 
 test('metadata can store audio codec', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'audio_codec' => 'aac',
     ]);
 
@@ -77,14 +77,14 @@ test('metadata can store audio codec', function () {
 
     expect($metadata->audio_codec)->toBe('aac');
 
-    $this->assertDatabaseHas('media_metadata', [
+    $this->assertDatabaseHas('media_av_metadata', [
         'id' => $metadata->id,
         'audio_codec' => 'aac',
     ]);
 });
 
 test('metadata duration_ms is cast to integer', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'duration_ms' => 45000,
     ]);
 
@@ -95,7 +95,7 @@ test('metadata duration_ms is cast to integer', function () {
 });
 
 test('metadata bitrate_kbps is cast to integer', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'bitrate_kbps' => 2500,
     ]);
 
@@ -106,7 +106,7 @@ test('metadata bitrate_kbps is cast to integer', function () {
 });
 
 test('metadata frame_rate is cast to float', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'frame_rate' => 23.976,
     ]);
 
@@ -117,7 +117,7 @@ test('metadata frame_rate is cast to float', function () {
 });
 
 test('metadata frame_count is cast to integer', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'frame_count' => 7200,
     ]);
 
@@ -128,7 +128,7 @@ test('metadata frame_count is cast to integer', function () {
 });
 
 test('metadata can have null values for optional fields', function () {
-    $metadata = MediaMetadata::factory()->create([
+    $metadata = MediaAvMetadata::factory()->create([
         'duration_ms' => null,
         'bitrate_kbps' => null,
         'frame_rate' => null,
@@ -150,7 +150,7 @@ test('metadata can have null values for optional fields', function () {
 test('metadata auto generates ULID on creation', function () {
     $media = Media::factory()->create();
     
-    $metadata = new MediaMetadata([
+    $metadata = new MediaAvMetadata([
         'media_id' => $media->id,
         'duration_ms' => 60000,
     ]);
@@ -166,7 +166,7 @@ test('metadata supports common video codecs', function () {
     $codecs = ['h264', 'h265', 'vp9', 'av1'];
 
     foreach ($codecs as $codec) {
-        $metadata = MediaMetadata::factory()->create([
+        $metadata = MediaAvMetadata::factory()->create([
             'video_codec' => $codec,
         ]);
 
@@ -178,7 +178,7 @@ test('metadata supports common audio codecs', function () {
     $codecs = ['aac', 'mp3', 'opus', 'vorbis'];
 
     foreach ($codecs as $codec) {
-        $metadata = MediaMetadata::factory()->create([
+        $metadata = MediaAvMetadata::factory()->create([
             'audio_codec' => $codec,
         ]);
 

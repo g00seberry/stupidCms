@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Media\Services;
 
+use App\Domain\Media\MediaKind;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 
@@ -80,10 +81,10 @@ class StorageResolver
     /**
      * Определить тип медиа (kind) по MIME-типу.
      *
-     * Возвращает одно из значений: image, video, audio, document.
+     * Возвращает строковое значение MediaKind для использования в конфигурации.
      *
      * @param string|null $mime MIME-тип файла
-     * @return string|null Тип медиа или null, если не удалось определить
+     * @return string|null Тип медиа (image, video, audio, document) или null, если не удалось определить
      */
     private function detectKindFromMime(?string $mime): ?string
     {
@@ -91,19 +92,7 @@ class StorageResolver
             return null;
         }
 
-        if (str_starts_with($mime, 'image/')) {
-            return 'image';
-        }
-
-        if (str_starts_with($mime, 'video/')) {
-            return 'video';
-        }
-
-        if (str_starts_with($mime, 'audio/')) {
-            return 'audio';
-        }
-
-        return 'document';
+        return MediaKind::fromMime($mime)->value;
     }
 }
 

@@ -5,17 +5,26 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Media;
-use App\Models\MediaMetadata;
+use App\Models\MediaAvMetadata;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<MediaMetadata>
+ * Фабрика для создания записей MediaAvMetadata.
+ *
+ * @extends Factory<MediaAvMetadata>
  */
-class MediaMetadataFactory extends Factory
+class MediaAvMetadataFactory extends Factory
 {
-    protected $model = MediaMetadata::class;
+    /**
+     * Имя модели, связанной с фабрикой.
+     *
+     * @var string
+     */
+    protected $model = MediaAvMetadata::class;
 
     /**
+     * Определить значения атрибутов по умолчанию.
+     *
      * @return array<string, mixed>
      */
     public function definition(): array

@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-use App\Models\MediaMetadata;
 use App\Models\Media;
+use App\Models\MediaAvMetadata;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Unit-тесты для модели MediaMetadata.
+ * Unit-тесты для модели MediaAvMetadata.
  *
  * Проверяют структуру модели, ULID, casts и отношения
  * без взаимодействия с БД.
  */
 
 test('uses ULID as primary key', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     expect($metadata->getKeyType())->toBe('string')
         ->and($metadata->getIncrementing())->toBeFalse();
 });
 
 test('casts duration_ms to integer', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     $casts = $metadata->getCasts();
 
@@ -30,7 +30,7 @@ test('casts duration_ms to integer', function () {
 });
 
 test('casts bitrate_kbps to integer', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     $casts = $metadata->getCasts();
 
@@ -39,7 +39,7 @@ test('casts bitrate_kbps to integer', function () {
 });
 
 test('casts frame_rate to float', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     $casts = $metadata->getCasts();
 
@@ -48,7 +48,7 @@ test('casts frame_rate to float', function () {
 });
 
 test('casts frame_count to integer', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     $casts = $metadata->getCasts();
 
@@ -57,7 +57,7 @@ test('casts frame_count to integer', function () {
 });
 
 test('belongs to media', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     $relation = $metadata->media();
 
@@ -66,7 +66,7 @@ test('belongs to media', function () {
 });
 
 test('has no guarded attributes', function () {
-    $metadata = new MediaMetadata();
+    $metadata = new MediaAvMetadata();
 
     $guarded = $metadata->getGuarded();
 

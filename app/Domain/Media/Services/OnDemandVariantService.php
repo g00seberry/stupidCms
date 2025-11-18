@@ -8,6 +8,7 @@ use App\Domain\Media\Events\MediaProcessed;
 use App\Domain\Media\Images\ImageProcessor;
 use App\Domain\Media\Images\ImageRef;
 use App\Domain\Media\Jobs\GenerateVariantJob;
+use App\Domain\Media\MediaKind;
 use App\Domain\Media\MediaVariantStatus;
 use App\Models\Media;
 use App\Models\MediaVariant;
@@ -162,7 +163,7 @@ class OnDemandVariantService
      */
     private function assertSupportsVariants(Media $media, string $variant): void
     {
-        if ($media->kind() !== 'image') {
+        if ($media->kind() !== MediaKind::Image) {
             throw new InvalidArgumentException('Variants supported only for images.');
         }
 
