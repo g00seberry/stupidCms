@@ -568,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: scheduled
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T15:27:39'
+                  example: '2025-11-18T15:29:09'
                   nullable: true
                 date_to:
                   type: string
@@ -614,7 +614,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.desc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2923,7 +2923,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: video
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -2943,7 +2943,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5384,7 +5384,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'true'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -5403,7 +5403,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -5413,7 +5413,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -9765,7 +9765,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 options_json:
                   type: object
@@ -9840,7 +9840,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.asc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10334,7 +10334,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-18T15:27:39'
+                  example: '2025-11-18T15:29:09'
                   nullable: true
                 to:
                   type: string
