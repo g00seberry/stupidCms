@@ -365,7 +365,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-19 09:40</li>
+        <li>Last updated: 2025-11-19 10:01</li>
     </ul>
 </div>
 
@@ -598,15 +598,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"draft\",
+    \"status\": \"published\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-19T09:40:53\",
+    \"date_from\": \"2025-11-19T10:01:35\",
     \"date_to\": \"2106-12-18\",
-    \"date_field\": \"published\",
+    \"date_field\": \"updated\",
     \"sort\": \"published_at.asc\",
     \"per_page\": 13
 }"
@@ -641,15 +641,15 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "draft",
+    "status": "published",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-19T09:40:53",
+    "date_from": "2025-11-19T10:01:35",
     "date_to": "2106-12-18",
-    "date_field": "published",
+    "date_field": "updated",
     "sort": "published_at.asc",
     "per_page": 13
 };
@@ -686,15 +686,15 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'draft',
+            'status' =&gt; 'published',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-19T09:40:53',
+            'date_from' =&gt; '2025-11-19T10:01:35',
             'date_to' =&gt; '2106-12-18',
-            'date_field' =&gt; 'published',
+            'date_field' =&gt; 'updated',
             'sort' =&gt; 'published_at.asc',
             'per_page' =&gt; 13,
         ],
@@ -1022,10 +1022,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="draft"
+               value="published"
                data-component="body">
     <br>
-<p>Example: <code>draft</code></p>
+<p>Example: <code>published</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -1074,10 +1074,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-19T09:40:53"
+               value="2025-11-19T10:01:35"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-19T09:40:53</code></p>
+<p>Must be a valid date. Example: <code>2025-11-19T10:01:35</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -1098,10 +1098,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_field"                data-endpoint="GETapi-v1-admin-entries"
-               value="published"
+               value="updated"
                data-component="body">
     <br>
-<p>Example: <code>published</code></p>
+<p>Example: <code>updated</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated</code></li> <li><code>published</code></li></ul>
         </div>
@@ -3262,12 +3262,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"audio\",
+    \"kind\": \"image\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"collection\": \"qxbajwbpilpmufinllwlo\",
     \"deleted\": \"with\",
     \"sort\": \"size_bytes\",
-    \"order\": \"desc\",
+    \"order\": \"asc\",
     \"page\": 3,
     \"per_page\": 21
 }"
@@ -3300,12 +3300,12 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "audio",
+    "kind": "image",
     "mime": "amniihfqcoynlazghdtqt",
     "collection": "qxbajwbpilpmufinllwlo",
     "deleted": "with",
     "sort": "size_bytes",
-    "order": "desc",
+    "order": "asc",
     "page": 3,
     "per_page": 21
 };
@@ -3340,12 +3340,12 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'audio',
+            'kind' =&gt; 'image',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'collection' =&gt; 'qxbajwbpilpmufinllwlo',
             'deleted' =&gt; 'with',
             'sort' =&gt; 'size_bytes',
-            'order' =&gt; 'desc',
+            'order' =&gt; 'asc',
             'page' =&gt; 3,
             'per_page' =&gt; 21,
         ],
@@ -3692,10 +3692,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="audio"
+               value="image"
                data-component="body">
     <br>
-<p>Example: <code>audio</code></p>
+<p>Example: <code>image</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -3758,10 +3758,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="order"                data-endpoint="GETapi-v1-admin-media"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -13202,7 +13202,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
     \"per_page\": 1,
-    \"sort\": \"created_at.desc\"
+    \"sort\": \"name.desc\"
 }"
 </code></pre></div>
 
@@ -13220,7 +13220,7 @@ const headers = {
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
     "per_page": 1,
-    "sort": "created_at.desc"
+    "sort": "name.desc"
 };
 
 fetch(url, {
@@ -13243,7 +13243,7 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
             'per_page' =&gt; 1,
-            'sort' =&gt; 'created_at.desc',
+            'sort' =&gt; 'name.desc',
         ],
     ]
 );
@@ -13370,10 +13370,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-admin-taxonomies--taxonomy_id--terms"
-               value="created_at.desc"
+               value="name.desc"
                data-component="body">
     <br>
-<p>Example: <code>created_at.desc</code></p>
+<p>Example: <code>name.desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>created_at.desc</code></li> <li><code>created_at.asc</code></li> <li><code>name.asc</code></li> <li><code>name.desc</code></li></ul>
         </div>
@@ -13870,7 +13870,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "alt=amniihfqcoynlazghdtqt"\
     --form "collection=qxbajwbpilpmufinllwlo"\
-    --form "file=@C:\Users\dattebayo\AppData\Local\Temp\php284A.tmp" </code></pre></div>
+    --form "file=@C:\Users\dattebayo\AppData\Local\Temp\php1D12.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -13921,7 +13921,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'file',
-                'contents' =&gt; fopen('C:\Users\dattebayo\AppData\Local\Temp\php284A.tmp', 'r')
+                'contents' =&gt; fopen('C:\Users\dattebayo\AppData\Local\Temp\php1D12.tmp', 'r')
             ],
         ],
     ]
@@ -14015,7 +14015,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 1048576 kilobytes. Example: <code>C:\Users\dattebayo\AppData\Local\Temp\php284A.tmp</code></p>
+<p>Must be a file. Must not be greater than 1048576 kilobytes. Example: <code>C:\Users\dattebayo\AppData\Local\Temp\php1D12.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
@@ -14688,7 +14688,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"5627:7\"
     ],
-    \"from\": \"2025-11-19T09:40:53\",
+    \"from\": \"2025-11-19T10:01:35\",
     \"to\": \"2106-12-18\",
     \"page\": 45,
     \"per_page\": 16
@@ -14726,7 +14726,7 @@ let body = {
     "term": [
         "5627:7"
     ],
-    "from": "2025-11-19T09:40:53",
+    "from": "2025-11-19T10:01:35",
     "to": "2106-12-18",
     "page": 45,
     "per_page": 16
@@ -14766,7 +14766,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 '5627:7',
             ],
-            'from' =&gt; '2025-11-19T09:40:53',
+            'from' =&gt; '2025-11-19T10:01:35',
             'to' =&gt; '2106-12-18',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -15013,10 +15013,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-19T09:40:53"
+               value="2025-11-19T10:01:35"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-19T09:40:53</code></p>
+<p>Must be a valid date. Example: <code>2025-11-19T10:01:35</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

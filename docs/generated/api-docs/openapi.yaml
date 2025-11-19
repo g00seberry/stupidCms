@@ -568,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: published
                   nullable: true
                   enum:
                     - all
@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T09:40:53'
+                  example: '2025-11-19T10:01:35'
                   nullable: true
                 date_to:
                   type: string
@@ -606,7 +606,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -2923,7 +2923,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: image
                   nullable: true
                   enum:
                     - image
@@ -2960,7 +2960,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -9840,7 +9840,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10351,7 +10351,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T09:40:53'
+                  example: '2025-11-19T10:01:35'
                   nullable: true
                 to:
                   type: string
