@@ -1069,29 +1069,6 @@
             ]
         },
         {
-            "id": "domain_service:Media/Services/EssenceMediaMetadataPlugin",
-            "type": "domain_service",
-            "name": "EssenceMediaMetadataPlugin",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\EssenceMediaMetadataPlugin.php",
-            "summary": "Плагин метаданных, основанный на библиотеке getID3 (essence).",
-            "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
-            "meta": {
-                "methods": [
-                    "supports",
-                    "extract"
-                ],
-                "dependencies": [
-                    "getID3"
-                ],
-                "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
-            },
-            "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
-        },
-        {
             "id": "domain_service:Media/Services/ExifManager",
             "type": "domain_service",
             "name": "ExifManager",
@@ -1159,12 +1136,35 @@
             ]
         },
         {
+            "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+            "type": "domain_service",
+            "name": "GetId3MediaMetadataPlugin",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\GetId3MediaMetadataPlugin.php",
+            "summary": "Плагин метаданных, основанный на библиотеке getID3.",
+            "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "extract"
+                ],
+                "dependencies": [
+                    "getID3"
+                ],
+                "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
             "id": "domain_service:Media/Services/MediaMetadataExtractor",
             "type": "domain_service",
             "name": "MediaMetadataExtractor",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
             "summary": "Сервис для извлечения метаданных из медиа-файлов.",
-            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (essence/getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
+            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
             "meta": {
                 "methods": [
                     "extract"
@@ -2812,7 +2812,7 @@
                     "quality",
                     "glide_driver",
                     "metadata",
-                    "essence",
+                    "getid3",
                     "enabled",
                     "ffprobe",
                     "binary",
@@ -2842,7 +2842,7 @@
                     "large",
                     "image",
                     "metadata",
-                    "essence",
+                    "getid3",
                     "ffprobe",
                     "mediainfo",
                     "exiftool",
@@ -6086,29 +6086,6 @@
                 ]
             },
             {
-                "id": "domain_service:Media/Services/EssenceMediaMetadataPlugin",
-                "type": "domain_service",
-                "name": "EssenceMediaMetadataPlugin",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\EssenceMediaMetadataPlugin.php",
-                "summary": "Плагин метаданных, основанный на библиотеке getID3 (essence).",
-                "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
-                "meta": {
-                    "methods": [
-                        "supports",
-                        "extract"
-                    ],
-                    "dependencies": [
-                        "getID3"
-                    ],
-                    "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
-                },
-                "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
-            },
-            {
                 "id": "domain_service:Media/Services/ExifManager",
                 "type": "domain_service",
                 "name": "ExifManager",
@@ -6176,12 +6153,35 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "GetId3MediaMetadataPlugin",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\GetId3MediaMetadataPlugin.php",
+                "summary": "Плагин метаданных, основанный на библиотеке getID3.",
+                "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "extract"
+                    ],
+                    "dependencies": [
+                        "getID3"
+                    ],
+                    "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
                 "summary": "Сервис для извлечения метаданных из медиа-файлов.",
-                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (essence/getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
+                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
                 "meta": {
                     "methods": [
                         "extract"
@@ -7833,7 +7833,7 @@
                         "quality",
                         "glide_driver",
                         "metadata",
-                        "essence",
+                        "getid3",
                         "enabled",
                         "ffprobe",
                         "binary",
@@ -7863,7 +7863,7 @@
                         "large",
                         "image",
                         "metadata",
-                        "essence",
+                        "getid3",
                         "ffprobe",
                         "mediainfo",
                         "exiftool",
@@ -10176,12 +10176,6 @@
                 "summary": "Резолвер правил валидации для коллекций медиа."
             },
             {
-                "id": "domain_service:Media/Services/EssenceMediaMetadataPlugin",
-                "type": "domain_service",
-                "name": "EssenceMediaMetadataPlugin",
-                "summary": "Плагин метаданных, основанный на библиотеке getID3 (essence)."
-            },
-            {
                 "id": "domain_service:Media/Services/ExifManager",
                 "type": "domain_service",
                 "name": "ExifManager",
@@ -10198,6 +10192,12 @@
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
                 "summary": "Плагин метаданных, основанный на утилите ffprobe."
+            },
+            {
+                "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "GetId3MediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на библиотеке getID3."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -10688,12 +10688,6 @@
                 "summary": "Резолвер правил валидации для коллекций медиа."
             },
             {
-                "id": "domain_service:Media/Services/EssenceMediaMetadataPlugin",
-                "type": "domain_service",
-                "name": "EssenceMediaMetadataPlugin",
-                "summary": "Плагин метаданных, основанный на библиотеке getID3 (essence)."
-            },
-            {
                 "id": "domain_service:Media/Services/ExifManager",
                 "type": "domain_service",
                 "name": "ExifManager",
@@ -10710,6 +10704,12 @@
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
                 "summary": "Плагин метаданных, основанный на утилите ffprobe."
+            },
+            {
+                "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "GetId3MediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на библиотеке getID3."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -12795,5 +12795,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-19T09:40:56+00:00"
+    "generated_at": "2025-11-19T09:57:08+00:00"
 }

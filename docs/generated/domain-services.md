@@ -121,27 +121,6 @@
 
 ---
 
-## EssenceMediaMetadataPlugin
-**ID:** `domain_service:Media/Services/EssenceMediaMetadataPlugin`
-**Path:** `app/Domain/Media/Services/EssenceMediaMetadataPlugin.php`
-
-Плагин метаданных, основанный на библиотеке getID3 (essence).
-
-### Details
-Использует getID3 для извлечения метаданных видео/аудио файлов.
-getID3 - это чистая PHP библиотека, не требующая внешних утилит.
-
-### Meta
-- **Methods:** `supports`, `extract`
-- **Dependencies:** `getID3`
-- **Interface:** `App\Domain\Media\Services\MediaMetadataPlugin`
-
-### Tags
-`media`, `service`
-
-
----
-
 ## ExifManager
 **ID:** `domain_service:Media/Services/ExifManager`
 **Path:** `app/Domain/Media/Services/ExifManager.php`
@@ -241,6 +220,27 @@ Job для генерации варианта медиа-файла.
 
 ### Tags
 `media`, `job`
+
+
+---
+
+## GetId3MediaMetadataPlugin
+**ID:** `domain_service:Media/Services/GetId3MediaMetadataPlugin`
+**Path:** `app/Domain/Media/Services/GetId3MediaMetadataPlugin.php`
+
+Плагин метаданных, основанный на библиотеке getID3.
+
+### Details
+Использует getID3 для извлечения метаданных видео/аудио файлов.
+getID3 - это чистая PHP библиотека, не требующая внешних утилит.
+
+### Meta
+- **Methods:** `supports`, `extract`
+- **Dependencies:** `getID3`
+- **Interface:** `App\Domain\Media\Services\MediaMetadataPlugin`
+
+### Tags
+`media`, `service`
 
 
 ---
@@ -447,7 +447,7 @@ DTO для нормализованных метаданных медиа-фай
 
 ### Details
 Извлекает размеры изображений, EXIF данные и другую информацию
-из загруженных файлов. Использует плагины (essence/getID3, ffprobe/mediainfo/exiftool)
+из загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)
 с graceful fallback и кэшированием результатов.
 
 ### Meta

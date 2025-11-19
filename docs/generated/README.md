@@ -45,10 +45,10 @@ HTTP эндпоинты API (60 сущностей)
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
-- [EssenceMediaMetadataPlugin](./domain-services.md#essencemediametadataplugin) - Плагин метаданных, основанный на библиотеке getID3 (essence).
 - [ExifManager](./domain-services.md#exifmanager) - Менеджер для управления EXIF данными изображений.
 - [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
 - [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
+- [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
 - *...и еще 56 сущностей*
 
 ### Blade Views
@@ -96,7 +96,7 @@ HTTP эндпоинты API (60 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-19 09:40:56
+**Сгенерировано:** 2025-11-19 09:57:08
 
 Для обновления документации выполните:
 ```bash

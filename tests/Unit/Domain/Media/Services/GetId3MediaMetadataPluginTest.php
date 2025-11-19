@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Domain\Media\Services\EssenceMediaMetadataPlugin;
+use App\Domain\Media\Services\GetId3MediaMetadataPlugin;
 
 test('supports video mime types', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     expect($plugin->supports('video/mp4'))->toBeTrue()
         ->and($plugin->supports('video/quicktime'))->toBeTrue()
@@ -13,7 +13,7 @@ test('supports video mime types', function () {
 });
 
 test('supports audio mime types', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     expect($plugin->supports('audio/mpeg'))->toBeTrue()
         ->and($plugin->supports('audio/mp4'))->toBeTrue()
@@ -21,21 +21,21 @@ test('supports audio mime types', function () {
 });
 
 test('does not support image mime types', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     expect($plugin->supports('image/jpeg'))->toBeFalse()
         ->and($plugin->supports('image/png'))->toBeFalse();
 });
 
 test('does not support non-media mime types', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     expect($plugin->supports('application/pdf'))->toBeFalse()
         ->and($plugin->supports('text/plain'))->toBeFalse();
 });
 
 test('returns empty array for non-existent file', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     $result = $plugin->extract('/non/existent/path');
 
@@ -43,7 +43,7 @@ test('returns empty array for non-existent file', function () {
 });
 
 test('returns empty array for empty path', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     $result = $plugin->extract('');
 
@@ -52,19 +52,19 @@ test('returns empty array for empty path', function () {
 
 test('uses custom getID3 instance when provided', function () {
     $getID3 = new \getID3();
-    $plugin = new EssenceMediaMetadataPlugin($getID3);
+    $plugin = new GetId3MediaMetadataPlugin($getID3);
 
-    expect($plugin)->toBeInstanceOf(EssenceMediaMetadataPlugin::class);
+    expect($plugin)->toBeInstanceOf(GetId3MediaMetadataPlugin::class);
 });
 
 test('creates new getID3 instance when null provided', function () {
-    $plugin = new EssenceMediaMetadataPlugin(null);
+    $plugin = new GetId3MediaMetadataPlugin(null);
 
-    expect($plugin)->toBeInstanceOf(EssenceMediaMetadataPlugin::class);
+    expect($plugin)->toBeInstanceOf(GetId3MediaMetadataPlugin::class);
 });
 
 test('extracts metadata structure correctly', function () {
-    $plugin = new EssenceMediaMetadataPlugin();
+    $plugin = new GetId3MediaMetadataPlugin();
 
     // Создаём временный файл для тестирования
     $tempFile = sys_get_temp_dir() . '/test_' . uniqid() . '.mp4';

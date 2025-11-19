@@ -84,8 +84,8 @@ return [
     ],
 
     'metadata' => [
-        'essence' => [
-            'enabled' => env('MEDIA_ESSENCE_ENABLED', true),
+        'getid3' => [
+            'enabled' => env('MEDIA_GETID3_ENABLED', true),
         ],
         'ffprobe' => [
             'enabled' => env('MEDIA_FFPROBE_ENABLED', true),
