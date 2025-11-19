@@ -16,18 +16,71 @@ class TermHierarchyService
      * Установить родителя для термина.
      * Обновляет term_tree согласно Closure Table паттерну.
      * Корректно обрабатывает перенос терма с потомками, сохраняя связи с потомками.
+     * При установке parent_id = null (делает терм корневым) сохраняет все связи с дочерними элементами.
      *
      * @param \App\Models\Term $term Терм, для которого устанавливается родитель
-     * @param int|null $parentId ID нового родителя (null для удаления родителя)
+     * @param int|null $parentId ID нового родителя (null для удаления родителя, делает терм корневым)
      * @return void
      * @throws \InvalidArgumentException Если родитель не принадлежит той же таксономии или создаст цикл
      */
     public function setParent(Term $term, ?int $parentId): void
     {
         if ($parentId === null) {
-            // Удаляем старые связи и добавляем только само-ссылку
-            $this->removeFromTree($term);
+            // Сохраняем связи с потомками (где term является предком)
+            $descendantLinks = TermTree::where('ancestor_id', $term->id)
+                ->where('descendant_id', '!=', $term->id) // исключаем само-ссылку
+                ->get()
+                ->map(fn ($link) => [
+                    'descendant_id' => $link->descendant_id,
+                    'depth' => $link->depth,
+                ])
+                ->toArray();
+
+            // Получаем список всех потомков (включая вложенных)
+            $allDescendantIds = TermTree::where('ancestor_id', $term->id)
+                ->where('descendant_id', '!=', $term->id)
+                ->pluck('descendant_id')
+                ->toArray();
+
+            // Получаем список старых предков term (до удаления)
+            $oldAncestorIds = TermTree::where('descendant_id', $term->id)
+                ->where('ancestor_id', '!=', $term->id)
+                ->pluck('ancestor_id')
+                ->toArray();
+
+            // Удаляем связи, где term является потомком (связи со старыми предками)
+            TermTree::where('descendant_id', $term->id)
+                ->where('ancestor_id', '!=', $term->id)
+                ->delete();
+
+            // Удаляем связи потомков со старыми предками term
+            // Это необходимо, так как потомки больше не связаны со старыми предками через term
+            if (!empty($allDescendantIds) && !empty($oldAncestorIds)) {
+                TermTree::whereIn('ancestor_id', $oldAncestorIds)
+                    ->whereIn('descendant_id', $allDescendantIds)
+                    ->delete();
+            }
+
+            // Добавляем само-ссылку (ancestor = descendant = term, depth = 0)
             $this->addSelfReference($term);
+
+            // Восстанавливаем связи с потомками (связи, где term является предком)
+            foreach ($descendantLinks as $link) {
+                $descendantId = $link['descendant_id'];
+                $originalDepth = $link['depth'];
+
+                // Восстанавливаем связь терма с потомком
+                TermTree::firstOrCreate(
+                    [
+                        'ancestor_id' => $term->id,
+                        'descendant_id' => $descendantId,
+                    ],
+                    [
+                        'depth' => $originalDepth,
+                    ]
+                );
+            }
+
             return;
         }
 

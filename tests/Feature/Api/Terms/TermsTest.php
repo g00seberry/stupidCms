@@ -236,6 +236,40 @@ test('admin can change term parent', function () {
     expect($term->fresh()->parent_id)->toBe($parent2->id);
 });
 
+test('setting parent_id to null preserves children relationships', function () {
+    $parent = Term::factory()->create(['taxonomy_id' => $this->taxonomy->id, 'name' => 'Parent']);
+    $term = Term::factory()->create(['taxonomy_id' => $this->taxonomy->id, 'name' => 'Term']);
+    $child1 = Term::factory()->create(['taxonomy_id' => $this->taxonomy->id, 'name' => 'Child 1']);
+    $child2 = Term::factory()->create(['taxonomy_id' => $this->taxonomy->id, 'name' => 'Child 2']);
+    
+    $hierarchyService = app(\App\Support\TermHierarchy\TermHierarchyService::class);
+    
+    // Создаем иерархию: parent -> term -> child1, child2
+    $hierarchyService->setParent($term, $parent->id);
+    $hierarchyService->setParent($child1, $term->id);
+    $hierarchyService->setParent($child2, $term->id);
+
+    // Проверяем начальное состояние
+    expect($term->fresh()->parent_id)->toBe($parent->id)
+        ->and($child1->fresh()->parent_id)->toBe($term->id)
+        ->and($child2->fresh()->parent_id)->toBe($term->id);
+
+    // Делаем term корневым (parent_id = null)
+    $response = actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->putJson("/api/v1/admin/terms/{$term->id}", [
+            'name' => $term->name,
+            'parent_id' => null,
+        ]);
+
+    $response->assertOk();
+
+    // Проверяем, что term стал корневым, но его дочерние элементы остались дочерними
+    expect($term->fresh()->parent_id)->toBeNull()
+        ->and($child1->fresh()->parent_id)->toBe($term->id)
+        ->and($child2->fresh()->parent_id)->toBe($term->id);
+});
+
 test('update returns 404 for non-existent term', function () {
     $response = actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
