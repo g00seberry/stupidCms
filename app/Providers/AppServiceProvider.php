@@ -9,6 +9,7 @@ use App\Domain\Media\Images\GlideImageProcessor;
 use App\Domain\Media\Images\ImageProcessor;
 use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\ExifManager;
+use App\Domain\Media\Services\EssenceMediaMetadataPlugin;
 use App\Domain\Media\Services\ExiftoolMediaMetadataPlugin;
 use App\Domain\Media\Services\FfprobeMediaMetadataPlugin;
 use App\Domain\Media\Services\MediaMetadataExtractor;
@@ -137,6 +138,11 @@ class AppServiceProvider extends ServiceProvider
             $plugins = [];
 
             // Порядок важен: пробуем плагины по порядку с graceful fallback
+            // Essence (getID3) - чистая PHP библиотека, не требует внешних утилит, пробуем первой
+            if (config('media.metadata.essence.enabled', true)) {
+                $plugins[] = new EssenceMediaMetadataPlugin();
+            }
+
             if (config('media.metadata.ffprobe.enabled', true)) {
                 $binary = config('media.metadata.ffprobe.binary', null);
                 $plugins[] = new FfprobeMediaMetadataPlugin($binary);

@@ -183,8 +183,8 @@ Configuration: Mail
 Configuration: Media
 
 ### Meta
-- **Keys:** `disks`, `default`, `collections`, `videos`, `documents`, `kinds`, `image`, `video`, `max_upload_mb`, `allowed_mimes`, `variants`, `thumbnail`, `max`, `medium`, `large`, `signed_ttl`, `public_signed_ttl`, `path_strategy`, `driver`, `quality`, `glide_driver`, `metadata`, `ffprobe`, `enabled`, `binary`, `mediainfo`, `exiftool`, `cache_ttl`, `max_size_bytes`, `max_duration_ms`, `max_bitrate_kbps`, `thumbnails`, `max_width`, `max_height`, `exif`, `auto_rotate`, `strip`, `whitelist`, `preserve_color_profile`
-- **Sections:** `disks`, `collections`, `kinds`, `allowed_mimes`, `variants`, `thumbnail`, `medium`, `large`, `image`, `metadata`, `ffprobe`, `mediainfo`, `exiftool`, `videos`, `thumbnails`, `exif`
+- **Keys:** `disks`, `default`, `collections`, `videos`, `documents`, `kinds`, `image`, `video`, `max_upload_mb`, `allowed_mimes`, `variants`, `thumbnail`, `max`, `medium`, `large`, `signed_ttl`, `public_signed_ttl`, `path_strategy`, `driver`, `quality`, `glide_driver`, `metadata`, `essence`, `enabled`, `ffprobe`, `binary`, `mediainfo`, `exiftool`, `cache_ttl`, `max_size_bytes`, `max_duration_ms`, `max_bitrate_kbps`, `thumbnails`, `max_width`, `max_height`, `exif`, `auto_rotate`, `strip`, `whitelist`, `preserve_color_profile`
+- **Sections:** `disks`, `collections`, `kinds`, `allowed_mimes`, `variants`, `thumbnail`, `medium`, `large`, `image`, `metadata`, `essence`, `ffprobe`, `mediainfo`, `exiftool`, `videos`, `thumbnails`, `exif`
 
 ### Tags
 `config`, `media`
