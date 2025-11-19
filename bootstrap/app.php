@@ -56,6 +56,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register custom middleware aliases
         $middleware->alias([
             'jwt.auth' => \App\Http\Middleware\JwtAuth::class,
+            'jwt.auth.optional' => \App\Http\Middleware\OptionalJwtAuth::class,
             'no-cache-auth' => \App\Http\Middleware\NoCacheAuth::class,
         ]);
     })

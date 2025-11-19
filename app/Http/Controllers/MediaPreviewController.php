@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Domain\Auth\JwtService;
 use App\Domain\Media\Services\OnDemandVariantService;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
-use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -36,11 +34,9 @@ class MediaPreviewController extends Controller
 
     /**
      * @param \App\Domain\Media\Services\OnDemandVariantService $variantService Сервис для генерации вариантов
-     * @param \App\Domain\Auth\JwtService $jwt Сервис для работы с JWT токенами
      */
     public function __construct(
-        private readonly OnDemandVariantService $variantService,
-        private readonly JwtService $jwt
+        private readonly OnDemandVariantService $variantService
     ) {
     }
 
@@ -54,7 +50,7 @@ class MediaPreviewController extends Controller
      * Для админов (аутентифицированных пользователей):
      * - Доступ к удаленным файлам (withTrashed)
      * - Проверка прав доступа через Policy
-     * - Аутентификация работает через JWT токен из cookie (cms_at) даже на публичных роутах
+     * - Аутентификация выполняется через OptionalJwtAuth middleware
      *
      * Для публичных запросов:
      * - Доступ только к активным (не удаленным) файлам
@@ -267,8 +263,9 @@ class MediaPreviewController extends Controller
     /**
      * Проверить, является ли запрос админским.
      *
-     * Проверяет наличие аутентифицированного пользователя через guard 'api'
-     * или валидирует JWT токен из cookie для публичных роутов.
+     * Проверяет наличие аутентифицированного пользователя через guard 'api'.
+     * Аутентификация выполняется через OptionalJwtAuth middleware, который
+     * устанавливает пользователя в guard при наличии валидного JWT токена.
      * Это позволяет админам получать доступ к удаленным файлам даже на публичных эндпоинтах.
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
@@ -276,44 +273,7 @@ class MediaPreviewController extends Controller
      */
     private function isAdminRequest(Request $request): bool
     {
-        // Если пользователь уже аутентифицирован через middleware
-        if (auth('api')->check() || auth()->check()) {
-            return true;
-        }
-
-        // Для публичных роутов проверяем JWT токен из cookie вручную
-        $accessToken = (string) $request->cookie(config('jwt.cookies.access'), '');
-
-        if ($accessToken === '') {
-            return false;
-        }
-
-        try {
-            $verified = $this->jwt->verify($accessToken, 'access');
-            $claims = $verified['claims'];
-            $subject = $claims['sub'] ?? null;
-
-            if (! is_numeric($subject) || (int) $subject <= 0) {
-                return false;
-            }
-
-            $userId = (int) $subject;
-            $user = User::query()->find($userId);
-
-            if (! $user) {
-                return false;
-            }
-
-            // Устанавливаем пользователя в guard для последующих проверок прав
-            // Это необходимо для работы authorize() в методе show()
-            Auth::shouldUse('api');
-            Auth::setUser($user);
-
-            return true;
-        } catch (Throwable) {
-            // Если токен невалиден, считаем запрос публичным
-            return false;
-        }
+        return auth('api')->check() || auth()->check();
     }
 
     /**

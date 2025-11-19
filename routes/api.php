@@ -45,8 +45,9 @@ Route::prefix('v1')->group(function () {
         ->name('api.v1.search');
 
     // Public media access with signed URLs (supports variants via ?variant=thumbnail)
+    // Optional JWT auth allows admins to access deleted files even on public routes
     Route::get('/media/{id}', [MediaPreviewController::class, 'show'])
-        ->middleware('throttle:api')
+        ->middleware(['jwt.auth.optional', 'throttle:api'])
         ->name('api.v1.media.show');
 });
 
