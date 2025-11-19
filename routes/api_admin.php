@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
 use App\Http\Controllers\Admin\V1\MediaController;
-use App\Http\Controllers\Admin\V1\MediaPreviewController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
@@ -31,7 +30,7 @@ use Illuminate\Support\Facades\Route;
  * 
  * Безопасность:
  * - Использует guard 'admin' для явной идентификации администраторских запросов
- * - Throttle 'api' настроен в bootstrap/app.php (60 запросов в минуту)
+ * - Throttle 'api' настроен в bootstrap/app.php (120 запросов в минуту)
  * - Для кросс-сайтовых запросов (SPA на другом origin) требуется:
  *   - SameSite=None; Secure для cookies
  *   - CORS с credentials: true
@@ -155,23 +154,24 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     });
 
     Route::middleware('can:viewAny,' . Media::class)->group(function () {
+        Route::get('/media/config', [MediaController::class, 'config'])
+            ->middleware('throttle:60,1')
+            ->name('admin.v1.media.config');
         Route::get('/media', [MediaController::class, 'index'])
             ->middleware('throttle:60,1')
             ->name('admin.v1.media.index');
         Route::get('/media/{media}', [MediaController::class, 'show'])
             ->middleware('throttle:60,1')
             ->name('admin.v1.media.show');
-        Route::get('/media/{media}/preview', [MediaPreviewController::class, 'preview'])
-            ->middleware('throttle:60,1')
-            ->name('admin.v1.media.preview');
-        Route::get('/media/{media}/download', [MediaPreviewController::class, 'download'])
-            ->middleware('throttle:60,1')
-            ->name('admin.v1.media.download');
     });
 
     Route::post('/media', [MediaController::class, 'store'])
         ->middleware(['can:create,' . Media::class, 'throttle:20,1'])
         ->name('admin.v1.media.store');
+
+    Route::post('/media/bulk', [MediaController::class, 'bulkStore'])
+        ->middleware(['can:create,' . Media::class, 'throttle:20,1'])
+        ->name('admin.v1.media.bulkStore');
 
     Route::put('/media/{media}', [MediaController::class, 'update'])
         ->middleware('throttle:20,1')

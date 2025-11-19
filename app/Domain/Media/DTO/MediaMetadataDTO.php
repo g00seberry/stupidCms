@@ -10,6 +10,10 @@ namespace App\Domain\Media\DTO;
  * Представляет унифицированную структуру метаданных, извлечённых
  * из различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).
  *
+ * Данные из DTO используются для создания записей в специализированных таблицах:
+ * - width, height, exif → MediaImage (для изображений)
+ * - durationMs, bitrateKbps, frameRate, frameCount, videoCodec, audioCodec → MediaAvMetadata (для видео/аудио)
+ *
  * @package App\Domain\Media\DTO
  */
 readonly class MediaMetadataDTO

@@ -5,10 +5,13 @@ declare(strict_types=1);
 use App\Models\RefreshToken;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели RefreshToken.
  */
+
+uses(TestCase::class);
 
 test('has fillable attributes', function () {
     $token = new RefreshToken();

@@ -15,7 +15,6 @@ final class MediaQuery
         private readonly ?string $search,
         private readonly ?string $kind,
         private readonly ?string $mimePrefix,
-        private readonly ?string $collection,
         private readonly DeletedFilter $deletedFilter,
         private readonly string $sort,
         private readonly string $order,
@@ -52,16 +51,6 @@ final class MediaQuery
     public function mimePrefix(): ?string
     {
         return $this->mimePrefix;
-    }
-
-    /**
-     * Слаг коллекции.
-     *
-     * @return string|null
-     */
-    public function collection(): ?string
-    {
-        return $this->collection;
     }
 
     /**

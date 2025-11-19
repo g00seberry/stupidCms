@@ -8,10 +8,13 @@ use App\Models\Entry;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели Term.
  */
+
+uses(TestCase::class);
 
 test('casts meta_json to array', function () {
     $term = new Term();

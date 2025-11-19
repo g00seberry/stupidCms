@@ -40,7 +40,6 @@ class IndexMediaRequest extends FormRequest
      * - q: опциональный поисковый запрос (максимум 255 символов)
      * - kind: опциональный тип медиа (image, video, audio, document)
      * - mime: опциональный MIME тип (максимум 120 символов)
-     * - collection: опциональная коллекция (максимум 64 символа)
      * - deleted: опциональный фильтр удалённых (with, only)
      * - sort: опциональная сортировка (created_at, size_bytes, mime)
      * - order: опциональный порядок (asc, desc)
@@ -54,7 +53,6 @@ class IndexMediaRequest extends FormRequest
             'q' => 'nullable|string|max:255',
             'kind' => 'nullable|string|in:image,video,audio,document',
             'mime' => 'nullable|string|max:120',
-            'collection' => 'nullable|string|max:64',
             'deleted' => 'nullable|string|in:with,only',
             'sort' => 'nullable|string|in:created_at,size_bytes,mime',
             'order' => 'nullable|string|in:asc,desc',

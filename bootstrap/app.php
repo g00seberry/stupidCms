@@ -35,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'cms_csrf', // CSRF token cookie (from config/security.php)
         ]);
         
-        // Rate limiting для API (60 запросов в минуту)
+        // Rate limiting для API (120 запросов в минуту)
         $middleware->throttleApi();
         
         // Канонизация URL применяется глобально ко всем HTTP-запросам
@@ -56,6 +56,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register custom middleware aliases
         $middleware->alias([
             'jwt.auth' => \App\Http\Middleware\JwtAuth::class,
+            'jwt.auth.optional' => \App\Http\Middleware\OptionalJwtAuth::class,
             'no-cache-auth' => \App\Http\Middleware\NoCacheAuth::class,
         ]);
     })

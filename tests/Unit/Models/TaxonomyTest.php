@@ -5,10 +5,13 @@ declare(strict_types=1);
 use App\Models\Taxonomy;
 use App\Models\Term;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели Taxonomy.
  */
+
+uses(TestCase::class);
 
 test('casts options_json to array', function () {
     $taxonomy = new Taxonomy();

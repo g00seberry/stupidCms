@@ -6,10 +6,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Миграция для создания таблицы media_av_metadata.
+ *
+ * Таблица хранит нормализованные AV-метаданные для видео и аудио:
+ * duration_ms, bitrate_kbps, frame_rate, frame_count, video_codec, audio_codec.
+ */
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('media_metadata', function (Blueprint $table): void {
+        Schema::create('media_av_metadata', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->ulid('media_id')->unique();
             $table->unsignedBigInteger('duration_ms')->nullable();
@@ -29,7 +35,7 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('media_metadata');
+        Schema::dropIfExists('media_av_metadata');
     }
 };
 

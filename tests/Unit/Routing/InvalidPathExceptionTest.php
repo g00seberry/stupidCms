@@ -29,7 +29,9 @@ test('exception is instance of Exception', function () {
 
 test('converts to error payload with validation error code', function () {
     $exception = new InvalidPathException('Path is empty');
-    $factory = app(\App\Support\Errors\ErrorFactory::class);
+    $errorsConfig = require __DIR__ . '/../../../config/errors.php';
+    $kernel = \App\Support\Errors\ErrorKernel::fromConfig($errorsConfig);
+    $factory = $kernel->factory();
 
     $error = $exception->toError($factory);
 

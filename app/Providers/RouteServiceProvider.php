@@ -40,18 +40,18 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Настройка rate limiter для API (60 запросов в минуту)
+        // Настройка rate limiter для API (120 запросов в минуту)
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
-        // Rate limiter для login (5 попыток в минуту на связку email+IP)
+        // Rate limiter для login (10 попыток в минуту на связку email+IP)
         RateLimiter::for('login', function (Request $request) {
             $key = 'login:'.Str::lower($request->input('email')).'|'.$request->ip();
-            return Limit::perMinute(5)->by($key);
+            return Limit::perMinute(10)->by($key);
         });
 
-        // Rate limiter для refresh (10 попыток в минуту по хэшу cookie+IP)
+        // Rate limiter для refresh (20 попыток в минуту по хэшу cookie+IP)
         // Используем хэш cookie+IP для более точной идентификации клиента
         // Это помогает избежать ложных блокировок за NAT и ловит автоматы
         RateLimiter::for('refresh', function (Request $request) {
@@ -59,16 +59,16 @@ class RouteServiceProvider extends ServiceProvider
             // Fallback to sha256 if xxh128 is not available
             $algo = in_array('xxh128', hash_algos(), true) ? 'xxh128' : 'sha256';
             $key = hash($algo, $refreshToken . '|' . $request->ip());
-            return Limit::perMinute(10)->by($key);
+            return Limit::perMinute(20)->by($key);
         });
 
         RateLimiter::for('search-public', function (Request $request) {
-            return Limit::perMinute(120)->by($request->ip());
+            return Limit::perMinute(240)->by($request->ip());
         });
 
         RateLimiter::for('search-reindex', function (Request $request) {
             $identifier = $request->user()?->getAuthIdentifier();
-            return Limit::perMinute(5)->by($identifier ?: $request->ip());
+            return Limit::perMinute(10)->by($identifier ?: $request->ip());
         });
 
         $this->routes(function () {

@@ -17,10 +17,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Media\BulkDeleteMediaRequest;
 use App\Http\Requests\Admin\Media\BulkForceDeleteMediaRequest;
 use App\Http\Requests\Admin\Media\BulkRestoreMediaRequest;
+use App\Http\Requests\Admin\Media\BulkStoreMediaRequest;
 use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
 use App\Http\Resources\Admin\MediaCollection;
+use App\Http\Resources\Admin\MediaConfigResource;
+use App\Http\Resources\Media\BaseMediaResource;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use App\Support\Errors\ErrorCode;
@@ -60,6 +63,91 @@ class MediaController extends Controller
     }
 
     /**
+     * Получение конфигурации системы медиа-файлов.
+     *
+     * Возвращает информацию о разрешенных типах файлов (MIME-типы),
+     * максимальном размере загрузки и доступных вариантах изображений.
+     *
+     * @group Admin ▸ Media
+     * @name Get media config
+     * @authenticated
+     * @response status=200 {
+     *   "allowed_mimes": [
+     *     "image/jpeg",
+     *     "image/png",
+     *     "image/webp",
+     *     "image/gif",
+     *     "image/avif",
+     *     "image/heic",
+     *     "image/heif",
+     *     "video/mp4",
+     *     "audio/mp4",
+     *     "audio/mpeg",
+     *     "audio/aiff",
+     *     "audio/x-aiff",
+     *     "application/pdf"
+     *   ],
+     *   "max_upload_mb": 1024,
+     *   "image_variants": {
+     *     "thumbnail": {
+     *       "max": 320,
+     *       "format": null,
+     *       "quality": null
+     *     },
+     *     "medium": {
+     *       "max": 1024,
+     *       "format": null,
+     *       "quality": null
+     *     },
+     *     "large": {
+     *       "max": 2048,
+     *       "format": null,
+     *       "quality": null
+     *     }
+     *   }
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555555",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555555-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000000",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000000-6666666677778888-01"
+     * }
+     */
+    /**
+     * Получение конфигурации системы медиа-файлов.
+     *
+     * Возвращает информацию о разрешенных типах файлов (MIME-типы),
+     * максимальном размере загрузки и доступных вариантах изображений.
+     *
+     * @return \App\Http\Resources\Admin\MediaConfigResource Ресурс с конфигурацией медиа
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на просмотр
+     */
+    public function config(): MediaConfigResource
+    {
+        $this->authorize('viewAny', Media::class);
+
+        return new MediaConfigResource(null);
+    }
+
+    /**
      * Список медиафайлов с фильтрами.
      *
      * @group Admin ▸ Media
@@ -68,7 +156,6 @@ class MediaController extends Controller
      * @queryParam q string Поиск по названию и исходному имени (<=255). Example: hero
      * @queryParam kind string Фильтр по типу. Values: image,video,audio,document.
      * @queryParam mime string Фильтр по MIME (prefix match). Example: image/png
-     * @queryParam collection string Коллекция (slug, до 64 символов). Example: uploads
      * @queryParam deleted string Управление soft-deleted. Values: with,only.
      * @queryParam sort string Поле сортировки. Values: created_at,size_bytes,mime. Default: created_at.
      * @queryParam order string Направление сортировки. Values: asc,desc. Default: desc.
@@ -76,7 +163,7 @@ class MediaController extends Controller
      * @response status=200 {
      *   "data": [
      *     {
-     *       "id": "uuid-media",
+     *       "id": "01HXZYXQJ123456789ABCDEF",
      *       "kind": "image",
      *       "name": "hero.jpg",
      *       "ext": "jpg",
@@ -84,17 +171,68 @@ class MediaController extends Controller
      *       "size_bytes": 235678,
      *       "width": 1920,
      *       "height": 1080,
-     *       "duration_ms": null,
      *       "title": "Hero image",
      *       "alt": "Hero cover",
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
      *       "preview_urls": {
-     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail",
+     *         "medium": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=medium",
+     *         "large": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=large"
      *       },
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJ987654321FEDCBA",
+     *       "kind": "video",
+     *       "name": "video.mp4",
+     *       "ext": "mp4",
+     *       "mime": "video/mp4",
+     *       "size_bytes": 5242880,
+     *       "duration_ms": 120000,
+     *       "bitrate_kbps": 3500,
+     *       "frame_rate": 30,
+     *       "frame_count": 3600,
+     *       "video_codec": "h264",
+     *       "audio_codec": "aac",
+     *       "title": "Video title",
+     *       "alt": null,
+     *       "created_at": "2025-01-10T12:01:00+00:00",
+     *       "updated_at": "2025-01-10T12:01:00+00:00",
+     *       "deleted_at": null,
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJABCDEF1234567890",
+     *       "kind": "audio",
+     *       "name": "audio.mp3",
+     *       "ext": "mp3",
+     *       "mime": "audio/mpeg",
+     *       "size_bytes": 3145728,
+     *       "duration_ms": 180000,
+     *       "bitrate_kbps": 256,
+     *       "audio_codec": "mp3",
+     *       "title": "Audio title",
+     *       "alt": null,
+     *       "created_at": "2025-01-10T12:02:00+00:00",
+     *       "updated_at": "2025-01-10T12:02:00+00:00",
+     *       "deleted_at": null,
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJABCDEF1234567890"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJFEDCBA9876543210",
+     *       "kind": "document",
+     *       "name": "document.pdf",
+     *       "ext": "pdf",
+     *       "mime": "application/pdf",
+     *       "size_bytes": 102400,
+     *       "title": "Document title",
+     *       "alt": null,
+     *       "created_at": "2025-01-10T12:03:00+00:00",
+     *       "updated_at": "2025-01-10T12:03:00+00:00",
+     *       "deleted_at": null,
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJFEDCBA9876543210"
      *     }
      *   ],
      *   "links": {
@@ -107,7 +245,7 @@ class MediaController extends Controller
      *     "current_page": 1,
      *     "last_page": 1,
      *     "per_page": 15,
-     *     "total": 1
+     *     "total": 4
      *   }
      * }
      * @response status=401 {
@@ -156,7 +294,6 @@ class MediaController extends Controller
             search: $v['q'] ?? null,
             kind: $v['kind'] ?? null,
             mimePrefix: $v['mime'] ?? null,
-            collection: $v['collection'] ?? null,
             deletedFilter: $deletedFilter,
             sort: $sort,
             order: $order,
@@ -165,6 +302,9 @@ class MediaController extends Controller
         );
 
         $paginator = $this->listAction->execute($mq)->appends($v);
+        
+        // Загружаем связи для избежания N+1 проблем
+        $paginator->getCollection()->load(['image', 'avMetadata']);
 
         return new MediaCollection($paginator);
     }
@@ -178,12 +318,11 @@ class MediaController extends Controller
      * @bodyParam file file required Файл (mimetype из `config('media.allowed_mimes')`). Example: storage/app/scribe/examples/media-upload.png
      * @bodyParam title string Пользовательский заголовок. Example: Hero image
      * @bodyParam alt string Alt-текст для изображений. Example: Hero cover
-     * @bodyParam collection string Коллекция (slug). Example: uploads
      * @responseHeader Cache-Control "no-store, private"
      * @responseHeader Vary "Cookie"
-     * @response status=201 {
+     * @response status=200 scenario="Дедупликация" {
      *   "data": {
-     *     "id": "uuid-media",
+     *     "id": "01HXZYXQJ123456789ABCDEF",
      *     "kind": "image",
      *     "name": "hero.jpg",
      *     "ext": "jpg",
@@ -191,17 +330,36 @@ class MediaController extends Controller
      *     "size_bytes": 235678,
      *     "width": 1920,
      *     "height": 1080,
-     *     "duration_ms": null,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
+     *   }
+     * }
+     * @response status=201 scenario="Изображение" {
+     *   "data": {
+     *     "id": "01HXZYXQJ123456789ABCDEF",
+     *     "kind": "image",
+     *     "name": "hero.jpg",
+     *     "ext": "jpg",
+     *     "mime": "image/jpeg",
+     *     "size_bytes": 235678,
+     *     "width": 1920,
+     *     "height": 1080,
+     *     "title": "Hero image",
+     *     "alt": "Hero cover",
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "preview_urls": {
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
+     *     },
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *   }
      * }
      * @response status=401 {
@@ -245,6 +403,24 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000001-6666666677778888-01"
      * }
      */
+    /**
+     * Загрузка нового медиа-файла.
+     *
+     * Сохраняет файл на диск, извлекает метаданные и создает запись Media в БД.
+     * Возвращает специализированный ресурс в зависимости от типа медиа:
+     * - MediaImageResource для изображений (с width, height, preview_urls)
+     * - MediaVideoResource для видео (с duration_ms, bitrate_kbps, frame_rate и т.д.)
+     * - MediaAudioResource для аудио (с duration_ms, bitrate_kbps, audio_codec)
+     * - MediaDocumentResource для документов (только базовые поля)
+     *
+     * При дедупликации (файл с таким же checksum уже существует) возвращает 200,
+     * при создании новой записи - 201.
+     *
+     * @param \App\Http\Requests\Admin\Media\StoreMediaRequest $request HTTP запрос с файлом и метаданными
+     * @return \Illuminate\Http\JsonResponse JSON ответ со специализированным ресурсом медиа-файла
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на создание
+     * @throws \App\Support\Errors\HttpErrorException Если файл не прошел валидацию или не удалось сохранить
+     */
     public function store(StoreMediaRequest $request): JsonResponse
     {
         $this->authorize('create', Media::class);
@@ -265,23 +441,189 @@ class MediaController extends Controller
         }
 
         $media = $this->storeAction->execute($file, $validated);
+        
+        // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+        $media->load(['image', 'avMetadata']);
 
         // При дедупликации возвращаем 200, при создании - 201
         $statusCode = $media->wasRecentlyCreated ? HttpResponse::HTTP_CREATED : HttpResponse::HTTP_OK;
 
-        return (new MediaResource($media))->response()->setStatusCode($statusCode);
+        return MediaResource::make($media)->response()->setStatusCode($statusCode);
+    }
+
+    /**
+     * Массовая загрузка медиа-файлов.
+     *
+     * Обрабатывает массив файлов и создаёт записи Media для каждого файла.
+     * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
+     * Опциональные метаданные (title, alt) применяются ко всем файлам.
+     *
+     * @group Admin ▸ Media
+     * @name Bulk upload media
+     * @authenticated
+     * @bodyParam files array required Массив файлов (1-50 элементов). Example: [storage/app/scribe/examples/media-upload.png, storage/app/scribe/examples/media-upload2.jpg]
+     * @bodyParam files.* file required Файл (mimetype из `config('media.allowed_mimes')`). Example: storage/app/scribe/examples/media-upload.png
+     * @bodyParam title string Пользовательский заголовок для всех файлов. Example: Gallery images
+     * @bodyParam alt string Alt-текст для всех файлов (для изображений). Example: Gallery cover
+     * @responseHeader Cache-Control "no-store, private"
+     * @responseHeader Vary "Cookie"
+     * @response status=201 {
+     *   "data": [
+     *     {
+     *       "id": "01HXZYXQJ123456789ABCDEF",
+     *       "kind": "image",
+     *       "name": "hero.jpg",
+     *       "ext": "jpg",
+     *       "mime": "image/jpeg",
+     *       "size_bytes": 235678,
+     *       "width": 1920,
+     *       "height": 1080,
+     *       "title": "Gallery images",
+     *       "alt": "Gallery cover",
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null,
+     *       "preview_urls": {
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
+     *       },
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJ987654321FEDCBA",
+     *       "kind": "image",
+     *       "name": "hero2.jpg",
+     *       "ext": "jpg",
+     *       "mime": "image/jpeg",
+     *       "size_bytes": 245678,
+     *       "width": 1920,
+     *       "height": 1080,
+     *       "title": "Gallery images",
+     *       "alt": "Gallery cover",
+     *       "created_at": "2025-01-10T12:00:01+00:00",
+     *       "updated_at": "2025-01-10T12:00:01+00:00",
+     *       "deleted_at": null,
+     *       "preview_urls": {
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA?variant=thumbnail"
+     *       },
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
+     *     }
+     *   ]
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555570",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555570-1111111122223333-01"
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The bulk media upload payload failed validation constraints.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555571",
+     *     "errors": {
+     *       "files": [
+     *         "The files field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555571-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000007",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000007-6666666677778888-01"
+     * }
+     */
+    /**
+     * Массовая загрузка медиа-файлов.
+     *
+     * Обрабатывает массив файлов и создаёт записи Media для каждого файла.
+     * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
+     * Опциональные метаданные (title, alt) применяются ко всем файлам.
+     *
+     * @param \App\Http\Requests\Admin\Media\BulkStoreMediaRequest $request HTTP запрос с массивом файлов и метаданными
+     * @return \Illuminate\Http\JsonResponse JSON ответ с коллекцией загруженных медиа-файлов (статус 201)
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на создание
+     * @throws \App\Domain\Media\Validation\MediaValidationException Если файлы не прошли валидацию
+     */
+    public function bulkStore(BulkStoreMediaRequest $request): JsonResponse
+    {
+        $this->authorize('create', Media::class);
+
+        $validated = $request->validated();
+        $files = $request->file('files', []);
+
+        if (empty($files) || ! is_array($files)) {
+            $this->throwError(
+                ErrorCode::VALIDATION_ERROR,
+                'Files payload is missing.',
+                [
+                    'errors' => [
+                        'files' => ['Files payload is required.'],
+                    ],
+                ],
+            );
+        }
+
+        $uploadedMedia = [];
+
+        foreach ($files as $file) {
+            if (! $file) {
+                continue;
+            }
+
+            $payload = [];
+            if (isset($validated['title'])) {
+                $payload['title'] = $validated['title'];
+            }
+            if (isset($validated['alt'])) {
+                $payload['alt'] = $validated['alt'];
+            }
+
+            $media = $this->storeAction->execute($file, $payload);
+            
+            // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+            $media->load(['image', 'avMetadata']);
+            
+            $uploadedMedia[] = $media;
+        }
+
+        return (new MediaCollection($uploadedMedia))->response()->setStatusCode(HttpResponse::HTTP_CREATED);
     }
 
     /**
      * Просмотр информации о медиафайле.
      *
+     * Возвращает специализированный ресурс в зависимости от типа медиа.
+     * Структура ответа различается для разных типов:
+     * - Изображения: width, height, preview_urls
+     * - Видео: duration_ms, bitrate_kbps, frame_rate, frame_count, video_codec, audio_codec
+     * - Аудио: duration_ms, bitrate_kbps, audio_codec
+     * - Документы: только базовые поля
+     *
      * @group Admin ▸ Media
      * @name Show media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
-     * @response status=200 {
+     * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
+     * @response status=200 scenario="Изображение" {
      *   "data": {
-     *     "id": "uuid-media",
+     *     "id": "01HXZYXQJ123456789ABCDEF",
      *     "kind": "image",
      *     "name": "hero.jpg",
      *     "ext": "jpg",
@@ -289,17 +631,72 @@ class MediaController extends Controller
      *     "size_bytes": 235678,
      *     "width": 1920,
      *     "height": 1080,
-     *     "duration_ms": null,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
+     *   }
+     * }
+     * @response status=200 scenario="Видео" {
+     *   "data": {
+     *     "id": "01HXZYXQJ987654321FEDCBA",
+     *     "kind": "video",
+     *     "name": "video.mp4",
+     *     "ext": "mp4",
+     *     "mime": "video/mp4",
+     *     "size_bytes": 5242880,
+     *     "duration_ms": 120000,
+     *     "bitrate_kbps": 3500,
+     *     "frame_rate": 30,
+     *     "frame_count": 3600,
+     *     "video_codec": "h264",
+     *     "audio_codec": "aac",
+     *     "title": "Video title",
+     *     "alt": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
+     *   }
+     * }
+     * @response status=200 scenario="Аудио" {
+     *   "data": {
+     *     "id": "01HXZYXQJABCDEF1234567890",
+     *     "kind": "audio",
+     *     "name": "audio.mp3",
+     *     "ext": "mp3",
+     *     "mime": "audio/mpeg",
+     *     "size_bytes": 3145728,
+     *     "duration_ms": 180000,
+     *     "bitrate_kbps": 256,
+     *     "audio_codec": "mp3",
+     *     "title": "Audio title",
+     *     "alt": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJABCDEF1234567890"
+     *   }
+     * }
+     * @response status=200 scenario="Документ" {
+     *   "data": {
+     *     "id": "01HXZYXQJFEDCBA9876543210",
+     *     "kind": "document",
+     *     "name": "document.pdf",
+     *     "ext": "pdf",
+     *     "mime": "application/pdf",
+     *     "size_bytes": 102400,
+     *     "title": "Document title",
+     *     "alt": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:00:00+00:00",
+     *     "deleted_at": null,
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJFEDCBA9876543210"
      *   }
      * }
      * @response status=401 {
@@ -319,10 +716,10 @@ class MediaController extends Controller
      *   "title": "Media not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "detail": "Media with ID 01HXZYXQJ123456789ABCDEF does not exist.",
      *   "meta": {
      *     "request_id": "11111111-2222-3333-4444-555555555559",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-11111111222233334444555555555559-1111111122223333-01"
      * }
@@ -339,9 +736,22 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000002-6666666677778888-01"
      * }
      */
-    public function show(string $mediaId): MediaResource
+    /**
+     * Просмотр информации о медиа-файле.
+     *
+     * Возвращает специализированный ресурс в зависимости от типа медиа:
+     * - MediaImageResource для изображений (с width, height, preview_urls)
+     * - MediaVideoResource для видео (с duration_ms, bitrate_kbps, frame_rate и т.д.)
+     * - MediaAudioResource для аудио (с duration_ms, bitrate_kbps, audio_codec)
+     * - MediaDocumentResource для документов (только базовые поля)
+     *
+     * @param string $mediaId ULID идентификатор медиа-файла
+     * @return \App\Http\Resources\Media\BaseMediaResource Специализированный ресурс медиа-файла
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на просмотр
+     */
+    public function show(string $mediaId): BaseMediaResource
     {
-        $media = Media::withTrashed()->find($mediaId);
+        $media = Media::withTrashed()->with(['image', 'avMetadata'])->find($mediaId);
 
         if (! $media) {
             $this->throwMediaNotFound($mediaId);
@@ -349,7 +759,7 @@ class MediaController extends Controller
 
         $this->authorize('view', $media);
 
-        return new MediaResource($media);
+        return MediaResource::make($media);
     }
 
     /**
@@ -358,13 +768,12 @@ class MediaController extends Controller
      * @group Admin ▸ Media
      * @name Update media
      * @authenticated
-     * @urlParam media string required UUID медиа. Example: uuid-media
+     * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
      * @bodyParam title string Новый заголовок. Example: Updated hero image
      * @bodyParam alt string Alt-текст. Example: Updated hero cover
-     * @bodyParam collection string Коллекция. Example: uploads
-     * @response status=200 {
+     * @response status=200 scenario="Изображение" {
      *   "data": {
-     *     "id": "uuid-media",
+     *     "id": "01HXZYXQJ123456789ABCDEF",
      *     "kind": "image",
      *     "name": "hero.jpg",
      *     "ext": "jpg",
@@ -380,9 +789,66 @@ class MediaController extends Controller
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
      *     "preview_urls": {
-     *       "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/preview?variant=thumbnail"
+     *       "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *     },
-     *     "download_url": "https://api.stupidcms.dev/api/v1/admin/media/uuid-media/download"
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
+     *   }
+     * }
+     * @response status=200 scenario="Видео" {
+     *   "data": {
+     *     "id": "01HXZYXQJ987654321FEDCBA",
+     *     "kind": "video",
+     *     "name": "video.mp4",
+     *     "ext": "mp4",
+     *     "mime": "video/mp4",
+     *     "size_bytes": 5242880,
+     *     "duration_ms": 120000,
+     *     "bitrate_kbps": 3500,
+     *     "frame_rate": 30,
+     *     "frame_count": 3600,
+     *     "video_codec": "h264",
+     *     "audio_codec": "aac",
+     *     "title": "Updated video title",
+     *     "alt": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
+     *   }
+     * }
+     * @response status=200 scenario="Аудио" {
+     *   "data": {
+     *     "id": "01HXZYXQJABCDEF1234567890",
+     *     "kind": "audio",
+     *     "name": "audio.mp3",
+     *     "ext": "mp3",
+     *     "mime": "audio/mpeg",
+     *     "size_bytes": 3145728,
+     *     "duration_ms": 180000,
+     *     "bitrate_kbps": 256,
+     *     "audio_codec": "mp3",
+     *     "title": "Updated audio title",
+     *     "alt": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJABCDEF1234567890"
+     *   }
+     * }
+     * @response status=200 scenario="Документ" {
+     *   "data": {
+     *     "id": "01HXZYXQJFEDCBA9876543210",
+     *     "kind": "document",
+     *     "name": "document.pdf",
+     *     "ext": "pdf",
+     *     "mime": "application/pdf",
+     *     "size_bytes": 102400,
+     *     "title": "Updated document title",
+     *     "alt": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
+     *     "updated_at": "2025-01-10T12:05:00+00:00",
+     *     "deleted_at": null,
+     *     "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJFEDCBA9876543210"
      *   }
      * }
      * @response status=401 {
@@ -402,10 +868,10 @@ class MediaController extends Controller
      *   "title": "Media not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Media with ID uuid-media does not exist.",
+     *   "detail": "Media with ID 01HXZYXQJ123456789ABCDEF does not exist.",
      *   "meta": {
      *     "request_id": "11111111-2222-3333-4444-555555555561",
-     *     "media_id": "uuid-media"
+     *     "media_id": "01HXZYXQJ123456789ABCDEF"
      *   },
      *   "trace_id": "00-11111111222233334444555555555661-1111111122223333-01"
      * }
@@ -422,7 +888,18 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000003-6666666677778888-01"
      * }
      */
-    public function update(UpdateMediaRequest $request, string $mediaId): MediaResource
+    /**
+     * Обновление метаданных медиа-файла.
+     *
+     * Обновляет title, alt и возвращает специализированный ресурс
+     * в зависимости от типа медиа (изображение, видео, аудио, документ).
+     *
+     * @param \App\Http\Requests\Admin\Media\UpdateMediaRequest $request HTTP запрос с валидированными данными
+     * @param string $mediaId ULID идентификатор медиа-файла
+     * @return \App\Http\Resources\Media\BaseMediaResource Обновленный специализированный ресурс медиа-файла
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на обновление
+     */
+    public function update(UpdateMediaRequest $request, string $mediaId): BaseMediaResource
     {
         $media = Media::withTrashed()->find($mediaId);
 
@@ -433,7 +910,11 @@ class MediaController extends Controller
         $this->authorize('update', $media);
 
         $updated = $this->updateMetadataAction->execute($mediaId, $request->validated());
-        return new MediaResource($updated);
+        
+        // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+        $updated->load(['image', 'avMetadata']);
+        
+        return MediaResource::make($updated);
     }
 
     /**
@@ -524,17 +1005,15 @@ class MediaController extends Controller
      *       "size_bytes": 235678,
      *       "width": 1920,
      *       "height": 1080,
-     *       "duration_ms": null,
      *       "title": "Hero image",
      *       "alt": "Hero cover",
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
      *       "preview_urls": {
-     *         "thumbnail": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/preview?variant=thumbnail"
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
      *       },
-     *       "download_url": "https://api.stupidcms.dev/api/v1/admin/media/01HXZYXQJ123456789ABCDEF/download"
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
      *     }
      *   ]
      * }
@@ -579,6 +1058,16 @@ class MediaController extends Controller
      *   "trace_id": "00-66666666777788889999000000000005-6666666677778888-01"
      * }
      */
+    /**
+     * Массовое восстановление удаленных медиа-файлов.
+     *
+     * Восстанавливает мягко удаленные медиа-файлы по массиву идентификаторов.
+     * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
+     *
+     * @param \App\Http\Requests\Admin\Media\BulkRestoreMediaRequest $request HTTP запрос с массивом ids
+     * @return \App\Http\Resources\Admin\MediaCollection Коллекция восстановленных медиа-файлов
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на восстановление
+     */
     public function bulkRestore(BulkRestoreMediaRequest $request): MediaCollection
     {
         $ids = $request->validated()['ids'];
@@ -590,6 +1079,10 @@ class MediaController extends Controller
             $this->authorize('restore', $media);
             $media->restore();
             $media->refresh();
+            
+            // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+            $media->load(['image', 'avMetadata']);
+            
             $restoredMedia[] = $media;
         }
 

@@ -195,7 +195,6 @@ test('bulk restored media retains all metadata', function () {
     $media = Media::factory()->create([
         'title' => 'Original Title',
         'alt' => 'Original Alt',
-        'collection' => 'uploads',
         'deleted_at' => now(),
     ]);
 
@@ -209,7 +208,6 @@ test('bulk restored media retains all metadata', function () {
 
     expect($freshMedia->title)->toBe('Original Title')
         ->and($freshMedia->alt)->toBe('Original Alt')
-        ->and($freshMedia->collection)->toBe('uploads')
         ->and($freshMedia->deleted_at)->toBeNull();
 });
 
@@ -362,6 +360,72 @@ test('bulk force delete removes variants and their files', function () {
 
     \Illuminate\Support\Facades\Storage::disk($media1->disk)->assertMissing($variant1->path);
     \Illuminate\Support\Facades\Storage::disk($media2->disk)->assertMissing($variant2->path);
+});
+
+test('bulk force delete removes media images via cascade', function () {
+    $user = User::factory()->create(['is_admin' => true]);
+    $user->grantAdminPermissions('media.forceDelete');
+
+    $media1 = Media::factory()->image()->create();
+    $media2 = Media::factory()->image()->create();
+
+    $image1 = \App\Models\MediaImage::factory()->for($media1)->create([
+        'width' => 1920,
+        'height' => 1080,
+    ]);
+    $image2 = \App\Models\MediaImage::factory()->for($media2)->create([
+        'width' => 1280,
+        'height' => 720,
+    ]);
+
+    \Illuminate\Support\Facades\Storage::fake($media1->disk);
+    \Illuminate\Support\Facades\Storage::disk($media1->disk)->put($media1->path, 'test content 1');
+    \Illuminate\Support\Facades\Storage::disk($media2->disk)->put($media2->path, 'test content 2');
+
+    $this->actingAs($user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->deleteJson('/api/v1/admin/media/bulk/force', [
+            'ids' => [$media1->id, $media2->id],
+        ]);
+
+    $this->assertDatabaseMissing('media_images', [
+        'id' => $image1->id,
+    ]);
+    $this->assertDatabaseMissing('media_images', [
+        'id' => $image2->id,
+    ]);
+});
+
+test('bulk force delete removes media av metadata via cascade', function () {
+    $user = User::factory()->create(['is_admin' => true]);
+    $user->grantAdminPermissions('media.forceDelete');
+
+    $media1 = Media::factory()->video()->create();
+    $media2 = Media::factory()->audio()->create();
+
+    $avMetadata1 = \App\Models\MediaAvMetadata::factory()->for($media1)->create([
+        'duration_ms' => 120000,
+    ]);
+    $avMetadata2 = \App\Models\MediaAvMetadata::factory()->for($media2)->create([
+        'duration_ms' => 60000,
+    ]);
+
+    \Illuminate\Support\Facades\Storage::fake($media1->disk);
+    \Illuminate\Support\Facades\Storage::disk($media1->disk)->put($media1->path, 'test content 1');
+    \Illuminate\Support\Facades\Storage::disk($media2->disk)->put($media2->path, 'test content 2');
+
+    $this->actingAs($user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->deleteJson('/api/v1/admin/media/bulk/force', [
+            'ids' => [$media1->id, $media2->id],
+        ]);
+
+    $this->assertDatabaseMissing('media_av_metadata', [
+        'id' => $avMetadata1->id,
+    ]);
+    $this->assertDatabaseMissing('media_av_metadata', [
+        'id' => $avMetadata2->id,
+    ]);
 });
 
 test('cannot bulk force delete without forceDelete permission', function () {

@@ -37,12 +37,16 @@ class TemplateController extends Controller
      *     {
      *       "name": "pages.show",
      *       "path": "pages/show.blade.php",
-     *       "exists": true
+     *       "exists": true,
+     *       "created_at": null,
+     *       "updated_at": null
      *     },
      *     {
      *       "name": "home.default",
      *       "path": "home/default.blade.php",
-     *       "exists": true
+     *       "exists": true,
+     *       "created_at": null,
+     *       "updated_at": null
      *     }
      *   ]
      * }
@@ -162,7 +166,8 @@ class TemplateController extends Controller
      *     "name": "pages.article",
      *     "path": "pages/article.blade.php",
      *     "exists": true,
-     *     "created_at": "2025-01-10T12:45:00+00:00"
+     *     "created_at": "2025-01-10T12:45:00+00:00",
+     *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }
      * @response status=401 {
@@ -230,6 +235,7 @@ class TemplateController extends Controller
      *     "name": "pages.article",
      *     "path": "pages/article.blade.php",
      *     "exists": true,
+     *     "created_at": null,
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }

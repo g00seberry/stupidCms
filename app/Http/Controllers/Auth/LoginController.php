@@ -62,6 +62,37 @@ final class LoginController
      *   "status": 401,
      *   "detail": "Invalid credentials."
      * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The given data was invalid.",
+     *   "meta": {
+     *     "request_id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+     *     "errors": {
+     *       "email": [
+     *         "The email field is required."
+     *       ],
+     *       "password": [
+     *         "The password field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-dddddddddddddddddddddddddddddddd-dddddddddddd-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-eeeeeeeeeeee-01"
+     * }
      */
     public function login(LoginRequest $request): LoginResource
     {

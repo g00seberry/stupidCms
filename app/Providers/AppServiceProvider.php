@@ -7,14 +7,15 @@ namespace App\Providers;
 use App\Domain\Media\Images\GdImageProcessor;
 use App\Domain\Media\Images\GlideImageProcessor;
 use App\Domain\Media\Images\ImageProcessor;
-use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\ExifManager;
+use App\Domain\Media\Services\GetId3MediaMetadataPlugin;
 use App\Domain\Media\Services\ExiftoolMediaMetadataPlugin;
 use App\Domain\Media\Services\FfprobeMediaMetadataPlugin;
 use App\Domain\Media\Services\MediaMetadataExtractor;
 use App\Domain\Media\Services\MediaMetadataPlugin;
 use App\Domain\Media\Services\MediainfoMediaMetadataPlugin;
 use App\Domain\Media\Validation\CorruptionValidator;
+use App\Domain\Media\Validation\MediaConfigValidator;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Domain\Media\Validation\MediaValidatorInterface;
 use App\Domain\Media\Validation\MimeSignatureValidator;
@@ -136,6 +137,11 @@ class AppServiceProvider extends ServiceProvider
             $plugins = [];
 
             // Порядок важен: пробуем плагины по порядку с graceful fallback
+            // getID3 - чистая PHP библиотека, не требует внешних утилит, пробуем первой
+            if (config('media.metadata.getid3.enabled', true)) {
+                $plugins[] = new GetId3MediaMetadataPlugin();
+            }
+
             if (config('media.metadata.ffprobe.enabled', true)) {
                 $binary = config('media.metadata.ffprobe.binary', null);
                 $plugins[] = new FfprobeMediaMetadataPlugin($binary);
@@ -168,8 +174,6 @@ class AppServiceProvider extends ServiceProvider
             return new ExifManager($images);
         });
 
-        // CollectionRulesResolver для получения правил коллекций
-        $this->app->singleton(CollectionRulesResolver::class);
 
         // MediaValidationPipeline с валидаторами
         $this->app->singleton(MediaValidationPipeline::class, function ($app): MediaValidationPipeline {
@@ -198,6 +202,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * Регистрирует EntryObserver для модели Entry.
      * Регистрирует слушателей событий медиа-файлов.
+     * Валидирует конфигурацию медиа-файлов.
      * Создаёт директорию для кэша HTMLPurifier.
      * Устанавливает JWT leeway для учёта расхождения часов.
      *
@@ -219,6 +224,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(MediaDeleted::class, [LogMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [NotifyMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [PurgeCdnCache::class, 'handleMediaDeleted']);
+
+        // Валидация конфигурации медиа-файлов
+        (new MediaConfigValidator())->validate();
         
         // Создаем директорию для кэша HTMLPurifier (idempotent)
         app('files')->ensureDirectoryExists(storage_path('app/purifier'));

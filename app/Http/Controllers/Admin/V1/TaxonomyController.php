@@ -119,7 +119,6 @@ class TaxonomyController extends Controller
      * @response status=201 {
      *   "data": {
      *     "id": 1,
-     *     "taxonomy_id": 1,
      *     "label": "Categories",
      *     "hierarchical": true,
      *     "options_json": {},

@@ -6,8 +6,9 @@ use App\Models\ReservedRoute;
 use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
 
-uses(RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 test('passes for non-reserved slug', function () {
     $rule = new ReservedSlug();

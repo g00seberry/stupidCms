@@ -13,7 +13,7 @@ use Illuminate\Http\UploadedFile;
  * Сервис для извлечения метаданных из медиа-файлов.
  *
  * Извлекает размеры изображений, EXIF данные и другую информацию
- * из загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)
+ * из загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)
  * с graceful fallback и кэшированием результатов.
  *
  * @package App\Domain\Media\Services
@@ -37,9 +37,16 @@ class MediaMetadataExtractor
     /**
      * Извлечь метаданные из медиа-файла.
      *
-     * Для изображений извлекает размеры и EXIF данные (если доступны).
-     * Для видео/аудио использует плагины (ffprobe/mediainfo/exiftool) для извлечения
-     * длительности и дополнительных нормализованных полей с graceful fallback.
+     * Для изображений извлекает размеры (width, height) и EXIF данные (если доступны).
+ * Для видео/аудио использует плагины (getID3, ffprobe/mediainfo/exiftool) для извлечения
+ * длительности и дополнительных нормализованных полей (bitrate, frameRate, codecs)
+ * с graceful fallback.
+     *
+     * Извлечённые данные возвращаются в виде MediaMetadataDTO, который затем используется
+     * для создания записей в специализированных таблицах:
+     * - MediaImage (width, height, exif_json) для изображений
+     * - MediaAvMetadata (duration_ms, bitrate_kbps, frame_rate, codecs) для видео/аудио
+     *
      * Результаты кэшируются для оптимизации производительности.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл

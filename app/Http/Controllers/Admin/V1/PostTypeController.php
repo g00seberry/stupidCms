@@ -137,6 +137,7 @@ class PostTypeController extends Controller
      *       "slug": "article",
      *       "name": "Articles",
      *       "options_json": {},
+     *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:45:00+00:00"
      *     }
      *   ]

@@ -246,22 +246,38 @@ POST /api/v1/admin/media/bulk/restore (api)
 
 ---
 
-## admin.v1.media.download
-**ID:** `http_endpoint:GET:/api/v1/admin/media/{media}/download`
-**Path:** `app/Http/Controllers/Admin/V1/MediaPreviewController.php`
+## admin.v1.media.bulkStore
+**ID:** `http_endpoint:POST:/api/v1/admin/media/bulk`
+**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
 
-GET /api/v1/admin/media/{media}/download (api)
+POST /api/v1/admin/media/bulk (api)
+
+### Meta
+- **Method:** `POST`
+- **URI:** `/api/v1/admin/media/bulk`
+- **Group:** `api`
+- **Auth:** `jwt`
+
+### Tags
+`api`, `admin`, `v1`, `media`, `bulk`
+
+
+---
+
+## admin.v1.media.config
+**ID:** `http_endpoint:GET:/api/v1/admin/media/config`
+**Path:** `app/Http/Controllers/Admin/V1/MediaController.php`
+
+GET /api/v1/admin/media/config (api)
 
 ### Meta
 - **Method:** `GET`
-- **URI:** `/api/v1/admin/media/{media}/download`
+- **URI:** `/api/v1/admin/media/config`
 - **Group:** `api`
 - **Auth:** `jwt`
-- **Parameters:**
-  - `media` (string, required)
 
 ### Tags
-`api`, `admin`, `v1`, `media`, `download`
+`api`, `admin`, `v1`, `media`, `config`
 
 
 ---
@@ -280,26 +296,6 @@ GET /api/v1/admin/media (api)
 
 ### Tags
 `api`, `admin`, `v1`, `media`
-
-
----
-
-## admin.v1.media.preview
-**ID:** `http_endpoint:GET:/api/v1/admin/media/{media}/preview`
-**Path:** `app/Http/Controllers/Admin/V1/MediaPreviewController.php`
-
-GET /api/v1/admin/media/{media}/preview (api)
-
-### Meta
-- **Method:** `GET`
-- **URI:** `/api/v1/admin/media/{media}/preview`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `media` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `media`, `preview`
 
 
 ---
@@ -1002,7 +998,7 @@ POST /api/v1/auth/refresh (api)
 
 ## api.v1.media.show
 **ID:** `http_endpoint:GET:/api/v1/media/{id}`
-**Path:** `app/Http/Controllers/PublicMediaController.php`
+**Path:** `app/Http/Controllers/MediaPreviewController.php`
 
 GET /api/v1/media/{id} (api)
 

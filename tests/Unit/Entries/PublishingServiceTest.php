@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 use App\Domain\Entries\PublishingService;
 use App\Models\Entry;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для PublishingService.
  */
+
+uses(TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
     $this->service = new PublishingService();

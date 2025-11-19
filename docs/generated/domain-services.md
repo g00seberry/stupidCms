@@ -23,26 +23,6 @@
 
 ---
 
-## CollectionRulesResolver
-**ID:** `domain_service:Media/Services/CollectionRulesResolver`
-**Path:** `app/Domain/Media/Services/CollectionRulesResolver.php`
-
-Резолвер правил валидации для коллекций медиа.
-
-### Details
-Получает правила валидации (MIME, размеры, длительность, битрейт)
-для конкретной коллекции из конфигурации. Если правила не заданы
-для коллекции, возвращает глобальные значения.
-
-### Meta
-- **Methods:** `getRules`, `getAllowedMimes`, `getMaxSizeBytes`
-
-### Tags
-`media`, `service`
-
-
----
-
 ## CorruptionValidator
 **ID:** `domain_service:Media/Validation/CorruptionValidator`
 **Path:** `app/Domain/Media/Validation/CorruptionValidator.php`
@@ -224,6 +204,27 @@ Job для генерации варианта медиа-файла.
 
 ---
 
+## GetId3MediaMetadataPlugin
+**ID:** `domain_service:Media/Services/GetId3MediaMetadataPlugin`
+**Path:** `app/Domain/Media/Services/GetId3MediaMetadataPlugin.php`
+
+Плагин метаданных, основанный на библиотеке getID3.
+
+### Details
+Использует getID3 для извлечения метаданных видео/аудио файлов.
+getID3 - это чистая PHP библиотека, не требующая внешних утилит.
+
+### Meta
+- **Methods:** `supports`, `extract`
+- **Dependencies:** `getID3`
+- **Interface:** `App\Domain\Media\Services\MediaMetadataPlugin`
+
+### Tags
+`media`, `service`
+
+
+---
+
 ## GlideImageProcessor
 **ID:** `domain_service:Media/Images/GlideImageProcessor`
 **Path:** `app/Domain/Media/Images/GlideImageProcessor.php`
@@ -338,6 +339,24 @@ CQRS-действие: выборка списка медиа по параме�
 
 ---
 
+## MediaConfigValidator
+**ID:** `domain_service:Media/Validation/MediaConfigValidator`
+**Path:** `app/Domain/Media/Validation/MediaConfigValidator.php`
+
+Валидатор конфигурации медиа-файлов.
+
+### Details
+Проверяет корректность конфигурации, включая обязательные варианты изображений.
+
+### Meta
+- **Methods:** `validate`
+
+### Tags
+`media`, `validation`
+
+
+---
+
 ## MediaDeleted
 **ID:** `domain_service:Media/Events/MediaDeleted`
 **Path:** `app/Domain/Media/Events/MediaDeleted.php`
@@ -387,6 +406,9 @@ DTO для нормализованных метаданных медиа-фай
 ### Details
 Представляет унифицированную структуру метаданных, извлечённых
 из различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).
+Данные из DTO используются для создания записей в специализированных таблицах:
+- width, height, exif → MediaImage (для изображений)
+- durationMs, bitrateKbps, frameRate, frameCount, videoCodec, audioCodec → MediaAvMetadata (для видео/аудио)
 
 ### Meta
 - **Methods:** `toArray`, `fromArray`
@@ -405,7 +427,7 @@ DTO для нормализованных метаданных медиа-фай
 
 ### Details
 Извлекает размеры изображений, EXIF данные и другую информацию
-из загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)
+из загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)
 с graceful fallback и кэшированием результатов.
 
 ### Meta
@@ -445,7 +467,7 @@ DTO для нормализованных метаданных медиа-фай
 Value Object для параметров выборки медиа.
 
 ### Meta
-- **Methods:** `search`, `kind`, `mimePrefix`, `collection`, `deletedFilter`, `sort`, `order`, `page`, `perPage`
+- **Methods:** `search`, `kind`, `mimePrefix`, `deletedFilter`, `sort`, `order`, `page`, `perPage`
 - **Dependencies:** `App\Domain\Media\MediaDeletedFilter`
 
 ### Tags
@@ -464,10 +486,12 @@ Value Object для параметров выборки медиа.
 Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
 создание записи Media в БД и (опционально) нормализованных AV-метаданных
 в отдельной таблице.
+Использует общую систему ошибок (HttpErrorException) для обработки ошибок валидации
+и сохранения файла.
 
 ### Meta
 - **Methods:** `execute`
-- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Services\CollectionRulesResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Domain\Media\Services\ExifManager`
+- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Support\Errors\ErrorFactory`, `App\Domain\Media\Services\ExifManager`
 
 ### Tags
 `media`, `action`
@@ -1220,9 +1244,8 @@ Value Object для фильтра поиска по терму.
 Резолвер дисков для медиа-хранилища.
 
 ### Details
-Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),
+Инкапсулирует логику выбора диска по типу медиа (MIME/kind),
 используя конфигурацию config/media.php:
-- media.disks.collections
 - media.disks.kinds
 - media.disks.default
 
@@ -1239,7 +1262,7 @@ Value Object для фильтра поиска по терму.
 **ID:** `domain_service:Media/Actions/UpdateMediaMetadataAction`
 **Path:** `app/Domain/Media/Actions/UpdateMediaMetadataAction.php`
 
-CQRS-действие: обновление метаданных медиа (title, alt, collection).
+CQRS-действие: обновление метаданных медиа (title, alt).
 
 ### Meta
 - **Methods:** `execute`

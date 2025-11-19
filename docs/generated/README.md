@@ -2,15 +2,15 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 172
+**Всего сущностей:** 174
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (16 сущностей)
+Eloquent-модели для работы с БД (17 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (64 сущностей)
+Доменные сервисы, действия, репозитории (65 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -28,19 +28,18 @@ HTTP эндпоинты API (61 сущностей)
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
-- [MediaMetadata](./models.md#mediametadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).
+- [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
+- [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
 - [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
 - [Option](./models.md#option) - Eloquent модель для опций системы (Option).
 - [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
 - [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
 - [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
-- [Redirect](./models.md#redirect) - Eloquent модель для редиректов (Redirect).
-- *...и еще 6 сущностей*
+- *...и еще 7 сущностей*
 
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
-- [CollectionRulesResolver](./domain-services.md#collectionrulesresolver) - Резолвер правил валидации для коллекций медиа.
 - [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
@@ -49,7 +48,8 @@ HTTP эндпоинты API (61 сущностей)
 - [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
 - [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
 - [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- *...и еще 54 сущностей*
+- [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
+- *...и еще 55 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-17 18:21:03
+**Сгенерировано:** 2025-11-19 14:02:43
 
 Для обновления документации выполните:
 ```bash

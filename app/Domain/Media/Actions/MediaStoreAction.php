@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Media\Actions;
 
 use App\Domain\Media\Events\MediaUploaded;
-use App\Domain\Media\Services\CollectionRulesResolver;
+use App\Domain\Media\MediaKind;
 use App\Domain\Media\Services\ExifManager;
 use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Services\MediaMetadataExtractor;
@@ -13,13 +13,17 @@ use App\Domain\Media\Validation\MediaValidationException;
 use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Domain\Media\Validation\SizeLimitValidator;
 use App\Models\Media;
-use App\Models\MediaMetadata;
+use App\Models\MediaAvMetadata;
+use App\Models\MediaImage;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorReporter;
+use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use RuntimeException;
 
 /**
  * Действие для сохранения медиа-файла.
@@ -27,6 +31,8 @@ use RuntimeException;
  * Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
  * создание записи Media в БД и (опционально) нормализованных AV-метаданных
  * в отдельной таблице.
+ * Использует общую систему ошибок (HttpErrorException) для обработки ошибок валидации
+ * и сохранения файла.
  *
  * @package App\Domain\Media\Actions
  */
@@ -35,15 +41,15 @@ class MediaStoreAction
     /**
      * @param \App\Domain\Media\Services\MediaMetadataExtractor $metadataExtractor Извлекатель метаданных
      * @param \App\Domain\Media\Services\StorageResolver $storageResolver Резолвер дисков для медиа
-     * @param \App\Domain\Media\Services\CollectionRulesResolver $collectionRulesResolver Резолвер правил коллекций
      * @param \App\Domain\Media\Validation\MediaValidationPipeline $validationPipeline Pipeline валидации
+     * @param \App\Support\Errors\ErrorFactory $errors Фабрика ошибок
      * @param \App\Domain\Media\Services\ExifManager|null $exifManager Менеджер EXIF (опционально)
      */
     public function __construct(
         private readonly MediaMetadataExtractor $metadataExtractor,
         private readonly StorageResolver $storageResolver,
-        private readonly CollectionRulesResolver $collectionRulesResolver,
         private readonly MediaValidationPipeline $validationPipeline,
+        private readonly ErrorFactory $errors,
         private readonly ?ExifManager $exifManager = null
     ) {
     }
@@ -53,39 +59,67 @@ class MediaStoreAction
      *
      * Сохраняет файл на диск, извлекает метаданные (размеры, EXIF, длительность и т.д.),
      * вычисляет checksum и создаёт запись Media в БД.
-     * Для видео/аудио дополнительно сохраняет нормализованные AV-метаданные
-     * (длительность, битрейт, кадры, кодеки) в таблице media_metadata.
-     * Если файл с таким же checksum уже существует, возвращает существующую запись
-     * без сохранения дубликата на диск (дедупликация).
+     * Для изображений создаёт запись в media_images с width, height, exif_json.
+     * Для видео/аудио создаёт запись в media_av_metadata с нормализованными AV-метаданными
+     * (длительность, битрейт, кадры, кодеки).
+     * Если файл с таким же checksum уже существует (включая soft deleted),
+     * возвращает существующую запись без сохранения дубликата на диск (дедупликация).
+     * Если найденная запись была soft deleted, она автоматически восстанавливается.
      * После успешного создания новой записи отправляет событие MediaUploaded.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
-     * @param array<string, mixed> $payload Дополнительные данные (title, alt, collection)
+     * @param array<string, mixed> $payload Дополнительные данные (title, alt)
      * @return \App\Models\Media Созданная или существующая запись Media
-     * @throws \RuntimeException Если не удалось сохранить файл на диск
+     * @throws \App\Support\Errors\HttpErrorException Если валидация не прошла или не удалось сохранить файл
      */
     public function execute(UploadedFile $file, array $payload = []): Media
     {
         $mime = $file->getMimeType() ?? $file->getClientMimeType() ?? 'application/octet-stream';
-        $collection = isset($payload['collection']) && is_string($payload['collection'])
-            ? $payload['collection']
-            : null;
 
         // Валидация через pipeline
         try {
             $this->validationPipeline->validate($file, $mime);
         } catch (MediaValidationException $e) {
-            throw new RuntimeException('Media validation failed: '.$e->getMessage(), 0, $e);
+            $payload = $this->errors
+                ->for(ErrorCode::VALIDATION_ERROR)
+                ->detail('Media validation failed: '.$e->getMessage())
+                ->meta([
+                    'validator' => $e->getValidator(),
+                    'mime' => $mime,
+                ])
+                ->build();
+
+            ErrorReporter::report($e, $payload, null);
+
+            throw new HttpErrorException($payload);
         }
 
-        // Валидация размеров на основе правил коллекции
-        $rules = $this->collectionRulesResolver->getRules($collection);
+        // Валидация размеров на основе глобальных правил
+        $rules = [
+            'allowed_mimes' => config('media.allowed_mimes', []),
+            'max_size_bytes' => (int) config('media.max_upload_mb', 25) * 1024 * 1024,
+            'max_width' => null,
+            'max_height' => null,
+            'max_duration_ms' => null,
+            'max_bitrate_kbps' => null,
+        ];
         $sizeValidator = new SizeLimitValidator($rules);
         if ($sizeValidator->supports($mime)) {
             try {
                 $sizeValidator->validate($file, $mime);
             } catch (MediaValidationException $e) {
-                throw new RuntimeException('Size validation failed: '.$e->getMessage(), 0, $e);
+                $payload = $this->errors
+                    ->for(ErrorCode::VALIDATION_ERROR)
+                    ->detail('Size validation failed: '.$e->getMessage())
+                    ->meta([
+                        'validator' => $e->getValidator(),
+                        'mime' => $mime,
+                    ])
+                    ->build();
+
+                ErrorReporter::report($e, $payload, null);
+
+                throw new HttpErrorException($payload);
             }
         }
 
@@ -94,10 +128,15 @@ class MediaStoreAction
         $extension = strtolower($file->getClientOriginalExtension() ?: pathinfo($originalName, PATHINFO_EXTENSION) ?: $file->extension() ?: 'bin');
         $checksum = $this->checksum($file);
 
-        // Дедупликация: проверка существующего файла по checksum
+        // Дедупликация: проверка существующего файла по checksum (включая soft deleted)
         if ($checksum !== null) {
-            $existing = Media::where('checksum_sha256', $checksum)->first();
+            $existing = Media::withTrashed()->where('checksum_sha256', $checksum)->first();
             if ($existing !== null) {
+                // Если файл был soft deleted, восстанавливаем его
+                if ($existing->trashed()) {
+                    $existing->restore();
+                }
+
                 // Обновить метаданные, если они переданы в payload
                 $shouldUpdate = false;
                 $updates = [];
@@ -112,11 +151,6 @@ class MediaStoreAction
                     $shouldUpdate = true;
                 }
 
-                if (isset($payload['collection']) && $existing->collection !== ($payload['collection'] ?? null)) {
-                    $updates['collection'] = $payload['collection'] ?? null;
-                    $shouldUpdate = true;
-                }
-
                 if ($shouldUpdate) {
                     $existing->update($updates);
                 }
@@ -125,7 +159,7 @@ class MediaStoreAction
             }
         }
 
-        $diskName = $this->storageResolver->resolveDiskName($collection, $mime);
+        $diskName = $this->storageResolver->resolveDiskName($mime);
         $disk = Storage::disk($diskName);
 
         $path = $this->storeFile($disk, $file, $extension, $checksum);
@@ -160,37 +194,50 @@ class MediaStoreAction
             'ext' => $extension,
             'mime' => $mime,
             'size_bytes' => $sizeBytes > 0 ? $sizeBytes : $disk->size($path),
-            'width' => $metadata->width,
-            'height' => $metadata->height,
-            'duration_ms' => $metadata->durationMs,
             'checksum_sha256' => $checksum,
-            'exif_json' => $exif,
             'title' => $payload['title'] ?? null,
             'alt' => $payload['alt'] ?? null,
-            'collection' => $payload['collection'] ?? null,
         ]);
 
-        // Нормализованные AV-метаданные (для видео/аудио).
-        $normalized = [
-            'duration_ms' => $metadata->durationMs,
-            'bitrate_kbps' => $metadata->bitrateKbps,
-            'frame_rate' => $metadata->frameRate,
-            'frame_count' => $metadata->frameCount,
-            'video_codec' => $metadata->videoCodec,
-            'audio_codec' => $metadata->audioCodec,
-        ];
+        // Определить тип медиа для создания связанных записей
+        $kind = $media->kind();
 
-        $hasNormalized = array_reduce(
-            $normalized,
-            static fn (bool $carry, $value): bool => $carry || $value !== null,
-            false
-        );
+        // Для изображений: создать запись в media_images
+        if ($kind === MediaKind::Image && ($metadata->width !== null || $metadata->height !== null || $exif !== null)) {
+            // Проверяем, что width и height не null перед созданием
+            if ($metadata->width !== null && $metadata->height !== null) {
+                MediaImage::create([
+                    'media_id' => $media->id,
+                    'width' => $metadata->width,
+                    'height' => $metadata->height,
+                    'exif_json' => $exif,
+                ]);
+            }
+        }
 
-        if ($hasNormalized) {
-            MediaMetadata::create(array_merge(
-                ['media_id' => $media->id],
-                $normalized
-            ));
+        // Для видео/аудио: создать запись в media_av_metadata
+        if ($kind === MediaKind::Video || $kind === MediaKind::Audio) {
+            $normalized = [
+                'duration_ms' => $metadata->durationMs,
+                'bitrate_kbps' => $metadata->bitrateKbps,
+                'frame_rate' => $metadata->frameRate,
+                'frame_count' => $metadata->frameCount,
+                'video_codec' => $metadata->videoCodec,
+                'audio_codec' => $metadata->audioCodec,
+            ];
+
+            $hasNormalized = array_reduce(
+                $normalized,
+                static fn (bool $carry, $value): bool => $carry || $value !== null,
+                false
+            );
+
+            if ($hasNormalized) {
+                MediaAvMetadata::create(array_merge(
+                    ['media_id' => $media->id],
+                    $normalized
+                ));
+            }
         }
 
         // Отправляем событие загрузки медиа-файла
@@ -230,7 +277,16 @@ class MediaStoreAction
         $storedPath = $disk->putFileAs($targetDirectory, $file, $filename);
 
         if (! $storedPath) {
-            throw new RuntimeException('Failed to store uploaded media file.');
+            $payload = $this->errors
+                ->for(ErrorCode::BAD_REQUEST)
+                ->detail('Failed to store uploaded media file.')
+                ->meta([
+                    'disk' => $diskName,
+                    'path' => $fullPath,
+                ])
+                ->build();
+
+            throw new HttpErrorException($payload);
         }
 
         return str_replace('\\', '/', ltrim($storedPath, '/'));

@@ -59,18 +59,6 @@ test('media can be filtered by mime type', function () {
         ->assertJsonCount(2, 'data');
 });
 
-test('media can be filtered by collection', function () {
-    Media::factory()->create(['collection' => 'uploads']);
-    Media::factory()->create(['collection' => 'uploads']);
-    Media::factory()->create(['collection' => 'avatars']);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/media?collection=uploads');
-
-    $response->assertOk()
-        ->assertJsonCount(2, 'data');
-});
 
 test('media can be searched by title', function () {
     Media::factory()->create(['title' => 'Hero Image']);
@@ -161,7 +149,10 @@ test('only trashed media can be shown', function () {
 });
 
 test('media response includes preview and download urls', function () {
-    $media = Media::factory()->create();
+    // Создаем разные типы медиа
+    $image = Media::factory()->image()->create();
+    $video = Media::factory()->video()->create();
+    $document = Media::factory()->document()->create();
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
@@ -170,9 +161,24 @@ test('media response includes preview and download urls', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['preview_urls', 'download_url'],
+                '*' => ['url'],
             ],
         ]);
+
+    // Проверяем, что изображения имеют preview_urls
+    $imageData = collect($response->json('data'))->firstWhere('id', $image->id);
+    expect($imageData)->toHaveKey('preview_urls')
+        ->and($imageData['kind'])->toBe('image');
+
+    // Проверяем, что видео не имеют preview_urls
+    $videoData = collect($response->json('data'))->firstWhere('id', $video->id);
+    expect($videoData)->not->toHaveKey('preview_urls')
+        ->and($videoData['kind'])->toBe('video');
+
+    // Проверяем, что документы не имеют preview_urls
+    $documentData = collect($response->json('data'))->firstWhere('id', $document->id);
+    expect($documentData)->not->toHaveKey('preview_urls')
+        ->and($documentData['kind'])->toBe('document');
 });
 
 test('unauthenticated request returns 401', function () {

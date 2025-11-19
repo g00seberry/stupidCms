@@ -70,17 +70,13 @@
             "name": "Media",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Media.php",
             "summary": "Eloquent модель для медиа-файлов (Media).",
-            "details": "Представляет загруженные файлы: изображения, видео, аудио, документы.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.\nУникальность обеспечивается по комбинации (disk, path).\nEXIF метаданные хранятся в JSONB колонке (PostgreSQL) или JSON (другие БД).",
+            "details": "Представляет загруженные файлы: изображения, видео, аудио, документы.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.\nУникальность обеспечивается по комбинации (disk, path).\nСпецифичные метаданные хранятся в связанных таблицах:\n- MediaImage для изображений (width, height, exif_json)\n- MediaAvMetadata для видео/аудио (duration_ms, bitrate, codecs и т.д.)",
             "meta": {
                 "table": "media",
                 "fillable": [],
                 "guarded": [],
                 "casts": {
-                    "exif_json": "array",
                     "deleted_at": "datetime",
-                    "width": "integer",
-                    "height": "integer",
-                    "duration_ms": "integer",
                     "size_bytes": "integer"
                 },
                 "relations": {
@@ -88,9 +84,13 @@
                         "type": "hasMany",
                         "related": "App\\Models\\MediaVariant"
                     },
-                    "metadata": {
+                    "image": {
                         "type": "hasOne",
-                        "related": "App\\Models\\MediaMetadata"
+                        "related": "App\\Models\\MediaImage"
+                    },
+                    "avMetadata": {
+                        "type": "hasOne",
+                        "related": "App\\Models\\MediaAvMetadata"
                     }
                 },
                 "factory": null
@@ -101,14 +101,14 @@
             ]
         },
         {
-            "id": "model:App\\Models\\MediaMetadata",
+            "id": "model:App\\Models\\MediaAvMetadata",
             "type": "model",
-            "name": "MediaMetadata",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaMetadata.php",
-            "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).",
+            "name": "MediaAvMetadata",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaAvMetadata.php",
+            "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).",
             "details": "Хранит технические характеристики аудио/видео:\nдлительность, битрейт, частоту кадров, количество кадров и кодеки.",
             "meta": {
-                "table": "media_metadata",
+                "table": "media_av_metadata",
                 "fillable": [],
                 "guarded": [],
                 "casts": {
@@ -127,7 +127,36 @@
             },
             "related": [],
             "tags": [
-                "mediametadata"
+                "mediaavmetadata"
+            ]
+        },
+        {
+            "id": "model:App\\Models\\MediaImage",
+            "type": "model",
+            "name": "MediaImage",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaImage.php",
+            "summary": "Eloquent модель для метаданных изображений (MediaImage).",
+            "details": "Хранит специфичные метаданные для изображений:\nразмеры (width, height) и EXIF метаданные.\nСвязана с Media через отношение один-к-одному.",
+            "meta": {
+                "table": "media_images",
+                "fillable": [],
+                "guarded": [],
+                "casts": {
+                    "width": "integer",
+                    "height": "integer",
+                    "exif_json": "array"
+                },
+                "relations": {
+                    "media": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Media"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "mediaimage"
             ]
         },
         {
@@ -630,7 +659,7 @@
             "name": "MediaStoreAction",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
             "summary": "Действие для сохранения медиа-файла.",
-            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.",
+            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.\nИспользует общую систему ошибок (HttpErrorException) для обработки ошибок валидации\nи сохранения файла.",
             "meta": {
                 "methods": [
                     "execute"
@@ -638,8 +667,8 @@
                 "dependencies": [
                     "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
                     "App\\Domain\\Media\\Services\\StorageResolver",
-                    "App\\Domain\\Media\\Services\\CollectionRulesResolver",
                     "App\\Domain\\Media\\Validation\\MediaValidationPipeline",
+                    "App\\Support\\Errors\\ErrorFactory",
                     "App\\Domain\\Media\\Services\\ExifManager"
                 ],
                 "interface": null
@@ -655,7 +684,7 @@
             "type": "domain_service",
             "name": "UpdateMediaMetadataAction",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\UpdateMediaMetadataAction.php",
-            "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection).",
+            "summary": "CQRS-действие: обновление метаданных медиа (title, alt).",
             "details": null,
             "meta": {
                 "methods": [
@@ -676,7 +705,7 @@
             "name": "MediaMetadataDTO",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\DTO\\MediaMetadataDTO.php",
             "summary": "DTO для нормализованных метаданных медиа-файла.",
-            "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).",
+            "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).\nДанные из DTO используются для создания записей в специализированных таблицах:\n- width, height, exif → MediaImage (для изображений)\n- durationMs, bitrateKbps, frameRate, frameCount, videoCodec, audioCodec → MediaAvMetadata (для видео/аудио)",
             "meta": {
                 "methods": [
                     "toArray",
@@ -1000,7 +1029,6 @@
                     "search",
                     "kind",
                     "mimePrefix",
-                    "collection",
                     "deletedFilter",
                     "sort",
                     "order",
@@ -1015,28 +1043,6 @@
             "related": [],
             "tags": [
                 "media"
-            ]
-        },
-        {
-            "id": "domain_service:Media/Services/CollectionRulesResolver",
-            "type": "domain_service",
-            "name": "CollectionRulesResolver",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\CollectionRulesResolver.php",
-            "summary": "Резолвер правил валидации для коллекций медиа.",
-            "details": "Получает правила валидации (MIME, размеры, длительность, битрейт)\nдля конкретной коллекции из конфигурации. Если правила не заданы\nдля коллекции, возвращает глобальные значения.",
-            "meta": {
-                "methods": [
-                    "getRules",
-                    "getAllowedMimes",
-                    "getMaxSizeBytes"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "media",
-                "service"
             ]
         },
         {
@@ -1107,12 +1113,35 @@
             ]
         },
         {
+            "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+            "type": "domain_service",
+            "name": "GetId3MediaMetadataPlugin",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\GetId3MediaMetadataPlugin.php",
+            "summary": "Плагин метаданных, основанный на библиотеке getID3.",
+            "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "extract"
+                ],
+                "dependencies": [
+                    "getID3"
+                ],
+                "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "service"
+            ]
+        },
+        {
             "id": "domain_service:Media/Services/MediaMetadataExtractor",
             "type": "domain_service",
             "name": "MediaMetadataExtractor",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
             "summary": "Сервис для извлечения метаданных из медиа-файлов.",
-            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
+            "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
             "meta": {
                 "methods": [
                     "extract"
@@ -1179,7 +1208,7 @@
             "name": "StorageResolver",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\StorageResolver.php",
             "summary": "Резолвер дисков для медиа-хранилища.",
-            "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default",
+            "details": "Инкапсулирует логику выбора диска по типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.kinds\n- media.disks.default",
             "meta": {
                 "methods": [
                     "resolveDiskName",
@@ -1210,6 +1239,26 @@
                     "App\\Domain\\Media\\Images\\ImageProcessor"
                 ],
                 "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+            },
+            "related": [],
+            "tags": [
+                "media",
+                "validation"
+            ]
+        },
+        {
+            "id": "domain_service:Media/Validation/MediaConfigValidator",
+            "type": "domain_service",
+            "name": "MediaConfigValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MediaConfigValidator.php",
+            "summary": "Валидатор конфигурации медиа-файлов.",
+            "details": "Проверяет корректность конфигурации, включая обязательные варианты изображений.",
+            "meta": {
+                "methods": [
+                    "validate"
+                ],
+                "dependencies": [],
+                "interface": null
             },
             "related": [],
             "tags": [
@@ -2720,9 +2769,6 @@
                 "keys": [
                     "disks",
                     "default",
-                    "collections",
-                    "videos",
-                    "documents",
                     "kinds",
                     "image",
                     "video",
@@ -2732,6 +2778,7 @@
                     "thumbnail",
                     "max",
                     "medium",
+                    "large",
                     "signed_ttl",
                     "public_signed_ttl",
                     "path_strategy",
@@ -2739,18 +2786,13 @@
                     "quality",
                     "glide_driver",
                     "metadata",
-                    "ffprobe",
+                    "getid3",
                     "enabled",
+                    "ffprobe",
                     "binary",
                     "mediainfo",
                     "exiftool",
                     "cache_ttl",
-                    "max_size_bytes",
-                    "max_duration_ms",
-                    "max_bitrate_kbps",
-                    "thumbnails",
-                    "max_width",
-                    "max_height",
                     "exif",
                     "auto_rotate",
                     "strip",
@@ -2759,19 +2801,18 @@
                 ],
                 "sections": [
                     "disks",
-                    "collections",
                     "kinds",
                     "allowed_mimes",
                     "variants",
                     "thumbnail",
                     "medium",
+                    "large",
                     "image",
                     "metadata",
+                    "getid3",
                     "ffprobe",
                     "mediainfo",
                     "exiftool",
-                    "videos",
-                    "thumbnails",
                     "exif"
                 ]
             },
@@ -3442,7 +3483,7 @@
             "id": "http_endpoint:GET:/api/v1/media/{id}",
             "type": "http_endpoint",
             "name": "api.v1.media.show",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\MediaPreviewController.php",
             "summary": "GET /api/v1/media/{id} (api)",
             "details": null,
             "meta": {
@@ -4493,6 +4534,30 @@
             }
         },
         {
+            "id": "http_endpoint:GET:/api/v1/admin/media/config",
+            "type": "http_endpoint",
+            "name": "admin.v1.media.config",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+            "summary": "GET /api/v1/admin/media/config (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/media/config",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": [],
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "media",
+                "7": "config"
+            }
+        },
+        {
             "id": "http_endpoint:GET:/api/v1/admin/media",
             "type": "http_endpoint",
             "name": "admin.v1.media.index",
@@ -4545,66 +4610,6 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-            "type": "http_endpoint",
-            "name": "admin.v1.media.preview",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-            "summary": "GET /api/v1/admin/media/{media}/preview (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/media/{media}/preview",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "media",
-                "7": "preview"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-            "type": "http_endpoint",
-            "name": "admin.v1.media.download",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-            "summary": "GET /api/v1/admin/media/{media}/download (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/media/{media}/download",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "media": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "media",
-                "7": "download"
-            }
-        },
-        {
             "id": "http_endpoint:POST:/api/v1/admin/media",
             "type": "http_endpoint",
             "name": "admin.v1.media.store",
@@ -4625,6 +4630,30 @@
                 "2": "admin",
                 "4": "v1",
                 "6": "media"
+            }
+        },
+        {
+            "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+            "type": "http_endpoint",
+            "name": "admin.v1.media.bulkStore",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+            "summary": "POST /api/v1/admin/media/bulk (api)",
+            "details": null,
+            "meta": {
+                "method": "POST",
+                "uri": "/api/v1/admin/media/bulk",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": [],
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "media",
+                "7": "bulk"
             }
         },
         {
@@ -5045,17 +5074,13 @@
                 "name": "Media",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Media.php",
                 "summary": "Eloquent модель для медиа-файлов (Media).",
-                "details": "Представляет загруженные файлы: изображения, видео, аудио, документы.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.\nУникальность обеспечивается по комбинации (disk, path).\nEXIF метаданные хранятся в JSONB колонке (PostgreSQL) или JSON (другие БД).",
+                "details": "Представляет загруженные файлы: изображения, видео, аудио, документы.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.\nУникальность обеспечивается по комбинации (disk, path).\nСпецифичные метаданные хранятся в связанных таблицах:\n- MediaImage для изображений (width, height, exif_json)\n- MediaAvMetadata для видео/аудио (duration_ms, bitrate, codecs и т.д.)",
                 "meta": {
                     "table": "media",
                     "fillable": [],
                     "guarded": [],
                     "casts": {
-                        "exif_json": "array",
                         "deleted_at": "datetime",
-                        "width": "integer",
-                        "height": "integer",
-                        "duration_ms": "integer",
                         "size_bytes": "integer"
                     },
                     "relations": {
@@ -5063,9 +5088,13 @@
                             "type": "hasMany",
                             "related": "App\\Models\\MediaVariant"
                         },
-                        "metadata": {
+                        "image": {
                             "type": "hasOne",
-                            "related": "App\\Models\\MediaMetadata"
+                            "related": "App\\Models\\MediaImage"
+                        },
+                        "avMetadata": {
+                            "type": "hasOne",
+                            "related": "App\\Models\\MediaAvMetadata"
                         }
                     },
                     "factory": null
@@ -5076,14 +5105,14 @@
                 ]
             },
             {
-                "id": "model:App\\Models\\MediaMetadata",
+                "id": "model:App\\Models\\MediaAvMetadata",
                 "type": "model",
-                "name": "MediaMetadata",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaMetadata.php",
-                "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata).",
+                "name": "MediaAvMetadata",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaAvMetadata.php",
+                "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).",
                 "details": "Хранит технические характеристики аудио/видео:\nдлительность, битрейт, частоту кадров, количество кадров и кодеки.",
                 "meta": {
-                    "table": "media_metadata",
+                    "table": "media_av_metadata",
                     "fillable": [],
                     "guarded": [],
                     "casts": {
@@ -5102,7 +5131,36 @@
                 },
                 "related": [],
                 "tags": [
-                    "mediametadata"
+                    "mediaavmetadata"
+                ]
+            },
+            {
+                "id": "model:App\\Models\\MediaImage",
+                "type": "model",
+                "name": "MediaImage",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/MediaImage.php",
+                "summary": "Eloquent модель для метаданных изображений (MediaImage).",
+                "details": "Хранит специфичные метаданные для изображений:\nразмеры (width, height) и EXIF метаданные.\nСвязана с Media через отношение один-к-одному.",
+                "meta": {
+                    "table": "media_images",
+                    "fillable": [],
+                    "guarded": [],
+                    "casts": {
+                        "width": "integer",
+                        "height": "integer",
+                        "exif_json": "array"
+                    },
+                    "relations": {
+                        "media": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Media"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "mediaimage"
                 ]
             },
             {
@@ -5607,7 +5665,7 @@
                 "name": "MediaStoreAction",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
                 "summary": "Действие для сохранения медиа-файла.",
-                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.",
+                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.\nИспользует общую систему ошибок (HttpErrorException) для обработки ошибок валидации\nи сохранения файла.",
                 "meta": {
                     "methods": [
                         "execute"
@@ -5615,8 +5673,8 @@
                     "dependencies": [
                         "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
                         "App\\Domain\\Media\\Services\\StorageResolver",
-                        "App\\Domain\\Media\\Services\\CollectionRulesResolver",
                         "App\\Domain\\Media\\Validation\\MediaValidationPipeline",
+                        "App\\Support\\Errors\\ErrorFactory",
                         "App\\Domain\\Media\\Services\\ExifManager"
                     ],
                     "interface": null
@@ -5632,7 +5690,7 @@
                 "type": "domain_service",
                 "name": "UpdateMediaMetadataAction",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\UpdateMediaMetadataAction.php",
-                "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection).",
+                "summary": "CQRS-действие: обновление метаданных медиа (title, alt).",
                 "details": null,
                 "meta": {
                     "methods": [
@@ -5653,7 +5711,7 @@
                 "name": "MediaMetadataDTO",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\DTO\\MediaMetadataDTO.php",
                 "summary": "DTO для нормализованных метаданных медиа-файла.",
-                "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).",
+                "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).\nДанные из DTO используются для создания записей в специализированных таблицах:\n- width, height, exif → MediaImage (для изображений)\n- durationMs, bitrateKbps, frameRate, frameCount, videoCodec, audioCodec → MediaAvMetadata (для видео/аудио)",
                 "meta": {
                     "methods": [
                         "toArray",
@@ -5977,7 +6035,6 @@
                         "search",
                         "kind",
                         "mimePrefix",
-                        "collection",
                         "deletedFilter",
                         "sort",
                         "order",
@@ -5992,28 +6049,6 @@
                 "related": [],
                 "tags": [
                     "media"
-                ]
-            },
-            {
-                "id": "domain_service:Media/Services/CollectionRulesResolver",
-                "type": "domain_service",
-                "name": "CollectionRulesResolver",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\CollectionRulesResolver.php",
-                "summary": "Резолвер правил валидации для коллекций медиа.",
-                "details": "Получает правила валидации (MIME, размеры, длительность, битрейт)\nдля конкретной коллекции из конфигурации. Если правила не заданы\nдля коллекции, возвращает глобальные значения.",
-                "meta": {
-                    "methods": [
-                        "getRules",
-                        "getAllowedMimes",
-                        "getMaxSizeBytes"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "media",
-                    "service"
                 ]
             },
             {
@@ -6084,12 +6119,35 @@
                 ]
             },
             {
+                "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "GetId3MediaMetadataPlugin",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\GetId3MediaMetadataPlugin.php",
+                "summary": "Плагин метаданных, основанный на библиотеке getID3.",
+                "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "extract"
+                    ],
+                    "dependencies": [
+                        "getID3"
+                    ],
+                    "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "service"
+                ]
+            },
+            {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
                 "type": "domain_service",
                 "name": "MediaMetadataExtractor",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\MediaMetadataExtractor.php",
                 "summary": "Сервис для извлечения метаданных из медиа-файлов.",
-                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
+                "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
                 "meta": {
                     "methods": [
                         "extract"
@@ -6156,7 +6214,7 @@
                 "name": "StorageResolver",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Services\\StorageResolver.php",
                 "summary": "Резолвер дисков для медиа-хранилища.",
-                "details": "Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.collections\n- media.disks.kinds\n- media.disks.default",
+                "details": "Инкапсулирует логику выбора диска по типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.kinds\n- media.disks.default",
                 "meta": {
                     "methods": [
                         "resolveDiskName",
@@ -6187,6 +6245,26 @@
                         "App\\Domain\\Media\\Images\\ImageProcessor"
                     ],
                     "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
+                },
+                "related": [],
+                "tags": [
+                    "media",
+                    "validation"
+                ]
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Validation\\MediaConfigValidator.php",
+                "summary": "Валидатор конфигурации медиа-файлов.",
+                "details": "Проверяет корректность конфигурации, включая обязательные варианты изображений.",
+                "meta": {
+                    "methods": [
+                        "validate"
+                    ],
+                    "dependencies": [],
+                    "interface": null
                 },
                 "related": [],
                 "tags": [
@@ -7701,9 +7779,6 @@
                     "keys": [
                         "disks",
                         "default",
-                        "collections",
-                        "videos",
-                        "documents",
                         "kinds",
                         "image",
                         "video",
@@ -7713,6 +7788,7 @@
                         "thumbnail",
                         "max",
                         "medium",
+                        "large",
                         "signed_ttl",
                         "public_signed_ttl",
                         "path_strategy",
@@ -7720,18 +7796,13 @@
                         "quality",
                         "glide_driver",
                         "metadata",
-                        "ffprobe",
+                        "getid3",
                         "enabled",
+                        "ffprobe",
                         "binary",
                         "mediainfo",
                         "exiftool",
                         "cache_ttl",
-                        "max_size_bytes",
-                        "max_duration_ms",
-                        "max_bitrate_kbps",
-                        "thumbnails",
-                        "max_width",
-                        "max_height",
                         "exif",
                         "auto_rotate",
                         "strip",
@@ -7740,19 +7811,18 @@
                     ],
                     "sections": [
                         "disks",
-                        "collections",
                         "kinds",
                         "allowed_mimes",
                         "variants",
                         "thumbnail",
                         "medium",
+                        "large",
                         "image",
                         "metadata",
+                        "getid3",
                         "ffprobe",
                         "mediainfo",
                         "exiftool",
-                        "videos",
-                        "thumbnails",
                         "exif"
                     ]
                 },
@@ -8425,7 +8495,7 @@
                 "id": "http_endpoint:GET:/api/v1/media/{id}",
                 "type": "http_endpoint",
                 "name": "api.v1.media.show",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PublicMediaController.php",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\MediaPreviewController.php",
                 "summary": "GET /api/v1/media/{id} (api)",
                 "details": null,
                 "meta": {
@@ -9476,6 +9546,30 @@
                 }
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+                "summary": "GET /api/v1/admin/media/config (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/media/config",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": [],
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "media",
+                    "7": "config"
+                }
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -9528,66 +9622,6 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/media/{media}/preview",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "media",
-                    "7": "preview"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaPreviewController.php",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/media/{media}/download",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "media": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "media",
-                    "7": "download"
-                }
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
@@ -9608,6 +9642,30 @@
                     "2": "admin",
                     "4": "v1",
                     "6": "media"
+                }
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+                "summary": "POST /api/v1/admin/media/bulk (api)",
+                "details": null,
+                "meta": {
+                    "method": "POST",
+                    "uri": "/api/v1/admin/media/bulk",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": [],
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "media",
+                    "7": "bulk"
                 }
             },
             {
@@ -10009,7 +10067,7 @@
                 "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
                 "type": "domain_service",
                 "name": "UpdateMediaMetadataAction",
-                "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
+                "summary": "CQRS-действие: обновление метаданных медиа (title, alt)."
             },
             {
                 "id": "domain_service:Media/DTO/MediaMetadataDTO",
@@ -10090,12 +10148,6 @@
                 "summary": "Value Object для параметров выборки медиа."
             },
             {
-                "id": "domain_service:Media/Services/CollectionRulesResolver",
-                "type": "domain_service",
-                "name": "CollectionRulesResolver",
-                "summary": "Резолвер правил валидации для коллекций медиа."
-            },
-            {
                 "id": "domain_service:Media/Services/ExifManager",
                 "type": "domain_service",
                 "name": "ExifManager",
@@ -10112,6 +10164,12 @@
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
                 "summary": "Плагин метаданных, основанный на утилите ffprobe."
+            },
+            {
+                "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "GetId3MediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на библиотеке getID3."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -10144,6 +10202,12 @@
                 "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
             },
             {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "summary": "Валидатор конфигурации медиа-файлов."
+            },
+            {
                 "id": "domain_service:Media/Validation/MediaValidationPipeline",
                 "type": "domain_service",
                 "name": "MediaValidationPipeline",
@@ -10174,6 +10238,12 @@
                 "summary": "GET /api/v1/media/{id} (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -10186,22 +10256,16 @@
                 "summary": "GET /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
                 "summary": "POST /api/v1/admin/media (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
@@ -10228,12 +10292,20 @@
                 "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             }
         ],
-        "mediametadata": [
+        "mediaavmetadata": [
             {
-                "id": "model:App\\Models\\MediaMetadata",
+                "id": "model:App\\Models\\MediaAvMetadata",
                 "type": "model",
-                "name": "MediaMetadata",
-                "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaMetadata)."
+                "name": "MediaAvMetadata",
+                "summary": "Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata)."
+            }
+        ],
+        "mediaimage": [
+            {
+                "id": "model:App\\Models\\MediaImage",
+                "type": "model",
+                "name": "MediaImage",
+                "summary": "Eloquent модель для метаданных изображений (MediaImage)."
             }
         ],
         "mediavariant": [
@@ -10477,7 +10549,7 @@
                 "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
                 "type": "domain_service",
                 "name": "UpdateMediaMetadataAction",
-                "summary": "CQRS-действие: обновление метаданных медиа (title, alt, collection)."
+                "summary": "CQRS-действие: обновление метаданных медиа (title, alt)."
             }
         ],
         "dto": [
@@ -10588,12 +10660,6 @@
         ],
         "service": [
             {
-                "id": "domain_service:Media/Services/CollectionRulesResolver",
-                "type": "domain_service",
-                "name": "CollectionRulesResolver",
-                "summary": "Резолвер правил валидации для коллекций медиа."
-            },
-            {
                 "id": "domain_service:Media/Services/ExifManager",
                 "type": "domain_service",
                 "name": "ExifManager",
@@ -10610,6 +10676,12 @@
                 "type": "domain_service",
                 "name": "FfprobeMediaMetadataPlugin",
                 "summary": "Плагин метаданных, основанный на утилите ffprobe."
+            },
+            {
+                "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
+                "type": "domain_service",
+                "name": "GetId3MediaMetadataPlugin",
+                "summary": "Плагин метаданных, основанный на библиотеке getID3."
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -10660,6 +10732,12 @@
                 "type": "domain_service",
                 "name": "CorruptionValidator",
                 "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "summary": "Валидатор конфигурации медиа-файлов."
             },
             {
                 "id": "domain_service:Media/Validation/MediaValidationPipeline",
@@ -11058,6 +11136,12 @@
                 "type": "config_area",
                 "name": "View_templates",
                 "summary": "Configuration: View_templates"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
             }
         ],
         "app": [
@@ -11548,6 +11632,12 @@
                 "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -11560,22 +11650,16 @@
                 "summary": "GET /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
                 "summary": "POST /api/v1/admin/media (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
@@ -11898,6 +11982,12 @@
                 "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -11910,22 +12000,16 @@
                 "summary": "GET /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
                 "summary": "POST /api/v1/admin/media (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
@@ -12242,6 +12326,12 @@
                 "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/media/config",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.config",
+                "summary": "GET /api/v1/admin/media/config (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.index",
@@ -12254,22 +12344,16 @@
                 "summary": "GET /api/v1/admin/media/{media} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/media",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
                 "summary": "POST /api/v1/admin/media (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
@@ -12656,23 +12740,13 @@
                 "summary": "GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree (api)"
             }
         ],
-        "preview": [
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/preview",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.preview",
-                "summary": "GET /api/v1/admin/media/{media}/preview (api)"
-            }
-        ],
-        "download": [
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/media/{media}/download",
-                "type": "http_endpoint",
-                "name": "admin.v1.media.download",
-                "summary": "GET /api/v1/admin/media/{media}/download (api)"
-            }
-        ],
         "bulk": [
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
+            },
             {
                 "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
@@ -12717,5 +12791,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-17T18:21:03+00:00"
+    "generated_at": "2025-11-19T14:02:43+00:00"
 }

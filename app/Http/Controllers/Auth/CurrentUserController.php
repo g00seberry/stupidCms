@@ -30,7 +30,10 @@ final class CurrentUserController
      * @response status=200 {
      *   "id": 1,
      *   "email": "admin@stupidcms.dev",
-     *   "name": "Admin"
+     *   "name": "Admin",
+     *   "is_admin": true,
+     *   "created_at": "2025-01-10T12:00:00+00:00",
+     *   "updated_at": "2025-01-10T12:00:00+00:00"
      * }
      * @response status=401 {
      *   "type": "about:blank",

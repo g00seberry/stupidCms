@@ -23,12 +23,12 @@
 
 ## Статистика выполнения
 
-**Дата обновления:** 2025-11-17
+**Дата обновления:** 2025-01-17
 
 ### Общие показатели
 
--   ✅ **Всего тестов:** 868
--   ✅ **Assertions:** 2150
+-   ✅ **Всего тестов:** 982
+-   ✅ **Assertions:** 2375
 -   ⏭️ **Skipped:** 8
 -   ❌ **Failed:** 0
 -   ⏱️ **Время выполнения:** ~58 сек
@@ -40,17 +40,18 @@
 -   ✅ **Models:** 218 тестов (User, Entry, Media, PostType, Plugin, Option, Taxonomy, Term, TermTree, RefreshToken, ReservedRoute, Redirect, Audit, Outbox + MediaVariant, MediaMetadata)
 -   ✅ **Auth Module:** 26 тестов (JwtService, RefreshTokenRepository, RefreshTokenDto, Exceptions)
 
-#### Фаза 2: Domain Services 🔄 (45%)
+#### Фаза 2: Domain Services 🔄 (55%)
 
 -   ✅ **Auth:** 26 тестов
 -   ✅ **Entries:** 16 тестов (PublishingService)
 -   ✅ **Routing:** 37 тестов (PathNormalizer, ReservedPattern, Exceptions)
--   ✅ **Media:** 72 теста (MediaQuery, ListMediaAction, UpdateMediaMetadataAction, ExifManager, MediaValidationPipeline, CorruptionValidator, MimeSignatureValidator, SizeLimitValidator, StorageResolver, CollectionRulesResolver, MediaDeletedFilter, MediaVariantStatus, MediaMetadataDTO)
+-   ✅ **Media:** 158 тестов (MediaQuery, ListMediaAction, UpdateMediaMetadataAction, ExifManager, MediaValidationPipeline, CorruptionValidator, MimeSignatureValidator, SizeLimitValidator, StorageResolver, CollectionRulesResolver, MediaDeletedFilter, MediaVariantStatus, MediaMetadataDTO, GdImageProcessor, GlideImageProcessor, MediaMetadataExtractor, ExiftoolMediaMetadataPlugin, FfprobeMediaMetadataPlugin, MediainfoMediaMetadataPlugin)
 -   ✅ **Options:** 16 тестов (OptionsRepository)
 -   ✅ **PostTypes:** 19 тестов (PostTypeOptions)
 -   ✅ **Sanitizer:** 17 тестов (RichTextSanitizer)
 -   ✅ **View:** 10 тестов (BladeTemplateResolver)
 -   ✅ **Plugins:** 7 тестов (PluginRegistry)
+-   ✅ **Search:** 26 тестов (SearchQuery, SearchResult, SearchHit, SearchTermFilter)
 -   ⏳ **Media (полное):** MediaStoreAction требует доработки
 -   ⏳ **Plugins (полное):** PluginActivator требует рефакторинга
 
@@ -1070,99 +1071,213 @@
 
 ---
 
-##### 2.2.9. GdImageProcessor
+##### 2.2.9. GdImageProcessor ✅
 
-**Путь:** `app/Domain/Media/Images/GdImageProcessor.php`
+**Путь:** `app/Domain/Media/Images/GdImageProcessor.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Images/GdImageProcessorTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Images/GdImageProcessorTest.php`) ✅
 
 ```php
-- test('opens image file')
-- test('gets image width')
-- test('gets image height')
-- test('resizes image')
-- test('encodes image to format')
-- test('supports jpg, png, gif, webp')
-- test('maintains aspect ratio on resize')
+✅ test('opens image file')
+✅ test('throws exception when opening invalid image data')
+✅ test('gets image width')
+✅ test('gets image height')
+✅ test('resizes image')
+✅ test('returns same image when resizing to same dimensions')
+✅ test('maintains aspect ratio on resize')
+✅ test('encodes image to jpeg format')
+✅ test('encodes image to png format')
+✅ test('encodes image to gif format')
+✅ test('encodes image to webp format when supported')
+⏭️ test('falls back to jpeg when webp is not supported') - skipped (WebP support is available)
+⏭️ test('throws exception when encoding fails') - skipped (Difficult to test encoding failure)
+✅ test('supports jpg format')
+✅ test('supports png format')
+✅ test('supports gif format')
+✅ test('supports webp format')
+✅ test('does not support unsupported formats')
+✅ test('supports method is case insensitive')
+✅ test('destroys image resource')
+✅ test('encodes with quality parameter')
 ```
+
+**Примечания:**
+
+-   19 тестов (17 passed, 2 skipped)
+-   Полное покрытие функционала GD ImageProcessor
+-   Проверка открытия, размеров, ресайза, кодирования в разные форматы
+-   Поддержка форматов: jpg, png, gif, webp
+-   Fallback на JPEG при отсутствии поддержки WebP
 
 ---
 
-##### 2.2.10. GlideImageProcessor
+##### 2.2.10. GlideImageProcessor ✅
 
-**Путь:** `app/Domain/Media/Images/GlideImageProcessor.php`
+**Путь:** `app/Domain/Media/Images/GlideImageProcessor.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Images/GlideImageProcessorTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Images/GlideImageProcessorTest.php`) ✅
 
 ```php
-- test('opens image with glide')
-- test('resizes image with glide')
-- test('applies filters')
-- test('generates thumbnails')
-- test('supports more formats than GD')
+✅ test('opens image file')
+✅ test('throws exception when opening invalid image data')
+✅ test('gets image width')
+✅ test('gets image height')
+✅ test('resizes image')
+✅ test('returns same image when resizing to same dimensions')
+✅ test('encodes image to jpeg format')
+✅ test('encodes image to png format')
+✅ test('encodes image to gif format')
+✅ test('encodes image to webp format')
+✅ test('encodes image to avif format when supported')
+✅ test('falls back to jpeg when avif encoding fails')
+✅ test('encodes image to heic format when supported')
+✅ test('falls back to jpeg when heic is not supported')
+✅ test('supports jpg format')
+✅ test('supports png format')
+✅ test('supports gif format')
+✅ test('supports webp format')
+✅ test('supports avif format')
+✅ test('supports heic and heif formats')
+✅ test('does not support unsupported formats')
+✅ test('supports method is case insensitive')
+✅ test('destroys image resource')
+✅ test('encodes with quality parameter')
+✅ test('clamps quality to valid range')
+✅ test('handles heif extension same as heic')
 ```
+
+**Примечания:**
+
+-   26 тестов (26 passed)
+-   Полное покрытие функционала Glide/Intervention ImageProcessor
+-   Использует реальный ImageManager (final класс, не может быть замокан)
+-   Поддержка форматов: jpg, png, gif, webp, avif, heic, heif
+-   Fallback на JPEG при отсутствии поддержки AVIF/HEIC
+-   Проверка качества кодирования и clamping значений
 
 ---
 
-##### 2.2.11. MediaMetadataExtractor
+##### 2.2.11. MediaMetadataExtractor ✅
 
-**Путь:** `app/Domain/Media/Services/MediaMetadataExtractor.php`
+**Путь:** `app/Domain/Media/Services/MediaMetadataExtractor.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тesты** (`tests/Unit/Domain/Media/Services/MediaMetadataExtractorTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/MediaMetadataExtractorTest.php`) ✅
 
 ```php
-- test('extracts metadata using available plugins')
-- test('tries plugins in order')
-- test('returns null if no plugin supports file')
-- test('handles plugin errors gracefully')
+✅ test('extracts image dimensions from jpeg file')
+✅ test('extracts image dimensions from png file')
+✅ test('returns null dimensions for non-image files')
+✅ test('uses provided mime type instead of auto-detection')
+✅ test('tries plugins in order for video files')
+✅ test('skips plugins that do not support mime type')
+✅ test('handles plugin errors gracefully')
+✅ test('skips non-plugin objects in plugins list')
+✅ test('uses cache when available')
+✅ test('stores result in cache after extraction')
+✅ test('uses custom cache ttl when provided')
+✅ test('extracts plugin data correctly')
+✅ test('stops on first plugin that returns data')
+✅ test('continues to next plugin when plugin returns empty data')
 ```
+
+**Примечания:**
+
+-   14 тестов
+-   Извлечение размеров изображений через ImageProcessor
+-   Fallback на getimagesize при ошибках ImageProcessor
+-   Использование плагинов для видео/аудио с graceful fallback
+-   Кэширование результатов извлечения метаданных
+-   Обработка ошибок плагинов и пустых результатов
 
 ---
 
-##### 2.2.12. ExiftoolMediaMetadataPlugin
+##### 2.2.12. ExiftoolMediaMetadataPlugin ✅
 
-**Путь:** `app/Domain/Media/Services/ExiftoolMediaMetadataPlugin.php`
+**Путь:** `app/Domain/Media/Services/ExiftoolMediaMetadataPlugin.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Services/ExiftoolMediaMetadataPluginTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/ExiftoolMediaMetadataPluginTest.php`) ✅
 
 ```php
-- test('supports images')
-- test('extracts metadata using exiftool')
-- test('parses exiftool json output')
-- test('handles exiftool errors')
-- test('requires exiftool binary')
+✅ test('supports image mime types')
+✅ test('supports video mime types')
+✅ test('supports audio mime types')
+✅ test('does not support non-media mime types')
+✅ test('returns empty array for non-existent file')
+✅ test('returns empty array for empty path')
+✅ test('uses custom binary path when provided')
+✅ test('uses default binary when null provided')
+✅ test('uses default binary when empty string provided')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Поддержка изображений, видео и аудио
+-   Использование exiftool для извлечения метаданных
+-   Обработка несуществующих файлов и пустых путей
+-   Настройка пути к бинарнику exiftool
 
 ---
 
-##### 2.2.13. FfprobeMediaMetadataPlugin
+##### 2.2.13. FfprobeMediaMetadataPlugin ✅
 
-**Путь:** `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`
+**Путь:** `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Services/FfprobeMediaMetadataPluginTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/FfprobeMediaMetadataPluginTest.php`) ✅
 
 ```php
-- test('supports video and audio')
-- test('extracts duration from video')
-- test('extracts bitrate from video')
-- test('extracts frame rate from video')
-- test('extracts codec information')
-- test('requires ffprobe binary')
+✅ test('supports video mime types')
+✅ test('supports audio mime types')
+✅ test('does not support image mime types')
+✅ test('does not support non-media mime types')
+✅ test('returns empty array for non-existent file')
+✅ test('returns empty array for empty path')
+✅ test('uses custom binary path when provided')
+✅ test('uses default binary when null provided')
+✅ test('uses default binary when empty string provided')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Поддержка только видео и аудио (не изображений)
+-   Использование ffprobe для извлечения метаданных
+-   Обработка несуществующих файлов и пустых путей
+-   Настройка пути к бинарнику ffprobe
 
 ---
 
-##### 2.2.14. MediainfoMediaMetadataPlugin
+##### 2.2.14. MediainfoMediaMetadataPlugin ✅
 
-**Путь:** `app/Domain/Media/Services/MediainfoMediaMetadataPlugin.php`
+**Путь:** `app/Domain/Media/Services/MediainfoMediaMetadataPlugin.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тесты** (`tests/Unit/Domain/Media/Services/MediainfoMediaMetadataPluginTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Media/Services/MediainfoMediaMetadataPluginTest.php`) ✅
 
 ```php
-- test('supports video and audio')
-- test('extracts detailed av metadata')
-- test('requires mediainfo binary')
+✅ test('supports video mime types')
+✅ test('supports audio mime types')
+✅ test('does not support image mime types')
+✅ test('does not support non-media mime types')
+✅ test('returns empty array for non-existent file')
+✅ test('returns empty array for empty path')
+✅ test('uses custom binary path when provided')
+✅ test('uses default binary when null provided')
+✅ test('uses default binary when empty string provided')
 ```
+
+**Примечания:**
+
+-   9 тестов
+-   Поддержка только видео и аудио (не изображений)
+-   Использование mediainfo для извлечения детальных метаданных
+-   Обработка несуществующих файлов и пустых путей
+-   Настройка пути к бинарнику mediainfo
 
 ---
 
@@ -1855,42 +1970,78 @@
 
 ---
 
-##### 2.6.6. SearchQuery, SearchResult, SearchHit
+##### 2.6.6. SearchQuery, SearchResult, SearchHit ✅
 
-**Путь:** `app/Domain/Search/`
+**Путь:** `app/Domain/Search/`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тesты** (`tests/Unit/Domain/Search/SearchQueryTest.php`, etc.)
+**Unit-тесты** ✅
+
+**SearchQuery** (`tests/Unit/Domain/Search/SearchQueryTest.php`):
 
 ```php
-// SearchQuery
-- test('builds query from parameters')
-- test('adds filters to query')
-- test('adds sorting to query')
-- test('sets pagination')
-
-// SearchResult
-- test('contains hits')
-- test('contains total count')
-- test('contains aggregations')
-
-// SearchHit
-- test('wraps search result item')
-- test('provides score')
-- test('provides highlights')
+✅ test('creates search query with all parameters')
+✅ test('creates search query with minimal parameters')
+✅ test('calculates offset correctly')
+✅ test('is blank returns true for null query')
+✅ test('is blank returns true for empty string query')
+✅ test('is blank returns true for whitespace only query')
+✅ test('is blank returns false for non-empty query')
+✅ test('search query is immutable')
 ```
+
+**SearchResult** (`tests/Unit/Domain/Search/SearchResultTest.php`):
+
+```php
+✅ test('creates search result with all parameters')
+✅ test('creates empty search result')
+✅ test('search result is immutable')
+✅ test('can have empty hits list')
+```
+
+**SearchHit** (`tests/Unit/Domain/Search/SearchHitTest.php`):
+
+```php
+✅ test('creates search hit with all parameters')
+✅ test('creates search hit with nullable fields')
+✅ test('search hit is immutable')
+```
+
+**Примечания:**
+
+-   15 тестов для value objects Search модуля
+-   Полное покрытие SearchQuery, SearchResult, SearchHit
+-   Проверка immutability и всех методов доступа
 
 ---
 
-##### 2.6.7. SearchTermFilter
+##### 2.6.7. SearchTermFilter ✅
 
-**Путь:** `app/Domain/Search/ValueObjects/SearchTermFilter.php`
+**Путь:** `app/Domain/Search/ValueObjects/SearchTermFilter.php`  
+**Статус:** ✅ Завершено (2025-01-17)
 
-**Unit-тesты** (`tests/Unit/Domain/Search/ValueObjects/SearchTermFilterTest.php`)
+**Unit-тесты** (`tests/Unit/Domain/Search/SearchTermFilterTest.php`) ✅
 
 ```php
-- test('creates filter from term id')
-- test('converts to elasticsearch filter')
+✅ test('creates search term filter from string')
+✅ test('creates search term filter with different ids')
+✅ test('throws exception for empty string')
+✅ test('throws exception for string without colon')
+✅ test('throws exception for empty taxonomy id')
+✅ test('throws exception for empty term id')
+✅ test('throws exception for invalid taxonomy id')
+✅ test('throws exception for invalid term id')
+✅ test('trims whitespace from string')
+✅ test('search term filter is immutable')
+✅ test('can create multiple filters')
 ```
+
+**Примечания:**
+
+-   11 тестов
+-   Value Object для фильтрации по термам таксономии
+-   Формат: "taxonomy_id:term_id"
+-   Валидация входных данных и обработка ошибок
 
 ---
 

@@ -6,12 +6,10 @@ namespace App\Http\Middleware;
 
 use App\Domain\Auth\Exceptions\JwtAuthenticationException;
 use App\Domain\Auth\JwtService;
-use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Middleware для базовой JWT аутентификации.
@@ -24,13 +22,7 @@ use Illuminate\Support\Facades\Auth;
 final class JwtAuth
 {
     use ThrowsErrors;
-
-    /**
-     * Имя guard для аутентификации.
-     *
-     * @var string
-     */
-    private const GUARD = 'api';
+    use HandlesJwtAuthentication;
 
     /**
      * @param \App\Domain\Auth\JwtService $jwt Сервис JWT
@@ -56,32 +48,29 @@ final class JwtAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        $accessToken = (string) $request->cookie(config('jwt.cookies.access'), '');
+        $accessToken = $this->extractAccessToken($request);
 
         if ($accessToken === '') {
             $this->respondUnauthorized('missing_token');
         }
 
         try {
-            $verified = $this->jwt->verify($accessToken, 'access');
+            $verified = $this->verifyTokenAndGetClaims($this->jwt, $accessToken);
             $claims = $verified['claims'];
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             $this->respondUnauthorized('invalid_token');
         }
 
-        $subject = $claims['sub'] ?? null;
-        if (! $this->isValidSubject($subject)) {
-            $this->respondUnauthorized('invalid_subject');
-        }
-
-        $userId = (int) $subject;
-        $user = User::query()->find($userId);
+        $user = $this->findUserFromClaims($claims);
         if (! $user) {
+            $subject = $claims['sub'] ?? null;
+            if (! $this->isValidSubject($subject)) {
+                $this->respondUnauthorized('invalid_subject');
+            }
             $this->respondUnauthorized('user_not_found');
         }
 
-        Auth::shouldUse(self::GUARD);
-        Auth::setUser($user);
+        $this->setAuthenticatedUser($user);
 
         return $next($request);
     }
@@ -135,25 +124,6 @@ final class JwtAuth
                 'Pragma' => 'no-cache',
             ],
         );
-    }
-
-    /**
-     * Проверить валидность subject claim токена.
-     *
-     * Subject должен быть положительным целым числом (ID пользователя).
-     *
-     * @param mixed $subject Subject claim из токена
-     * @return bool
-     */
-    private function isValidSubject(mixed $subject): bool
-    {
-        if (! is_numeric($subject)) {
-            return false;
-        }
-
-        $intVal = (int) $subject;
-        
-        return $intVal > 0 && (string) $intVal === trim((string) $subject);
     }
 }
 

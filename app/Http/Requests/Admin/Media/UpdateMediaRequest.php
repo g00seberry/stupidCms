@@ -10,7 +10,6 @@ use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\HttpErrorException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 
 /**
  * Request для обновления медиа-файла.
@@ -19,9 +18,6 @@ use Illuminate\Support\Str;
  * - Все поля опциональны
  * - title: опциональный заголовок (минимум 1, максимум 255 символов, если указан)
  * - alt: опциональный alt текст (минимум 1, максимум 255 символов, если указан)
- * - collection: опциональная коллекция (автоматически slugify, regex, максимум 64 символа)
- *
- * Автоматически нормализует collection через slugify для очистки данных на границе.
  *
  * @package App\Http\Requests\Admin\Media
  */
@@ -51,7 +47,6 @@ class UpdateMediaRequest extends FormRequest
     /**
      * Подготовить данные для валидации.
      *
-     * Автоматически нормализует collection через slugify для очистки данных на границе.
      * Нормализует пустые строки в null для title и alt, чтобы они не проходили валидацию min:1.
      *
      * @return void
@@ -69,18 +64,6 @@ class UpdateMediaRequest extends FormRequest
             $alt = trim($this->input('alt'));
             $this->merge(['alt' => $alt !== '' ? $alt : null]);
         }
-
-        // Нормализация collection: slugify и пустые строки → null
-        if ($this->has('collection') && is_string($this->input('collection'))) {
-            $collection = trim($this->input('collection'));
-            if ($collection !== '') {
-                $this->merge([
-                    'collection' => Str::slug($collection, '-'),
-                ]);
-            } else {
-                $this->merge(['collection' => null]);
-            }
-        }
     }
 
     /**
@@ -89,7 +72,6 @@ class UpdateMediaRequest extends FormRequest
      * Валидирует (все поля опциональны):
      * - title: заголовок (минимум 1, максимум 255 символов, если указан)
      * - alt: alt текст (минимум 1, максимум 255 символов, если указан)
-     * - collection: коллекция (regex, максимум 64 символа, автоматически slugify)
      *
      * @return array<string, mixed>
      */
@@ -98,7 +80,6 @@ class UpdateMediaRequest extends FormRequest
         return [
             'title' => 'nullable|filled|string|min:1|max:255',
             'alt' => 'nullable|filled|string|min:1|max:255',
-            'collection' => 'nullable|string|max:64|regex:/^[a-z0-9-_.]+$/i',
         ];
     }
 

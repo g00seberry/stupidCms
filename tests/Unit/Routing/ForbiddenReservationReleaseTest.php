@@ -41,7 +41,9 @@ test('readonly properties cannot be modified', function () {
 
 test('converts to error payload with forbidden code', function () {
     $exception = new ForbiddenReservationRelease('/admin', 'system', 'plugin');
-    $factory = app(\App\Support\Errors\ErrorFactory::class);
+    $errorsConfig = require __DIR__ . '/../../../config/errors.php';
+    $kernel = \App\Support\Errors\ErrorKernel::fromConfig($errorsConfig);
+    $factory = $kernel->factory();
 
     $error = $exception->toError($factory);
 
