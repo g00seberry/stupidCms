@@ -568,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: trashed
+                  example: draft
                   nullable: true
                   enum:
                     - all
@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T13:49:23'
+                  example: '2025-11-19T13:55:18'
                   nullable: true
                 date_to:
                   type: string
@@ -614,7 +614,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: title.desc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2924,7 +2924,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: size_bytes
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -2933,7 +2933,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: true
                   enum:
                     - asc
@@ -5386,7 +5386,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -5405,7 +5405,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug
+                  example: updated_at
                   nullable: true
                   enum:
                     - name
@@ -7644,7 +7644,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9842,7 +9842,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.desc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10348,7 +10348,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T13:49:23'
+                  example: '2025-11-19T13:55:17'
                   nullable: true
                 to:
                   type: string
