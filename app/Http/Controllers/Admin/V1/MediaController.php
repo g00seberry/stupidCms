@@ -156,7 +156,6 @@ class MediaController extends Controller
      * @queryParam q string Поиск по названию и исходному имени (<=255). Example: hero
      * @queryParam kind string Фильтр по типу. Values: image,video,audio,document.
      * @queryParam mime string Фильтр по MIME (prefix match). Example: image/png
-     * @queryParam collection string Коллекция (slug, до 64 символов). Example: uploads
      * @queryParam deleted string Управление soft-deleted. Values: with,only.
      * @queryParam sort string Поле сортировки. Values: created_at,size_bytes,mime. Default: created_at.
      * @queryParam order string Направление сортировки. Values: asc,desc. Default: desc.
@@ -174,7 +173,6 @@ class MediaController extends Controller
      *       "height": 1080,
      *       "title": "Hero image",
      *       "alt": "Hero cover",
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
@@ -200,7 +198,6 @@ class MediaController extends Controller
      *       "audio_codec": "aac",
      *       "title": "Video title",
      *       "alt": null,
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:01:00+00:00",
      *       "updated_at": "2025-01-10T12:01:00+00:00",
      *       "deleted_at": null,
@@ -218,7 +215,6 @@ class MediaController extends Controller
      *       "audio_codec": "mp3",
      *       "title": "Audio title",
      *       "alt": null,
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:02:00+00:00",
      *       "updated_at": "2025-01-10T12:02:00+00:00",
      *       "deleted_at": null,
@@ -233,7 +229,6 @@ class MediaController extends Controller
      *       "size_bytes": 102400,
      *       "title": "Document title",
      *       "alt": null,
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:03:00+00:00",
      *       "updated_at": "2025-01-10T12:03:00+00:00",
      *       "deleted_at": null,
@@ -299,7 +294,6 @@ class MediaController extends Controller
             search: $v['q'] ?? null,
             kind: $v['kind'] ?? null,
             mimePrefix: $v['mime'] ?? null,
-            collection: $v['collection'] ?? null,
             deletedFilter: $deletedFilter,
             sort: $sort,
             order: $order,
@@ -324,7 +318,6 @@ class MediaController extends Controller
      * @bodyParam file file required Файл (mimetype из `config('media.allowed_mimes')`). Example: storage/app/scribe/examples/media-upload.png
      * @bodyParam title string Пользовательский заголовок. Example: Hero image
      * @bodyParam alt string Alt-текст для изображений. Example: Hero cover
-     * @bodyParam collection string Коллекция (slug). Example: uploads
      * @responseHeader Cache-Control "no-store, private"
      * @responseHeader Vary "Cookie"
      * @response status=200 scenario="Дедупликация" {
@@ -339,7 +332,6 @@ class MediaController extends Controller
      *     "height": 1080,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
@@ -361,7 +353,6 @@ class MediaController extends Controller
      *     "height": 1080,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
@@ -465,7 +456,7 @@ class MediaController extends Controller
      *
      * Обрабатывает массив файлов и создаёт записи Media для каждого файла.
      * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
-     * Опциональные метаданные (title, alt, collection) применяются ко всем файлам.
+     * Опциональные метаданные (title, alt) применяются ко всем файлам.
      *
      * @group Admin ▸ Media
      * @name Bulk upload media
@@ -474,7 +465,6 @@ class MediaController extends Controller
      * @bodyParam files.* file required Файл (mimetype из `config('media.allowed_mimes')`). Example: storage/app/scribe/examples/media-upload.png
      * @bodyParam title string Пользовательский заголовок для всех файлов. Example: Gallery images
      * @bodyParam alt string Alt-текст для всех файлов (для изображений). Example: Gallery cover
-     * @bodyParam collection string Коллекция (slug). Example: uploads
      * @responseHeader Cache-Control "no-store, private"
      * @responseHeader Vary "Cookie"
      * @response status=201 {
@@ -490,7 +480,6 @@ class MediaController extends Controller
      *       "height": 1080,
      *       "title": "Gallery images",
      *       "alt": "Gallery cover",
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,
@@ -510,7 +499,6 @@ class MediaController extends Controller
      *       "height": 1080,
      *       "title": "Gallery images",
      *       "alt": "Gallery cover",
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:00:01+00:00",
      *       "updated_at": "2025-01-10T12:00:01+00:00",
      *       "deleted_at": null,
@@ -567,7 +555,7 @@ class MediaController extends Controller
      *
      * Обрабатывает массив файлов и создаёт записи Media для каждого файла.
      * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
-     * Опциональные метаданные (title, alt, collection) применяются ко всем файлам.
+     * Опциональные метаданные (title, alt) применяются ко всем файлам.
      *
      * @param \App\Http\Requests\Admin\Media\BulkStoreMediaRequest $request HTTP запрос с массивом файлов и метаданными
      * @return \Illuminate\Http\JsonResponse JSON ответ с коллекцией загруженных медиа-файлов (статус 201)
@@ -607,9 +595,6 @@ class MediaController extends Controller
             if (isset($validated['alt'])) {
                 $payload['alt'] = $validated['alt'];
             }
-            if (isset($validated['collection'])) {
-                $payload['collection'] = $validated['collection'];
-            }
 
             $media = $this->storeAction->execute($file, $payload);
             
@@ -648,7 +633,6 @@ class MediaController extends Controller
      *     "height": 1080,
      *     "title": "Hero image",
      *     "alt": "Hero cover",
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
@@ -674,7 +658,6 @@ class MediaController extends Controller
      *     "audio_codec": "aac",
      *     "title": "Video title",
      *     "alt": null,
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
@@ -694,7 +677,6 @@ class MediaController extends Controller
      *     "audio_codec": "mp3",
      *     "title": "Audio title",
      *     "alt": null,
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
@@ -711,7 +693,6 @@ class MediaController extends Controller
      *     "size_bytes": 102400,
      *     "title": "Document title",
      *     "alt": null,
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00",
      *     "deleted_at": null,
@@ -790,7 +771,6 @@ class MediaController extends Controller
      * @urlParam media string required ULID идентификатор медиа-файла. Example: 01HXZYXQJ123456789ABCDEF
      * @bodyParam title string Новый заголовок. Example: Updated hero image
      * @bodyParam alt string Alt-текст. Example: Updated hero cover
-     * @bodyParam collection string Коллекция. Example: uploads
      * @response status=200 scenario="Изображение" {
      *   "data": {
      *     "id": "01HXZYXQJ123456789ABCDEF",
@@ -830,7 +810,6 @@ class MediaController extends Controller
      *     "audio_codec": "aac",
      *     "title": "Updated video title",
      *     "alt": null,
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
@@ -850,7 +829,6 @@ class MediaController extends Controller
      *     "audio_codec": "mp3",
      *     "title": "Updated audio title",
      *     "alt": null,
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
@@ -867,7 +845,6 @@ class MediaController extends Controller
      *     "size_bytes": 102400,
      *     "title": "Updated document title",
      *     "alt": null,
-     *     "collection": "uploads",
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:05:00+00:00",
      *     "deleted_at": null,
@@ -914,7 +891,7 @@ class MediaController extends Controller
     /**
      * Обновление метаданных медиа-файла.
      *
-     * Обновляет title, alt, collection и возвращает специализированный ресурс
+     * Обновляет title, alt и возвращает специализированный ресурс
      * в зависимости от типа медиа (изображение, видео, аудио, документ).
      *
      * @param \App\Http\Requests\Admin\Media\UpdateMediaRequest $request HTTP запрос с валидированными данными
@@ -1030,7 +1007,6 @@ class MediaController extends Controller
      *       "height": 1080,
      *       "title": "Hero image",
      *       "alt": "Hero cover",
-     *       "collection": "uploads",
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00",
      *       "deleted_at": null,

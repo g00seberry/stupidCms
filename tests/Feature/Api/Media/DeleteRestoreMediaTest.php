@@ -195,7 +195,6 @@ test('bulk restored media retains all metadata', function () {
     $media = Media::factory()->create([
         'title' => 'Original Title',
         'alt' => 'Original Alt',
-        'collection' => 'uploads',
         'deleted_at' => now(),
     ]);
 
@@ -209,7 +208,6 @@ test('bulk restored media retains all metadata', function () {
 
     expect($freshMedia->title)->toBe('Original Title')
         ->and($freshMedia->alt)->toBe('Original Alt')
-        ->and($freshMedia->collection)->toBe('uploads')
         ->and($freshMedia->deleted_at)->toBeNull();
 });
 

@@ -23,26 +23,6 @@
 
 ---
 
-## CollectionRulesResolver
-**ID:** `domain_service:Media/Services/CollectionRulesResolver`
-**Path:** `app/Domain/Media/Services/CollectionRulesResolver.php`
-
-Резолвер правил валидации для коллекций медиа.
-
-### Details
-Получает правила валидации (MIME, размеры, длительность, битрейт)
-для конкретной коллекции из конфигурации. Если правила не заданы
-для коллекции, возвращает глобальные значения.
-
-### Meta
-- **Methods:** `getRules`, `getAllowedMimes`, `getMaxSizeBytes`
-
-### Tags
-`media`, `service`
-
-
----
-
 ## CorruptionValidator
 **ID:** `domain_service:Media/Validation/CorruptionValidator`
 **Path:** `app/Domain/Media/Validation/CorruptionValidator.php`
@@ -487,7 +467,7 @@ DTO для нормализованных метаданных медиа-фай
 Value Object для параметров выборки медиа.
 
 ### Meta
-- **Methods:** `search`, `kind`, `mimePrefix`, `collection`, `deletedFilter`, `sort`, `order`, `page`, `perPage`
+- **Methods:** `search`, `kind`, `mimePrefix`, `deletedFilter`, `sort`, `order`, `page`, `perPage`
 - **Dependencies:** `App\Domain\Media\MediaDeletedFilter`
 
 ### Tags
@@ -509,7 +489,7 @@ Value Object для параметров выборки медиа.
 
 ### Meta
 - **Methods:** `execute`
-- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Services\CollectionRulesResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Domain\Media\Services\ExifManager`
+- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Domain\Media\Services\ExifManager`
 
 ### Tags
 `media`, `action`
@@ -1262,9 +1242,8 @@ Value Object для фильтра поиска по терму.
 Резолвер дисков для медиа-хранилища.
 
 ### Details
-Инкапсулирует логику выбора диска по коллекции и типу медиа (MIME/kind),
+Инкапсулирует логику выбора диска по типу медиа (MIME/kind),
 используя конфигурацию config/media.php:
-- media.disks.collections
 - media.disks.kinds
 - media.disks.default
 
@@ -1281,7 +1260,7 @@ Value Object для фильтра поиска по терму.
 **ID:** `domain_service:Media/Actions/UpdateMediaMetadataAction`
 **Path:** `app/Domain/Media/Actions/UpdateMediaMetadataAction.php`
 
-CQRS-действие: обновление метаданных медиа (title, alt, collection).
+CQRS-действие: обновление метаданных медиа (title, alt).
 
 ### Meta
 - **Methods:** `execute`

@@ -568,7 +568,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: scheduled
                   nullable: true
                   enum:
                     - all
@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T11:06:36'
+                  example: '2025-11-19T11:16:52'
                   nullable: true
                 date_to:
                   type: string
@@ -614,7 +614,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: title.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2510,17 +2510,6 @@ paths:
             nullable: false
         -
           in: query
-          name: collection
-          description: 'Коллекция (slug, до 64 символов).'
-          example: uploads
-          required: false
-          schema:
-            type: string
-            description: 'Коллекция (slug, до 64 символов).'
-            example: uploads
-            nullable: false
-        -
-          in: query
           name: deleted
           description: 'Управление soft-deleted. Values: with,only.'
           example: consequatur
@@ -2583,7 +2572,6 @@ paths:
                       height: 1080
                       title: 'Hero image'
                       alt: 'Hero cover'
-                      collection: uploads
                       created_at: '2025-01-10T12:00:00+00:00'
                       updated_at: '2025-01-10T12:00:00+00:00'
                       deleted_at: null
@@ -2607,7 +2595,6 @@ paths:
                       audio_codec: aac
                       title: 'Video title'
                       alt: null
-                      collection: uploads
                       created_at: '2025-01-10T12:01:00+00:00'
                       updated_at: '2025-01-10T12:01:00+00:00'
                       deleted_at: null
@@ -2624,7 +2611,6 @@ paths:
                       audio_codec: mp3
                       title: 'Audio title'
                       alt: null
-                      collection: uploads
                       created_at: '2025-01-10T12:02:00+00:00'
                       updated_at: '2025-01-10T12:02:00+00:00'
                       deleted_at: null
@@ -2638,7 +2624,6 @@ paths:
                       size_bytes: 102400
                       title: 'Document title'
                       alt: null
-                      collection: uploads
                       created_at: '2025-01-10T12:03:00+00:00'
                       updated_at: '2025-01-10T12:03:00+00:00'
                       deleted_at: null
@@ -2668,7 +2653,6 @@ paths:
                         height: 1080
                         title: 'Hero image'
                         alt: 'Hero cover'
-                        collection: uploads
                         created_at: '2025-01-10T12:00:00+00:00'
                         updated_at: '2025-01-10T12:00:00+00:00'
                         deleted_at: null
@@ -2692,7 +2676,6 @@ paths:
                         audio_codec: aac
                         title: 'Video title'
                         alt: null
-                        collection: uploads
                         created_at: '2025-01-10T12:01:00+00:00'
                         updated_at: '2025-01-10T12:01:00+00:00'
                         deleted_at: null
@@ -2709,7 +2692,6 @@ paths:
                         audio_codec: mp3
                         title: 'Audio title'
                         alt: null
-                        collection: uploads
                         created_at: '2025-01-10T12:02:00+00:00'
                         updated_at: '2025-01-10T12:02:00+00:00'
                         deleted_at: null
@@ -2723,7 +2705,6 @@ paths:
                         size_bytes: 102400
                         title: 'Document title'
                         alt: null
-                        collection: uploads
                         created_at: '2025-01-10T12:03:00+00:00'
                         updated_at: '2025-01-10T12:03:00+00:00'
                         deleted_at: null
@@ -2761,9 +2742,6 @@ paths:
                         alt:
                           type: string
                           example: 'Hero cover'
-                        collection:
-                          type: string
-                          example: uploads
                         created_at:
                           type: string
                           example: '2025-01-10T12:00:00+00:00'
@@ -2935,11 +2913,6 @@ paths:
                   description: 'Must not be greater than 120 characters.'
                   example: amniihfqcoynlazghdtqt
                   nullable: true
-                collection:
-                  type: string
-                  description: 'Must not be greater than 64 characters.'
-                  example: qxbajwbpilpmufinllwlo
-                  nullable: true
                 deleted:
                   type: string
                   description: ''
@@ -2960,7 +2933,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -2968,12 +2941,12 @@ paths:
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 3
+                  example: 56
                   nullable: true
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 21
+                  example: 23
                   nullable: true
     post:
       summary: 'Загрузка нового медиа-файла.'
@@ -3004,11 +2977,6 @@ paths:
                   type: string
                   description: 'Must be at least 1 character. Must not be greater than 255 characters.'
                   example: amniihfqcoynlazghdtqt
-                  nullable: true
-                collection:
-                  type: string
-                  description: 'Must match the regex /^[a-z0-9-_.]+$/i. Must not be greater than 64 characters.'
-                  example: qxbajwbpilpmufinllwlo
                   nullable: true
               required:
                 - file
@@ -3190,7 +3158,7 @@ paths:
     post:
       summary: 'Массовая загрузка медиа-файлов.'
       operationId: ''
-      description: "Обрабатывает массив файлов и создаёт записи Media для каждого файла.\nВозвращает коллекцию с специализированными ресурсами для каждого типа медиа.\nОпциональные метаданные (title, alt, collection) применяются ко всем файлам."
+      description: "Обрабатывает массив файлов и создаёт записи Media для каждого файла.\nВозвращает коллекцию с специализированными ресурсами для каждого типа медиа.\nОпциональные метаданные (title, alt) применяются ко всем файлам."
       parameters: []
       responses: {  }
       tags:
@@ -3217,11 +3185,6 @@ paths:
                   type: string
                   description: 'Must be at least 1 character. Must not be greater than 255 characters.'
                   example: amniihfqcoynlazghdtqt
-                  nullable: true
-                collection:
-                  type: string
-                  description: 'Must not be greater than 64 characters.'
-                  example: qxbajwbpilpmufinllwlo
                   nullable: true
               required:
                 - files
@@ -3739,7 +3702,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: with
+                  example: only
                   nullable: true
                   enum:
                     - with
@@ -5423,7 +5386,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: any
                   nullable: true
                   enum:
                     - 'true'
@@ -5442,7 +5405,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: slug
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -7681,7 +7644,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: label.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9804,7 +9767,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 options_json:
                   type: object
@@ -9953,7 +9916,7 @@ paths:
     put:
       summary: 'Обновление метаданных медиа-файла.'
       operationId: ''
-      description: "Обновляет title, alt, collection и возвращает специализированный ресурс\nв зависимости от типа медиа (изображение, видео, аудио, документ)."
+      description: "Обновляет title, alt и возвращает специализированный ресурс\nв зависимости от типа медиа (изображение, видео, аудио, документ)."
       parameters: []
       responses: {  }
       tags:
@@ -9974,11 +9937,6 @@ paths:
                   type: string
                   description: 'Must be at least 1 character. Must not be greater than 255 characters.'
                   example: amniihfqcoynlazghdtqt
-                  nullable: true
-                collection:
-                  type: string
-                  description: 'Must match the regex /^[a-z0-9-_.]+$/i. Must not be greater than 64 characters.'
-                  example: qxbajwbpilpmufinllwlo
                   nullable: true
       security: []
     parameters:
@@ -10390,7 +10348,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T11:06:36'
+                  example: '2025-11-19T11:16:52'
                   nullable: true
                 to:
                   type: string

@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 175
+**Всего сущностей:** 174
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (17 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (66 сущностей)
+Доменные сервисы, действия, репозитории (65 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -40,7 +40,6 @@ HTTP эндпоинты API (61 сущностей)
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
-- [CollectionRulesResolver](./domain-services.md#collectionrulesresolver) - Резолвер правил валидации для коллекций медиа.
 - [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
@@ -49,7 +48,8 @@ HTTP эндпоинты API (61 сущностей)
 - [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
 - [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
 - [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- *...и еще 56 сущностей*
+- [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
+- *...и еще 55 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-19 11:06:40
+**Сгенерировано:** 2025-11-19 11:16:55
 
 Для обновления документации выполните:
 ```bash

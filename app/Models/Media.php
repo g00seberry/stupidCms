@@ -31,7 +31,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
  * @property string|null $checksum_sha256 SHA256 checksum файла (индексирован)
  * @property string|null $title Заголовок медиа
  * @property string|null $alt Альтернативный текст
- * @property string|null $collection Коллекция/группа медиа
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at Дата мягкого удаления

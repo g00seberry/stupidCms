@@ -20,7 +20,6 @@ test('lists media with pagination', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -46,31 +45,6 @@ test('filters media by mime prefix', function () {
         search: null,
         kind: null,
         mimePrefix: 'image/',
-        collection: null,
-        deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
-        sort: 'created_at',
-        order: 'desc',
-        page: 1,
-        perPage: 10
-    );
-
-    $result = $action->execute($query);
-
-    expect($result->total())->toBe(2);
-});
-
-test('filters media by collection', function () {
-    $action = app(ListMediaAction::class);
-    
-    Media::factory()->create(['collection' => 'avatars']);
-    Media::factory()->create(['collection' => 'avatars']);
-    Media::factory()->create(['collection' => 'content']);
-
-    $query = new MediaQuery(
-        search: null,
-        kind: null,
-        mimePrefix: null,
-        collection: 'avatars',
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -94,7 +68,6 @@ test('searches media by title and original name', function () {
         search: 'sunset',
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -119,7 +92,6 @@ test('excludes soft deleted media by default', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -143,7 +115,6 @@ test('includes soft deleted media when requested', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::WithDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -167,7 +138,6 @@ test('shows only soft deleted media', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::OnlyDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -192,7 +162,6 @@ test('sorts media by different fields', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'size_bytes',
         order: 'desc',
@@ -214,7 +183,6 @@ test('respects per page limit', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'created_at',
         order: 'desc',

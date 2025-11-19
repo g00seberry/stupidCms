@@ -14,7 +14,6 @@ test('creates media query with all parameters', function () {
         search: 'test',
         kind: 'image',
         mimePrefix: 'image/',
-        collection: 'avatars',
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'created_at',
         order: 'desc',
@@ -25,7 +24,6 @@ test('creates media query with all parameters', function () {
     expect($query->search())->toBe('test')
         ->and($query->kind())->toBe('image')
         ->and($query->mimePrefix())->toBe('image/')
-        ->and($query->collection())->toBe('avatars')
         ->and($query->deletedFilter())->toBe(MediaDeletedFilter::DefaultOnlyNotDeleted)
         ->and($query->sort())->toBe('created_at')
         ->and($query->order())->toBe('desc')
@@ -38,7 +36,6 @@ test('creates media query with minimal parameters', function () {
         search: null,
         kind: null,
         mimePrefix: null,
-        collection: null,
         deletedFilter: MediaDeletedFilter::DefaultOnlyNotDeleted,
         sort: 'id',
         order: 'asc',
@@ -49,7 +46,6 @@ test('creates media query with minimal parameters', function () {
     expect($query->search())->toBeNull()
         ->and($query->kind())->toBeNull()
         ->and($query->mimePrefix())->toBeNull()
-        ->and($query->collection())->toBeNull()
         ->and($query->deletedFilter())->toBe(MediaDeletedFilter::DefaultOnlyNotDeleted);
 });
 
@@ -58,7 +54,6 @@ test('media query is immutable value object', function () {
         search: 'original',
         kind: 'video',
         mimePrefix: 'video/',
-        collection: 'content',
         deletedFilter: MediaDeletedFilter::OnlyDeleted,
         sort: 'size_bytes',
         order: 'asc',

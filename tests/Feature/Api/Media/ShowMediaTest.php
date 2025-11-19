@@ -135,7 +135,6 @@ test('media includes all metadata', function () {
     $media = Media::factory()->create([
         'title' => 'Test Title',
         'alt' => 'Test Alt',
-        'collection' => 'uploads',
     ]);
 
     $response = $this->actingAs($this->user)
@@ -144,8 +143,7 @@ test('media includes all metadata', function () {
 
     $response->assertOk()
         ->assertJsonPath('data.title', 'Test Title')
-        ->assertJsonPath('data.alt', 'Test Alt')
-        ->assertJsonPath('data.collection', 'uploads');
+        ->assertJsonPath('data.alt', 'Test Alt');
 });
 
 test('media includes timestamps', function () {

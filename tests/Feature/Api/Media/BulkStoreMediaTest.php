@@ -57,7 +57,6 @@ test('bulk upload applies common metadata to all files', function () {
             'files' => [$file1, $file2],
             'title' => 'Gallery images',
             'alt' => 'Gallery cover',
-            'collection' => 'gallery',
         ]);
 
     $response->assertStatus(201)
@@ -68,10 +67,8 @@ test('bulk upload applies common metadata to all files', function () {
 
     expect($media1->title)->toBe('Gallery images')
         ->and($media1->alt)->toBe('Gallery cover')
-        ->and($media1->collection)->toBe('gallery')
         ->and($media2->title)->toBe('Gallery images')
-        ->and($media2->alt)->toBe('Gallery cover')
-        ->and($media2->collection)->toBe('gallery');
+        ->and($media2->alt)->toBe('Gallery cover');
 });
 
 test('bulk upload requires files array', function () {
@@ -124,35 +121,6 @@ test('bulk upload validates file types', function () {
         ->assertJsonValidationErrors(['files.1']);
 });
 
-test('bulk upload validates collection format', function () {
-    $file1 = UploadedFile::fake()->image('image1.jpg', 1920, 1080);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/media/bulk', [
-            'files' => [$file1],
-            'collection' => 'invalid collection name with spaces!',
-        ]);
-
-    $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['collection']);
-});
-
-test('bulk upload normalizes collection slug', function () {
-    $file1 = UploadedFile::fake()->image('image1.jpg', 1920, 1080);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/media/bulk', [
-            'files' => [$file1],
-            'collection' => 'My Gallery Collection',
-        ]);
-
-    $response->assertStatus(201);
-
-    $media = Media::first();
-    expect($media->collection)->toBe('my-gallery-collection');
-});
 
 test('bulk upload requires authentication', function () {
     $file1 = UploadedFile::fake()->image('image1.jpg', 1920, 1080);

@@ -67,11 +67,6 @@ final class EloquentMediaRepository implements MediaRepository
             $builder->where('mime', 'like', $query->mimePrefix() . '%');
         }
 
-        // collection
-        if ($query->collection()) {
-            $builder->where('collection', $query->collection());
-        }
-
         // sort/order
         $builder->orderBy($query->sort(), $query->order());
 

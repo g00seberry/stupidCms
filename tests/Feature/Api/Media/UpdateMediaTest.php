@@ -63,21 +63,6 @@ test('alt text can be updated', function () {
     expect($freshMedia->alt)->toBe('New alt text');
 });
 
-test('collection can be updated', function () {
-    $media = Media::factory()->create(['collection' => 'uploads']);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson("/api/v1/admin/media/{$media->id}", [
-            'collection' => 'avatars',
-        ]);
-
-    $response->assertOk();
-    
-    $freshMedia = $media->fresh();
-    expect($freshMedia->collection)->toBe('avatars');
-});
-
 test('can update soft deleted media', function () {
     $media = Media::factory()->create([
         'title' => 'Old Title',
@@ -118,14 +103,12 @@ test('can update multiple fields at once', function () {
         ->putJson("/api/v1/admin/media/{$media->id}", [
             'title' => 'New Title',
             'alt' => 'New Alt',
-            'collection' => 'new-collection',
         ]);
 
     $response->assertOk();
     
     $freshMedia = $media->fresh();
     expect($freshMedia->title)->toBe('New Title')
-        ->and($freshMedia->alt)->toBe('New Alt')
-        ->and($freshMedia->collection)->toBe('new-collection');
+        ->and($freshMedia->alt)->toBe('New Alt');
 });
 

@@ -8,7 +8,7 @@ use App\Models\Media;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
- * CQRS-действие: обновление метаданных медиа (title, alt, collection).
+ * CQRS-действие: обновление метаданных медиа (title, alt).
  */
 final class UpdateMediaMetadataAction
 {
@@ -16,7 +16,7 @@ final class UpdateMediaMetadataAction
      * Обновить метаданные медиа и вернуть актуальную модель.
      *
      * @param string $mediaId ULID медиа
-     * @param array<string, mixed> $attributes Валидированные поля (title, alt, collection)
+     * @param array<string, mixed> $attributes Валидированные поля (title, alt)
      * @return \App\Models\Media
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException

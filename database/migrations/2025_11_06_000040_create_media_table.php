@@ -26,12 +26,10 @@ return new class extends Migration {
             $table->string('checksum_sha256', 64)->nullable()->index();
             $table->string('title')->nullable();
             $table->string('alt')->nullable();
-            $table->string('collection', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('mime');
-            $table->index('collection');
             $table->index('created_at');
             $table->index('deleted_at');
         });

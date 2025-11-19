@@ -7,7 +7,6 @@ namespace App\Providers;
 use App\Domain\Media\Images\GdImageProcessor;
 use App\Domain\Media\Images\GlideImageProcessor;
 use App\Domain\Media\Images\ImageProcessor;
-use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\ExifManager;
 use App\Domain\Media\Services\GetId3MediaMetadataPlugin;
 use App\Domain\Media\Services\ExiftoolMediaMetadataPlugin;
@@ -175,8 +174,6 @@ class AppServiceProvider extends ServiceProvider
             return new ExifManager($images);
         });
 
-        // CollectionRulesResolver для получения правил коллекций
-        $this->app->singleton(CollectionRulesResolver::class);
 
         // MediaValidationPipeline с валидаторами
         $this->app->singleton(MediaValidationPipeline::class, function ($app): MediaValidationPipeline {

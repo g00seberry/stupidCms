@@ -6,7 +6,6 @@ namespace App\Domain\Media\Actions;
 
 use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\MediaKind;
-use App\Domain\Media\Services\CollectionRulesResolver;
 use App\Domain\Media\Services\ExifManager;
 use App\Domain\Media\Services\StorageResolver;
 use App\Domain\Media\Services\MediaMetadataExtractor;
@@ -37,14 +36,12 @@ class MediaStoreAction
     /**
      * @param \App\Domain\Media\Services\MediaMetadataExtractor $metadataExtractor Извлекатель метаданных
      * @param \App\Domain\Media\Services\StorageResolver $storageResolver Резолвер дисков для медиа
-     * @param \App\Domain\Media\Services\CollectionRulesResolver $collectionRulesResolver Резолвер правил коллекций
      * @param \App\Domain\Media\Validation\MediaValidationPipeline $validationPipeline Pipeline валидации
      * @param \App\Domain\Media\Services\ExifManager|null $exifManager Менеджер EXIF (опционально)
      */
     public function __construct(
         private readonly MediaMetadataExtractor $metadataExtractor,
         private readonly StorageResolver $storageResolver,
-        private readonly CollectionRulesResolver $collectionRulesResolver,
         private readonly MediaValidationPipeline $validationPipeline,
         private readonly ?ExifManager $exifManager = null
     ) {
@@ -64,16 +61,13 @@ class MediaStoreAction
      * После успешного создания новой записи отправляет событие MediaUploaded.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
-     * @param array<string, mixed> $payload Дополнительные данные (title, alt, collection)
+     * @param array<string, mixed> $payload Дополнительные данные (title, alt)
      * @return \App\Models\Media Созданная или существующая запись Media
      * @throws \RuntimeException Если не удалось сохранить файл на диск
      */
     public function execute(UploadedFile $file, array $payload = []): Media
     {
         $mime = $file->getMimeType() ?? $file->getClientMimeType() ?? 'application/octet-stream';
-        $collection = isset($payload['collection']) && is_string($payload['collection'])
-            ? $payload['collection']
-            : null;
 
         // Валидация через pipeline
         try {
@@ -82,8 +76,15 @@ class MediaStoreAction
             throw new RuntimeException('Media validation failed: '.$e->getMessage(), 0, $e);
         }
 
-        // Валидация размеров на основе правил коллекции
-        $rules = $this->collectionRulesResolver->getRules($collection);
+        // Валидация размеров на основе глобальных правил
+        $rules = [
+            'allowed_mimes' => config('media.allowed_mimes', []),
+            'max_size_bytes' => (int) config('media.max_upload_mb', 25) * 1024 * 1024,
+            'max_width' => null,
+            'max_height' => null,
+            'max_duration_ms' => null,
+            'max_bitrate_kbps' => null,
+        ];
         $sizeValidator = new SizeLimitValidator($rules);
         if ($sizeValidator->supports($mime)) {
             try {
@@ -121,11 +122,6 @@ class MediaStoreAction
                     $shouldUpdate = true;
                 }
 
-                if (isset($payload['collection']) && $existing->collection !== ($payload['collection'] ?? null)) {
-                    $updates['collection'] = $payload['collection'] ?? null;
-                    $shouldUpdate = true;
-                }
-
                 if ($shouldUpdate) {
                     $existing->update($updates);
                 }
@@ -134,7 +130,7 @@ class MediaStoreAction
             }
         }
 
-        $diskName = $this->storageResolver->resolveDiskName($collection, $mime);
+        $diskName = $this->storageResolver->resolveDiskName($mime);
         $disk = Storage::disk($diskName);
 
         $path = $this->storeFile($disk, $file, $extension, $checksum);
@@ -172,7 +168,6 @@ class MediaStoreAction
             'checksum_sha256' => $checksum,
             'title' => $payload['title'] ?? null,
             'alt' => $payload['alt'] ?? null,
-            'collection' => $payload['collection'] ?? null,
         ]);
 
         // Определить тип медиа для создания связанных записей

@@ -43,7 +43,6 @@ class MediaFactory extends Factory
             'checksum_sha256' => hash('sha256', $basename),
             'title' => $this->faker->sentence(3),
             'alt' => $this->faker->sentence(4),
-            'collection' => $this->faker->randomElement(['banners', 'gallery', 'documents']),
         ];
     }
 

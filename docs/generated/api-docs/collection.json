@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API",
-        "_postman_id": "be6bd5ad-b323-423e-a023-b5b3a61b59c7",
+        "_postman_id": "dbff9a8e-24f2-4eb7-927e-1172c54d7086",
         "description": "Headless content platform: entries, taxonomies, media, auth.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -146,7 +146,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"draft\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-19T11:06:36\",\"date_to\":\"2106-12-18\",\"date_field\":\"updated\",\"sort\":\"published_at.asc\",\"per_page\":13}"
+                            "raw": "{\"post_type\":\"consequatur\",\"status\":\"scheduled\",\"q\":\"mqeopfuudtdsufvyvddqa\",\"author_id\":17,\"term\":[17],\"date_from\":\"2025-11-19T11:16:52\",\"date_to\":\"2106-12-18\",\"date_field\":\"updated\",\"sort\":\"title.asc\",\"per_page\":13}"
                         },
                         "description": ""
                     },
@@ -646,12 +646,6 @@
                                     "disabled": false
                                 },
                                 {
-                                    "key": "collection",
-                                    "value": "uploads",
-                                    "description": "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044f (slug, \u0434\u043e 64 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432).",
-                                    "disabled": false
-                                },
-                                {
                                     "key": "deleted",
                                     "value": "consequatur",
                                     "description": "\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 soft-deleted. Values: with,only.",
@@ -676,7 +670,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media?q=hero&kind=consequatur&mime=image%2Fpng&collection=uploads&deleted=consequatur&sort=consequatur&order=consequatur&per_page=17"
+                            "raw": "{{baseUrl}}\/api\/v1\/admin\/media?q=hero&kind=consequatur&mime=image%2Fpng&deleted=consequatur&sort=consequatur&order=consequatur&per_page=17"
                         },
                         "method": "GET",
                         "header": [
@@ -691,7 +685,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\",\"deleted\":\"only\",\"sort\":\"size_bytes\",\"order\":\"desc\",\"page\":3,\"per_page\":21}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"kind\":\"document\",\"mime\":\"amniihfqcoynlazghdtqt\",\"deleted\":\"only\",\"sort\":\"size_bytes\",\"order\":\"asc\",\"page\":56,\"per_page\":23}"
                         },
                         "description": ""
                     },
@@ -699,7 +693,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"01HXZYXQJ123456789ABCDEF\",\n      \"kind\": \"image\",\n      \"name\": \"hero.jpg\",\n      \"ext\": \"jpg\",\n      \"mime\": \"image\/jpeg\",\n      \"size_bytes\": 235678,\n      \"width\": 1920,\n      \"height\": 1080,\n      \"title\": \"Hero image\",\n      \"alt\": \"Hero cover\",\n      \"collection\": \"uploads\",\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n      \"deleted_at\": null,\n      \"preview_urls\": {\n        \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF?variant=thumbnail\",\n        \"medium\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF?variant=medium\",\n        \"large\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF?variant=large\"\n      },\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF\"\n    },\n    {\n      \"id\": \"01HXZYXQJ987654321FEDCBA\",\n      \"kind\": \"video\",\n      \"name\": \"video.mp4\",\n      \"ext\": \"mp4\",\n      \"mime\": \"video\/mp4\",\n      \"size_bytes\": 5242880,\n      \"duration_ms\": 120000,\n      \"bitrate_kbps\": 3500,\n      \"frame_rate\": 30,\n      \"frame_count\": 3600,\n      \"video_codec\": \"h264\",\n      \"audio_codec\": \"aac\",\n      \"title\": \"Video title\",\n      \"alt\": null,\n      \"collection\": \"uploads\",\n      \"created_at\": \"2025-01-10T12:01:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:01:00+00:00\",\n      \"deleted_at\": null,\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ987654321FEDCBA\"\n    },\n    {\n      \"id\": \"01HXZYXQJABCDEF1234567890\",\n      \"kind\": \"audio\",\n      \"name\": \"audio.mp3\",\n      \"ext\": \"mp3\",\n      \"mime\": \"audio\/mpeg\",\n      \"size_bytes\": 3145728,\n      \"duration_ms\": 180000,\n      \"bitrate_kbps\": 256,\n      \"audio_codec\": \"mp3\",\n      \"title\": \"Audio title\",\n      \"alt\": null,\n      \"collection\": \"uploads\",\n      \"created_at\": \"2025-01-10T12:02:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:02:00+00:00\",\n      \"deleted_at\": null,\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJABCDEF1234567890\"\n    },\n    {\n      \"id\": \"01HXZYXQJFEDCBA9876543210\",\n      \"kind\": \"document\",\n      \"name\": \"document.pdf\",\n      \"ext\": \"pdf\",\n      \"mime\": \"application\/pdf\",\n      \"size_bytes\": 102400,\n      \"title\": \"Document title\",\n      \"alt\": null,\n      \"collection\": \"uploads\",\n      \"created_at\": \"2025-01-10T12:03:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:03:00+00:00\",\n      \"deleted_at\": null,\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJFEDCBA9876543210\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 15,\n    \"total\": 4\n  }\n}",
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"01HXZYXQJ123456789ABCDEF\",\n      \"kind\": \"image\",\n      \"name\": \"hero.jpg\",\n      \"ext\": \"jpg\",\n      \"mime\": \"image\/jpeg\",\n      \"size_bytes\": 235678,\n      \"width\": 1920,\n      \"height\": 1080,\n      \"title\": \"Hero image\",\n      \"alt\": \"Hero cover\",\n      \"created_at\": \"2025-01-10T12:00:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:00:00+00:00\",\n      \"deleted_at\": null,\n      \"preview_urls\": {\n        \"thumbnail\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF?variant=thumbnail\",\n        \"medium\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF?variant=medium\",\n        \"large\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF?variant=large\"\n      },\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ123456789ABCDEF\"\n    },\n    {\n      \"id\": \"01HXZYXQJ987654321FEDCBA\",\n      \"kind\": \"video\",\n      \"name\": \"video.mp4\",\n      \"ext\": \"mp4\",\n      \"mime\": \"video\/mp4\",\n      \"size_bytes\": 5242880,\n      \"duration_ms\": 120000,\n      \"bitrate_kbps\": 3500,\n      \"frame_rate\": 30,\n      \"frame_count\": 3600,\n      \"video_codec\": \"h264\",\n      \"audio_codec\": \"aac\",\n      \"title\": \"Video title\",\n      \"alt\": null,\n      \"created_at\": \"2025-01-10T12:01:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:01:00+00:00\",\n      \"deleted_at\": null,\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJ987654321FEDCBA\"\n    },\n    {\n      \"id\": \"01HXZYXQJABCDEF1234567890\",\n      \"kind\": \"audio\",\n      \"name\": \"audio.mp3\",\n      \"ext\": \"mp3\",\n      \"mime\": \"audio\/mpeg\",\n      \"size_bytes\": 3145728,\n      \"duration_ms\": 180000,\n      \"bitrate_kbps\": 256,\n      \"audio_codec\": \"mp3\",\n      \"title\": \"Audio title\",\n      \"alt\": null,\n      \"created_at\": \"2025-01-10T12:02:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:02:00+00:00\",\n      \"deleted_at\": null,\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJABCDEF1234567890\"\n    },\n    {\n      \"id\": \"01HXZYXQJFEDCBA9876543210\",\n      \"kind\": \"document\",\n      \"name\": \"document.pdf\",\n      \"ext\": \"pdf\",\n      \"mime\": \"application\/pdf\",\n      \"size_bytes\": 102400,\n      \"title\": \"Document title\",\n      \"alt\": null,\n      \"created_at\": \"2025-01-10T12:03:00+00:00\",\n      \"updated_at\": \"2025-01-10T12:03:00+00:00\",\n      \"deleted_at\": null,\n      \"url\": \"https:\/\/api.stupidcms.dev\/api\/v1\/media\/01HXZYXQJFEDCBA9876543210\"\n    }\n  ],\n  \"links\": {\n    \"first\": \"\u2026\",\n    \"last\": \"\u2026\",\n    \"prev\": null,\n    \"next\": null\n  },\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 15,\n    \"total\": 4\n  }\n}",
                             "name": ""
                         },
                         {
@@ -883,7 +877,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"with\",\"page\":87,\"per_page\":4}"
+                            "raw": "{\"namespace\":\"gvxi44f2f25h5.6eezattmmlhydv_tra-jle3y2y8\",\"q\":\"bajwbpilpmufinllwloau\",\"deleted\":\"only\",\"page\":87,\"per_page\":4}"
                         },
                         "description": ""
                     },
@@ -1408,7 +1402,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"false\",\"page\":2,\"per_page\":13,\"sort\":\"slug\",\"order\":\"asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"enabled\":\"any\",\"page\":2,\"per_page\":13,\"sort\":\"version\",\"order\":\"asc\"}"
                         },
                         "description": ""
                     },
@@ -2049,7 +2043,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"label.asc\"}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"per_page\":1,\"sort\":\"label.desc\"}"
                         },
                         "description": ""
                     },
@@ -2910,7 +2904,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":true}"
+                            "raw": "{\"label\":\"vmqeopfuudtdsufvyvddq\",\"hierarchical\":false}"
                         },
                         "description": "",
                         "auth": {
@@ -3169,12 +3163,6 @@
                                     "description": "Must be at least 1 character. Must not be greater than 255 characters."
                                 },
                                 {
-                                    "key": "collection",
-                                    "value": "qxbajwbpilpmufinllwlo",
-                                    "type": "text",
-                                    "description": "Must match the regex \/^[a-z0-9-_.]+$\/i. Must not be greater than 64 characters."
-                                },
-                                {
                                     "key": "file",
                                     "src": [],
                                     "type": "file"
@@ -3224,19 +3212,13 @@
                                     "description": "Must be at least 1 character. Must not be greater than 255 characters."
                                 },
                                 {
-                                    "key": "collection",
-                                    "value": "qxbajwbpilpmufinllwlo",
-                                    "type": "text",
-                                    "description": "Must not be greater than 64 characters."
-                                },
-                                {
                                     "key": "files[]",
                                     "src": [],
                                     "type": "file"
                                 }
                             ]
                         },
-                        "description": "\u041e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u0442 \u043c\u0430\u0441\u0441\u0438\u0432 \u0444\u0430\u0439\u043b\u043e\u0432 \u0438 \u0441\u043e\u0437\u0434\u0430\u0451\u0442 \u0437\u0430\u043f\u0438\u0441\u0438 Media \u0434\u043b\u044f \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0444\u0430\u0439\u043b\u0430.\n\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044e \u0441 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u043c\u0438 \u0440\u0435\u0441\u0443\u0440\u0441\u0430\u043c\u0438 \u0434\u043b\u044f \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0442\u0438\u043f\u0430 \u043c\u0435\u0434\u0438\u0430.\n\u041e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435 \u043c\u0435\u0442\u0430\u0434\u0430\u043d\u043d\u044b\u0435 (title, alt, collection) \u043f\u0440\u0438\u043c\u0435\u043d\u044f\u044e\u0442\u0441\u044f \u043a\u043e \u0432\u0441\u0435\u043c \u0444\u0430\u0439\u043b\u0430\u043c.",
+                        "description": "\u041e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u0442 \u043c\u0430\u0441\u0441\u0438\u0432 \u0444\u0430\u0439\u043b\u043e\u0432 \u0438 \u0441\u043e\u0437\u0434\u0430\u0451\u0442 \u0437\u0430\u043f\u0438\u0441\u0438 Media \u0434\u043b\u044f \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0444\u0430\u0439\u043b\u0430.\n\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044e \u0441 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u043c\u0438 \u0440\u0435\u0441\u0443\u0440\u0441\u0430\u043c\u0438 \u0434\u043b\u044f \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0442\u0438\u043f\u0430 \u043c\u0435\u0434\u0438\u0430.\n\u041e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435 \u043c\u0435\u0442\u0430\u0434\u0430\u043d\u043d\u044b\u0435 (title, alt) \u043f\u0440\u0438\u043c\u0435\u043d\u044f\u044e\u0442\u0441\u044f \u043a\u043e \u0432\u0441\u0435\u043c \u0444\u0430\u0439\u043b\u0430\u043c.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -3273,9 +3255,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\":\"vmqeopfuudtdsufvyvddq\",\"alt\":\"amniihfqcoynlazghdtqt\",\"collection\":\"qxbajwbpilpmufinllwlo\"}"
+                            "raw": "{\"title\":\"vmqeopfuudtdsufvyvddq\",\"alt\":\"amniihfqcoynlazghdtqt\"}"
                         },
-                        "description": "\u041e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u0442 title, alt, collection \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0440\u0435\u0441\u0443\u0440\u0441\n\u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438 \u043e\u0442 \u0442\u0438\u043f\u0430 \u043c\u0435\u0434\u0438\u0430 (\u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435, \u0432\u0438\u0434\u0435\u043e, \u0430\u0443\u0434\u0438\u043e, \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442).",
+                        "description": "\u041e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u0442 title, alt \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0440\u0435\u0441\u0443\u0440\u0441\n\u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438 \u043e\u0442 \u0442\u0438\u043f\u0430 \u043c\u0435\u0434\u0438\u0430 (\u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435, \u0432\u0438\u0434\u0435\u043e, \u0430\u0443\u0434\u0438\u043e, \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442).",
                         "auth": {
                             "type": "noauth"
                         }
@@ -3464,7 +3446,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-19T11:06:36\",\"to\":\"2106-12-18\",\"page\":45,\"per_page\":16}"
+                            "raw": "{\"q\":\"vmqeopfuudtdsufvyvddq\",\"post_type\":[\"amniihfqcoynlazghdtqt\"],\"term\":[\"5627:7\"],\"from\":\"2025-11-19T11:16:52\",\"to\":\"2106-12-18\",\"page\":45,\"per_page\":16}"
                         },
                         "description": "",
                         "auth": {

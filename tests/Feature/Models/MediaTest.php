@@ -220,18 +220,6 @@ test('media checksum is stored correctly', function () {
         ->and(strlen($media->checksum_sha256))->toBe(64); // SHA256 length
 });
 
-test('media collection can be set', function () {
-    $media = Media::factory()->create([
-        'collection' => 'avatars',
-    ]);
-
-    expect($media->collection)->toBe('avatars');
-
-    $this->assertDatabaseHas('media', [
-        'id' => $media->id,
-        'collection' => 'avatars',
-    ]);
-});
 
 test('media duration_ms can be set for video via avMetadata relationship', function () {
     $media = Media::factory()->video()->create();

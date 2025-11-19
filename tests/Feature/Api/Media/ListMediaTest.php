@@ -59,18 +59,6 @@ test('media can be filtered by mime type', function () {
         ->assertJsonCount(2, 'data');
 });
 
-test('media can be filtered by collection', function () {
-    Media::factory()->create(['collection' => 'uploads']);
-    Media::factory()->create(['collection' => 'uploads']);
-    Media::factory()->create(['collection' => 'avatars']);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/media?collection=uploads');
-
-    $response->assertOk()
-        ->assertJsonCount(2, 'data');
-});
 
 test('media can be searched by title', function () {
     Media::factory()->create(['title' => 'Hero Image']);
