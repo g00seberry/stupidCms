@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasDocumentData;
 use Database\Factories\EntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,7 +38,7 @@ use Illuminate\Support\Carbon;
  */
 class Entry extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasDocumentData;
 
     /**
      * Статус: черновик.
@@ -88,6 +89,16 @@ class Entry extends Model
     public function postType()
     {
         return $this->belongsTo(PostType::class);
+    }
+
+    /**
+     * Связь с Blueprint.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Blueprint, \App\Models\Entry>
+     */
+    public function blueprint()
+    {
+        return $this->belongsTo(Blueprint::class);
     }
 
     /**

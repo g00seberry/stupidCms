@@ -21,6 +21,76 @@ Eloquent модель для аудита изменений (Audit).
 
 ---
 
+## Blueprint
+**ID:** `model:App\Models\Blueprint`
+**Path:** `app/Models/Blueprint.php`
+
+Модель Blueprint — схема полей для Entry.
+
+### Meta
+- **Table:** `blueprints`
+- **Fillable:** `post_type_id`, `slug`, `name`, `description`, `type`, `is_default`
+- **Guarded:** `*`
+- **Casts:** `is_default` => `boolean`
+- **Relations:**
+  - `postType`: belongsTo → `App\Models\PostType`
+  - `paths`: hasMany → `App\Models\Path`
+  - `ownPaths`: hasMany → `App\Models\Path`
+  - `materializedPaths`: hasMany → `App\Models\Path`
+  - `entries`: hasMany → `App\Models\Entry`
+  - `components`: belongsToMany → `App\Models\Blueprint`
+  - `usedInBlueprints`: belongsToMany → `App\Models\Blueprint`
+- **Factory:** `Database\Factories\BlueprintFactory`
+
+### Tags
+`blueprint`
+
+
+---
+
+## DocRef
+**ID:** `model:App\Models\DocRef`
+**Path:** `app/Models/DocRef.php`
+
+Модель DocRef — индексированная ссылка Entry → Entry.
+
+### Meta
+- **Table:** `doc_refs`
+- **Fillable:** `entry_id`, `path_id`, `idx`, `target_entry_id`
+- **Guarded:** `*`
+- **Casts:** `created_at` => `datetime`
+- **Relations:**
+  - `owner`: belongsTo → `App\Models\Entry`
+  - `target`: belongsTo → `App\Models\Entry`
+  - `path`: belongsTo → `App\Models\Path`
+
+### Tags
+`docref`
+
+
+---
+
+## DocValue
+**ID:** `model:App\Models\DocValue`
+**Path:** `app/Models/DocValue.php`
+
+Модель DocValue — индексированное скалярное значение.
+
+### Meta
+- **Table:** `doc_values`
+- **Fillable:** `entry_id`, `path_id`, `idx`, `value_string`, `value_int`, `value_float`, `value_bool`, `value_text`, `value_json`
+- **Guarded:** `*`
+- **Casts:** `value_json` => `array`, `value_bool` => `boolean`, `created_at` => `datetime`
+- **Relations:**
+  - `entry`: belongsTo → `App\Models\Entry`
+  - `path`: belongsTo → `App\Models\Path`
+
+### Tags
+`docvalue`
+
+
+---
+
 ## Entry
 **ID:** `model:App\Models\Entry`
 **Path:** `app/Models/Entry.php`
@@ -36,8 +106,11 @@ Eloquent модель для записей контента (Entry).
 - **Casts:** `data_json` => `array`, `seo_json` => `array`, `published_at` => `datetime`
 - **Relations:**
   - `postType`: belongsTo → `App\Models\PostType`
+  - `blueprint`: belongsTo → `App\Models\Blueprint`
   - `author`: belongsTo → `App\Models\User`
   - `terms`: belongsToMany → `App\Models\Term`
+  - `values`: hasMany → `App\Models\DocValue`
+  - `refs`: hasMany → `App\Models\DocRef`
 - **Factory:** `Database\Factories\EntryFactory`
 
 ### Tags
@@ -179,6 +252,31 @@ Eloquent модель для исходящих сообщений (Outbox).
 
 ### Tags
 `outbox`
+
+
+---
+
+## Path
+**ID:** `model:App\Models\Path`
+**Path:** `app/Models/Path.php`
+
+Модель Path — метаданные поля в Blueprint.
+
+### Meta
+- **Table:** `paths`
+- **Fillable:** `blueprint_id`, `source_component_id`, `source_path_id`, `parent_id`, `name`, `full_path`, `data_type`, `cardinality`, `is_indexed`, `is_required`, `ref_target_type`, `validation_rules`, `ui_options`
+- **Guarded:** `*`
+- **Casts:** `validation_rules` => `array`, `ui_options` => `array`, `is_indexed` => `boolean`, `is_required` => `boolean`
+- **Relations:**
+  - `blueprint`: belongsTo → `App\Models\Blueprint`
+  - `parent`: belongsTo → `App\Models\Path`
+  - `children`: hasMany → `App\Models\Path`
+  - `values`: hasMany → `App\Models\DocValue`
+  - `refs`: hasMany → `App\Models\DocRef`
+- **Factory:** `Database\Factories\PathFactory`
+
+### Tags
+`path`
 
 
 ---

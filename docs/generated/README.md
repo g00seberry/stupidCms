@@ -2,12 +2,12 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 174
+**Всего сущностей:** 191
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (17 сущностей)
+Eloquent-модели для работы с БД (21 сущностей)
 
 ### [Domain Services](./domain-services.md)
 Доменные сервисы, действия, репозитории (65 сущностей)
@@ -19,23 +19,23 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (61 сущностей)
+HTTP эндпоинты API (74 сущностей)
 
 ## Быстрая навигация
 
 ### Models
 
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
+- [Blueprint](./models.md#blueprint) - Модель Blueprint — схема полей для Entry.
+- [DocRef](./models.md#docref) - Модель DocRef — индексированная ссылка Entry → Entry.
+- [DocValue](./models.md#docvalue) - Модель DocValue — индексированное скалярное значение.
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 - [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
 - [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
 - [Option](./models.md#option) - Eloquent модель для опций системы (Option).
-- [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
-- [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
-- [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
-- *...и еще 7 сущностей*
+- *...и еще 11 сущностей*
 
 ### Domain Services
 
@@ -79,16 +79,16 @@ HTTP эндпоинты API (61 сущностей)
 ### HTTP Endpoints
 
 - [admin.v1.auth.current](./http-endpoints.md#admin-v1-auth-current) - GET /api/v1/admin/auth/current (api)
-- [admin.v1.entries.destroy](./http-endpoints.md#admin-v1-entries-destroy) - DELETE /api/v1/admin/entries/{id} (api)
-- [admin.v1.entries.index](./http-endpoints.md#admin-v1-entries-index) - GET /api/v1/admin/entries (api)
-- [admin.v1.entries.restore](./http-endpoints.md#admin-v1-entries-restore) - POST /api/v1/admin/entries/{id}/restore (api)
-- [admin.v1.entries.show](./http-endpoints.md#admin-v1-entries-show) - GET /api/v1/admin/entries/{id} (api)
-- [admin.v1.entries.statuses](./http-endpoints.md#admin-v1-entries-statuses) - GET /api/v1/admin/entries/statuses (api)
-- [admin.v1.entries.store](./http-endpoints.md#admin-v1-entries-store) - POST /api/v1/admin/entries (api)
-- [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
-- [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
-- [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
-- *...и еще 51 сущностей*
+- [admin.v1.blueprints.components.attach](./http-endpoints.md#admin-v1-blueprints-components-attach) - POST /api/v1/admin/blueprints/{blueprint}/components (api)
+- [admin.v1.blueprints.components.detach](./http-endpoints.md#admin-v1-blueprints-components-detach) - DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)
+- [admin.v1.blueprints.components.index](./http-endpoints.md#admin-v1-blueprints-components-index) - GET /api/v1/admin/blueprints/{blueprint}/components (api)
+- [admin.v1.blueprints.destroy](./http-endpoints.md#admin-v1-blueprints-destroy) - DELETE /api/v1/admin/blueprints/{blueprint} (api)
+- [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
+- [admin.v1.blueprints.paths.destroy](./http-endpoints.md#admin-v1-blueprints-paths-destroy) - DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)
+- [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
+- [admin.v1.blueprints.paths.show](./http-endpoints.md#admin-v1-blueprints-paths-show) - GET /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)
+- [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
+- *...и еще 64 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-19 14:10:49
+**Сгенерировано:** 2025-11-19 15:54:22
 
 Для обновления документации выполните:
 ```bash

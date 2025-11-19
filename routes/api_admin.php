@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\V1\MediaController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
+use App\Http\Controllers\Admin\BlueprintController;
+use App\Http\Controllers\Admin\PathController;
+use App\Http\Controllers\Admin\BlueprintComponentController;
 use App\Http\Controllers\Auth\CurrentUserController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
@@ -214,5 +217,35 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::post('/search/reindex', [SearchAdminController::class, 'reindex'])
         ->middleware(['can:search.reindex', 'throttle:search-reindex'])
         ->name('admin.v1.search.reindex');
+
+    // Blueprint Management
+    Route::apiResource('blueprints', BlueprintController::class)
+        ->names([
+            'index' => 'admin.v1.blueprints.index',
+            'store' => 'admin.v1.blueprints.store',
+            'show' => 'admin.v1.blueprints.show',
+            'update' => 'admin.v1.blueprints.update',
+            'destroy' => 'admin.v1.blueprints.destroy',
+        ]);
+
+    // Paths в контексте Blueprint
+    Route::prefix('blueprints/{blueprint}')->group(function () {
+        Route::apiResource('paths', PathController::class)
+            ->names([
+                'index' => 'admin.v1.blueprints.paths.index',
+                'store' => 'admin.v1.blueprints.paths.store',
+                'show' => 'admin.v1.blueprints.paths.show',
+                'update' => 'admin.v1.blueprints.paths.update',
+                'destroy' => 'admin.v1.blueprints.paths.destroy',
+            ]);
+
+        // Компоненты Blueprint
+        Route::post('components', [BlueprintComponentController::class, 'attach'])
+            ->name('admin.v1.blueprints.components.attach');
+        Route::get('components', [BlueprintComponentController::class, 'index'])
+            ->name('admin.v1.blueprints.components.index');
+        Route::delete('components/{component}', [BlueprintComponentController::class, 'detach'])
+            ->name('admin.v1.blueprints.components.detach');
+    });
 });
 

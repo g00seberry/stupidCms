@@ -45,7 +45,9 @@ use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
+use App\Models\Path;
 use App\Observers\EntryObserver;
+use App\Observers\PathObserver;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
@@ -211,6 +213,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Entry::observe(EntryObserver::class);
+        Path::observe(PathObserver::class);
 
         // Регистрация слушателей событий медиа-файлов
         Event::listen(MediaUploaded::class, [LogMediaEvent::class, 'handleMediaUploaded']);

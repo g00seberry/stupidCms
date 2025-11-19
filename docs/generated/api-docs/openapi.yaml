@@ -47,10 +47,19 @@ tags:
     name: Auth
     description: ''
   -
+    name: 'Blueprint Components'
+    description: ''
+  -
+    name: 'Blueprint Management'
+    description: ''
+  -
     name: Endpoints
     description: ''
   -
     name: Media
+    description: ''
+  -
+    name: 'Path Management'
     description: ''
   -
     name: Search
@@ -596,7 +605,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T14:10:46'
+                  example: '2025-11-19T15:54:13'
                   nullable: true
                 date_to:
                   type: string
@@ -606,7 +615,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -614,7 +623,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: updated_at.desc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2916,7 +2925,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -2924,7 +2933,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at
+                  example: mime
                   nullable: true
                   enum:
                     - created_at
@@ -2933,7 +2942,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -3702,7 +3711,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5386,7 +5395,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'false'
                   nullable: true
                   enum:
                     - 'true'
@@ -5415,7 +5424,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -7644,7 +7653,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.asc
+                  example: created_at.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9734,6 +9743,225 @@ paths:
                     example: 'Authentication required.'
       tags:
         - Auth
+  '/api/v1/admin/blueprints/{blueprint_id}/components':
+    post:
+      summary: 'Добавить компонент к Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Components'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                component_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the blueprints table.'
+                  example: 17
+                  nullable: false
+                path_prefix:
+                  type: string
+                  description: 'Must match the regex /^[a-zA-Z_][a-zA-Z0-9_]*$/. Must not be greater than 100 characters.'
+                  example: mqeopfuudtdsufvyvddqa
+                  nullable: false
+              required:
+                - component_id
+                - path_prefix
+      security: []
+    get:
+      summary: 'Список компонентов Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Components'
+      security: []
+    parameters:
+      -
+        in: path
+        name: blueprint_id
+        description: 'The ID of the blueprint.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/blueprints/{blueprint_id}/components/{component_id}':
+    delete:
+      summary: 'Удалить компонент из Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Components'
+      security: []
+    parameters:
+      -
+        in: path
+        name: blueprint_id
+        description: 'The ID of the blueprint.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: component_id
+        description: 'The ID of the component.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/v1/admin/blueprints:
+    get:
+      summary: 'Список Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Management'
+      security: []
+    post:
+      summary: 'Создать Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: false
+                description:
+                  type: string
+                  description: ''
+                  example: 'Dolores dolorum amet iste laborum eius est dolor.'
+                  nullable: true
+                type:
+                  type: string
+                  description: ''
+                  example: component
+                  nullable: false
+                  enum:
+                    - full
+                    - component
+                is_default:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: true
+                post_type_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the post_types table.'
+                  example: 17
+                  nullable: true
+              required:
+                - slug
+                - name
+                - type
+      security: []
+  '/api/v1/admin/blueprints/{id}':
+    get:
+      summary: 'Показать Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Management'
+      security: []
+    put:
+      summary: 'Обновить Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                  description: 'Must match the regex /^[a-z0-9_-]+$/. Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: false
+                description:
+                  type: string
+                  description: ''
+                  example: 'Dolores dolorum amet iste laborum eius est dolor.'
+                  nullable: true
+                type:
+                  type: string
+                  description: ''
+                  example: full
+                  nullable: false
+                  enum:
+                    - full
+                    - component
+                is_default:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: true
+                post_type_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the post_types table.'
+                  example: 17
+                  nullable: true
+              required:
+                - slug
+                - name
+                - type
+      security: []
+    delete:
+      summary: 'Удалить Blueprint.'
+      operationId: Blueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Blueprint Management'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the blueprint.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   '/api/v1/admin/taxonomies/{id}':
     get:
       summary: 'Получение таксономии.'
@@ -9842,7 +10070,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name.desc
+                  example: name.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10151,6 +10379,241 @@ paths:
         required: true
         schema:
           type: string
+  '/api/v1/admin/blueprints/{blueprint_id}/paths':
+    get:
+      summary: 'Список Paths Blueprint.'
+      operationId: PathsBlueprint
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Path Management'
+      security: []
+    post:
+      summary: 'Создать Path.'
+      operationId: Path
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Path Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                blueprint_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the blueprints table.'
+                  example: 17
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Must match the regex /^[a-zA-Z_][a-zA-Z0-9_]*$/. Must not be greater than 100 characters.'
+                  example: mqeopfuudtdsufvyvddqa
+                  nullable: false
+                full_path:
+                  type: string
+                  description: 'Must not be greater than 500 characters.'
+                  example: mniihfqcoynlazghdtqtq
+                  nullable: false
+                data_type:
+                  type: string
+                  description: ''
+                  example: ref
+                  nullable: false
+                  enum:
+                    - string
+                    - int
+                    - float
+                    - bool
+                    - text
+                    - json
+                    - ref
+                cardinality:
+                  type: string
+                  description: ''
+                  example: many
+                  nullable: false
+                  enum:
+                    - one
+                    - many
+                is_indexed:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: true
+                is_required:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: true
+                ref_target_type:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: xbajwbpilpmufinllwloa
+                  nullable: true
+                validation_rules:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                ui_options:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                parent_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the paths table.'
+                  example: 17
+                  nullable: true
+              required:
+                - blueprint_id
+                - name
+                - full_path
+                - data_type
+                - cardinality
+      security: []
+    parameters:
+      -
+        in: path
+        name: blueprint_id
+        description: 'The ID of the blueprint.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/admin/blueprints/{blueprint_id}/paths/{id}':
+    get:
+      summary: 'Показать Path.'
+      operationId: Path
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Path Management'
+      security: []
+    put:
+      summary: 'Обновить Path.'
+      operationId: Path
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Path Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                blueprint_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the blueprints table.'
+                  example: 17
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Must match the regex /^[a-zA-Z_][a-zA-Z0-9_]*$/. Must not be greater than 100 characters.'
+                  example: mqeopfuudtdsufvyvddqa
+                  nullable: false
+                full_path:
+                  type: string
+                  description: 'Must not be greater than 500 characters.'
+                  example: mniihfqcoynlazghdtqtq
+                  nullable: false
+                data_type:
+                  type: string
+                  description: ''
+                  example: text
+                  nullable: false
+                  enum:
+                    - string
+                    - int
+                    - float
+                    - bool
+                    - text
+                    - json
+                    - ref
+                cardinality:
+                  type: string
+                  description: ''
+                  example: many
+                  nullable: false
+                  enum:
+                    - one
+                    - many
+                is_indexed:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: true
+                is_required:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: true
+                ref_target_type:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: xbajwbpilpmufinllwloa
+                  nullable: true
+                validation_rules:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                ui_options:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: true
+                  properties: {  }
+                parent_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the paths table.'
+                  example: 17
+                  nullable: true
+              required:
+                - blueprint_id
+                - name
+                - full_path
+                - data_type
+                - cardinality
+      security: []
+    delete:
+      summary: 'Удалить Path.'
+      operationId: Path
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Path Management'
+      security: []
+    parameters:
+      -
+        in: path
+        name: blueprint_id
+        description: 'The ID of the blueprint.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: id
+        description: 'The ID of the path.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/v1/search:
     get:
       summary: 'Поиск опубликованного контента с фильтрами.'
@@ -10348,7 +10811,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T14:10:45'
+                  example: '2025-11-19T15:54:13'
                   nullable: true
                 to:
                   type: string
