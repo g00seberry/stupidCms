@@ -60,7 +60,6 @@ class ImportBlueprintCommand extends Command
         DB::transaction(function () use ($data, $existing) {
             if ($existing) {
                 $existing->paths()->delete();
-                $existing->components()->detach();
                 $blueprint = $existing;
                 $blueprint->update([
                     'name' => $data['name'],
@@ -92,17 +91,6 @@ class ImportBlueprintCommand extends Command
                     'blueprint_id' => $blueprint->id,
                     ...$pathData,
                 ]);
-            }
-
-            // Attach components
-            foreach ($data['components'] ?? [] as $componentData) {
-                $component = Blueprint::where('slug', $componentData['slug'])->first();
-                if ($component) {
-                    $blueprint->materializeComponentPaths($component, $componentData['path_prefix']);
-                    $blueprint->components()->attach($component->id, [
-                        'path_prefix' => $componentData['path_prefix'],
-                    ]);
-                }
             }
         });
 

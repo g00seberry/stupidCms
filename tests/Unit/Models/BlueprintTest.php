@@ -6,7 +6,6 @@ use App\Models\Blueprint;
 use App\Models\Path;
 use App\Models\PostType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Tests\TestCase;
 
@@ -59,14 +58,6 @@ test('has many entries', function () {
     $relation = $blueprint->entries();
 
     expect($relation)->toBeInstanceOf(HasMany::class);
-});
-
-test('has many components relationship', function () {
-    $blueprint = new Blueprint();
-    $relation = $blueprint->components();
-
-    expect($relation)->toBeInstanceOf(BelongsToMany::class)
-        ->and($relation->getRelated())->toBeInstanceOf(Blueprint::class);
 });
 
 test('uses soft deletes', function () {

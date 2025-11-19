@@ -94,15 +94,8 @@ class BlueprintSeeder extends Seeder
                 'ref_target_type' => 'article',
             ]);
 
-            // Attach компонентов
-            $articleBlueprint->components()->attach([
-                $seoComponent->id => ['path_prefix' => 'seo'],
-                $authorComponent->id => ['path_prefix' => 'customAuthor'],
-            ]);
-
-            // Материализация paths
-            $articleBlueprint->materializeComponentPaths($seoComponent, 'seo');
-            $articleBlueprint->materializeComponentPaths($authorComponent, 'customAuthor');
+            // TODO: Migrate to embedded blueprints (data_type='blueprint')
+            // For now, seeder works only with direct paths
         }
     }
 }

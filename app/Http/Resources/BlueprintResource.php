@@ -43,7 +43,6 @@ class BlueprintResource extends JsonResource
             }),
 
             'paths' => PathResource::collection($this->whenLoaded('paths')),
-            'components' => BlueprintResource::collection($this->whenLoaded('components')),
 
             // Статистика
             'entries_count' => $this->when(

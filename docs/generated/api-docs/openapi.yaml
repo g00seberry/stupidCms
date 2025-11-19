@@ -602,7 +602,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T18:31:20'
+                  example: '2025-11-19T18:41:56'
                   nullable: true
                 date_to:
                   type: string
@@ -620,7 +620,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: updated_at.desc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2939,7 +2939,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -3708,7 +3708,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -5411,7 +5411,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: name
+                  example: version
                   nullable: true
                   enum:
                     - name
@@ -7675,7 +7675,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: label.desc
+                  example: label.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -9871,7 +9871,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: component
+                  example: full
                   nullable: false
                   enum:
                     - full
@@ -9879,7 +9879,7 @@ paths:
                 is_default:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: true
                 post_type_id:
                   type: integer
@@ -9942,7 +9942,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 options_json:
                   type: object
@@ -10017,7 +10017,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.desc
+                  example: created_at.asc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10369,7 +10369,7 @@ paths:
                 data_type:
                   type: string
                   description: ''
-                  example: float
+                  example: text
                   nullable: false
                   enum:
                     - string
@@ -10383,7 +10383,7 @@ paths:
                 cardinality:
                   type: string
                   description: ''
-                  example: one
+                  example: many
                   nullable: false
                   enum:
                     - one
@@ -10396,7 +10396,7 @@ paths:
                 is_required:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: true
                 ref_target_type:
                   type: string
@@ -10483,7 +10483,7 @@ paths:
                 data_type:
                   type: string
                   description: ''
-                  example: string
+                  example: json
                   nullable: false
                   enum:
                     - string
@@ -10768,7 +10768,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T18:31:20'
+                  example: '2025-11-19T18:41:56'
                   nullable: true
                 to:
                   type: string
