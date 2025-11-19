@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 191
+**Всего сущностей:** 188
 
 ## Содержание
 
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (74 сущностей)
+HTTP эндпоинты API (71 сущностей)
 
 ## Быстрая навигация
 
@@ -79,16 +79,16 @@ HTTP эндпоинты API (74 сущностей)
 ### HTTP Endpoints
 
 - [admin.v1.auth.current](./http-endpoints.md#admin-v1-auth-current) - GET /api/v1/admin/auth/current (api)
-- [admin.v1.blueprints.components.attach](./http-endpoints.md#admin-v1-blueprints-components-attach) - POST /api/v1/admin/blueprints/{blueprint}/components (api)
-- [admin.v1.blueprints.components.detach](./http-endpoints.md#admin-v1-blueprints-components-detach) - DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)
-- [admin.v1.blueprints.components.index](./http-endpoints.md#admin-v1-blueprints-components-index) - GET /api/v1/admin/blueprints/{blueprint}/components (api)
 - [admin.v1.blueprints.destroy](./http-endpoints.md#admin-v1-blueprints-destroy) - DELETE /api/v1/admin/blueprints/{blueprint} (api)
 - [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
 - [admin.v1.blueprints.paths.destroy](./http-endpoints.md#admin-v1-blueprints-paths-destroy) - DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)
 - [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
 - [admin.v1.blueprints.paths.show](./http-endpoints.md#admin-v1-blueprints-paths-show) - GET /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)
 - [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
-- *...и еще 64 сущностей*
+- [admin.v1.blueprints.paths.update](./http-endpoints.md#admin-v1-blueprints-paths-update) - PUT /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)
+- [admin.v1.blueprints.show](./http-endpoints.md#admin-v1-blueprints-show) - GET /api/v1/admin/blueprints/{blueprint} (api)
+- [admin.v1.blueprints.store](./http-endpoints.md#admin-v1-blueprints-store) - POST /api/v1/admin/blueprints (api)
+- *...и еще 61 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (74 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-19 18:02:26
+**Сгенерировано:** 2025-11-19 18:31:28
 
 Для обновления документации выполните:
 ```bash

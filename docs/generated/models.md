@@ -38,8 +38,6 @@ Eloquent модель для аудита изменений (Audit).
   - `ownPaths`: hasMany → `App\Models\Path`
   - `materializedPaths`: hasMany → `App\Models\Path`
   - `entries`: hasMany → `App\Models\Entry`
-  - `components`: belongsToMany → `App\Models\Blueprint`
-  - `usedInBlueprints`: belongsToMany → `App\Models\Blueprint`
 - **Factory:** `Database\Factories\BlueprintFactory`
 
 ### Tags
@@ -264,11 +262,13 @@ Eloquent модель для исходящих сообщений (Outbox).
 
 ### Meta
 - **Table:** `paths`
-- **Fillable:** `blueprint_id`, `source_component_id`, `source_path_id`, `parent_id`, `name`, `full_path`, `data_type`, `cardinality`, `is_indexed`, `is_required`, `ref_target_type`, `validation_rules`, `ui_options`
+- **Fillable:** `blueprint_id`, `source_component_id`, `source_path_id`, `parent_id`, `name`, `full_path`, `data_type`, `cardinality`, `is_indexed`, `is_required`, `ref_target_type`, `embedded_blueprint_id`, `embedded_root_path_id`, `validation_rules`, `ui_options`
 - **Guarded:** `*`
 - **Casts:** `validation_rules` => `array`, `ui_options` => `array`, `is_indexed` => `boolean`, `is_required` => `boolean`
 - **Relations:**
   - `blueprint`: belongsTo → `App\Models\Blueprint`
+  - `embeddedBlueprint`: belongsTo → `App\Models\Blueprint`
+  - `embeddedRootPath`: belongsTo → `App\Models\Path`
   - `parent`: belongsTo → `App\Models\Path`
   - `children`: hasMany → `App\Models\Path`
   - `values`: hasMany → `App\Models\DocValue`

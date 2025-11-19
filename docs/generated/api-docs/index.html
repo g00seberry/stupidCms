@@ -296,22 +296,6 @@
                                                                     </ul>
                                                                         </ul>
                             </ul>
-                    <ul id="tocify-header-blueprint-components" class="tocify-header">
-                <li class="tocify-item level-1" data-unique="blueprint-components">
-                    <a href="#blueprint-components">Blueprint Components</a>
-                </li>
-                                    <ul id="tocify-subheader-blueprint-components" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="blueprint-components-POSTapi-v1-admin-blueprints--blueprint_id--components">
-                                <a href="#blueprint-components-POSTapi-v1-admin-blueprints--blueprint_id--components">Добавить компонент к Blueprint.</a>
-                            </li>
-                                                                                <li class="tocify-item level-2" data-unique="blueprint-components-GETapi-v1-admin-blueprints--blueprint_id--components">
-                                <a href="#blueprint-components-GETapi-v1-admin-blueprints--blueprint_id--components">Список компонентов Blueprint.</a>
-                            </li>
-                                                                                <li class="tocify-item level-2" data-unique="blueprint-components-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-">
-                                <a href="#blueprint-components-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-">Удалить компонент из Blueprint.</a>
-                            </li>
-                                                                        </ul>
-                            </ul>
                     <ul id="tocify-header-blueprint-management" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="blueprint-management">
                     <a href="#blueprint-management">Blueprint Management</a>
@@ -428,7 +412,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: 2025-11-19 18:02</li>
+        <li>Last updated: 2025-11-19 18:31</li>
     </ul>
 </div>
 
@@ -661,15 +645,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"post_type\": \"consequatur\",
-    \"status\": \"draft\",
+    \"status\": \"trashed\",
     \"q\": \"mqeopfuudtdsufvyvddqa\",
     \"author_id\": 17,
     \"term\": [
         17
     ],
-    \"date_from\": \"2025-11-19T18:02:21\",
+    \"date_from\": \"2025-11-19T18:31:20\",
     \"date_to\": \"2106-12-19\",
-    \"date_field\": \"published\",
+    \"date_field\": \"updated\",
     \"sort\": \"published_at.asc\",
     \"per_page\": 13
 }"
@@ -704,15 +688,15 @@ const headers = {
 
 let body = {
     "post_type": "consequatur",
-    "status": "draft",
+    "status": "trashed",
     "q": "mqeopfuudtdsufvyvddqa",
     "author_id": 17,
     "term": [
         17
     ],
-    "date_from": "2025-11-19T18:02:21",
+    "date_from": "2025-11-19T18:31:20",
     "date_to": "2106-12-19",
-    "date_field": "published",
+    "date_field": "updated",
     "sort": "published_at.asc",
     "per_page": 13
 };
@@ -749,15 +733,15 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'post_type' =&gt; 'consequatur',
-            'status' =&gt; 'draft',
+            'status' =&gt; 'trashed',
             'q' =&gt; 'mqeopfuudtdsufvyvddqa',
             'author_id' =&gt; 17,
             'term' =&gt; [
                 17,
             ],
-            'date_from' =&gt; '2025-11-19T18:02:21',
+            'date_from' =&gt; '2025-11-19T18:31:20',
             'date_to' =&gt; '2106-12-19',
-            'date_field' =&gt; 'published',
+            'date_field' =&gt; 'updated',
             'sort' =&gt; 'published_at.asc',
             'per_page' =&gt; 13,
         ],
@@ -1085,10 +1069,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-admin-entries"
-               value="draft"
+               value="trashed"
                data-component="body">
     <br>
-<p>Example: <code>draft</code></p>
+<p>Example: <code>trashed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>all</code></li> <li><code>draft</code></li> <li><code>published</code></li> <li><code>scheduled</code></li> <li><code>trashed</code></li></ul>
         </div>
@@ -1137,10 +1121,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-v1-admin-entries"
-               value="2025-11-19T18:02:21"
+               value="2025-11-19T18:31:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-19T18:02:21</code></p>
+<p>Must be a valid date. Example: <code>2025-11-19T18:31:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -1161,10 +1145,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date_field"                data-endpoint="GETapi-v1-admin-entries"
-               value="published"
+               value="updated"
                data-component="body">
     <br>
-<p>Example: <code>published</code></p>
+<p>Example: <code>updated</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>updated</code></li> <li><code>published</code></li></ul>
         </div>
@@ -3325,7 +3309,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"kind\": \"document\",
+    \"kind\": \"audio\",
     \"mime\": \"amniihfqcoynlazghdtqt\",
     \"deleted\": \"only\",
     \"sort\": \"size_bytes\",
@@ -3361,7 +3345,7 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "kind": "document",
+    "kind": "audio",
     "mime": "amniihfqcoynlazghdtqt",
     "deleted": "only",
     "sort": "size_bytes",
@@ -3399,7 +3383,7 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'kind' =&gt; 'document',
+            'kind' =&gt; 'audio',
             'mime' =&gt; 'amniihfqcoynlazghdtqt',
             'deleted' =&gt; 'only',
             'sort' =&gt; 'size_bytes',
@@ -3734,10 +3718,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="kind"                data-endpoint="GETapi-v1-admin-media"
-               value="document"
+               value="audio"
                data-component="body">
     <br>
-<p>Example: <code>document</code></p>
+<p>Example: <code>audio</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>image</code></li> <li><code>video</code></li> <li><code>audio</code></li> <li><code>document</code></li></ul>
         </div>
@@ -6541,7 +6525,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"q\": \"vmqeopfuudtdsufvyvddq\",
-    \"enabled\": \"any\",
+    \"enabled\": \"true\",
     \"page\": 2,
     \"per_page\": 13,
     \"sort\": \"name\",
@@ -6573,7 +6557,7 @@ const headers = {
 
 let body = {
     "q": "vmqeopfuudtdsufvyvddq",
-    "enabled": "any",
+    "enabled": "true",
     "page": 2,
     "per_page": 13,
     "sort": "name",
@@ -6607,7 +6591,7 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'q' =&gt; 'vmqeopfuudtdsufvyvddq',
-            'enabled' =&gt; 'any',
+            'enabled' =&gt; 'true',
             'page' =&gt; 2,
             'per_page' =&gt; 13,
             'sort' =&gt; 'name',
@@ -6853,10 +6837,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="enabled"                data-endpoint="GETapi-v1-admin-plugins"
-               value="any"
+               value="true"
                data-component="body">
     <br>
-<p>Example: <code>any</code></p>
+<p>Example: <code>true</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>any</code></li></ul>
         </div>
@@ -12597,479 +12581,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                <h1 id="blueprint-components">Blueprint Components</h1>
-
-    
-
-                                <h2 id="blueprint-components-POSTapi-v1-admin-blueprints--blueprint_id--components">Добавить компонент к Blueprint.</h2>
-
-<p>
-</p>
-
-
-
-<span id="example-requests-POSTapi-v1-admin-blueprints--blueprint_id--components">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/v1/api/v1/admin/blueprints/1/components" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"component_id\": 17,
-    \"path_prefix\": \"mqeopfuudtdsufvyvddqa\"
-}"
-</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/blueprints/1/components"
-);
-
-const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "component_id": 17,
-    "path_prefix": "mqeopfuudtdsufvyvddqa"
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre></div>
-
-
-<div class="php-example">
-    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/blueprints/1/components';
-$response = $client-&gt;post(
-    $url,
-    [
-        'headers' =&gt; [
-            'Content-Type' =&gt; 'application/json',
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'component_id' =&gt; 17,
-            'path_prefix' =&gt; 'mqeopfuudtdsufvyvddqa',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre></div>
-
-</span>
-
-<span id="example-responses-POSTapi-v1-admin-blueprints--blueprint_id--components">
-</span>
-<span id="execution-results-POSTapi-v1-admin-blueprints--blueprint_id--components" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-POSTapi-v1-admin-blueprints--blueprint_id--components"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-v1-admin-blueprints--blueprint_id--components"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-POSTapi-v1-admin-blueprints--blueprint_id--components" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-v1-admin-blueprints--blueprint_id--components">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-POSTapi-v1-admin-blueprints--blueprint_id--components" data-method="POST"
-      data-path="api/v1/admin/blueprints/{blueprint_id}/components"
-      data-authed="0"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-admin-blueprints--blueprint_id--components', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-v1-admin-blueprints--blueprint_id--components"
-                    onclick="tryItOut('POSTapi-v1-admin-blueprints--blueprint_id--components');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-v1-admin-blueprints--blueprint_id--components"
-                    onclick="cancelTryOut('POSTapi-v1-admin-blueprints--blueprint_id--components');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-v1-admin-blueprints--blueprint_id--components"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-black">POST</small>
-            <b><code>api/v1/admin/blueprints/{blueprint_id}/components</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--components"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--components"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>blueprint_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="blueprint_id"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--components"
-               value="1"
-               data-component="url">
-    <br>
-<p>The ID of the blueprint. Example: <code>1</code></p>
-            </div>
-                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>component_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="component_id"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--components"
-               value="17"
-               data-component="body">
-    <br>
-<p>The <code>id</code> of an existing record in the blueprints table. Example: <code>17</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>path_prefix</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="path_prefix"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--components"
-               value="mqeopfuudtdsufvyvddqa"
-               data-component="body">
-    <br>
-<p>Must match the regex /^[a-zA-Z<em>][a-zA-Z0-9</em>]*$/. Must not be greater than 100 characters. Example: <code>mqeopfuudtdsufvyvddqa</code></p>
-        </div>
-        </form>
-
-                    <h2 id="blueprint-components-GETapi-v1-admin-blueprints--blueprint_id--components">Список компонентов Blueprint.</h2>
-
-<p>
-</p>
-
-
-
-<span id="example-requests-GETapi-v1-admin-blueprints--blueprint_id--components">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/api/v1/admin/blueprints/1/components" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/blueprints/1/components"
-);
-
-const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
-
-
-<div class="php-example">
-    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/blueprints/1/components';
-$response = $client-&gt;get(
-    $url,
-    [
-        'headers' =&gt; [
-            'Content-Type' =&gt; 'application/json',
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre></div>
-
-</span>
-
-<span id="example-responses-GETapi-v1-admin-blueprints--blueprint_id--components">
-    </span>
-<span id="execution-results-GETapi-v1-admin-blueprints--blueprint_id--components" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-GETapi-v1-admin-blueprints--blueprint_id--components"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-v1-admin-blueprints--blueprint_id--components"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-GETapi-v1-admin-blueprints--blueprint_id--components" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-v1-admin-blueprints--blueprint_id--components">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-GETapi-v1-admin-blueprints--blueprint_id--components" data-method="GET"
-      data-path="api/v1/admin/blueprints/{blueprint_id}/components"
-      data-authed="0"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-admin-blueprints--blueprint_id--components', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-v1-admin-blueprints--blueprint_id--components"
-                    onclick="tryItOut('GETapi-v1-admin-blueprints--blueprint_id--components');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-v1-admin-blueprints--blueprint_id--components"
-                    onclick="cancelTryOut('GETapi-v1-admin-blueprints--blueprint_id--components');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-v1-admin-blueprints--blueprint_id--components"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/v1/admin/blueprints/{blueprint_id}/components</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-admin-blueprints--blueprint_id--components"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-v1-admin-blueprints--blueprint_id--components"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>blueprint_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="blueprint_id"                data-endpoint="GETapi-v1-admin-blueprints--blueprint_id--components"
-               value="1"
-               data-component="url">
-    <br>
-<p>The ID of the blueprint. Example: <code>1</code></p>
-            </div>
-                    </form>
-
-                    <h2 id="blueprint-components-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-">Удалить компонент из Blueprint.</h2>
-
-<p>
-</p>
-
-
-
-<span id="example-requests-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/v1/api/v1/admin/blueprints/1/components/1" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/api/v1/admin/blueprints/1/components/1"
-);
-
-const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "DELETE",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
-
-
-<div class="php-example">
-    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/api/v1/admin/blueprints/1/components/1';
-$response = $client-&gt;delete(
-    $url,
-    [
-        'headers' =&gt; [
-            'Content-Type' =&gt; 'application/json',
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre></div>
-
-</span>
-
-<span id="example-responses-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-">
-</span>
-<span id="execution-results-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-" data-method="DELETE"
-      data-path="api/v1/admin/blueprints/{blueprint_id}/components/{component_id}"
-      data-authed="0"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-                    onclick="tryItOut('DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-                    onclick="cancelTryOut('DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-red">DELETE</small>
-            <b><code>api/v1/admin/blueprints/{blueprint_id}/components/{component_id}</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>blueprint_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="blueprint_id"                data-endpoint="DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-               value="1"
-               data-component="url">
-    <br>
-<p>The ID of the blueprint. Example: <code>1</code></p>
-            </div>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>component_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="component_id"                data-endpoint="DELETEapi-v1-admin-blueprints--blueprint_id--components--component_id-"
-               value="1"
-               data-component="url">
-    <br>
-<p>The ID of the component. Example: <code>1</code></p>
-            </div>
-                    </form>
-
                 <h1 id="blueprint-management">Blueprint Management</h1>
 
     
@@ -13221,7 +12732,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"amniihfqcoynlazghdtqt\",
     \"description\": \"Dolores dolorum amet iste laborum eius est dolor.\",
     \"type\": \"full\",
-    \"is_default\": true,
+    \"is_default\": false,
     \"post_type_id\": 17
 }"
 </code></pre></div>
@@ -13242,7 +12753,7 @@ let body = {
     "name": "amniihfqcoynlazghdtqt",
     "description": "Dolores dolorum amet iste laborum eius est dolor.",
     "type": "full",
-    "is_default": true,
+    "is_default": false,
     "post_type_id": 17
 };
 
@@ -13268,7 +12779,7 @@ $response = $client-&gt;post(
             'name' =&gt; 'amniihfqcoynlazghdtqt',
             'description' =&gt; 'Dolores dolorum amet iste laborum eius est dolor.',
             'type' =&gt; 'full',
-            'is_default' =&gt; true,
+            'is_default' =&gt; false,
             'post_type_id' =&gt; 17,
         ],
     ]
@@ -13422,7 +12933,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>post_type_id</code></b>&nbsp;&nbsp;
@@ -13597,7 +13108,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"slug\": \"vmqeopfuudtdsufvyvddq\",
     \"name\": \"amniihfqcoynlazghdtqt\",
     \"description\": \"Dolores dolorum amet iste laborum eius est dolor.\",
-    \"type\": \"full\",
+    \"type\": \"component\",
     \"is_default\": false,
     \"post_type_id\": 17
 }"
@@ -13618,7 +13129,7 @@ let body = {
     "slug": "vmqeopfuudtdsufvyvddq",
     "name": "amniihfqcoynlazghdtqt",
     "description": "Dolores dolorum amet iste laborum eius est dolor.",
-    "type": "full",
+    "type": "component",
     "is_default": false,
     "post_type_id": 17
 };
@@ -13644,7 +13155,7 @@ $response = $client-&gt;put(
             'slug' =&gt; 'vmqeopfuudtdsufvyvddq',
             'name' =&gt; 'amniihfqcoynlazghdtqt',
             'description' =&gt; 'Dolores dolorum amet iste laborum eius est dolor.',
-            'type' =&gt; 'full',
+            'type' =&gt; 'component',
             'is_default' =&gt; false,
             'post_type_id' =&gt; 17,
         ],
@@ -13789,10 +13300,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="PUTapi-v1-admin-blueprints--id-"
-               value="full"
+               value="component"
                data-component="body">
     <br>
-<p>Example: <code>full</code></p>
+<p>Example: <code>component</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>full</code></li> <li><code>component</code></li></ul>
         </div>
@@ -15279,7 +14790,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "alt=amniihfqcoynlazghdtqt"\
-    --form "file=@C:\Users\dattebayo\AppData\Local\Temp\php8A00.tmp" </code></pre></div>
+    --form "file=@C:\Users\dattebayo\AppData\Local\Temp\php1598.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -15325,7 +14836,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'file',
-                'contents' =&gt; fopen('C:\Users\dattebayo\AppData\Local\Temp\php8A00.tmp', 'r')
+                'contents' =&gt; fopen('C:\Users\dattebayo\AppData\Local\Temp\php1598.tmp', 'r')
             ],
         ],
     ]
@@ -15419,7 +14930,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 1048576 kilobytes. Example: <code>C:\Users\dattebayo\AppData\Local\Temp\php8A00.tmp</code></p>
+<p>Must be a file. Must not be greater than 1048576 kilobytes. Example: <code>C:\Users\dattebayo\AppData\Local\Temp\php1598.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
@@ -15467,7 +14978,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "alt=amniihfqcoynlazghdtqt"\
-    --form "files[]=@C:\Users\dattebayo\AppData\Local\Temp\php8A11.tmp" </code></pre></div>
+    --form "files[]=@C:\Users\dattebayo\AppData\Local\Temp\php15A9.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -15513,7 +15024,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('C:\Users\dattebayo\AppData\Local\Temp\php8A11.tmp', 'r')
+                'contents' =&gt; fopen('C:\Users\dattebayo\AppData\Local\Temp\php15A9.tmp', 'r')
             ],
         ],
     ]
@@ -16390,11 +15901,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"blueprint_id\": 17,
     \"name\": \"mqeopfuudtdsufvyvddqa\",
     \"full_path\": \"mniihfqcoynlazghdtqtq\",
-    \"data_type\": \"string\",
+    \"data_type\": \"float\",
     \"cardinality\": \"one\",
     \"is_indexed\": true,
-    \"is_required\": true,
+    \"is_required\": false,
     \"ref_target_type\": \"xbajwbpilpmufinllwloa\",
+    \"embedded_blueprint_id\": 17,
     \"parent_id\": 17
 }"
 </code></pre></div>
@@ -16414,11 +15926,12 @@ let body = {
     "blueprint_id": 17,
     "name": "mqeopfuudtdsufvyvddqa",
     "full_path": "mniihfqcoynlazghdtqtq",
-    "data_type": "string",
+    "data_type": "float",
     "cardinality": "one",
     "is_indexed": true,
-    "is_required": true,
+    "is_required": false,
     "ref_target_type": "xbajwbpilpmufinllwloa",
+    "embedded_blueprint_id": 17,
     "parent_id": 17
 };
 
@@ -16443,11 +15956,12 @@ $response = $client-&gt;post(
             'blueprint_id' =&gt; 17,
             'name' =&gt; 'mqeopfuudtdsufvyvddqa',
             'full_path' =&gt; 'mniihfqcoynlazghdtqtq',
-            'data_type' =&gt; 'string',
+            'data_type' =&gt; 'float',
             'cardinality' =&gt; 'one',
             'is_indexed' =&gt; true,
-            'is_required' =&gt; true,
+            'is_required' =&gt; false,
             'ref_target_type' =&gt; 'xbajwbpilpmufinllwloa',
+            'embedded_blueprint_id' =&gt; 17,
             'parent_id' =&gt; 17,
         ],
     ]
@@ -16547,7 +16061,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
         <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>blueprint_id</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="blueprint_id"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--paths"
@@ -16587,12 +16101,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="data_type"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--paths"
-               value="string"
+               value="float"
                data-component="body">
     <br>
-<p>Example: <code>string</code></p>
+<p>Example: <code>float</code></p>
 Must be one of:
-<ul style="list-style-type: square;"><li><code>string</code></li> <li><code>int</code></li> <li><code>float</code></li> <li><code>bool</code></li> <li><code>text</code></li> <li><code>json</code></li> <li><code>ref</code></li></ul>
+<ul style="list-style-type: square;"><li><code>string</code></li> <li><code>int</code></li> <li><code>float</code></li> <li><code>bool</code></li> <li><code>text</code></li> <li><code>json</code></li> <li><code>ref</code></li> <li><code>blueprint</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>cardinality</code></b>&nbsp;&nbsp;
@@ -16650,7 +16164,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>ref_target_type</code></b>&nbsp;&nbsp;
@@ -16663,6 +16177,18 @@ Must be one of:
                data-component="body">
     <br>
 <p>Must not be greater than 100 characters. Example: <code>xbajwbpilpmufinllwloa</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>embedded_blueprint_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="embedded_blueprint_id"                data-endpoint="POSTapi-v1-admin-blueprints--blueprint_id--paths"
+               value="17"
+               data-component="body">
+    <br>
+<p>This field is required when <code>data_type</code> is <code>blueprint</code>. The <code>id</code> of an existing record in the blueprints table. Example: <code>17</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>validation_rules</code></b>&nbsp;&nbsp;
@@ -16873,11 +16399,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"blueprint_id\": 17,
     \"name\": \"mqeopfuudtdsufvyvddqa\",
     \"full_path\": \"mniihfqcoynlazghdtqtq\",
-    \"data_type\": \"ref\",
-    \"cardinality\": \"many\",
-    \"is_indexed\": true,
+    \"data_type\": \"string\",
+    \"cardinality\": \"one\",
+    \"is_indexed\": false,
     \"is_required\": true,
     \"ref_target_type\": \"xbajwbpilpmufinllwloa\",
+    \"embedded_blueprint_id\": 17,
     \"parent_id\": 17
 }"
 </code></pre></div>
@@ -16897,11 +16424,12 @@ let body = {
     "blueprint_id": 17,
     "name": "mqeopfuudtdsufvyvddqa",
     "full_path": "mniihfqcoynlazghdtqtq",
-    "data_type": "ref",
-    "cardinality": "many",
-    "is_indexed": true,
+    "data_type": "string",
+    "cardinality": "one",
+    "is_indexed": false,
     "is_required": true,
     "ref_target_type": "xbajwbpilpmufinllwloa",
+    "embedded_blueprint_id": 17,
     "parent_id": 17
 };
 
@@ -16926,11 +16454,12 @@ $response = $client-&gt;put(
             'blueprint_id' =&gt; 17,
             'name' =&gt; 'mqeopfuudtdsufvyvddqa',
             'full_path' =&gt; 'mniihfqcoynlazghdtqtq',
-            'data_type' =&gt; 'ref',
-            'cardinality' =&gt; 'many',
-            'is_indexed' =&gt; true,
+            'data_type' =&gt; 'string',
+            'cardinality' =&gt; 'one',
+            'is_indexed' =&gt; false,
             'is_required' =&gt; true,
             'ref_target_type' =&gt; 'xbajwbpilpmufinllwloa',
+            'embedded_blueprint_id' =&gt; 17,
             'parent_id' =&gt; 17,
         ],
     ]
@@ -17046,7 +16575,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
         <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>blueprint_id</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
- &nbsp;
+<i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="blueprint_id"                data-endpoint="PUTapi-v1-admin-blueprints--blueprint_id--paths--id-"
@@ -17086,12 +16615,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="data_type"                data-endpoint="PUTapi-v1-admin-blueprints--blueprint_id--paths--id-"
-               value="ref"
+               value="string"
                data-component="body">
     <br>
-<p>Example: <code>ref</code></p>
+<p>Example: <code>string</code></p>
 Must be one of:
-<ul style="list-style-type: square;"><li><code>string</code></li> <li><code>int</code></li> <li><code>float</code></li> <li><code>bool</code></li> <li><code>text</code></li> <li><code>json</code></li> <li><code>ref</code></li></ul>
+<ul style="list-style-type: square;"><li><code>string</code></li> <li><code>int</code></li> <li><code>float</code></li> <li><code>bool</code></li> <li><code>text</code></li> <li><code>json</code></li> <li><code>ref</code></li> <li><code>blueprint</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>cardinality</code></b>&nbsp;&nbsp;
@@ -17100,10 +16629,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="cardinality"                data-endpoint="PUTapi-v1-admin-blueprints--blueprint_id--paths--id-"
-               value="many"
+               value="one"
                data-component="body">
     <br>
-<p>Example: <code>many</code></p>
+<p>Example: <code>one</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>one</code></li> <li><code>many</code></li></ul>
         </div>
@@ -17127,7 +16656,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>is_required</code></b>&nbsp;&nbsp;
@@ -17162,6 +16691,18 @@ Must be one of:
                data-component="body">
     <br>
 <p>Must not be greater than 100 characters. Example: <code>xbajwbpilpmufinllwloa</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>embedded_blueprint_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="embedded_blueprint_id"                data-endpoint="PUTapi-v1-admin-blueprints--blueprint_id--paths--id-"
+               value="17"
+               data-component="body">
+    <br>
+<p>This field is required when <code>data_type</code> is <code>blueprint</code>. The <code>id</code> of an existing record in the blueprints table. Example: <code>17</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>validation_rules</code></b>&nbsp;&nbsp;
@@ -17380,7 +16921,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"term\": [
         \"5627:7\"
     ],
-    \"from\": \"2025-11-19T18:02:20\",
+    \"from\": \"2025-11-19T18:31:20\",
     \"to\": \"2106-12-19\",
     \"page\": 45,
     \"per_page\": 16
@@ -17418,7 +16959,7 @@ let body = {
     "term": [
         "5627:7"
     ],
-    "from": "2025-11-19T18:02:20",
+    "from": "2025-11-19T18:31:20",
     "to": "2106-12-19",
     "page": 45,
     "per_page": 16
@@ -17458,7 +16999,7 @@ $response = $client-&gt;get(
             'term' =&gt; [
                 '5627:7',
             ],
-            'from' =&gt; '2025-11-19T18:02:20',
+            'from' =&gt; '2025-11-19T18:31:20',
             'to' =&gt; '2106-12-19',
             'page' =&gt; 45,
             'per_page' =&gt; 16,
@@ -17705,10 +17246,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-search"
-               value="2025-11-19T18:02:20"
+               value="2025-11-19T18:31:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-11-19T18:02:20</code></p>
+<p>Must be a valid date. Example: <code>2025-11-19T18:31:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;

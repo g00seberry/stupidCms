@@ -29,7 +29,7 @@ class DiagnoseBlueprintCommand extends Command
     public function handle(): int
     {
         $blueprint = Blueprint::where('slug', $this->argument('slug'))
-            ->with(['paths', 'components', 'entries'])
+            ->with(['paths', 'entries'])
             ->firstOrFail();
 
         $this->info("Blueprint: {$blueprint->name} ({$blueprint->slug})");
@@ -49,7 +49,7 @@ class DiagnoseBlueprintCommand extends Command
                 ['Indexed Paths', $blueprint->paths->where('is_indexed', true)->count()],
                 ['Required Paths', $blueprint->paths->where('is_required', true)->count()],
                 ['Ref Paths', $blueprint->paths->where('data_type', 'ref')->count()],
-                ['Components', $blueprint->components->count()],
+                ['Embedded Blueprints', $blueprint->paths->where('data_type', 'blueprint')->count()],
                 ['Entries', $blueprint->entries->count()],
             ]
         );

@@ -72,59 +72,7 @@ test('entry is re-indexed on update', function () {
     expect($newValue->value_string)->toBe('New Title');
 });
 
-test('composite blueprint indexes all paths', function () {
-    $blueprint = Blueprint::factory()->create(['type' => 'full']);
-    $component = Blueprint::factory()->create(['type' => 'component']);
-    
-    // Собственный Path
-    $ownPath = Path::factory()->create([
-        'blueprint_id' => $blueprint->id,
-        'full_path' => 'content',
-        'data_type' => 'text',
-        'is_indexed' => true,
-    ]);
-    
-    // Path в компоненте
-    $componentPath = Path::factory()->create([
-        'blueprint_id' => $component->id,
-        'full_path' => 'metaTitle',
-        'data_type' => 'string',
-        'is_indexed' => true,
-    ]);
-    
-    // Attach компонента (материализация)
-    $blueprint->components()->attach($component->id, ['path_prefix' => 'seo']);
-    $blueprint->materializeComponentPaths($component, 'seo');
-    
-    $materializedPath = Path::where([
-        'blueprint_id' => $blueprint->id,
-        'source_component_id' => $component->id,
-    ])->first();
-    
-    // Создаем Entry
-    $entry = Entry::factory()->create([
-        'blueprint_id' => $blueprint->id,
-        'data_json' => [
-            'content' => 'Article content',
-            'seo' => [
-                'metaTitle' => 'SEO Title',
-            ],
-        ],
-    ]);
-    
-    // Проверяем индексы для обоих путей
-    $this->assertDatabaseHas('doc_values', [
-        'entry_id' => $entry->id,
-        'path_id' => $ownPath->id,
-        'value_text' => 'Article content',
-    ]);
-    
-    $this->assertDatabaseHas('doc_values', [
-        'entry_id' => $entry->id,
-        'path_id' => $materializedPath->id,
-        'value_string' => 'SEO Title',
-    ]);
-});
+// Этот тест удалён - функциональность покрыта в tests/Feature/EmbeddedBlueprintTest.php
 
 test('where path scope finds entries by indexed value', function () {
     $blueprint = Blueprint::factory()->create();

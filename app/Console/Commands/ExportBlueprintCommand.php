@@ -33,7 +33,7 @@ class ExportBlueprintCommand extends Command
     {
         $slug = $this->argument('slug');
         $blueprint = Blueprint::where('slug', $slug)
-            ->with(['paths', 'components.paths'])
+            ->with(['paths'])
             ->firstOrFail();
 
         $export = [
@@ -51,10 +51,6 @@ class ExportBlueprintCommand extends Command
                 'ref_target_type' => $path->ref_target_type,
                 'validation_rules' => $path->validation_rules,
                 'ui_options' => $path->ui_options,
-            ])->toArray(),
-            'components' => $blueprint->components->map(fn($component) => [
-                'slug' => $component->slug,
-                'path_prefix' => $component->pivot->path_prefix,
             ])->toArray(),
         ];
 

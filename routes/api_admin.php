@@ -14,7 +14,6 @@ use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
 use App\Http\Controllers\Admin\BlueprintController;
 use App\Http\Controllers\Admin\PathController;
-use App\Http\Controllers\Admin\BlueprintComponentController;
 use App\Http\Controllers\Auth\CurrentUserController;
 use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
@@ -238,14 +237,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
                 'update' => 'admin.v1.blueprints.paths.update',
                 'destroy' => 'admin.v1.blueprints.paths.destroy',
             ]);
-
-        // Компоненты Blueprint
-        Route::post('components', [BlueprintComponentController::class, 'attach'])
-            ->name('admin.v1.blueprints.components.attach');
-        Route::get('components', [BlueprintComponentController::class, 'index'])
-            ->name('admin.v1.blueprints.components.index');
-        Route::delete('components/{component}', [BlueprintComponentController::class, 'detach'])
-            ->name('admin.v1.blueprints.components.detach');
     });
 });
 

@@ -47,9 +47,6 @@ tags:
     name: Auth
     description: ''
   -
-    name: 'Blueprint Components'
-    description: ''
-  -
     name: 'Blueprint Management'
     description: ''
   -
@@ -577,7 +574,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: draft
+                  example: trashed
                   nullable: true
                   enum:
                     - all
@@ -605,7 +602,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T18:02:21'
+                  example: '2025-11-19T18:31:20'
                   nullable: true
                 date_to:
                   type: string
@@ -615,7 +612,7 @@ paths:
                 date_field:
                   type: string
                   description: ''
-                  example: published
+                  example: updated
                   nullable: true
                   enum:
                     - updated
@@ -2910,7 +2907,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: document
+                  example: audio
                   nullable: true
                   enum:
                     - image
@@ -5395,7 +5392,7 @@ paths:
                 enabled:
                   type: string
                   description: ''
-                  example: any
+                  example: 'true'
                   nullable: true
                   enum:
                     - 'true'
@@ -9768,81 +9765,6 @@ paths:
                     example: 'Authentication required.'
       tags:
         - Auth
-  '/api/v1/admin/blueprints/{blueprint_id}/components':
-    post:
-      summary: 'Добавить компонент к Blueprint.'
-      operationId: Blueprint
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - 'Blueprint Components'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                component_id:
-                  type: integer
-                  description: 'The <code>id</code> of an existing record in the blueprints table.'
-                  example: 17
-                  nullable: false
-                path_prefix:
-                  type: string
-                  description: 'Must match the regex /^[a-zA-Z_][a-zA-Z0-9_]*$/. Must not be greater than 100 characters.'
-                  example: mqeopfuudtdsufvyvddqa
-                  nullable: false
-              required:
-                - component_id
-                - path_prefix
-      security: []
-    get:
-      summary: 'Список компонентов Blueprint.'
-      operationId: Blueprint
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - 'Blueprint Components'
-      security: []
-    parameters:
-      -
-        in: path
-        name: blueprint_id
-        description: 'The ID of the blueprint.'
-        example: 1
-        required: true
-        schema:
-          type: integer
-  '/api/v1/admin/blueprints/{blueprint_id}/components/{component_id}':
-    delete:
-      summary: 'Удалить компонент из Blueprint.'
-      operationId: Blueprint
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - 'Blueprint Components'
-      security: []
-    parameters:
-      -
-        in: path
-        name: blueprint_id
-        description: 'The ID of the blueprint.'
-        example: 1
-        required: true
-        schema:
-          type: integer
-      -
-        in: path
-        name: component_id
-        description: 'The ID of the component.'
-        example: 1
-        required: true
-        schema:
-          type: integer
   /api/v1/admin/blueprints:
     get:
       summary: 'Список Blueprint.'
@@ -9894,7 +9816,7 @@ paths:
                 is_default:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: true
                 post_type_id:
                   type: integer
@@ -9949,7 +9871,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: full
+                  example: component
                   nullable: false
                   enum:
                     - full
@@ -10447,7 +10369,7 @@ paths:
                 data_type:
                   type: string
                   description: ''
-                  example: string
+                  example: float
                   nullable: false
                   enum:
                     - string
@@ -10457,6 +10379,7 @@ paths:
                     - text
                     - json
                     - ref
+                    - blueprint
                 cardinality:
                   type: string
                   description: ''
@@ -10473,12 +10396,17 @@ paths:
                 is_required:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: true
                 ref_target_type:
                   type: string
                   description: 'Must not be greater than 100 characters.'
                   example: xbajwbpilpmufinllwloa
+                  nullable: true
+                embedded_blueprint_id:
+                  type: integer
+                  description: 'This field is required when <code>data_type</code> is <code>blueprint</code>. The <code>id</code> of an existing record in the blueprints table.'
+                  example: 17
                   nullable: true
                 validation_rules:
                   type: object
@@ -10498,7 +10426,6 @@ paths:
                   example: 17
                   nullable: true
               required:
-                - blueprint_id
                 - name
                 - full_path
                 - data_type
@@ -10556,7 +10483,7 @@ paths:
                 data_type:
                   type: string
                   description: ''
-                  example: ref
+                  example: string
                   nullable: false
                   enum:
                     - string
@@ -10566,10 +10493,11 @@ paths:
                     - text
                     - json
                     - ref
+                    - blueprint
                 cardinality:
                   type: string
                   description: ''
-                  example: many
+                  example: one
                   nullable: false
                   enum:
                     - one
@@ -10577,7 +10505,7 @@ paths:
                 is_indexed:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: true
                 is_required:
                   type: boolean
@@ -10588,6 +10516,11 @@ paths:
                   type: string
                   description: 'Must not be greater than 100 characters.'
                   example: xbajwbpilpmufinllwloa
+                  nullable: true
+                embedded_blueprint_id:
+                  type: integer
+                  description: 'This field is required when <code>data_type</code> is <code>blueprint</code>. The <code>id</code> of an existing record in the blueprints table.'
+                  example: 17
                   nullable: true
                 validation_rules:
                   type: object
@@ -10607,7 +10540,6 @@ paths:
                   example: 17
                   nullable: true
               required:
-                - blueprint_id
                 - name
                 - full_path
                 - data_type
@@ -10836,7 +10768,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-19T18:02:20'
+                  example: '2025-11-19T18:31:20'
                   nullable: true
                 to:
                   type: string

@@ -49,7 +49,7 @@ class BlueprintController extends Controller
      */
     public function show(Blueprint $blueprint)
     {
-        $blueprint->load(['postType', 'paths', 'components']);
+        $blueprint->load(['postType', 'paths']);
 
         return new BlueprintResource($blueprint);
     }

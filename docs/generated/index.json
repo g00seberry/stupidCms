@@ -70,14 +70,6 @@
                     "entries": {
                         "type": "hasMany",
                         "related": "App\\Models\\Entry"
-                    },
-                    "components": {
-                        "type": "belongsToMany",
-                        "related": "App\\Models\\Blueprint"
-                    },
-                    "usedInBlueprints": {
-                        "type": "belongsToMany",
-                        "related": "App\\Models\\Blueprint"
                     }
                 },
                 "factory": "Database\\Factories\\BlueprintFactory"
@@ -421,6 +413,8 @@
                     "is_indexed",
                     "is_required",
                     "ref_target_type",
+                    "embedded_blueprint_id",
+                    "embedded_root_path_id",
                     "validation_rules",
                     "ui_options"
                 ],
@@ -437,6 +431,14 @@
                     "blueprint": {
                         "type": "belongsTo",
                         "related": "App\\Models\\Blueprint"
+                    },
+                    "embeddedBlueprint": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Blueprint"
+                    },
+                    "embeddedRootPath": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Path"
                     },
                     "parent": {
                         "type": "belongsTo",
@@ -5469,101 +5471,6 @@
             }
         },
         {
-            "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-            "type": "http_endpoint",
-            "name": "admin.v1.blueprints.components.attach",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\BlueprintComponentController.php",
-            "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/blueprints/{blueprint}/components",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "blueprint": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "blueprints",
-                "7": "components"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-            "type": "http_endpoint",
-            "name": "admin.v1.blueprints.components.index",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\BlueprintComponentController.php",
-            "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/blueprints/{blueprint}/components",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "blueprint": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "blueprints",
-                "7": "components"
-            }
-        },
-        {
-            "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-            "type": "http_endpoint",
-            "name": "admin.v1.blueprints.components.detach",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\BlueprintComponentController.php",
-            "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)",
-            "details": null,
-            "meta": {
-                "method": "DELETE",
-                "uri": "/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "blueprint": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    },
-                    "component": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "blueprints",
-                "7": "components"
-            }
-        },
-        {
             "id": "http_endpoint:GET:/{slug}",
             "type": "http_endpoint",
             "name": "page.show",
@@ -5688,14 +5595,6 @@
                         "entries": {
                             "type": "hasMany",
                             "related": "App\\Models\\Entry"
-                        },
-                        "components": {
-                            "type": "belongsToMany",
-                            "related": "App\\Models\\Blueprint"
-                        },
-                        "usedInBlueprints": {
-                            "type": "belongsToMany",
-                            "related": "App\\Models\\Blueprint"
                         }
                     },
                     "factory": "Database\\Factories\\BlueprintFactory"
@@ -6039,6 +5938,8 @@
                         "is_indexed",
                         "is_required",
                         "ref_target_type",
+                        "embedded_blueprint_id",
+                        "embedded_root_path_id",
                         "validation_rules",
                         "ui_options"
                     ],
@@ -6055,6 +5956,14 @@
                         "blueprint": {
                             "type": "belongsTo",
                             "related": "App\\Models\\Blueprint"
+                        },
+                        "embeddedBlueprint": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Blueprint"
+                        },
+                        "embeddedRootPath": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Path"
                         },
                         "parent": {
                             "type": "belongsTo",
@@ -11095,101 +11004,6 @@
                 }
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.attach",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\BlueprintComponentController.php",
-                "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/blueprints/{blueprint}/components",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "blueprint": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "blueprints",
-                    "7": "components"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.index",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\BlueprintComponentController.php",
-                "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/blueprints/{blueprint}/components",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "blueprint": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "blueprints",
-                    "7": "components"
-                }
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.detach",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\BlueprintComponentController.php",
-                "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)",
-                "details": null,
-                "meta": {
-                    "method": "DELETE",
-                    "uri": "/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "blueprint": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        },
-                        "component": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "blueprints",
-                    "7": "components"
-                }
-            },
-            {
                 "id": "http_endpoint:GET:/{slug}",
                 "type": "http_endpoint",
                 "name": "page.show",
@@ -13040,24 +12854,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.destroy",
                 "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.attach",
-                "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.index",
-                "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.detach",
-                "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)"
             }
         ],
         "v1": [
@@ -13468,24 +13264,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.destroy",
                 "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.attach",
-                "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.index",
-                "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.detach",
-                "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)"
             }
         ],
         "login": [
@@ -13890,24 +13668,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.destroy",
                 "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.attach",
-                "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.index",
-                "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.detach",
-                "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)"
             }
         ],
         "current": [
@@ -14336,24 +14096,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.destroy",
                 "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.attach",
-                "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.index",
-                "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.detach",
-                "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)"
             }
         ],
         "paths": [
@@ -14388,26 +14130,6 @@
                 "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/paths/{path} (api)"
             }
         ],
-        "components": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.attach",
-                "summary": "POST /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/components",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.index",
-                "summary": "GET /api/v1/admin/blueprints/{blueprint}/components (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}/components/{component}",
-                "type": "http_endpoint",
-                "name": "admin.v1.blueprints.components.detach",
-                "summary": "DELETE /api/v1/admin/blueprints/{blueprint}/components/{component} (api)"
-            }
-        ],
         "storage": [
             {
                 "id": "http_endpoint:GET:/storage/{path}",
@@ -14417,5 +14139,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-19T18:02:26+00:00"
+    "generated_at": "2025-11-19T18:31:28+00:00"
 }

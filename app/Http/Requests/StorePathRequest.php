@@ -19,6 +19,20 @@ class StorePathRequest extends FormRequest
     }
 
     /**
+     * Подготовить данные для валидации.
+     */
+    protected function prepareForValidation(): void
+    {
+        $blueprint = $this->route('blueprint');
+        
+        if ($blueprint && !$this->has('blueprint_id')) {
+            $this->merge([
+                'blueprint_id' => $blueprint->id,
+            ]);
+        }
+    }
+
+    /**
      * Правила валидации для запроса.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -30,6 +44,7 @@ class StorePathRequest extends FormRequest
 
         return [
             'blueprint_id' => [
+                'sometimes',
                 'required',
                 'integer',
                 'exists:blueprints,id',
@@ -65,14 +80,23 @@ class StorePathRequest extends FormRequest
             'data_type' => [
                 'required',
                 'string',
-                Rule::in(['string', 'int', 'float', 'bool', 'text', 'json', 'ref']),
+                Rule::in(['string', 'int', 'float', 'bool', 'text', 'json', 'ref', 'blueprint']),
             ],
             'cardinality' => [
                 'required',
                 'string',
                 Rule::in(['one', 'many']),
             ],
-            'is_indexed' => ['nullable', 'boolean'],
+            'is_indexed' => [
+                'nullable',
+                'boolean',
+                // Для data_type=blueprint запрещаем is_indexed=true
+                function ($attribute, $value, $fail) {
+                    if ($this->input('data_type') === 'blueprint' && $value === true) {
+                        $fail('Поля с data_type=blueprint не могут быть индексируемыми (is_indexed должен быть false).');
+                    }
+                },
+            ],
             'is_required' => ['nullable', 'boolean'],
             'ref_target_type' => [
                 'nullable',
@@ -82,6 +106,32 @@ class StorePathRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if ($this->input('data_type') === 'ref' && !$value) {
                         $fail('ref_target_type обязателен для data_type=ref.');
+                    }
+                },
+            ],
+            'embedded_blueprint_id' => [
+                'nullable',
+                'integer',
+                'required_if:data_type,blueprint',
+                'exists:blueprints,id',
+                function ($attribute, $value, $fail) use ($blueprint) {
+                    $dataType = $this->input('data_type');
+                    
+                    if ($dataType === 'blueprint' && $value) {
+                        $embeddedBlueprint = Blueprint::find($value);
+
+                        // Проверить, что это component
+                        if ($embeddedBlueprint && !$embeddedBlueprint->isComponent()) {
+                            $fail('embedded_blueprint_id должен указывать на Blueprint с type=component.');
+                        }
+
+                        // Защита от циклических ссылок
+                        if ($blueprint && $value == $blueprint->id) {
+                            $fail('Нельзя встроить Blueprint сам в себя.');
+                        }
+                    } elseif ($value && $dataType !== 'blueprint') {
+                        // Для других типов данных embedded_blueprint_id должен быть null
+                        $fail('embedded_blueprint_id может быть указан только для data_type=blueprint.');
                     }
                 },
             ],
@@ -110,7 +160,7 @@ class StorePathRequest extends FormRequest
     {
         return [
             'name.regex' => 'Имя поля должно начинаться с буквы или подчёркивания и содержать только буквы, цифры и подчёркивания.',
-            'data_type.in' => 'Тип данных должен быть одним из: string, int, float, bool, text, json, ref.',
+            'data_type.in' => 'Тип данных должен быть одним из: string, int, float, bool, text, json, ref, blueprint.',
             'cardinality.in' => 'Cardinality должен быть либо "one", либо "many".',
         ];
     }

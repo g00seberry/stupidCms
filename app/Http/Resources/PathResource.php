@@ -35,6 +35,8 @@ class PathResource extends JsonResource
             'is_indexed' => $this->is_indexed,
             'is_required' => $this->is_required,
             'ref_target_type' => $this->ref_target_type,
+            'embedded_blueprint_id' => $this->embedded_blueprint_id,
+            'embedded_root_path_id' => $this->embedded_root_path_id,
             'validation_rules' => $this->validation_rules,
             'ui_options' => $this->ui_options,
             'created_at' => $this->created_at?->toISOString(),
@@ -42,6 +44,7 @@ class PathResource extends JsonResource
 
             // Флаги
             'is_materialized' => $this->source_component_id !== null,
+            'is_embedded_blueprint' => $this->isEmbeddedBlueprint(),
             'is_ref' => $this->isRef(),
             'is_many' => $this->isMany(),
         ];

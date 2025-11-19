@@ -10,22 +10,59 @@ use App\Models\Path;
 class PathObserver
 {
     /**
-     * При изменении Path в компоненте — синхронизировать материализованные копии.
+     * При создании Path с data_type='blueprint' — материализовать вложенные поля.
+     *
+     * @param \App\Models\Path $path
      */
-    public function updated(Path $sourcePath): void
+    public function created(Path $path): void
     {
-        // Только для исходных Paths в компонентах (не материализованных)
-        if ($sourcePath->source_component_id === null && $sourcePath->blueprint->isComponent()) {
-            $this->syncMaterializedPaths($sourcePath);
+        if ($path->isEmbeddedBlueprint() && $path->embedded_blueprint_id) {
+            $path->blueprint->materializeEmbeddedBlueprint($path);
+            
+            // Реиндексация Entry при необходимости
+            if ($path->blueprint->entries()->exists()) {
+                dispatch(new ReindexBlueprintEntries($path->blueprint_id));
+            }
         }
     }
 
     /**
-     * При удалении Path — удалить материализованные копии.
+     * При изменении Path — синхронизировать зависимые материализованные копии.
+     *
+     * @param \App\Models\Path $sourcePath
+     */
+    public function updated(Path $sourcePath): void
+    {
+        // 1) Если это Path в компоненте → синхронизировать все его материализации
+        if ($sourcePath->source_component_id === null && $sourcePath->blueprint->isComponent()) {
+            $this->syncMaterializedPaths($sourcePath);
+        }
+
+        // 2) Если это поле-типа blueprint, и поменялся full_path или embedded_blueprint_id
+        if ($sourcePath->isEmbeddedBlueprint() && $sourcePath->wasChanged(['full_path', 'embedded_blueprint_id'])) {
+            $sourcePath->blueprint->materializeEmbeddedBlueprint($sourcePath);
+            dispatch(new ReindexBlueprintEntries($sourcePath->blueprint_id));
+        }
+    }
+
+    /**
+     * При удалении Path — удалить зависимые материализованные копии.
+     *
+     * @param \App\Models\Path $sourcePath
      */
     public function deleted(Path $sourcePath): void
     {
-        // Только для исходных Paths в компонентах
+        // 1) При удалении embedded-поля удаляем и его материализацию
+        if ($sourcePath->isEmbeddedBlueprint()) {
+            Path::where('embedded_root_path_id', $sourcePath->id)->delete();
+            $sourcePath->blueprint->invalidatePathsCache();
+            
+            if ($sourcePath->blueprint->entries()->exists()) {
+                dispatch(new ReindexBlueprintEntries($sourcePath->blueprint_id));
+            }
+        }
+
+        // 2) Если это исходный Path в компоненте → удалить все его материализации
         if ($sourcePath->source_component_id === null && $sourcePath->blueprint->isComponent()) {
             Path::where('source_path_id', $sourcePath->id)->delete();
         }
@@ -42,12 +79,17 @@ class PathObserver
         $affectedBlueprintIds = [];
 
         foreach ($materializedPaths as $matPath) {
-            // Получить path_prefix из pivot-таблицы
-            $pathPrefix = $matPath->blueprint->components()
-                ->where('component_id', $sourcePath->blueprint_id)
-                ->first()
-                ?->pivot
-                ->path_prefix;
+            // Получить префикс из корневого Path (embedded field)
+            if (!$matPath->embedded_root_path_id) {
+                continue;
+            }
+
+            $rootField = Path::find($matPath->embedded_root_path_id);
+            if (!$rootField) {
+                continue;
+            }
+
+            $pathPrefix = $rootField->full_path;
 
             // Подготовить обновления
             $updates = [

@@ -77,6 +77,11 @@ trait HasDocumentData
 
         // Пройтись по каждому индексируемому пути
         foreach ($indexedPaths as $path) {
+            // Пропускаем поля с data_type=blueprint (они не должны индексироваться)
+            if ($path->data_type === 'blueprint') {
+                continue;
+            }
+
             $value = Arr::get($this->data_json ?? [], $path->full_path);
 
             if ($value === null) {
@@ -174,6 +179,7 @@ trait HasDocumentData
      *
      * @param string $dataType
      * @return string
+     * @throws \InvalidArgumentException Если тип данных не поддерживается для индексации
      */
     private function getValueFieldForType(string $dataType): string
     {
@@ -184,6 +190,7 @@ trait HasDocumentData
             'bool' => 'value_bool',
             'text' => 'value_text',
             'json' => 'value_json',
+            'blueprint' => throw new \InvalidArgumentException('data_type=blueprint не поддерживает индексацию'),
             default => 'value_string',
         };
     }

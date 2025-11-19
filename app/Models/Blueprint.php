@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -34,8 +33,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Path> $ownPaths
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Path> $materializedPaths
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Blueprint> $components
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Blueprint> $usedInBlueprints
  */
 class Blueprint extends Model
 {
@@ -105,34 +102,6 @@ class Blueprint extends Model
     public function entries(): HasMany
     {
         return $this->hasMany(Entry::class);
-    }
-
-    /**
-     * Компоненты, используемые в этом Blueprint.
-     */
-    public function components(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Blueprint::class,
-            'blueprint_components',
-            'blueprint_id',
-            'component_id'
-        )->withPivot('path_prefix')
-         ->withTimestamps();
-    }
-
-    /**
-     * Blueprint'ы, в которых этот компонент используется.
-     */
-    public function usedInBlueprints(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Blueprint::class,
-            'blueprint_components',
-            'component_id',
-            'blueprint_id'
-        )->withPivot('path_prefix')
-         ->withTimestamps();
     }
 
     // Скоупы
@@ -207,27 +176,38 @@ class Blueprint extends Model
         return $this->getAllPaths()->firstWhere('full_path', $fullPath);
     }
 
+
     /**
-     * Материализовать Paths из компонента.
+     * Материализовать Paths из встроенного Blueprint.
      *
-     * @param \App\Models\Blueprint $component
-     * @param string $pathPrefix
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * Создаёт материализованные Paths для поля с data_type='blueprint'.
+     * Префикс для full_path берётся из самого поля.
+     *
+     * @param \App\Models\Path $field Поле с data_type='blueprint'
+     * @throws \InvalidArgumentException Если поле не имеет data_type='blueprint'
+     * @throws \LogicException Если embedded_blueprint_id не указывает на компонент
+     * @throws \LogicException При конфликтах full_path
      */
-    public function materializeComponentPaths(Blueprint $component, string $pathPrefix): void
+    public function materializeEmbeddedBlueprint(Path $field): void
     {
-        if ($component->type !== 'component') {
-            throw new \InvalidArgumentException('Можно материализовать только component Blueprint');
+        if (!$field->isEmbeddedBlueprint()) {
+            throw new \InvalidArgumentException('Field must have data_type=blueprint');
         }
 
-        if (empty($pathPrefix)) {
-            throw new \InvalidArgumentException('path_prefix обязателен');
+        $component = $field->embeddedBlueprint;
+
+        if (!$component || !$component->isComponent()) {
+            throw new \LogicException('embedded_blueprint_id должен указывать на Blueprint с type=component');
         }
 
-        $this->validateNoPathConflicts($component, $pathPrefix);
+        DB::transaction(function () use ($field, $component) {
+            // 1. Защита от конфликтов full_path
+            $this->validateNoEmbeddedConflicts($field, $component);
 
-        DB::transaction(function () use ($component, $pathPrefix) {
+            // 2. Удаляем старую материализацию, если она была
+            Path::where('embedded_root_path_id', $field->id)->delete();
+
+            // 3. Создаём новые материализованные Paths
             foreach ($component->ownPaths as $sourcePath) {
                 if ($sourcePath->parent_id !== null) {
                     throw new \LogicException(
@@ -237,19 +217,20 @@ class Blueprint extends Model
                 }
 
                 Path::create([
-                    'blueprint_id' => $this->id,
-                    'source_component_id' => $component->id,
-                    'source_path_id' => $sourcePath->id,
-                    'parent_id' => null,
-                    'name' => $sourcePath->name,
-                    'full_path' => $pathPrefix . '.' . $sourcePath->full_path,
-                    'data_type' => $sourcePath->data_type,
-                    'cardinality' => $sourcePath->cardinality,
-                    'is_indexed' => $sourcePath->is_indexed,
-                    'is_required' => $sourcePath->is_required,
-                    'ref_target_type' => $sourcePath->ref_target_type,
-                    'validation_rules' => $sourcePath->validation_rules,
-                    'ui_options' => $sourcePath->ui_options,
+                    'blueprint_id'          => $this->id,
+                    'source_component_id'   => $component->id,
+                    'source_path_id'        => $sourcePath->id,
+                    'embedded_root_path_id' => $field->id,
+                    'parent_id'             => null,
+                    'name'                  => $sourcePath->name,
+                    'full_path'             => $field->full_path . '.' . $sourcePath->full_path,
+                    'data_type'             => $sourcePath->data_type,
+                    'cardinality'           => $sourcePath->cardinality,
+                    'is_indexed'            => $sourcePath->is_indexed,
+                    'is_required'           => $sourcePath->is_required,
+                    'ref_target_type'       => $sourcePath->ref_target_type,
+                    'validation_rules'      => $sourcePath->validation_rules,
+                    'ui_options'            => $sourcePath->ui_options,
                 ]);
             }
         });
@@ -258,17 +239,32 @@ class Blueprint extends Model
     }
 
     /**
-     * Удалить материализованные Paths компонента.
+     * Проверить конфликты full_path при встраивании Blueprint.
      *
-     * @param \App\Models\Blueprint $component
+     * @param \App\Models\Path $field Поле с data_type='blueprint'
+     * @param \App\Models\Blueprint $component Компонент для встраивания
+     * @throws \LogicException При конфликте путей
      */
-    public function dematerializeComponentPaths(Blueprint $component): void
+    private function validateNoEmbeddedConflicts(Path $field, Blueprint $component): void
     {
-        Path::where('blueprint_id', $this->id)
-            ->where('source_component_id', $component->id)
-            ->delete();
+        $existingPaths = $this->paths()
+            ->where('id', '!=', $field->id)
+            ->where(function ($query) use ($field) {
+                // Исключаем старые материализованные Paths от этого поля
+                $query->where('embedded_root_path_id', '!=', $field->id)
+                    ->orWhereNull('embedded_root_path_id');
+            })
+            ->pluck('full_path');
 
-        $this->invalidatePathsCache();
+        foreach ($component->ownPaths as $sourcePath) {
+            $newFullPath = $field->full_path . '.' . $sourcePath->full_path;
+
+            if ($existingPaths->contains($newFullPath)) {
+                throw new \LogicException(
+                    "Конфликт: Path '{$newFullPath}' уже существует в Blueprint '{$this->slug}'"
+                );
+            }
+        }
     }
 
     /**
@@ -277,28 +273,6 @@ class Blueprint extends Model
     public function invalidatePathsCache(): void
     {
         Cache::forget("blueprint:{$this->id}:all_paths");
-    }
-
-    /**
-     * Проверить конфликты full_path.
-     *
-     * @param \App\Models\Blueprint $component
-     * @param string $pathPrefix
-     * @throws \LogicException
-     */
-    private function validateNoPathConflicts(Blueprint $component, string $pathPrefix): void
-    {
-        $existingPaths = $this->paths()->pluck('full_path');
-
-        foreach ($component->ownPaths as $sourcePath) {
-            $newFullPath = $pathPrefix . '.' . $sourcePath->full_path;
-
-            if ($existingPaths->contains($newFullPath)) {
-                throw new \LogicException(
-                    "Конфликт: Path '{$newFullPath}' уже существует в Blueprint '{$this->slug}'"
-                );
-            }
-        }
     }
 
     /**

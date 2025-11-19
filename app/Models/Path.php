@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $is_indexed
  * @property bool $is_required
  * @property string|null $ref_target_type
+ * @property int|null $embedded_blueprint_id
+ * @property int|null $embedded_root_path_id
  * @property array|null $validation_rules
  * @property array|null $ui_options
  * @property \Illuminate\Support\Carbon $created_at
@@ -33,7 +35,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  *
  * @property-read \App\Models\Blueprint $blueprint
+ * @property-read \App\Models\Blueprint|null $embeddedBlueprint
  * @property-read \App\Models\Path|null $parent
+ * @property-read \App\Models\Path|null $embeddedRootPath
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Path> $children
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocValue> $values
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocRef> $refs
@@ -54,6 +58,8 @@ class Path extends Model
         'is_indexed',
         'is_required',
         'ref_target_type',
+        'embedded_blueprint_id',
+        'embedded_root_path_id',
         'validation_rules',
         'ui_options',
     ];
@@ -73,6 +79,22 @@ class Path extends Model
     public function blueprint(): BelongsTo
     {
         return $this->belongsTo(Blueprint::class);
+    }
+
+    /**
+     * Связь с встроенным Blueprint (для data_type='blueprint').
+     */
+    public function embeddedBlueprint(): BelongsTo
+    {
+        return $this->belongsTo(Blueprint::class, 'embedded_blueprint_id');
+    }
+
+    /**
+     * Корневой Path, от которого материализованы вложенные поля.
+     */
+    public function embeddedRootPath(): BelongsTo
+    {
+        return $this->belongsTo(Path::class, 'embedded_root_path_id');
     }
 
     /**
@@ -115,6 +137,14 @@ class Path extends Model
     public function isRef(): bool
     {
         return $this->data_type === 'ref';
+    }
+
+    /**
+     * Является ли это поле встроенным Blueprint.
+     */
+    public function isEmbeddedBlueprint(): bool
+    {
+        return $this->data_type === 'blueprint';
     }
 
     /**
