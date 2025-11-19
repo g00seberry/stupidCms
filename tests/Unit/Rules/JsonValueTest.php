@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Rules\JsonValue;
 use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 test('passes for valid json encodable value', function () {
     $rule = new JsonValue();

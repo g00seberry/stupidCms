@@ -8,13 +8,16 @@ use App\Models\MediaAvMetadata;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели Media.
  *
- * Проверяют структуру модели, ULID, casts, отношения и бизнес-логику
- * без взаимодействия с БД.
+ * Проверяют структуру модели, ULID, casts, отношения и бизнес-логику.
  */
+
+uses(TestCase::class, RefreshDatabase::class);
 
 test('uses ULID as primary key', function () {
     $media = new Media();

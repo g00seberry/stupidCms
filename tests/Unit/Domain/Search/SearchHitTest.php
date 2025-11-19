@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Domain\Search\SearchHit;
 
+uses();
+
 test('creates search hit with all parameters', function () {
     $highlight = [
         'title' => ['Test <em>Title</em>'],

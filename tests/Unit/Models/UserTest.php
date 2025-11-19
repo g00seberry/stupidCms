@@ -7,6 +7,7 @@ use App\Models\Entry;
 use App\Models\RefreshToken;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\DatabaseNotification;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели User.
@@ -14,6 +15,8 @@ use Illuminate\Notifications\DatabaseNotification;
  * Проверяют структуру модели, атрибуты, отношения и бизнес-логику
  * без взаимодействия с БД (используем моки где необходимо).
  */
+
+uses(TestCase::class);
 
 test('has fillable attributes', function () {
     $user = new User();

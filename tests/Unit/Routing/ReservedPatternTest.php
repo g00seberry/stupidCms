@@ -3,10 +3,13 @@
 declare(strict_types=1);
 
 use App\Domain\Routing\ReservedPattern;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для ReservedPattern.
  */
+
+uses(TestCase::class);
 
 test('generates slug regex pattern', function () {
     $pattern = ReservedPattern::slugRegex();

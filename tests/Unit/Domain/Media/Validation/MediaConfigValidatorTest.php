@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Domain\Media\Validation\MediaConfigValidator;
 use Illuminate\Support\Facades\Config;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для MediaConfigValidator.
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Config;
  * - проверка структуры конфигурации вариантов
  * - проверка наличия обязательного ключа 'max' в каждом варианте
  */
+
+uses(TestCase::class);
+
 beforeEach(function () {
     // Сохраняем оригинальную конфигурацию
     $this->originalVariants = config('media.variants', []);

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Rules\PublishedDateNotInFuture;
 use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 test('passes for past date', function () {
     $rule = new PublishedDateNotInFuture();

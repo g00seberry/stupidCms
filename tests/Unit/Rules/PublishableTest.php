@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Rules\Publishable;
 use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 test('passes when not publishing', function () {
     $rule = new Publishable();

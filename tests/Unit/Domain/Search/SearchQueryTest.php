@@ -6,6 +6,8 @@ use App\Domain\Search\SearchQuery;
 use App\Domain\Search\ValueObjects\SearchTermFilter;
 use Carbon\CarbonImmutable;
 
+uses();
+
 test('creates search query with all parameters', function () {
     $from = CarbonImmutable::parse('2024-01-01');
     $to = CarbonImmutable::parse('2024-12-31');

@@ -13,9 +13,18 @@ use Tests\TestCase;
 uses(TestCase::class, RefreshDatabase::class)
     ->in('Feature');
 
-// Unit-тесты без БД
+// Unit-тесты без БД (исключая Domain/Search, которые не требуют TestCase)
 uses(TestCase::class)
-    ->in('Unit');
+    ->in('Unit/Auth')
+    ->in('Unit/Domain/Media')
+    ->in('Unit/Entries')
+    ->in('Unit/Helpers')
+    ->in('Unit/Media')
+    ->in('Unit/Models')
+    ->in('Unit/PostTypes')
+    ->in('Unit/Routing')
+    ->in('Unit/Rules')
+    ->in('Unit/Support');
 
 // Загрузка модульных конфигураций
 $modules = glob(__DIR__ . '/Modules/*.php');

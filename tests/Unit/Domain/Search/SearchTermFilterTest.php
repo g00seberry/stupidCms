@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Domain\Search\ValueObjects\SearchTermFilter;
 
+uses();
+
 test('creates search term filter from string', function () {
     $filter = SearchTermFilter::fromString('1:123');
 

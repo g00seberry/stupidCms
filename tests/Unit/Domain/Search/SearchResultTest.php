@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Domain\Search\SearchHit;
 use App\Domain\Search\SearchResult;
 
+uses();
+
 test('creates search result with all parameters', function () {
     $hits = [
         new SearchHit('1', 'post', 'test-1', 'Test Title 1', 'Excerpt 1', 0.95, []),

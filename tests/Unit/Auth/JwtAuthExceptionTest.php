@@ -5,10 +5,13 @@ declare(strict_types=1);
 use App\Domain\Auth\Exceptions\JwtAuthenticationException;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для JwtAuthenticationException.
  */
+
+uses(TestCase::class);
 
 test('creates exception with reason and detail', function () {
     $reason = 'token_expired';
@@ -31,8 +34,9 @@ test('exception message includes reason and detail', function () {
 test('converts to error payload with unauthorized code', function () {
     $exception = new JwtAuthenticationException('token_revoked', 'Token has been revoked');
     
-    // Use app's ErrorFactory instance (resolved from container)
-    $factory = app(\App\Support\Errors\ErrorFactory::class);
+    $errorsConfig = require __DIR__ . '/../../../config/errors.php';
+    $kernel = \App\Support\Errors\ErrorKernel::fromConfig($errorsConfig);
+    $factory = $kernel->factory();
 
     $error = $exception->toError($factory);
 

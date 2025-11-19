@@ -58,8 +58,9 @@ class MediaStoreAction
      * Для изображений создаёт запись в media_images с width, height, exif_json.
      * Для видео/аудио создаёт запись в media_av_metadata с нормализованными AV-метаданными
      * (длительность, битрейт, кадры, кодеки).
-     * Если файл с таким же checksum уже существует, возвращает существующую запись
-     * без сохранения дубликата на диск (дедупликация).
+     * Если файл с таким же checksum уже существует (включая soft deleted),
+     * возвращает существующую запись без сохранения дубликата на диск (дедупликация).
+     * Если найденная запись была soft deleted, она автоматически восстанавливается.
      * После успешного создания новой записи отправляет событие MediaUploaded.
      *
      * @param \Illuminate\Http\UploadedFile $file Загруженный файл
@@ -97,10 +98,15 @@ class MediaStoreAction
         $extension = strtolower($file->getClientOriginalExtension() ?: pathinfo($originalName, PATHINFO_EXTENSION) ?: $file->extension() ?: 'bin');
         $checksum = $this->checksum($file);
 
-        // Дедупликация: проверка существующего файла по checksum
+        // Дедупликация: проверка существующего файла по checksum (включая soft deleted)
         if ($checksum !== null) {
-            $existing = Media::where('checksum_sha256', $checksum)->first();
+            $existing = Media::withTrashed()->where('checksum_sha256', $checksum)->first();
             if ($existing !== null) {
+                // Если файл был soft deleted, восстанавливаем его
+                if ($existing->trashed()) {
+                    $existing->restore();
+                }
+
                 // Обновить метаданные, если они переданы в payload
                 $shouldUpdate = false;
                 $updates = [];

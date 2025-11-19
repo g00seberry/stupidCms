@@ -5,10 +5,13 @@ declare(strict_types=1);
 use App\Models\Audit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели Audit.
  */
+
+uses(TestCase::class);
 
 test('casts diff_json to array', function () {
     $audit = new Audit();

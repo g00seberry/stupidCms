@@ -37,7 +37,9 @@ test('readonly properties cannot be modified', function () {
 
 test('converts to error payload with conflict code', function () {
     $exception = new PathAlreadyReservedException('/admin', 'system');
-    $factory = app(\App\Support\Errors\ErrorFactory::class);
+    $errorsConfig = require __DIR__ . '/../../../config/errors.php';
+    $kernel = \App\Support\Errors\ErrorKernel::fromConfig($errorsConfig);
+    $factory = $kernel->factory();
 
     $error = $exception->toError($factory);
 

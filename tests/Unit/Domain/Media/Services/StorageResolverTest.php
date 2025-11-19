@@ -6,6 +6,9 @@ use App\Domain\Media\Services\StorageResolver;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 test('resolves storage disk by collection', function () {
     Config::set('media.disks.collections', [

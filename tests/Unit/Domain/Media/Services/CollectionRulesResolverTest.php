@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Domain\Media\Services\CollectionRulesResolver;
 use Illuminate\Support\Facades\Config;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 test('gets rules for collection', function () {
     Config::set('media.collections.videos', [

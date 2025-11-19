@@ -6,13 +6,15 @@ use App\Models\MediaVariant;
 use App\Models\Media;
 use App\Domain\Media\MediaVariantStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели MediaVariant.
  *
- * Проверяют структуру модели, ULID, casts, отношения и enum
- * без взаимодействия с БД.
+ * Проверяют структуру модели, ULID, casts, отношения и enum.
  */
+
+uses(TestCase::class);
 
 test('uses ULID as primary key', function () {
     $variant = new MediaVariant();

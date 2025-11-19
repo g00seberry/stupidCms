@@ -44,7 +44,7 @@ class BulkStoreMediaRequest extends FormRequest
     /**
      * Подготовить данные для валидации.
      *
-     * Автоматически нормализует collection через slugify для очистки данных на границе.
+     * Сохраняет оригинальное значение collection для валидации до нормализации.
      * Нормализует пустые строки в null для title и alt, чтобы они не проходили валидацию min:1.
      *
      * @return void
@@ -63,14 +63,11 @@ class BulkStoreMediaRequest extends FormRequest
             $this->merge(['alt' => $alt !== '' ? $alt : null]);
         }
 
-        // Нормализация collection: slugify и пустые строки → null
+        // Сохраняем оригинальное значение collection для валидации
+        // Нормализация будет выполнена после валидации в методе withValidator
         if ($this->has('collection') && is_string($this->input('collection'))) {
             $collection = trim($this->input('collection'));
-            if ($collection !== '') {
-                $this->merge([
-                    'collection' => Str::slug($collection, '-'),
-                ]);
-            } else {
+            if ($collection === '') {
                 $this->merge(['collection' => null]);
             }
         }
@@ -95,6 +92,8 @@ class BulkStoreMediaRequest extends FormRequest
     {
         /** @var CollectionRulesResolver $resolver */
         $resolver = app(CollectionRulesResolver::class);
+        // Используем оригинальное значение collection для получения правил
+        // После валидации оно будет нормализовано
         $collection = $this->input('collection');
 
         $rules = $resolver->getRules($collection);
@@ -106,8 +105,78 @@ class BulkStoreMediaRequest extends FormRequest
             'files.*' => ['required', 'file', "max:{$maxUploadKb}", "mimetypes:{$allowedMimes}"],
             'title' => 'nullable|filled|string|min:1|max:255',
             'alt' => 'nullable|filled|string|min:1|max:255',
-            'collection' => 'nullable|string|max:64|regex:/^[a-z0-9-_.]+$/i',
+            'collection' => ['nullable', 'string', 'max:64', function ($attribute, $value, $fail) {
+                if ($value === null) {
+                    return;
+                }
+                // Валидируем оригинальное значение: проверяем, что оно содержит только допустимые символы
+                // Допустимые символы: буквы, цифры, пробелы (будут заменены на дефисы), дефисы, подчеркивания, точки
+                // Недопустимые: специальные символы типа !, @, #, $, %, ^, &, *, (, ), +, =, [, ], {, }, |, \, :, ;, ", ', <, >, ?, /, ~, `
+                if (!preg_match('/^[a-zA-Z0-9\s\-_.]+$/', $value)) {
+                    $fail('The collection must contain only letters, numbers, spaces, hyphens, underscores, and dots.');
+                }
+                // Также проверяем, что после slugify значение не пустое и соответствует regex
+                $normalized = Str::slug($value, '-');
+                if ($normalized === '' || !preg_match('/^[a-z0-9-_.]+$/i', $normalized)) {
+                    $fail('The collection must be able to be normalized to a valid slug.');
+                }
+            }],
         ];
+    }
+
+    /**
+     * Настроить валидатор после создания правил.
+     *
+     * Нормализует collection через slugify после успешной валидации.
+     *
+     * @param \Illuminate\Contracts\Validation\Validator $validator Валидатор
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function ($validator) {
+            // Нормализуем collection после валидации, только если нет ошибок для collection
+            if (!$validator->errors()->has('collection') && $this->has('collection') && is_string($this->input('collection'))) {
+                $collection = trim($this->input('collection'));
+                if ($collection !== '') {
+                    // Используем replace() для обновления данных после валидации
+                    $data = $this->all();
+                    $data['collection'] = Str::slug($collection, '-');
+                    $this->replace($data);
+                }
+            }
+        });
+    }
+
+    /**
+     * Получить валидированные данные запроса.
+     *
+     * Нормализует collection через slugify после валидации.
+     *
+     * @param string|array<string>|null $key Ключ для получения (опционально)
+     * @param mixed $default Значение по умолчанию (опционально)
+     * @return array<string, mixed>|mixed
+     */
+    public function validated($key = null, $default = null)
+    {
+        $validated = parent::validated($key, $default);
+        
+        // Если запрошен конкретный ключ, возвращаем как есть
+        if ($key !== null) {
+            return $validated;
+        }
+        
+        // Нормализуем collection после валидации
+        if (isset($validated['collection']) && is_string($validated['collection'])) {
+            $collection = trim($validated['collection']);
+            if ($collection !== '') {
+                $validated['collection'] = Str::slug($collection, '-');
+            } else {
+                $validated['collection'] = null;
+            }
+        }
+        
+        return $validated;
     }
 
     /**

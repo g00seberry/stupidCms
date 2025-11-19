@@ -9,13 +9,16 @@ use App\Models\Term;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели Entry.
  *
- * Проверяют структуру модели, casts, отношения, scopes и бизнес-логику
- * без взаимодействия с БД.
+ * Проверяют структуру модели, casts, отношения, scopes и бизнес-логику.
  */
+
+uses(TestCase::class, RefreshDatabase::class);
 
 test('casts data_json to array', function () {
     $entry = new Entry();

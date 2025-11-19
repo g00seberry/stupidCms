@@ -157,9 +157,10 @@ test('bulk upload normalizes collection slug', function () {
 test('bulk upload requires authentication', function () {
     $file1 = UploadedFile::fake()->image('image1.jpg', 1920, 1080);
 
-    $response = $this->postJson('/api/v1/admin/media/bulk', [
-        'files' => [$file1],
-    ]);
+    $response = $this->withoutMiddleware([\App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/media/bulk', [
+            'files' => [$file1],
+        ]);
 
     $response->assertUnauthorized();
 });

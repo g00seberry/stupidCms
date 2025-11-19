@@ -135,3 +135,117 @@ test('creates media av metadata only if has normalized data', function () {
     expect($columns)->not->toContain('duration_ms');
 });
 
+test('deduplicates file with soft deleted media', function () {
+    $action = app(MediaStoreAction::class);
+    
+    // Создаем файл с фиксированным содержимым для одинакового checksum
+    // Используем Storage::fake() для создания стабильного файла
+    $fakeFile = UploadedFile::fake()->image('test.jpg', 1920, 1080);
+    $fileContent = file_get_contents($fakeFile->getRealPath());
+    
+    // Сохраняем в Storage для стабильности
+    Storage::disk('media')->put('test_file.jpg', $fileContent);
+    $tempPath1 = Storage::disk('media')->path('test_file.jpg');
+    
+    $file1 = new UploadedFile(
+        $tempPath1,
+        'test.jpg',
+        'image/jpeg',
+        null,
+        true
+    );
+
+    $media1 = $action->execute($file1, [
+        'title' => 'Original Title',
+        'alt' => 'Original Alt',
+    ]);
+
+    expect($media1)->not->toBeNull()
+        ->and($media1->trashed())->toBeFalse();
+
+    $originalId = $media1->id;
+    $originalChecksum = $media1->checksum_sha256;
+
+    // Soft delete файл
+    $media1->delete();
+    expect($media1->trashed())->toBeTrue();
+
+    // Загружаем тот же файл снова (с тем же содержимым)
+    Storage::disk('media')->put('test_file2.jpg', $fileContent);
+    $tempPath2 = Storage::disk('media')->path('test_file2.jpg');
+    $file2 = new UploadedFile(
+        $tempPath2,
+        'test.jpg',
+        'image/jpeg',
+        null,
+        true
+    );
+
+    $media2 = $action->execute($file2, [
+        'title' => 'New Title',
+        'alt' => 'New Alt',
+    ]);
+
+    // Проверяем, что вернулась та же запись (не создана новая)
+    expect($media2->id)->toBe($originalId)
+        ->and($media2->checksum_sha256)->toBe($originalChecksum)
+        ->and($media2->trashed())->toBeFalse() // Должна быть восстановлена
+        ->and($media2->title)->toBe('New Title') // Метаданные обновлены
+        ->and($media2->alt)->toBe('New Alt');
+
+    // Проверяем, что не создана новая запись
+    $mediaCount = Media::withTrashed()->where('checksum_sha256', $originalChecksum)->count();
+    expect($mediaCount)->toBe(1);
+});
+
+test('deduplicates file with active media', function () {
+    $action = app(MediaStoreAction::class);
+    
+    // Создаем файл с фиксированным содержимым
+    $fakeFile = UploadedFile::fake()->image('test.jpg', 1920, 1080);
+    $fileContent = file_get_contents($fakeFile->getRealPath());
+    
+    Storage::disk('media')->put('test_file3.jpg', $fileContent);
+    $tempPath1 = Storage::disk('media')->path('test_file3.jpg');
+    
+    $file1 = new UploadedFile(
+        $tempPath1,
+        'test.jpg',
+        'image/jpeg',
+        null,
+        true
+    );
+
+    $media1 = $action->execute($file1, [
+        'title' => 'Original Title',
+    ]);
+
+    $originalId = $media1->id;
+    $originalChecksum = $media1->checksum_sha256;
+
+    // Загружаем тот же файл снова (не удаленный)
+    Storage::disk('media')->put('test_file4.jpg', $fileContent);
+    $tempPath2 = Storage::disk('media')->path('test_file4.jpg');
+    $file2 = new UploadedFile(
+        $tempPath2,
+        'test.jpg',
+        'image/jpeg',
+        null,
+        true
+    );
+
+    $media2 = $action->execute($file2, [
+        'title' => 'New Title',
+    ]);
+
+    // Проверяем, что вернулась та же запись
+    expect($media2->id)->toBe($originalId)
+        ->and($media2->checksum_sha256)->toBe($originalChecksum)
+        ->and($media2->trashed())->toBeFalse()
+        ->and($media2->title)->toBe('New Title');
+
+    // Проверяем, что не создана новая запись
+    $mediaCount = Media::where('checksum_sha256', $originalChecksum)->count();
+    expect($mediaCount)->toBe(1);
+});
+

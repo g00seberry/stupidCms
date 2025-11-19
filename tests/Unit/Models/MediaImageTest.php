@@ -5,13 +5,15 @@ declare(strict_types=1);
 use App\Models\Media;
 use App\Models\MediaImage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели MediaImage.
  *
- * Проверяют структуру модели, ULID, casts и отношения
- * без взаимодействия с БД.
+ * Проверяют структуру модели, ULID, casts и отношения.
  */
+
+uses(TestCase::class);
 
 test('uses ULID as primary key', function () {
     $image = new MediaImage();

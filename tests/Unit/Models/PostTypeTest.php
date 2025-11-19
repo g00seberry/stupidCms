@@ -6,13 +6,16 @@ use App\Models\PostType;
 use App\Models\Entry;
 use App\Domain\PostTypes\PostTypeOptions;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели PostType.
  *
- * Проверяют структуру модели, fillable, casts и отношения
- * без взаимодействия с БД.
+ * Проверяют структуру модели, fillable, casts и отношения.
  */
+
+uses(TestCase::class, RefreshDatabase::class);
 
 test('has fillable attributes', function () {
     $postType = new PostType();

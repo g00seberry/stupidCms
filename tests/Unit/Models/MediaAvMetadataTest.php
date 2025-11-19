@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Media;
 use App\Models\MediaAvMetadata;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tests\TestCase;
 
 /**
  * Unit-тесты для модели MediaAvMetadata.
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Проверяют структуру модели, ULID, casts и отношения
  * без взаимодействия с БД.
  */
+
+uses(TestCase::class);
 
 test('uses ULID as primary key', function () {
     $metadata = new MediaAvMetadata();
