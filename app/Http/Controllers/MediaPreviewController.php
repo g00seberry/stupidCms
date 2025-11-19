@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domain\Auth\JwtService;
 use App\Domain\Media\Services\OnDemandVariantService;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
+use App\Models\User;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -33,9 +36,11 @@ class MediaPreviewController extends Controller
 
     /**
      * @param \App\Domain\Media\Services\OnDemandVariantService $variantService Сервис для генерации вариантов
+     * @param \App\Domain\Auth\JwtService $jwt Сервис для работы с JWT токенами
      */
     public function __construct(
-        private readonly OnDemandVariantService $variantService
+        private readonly OnDemandVariantService $variantService,
+        private readonly JwtService $jwt
     ) {
     }
 
@@ -49,10 +54,14 @@ class MediaPreviewController extends Controller
      * Для админов (аутентифицированных пользователей):
      * - Доступ к удаленным файлам (withTrashed)
      * - Проверка прав доступа через Policy
+     * - Аутентификация работает через JWT токен из cookie (cms_at) даже на публичных роутах
      *
      * Для публичных запросов:
      * - Доступ только к активным (не удаленным) файлам
      * - Без проверки прав доступа
+     *
+     * Поиск медиа-файла выполняется по ULID идентификатору через where('id', $id)->first()
+     * для обеспечения корректной работы с ULID в Laravel.
      *
      * @group Media
      * @name Get media or variant
@@ -112,9 +121,10 @@ class MediaPreviewController extends Controller
         $isAdmin = $this->isAdminRequest($request);
 
         // Для админов используем withTrashed, для публичных - только активные
+        // Используем where('id', $id) для явного поиска по ULID
         $media = $isAdmin
-            ? Media::withTrashed()->find($id)
-            : Media::query()->find($id);
+            ? Media::withTrashed()->where('id', $id)->first()
+            : Media::query()->where('id', $id)->first();
 
         if (! $media) {
             $this->throwMediaNotFound($id);
@@ -258,14 +268,52 @@ class MediaPreviewController extends Controller
      * Проверить, является ли запрос админским.
      *
      * Проверяет наличие аутентифицированного пользователя через guard 'api'
-     * (используется JwtAuth middleware в админских роутах).
+     * или валидирует JWT токен из cookie для публичных роутов.
+     * Это позволяет админам получать доступ к удаленным файлам даже на публичных эндпоинтах.
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
      * @return bool true, если запрос от админа
      */
     private function isAdminRequest(Request $request): bool
     {
-        return auth('api')->check() || auth()->check();
+        // Если пользователь уже аутентифицирован через middleware
+        if (auth('api')->check() || auth()->check()) {
+            return true;
+        }
+
+        // Для публичных роутов проверяем JWT токен из cookie вручную
+        $accessToken = (string) $request->cookie(config('jwt.cookies.access'), '');
+
+        if ($accessToken === '') {
+            return false;
+        }
+
+        try {
+            $verified = $this->jwt->verify($accessToken, 'access');
+            $claims = $verified['claims'];
+            $subject = $claims['sub'] ?? null;
+
+            if (! is_numeric($subject) || (int) $subject <= 0) {
+                return false;
+            }
+
+            $userId = (int) $subject;
+            $user = User::query()->find($userId);
+
+            if (! $user) {
+                return false;
+            }
+
+            // Устанавливаем пользователя в guard для последующих проверок прав
+            // Это необходимо для работы authorize() в методе show()
+            Auth::shouldUse('api');
+            Auth::setUser($user);
+
+            return true;
+        } catch (Throwable) {
+            // Если токен невалиден, считаем запрос публичным
+            return false;
+        }
     }
 
     /**

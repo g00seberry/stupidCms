@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
  * 
  * Безопасность:
  * - Использует guard 'admin' для явной идентификации администраторских запросов
- * - Throttle 'api' настроен в bootstrap/app.php (60 запросов в минуту)
+ * - Throttle 'api' настроен в bootstrap/app.php (120 запросов в минуту)
  * - Для кросс-сайтовых запросов (SPA на другом origin) требуется:
  *   - SameSite=None; Secure для cookies
  *   - CORS с credentials: true
