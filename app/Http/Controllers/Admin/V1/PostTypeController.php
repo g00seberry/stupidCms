@@ -42,6 +42,7 @@ class PostTypeController extends Controller
      * @bodyParam options_json object Опциональные настройки. Example: {"fields":{"price":{"type":"number"}}}
      * @response status=201 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "product",
      *     "name": "Products",
      *     "options_json": {
@@ -134,6 +135,7 @@ class PostTypeController extends Controller
      * @response status=200 {
      *   "data": [
      *     {
+     *       "id": 1,
      *       "slug": "article",
      *       "name": "Articles",
      *       "options_json": {},
@@ -192,9 +194,11 @@ class PostTypeController extends Controller
      * @urlParam slug string required Slug PostType. Example: article
      * @response status=200 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "article",
      *     "name": "Articles",
      *     "options_json": {},
+     *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }
@@ -275,6 +279,7 @@ class PostTypeController extends Controller
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @response status=200 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "article",
      *     "name": "Articles",
      *     "options_json": {
@@ -284,6 +289,7 @@ class PostTypeController extends Controller
      *         }
      *       }
      *     },
+     *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }

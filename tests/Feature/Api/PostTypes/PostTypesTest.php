@@ -27,7 +27,7 @@ test('admin can list post types', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['slug', 'name', 'options_json'],
+                '*' => ['id', 'slug', 'name', 'options_json'],
             ],
         ])
         ->assertJsonCount(3, 'data');

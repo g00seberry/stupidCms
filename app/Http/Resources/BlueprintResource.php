@@ -29,7 +29,7 @@ class BlueprintResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'type' => $this->type,
-            'is_default' => $this->is_default,
+            'is_default' => (bool) $this->is_default,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
 

@@ -45,6 +45,9 @@ class PostTypeResource extends AdminJsonResource
     /**
      * Преобразовать ресурс в массив.
      *
+     * Возвращает массив с полями типа записи: id, slug, name, options_json,
+     * created_at, updated_at.
+     *
      * @param \Illuminate\Http\Request $request HTTP запрос
      * @return array<string, mixed> Массив с полями типа записи
      */
@@ -54,6 +57,7 @@ class PostTypeResource extends AdminJsonResource
         $options = $this->options_json;
 
         return [
+            'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
             'options_json' => $options->toApiArray(),

@@ -50,6 +50,15 @@ class Blueprint extends Model
         'is_default',
     ];
 
+    /**
+     * Значения атрибутов по умолчанию.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'is_default' => false,
+    ];
+
     protected $casts = [
         'is_default' => 'boolean',
     ];
