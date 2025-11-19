@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Media\BulkDeleteMediaRequest;
 use App\Http\Requests\Admin\Media\BulkForceDeleteMediaRequest;
 use App\Http\Requests\Admin\Media\BulkRestoreMediaRequest;
+use App\Http\Requests\Admin\Media\BulkStoreMediaRequest;
 use App\Http\Requests\Admin\Media\IndexMediaRequest;
 use App\Http\Requests\Admin\Media\StoreMediaRequest;
 use App\Http\Requests\Admin\Media\UpdateMediaRequest;
@@ -457,6 +458,168 @@ class MediaController extends Controller
         $statusCode = $media->wasRecentlyCreated ? HttpResponse::HTTP_CREATED : HttpResponse::HTTP_OK;
 
         return MediaResource::make($media)->response()->setStatusCode($statusCode);
+    }
+
+    /**
+     * Массовая загрузка медиа-файлов.
+     *
+     * Обрабатывает массив файлов и создаёт записи Media для каждого файла.
+     * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
+     * Опциональные метаданные (title, alt, collection) применяются ко всем файлам.
+     *
+     * @group Admin ▸ Media
+     * @name Bulk upload media
+     * @authenticated
+     * @bodyParam files array required Массив файлов (1-50 элементов). Example: [storage/app/scribe/examples/media-upload.png, storage/app/scribe/examples/media-upload2.jpg]
+     * @bodyParam files.* file required Файл (mimetype из `config('media.allowed_mimes')`). Example: storage/app/scribe/examples/media-upload.png
+     * @bodyParam title string Пользовательский заголовок для всех файлов. Example: Gallery images
+     * @bodyParam alt string Alt-текст для всех файлов (для изображений). Example: Gallery cover
+     * @bodyParam collection string Коллекция (slug). Example: uploads
+     * @responseHeader Cache-Control "no-store, private"
+     * @responseHeader Vary "Cookie"
+     * @response status=201 {
+     *   "data": [
+     *     {
+     *       "id": "01HXZYXQJ123456789ABCDEF",
+     *       "kind": "image",
+     *       "name": "hero.jpg",
+     *       "ext": "jpg",
+     *       "mime": "image/jpeg",
+     *       "size_bytes": 235678,
+     *       "width": 1920,
+     *       "height": 1080,
+     *       "title": "Gallery images",
+     *       "alt": "Gallery cover",
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null,
+     *       "preview_urls": {
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF?variant=thumbnail"
+     *       },
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ123456789ABCDEF"
+     *     },
+     *     {
+     *       "id": "01HXZYXQJ987654321FEDCBA",
+     *       "kind": "image",
+     *       "name": "hero2.jpg",
+     *       "ext": "jpg",
+     *       "mime": "image/jpeg",
+     *       "size_bytes": 245678,
+     *       "width": 1920,
+     *       "height": 1080,
+     *       "title": "Gallery images",
+     *       "alt": "Gallery cover",
+     *       "collection": "uploads",
+     *       "created_at": "2025-01-10T12:00:01+00:00",
+     *       "updated_at": "2025-01-10T12:00:01+00:00",
+     *       "deleted_at": null,
+     *       "preview_urls": {
+     *         "thumbnail": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA?variant=thumbnail"
+     *       },
+     *       "url": "https://api.stupidcms.dev/api/v1/media/01HXZYXQJ987654321FEDCBA"
+     *     }
+     *   ]
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555570",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555570-1111111122223333-01"
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The bulk media upload payload failed validation constraints.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555571",
+     *     "errors": {
+     *       "files": [
+     *         "The files field is required."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555571-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000007",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000007-6666666677778888-01"
+     * }
+     */
+    /**
+     * Массовая загрузка медиа-файлов.
+     *
+     * Обрабатывает массив файлов и создаёт записи Media для каждого файла.
+     * Возвращает коллекцию с специализированными ресурсами для каждого типа медиа.
+     * Опциональные метаданные (title, alt, collection) применяются ко всем файлам.
+     *
+     * @param \App\Http\Requests\Admin\Media\BulkStoreMediaRequest $request HTTP запрос с массивом файлов и метаданными
+     * @return \Illuminate\Http\JsonResponse JSON ответ с коллекцией загруженных медиа-файлов (статус 201)
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на создание
+     * @throws \App\Domain\Media\Validation\MediaValidationException Если файлы не прошли валидацию
+     */
+    public function bulkStore(BulkStoreMediaRequest $request): JsonResponse
+    {
+        $this->authorize('create', Media::class);
+
+        $validated = $request->validated();
+        $files = $request->file('files', []);
+
+        if (empty($files) || ! is_array($files)) {
+            $this->throwError(
+                ErrorCode::VALIDATION_ERROR,
+                'Files payload is missing.',
+                [
+                    'errors' => [
+                        'files' => ['Files payload is required.'],
+                    ],
+                ],
+            );
+        }
+
+        $uploadedMedia = [];
+
+        foreach ($files as $file) {
+            if (! $file) {
+                continue;
+            }
+
+            $payload = [];
+            if (isset($validated['title'])) {
+                $payload['title'] = $validated['title'];
+            }
+            if (isset($validated['alt'])) {
+                $payload['alt'] = $validated['alt'];
+            }
+            if (isset($validated['collection'])) {
+                $payload['collection'] = $validated['collection'];
+            }
+
+            $media = $this->storeAction->execute($file, $payload);
+            
+            // Загружаем связи для MediaResource (width, height из image, duration_ms из avMetadata)
+            $media->load(['image', 'avMetadata']);
+            
+            $uploadedMedia[] = $media;
+        }
+
+        return (new MediaCollection($uploadedMedia))->response()->setStatusCode(HttpResponse::HTTP_CREATED);
     }
 
     /**

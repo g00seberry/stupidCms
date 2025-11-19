@@ -4668,6 +4668,30 @@
             }
         },
         {
+            "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+            "type": "http_endpoint",
+            "name": "admin.v1.media.bulkStore",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+            "summary": "POST /api/v1/admin/media/bulk (api)",
+            "details": null,
+            "meta": {
+                "method": "POST",
+                "uri": "/api/v1/admin/media/bulk",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": [],
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "media",
+                "7": "bulk"
+            }
+        },
+        {
             "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
             "type": "http_endpoint",
             "name": "admin.v1.media.update",
@@ -9691,6 +9715,30 @@
                 }
             },
             {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\MediaController.php",
+                "summary": "POST /api/v1/admin/media/bulk (api)",
+                "details": null,
+                "meta": {
+                    "method": "POST",
+                    "uri": "/api/v1/admin/media/bulk",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": [],
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "media",
+                    "7": "bulk"
+                }
+            },
+            {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.update",
@@ -10288,6 +10336,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
                 "summary": "POST /api/v1/admin/media (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
@@ -11684,6 +11738,12 @@
                 "summary": "POST /api/v1/admin/media (api)"
             },
             {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
+            },
+            {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.update",
@@ -12028,6 +12088,12 @@
                 "summary": "POST /api/v1/admin/media (api)"
             },
             {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
+            },
+            {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.update",
@@ -12364,6 +12430,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.store",
                 "summary": "POST /api/v1/admin/media (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
             },
             {
                 "id": "http_endpoint:PUT:/api/v1/admin/media/{media}",
@@ -12752,6 +12824,12 @@
         ],
         "bulk": [
             {
+                "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
+                "type": "http_endpoint",
+                "name": "admin.v1.media.bulkStore",
+                "summary": "POST /api/v1/admin/media/bulk (api)"
+            },
+            {
                 "id": "http_endpoint:DELETE:/api/v1/admin/media/bulk",
                 "type": "http_endpoint",
                 "name": "admin.v1.media.bulkDestroy",
@@ -12795,5 +12873,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-19T10:01:39+00:00"
+    "generated_at": "2025-11-19T10:14:43+00:00"
 }

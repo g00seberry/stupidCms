@@ -169,6 +169,10 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->middleware(['can:create,' . Media::class, 'throttle:20,1'])
         ->name('admin.v1.media.store');
 
+    Route::post('/media/bulk', [MediaController::class, 'bulkStore'])
+        ->middleware(['can:create,' . Media::class, 'throttle:20,1'])
+        ->name('admin.v1.media.bulkStore');
+
     Route::put('/media/{media}', [MediaController::class, 'update'])
         ->middleware('throttle:20,1')
         ->name('admin.v1.media.update');
