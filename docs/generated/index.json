@@ -659,7 +659,7 @@
             "name": "MediaStoreAction",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
             "summary": "Действие для сохранения медиа-файла.",
-            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.",
+            "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.\nИспользует общую систему ошибок (HttpErrorException) для обработки ошибок валидации\nи сохранения файла.",
             "meta": {
                 "methods": [
                     "execute"
@@ -668,6 +668,7 @@
                     "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
                     "App\\Domain\\Media\\Services\\StorageResolver",
                     "App\\Domain\\Media\\Validation\\MediaValidationPipeline",
+                    "App\\Support\\Errors\\ErrorFactory",
                     "App\\Domain\\Media\\Services\\ExifManager"
                 ],
                 "interface": null
@@ -5664,7 +5665,7 @@
                 "name": "MediaStoreAction",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Media\\Actions\\MediaStoreAction.php",
                 "summary": "Действие для сохранения медиа-файла.",
-                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.",
+                "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.\nИспользует общую систему ошибок (HttpErrorException) для обработки ошибок валидации\nи сохранения файла.",
                 "meta": {
                     "methods": [
                         "execute"
@@ -5673,6 +5674,7 @@
                         "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
                         "App\\Domain\\Media\\Services\\StorageResolver",
                         "App\\Domain\\Media\\Validation\\MediaValidationPipeline",
+                        "App\\Support\\Errors\\ErrorFactory",
                         "App\\Domain\\Media\\Services\\ExifManager"
                     ],
                     "interface": null
@@ -12789,5 +12791,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-19T13:55:24+00:00"
+    "generated_at": "2025-11-19T14:02:43+00:00"
 }

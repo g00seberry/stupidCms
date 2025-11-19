@@ -419,7 +419,7 @@ class MediaController extends Controller
      * @param \App\Http\Requests\Admin\Media\StoreMediaRequest $request HTTP запрос с файлом и метаданными
      * @return \Illuminate\Http\JsonResponse JSON ответ со специализированным ресурсом медиа-файла
      * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на создание
-     * @throws \App\Domain\Media\Validation\MediaValidationException Если файл не прошел валидацию
+     * @throws \App\Support\Errors\HttpErrorException Если файл не прошел валидацию или не удалось сохранить
      */
     public function store(StoreMediaRequest $request): JsonResponse
     {

@@ -486,10 +486,12 @@ Value Object для параметров выборки медиа.
 Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,
 создание записи Media в БД и (опционально) нормализованных AV-метаданных
 в отдельной таблице.
+Использует общую систему ошибок (HttpErrorException) для обработки ошибок валидации
+и сохранения файла.
 
 ### Meta
 - **Methods:** `execute`
-- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Domain\Media\Services\ExifManager`
+- **Dependencies:** `App\Domain\Media\Services\MediaMetadataExtractor`, `App\Domain\Media\Services\StorageResolver`, `App\Domain\Media\Validation\MediaValidationPipeline`, `App\Support\Errors\ErrorFactory`, `App\Domain\Media\Services\ExifManager`
 
 ### Tags
 `media`, `action`
