@@ -25,7 +25,7 @@ class PathResource extends AdminJsonResource
      * - Метаданные (data_type, cardinality, is_required, is_indexed, is_readonly, sort_order)
      * - Правила валидации (validation_rules)
      * - Источник копии (source_blueprint_id, source_blueprint, blueprint_embed_id)
-     * - Дочерние поля (children) при их загрузке
+     * - Дочерние поля (children) - всегда присутствует (может быть пустым массивом)
      * - Даты в ISO 8601 формате
      *
      * @param Request $request HTTP запрос
@@ -60,12 +60,38 @@ class PathResource extends AdminJsonResource
             // Embed (если копия)
             'blueprint_embed_id' => $this->blueprint_embed_id,
 
-            // Дочерние поля (если загружены)
-            'children' => PathResource::collection($this->whenLoaded('children')),
+            // Дочерние поля (если загружены или установлены вручную через buildTree)
+            'children' => $this->getChildrenCollection(),
 
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
+    }
+
+    /**
+     * Получить коллекцию children для ресурса.
+     *
+     * Проверяет, загружены ли children через отношение или установлены вручную (через buildTree).
+     * Всегда возвращает коллекцию PathResource (может быть пустой).
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    private function getChildrenCollection(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    {
+        // Если children загружены через отношение, используем их
+        if ($this->relationLoaded('children')) {
+            return PathResource::collection($this->children);
+        }
+        
+        // Если children установлены вручную (через buildTree), используем их
+        // Проверяем, является ли children коллекцией (установлено вручную)
+        $children = $this->children;
+        if ($children instanceof \Illuminate\Support\Collection || $children instanceof \Illuminate\Database\Eloquent\Collection) {
+            return PathResource::collection($children);
+        }
+        
+        // Если children не установлены (вернулось отношение), возвращаем пустую коллекцию
+        return PathResource::collection(collect());
     }
 }
 

@@ -126,3 +126,54 @@ test('получение списка встраиваний blueprint', functio
         ->assertJsonCount(2, 'data');
 });
 
+test('нельзя создать дубликат встраивания в одно место', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    Path::factory()->create(['blueprint_id' => $embedded->id, 'name' => 'field1', 'full_path' => 'field1']);
+
+    // Первое встраивание
+    $this->postJson("/api/v1/admin/blueprints/{$host->id}/embeds", [
+        'embedded_blueprint_id' => $embedded->id,
+    ])->assertCreated();
+
+    // Попытка создать дубликат
+    $response = $this->postJson("/api/v1/admin/blueprints/{$host->id}/embeds", [
+        'embedded_blueprint_id' => $embedded->id,
+    ]);
+
+    $response->assertStatus(409)
+        ->assertJsonPath('code', 'CONFLICT')
+        ->assertJsonPath('detail', "Blueprint 'embedded' уже встроен в 'host' в корень.");
+});
+
+test('нельзя создать дубликат встраивания под одно host_path', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    Path::factory()->create(['blueprint_id' => $embedded->id, 'name' => 'field1', 'full_path' => 'field1']);
+
+    $hostPath = Path::factory()->create([
+        'blueprint_id' => $host->id,
+        'name' => 'office',
+        'full_path' => 'office',
+        'data_type' => 'json',
+    ]);
+
+    // Первое встраивание под host_path
+    $this->postJson("/api/v1/admin/blueprints/{$host->id}/embeds", [
+        'embedded_blueprint_id' => $embedded->id,
+        'host_path_id' => $hostPath->id,
+    ])->assertCreated();
+
+    // Попытка создать дубликат под тем же host_path
+    $response = $this->postJson("/api/v1/admin/blueprints/{$host->id}/embeds", [
+        'embedded_blueprint_id' => $embedded->id,
+        'host_path_id' => $hostPath->id,
+    ]);
+
+    $response->assertStatus(409)
+        ->assertJsonPath('code', 'CONFLICT')
+        ->assertJsonPath('detail', "Blueprint 'embedded' уже встроен в 'host' под полем 'office'.");
+});
+

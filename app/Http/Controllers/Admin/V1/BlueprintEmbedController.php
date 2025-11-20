@@ -109,6 +109,18 @@ class BlueprintEmbedController extends Controller
      * @response status=422 {
      *   "message": "Невозможно встроить blueprint 'address' в 'article': конфликт путей: 'email'"
      * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/conflict",
+     *   "title": "Conflict",
+     *   "status": 409,
+     *   "code": "CONFLICT",
+     *   "detail": "Blueprint 'address' уже встроен в 'article' в корень.",
+     *   "meta": {
+     *     "host_blueprint_code": "article",
+     *     "embedded_blueprint_code": "address",
+     *     "host_path_full_path": null
+     *   }
+     * }
      *
      * @param StoreEmbedRequest $request
      * @param Blueprint $blueprint

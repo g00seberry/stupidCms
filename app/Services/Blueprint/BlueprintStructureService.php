@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace App\Services\Blueprint;
 
 use App\Events\Blueprint\BlueprintStructureChanged;
+use App\Exceptions\Blueprint\BlueprintEmbeddedException;
+use App\Exceptions\Blueprint\BlueprintUsedInPostTypeException;
+use App\Exceptions\Blueprint\CannotDeleteCopiedPathException;
+use App\Exceptions\Blueprint\CannotEditCopiedPathException;
 use App\Exceptions\Blueprint\CyclicDependencyException;
+use App\Exceptions\Blueprint\DuplicateEmbedException;
 use App\Exceptions\Blueprint\PathConflictException;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
@@ -71,32 +76,27 @@ class BlueprintStructureService
      *
      * @param Blueprint $blueprint
      * @return void
-     * @throws \LogicException
+     * @throws BlueprintUsedInPostTypeException
+     * @throws BlueprintEmbeddedException
      */
     public function deleteBlueprint(Blueprint $blueprint): void
     {
         // Проверить, не используется ли blueprint в PostType
-        $usedInPostTypes = \App\Models\PostType::query()
+        $postTypesCount = \App\Models\PostType::query()
             ->where('blueprint_id', $blueprint->id)
-            ->exists();
+            ->count();
 
-        if ($usedInPostTypes) {
-            throw new \LogicException(
-                "Невозможно удалить blueprint '{$blueprint->code}': " .
-                "используется в PostType. Сначала отвяжите PostType от blueprint."
-            );
+        if ($postTypesCount > 0) {
+            throw BlueprintUsedInPostTypeException::create($blueprint->code, $postTypesCount);
         }
 
         // Проверить, не встроен ли в другие blueprint
-        $embeddedIn = BlueprintEmbed::query()
+        $embedsCount = BlueprintEmbed::query()
             ->where('embedded_blueprint_id', $blueprint->id)
-            ->exists();
+            ->count();
 
-        if ($embeddedIn) {
-            throw new \LogicException(
-                "Невозможно удалить blueprint '{$blueprint->code}': " .
-                "встроен в другие blueprint. Сначала удалите встраивания."
-            );
+        if ($embedsCount > 0) {
+            throw BlueprintEmbeddedException::create($blueprint->code, $embedsCount);
         }
 
         $blueprint->delete();
@@ -162,7 +162,7 @@ class BlueprintStructureService
      * @param Path $path
      * @param array<string, mixed> $data
      * @return Path
-     * @throws \LogicException
+     * @throws CannotEditCopiedPathException
      */
     public function updatePath(Path $path, array $data): Path
     {
@@ -171,10 +171,7 @@ class BlueprintStructureService
             $path->load('sourceBlueprint');
             $sourceBlueprintCode = $path->sourceBlueprint?->code ?? 'unknown';
             
-            throw new \LogicException(
-                "Невозможно редактировать скопированное поле '{$path->full_path}'. " .
-                "Измените исходное поле в blueprint '{$sourceBlueprintCode}'."
-            );
+            throw CannotEditCopiedPathException::create($path->full_path, $sourceBlueprintCode);
         }
 
         return DB::transaction(function () use ($path, $data) {
@@ -199,16 +196,13 @@ class BlueprintStructureService
      *
      * @param Path $path
      * @return void
-     * @throws \LogicException
+     * @throws CannotDeleteCopiedPathException
      */
     public function deletePath(Path $path): void
     {
         // Валидация: нельзя удалять скопированные поля
         if ($path->isCopied()) {
-            throw new \LogicException(
-                "Невозможно удалить скопированное поле '{$path->full_path}'. " .
-                "Удалите встраивание в blueprint '{$path->blueprint->code}'."
-            );
+            throw CannotDeleteCopiedPathException::create($path->full_path, $path->blueprint->code);
         }
 
         DB::transaction(function () use ($path) {
@@ -260,7 +254,7 @@ class BlueprintStructureService
      * @return BlueprintEmbed
      * @throws CyclicDependencyException
      * @throws PathConflictException
-     * @throws \LogicException
+     * @throws DuplicateEmbedException Если встраивание уже существует в указанном месте
      */
     public function createEmbed(
         Blueprint $host,
@@ -282,12 +276,10 @@ class BlueprintStructureService
                 ->exists();
 
             if ($exists) {
-                $hostName = $hostPath
-                    ? "под полем '{$hostPath->full_path}'"
-                    : "в корень";
-
-                throw new \LogicException(
-                    "Blueprint '{$embedded->code}' уже встроен в '{$host->code}' {$hostName}."
+                throw DuplicateEmbedException::create(
+                    $host->code,
+                    $embedded->code,
+                    $hostPath?->full_path
                 );
             }
 
