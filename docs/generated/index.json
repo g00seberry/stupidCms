@@ -28,6 +28,174 @@
             ]
         },
         {
+            "id": "model:App\\Models\\Blueprint",
+            "type": "model",
+            "name": "Blueprint",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Blueprint.php",
+            "summary": "Шаблон структуры данных для Entry.",
+            "details": null,
+            "meta": {
+                "table": "blueprints",
+                "fillable": [
+                    "name",
+                    "code",
+                    "description"
+                ],
+                "guarded": [
+                    "*"
+                ],
+                "casts": [],
+                "relations": {
+                    "paths": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\Path"
+                    },
+                    "embeds": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\BlueprintEmbed"
+                    },
+                    "embeddedIn": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\BlueprintEmbed"
+                    },
+                    "postTypes": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\PostType"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "blueprint"
+            ]
+        },
+        {
+            "id": "model:App\\Models\\BlueprintEmbed",
+            "type": "model",
+            "name": "BlueprintEmbed",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/BlueprintEmbed.php",
+            "summary": "Связь встраивания blueprint'а.",
+            "details": null,
+            "meta": {
+                "table": "blueprint_embeds",
+                "fillable": [
+                    "blueprint_id",
+                    "embedded_blueprint_id",
+                    "host_path_id"
+                ],
+                "guarded": [
+                    "*"
+                ],
+                "casts": [],
+                "relations": {
+                    "blueprint": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Blueprint"
+                    },
+                    "embeddedBlueprint": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Blueprint"
+                    },
+                    "hostPath": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Path"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "blueprintembed"
+            ]
+        },
+        {
+            "id": "model:App\\Models\\DocRef",
+            "type": "model",
+            "name": "DocRef",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/DocRef.php",
+            "summary": "Индексированная ссылка на другой Entry.",
+            "details": null,
+            "meta": {
+                "table": "doc_refs",
+                "fillable": [
+                    "entry_id",
+                    "path_id",
+                    "array_index",
+                    "target_entry_id"
+                ],
+                "guarded": [
+                    "*"
+                ],
+                "casts": [],
+                "relations": {
+                    "entry": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Entry"
+                    },
+                    "path": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Path"
+                    },
+                    "targetEntry": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Entry"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "docref"
+            ]
+        },
+        {
+            "id": "model:App\\Models\\DocValue",
+            "type": "model",
+            "name": "DocValue",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/DocValue.php",
+            "summary": "Индексированное скалярное значение из Entry.data_json.",
+            "details": null,
+            "meta": {
+                "table": "doc_values",
+                "fillable": [
+                    "entry_id",
+                    "path_id",
+                    "array_index",
+                    "value_string",
+                    "value_int",
+                    "value_float",
+                    "value_bool",
+                    "value_date",
+                    "value_datetime",
+                    "value_text",
+                    "value_json"
+                ],
+                "guarded": [
+                    "*"
+                ],
+                "casts": {
+                    "value_bool": "boolean",
+                    "value_json": "array"
+                },
+                "relations": {
+                    "entry": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Entry"
+                    },
+                    "path": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Path"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "docvalue"
+            ]
+        },
+        {
             "id": "model:App\\Models\\Entry",
             "type": "model",
             "name": "Entry",
@@ -55,6 +223,14 @@
                     "terms": {
                         "type": "belongsToMany",
                         "related": "App\\Models\\Term"
+                    },
+                    "docValues": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\DocValue"
+                    },
+                    "docRefs": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\DocRef"
                     }
                 },
                 "factory": "Database\\Factories\\EntryFactory"
@@ -242,6 +418,67 @@
             ]
         },
         {
+            "id": "model:App\\Models\\Path",
+            "type": "model",
+            "name": "Path",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Path.php",
+            "summary": "Поле внутри blueprint с материализованным full_path.",
+            "details": null,
+            "meta": {
+                "table": "paths",
+                "fillable": [
+                    "blueprint_id",
+                    "parent_id",
+                    "name",
+                    "data_type",
+                    "cardinality",
+                    "is_required",
+                    "is_indexed",
+                    "sort_order",
+                    "validation_rules"
+                ],
+                "guarded": [
+                    "source_blueprint_id",
+                    "blueprint_embed_id",
+                    "is_readonly",
+                    "full_path"
+                ],
+                "casts": {
+                    "is_required": "boolean",
+                    "is_indexed": "boolean",
+                    "is_readonly": "boolean",
+                    "validation_rules": "array"
+                },
+                "relations": {
+                    "blueprint": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Blueprint"
+                    },
+                    "sourceBlueprint": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Blueprint"
+                    },
+                    "blueprintEmbed": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\BlueprintEmbed"
+                    },
+                    "parent": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Path"
+                    },
+                    "children": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\Path"
+                    }
+                },
+                "factory": null
+            },
+            "related": [],
+            "tags": [
+                "path"
+            ]
+        },
+        {
             "id": "model:App\\Models\\Plugin",
             "type": "model",
             "name": "Plugin",
@@ -277,7 +514,8 @@
                 "fillable": [
                     "slug",
                     "name",
-                    "options_json"
+                    "options_json",
+                    "blueprint_id"
                 ],
                 "guarded": [
                     "*"
@@ -289,6 +527,10 @@
                     "entries": {
                         "type": "hasMany",
                         "related": "App\\Models\\Entry"
+                    },
+                    "blueprint": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\Blueprint"
                     }
                 },
                 "factory": "Database\\Factories\\PostTypeFactory"
@@ -5032,6 +5274,174 @@
                 ]
             },
             {
+                "id": "model:App\\Models\\Blueprint",
+                "type": "model",
+                "name": "Blueprint",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Blueprint.php",
+                "summary": "Шаблон структуры данных для Entry.",
+                "details": null,
+                "meta": {
+                    "table": "blueprints",
+                    "fillable": [
+                        "name",
+                        "code",
+                        "description"
+                    ],
+                    "guarded": [
+                        "*"
+                    ],
+                    "casts": [],
+                    "relations": {
+                        "paths": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\Path"
+                        },
+                        "embeds": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\BlueprintEmbed"
+                        },
+                        "embeddedIn": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\BlueprintEmbed"
+                        },
+                        "postTypes": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\PostType"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "blueprint"
+                ]
+            },
+            {
+                "id": "model:App\\Models\\BlueprintEmbed",
+                "type": "model",
+                "name": "BlueprintEmbed",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/BlueprintEmbed.php",
+                "summary": "Связь встраивания blueprint'а.",
+                "details": null,
+                "meta": {
+                    "table": "blueprint_embeds",
+                    "fillable": [
+                        "blueprint_id",
+                        "embedded_blueprint_id",
+                        "host_path_id"
+                    ],
+                    "guarded": [
+                        "*"
+                    ],
+                    "casts": [],
+                    "relations": {
+                        "blueprint": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Blueprint"
+                        },
+                        "embeddedBlueprint": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Blueprint"
+                        },
+                        "hostPath": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Path"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "blueprintembed"
+                ]
+            },
+            {
+                "id": "model:App\\Models\\DocRef",
+                "type": "model",
+                "name": "DocRef",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/DocRef.php",
+                "summary": "Индексированная ссылка на другой Entry.",
+                "details": null,
+                "meta": {
+                    "table": "doc_refs",
+                    "fillable": [
+                        "entry_id",
+                        "path_id",
+                        "array_index",
+                        "target_entry_id"
+                    ],
+                    "guarded": [
+                        "*"
+                    ],
+                    "casts": [],
+                    "relations": {
+                        "entry": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Entry"
+                        },
+                        "path": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Path"
+                        },
+                        "targetEntry": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Entry"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "docref"
+                ]
+            },
+            {
+                "id": "model:App\\Models\\DocValue",
+                "type": "model",
+                "name": "DocValue",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/DocValue.php",
+                "summary": "Индексированное скалярное значение из Entry.data_json.",
+                "details": null,
+                "meta": {
+                    "table": "doc_values",
+                    "fillable": [
+                        "entry_id",
+                        "path_id",
+                        "array_index",
+                        "value_string",
+                        "value_int",
+                        "value_float",
+                        "value_bool",
+                        "value_date",
+                        "value_datetime",
+                        "value_text",
+                        "value_json"
+                    ],
+                    "guarded": [
+                        "*"
+                    ],
+                    "casts": {
+                        "value_bool": "boolean",
+                        "value_json": "array"
+                    },
+                    "relations": {
+                        "entry": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Entry"
+                        },
+                        "path": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Path"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "docvalue"
+                ]
+            },
+            {
                 "id": "model:App\\Models\\Entry",
                 "type": "model",
                 "name": "Entry",
@@ -5059,6 +5469,14 @@
                         "terms": {
                             "type": "belongsToMany",
                             "related": "App\\Models\\Term"
+                        },
+                        "docValues": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\DocValue"
+                        },
+                        "docRefs": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\DocRef"
                         }
                     },
                     "factory": "Database\\Factories\\EntryFactory"
@@ -5246,6 +5664,67 @@
                 ]
             },
             {
+                "id": "model:App\\Models\\Path",
+                "type": "model",
+                "name": "Path",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Path.php",
+                "summary": "Поле внутри blueprint с материализованным full_path.",
+                "details": null,
+                "meta": {
+                    "table": "paths",
+                    "fillable": [
+                        "blueprint_id",
+                        "parent_id",
+                        "name",
+                        "data_type",
+                        "cardinality",
+                        "is_required",
+                        "is_indexed",
+                        "sort_order",
+                        "validation_rules"
+                    ],
+                    "guarded": [
+                        "source_blueprint_id",
+                        "blueprint_embed_id",
+                        "is_readonly",
+                        "full_path"
+                    ],
+                    "casts": {
+                        "is_required": "boolean",
+                        "is_indexed": "boolean",
+                        "is_readonly": "boolean",
+                        "validation_rules": "array"
+                    },
+                    "relations": {
+                        "blueprint": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Blueprint"
+                        },
+                        "sourceBlueprint": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Blueprint"
+                        },
+                        "blueprintEmbed": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\BlueprintEmbed"
+                        },
+                        "parent": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Path"
+                        },
+                        "children": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\Path"
+                        }
+                    },
+                    "factory": null
+                },
+                "related": [],
+                "tags": [
+                    "path"
+                ]
+            },
+            {
                 "id": "model:App\\Models\\Plugin",
                 "type": "model",
                 "name": "Plugin",
@@ -5281,7 +5760,8 @@
                     "fillable": [
                         "slug",
                         "name",
-                        "options_json"
+                        "options_json",
+                        "blueprint_id"
                     ],
                     "guarded": [
                         "*"
@@ -5293,6 +5773,10 @@
                         "entries": {
                             "type": "hasMany",
                             "related": "App\\Models\\Entry"
+                        },
+                        "blueprint": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\Blueprint"
                         }
                     },
                     "factory": "Database\\Factories\\PostTypeFactory"
@@ -10024,6 +10508,38 @@
                 "summary": "Eloquent модель для аудита изменений (Audit)."
             }
         ],
+        "blueprint": [
+            {
+                "id": "model:App\\Models\\Blueprint",
+                "type": "model",
+                "name": "Blueprint",
+                "summary": "Шаблон структуры данных для Entry."
+            }
+        ],
+        "blueprintembed": [
+            {
+                "id": "model:App\\Models\\BlueprintEmbed",
+                "type": "model",
+                "name": "BlueprintEmbed",
+                "summary": "Связь встраивания blueprint'а."
+            }
+        ],
+        "docref": [
+            {
+                "id": "model:App\\Models\\DocRef",
+                "type": "model",
+                "name": "DocRef",
+                "summary": "Индексированная ссылка на другой Entry."
+            }
+        ],
+        "docvalue": [
+            {
+                "id": "model:App\\Models\\DocValue",
+                "type": "model",
+                "name": "DocValue",
+                "summary": "Индексированное скалярное значение из Entry.data_json."
+            }
+        ],
         "entry": [
             {
                 "id": "model:App\\Models\\Entry",
@@ -10336,6 +10852,14 @@
                 "type": "model",
                 "name": "Outbox",
                 "summary": "Eloquent модель для исходящих сообщений (Outbox)."
+            }
+        ],
+        "path": [
+            {
+                "id": "model:App\\Models\\Path",
+                "type": "model",
+                "name": "Path",
+                "summary": "Поле внутри blueprint с материализованным full_path."
             }
         ],
         "plugin": [
@@ -12791,5 +13315,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-19T14:10:49+00:00"
+    "generated_at": "2025-11-20T12:09:12+00:00"
 }

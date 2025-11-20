@@ -9,6 +9,7 @@ use App\Domain\PostTypes\PostTypeOptions;
 use Database\Factories\PostTypeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Eloquent модель для типов записей (PostType).
@@ -20,10 +21,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug Уникальный slug типа записи
  * @property string $name Название типа записи
  * @property \App\Domain\PostTypes\PostTypeOptions $options_json Опции типа записи
+ * @property int|null $blueprint_id Blueprint, определяющий структуру Entry
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Entry> $entries Записи этого типа
+ * @property-read \App\Models\Blueprint|null $blueprint Blueprint, определяющий структуру Entry
  */
 class PostType extends Model
 {
@@ -41,6 +44,7 @@ class PostType extends Model
         'slug',
         'name',
         'options_json',
+        'blueprint_id',
     ];
 
     /**
@@ -60,6 +64,16 @@ class PostType extends Model
     public function entries()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    /**
+     * Blueprint, определяющий структуру Entry этого типа.
+     *
+     * @return BelongsTo<Blueprint, PostType>
+     */
+    public function blueprint(): BelongsTo
+    {
+        return $this->belongsTo(Blueprint::class);
     }
 
     /**

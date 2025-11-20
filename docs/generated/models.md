@@ -21,6 +21,91 @@ Eloquent модель для аудита изменений (Audit).
 
 ---
 
+## Blueprint
+**ID:** `model:App\Models\Blueprint`
+**Path:** `app/Models/Blueprint.php`
+
+Шаблон структуры данных для Entry.
+
+### Meta
+- **Table:** `blueprints`
+- **Fillable:** `name`, `code`, `description`
+- **Guarded:** `*`
+- **Relations:**
+  - `paths`: hasMany → `App\Models\Path`
+  - `embeds`: hasMany → `App\Models\BlueprintEmbed`
+  - `embeddedIn`: hasMany → `App\Models\BlueprintEmbed`
+  - `postTypes`: hasMany → `App\Models\PostType`
+
+### Tags
+`blueprint`
+
+
+---
+
+## BlueprintEmbed
+**ID:** `model:App\Models\BlueprintEmbed`
+**Path:** `app/Models/BlueprintEmbed.php`
+
+Связь встраивания blueprint'а.
+
+### Meta
+- **Table:** `blueprint_embeds`
+- **Fillable:** `blueprint_id`, `embedded_blueprint_id`, `host_path_id`
+- **Guarded:** `*`
+- **Relations:**
+  - `blueprint`: belongsTo → `App\Models\Blueprint`
+  - `embeddedBlueprint`: belongsTo → `App\Models\Blueprint`
+  - `hostPath`: belongsTo → `App\Models\Path`
+
+### Tags
+`blueprintembed`
+
+
+---
+
+## DocRef
+**ID:** `model:App\Models\DocRef`
+**Path:** `app/Models/DocRef.php`
+
+Индексированная ссылка на другой Entry.
+
+### Meta
+- **Table:** `doc_refs`
+- **Fillable:** `entry_id`, `path_id`, `array_index`, `target_entry_id`
+- **Guarded:** `*`
+- **Relations:**
+  - `entry`: belongsTo → `App\Models\Entry`
+  - `path`: belongsTo → `App\Models\Path`
+  - `targetEntry`: belongsTo → `App\Models\Entry`
+
+### Tags
+`docref`
+
+
+---
+
+## DocValue
+**ID:** `model:App\Models\DocValue`
+**Path:** `app/Models/DocValue.php`
+
+Индексированное скалярное значение из Entry.data_json.
+
+### Meta
+- **Table:** `doc_values`
+- **Fillable:** `entry_id`, `path_id`, `array_index`, `value_string`, `value_int`, `value_float`, `value_bool`, `value_date`, `value_datetime`, `value_text`, `value_json`
+- **Guarded:** `*`
+- **Casts:** `value_bool` => `boolean`, `value_json` => `array`
+- **Relations:**
+  - `entry`: belongsTo → `App\Models\Entry`
+  - `path`: belongsTo → `App\Models\Path`
+
+### Tags
+`docvalue`
+
+
+---
+
 ## Entry
 **ID:** `model:App\Models\Entry`
 **Path:** `app/Models/Entry.php`
@@ -38,6 +123,8 @@ Eloquent модель для записей контента (Entry).
   - `postType`: belongsTo → `App\Models\PostType`
   - `author`: belongsTo → `App\Models\User`
   - `terms`: belongsToMany → `App\Models\Term`
+  - `docValues`: hasMany → `App\Models\DocValue`
+  - `docRefs`: hasMany → `App\Models\DocRef`
 - **Factory:** `Database\Factories\EntryFactory`
 
 ### Tags
@@ -183,6 +270,30 @@ Eloquent модель для исходящих сообщений (Outbox).
 
 ---
 
+## Path
+**ID:** `model:App\Models\Path`
+**Path:** `app/Models/Path.php`
+
+Поле внутри blueprint с материализованным full_path.
+
+### Meta
+- **Table:** `paths`
+- **Fillable:** `blueprint_id`, `parent_id`, `name`, `data_type`, `cardinality`, `is_required`, `is_indexed`, `sort_order`, `validation_rules`
+- **Guarded:** `source_blueprint_id`, `blueprint_embed_id`, `is_readonly`, `full_path`
+- **Casts:** `is_required` => `boolean`, `is_indexed` => `boolean`, `is_readonly` => `boolean`, `validation_rules` => `array`
+- **Relations:**
+  - `blueprint`: belongsTo → `App\Models\Blueprint`
+  - `sourceBlueprint`: belongsTo → `App\Models\Blueprint`
+  - `blueprintEmbed`: belongsTo → `App\Models\BlueprintEmbed`
+  - `parent`: belongsTo → `App\Models\Path`
+  - `children`: hasMany → `App\Models\Path`
+
+### Tags
+`path`
+
+
+---
+
 ## Plugin
 **ID:** `model:App\Models\Plugin`
 **Path:** `app/Models/Plugin.php`
@@ -215,11 +326,12 @@ Eloquent модель для типов записей (PostType).
 
 ### Meta
 - **Table:** `post_types`
-- **Fillable:** `slug`, `name`, `options_json`
+- **Fillable:** `slug`, `name`, `options_json`, `blueprint_id`
 - **Guarded:** `*`
 - **Casts:** `options_json` => `App\Casts\AsPostTypeOptions`
 - **Relations:**
   - `entries`: hasMany → `App\Models\Entry`
+  - `blueprint`: belongsTo → `App\Models\Blueprint`
 - **Factory:** `Database\Factories\PostTypeFactory`
 
 ### Tags

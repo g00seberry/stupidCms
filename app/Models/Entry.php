@@ -7,6 +7,7 @@ namespace App\Models;
 use Database\Factories\EntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -34,6 +35,8 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\PostType $postType Тип записи
  * @property-read \App\Models\User $author Автор записи
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms Привязанные термы (категории, теги)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocValue> $docValues Индексированные скалярные значения
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocRef> $docRefs Индексированные ссылки на другие Entry
  */
 class Entry extends Model
 {
@@ -109,6 +112,26 @@ class Entry extends Model
     {
         return $this->belongsToMany(Term::class, 'entry_term', 'entry_id', 'term_id')
             ->withTimestamps();
+    }
+
+    /**
+     * Индексированные скалярные значения из data_json.
+     *
+     * @return HasMany<DocValue>
+     */
+    public function docValues(): HasMany
+    {
+        return $this->hasMany(DocValue::class);
+    }
+
+    /**
+     * Индексированные ссылки на другие Entry.
+     *
+     * @return HasMany<DocRef>
+     */
+    public function docRefs(): HasMany
+    {
+        return $this->hasMany(DocRef::class);
     }
 
 

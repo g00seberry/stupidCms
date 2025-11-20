@@ -2,12 +2,12 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 174
+**Всего сущностей:** 179
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (17 сущностей)
+Eloquent-модели для работы с БД (22 сущностей)
 
 ### [Domain Services](./domain-services.md)
 Доменные сервисы, действия, репозитории (65 сущностей)
@@ -26,16 +26,16 @@ HTTP эндпоинты API (61 сущностей)
 ### Models
 
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
+- [Blueprint](./models.md#blueprint) - Шаблон структуры данных для Entry.
+- [BlueprintEmbed](./models.md#blueprintembed) - Связь встраивания blueprint'а.
+- [DocRef](./models.md#docref) - Индексированная ссылка на другой Entry.
+- [DocValue](./models.md#docvalue) - Индексированное скалярное значение из Entry.data_json.
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 - [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
 - [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
-- [Option](./models.md#option) - Eloquent модель для опций системы (Option).
-- [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
-- [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
-- [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
-- *...и еще 7 сущностей*
+- *...и еще 12 сущностей*
 
 ### Domain Services
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-19 14:10:49
+**Сгенерировано:** 2025-11-20 12:09:12
 
 Для обновления документации выполните:
 ```bash
