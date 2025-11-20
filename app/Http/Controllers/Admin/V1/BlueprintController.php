@@ -51,10 +51,26 @@ class BlueprintController extends Controller
      *       "description": "Blog article structure",
      *       "paths_count": 5,
      *       "embeds_count": 2,
+     *       "post_types_count": 3,
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:00:00+00:00"
      *     }
-     *   ]
+     *   ],
+     *   "links": {
+     *     "first": "http://example.com/api/admin/v1/blueprints?page=1",
+     *     "last": "http://example.com/api/admin/v1/blueprints?page=1",
+     *     "prev": null,
+     *     "next": null
+     *   },
+     *   "meta": {
+     *     "current_page": 1,
+     *     "from": 1,
+     *     "last_page": 1,
+     *     "path": "http://example.com/api/admin/v1/blueprints",
+     *     "per_page": 15,
+     *     "to": 1,
+     *     "total": 1
+     *   }
      * }
      *
      * @param Request $request
