@@ -86,3 +86,36 @@ test('canEmbed возвращает false для циклической зави
     expect($this->validator->canEmbed($b->id, $a->id))->toBeFalse();
 });
 
+test('можно создать diamond dependency без цикла', function () {
+    $a = Blueprint::factory()->create(['code' => 'a']);
+    $b = Blueprint::factory()->create(['code' => 'b']);
+    $c = Blueprint::factory()->create(['code' => 'c']);
+    $d = Blueprint::factory()->create(['code' => 'd']);
+
+    // Diamond: D → B, D → C, B → A, C → A (нет цикла)
+    BlueprintEmbed::create(['blueprint_id' => $d->id, 'embedded_blueprint_id' => $b->id]);
+    BlueprintEmbed::create(['blueprint_id' => $d->id, 'embedded_blueprint_id' => $c->id]);
+    BlueprintEmbed::create(['blueprint_id' => $b->id, 'embedded_blueprint_id' => $a->id]);
+    BlueprintEmbed::create(['blueprint_id' => $c->id, 'embedded_blueprint_id' => $a->id]);
+
+    // Все встраивания должны быть валидны
+    expect($this->validator->canEmbed($d->id, $b->id))->toBeTrue()
+        ->and($this->validator->canEmbed($d->id, $c->id))->toBeTrue()
+        ->and($this->validator->canEmbed($b->id, $a->id))->toBeTrue()
+        ->and($this->validator->canEmbed($c->id, $a->id))->toBeTrue();
+});
+
+test('canEmbed возвращает true если циклов нет', function () {
+    $a = Blueprint::factory()->create();
+    $b = Blueprint::factory()->create();
+    $c = Blueprint::factory()->create();
+
+    BlueprintEmbed::create([
+        'blueprint_id' => $a->id,
+        'embedded_blueprint_id' => $b->id,
+    ]);
+
+    expect($this->validator->canEmbed($c->id, $a->id))->toBeTrue()
+        ->and($this->validator->canEmbed($c->id, $b->id))->toBeTrue();
+});
+

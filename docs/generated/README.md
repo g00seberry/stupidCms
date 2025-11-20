@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 179
+**Всего сущностей:** 196
 
 ## Содержание
 
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (23 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (61 сущностей)
+HTTP эндпоинты API (78 сущностей)
 
 ## Быстрая навигация
 
@@ -79,16 +79,16 @@ HTTP эндпоинты API (61 сущностей)
 ### HTTP Endpoints
 
 - [admin.v1.auth.current](./http-endpoints.md#admin-v1-auth-current) - GET /api/v1/admin/auth/current (api)
-- [admin.v1.entries.destroy](./http-endpoints.md#admin-v1-entries-destroy) - DELETE /api/v1/admin/entries/{id} (api)
-- [admin.v1.entries.index](./http-endpoints.md#admin-v1-entries-index) - GET /api/v1/admin/entries (api)
-- [admin.v1.entries.restore](./http-endpoints.md#admin-v1-entries-restore) - POST /api/v1/admin/entries/{id}/restore (api)
-- [admin.v1.entries.show](./http-endpoints.md#admin-v1-entries-show) - GET /api/v1/admin/entries/{id} (api)
-- [admin.v1.entries.statuses](./http-endpoints.md#admin-v1-entries-statuses) - GET /api/v1/admin/entries/statuses (api)
-- [admin.v1.entries.store](./http-endpoints.md#admin-v1-entries-store) - POST /api/v1/admin/entries (api)
-- [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
-- [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
-- [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
-- *...и еще 51 сущностей*
+- [admin.v1.blueprints.can-delete](./http-endpoints.md#admin-v1-blueprints-can-delete) - GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)
+- [admin.v1.blueprints.dependencies](./http-endpoints.md#admin-v1-blueprints-dependencies) - GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)
+- [admin.v1.blueprints.destroy](./http-endpoints.md#admin-v1-blueprints-destroy) - DELETE /api/v1/admin/blueprints/{blueprint} (api)
+- [admin.v1.blueprints.embeddable](./http-endpoints.md#admin-v1-blueprints-embeddable) - GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)
+- [admin.v1.blueprints.embeds.index](./http-endpoints.md#admin-v1-blueprints-embeds-index) - GET /api/v1/admin/blueprints/{blueprint}/embeds (api)
+- [admin.v1.blueprints.embeds.store](./http-endpoints.md#admin-v1-blueprints-embeds-store) - POST /api/v1/admin/blueprints/{blueprint}/embeds (api)
+- [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
+- [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
+- [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
+- *...и еще 68 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-20 12:38:11
+**Сгенерировано:** 2025-11-20 13:22:08
 
 Для обновления документации выполните:
 ```bash

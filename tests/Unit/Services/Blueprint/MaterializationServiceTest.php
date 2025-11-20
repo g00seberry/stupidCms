@@ -3,13 +3,16 @@
 declare(strict_types=1);
 
 use App\Exceptions\Blueprint\MaxDepthExceededException;
+use App\Exceptions\Blueprint\PathConflictException;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
 use App\Models\Path;
+use App\Services\Blueprint\BlueprintStructureService;
 use App\Services\Blueprint\MaterializationService;
 
 beforeEach(function () {
     $this->service = app(MaterializationService::class);
+    $this->structureService = app(BlueprintStructureService::class);
 });
 
 test('простое встраивание создаёт копии полей', function () {
@@ -236,5 +239,53 @@ test('превышение максимальной глубины выбрас�
     // при рекурсивном разворачивании цепочки bp0 → bp1 → ... → bp6
     expect(fn() => $this->service->materialize($embeds[0]))
         ->toThrow(MaxDepthExceededException::class);
+});
+
+test('PRE-CHECK выявляет конфликт full_path перед вставкой', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    // host имеет поле 'email'
+    Path::factory()->create(['blueprint_id' => $host->id, 'name' => 'email', 'full_path' => 'email']);
+
+    // embedded тоже имеет 'email'
+    Path::factory()->create(['blueprint_id' => $embedded->id, 'name' => 'email', 'full_path' => 'email']);
+
+    // Встраивание в корень → конфликт
+    expect(fn() => $this->structureService->createEmbed($host, $embedded))
+        ->toThrow(PathConflictException::class);
+});
+
+test('PRE-CHECK разрешает встраивание если full_path разные', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    Path::factory()->create(['blueprint_id' => $host->id, 'name' => 'email', 'full_path' => 'email']);
+
+    $contacts = $this->structureService->createPath($host, ['name' => 'contacts', 'data_type' => 'json']);
+
+    Path::factory()->create(['blueprint_id' => $embedded->id, 'name' => 'email', 'full_path' => 'email']);
+
+    // Встраивание под contacts → full_path = contacts.email (нет конфликта)
+    $embed = $this->structureService->createEmbed($host, $embedded, $contacts);
+
+    expect($embed->id)->toBeGreaterThan(0);
+});
+
+test('удаление embed удаляет все копии', function () {
+    $a = Blueprint::factory()->create();
+    $b = Blueprint::factory()->create();
+
+    Path::factory()->create(['blueprint_id' => $b->id, 'name' => 'field1', 'full_path' => 'field1']);
+
+    $embed = $this->structureService->createEmbed($a, $b);
+
+    $copiesCount = Path::where('blueprint_embed_id', $embed->id)->count();
+    expect($copiesCount)->toBeGreaterThan(0);
+
+    $this->structureService->deleteEmbed($embed);
+
+    $copiesCountAfter = Path::where('blueprint_embed_id', $embed->id)->count();
+    expect($copiesCountAfter)->toBe(0);
 });
 

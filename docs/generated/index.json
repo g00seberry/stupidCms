@@ -231,6 +231,10 @@
                     "docRefs": {
                         "type": "hasMany",
                         "related": "App\\Models\\DocRef"
+                    },
+                    "docRefsIncoming": {
+                        "type": "hasMany",
+                        "related": "App\\Models\\DocRef"
                     }
                 },
                 "factory": "Database\\Factories\\EntryFactory"
@@ -5192,6 +5196,494 @@
             }
         },
         {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.index",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "GET /api/v1/admin/blueprints (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": [],
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints"
+            }
+        },
+        {
+            "id": "http_endpoint:POST:/api/v1/admin/blueprints",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.store",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "POST /api/v1/admin/blueprints (api)",
+            "details": null,
+            "meta": {
+                "method": "POST",
+                "uri": "/api/v1/admin/blueprints",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": [],
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.show",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint} (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints"
+            }
+        },
+        {
+            "id": "http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.update",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "PUT /api/v1/admin/blueprints/{blueprint} (api)",
+            "details": null,
+            "meta": {
+                "method": "PUT",
+                "uri": "/api/v1/admin/blueprints/{blueprint}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints"
+            }
+        },
+        {
+            "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.destroy",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "DELETE /api/v1/admin/blueprints/{blueprint} (api)",
+            "details": null,
+            "meta": {
+                "method": "DELETE",
+                "uri": "/api/v1/admin/blueprints/{blueprint}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.can-delete",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "can-delete"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.dependencies",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "dependencies"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.embeddable",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "embeddable"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.paths.index",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/paths",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "paths"
+            }
+        },
+        {
+            "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.paths.store",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+            "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)",
+            "details": null,
+            "meta": {
+                "method": "POST",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/paths",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "paths"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.embeds.index",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/embeds",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "embeds"
+            }
+        },
+        {
+            "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.embeds.store",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+            "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)",
+            "details": null,
+            "meta": {
+                "method": "POST",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/embeds",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "embeds"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/paths/{path}",
+            "type": "http_endpoint",
+            "name": "admin.v1.paths.show",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+            "summary": "GET /api/v1/admin/paths/{path} (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/paths/{path}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "path": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "paths"
+            }
+        },
+        {
+            "id": "http_endpoint:PUT:/api/v1/admin/paths/{path}",
+            "type": "http_endpoint",
+            "name": "admin.v1.paths.update",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+            "summary": "PUT /api/v1/admin/paths/{path} (api)",
+            "details": null,
+            "meta": {
+                "method": "PUT",
+                "uri": "/api/v1/admin/paths/{path}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "path": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "paths"
+            }
+        },
+        {
+            "id": "http_endpoint:DELETE:/api/v1/admin/paths/{path}",
+            "type": "http_endpoint",
+            "name": "admin.v1.paths.destroy",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+            "summary": "DELETE /api/v1/admin/paths/{path} (api)",
+            "details": null,
+            "meta": {
+                "method": "DELETE",
+                "uri": "/api/v1/admin/paths/{path}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "path": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "paths"
+            }
+        },
+        {
+            "id": "http_endpoint:GET:/api/v1/admin/embeds/{embed}",
+            "type": "http_endpoint",
+            "name": "admin.v1.embeds.show",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+            "summary": "GET /api/v1/admin/embeds/{embed} (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/embeds/{embed}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "embed": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "embeds"
+            }
+        },
+        {
+            "id": "http_endpoint:DELETE:/api/v1/admin/embeds/{embed}",
+            "type": "http_endpoint",
+            "name": "admin.v1.embeds.destroy",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+            "summary": "DELETE /api/v1/admin/embeds/{embed} (api)",
+            "details": null,
+            "meta": {
+                "method": "DELETE",
+                "uri": "/api/v1/admin/embeds/{embed}",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "embed": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "embeds"
+            }
+        },
+        {
             "id": "http_endpoint:GET:/{slug}",
             "type": "http_endpoint",
             "name": "page.show",
@@ -5475,6 +5967,10 @@
                             "related": "App\\Models\\DocValue"
                         },
                         "docRefs": {
+                            "type": "hasMany",
+                            "related": "App\\Models\\DocRef"
+                        },
+                        "docRefsIncoming": {
                             "type": "hasMany",
                             "related": "App\\Models\\DocRef"
                         }
@@ -10446,6 +10942,494 @@
                 }
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.index",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "GET /api/v1/admin/blueprints (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": [],
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints"
+                }
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.store",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "POST /api/v1/admin/blueprints (api)",
+                "details": null,
+                "meta": {
+                    "method": "POST",
+                    "uri": "/api/v1/admin/blueprints",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": [],
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.show",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint} (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints"
+                }
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.update",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "PUT /api/v1/admin/blueprints/{blueprint} (api)",
+                "details": null,
+                "meta": {
+                    "method": "PUT",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints"
+                }
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.destroy",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "DELETE /api/v1/admin/blueprints/{blueprint} (api)",
+                "details": null,
+                "meta": {
+                    "method": "DELETE",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.can-delete",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/can-delete",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "can-delete"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.dependencies",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/dependencies",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "dependencies"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeddable",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/embeddable",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "embeddable"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.index",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/paths",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "paths"
+                }
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.store",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)",
+                "details": null,
+                "meta": {
+                    "method": "POST",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/paths",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "paths"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.index",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/embeds",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "embeds"
+                }
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.store",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)",
+                "details": null,
+                "meta": {
+                    "method": "POST",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/embeds",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "embeds"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.show",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+                "summary": "GET /api/v1/admin/paths/{path} (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/paths/{path}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "path": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "paths"
+                }
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.update",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+                "summary": "PUT /api/v1/admin/paths/{path} (api)",
+                "details": null,
+                "meta": {
+                    "method": "PUT",
+                    "uri": "/api/v1/admin/paths/{path}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "path": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "paths"
+                }
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.destroy",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathController.php",
+                "summary": "DELETE /api/v1/admin/paths/{path} (api)",
+                "details": null,
+                "meta": {
+                    "method": "DELETE",
+                    "uri": "/api/v1/admin/paths/{path}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "path": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "paths"
+                }
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.show",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+                "summary": "GET /api/v1/admin/embeds/{embed} (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/embeds/{embed}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "embed": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "embeds"
+                }
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.destroy",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintEmbedController.php",
+                "summary": "DELETE /api/v1/admin/embeds/{embed} (api)",
+                "details": null,
+                "meta": {
+                    "method": "DELETE",
+                    "uri": "/api/v1/admin/embeds/{embed}",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "embed": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "embeds"
+                }
+            },
+            {
                 "id": "http_endpoint:GET:/{slug}",
                 "type": "http_endpoint",
                 "name": "page.show",
@@ -12244,6 +13228,108 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.search.reindex",
                 "summary": "POST /api/v1/admin/search/reindex (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.index",
+                "summary": "GET /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.store",
+                "summary": "POST /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.show",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.update",
+                "summary": "PUT /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.destroy",
+                "summary": "DELETE /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.can-delete",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.dependencies",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeddable",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.show",
+                "summary": "GET /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.update",
+                "summary": "PUT /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.destroy",
+                "summary": "DELETE /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.show",
+                "summary": "GET /api/v1/admin/embeds/{embed} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.destroy",
+                "summary": "DELETE /api/v1/admin/embeds/{embed} (api)"
             }
         ],
         "v1": [
@@ -12594,6 +13680,108 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.search.reindex",
                 "summary": "POST /api/v1/admin/search/reindex (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.index",
+                "summary": "GET /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.store",
+                "summary": "POST /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.show",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.update",
+                "summary": "PUT /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.destroy",
+                "summary": "DELETE /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.can-delete",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.dependencies",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeddable",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.show",
+                "summary": "GET /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.update",
+                "summary": "PUT /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.destroy",
+                "summary": "DELETE /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.show",
+                "summary": "GET /api/v1/admin/embeds/{embed} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.destroy",
+                "summary": "DELETE /api/v1/admin/embeds/{embed} (api)"
             }
         ],
         "login": [
@@ -12938,6 +14126,108 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.search.reindex",
                 "summary": "POST /api/v1/admin/search/reindex (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.index",
+                "summary": "GET /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.store",
+                "summary": "POST /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.show",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.update",
+                "summary": "PUT /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.destroy",
+                "summary": "DELETE /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.can-delete",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.dependencies",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeddable",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.show",
+                "summary": "GET /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.update",
+                "summary": "PUT /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.destroy",
+                "summary": "DELETE /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.show",
+                "summary": "GET /api/v1/admin/embeds/{embed} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.destroy",
+                "summary": "DELETE /api/v1/admin/embeds/{embed} (api)"
             }
         ],
         "current": [
@@ -13306,6 +14596,162 @@
                 "summary": "POST /api/v1/admin/search/reindex (api)"
             }
         ],
+        "blueprints": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.index",
+                "summary": "GET /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.store",
+                "summary": "POST /api/v1/admin/blueprints (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.show",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.update",
+                "summary": "PUT /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.destroy",
+                "summary": "DELETE /api/v1/admin/blueprints/{blueprint} (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.can-delete",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.dependencies",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeddable",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            }
+        ],
+        "can-delete": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.can-delete",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)"
+            }
+        ],
+        "dependencies": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.dependencies",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)"
+            }
+        ],
+        "embeddable": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeddable",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            }
+        ],
+        "paths": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.paths.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/paths (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.show",
+                "summary": "GET /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.update",
+                "summary": "PUT /api/v1/admin/paths/{path} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/paths/{path}",
+                "type": "http_endpoint",
+                "name": "admin.v1.paths.destroy",
+                "summary": "DELETE /api/v1/admin/paths/{path} (api)"
+            }
+        ],
+        "embeds": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.index",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.embeds.store",
+                "summary": "POST /api/v1/admin/blueprints/{blueprint}/embeds (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.show",
+                "summary": "GET /api/v1/admin/embeds/{embed} (api)"
+            },
+            {
+                "id": "http_endpoint:DELETE:/api/v1/admin/embeds/{embed}",
+                "type": "http_endpoint",
+                "name": "admin.v1.embeds.destroy",
+                "summary": "DELETE /api/v1/admin/embeds/{embed} (api)"
+            }
+        ],
         "storage": [
             {
                 "id": "http_endpoint:GET:/storage/{path}",
@@ -13315,5 +14761,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-20T12:38:11+00:00"
+    "generated_at": "2025-11-20T13:22:08+00:00"
 }

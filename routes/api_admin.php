@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\V1\BlueprintController;
+use App\Http\Controllers\Admin\V1\BlueprintEmbedController;
 use App\Http\Controllers\Admin\V1\OptionsController;
+use App\Http\Controllers\Admin\V1\PathController;
 use App\Http\Controllers\Admin\V1\PathReservationController;
 use App\Http\Controllers\Admin\V1\PluginsController;
 use App\Http\Controllers\Admin\V1\SearchAdminController;
@@ -214,5 +217,58 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::post('/search/reindex', [SearchAdminController::class, 'reindex'])
         ->middleware(['can:search.reindex', 'throttle:search-reindex'])
         ->name('admin.v1.search.reindex');
+
+    // Blueprints (full CRUD + dependencies/embeddable)
+    Route::prefix('blueprints')->group(function () {
+        // CRUD Blueprint
+        Route::get('/', [BlueprintController::class, 'index'])
+            ->name('admin.v1.blueprints.index');
+        Route::post('/', [BlueprintController::class, 'store'])
+            ->name('admin.v1.blueprints.store');
+        Route::get('/{blueprint}', [BlueprintController::class, 'show'])
+            ->name('admin.v1.blueprints.show');
+        Route::put('/{blueprint}', [BlueprintController::class, 'update'])
+            ->name('admin.v1.blueprints.update');
+        Route::delete('/{blueprint}', [BlueprintController::class, 'destroy'])
+            ->name('admin.v1.blueprints.destroy');
+
+        // Вспомогательные endpoints
+        Route::get('/{blueprint}/can-delete', [BlueprintController::class, 'canDelete'])
+            ->name('admin.v1.blueprints.can-delete');
+        Route::get('/{blueprint}/dependencies', [BlueprintController::class, 'dependencies'])
+            ->name('admin.v1.blueprints.dependencies');
+        Route::get('/{blueprint}/embeddable', [BlueprintController::class, 'embeddable'])
+            ->name('admin.v1.blueprints.embeddable');
+
+        // CRUD Path
+        Route::get('/{blueprint}/paths', [PathController::class, 'index'])
+            ->name('admin.v1.blueprints.paths.index');
+        Route::post('/{blueprint}/paths', [PathController::class, 'store'])
+            ->name('admin.v1.blueprints.paths.store');
+
+        // CRUD BlueprintEmbed
+        Route::get('/{blueprint}/embeds', [BlueprintEmbedController::class, 'index'])
+            ->name('admin.v1.blueprints.embeds.index');
+        Route::post('/{blueprint}/embeds', [BlueprintEmbedController::class, 'store'])
+            ->name('admin.v1.blueprints.embeds.store');
+    });
+
+    // Path (глобальные операции)
+    Route::prefix('paths')->group(function () {
+        Route::get('/{path}', [PathController::class, 'show'])
+            ->name('admin.v1.paths.show');
+        Route::put('/{path}', [PathController::class, 'update'])
+            ->name('admin.v1.paths.update');
+        Route::delete('/{path}', [PathController::class, 'destroy'])
+            ->name('admin.v1.paths.destroy');
+    });
+
+    // BlueprintEmbed (глобальные операции)
+    Route::prefix('embeds')->group(function () {
+        Route::get('/{embed}', [BlueprintEmbedController::class, 'show'])
+            ->name('admin.v1.embeds.show');
+        Route::delete('/{embed}', [BlueprintEmbedController::class, 'destroy'])
+            ->name('admin.v1.embeds.destroy');
+    });
 });
 

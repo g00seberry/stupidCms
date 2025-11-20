@@ -125,6 +125,7 @@ Eloquent модель для записей контента (Entry).
   - `terms`: belongsToMany → `App\Models\Term`
   - `docValues`: hasMany → `App\Models\DocValue`
   - `docRefs`: hasMany → `App\Models\DocRef`
+  - `docRefsIncoming`: hasMany → `App\Models\DocRef`
 - **Factory:** `Database\Factories\EntryFactory`
 
 ### Tags

@@ -48,6 +48,7 @@ use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Observers\EntryObserver;
+use App\Services\Blueprint\BlueprintStructureService;
 use App\Services\Blueprint\CyclicDependencyValidator;
 use App\Services\Blueprint\DependencyGraphService;
 use App\Services\Blueprint\MaterializationService;
@@ -208,6 +209,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CyclicDependencyValidator::class);
         $this->app->singleton(PathConflictValidator::class);
         $this->app->singleton(MaterializationService::class);
+        $this->app->singleton(BlueprintStructureService::class);
 
         // Entry indexing service
         $this->app->singleton(EntryIndexer::class);
