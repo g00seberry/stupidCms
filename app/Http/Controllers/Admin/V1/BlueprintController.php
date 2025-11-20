@@ -314,7 +314,7 @@ class BlueprintController extends Controller
                 'id' => $bp->id,
                 'code' => $bp->code,
                 'name' => $bp->name,
-            ]),
+            ])->values(),
         ]);
     }
 }

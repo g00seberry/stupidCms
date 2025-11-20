@@ -41,9 +41,9 @@ class PathResource extends AdminJsonResource
             'full_path' => $this->full_path,
             'data_type' => $this->data_type,
             'cardinality' => $this->cardinality,
-            'is_required' => $this->is_required,
-            'is_indexed' => $this->is_indexed,
-            'is_readonly' => $this->is_readonly,
+            'is_required' => (bool) $this->is_required,
+            'is_indexed' => (bool) $this->is_indexed,
+            'is_readonly' => (bool) $this->is_readonly,
             'sort_order' => $this->sort_order,
             'validation_rules' => $this->validation_rules,
 
