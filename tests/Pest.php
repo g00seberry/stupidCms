@@ -30,6 +30,10 @@ uses(TestCase::class)
 uses(TestCase::class, RefreshDatabase::class)
     ->in('Unit/Services/Blueprint');
 
+// Unit-тесты с БД для Listeners/Blueprint
+uses(TestCase::class, RefreshDatabase::class)
+    ->in('Unit/Listeners/Blueprint');
+
 // Загрузка модульных конфигураций
 $modules = glob(__DIR__ . '/Modules/*.php');
 if ($modules !== false) {

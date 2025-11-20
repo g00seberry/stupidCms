@@ -17,6 +17,12 @@
 | **F+G** | [Entry и индексация](./block-fg-entry-indexing.md) | 46 ч         | HasDocumentData, EntryIndexer, wherePath    |
 | **H** | [BlueprintStructureService](./block-h-structure-service.md) | 48 ч         | Центральный сервис координации CRUD         |
 
+### Should Have (34 часа) — REST API ✅
+
+| Блок  | Документ                                        | Трудоёмкость | Описание                                    |
+| ----- | ----------------------------------------------- | ------------ | ------------------------------------------- |
+| **I** | [API контроллеры](./block-i-api-controllers.md) | 34 ч         | CRUD Blueprint/Path/Embed, Resources, роуты |
+
 ---
 
 ## Архитектура интеграции с stupidCMS
@@ -155,6 +161,32 @@ php artisan test --filter=WherePath
 
 ```bash
 php artisan test --filter=BlueprintStructureService
+```
+
+---
+
+### Этап 6: REST API (34 часа) — Блок I
+
+**Компоненты:**
+
+- `BlueprintController` (CRUD + вспомогательные endpoints)
+- `PathController` (дерево полей + CRUD)
+- `BlueprintEmbedController` (создание/удаление встраиваний)
+- API Resources (`BlueprintResource`, `PathResource`, `BlueprintEmbedResource`)
+- FormRequest классы для валидации
+
+**Команды:**
+
+```bash
+# Создать контроллеры и ресурсы
+php artisan make:controller Admin/BlueprintController --api
+php artisan make:resource Admin/BlueprintResource
+
+# Тесты
+php artisan test --filter=BlueprintController
+
+# Документация API
+composer scribe:gen
 ```
 
 ---
@@ -427,6 +459,22 @@ Log::info("Материализация blueprint '{$blueprint->code}'", [
 **A:** Нет. Изменения нужно вносить в исходный blueprint. Копии обновятся автоматически через каскад.
 
 ---
+
+## Созданные документы реализации
+
+**Must Have + Should Have (230 часов):**
+
+1. ✅ [Блок A: Схема БД](./block-a-database-schema.md) — 18 ч
+2. ✅ [Блок B: Граф зависимостей](./block-b-dependency-graph.md) — 12 ч
+3. ✅ [Блок C: Материализация](./block-c-materialization.md) — 40 ч
+4. ✅ [Блок D: Каскадные события](./block-d-cascade-events.md) — 32 ч
+5. ✅ [Блок F+G: Entry и индексация](./block-fg-entry-indexing.md) — 46 ч
+6. ✅ [Блок H: BlueprintStructureService](./block-h-structure-service.md) — 48 ч
+7. ✅ [Блок I: API контроллеры](./block-i-api-controllers.md) — 34 ч
+
+**Опционально (Could Have):**
+- Блок J: Комплексное тестирование (88 ч)
+- Блок K-M: Оптимизация и мониторинг (92 ч)
 
 ## Исходные документы
 

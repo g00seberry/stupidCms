@@ -39,6 +39,8 @@ use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\Listeners\LogMediaEvent;
 use App\Domain\Media\Listeners\NotifyMediaEvent;
 use App\Domain\Media\Listeners\PurgeCdnCache;
+use App\Events\Blueprint\BlueprintStructureChanged;
+use App\Listeners\Blueprint\RematerializeEmbeds;
 use App\Domain\Media\MediaRepository;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
@@ -234,6 +236,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(MediaDeleted::class, [LogMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [NotifyMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [PurgeCdnCache::class, 'handleMediaDeleted']);
+
+        // Регистрация слушателя каскадных событий blueprint
+        Event::listen(BlueprintStructureChanged::class, RematerializeEmbeds::class);
 
         // Валидация конфигурации медиа-файлов
         (new MediaConfigValidator())->validate();
