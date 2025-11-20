@@ -46,6 +46,8 @@ use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Observers\EntryObserver;
+use App\Services\Blueprint\CyclicDependencyValidator;
+use App\Services\Blueprint\DependencyGraphService;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
@@ -195,6 +197,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RouteReloader::class, PluginsRouteReloader::class);
         $this->app->bind(PluginsSynchronizerInterface::class, PluginsSynchronizer::class);
         $this->app->bind(PluginActivatorInterface::class, PluginActivator::class);
+
+        // Blueprint services
+        $this->app->singleton(DependencyGraphService::class);
+        $this->app->singleton(CyclicDependencyValidator::class);
     }
 
     /**

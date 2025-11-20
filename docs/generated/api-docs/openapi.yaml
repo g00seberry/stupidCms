@@ -596,7 +596,7 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-20T12:09:09'
+                  example: '2025-11-20T12:17:01'
                   nullable: true
                 date_to:
                   type: string
@@ -614,7 +614,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: published_at.asc
+                  example: updated_at.asc
                   nullable: true
                   enum:
                     - updated_at.desc
@@ -2901,7 +2901,7 @@ paths:
                 kind:
                   type: string
                   description: ''
-                  example: audio
+                  example: document
                   nullable: true
                   enum:
                     - image
@@ -2916,7 +2916,7 @@ paths:
                 deleted:
                   type: string
                   description: ''
-                  example: only
+                  example: with
                   nullable: true
                   enum:
                     - with
@@ -2933,7 +2933,7 @@ paths:
                 order:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: true
                   enum:
                     - asc
@@ -9767,7 +9767,7 @@ paths:
                 hierarchical:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 options_json:
                   type: object
@@ -9842,7 +9842,7 @@ paths:
                 sort:
                   type: string
                   description: ''
-                  example: created_at.asc
+                  example: name.desc
                   nullable: false
                   enum:
                     - created_at.desc
@@ -10348,7 +10348,7 @@ paths:
                 from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-11-20T12:09:08'
+                  example: '2025-11-20T12:17:01'
                   nullable: true
                 to:
                   type: string

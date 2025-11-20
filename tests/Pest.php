@@ -26,6 +26,10 @@ uses(TestCase::class)
     ->in('Unit/Rules')
     ->in('Unit/Support');
 
+// Unit-тесты с БД для Services/Blueprint
+uses(TestCase::class, RefreshDatabase::class)
+    ->in('Unit/Services/Blueprint');
+
 // Загрузка модульных конфигураций
 $modules = glob(__DIR__ . '/Modules/*.php');
 if ($modules !== false) {
