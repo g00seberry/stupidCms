@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Domain\Sanitizer\RichTextSanitizer;
+use App\Models\DocRef;
+use App\Models\DocValue;
 use App\Models\Entry;
 use App\Models\ReservedRoute;
+use App\Services\Entry\EntryIndexer;
 use App\Support\Slug\Slugifier;
 use App\Support\Slug\SlugOptions;
 use App\Support\Slug\UniqueSlugService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
@@ -30,11 +34,13 @@ class EntryObserver
      * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
      * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис уникальности slug'ов
      * @param \App\Domain\Sanitizer\RichTextSanitizer $sanitizer Санитизатор HTML
+     * @param \App\Services\Entry\EntryIndexer $indexer Сервис индексации Entry
      */
     public function __construct(
         private Slugifier $slugifier,
         private UniqueSlugService $uniqueSlugService,
         private RichTextSanitizer $sanitizer,
+        private EntryIndexer $indexer,
     ) {}
 
     /**
@@ -71,6 +77,43 @@ class EntryObserver
         if ($entry->isDirty('data_json')) {
             $this->sanitizeRichTextFields($entry);
         }
+    }
+
+    /**
+     * Handle the Entry "saved" event.
+     *
+     * Автоматическая индексация Entry при сохранении.
+     *
+     * @param Entry $entry
+     * @return void
+     */
+    public function saved(Entry $entry): void
+    {
+        // Индексация только если PostType имеет blueprint
+        if ($entry->postType?->blueprint_id) {
+            try {
+                $this->indexer->index($entry);
+            } catch (\Exception $e) {
+                Log::error("Ошибка автоиндексации Entry {$entry->id}: {$e->getMessage()}", [
+                    'exception' => $e,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Handle the Entry "deleted" event.
+     *
+     * Очистка индексов при удалении Entry.
+     *
+     * @param Entry $entry
+     * @return void
+     */
+    public function deleted(Entry $entry): void
+    {
+        // Очистить индексы (CASCADE в БД, но на всякий случай)
+        DocValue::where('entry_id', $entry->id)->delete();
+        DocRef::where('entry_id', $entry->id)->delete();
     }
 
     /**

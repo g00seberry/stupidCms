@@ -52,6 +52,7 @@ use App\Services\Blueprint\CyclicDependencyValidator;
 use App\Services\Blueprint\DependencyGraphService;
 use App\Services\Blueprint\MaterializationService;
 use App\Services\Blueprint\PathConflictValidator;
+use App\Services\Entry\EntryIndexer;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
@@ -207,6 +208,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CyclicDependencyValidator::class);
         $this->app->singleton(PathConflictValidator::class);
         $this->app->singleton(MaterializationService::class);
+
+        // Entry indexing service
+        $this->app->singleton(EntryIndexer::class);
     }
 
     /**

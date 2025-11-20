@@ -30,6 +30,10 @@ uses(TestCase::class)
 uses(TestCase::class, RefreshDatabase::class)
     ->in('Unit/Services/Blueprint');
 
+// Unit-тесты с БД для Services/Entry
+uses(TestCase::class, RefreshDatabase::class)
+    ->in('Unit/Services/Entry');
+
 // Unit-тесты с БД для Listeners/Blueprint
 uses(TestCase::class, RefreshDatabase::class)
     ->in('Unit/Listeners/Blueprint');

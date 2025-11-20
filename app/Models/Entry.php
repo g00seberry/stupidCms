@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasDocumentData;
 use Database\Factories\EntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,11 +37,13 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\User $author Автор записи
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Term> $terms Привязанные термы (категории, теги)
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocValue> $docValues Индексированные скалярные значения
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocRef> $docRefs Индексированные ссылки на другие Entry
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocRef> $docRefs Индексированные ссылки на другие Entry (исходящие)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DocRef> $docRefsIncoming Входящие ссылки (кто ссылается на этот Entry)
+ * @property-read \App\Models\Blueprint|null $blueprint Blueprint через PostType
  */
 class Entry extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasDocumentData;
 
     /**
      * Статус: черновик.
@@ -125,13 +128,33 @@ class Entry extends Model
     }
 
     /**
-     * Индексированные ссылки на другие Entry.
+     * Индексированные ссылки на другие Entry (исходящие).
      *
      * @return HasMany<DocRef>
      */
     public function docRefs(): HasMany
     {
         return $this->hasMany(DocRef::class);
+    }
+
+    /**
+     * Связь с входящими ссылками (кто ссылается на этот Entry).
+     *
+     * @return HasMany<DocRef>
+     */
+    public function docRefsIncoming(): HasMany
+    {
+        return $this->hasMany(DocRef::class, 'target_entry_id');
+    }
+
+    /**
+     * Получить blueprint через PostType.
+     *
+     * @return Blueprint|null
+     */
+    public function blueprint(): ?Blueprint
+    {
+        return $this->postType?->blueprint;
     }
 
 

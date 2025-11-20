@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Listeners\Blueprint;
 
 use App\Events\Blueprint\BlueprintStructureChanged;
+use App\Jobs\Blueprint\ReindexBlueprintEntries;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
 use App\Services\Blueprint\DependencyGraphService;
@@ -99,7 +100,10 @@ class RematerializeEmbeds
                 $this->materializationService->materialize($embed);
             }
 
-            // 3. Каскадное событие для зависимого blueprint
+            // 3. Триггер реиндексации зависимого blueprint
+            dispatch(new ReindexBlueprintEntries($dependentId));
+
+            // 4. Каскадное событие для зависимого blueprint
             // (структура dependent изменилась, нужно уведомить тех, кто встраивает dependent)
             Log::info("Триггер каскадного события для '{$dependent->code}'");
             event(new BlueprintStructureChanged($dependent, $event->processedBlueprints));

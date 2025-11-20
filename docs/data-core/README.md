@@ -23,6 +23,12 @@
 | ----- | ----------------------------------------------- | ------------ | ------------------------------------------- |
 | **I** | [API контроллеры](./block-i-api-controllers.md) | 34 ч         | CRUD Blueprint/Path/Embed, Resources, роуты |
 
+### Could Have (88 часов) — Комплексное тестирование ✅
+
+| Блок  | Документ                                        | Трудоёмкость | Описание                                    |
+| ----- | ----------------------------------------------- | ------------ | ------------------------------------------- |
+| **J** | [Тестирование](./block-j-testing.md)           | 88 ч         | Unit, Feature, Integration, Performance тесты |
+
 ---
 
 ## Архитектура интеграции с stupidCMS
@@ -464,16 +470,18 @@ Log::info("Материализация blueprint '{$blueprint->code}'", [
 
 **Must Have + Should Have (230 часов):**
 
-1. ✅ [Блок A: Схема БД](./block-a-database-schema.md) — 18 ч
-2. ✅ [Блок B: Граф зависимостей](./block-b-dependency-graph.md) — 12 ч
-3. ✅ [Блок C: Материализация](./block-c-materialization.md) — 40 ч
+1. ✅ [Блок A: Схема БД](./v-block-a-database-schema.md) — 18 ч
+2. ✅ [Блок B: Граф зависимостей](./v-block-b-dependency-graph.md) — 12 ч
+3. ✅ [Блок C: Материализация](./v-block-c-materialization.md) — 40 ч
 4. ✅ [Блок D: Каскадные события](./block-d-cascade-events.md) — 32 ч
 5. ✅ [Блок F+G: Entry и индексация](./block-fg-entry-indexing.md) — 46 ч
 6. ✅ [Блок H: BlueprintStructureService](./block-h-structure-service.md) — 48 ч
 7. ✅ [Блок I: API контроллеры](./block-i-api-controllers.md) — 34 ч
 
-**Опционально (Could Have):**
-- Блок J: Комплексное тестирование (88 ч)
+**Could Have (88 часов):**
+8. ✅ [Блок J: Комплексное тестирование](./block-j-testing.md) — 88 ч
+
+**Опционально (Could Have+):**
 - Блок K-M: Оптимизация и мониторинг (92 ч)
 
 ## Исходные документы
