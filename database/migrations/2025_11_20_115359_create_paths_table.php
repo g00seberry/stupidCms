@@ -64,8 +64,19 @@ return new class extends Migration {
     public function down(): void
     {
         // Удаляем индекс перед удалением таблицы (для явности)
+        // MySQL не поддерживает DROP INDEX IF EXISTS, проверяем существование через INFORMATION_SCHEMA
         if (DB::getDriverName() === 'mysql') {
-            DB::statement('DROP INDEX IF EXISTS uq_paths_full_path_per_blueprint ON paths');
+            $indexes = DB::select("
+                SELECT INDEX_NAME
+                FROM INFORMATION_SCHEMA.STATISTICS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'paths'
+                  AND INDEX_NAME = 'uq_paths_full_path_per_blueprint'
+            ");
+
+            if (!empty($indexes)) {
+                DB::statement('DROP INDEX uq_paths_full_path_per_blueprint ON paths');
+            }
         }
         Schema::dropIfExists('paths');
     }

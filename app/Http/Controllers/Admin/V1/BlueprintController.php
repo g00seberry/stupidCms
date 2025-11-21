@@ -10,6 +10,9 @@ use App\Http\Requests\Admin\Blueprint\UpdateBlueprintRequest;
 use App\Http\Resources\Admin\BlueprintResource;
 use App\Models\Blueprint;
 use App\Services\Blueprint\BlueprintStructureService;
+use App\Support\Errors\ErrorCode;
+use App\Support\Errors\ErrorFactory;
+use App\Support\Errors\ErrorResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -27,9 +30,11 @@ class BlueprintController extends Controller
 {
     /**
      * @param BlueprintStructureService $structureService
+     * @param ErrorFactory $errors
      */
     public function __construct(
-        private readonly BlueprintStructureService $structureService
+        private readonly BlueprintStructureService $structureService,
+        private readonly ErrorFactory $errors
     ) {}
 
     /**
@@ -212,8 +217,14 @@ class BlueprintController extends Controller
      *   "message": "Blueprint удалён"
      * }
      * @response status=422 {
-     *   "message": "Невозможно удалить blueprint",
-     *   "reasons": ["Используется в 3 PostType", "Встроен в 2 других blueprint"]
+     *   "type": "https://stupidcms.dev/problems/unprocessable-entity",
+     *   "title": "Unprocessable Entity",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "Невозможно удалить blueprint",
+     *   "meta": {
+     *     "reasons": ["Используется в 3 PostType", "Встроен в 2 других blueprint"]
+     *   }
      * }
      *
      * @param Blueprint $blueprint
@@ -224,10 +235,15 @@ class BlueprintController extends Controller
         $check = $this->structureService->canDeleteBlueprint($blueprint);
 
         if (!$check['can_delete']) {
-            return response()->json([
-                'message' => 'Невозможно удалить blueprint',
-                'reasons' => $check['reasons'],
-            ], 422);
+            $payload = $this->errors->for(ErrorCode::VALIDATION_ERROR)
+                ->detail('Невозможно удалить blueprint')
+                ->meta([
+                    'reasons' => $check['reasons'],
+                    'blueprint_code' => $blueprint->code,
+                ])
+                ->build();
+
+            return ErrorResponseFactory::make($payload);
         }
 
         $this->structureService->deleteBlueprint($blueprint);

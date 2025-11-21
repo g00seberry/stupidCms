@@ -11,6 +11,7 @@ use App\Exceptions\Blueprint\CannotDeleteCopiedPathException;
 use App\Exceptions\Blueprint\CannotEditCopiedPathException;
 use App\Exceptions\Blueprint\CyclicDependencyException;
 use App\Exceptions\Blueprint\DuplicateEmbedException;
+use App\Exceptions\Blueprint\InvalidHostPathException;
 use App\Exceptions\Blueprint\PathConflictException;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
@@ -23,6 +24,9 @@ use Illuminate\Support\Facades\Log;
  *
  * Координирует создание/изменение/удаление Blueprint, Path, BlueprintEmbed.
  * Использует валидаторы, материализацию и каскадные события.
+ *
+ * Все исключения реализуют ErrorConvertible и автоматически обрабатываются
+ * через систему управления ошибками (ErrorKernel).
  */
 class BlueprintStructureService
 {
@@ -255,6 +259,7 @@ class BlueprintStructureService
      * @throws CyclicDependencyException
      * @throws PathConflictException
      * @throws DuplicateEmbedException Если встраивание уже существует в указанном месте
+     * @throws InvalidHostPathException Если host_path невалиден
      */
     public function createEmbed(
         Blueprint $host,
@@ -337,7 +342,7 @@ class BlueprintStructureService
      * @param Blueprint $blueprint
      * @param Path|null $hostPath
      * @return void
-     * @throws \InvalidArgumentException
+     * @throws InvalidHostPathException
      */
     private function validateHostPath(Blueprint $blueprint, ?Path $hostPath): void
     {
@@ -347,24 +352,17 @@ class BlueprintStructureService
 
         // Проверить принадлежность к blueprint
         if ($hostPath->blueprint_id !== $blueprint->id) {
-            throw new \InvalidArgumentException(
-                "host_path '{$hostPath->full_path}' не принадлежит blueprint '{$blueprint->code}'."
-            );
+            throw InvalidHostPathException::notOwnedByBlueprint($hostPath->full_path, $blueprint->code);
         }
 
         // Проверить, что host_path — не скопированное поле
         if ($hostPath->isCopied()) {
-            throw new \InvalidArgumentException(
-                "Нельзя встраивать в скопированное поле '{$hostPath->full_path}'. " .
-                "Используйте собственные поля blueprint."
-            );
+            throw InvalidHostPathException::isCopied($hostPath->full_path);
         }
 
         // Опционально: проверить тип (должна быть группа)
         if ($hostPath->data_type !== 'json') {
-            throw new \InvalidArgumentException(
-                "host_path '{$hostPath->full_path}' должен быть группой (data_type = 'json')."
-            );
+            throw InvalidHostPathException::notAGroup($hostPath->full_path);
         }
     }
 

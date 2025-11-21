@@ -81,7 +81,9 @@ test('нельзя удалить blueprint используемый в PostType
     $response = $this->deleteJson("/api/v1/admin/blueprints/{$blueprint->id}");
 
     $response->assertUnprocessable()
-        ->assertJsonPath('message', 'Невозможно удалить blueprint');
+        ->assertJsonPath('code', 'VALIDATION_ERROR')
+        ->assertJsonPath('detail', 'Невозможно удалить blueprint')
+        ->assertJsonPath('meta.reasons', fn($reasons) => is_array($reasons) && count($reasons) > 0);
 
     $this->assertDatabaseHas('blueprints', ['id' => $blueprint->id]);
 });

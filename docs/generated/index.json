@@ -2563,7 +2563,8 @@
                 "keys": [
                     "max_embed_depth",
                     "max_conflict_check_depth",
-                    "cache_graph_on_conflict_check"
+                    "cache_graph_on_conflict_check",
+                    "batch_insert_size"
                 ],
                 "sections": []
             },
@@ -8329,7 +8330,8 @@
                     "keys": [
                         "max_embed_depth",
                         "max_conflict_check_depth",
-                        "cache_graph_on_conflict_check"
+                        "cache_graph_on_conflict_check",
+                        "batch_insert_size"
                     ],
                     "sections": []
                 },
@@ -14817,5 +14819,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-21T11:29:25+00:00"
+    "generated_at": "2025-11-21T17:10:59+00:00"
 }

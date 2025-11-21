@@ -89,7 +89,10 @@ return new class extends Migration {
             }
 
             if (DB::getDriverName() === 'mysql') {
-                DB::statement('DROP INDEX IF EXISTS idx_paths_conflict_check ON paths');
+                // MySQL не поддерживает DROP INDEX IF EXISTS, используем проверку через hasIndex
+                if ($this->hasIndex('paths', 'idx_paths_conflict_check')) {
+                    DB::statement('DROP INDEX idx_paths_conflict_check ON paths');
+                }
             } elseif ($this->hasIndex('paths', 'idx_paths_conflict_check')) {
                 $table->dropIndex('idx_paths_conflict_check');
             }

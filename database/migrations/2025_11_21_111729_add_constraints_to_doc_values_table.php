@@ -83,8 +83,25 @@ return new class extends Migration
     public function down(): void
     {
         if (DB::getDriverName() === 'mysql') {
-            DB::statement('ALTER TABLE doc_values DROP CHECK IF EXISTS chk_doc_values_single_value');
-            DB::statement('ALTER TABLE doc_values DROP CHECK IF EXISTS chk_doc_values_array_index');
+            // MySQL не поддерживает DROP CHECK IF EXISTS, проверяем существование через INFORMATION_SCHEMA
+            $constraints = DB::select("
+                SELECT CONSTRAINT_NAME
+                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'doc_values'
+                  AND CONSTRAINT_TYPE = 'CHECK'
+                  AND CONSTRAINT_NAME IN ('chk_doc_values_single_value', 'chk_doc_values_array_index')
+            ");
+
+            $constraintNames = array_column($constraints, 'CONSTRAINT_NAME');
+
+            if (in_array('chk_doc_values_single_value', $constraintNames, true)) {
+                DB::statement('ALTER TABLE doc_values DROP CHECK chk_doc_values_single_value');
+            }
+
+            if (in_array('chk_doc_values_array_index', $constraintNames, true)) {
+                DB::statement('ALTER TABLE doc_values DROP CHECK chk_doc_values_array_index');
+            }
         }
 
         Schema::table('doc_values', function (Blueprint $table): void {

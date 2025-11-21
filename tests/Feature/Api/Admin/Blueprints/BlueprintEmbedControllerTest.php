@@ -80,8 +80,9 @@ test('нельзя создать цикл через API', function () {
         'embedded_blueprint_id' => $a->id,
     ]);
 
-    // Циклическая зависимость выбрасывает исключение, которое возвращает 500
-    $response->assertStatus(500);
+    // Циклическая зависимость обрабатывается через систему управления ошибками и возвращает 409 (CONFLICT)
+    $response->assertStatus(409)
+        ->assertJsonPath('code', 'CONFLICT');
 });
 
 test('можно удалить встраивание', function () {

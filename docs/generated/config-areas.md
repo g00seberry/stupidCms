@@ -39,7 +39,7 @@ Configuration: Auth
 Configuration: Blueprint
 
 ### Meta
-- **Keys:** `max_embed_depth`, `max_conflict_check_depth`, `cache_graph_on_conflict_check`
+- **Keys:** `max_embed_depth`, `max_conflict_check_depth`, `cache_graph_on_conflict_check`, `batch_insert_size`
 
 ### Tags
 `config`, `blueprint`
