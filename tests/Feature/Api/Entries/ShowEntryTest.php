@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use App\Models\Entry;
 use App\Models\PostType;
+use App\Models\Blueprint;
 
 /**
  * Feature-тесты для GET /api/v1/admin/entries/{id}
@@ -135,5 +136,50 @@ test('entry includes timestamps', function () {
         ->assertJsonStructure([
             'data' => ['created_at', 'updated_at', 'deleted_at'],
         ]);
+});
+
+test('entry includes blueprint from post type', function () {
+    $blueprint = Blueprint::factory()->create([
+        'code' => 'article-blueprint',
+        'name' => 'Article Blueprint',
+    ]);
+    
+    $postType = PostType::factory()->create([
+        'slug' => 'article-with-blueprint',
+        'blueprint_id' => $blueprint->id,
+    ]);
+    
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'author_id' => $this->user->id,
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                'blueprint' => ['id', 'name', 'code', 'description', 'created_at', 'updated_at'],
+            ],
+        ])
+        ->assertJsonPath('data.blueprint.id', $blueprint->id)
+        ->assertJsonPath('data.blueprint.code', 'article-blueprint')
+        ->assertJsonPath('data.blueprint.name', 'Article Blueprint');
+});
+
+test('entry does not include blueprint when post type has no blueprint', function () {
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'author_id' => $this->user->id,
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonMissingPath('data.blueprint');
 });
 

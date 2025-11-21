@@ -25,7 +25,7 @@ class PathResource extends AdminJsonResource
      * - Метаданные (data_type, cardinality, is_required, is_indexed, is_readonly, sort_order)
      * - Правила валидации (validation_rules)
      * - Источник копии (source_blueprint_id, source_blueprint, blueprint_embed_id)
-     * - Дочерние поля (children) - всегда присутствует (может быть пустым массивом)
+     * - Дочерние поля (children) - присутствует только если есть дочерние элементы
      * - Даты в ISO 8601 формате
      *
      * @param Request $request HTTP запрос
@@ -60,8 +60,10 @@ class PathResource extends AdminJsonResource
             // Embed (если копия)
             'blueprint_embed_id' => $this->blueprint_embed_id,
 
-            // Дочерние поля (если загружены или установлены вручную через buildTree)
-            'children' => $this->getChildrenCollection(),
+            // Дочерние поля (только если есть реальные дочерние элементы)
+            'children' => $this->when($this->hasChildren(), function () {
+                return $this->getChildrenCollection();
+            }),
 
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
@@ -69,10 +71,35 @@ class PathResource extends AdminJsonResource
     }
 
     /**
+     * Проверить, есть ли у path дочерние элементы.
+     *
+     * Проверяет, загружены ли children через отношение или установлены вручную (через buildTree),
+     * и есть ли в них реальные элементы.
+     *
+     * @return bool true, если есть дочерние элементы
+     */
+    private function hasChildren(): bool
+    {
+        // Если children загружены через отношение, проверяем количество
+        if ($this->relationLoaded('children')) {
+            return $this->children->isNotEmpty();
+        }
+        
+        // Если children установлены вручную (через buildTree), проверяем коллекцию
+        $children = $this->children;
+        if ($children instanceof \Illuminate\Support\Collection || $children instanceof \Illuminate\Database\Eloquent\Collection) {
+            return $children->isNotEmpty();
+        }
+        
+        // Если children не установлены (вернулось отношение), считаем что их нет
+        return false;
+    }
+
+    /**
      * Получить коллекцию children для ресурса.
      *
      * Проверяет, загружены ли children через отношение или установлены вручную (через buildTree).
-     * Всегда возвращает коллекцию PathResource (может быть пустой).
+     * Возвращает коллекцию PathResource.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -91,6 +118,7 @@ class PathResource extends AdminJsonResource
         }
         
         // Если children не установлены (вернулось отношение), возвращаем пустую коллекцию
+        // (этот случай не должен произойти, так как hasChildren() вернёт false)
         return PathResource::collection(collect());
     }
 }

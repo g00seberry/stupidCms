@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
  * API Resource для Entry в админ-панели.
  *
  * Форматирует Entry для ответа API, включая связанные сущности
- * (postType, author, terms) при их загрузке.
+ * (postType, author, terms, blueprint) при их загрузке.
  *
  * @package App\Http\Resources\Admin
  */
@@ -23,7 +23,7 @@ class EntryResource extends AdminJsonResource
      * Возвращает массив с полями записи, включая:
      * - Основные поля (id, post_type, title, slug, status)
      * - JSON поля (content_json, meta_json) преобразованные в объекты
-     * - Связанные сущности (author, terms) при их загрузке
+     * - Связанные сущности (author, terms, blueprint) при их загрузке
      * - Даты в ISO 8601 формате
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
@@ -57,6 +57,12 @@ class EntryResource extends AdminJsonResource
                     ];
                 });
             }),
+            'blueprint' => $this->when(
+                $this->postType?->relationLoaded('blueprint') && $this->postType?->blueprint,
+                function () {
+                    return BlueprintResource::make($this->postType->blueprint);
+                }
+            ),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'deleted_at' => $this->deleted_at?->toIso8601String(),

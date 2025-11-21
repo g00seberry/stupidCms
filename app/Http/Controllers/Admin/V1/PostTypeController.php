@@ -40,6 +40,7 @@ class PostTypeController extends Controller
      * @bodyParam slug string required Уникальный slug PostType. Example: product
      * @bodyParam name string required Человекочитаемое название. Example: Products
      * @bodyParam options_json object Опциональные настройки. Example: {"fields":{"price":{"type":"number"}}}
+     * @bodyParam blueprint_id integer optional ID Blueprint для привязки к типу записи. Example: 1
      * @response status=201 {
      *   "data": {
      *     "slug": "product",
@@ -118,6 +119,7 @@ class PostTypeController extends Controller
                 'slug' => $slug,
                 'name' => $validated['name'],
                 'options_json' => $options,
+                'blueprint_id' => $validated['blueprint_id'] ?? null,
             ]);
         });
 
@@ -258,7 +260,7 @@ class PostTypeController extends Controller
     /**
      * Обновление настроек типа записи.
      *
-     * Обновляет slug, name и options_json типа записи. Нормализует taxonomies в options_json:
+     * Обновляет slug, name, options_json и blueprint_id типа записи. Нормализует taxonomies в options_json:
      * принимает как целые числа, так и строковые представления чисел, преобразуя их в целые числа.
      *
      * @param \App\Http\Requests\Admin\UpdatePostTypeRequest $request Валидированный запрос
@@ -273,6 +275,7 @@ class PostTypeController extends Controller
      * @bodyParam slug string optional Новый slug PostType. Example: article-updated
      * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
+     * @bodyParam blueprint_id integer optional ID Blueprint для привязки к типу записи. Example: 1
      * @response status=200 {
      *   "data": {
      *     "slug": "article",
@@ -356,6 +359,9 @@ class PostTypeController extends Controller
             }
             if (isset($validated['name'])) {
                 $type->name = $validated['name'];
+            }
+            if (array_key_exists('blueprint_id', $validated)) {
+                $type->blueprint_id = $validated['blueprint_id'];
             }
             $options = PostTypeOptions::fromArray($validated['options_json']);
             $type->options_json = $options;

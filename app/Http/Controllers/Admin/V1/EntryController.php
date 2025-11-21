@@ -211,6 +211,8 @@ class EntryController extends Controller
     /**
      * Получение записи по ID (включая удалённые).
      *
+     * Возвращает запись с blueprint, назначенным в родительском PostType.
+     *
      * @group Admin ▸ Entries
      * @name Show entry
      * @authenticated
@@ -283,7 +285,7 @@ class EntryController extends Controller
     public function show(int $id): EntryResource
     {
         $entry = Entry::query()
-            ->with(['postType', 'author', 'terms.taxonomy'])
+            ->with(['postType.blueprint', 'author', 'terms.taxonomy'])
             ->withTrashed()
             ->find($id);
 
