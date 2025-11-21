@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
  * - Одноразовая загрузка графа с eager loading
  * - Кеширование путей и embeds
  * - Конфигурируемый лимит глубины
+ * - Батчинг проверки конфликтов (chunks по 500 элементов) для избежания проблем с большими WHERE IN
  */
 class PathConflictValidator
 {
@@ -80,6 +81,9 @@ class PathConflictValidator
     /**
      * Проверить, что материализация не создаст конфликтов full_path.
      *
+     * Использует батчинг для проверки конфликтов: разбивает будущие пути
+     * на chunks по 500 элементов для избежания проблем с большими WHERE IN запросами.
+     *
      * @param Blueprint $embeddedBlueprint Кого встраиваем
      * @param Blueprint $hostBlueprint В кого встраиваем
      * @param string|null $baseParentPath Базовый путь (или null для корня)
@@ -102,23 +106,29 @@ class PathConflictValidator
         // 2. Собрать все будущие пути (включая транзитивные) без рекурсивных запросов
         $futurePaths = $this->collectFuturePathsFromGraph($graph, $embeddedBlueprint->id, $baseParentPath);
 
-        // 3. Проверить пересечения с существующими путями
-        $query = Path::query()
-            ->where('blueprint_id', $hostBlueprint->id)
-            ->whereIn('full_path', $futurePaths);
+        // 3. Проверить пересечения с существующими путями (батчинг для больших массивов)
+        $existingPaths = [];
+        $chunkSize = 500; // Размер батча для WHERE IN (безопасный лимит для MySQL)
 
-        // Исключить пути, которые будут удалены (для рематериализации)
-        if ($excludeEmbedId !== null) {
-            $query->where(function ($q) use ($excludeEmbedId) {
-                $q->whereNull('blueprint_embed_id')
-                    ->orWhere('blueprint_embed_id', '!=', $excludeEmbedId);
-            });
-        } else {
-            // При первой материализации исключаем копии (только собственные пути host blueprint)
-            $query->whereNull('blueprint_embed_id');
+        foreach (array_chunk($futurePaths, $chunkSize) as $chunk) {
+            $query = Path::query()
+                ->where('blueprint_id', $hostBlueprint->id)
+                ->whereIn('full_path', $chunk);
+
+            // Исключить пути, которые будут удалены (для рематериализации)
+            if ($excludeEmbedId !== null) {
+                $query->where(function ($q) use ($excludeEmbedId) {
+                    $q->whereNull('blueprint_embed_id')
+                        ->orWhere('blueprint_embed_id', '!=', $excludeEmbedId);
+                });
+            } else {
+                // При первой материализации исключаем копии (только собственные пути host blueprint)
+                $query->whereNull('blueprint_embed_id');
+            }
+
+            $chunkConflicts = $query->pluck('full_path')->all();
+            $existingPaths = array_merge($existingPaths, $chunkConflicts);
         }
-
-        $existingPaths = $query->pluck('full_path')->all();
 
         if (!empty($existingPaths)) {
             throw PathConflictException::create(
