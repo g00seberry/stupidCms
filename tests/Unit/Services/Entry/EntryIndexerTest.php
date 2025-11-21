@@ -23,6 +23,7 @@ test('индексация Entry с blueprint создаёт doc_values', functi
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
+        'cardinality' => 'one',
         'is_indexed' => true,
     ]);
 
@@ -37,7 +38,11 @@ test('индексация Entry с blueprint создаёт doc_values', functi
 
     expect($docValue)->not->toBeNull()
         ->and($docValue->value_string)->toBe('Test Article')
-        ->and($docValue->array_index)->toBe(0);
+        ->and($docValue->cardinality)->toBe('one')
+        ->and($docValue->array_index)->toBeNull()
+        ->and($docValue->value_int)->toBeNull()
+        ->and($docValue->value_float)->toBeNull()
+        ->and($docValue->value_bool)->toBeNull();
 });
 
 test('индексация массива создаёт несколько doc_values', function () {
@@ -78,6 +83,7 @@ test('индексация ref-поля создаёт doc_refs', function () {
         'name' => 'relatedArticle',
         'full_path' => 'relatedArticle',
         'data_type' => 'ref',
+        'cardinality' => 'one',
         'is_indexed' => true,
     ]);
 
@@ -93,7 +99,8 @@ test('индексация ref-поля создаёт doc_refs', function () {
 
     expect($docRef)->not->toBeNull()
         ->and($docRef->target_entry_id)->toBe($targetEntry->id)
-        ->and($docRef->array_index)->toBe(0);
+        ->and($docRef->array_index)->toBeNull()
+        ->and(DocValue::where('entry_id', $entry->id)->count())->toBe(0);
 });
 
 test('реиндексация удаляет старые значения', function () {
@@ -105,6 +112,7 @@ test('реиндексация удаляет старые значения', fu
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
+        'cardinality' => 'one',
         'is_indexed' => true,
     ]);
 
@@ -140,4 +148,89 @@ test('Entry без blueprint не индексируется', function () {
     $this->indexer->index($entry);
 
     expect(DocValue::where('entry_id', $entry->id)->count())->toBe(0);
+});
+
+test('индексация явно очищает остальные value_* колонки', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'price',
+        'full_path' => 'price',
+        'data_type' => 'int',
+        'cardinality' => 'one',
+        'is_indexed' => true,
+    ]);
+
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'data_json' => ['price' => 100],
+    ]);
+
+    $this->indexer->index($entry);
+
+    $docValue = DocValue::where('entry_id', $entry->id)->first();
+
+    expect($docValue->value_int)->toBe(100)
+        ->and($docValue->value_string)->toBeNull()
+        ->and($docValue->value_float)->toBeNull()
+        ->and($docValue->value_bool)->toBeNull()
+        ->and($docValue->value_date)->toBeNull()
+        ->and($docValue->value_datetime)->toBeNull()
+        ->and($docValue->value_text)->toBeNull()
+        ->and($docValue->value_json)->toBeNull();
+});
+
+test('индексация массива устанавливает cardinality=many и array_index', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'tags',
+        'full_path' => 'tags',
+        'data_type' => 'string',
+        'cardinality' => 'many',
+        'is_indexed' => true,
+    ]);
+
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'data_json' => ['tags' => ['php', 'laravel']],
+    ]);
+
+    $this->indexer->index($entry);
+
+    $values = DocValue::where('entry_id', $entry->id)->orderBy('array_index')->get();
+
+    expect($values)->toHaveCount(2)
+        ->and($values[0]->cardinality)->toBe('many')
+        ->and($values[0]->array_index)->toBe(1)
+        ->and($values[1]->array_index)->toBe(2);
+});
+
+test('ref-типы не записываются в doc_values', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    $path = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'relatedArticle',
+        'full_path' => 'relatedArticle',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+        'is_indexed' => true,
+    ]);
+
+    $targetEntry = Entry::factory()->create();
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'data_json' => ['relatedArticle' => $targetEntry->id],
+    ]);
+
+    $this->indexer->index($entry);
+
+    expect(DocValue::where('entry_id', $entry->id)->count())->toBe(0)
+        ->and(DocRef::where('entry_id', $entry->id)->count())->toBe(1);
 });

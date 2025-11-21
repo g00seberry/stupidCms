@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $entry_id
  * @property int $path_id
- * @property int|null $array_index
+ * @property string $cardinality Денормализованное значение из paths.cardinality: 'one' | 'many'
+ * @property int|null $array_index Индекс в массиве (NULL для cardinality=one, обязателен для many)
  * @property string|null $value_string
  * @property int|null $value_int
  * @property float|null $value_float
@@ -36,6 +37,7 @@ class DocValue extends Model
     protected $fillable = [
         'entry_id',
         'path_id',
+        'cardinality',
         'array_index',
         'value_string',
         'value_int',

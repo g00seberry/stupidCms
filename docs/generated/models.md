@@ -93,7 +93,7 @@ Eloquent модель для аудита изменений (Audit).
 
 ### Meta
 - **Table:** `doc_values`
-- **Fillable:** `entry_id`, `path_id`, `array_index`, `value_string`, `value_int`, `value_float`, `value_bool`, `value_date`, `value_datetime`, `value_text`, `value_json`
+- **Fillable:** `entry_id`, `path_id`, `cardinality`, `array_index`, `value_string`, `value_int`, `value_float`, `value_bool`, `value_date`, `value_datetime`, `value_text`, `value_json`
 - **Guarded:** `*`
 - **Casts:** `value_bool` => `boolean`, `value_json` => `array`
 - **Relations:**

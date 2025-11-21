@@ -16,20 +16,57 @@ use Illuminate\Support\Facades\DB;
  *
  * Копирует структуру embedded blueprint в host blueprint,
  * включая все транзитивные встраивания.
+ * Использует конфигурационные параметры из config/blueprint.php.
  */
 class MaterializationService
 {
     /**
      * Максимальная глубина вложенности встраиваний.
+     *
+     * Читается из конфига config('blueprint.max_embed_depth').
+     * По умолчанию: 5.
+     *
+     * @var int|null
      */
-    private const MAX_EMBED_DEPTH = 5;
+    private ?int $maxEmbedDepth = null;
+
+    /**
+     * Переопределить максимальную глубину (для тестов).
+     *
+     * @var int|null
+     */
+    private ?int $overrideMaxDepth = null;
 
     /**
      * @param PathConflictValidator $conflictValidator
+     * @param int|null $maxDepth Переопределить максимальную глубину (null = из конфига)
      */
     public function __construct(
-        private readonly PathConflictValidator $conflictValidator
-    ) {}
+        private readonly PathConflictValidator $conflictValidator,
+        ?int $maxDepth = null
+    ) {
+        $this->overrideMaxDepth = $maxDepth;
+    }
+
+    /**
+     * Получить максимальную глубину вложенности.
+     *
+     * @return int
+     */
+    private function getMaxEmbedDepth(): int
+    {
+        if ($this->maxEmbedDepth !== null) {
+            return $this->maxEmbedDepth;
+        }
+
+        if ($this->overrideMaxDepth !== null) {
+            $this->maxEmbedDepth = $this->overrideMaxDepth;
+            return $this->maxEmbedDepth;
+        }
+
+        $this->maxEmbedDepth = (int) config('blueprint.max_embed_depth', 5);
+        return $this->maxEmbedDepth;
+    }
 
     /**
      * Материализовать встраивание со всеми транзитивными зависимостями.
@@ -98,9 +135,10 @@ class MaterializationService
         BlueprintEmbed $rootEmbed,
         int $depth
     ): void {
-        // Защита от переполнения стека
-        if ($depth >= self::MAX_EMBED_DEPTH) {
-            throw MaxDepthExceededException::create(self::MAX_EMBED_DEPTH);
+        // Защита от переполнения стека (лимит из конфига)
+        $maxDepth = $this->getMaxEmbedDepth();
+        if ($depth >= $maxDepth) {
+            throw MaxDepthExceededException::create($maxDepth);
         }
 
         // 1. Получить собственные поля blueprint (без source_blueprint_id)

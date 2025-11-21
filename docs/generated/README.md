@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 196
+**Всего сущностей:** 197
 
 ## Содержание
 
@@ -16,7 +16,7 @@ Eloquent-модели для работы с БД (22 сущностей)
 Blade-шаблоны для рендеринга (8 сущностей)
 
 ### [Config Areas](./config-areas.md)
-Логические секции конфигурации (23 сущностей)
+Логические секции конфигурации (24 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
 HTTP эндпоинты API (78 сущностей)
@@ -66,6 +66,7 @@ HTTP эндпоинты API (78 сущностей)
 
 - [App](./config-areas.md#app) - Configuration: App
 - [Auth](./config-areas.md#auth) - Configuration: Auth
+- [Blueprint](./config-areas.md#blueprint) - Configuration: Blueprint
 - [Cache](./config-areas.md#cache) - Configuration: Cache
 - [Cors](./config-areas.md#cors) - Configuration: Cors
 - [Database](./config-areas.md#database) - Configuration: Database
@@ -73,8 +74,7 @@ HTTP эндпоинты API (78 сущностей)
 - [Errors](./config-areas.md#errors) - Configuration: Errors
 - [Filesystems](./config-areas.md#filesystems) - Configuration: Filesystems
 - [Jwt](./config-areas.md#jwt) - Configuration: Jwt
-- [Logging](./config-areas.md#logging) - Configuration: Logging
-- *...и еще 13 сущностей*
+- *...и еще 14 сущностей*
 
 ### HTTP Endpoints
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (78 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-20 19:05:17
+**Сгенерировано:** 2025-11-21 11:29:25
 
 Для обновления документации выполните:
 ```bash

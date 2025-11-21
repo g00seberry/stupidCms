@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Log;
  *
  * Извлекает значения из data_json по путям blueprint и сохраняет
  * в реляционные таблицы для быстрых запросов.
+ *
+ * Правила индексации:
+ * - Для скалярных типов (string, int, float, bool, date, datetime, text, json) → doc_values
+ * - Для ref-типов → только doc_refs (запись в doc_values запрещена)
+ * - Явное сопоставление data_type → целевая колонка value_* с очисткой остальных
+ * - cardinality записывается денормализованно для CHECK-констрейнтов
+ * - array_index: NULL для cardinality=one, обязателен (1-based) для cardinality=many
  */
 class EntryIndexer
 {
@@ -95,42 +102,68 @@ class EntryIndexer
     /**
      * Индексировать скалярное поле (или массив скаляров).
      *
+     * Явно сопоставляет data_type → целевую колонку и очищает остальные value_* поля.
+     * Запрещено для ref-типов (они обрабатываются через indexRefPath).
+     *
      * @param Entry $entry
      * @param \App\Models\Path $path
      * @param mixed $value
      * @return void
+     * @throws \InvalidArgumentException Если path имеет data_type='ref'
      */
     private function indexValuePath(Entry $entry, $path, mixed $value): void
     {
+        // Защита: ref-типы должны обрабатываться через indexRefPath
+        if ($path->data_type === 'ref') {
+            throw new \InvalidArgumentException(
+                "Попытка записать ref-поле '{$path->full_path}' в doc_values. Используйте doc_refs."
+            );
+        }
+
         $valueField = $this->getValueFieldForType($path->data_type);
 
+        // Базовая структура записи с явной очисткой остальных колонок
+        $baseData = [
+            'entry_id' => $entry->id,
+            'path_id' => $path->id,
+            'cardinality' => $path->cardinality,
+            // Явная очистка всех value_* полей
+            'value_string' => null,
+            'value_int' => null,
+            'value_float' => null,
+            'value_bool' => null,
+            'value_date' => null,
+            'value_datetime' => null,
+            'value_text' => null,
+            'value_json' => null,
+        ];
+
         if ($path->cardinality === 'one') {
-            // Одиночное значение
-            DocValue::create([
-                'entry_id' => $entry->id,
-                'path_id' => $path->id,
-                'array_index' => 0,
-                $valueField => $this->castValue($value, $path->data_type),
-            ]);
+            // Одиночное значение: array_index = NULL
+            $baseData['array_index'] = null;
+            $baseData[$valueField] = $this->castValue($value, $path->data_type);
+
+            DocValue::create($baseData);
         } else {
-            // Массив значений
+            // Массив значений: array_index обязателен
             if (!is_array($value)) {
                 return;
             }
 
             foreach ($value as $idx => $item) {
-                DocValue::create([
-                    'entry_id' => $entry->id,
-                    'path_id' => $path->id,
-                    'array_index' => $idx + 1, // 1-based индексация
-                    $valueField => $this->castValue($item, $path->data_type),
-                ]);
+                $itemData = $baseData;
+                $itemData['array_index'] = $idx + 1; // 1-based индексация
+                $itemData[$valueField] = $this->castValue($item, $path->data_type);
+
+                DocValue::create($itemData);
             }
         }
     }
 
     /**
      * Индексировать ref-поле (ссылка на другой Entry).
+     *
+     * Сохраняет только в doc_refs, не в doc_values.
      *
      * @param Entry $entry
      * @param \App\Models\Path $path
@@ -140,7 +173,7 @@ class EntryIndexer
     private function indexRefPath(Entry $entry, $path, mixed $value): void
     {
         if ($path->cardinality === 'one') {
-            // Одиночная ссылка
+            // Одиночная ссылка: array_index = NULL
             if (!is_int($value) && !is_numeric($value)) {
                 return;
             }
@@ -148,11 +181,11 @@ class EntryIndexer
             DocRef::create([
                 'entry_id' => $entry->id,
                 'path_id' => $path->id,
-                'array_index' => 0,
+                'array_index' => null, // Для cardinality=one
                 'target_entry_id' => (int) $value,
             ]);
         } else {
-            // Массив ссылок
+            // Массив ссылок: array_index обязателен
             if (!is_array($value)) {
                 return;
             }
@@ -165,7 +198,7 @@ class EntryIndexer
                 DocRef::create([
                     'entry_id' => $entry->id,
                     'path_id' => $path->id,
-                    'array_index' => $idx + 1,
+                    'array_index' => $idx + 1, // 1-based индексация
                     'target_entry_id' => (int) $targetId,
                 ]);
             }
@@ -203,17 +236,19 @@ class EntryIndexer
     private function castValue(mixed $value, string $dataType): mixed
     {
         return match ($dataType) {
+            'string' => (string) $value,
             'int' => (int) $value,
             'float' => (float) $value,
             'bool' => (bool) $value,
             'date' => $value instanceof \DateTimeInterface
                 ? $value->format('Y-m-d')
-                : $value,
+                : (is_string($value) ? $value : (string) $value),
             'datetime' => $value instanceof \DateTimeInterface
                 ? $value
-                : now()->parse($value),
-            'json' => is_array($value) ? $value : json_decode($value, true),
-            default => (string) $value,
+                : (is_string($value) ? now()->parse($value) : now()),
+            'text' => (string) $value,
+            'json' => is_array($value) ? $value : json_decode((string) $value, true),
+            default => throw new \InvalidArgumentException("Неизвестный data_type для приведения: {$dataType}"),
         };
     }
 }

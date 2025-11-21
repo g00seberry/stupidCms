@@ -161,6 +161,7 @@
                 "fillable": [
                     "entry_id",
                     "path_id",
+                    "cardinality",
                     "array_index",
                     "value_string",
                     "value_int",
@@ -2549,6 +2550,27 @@
             "tags": [
                 "config",
                 "auth"
+            ]
+        },
+        {
+            "id": "config_area:blueprint",
+            "type": "config_area",
+            "name": "Blueprint",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/blueprint.php",
+            "summary": "Configuration: Blueprint",
+            "details": null,
+            "meta": {
+                "keys": [
+                    "max_embed_depth",
+                    "max_conflict_check_depth",
+                    "cache_graph_on_conflict_check"
+                ],
+                "sections": []
+            },
+            "related": [],
+            "tags": [
+                "config",
+                "blueprint"
             ]
         },
         {
@@ -5899,6 +5921,7 @@
                     "fillable": [
                         "entry_id",
                         "path_id",
+                        "cardinality",
                         "array_index",
                         "value_string",
                         "value_int",
@@ -8293,6 +8316,27 @@
                 "tags": [
                     "config",
                     "auth"
+                ]
+            },
+            {
+                "id": "config_area:blueprint",
+                "type": "config_area",
+                "name": "Blueprint",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/blueprint.php",
+                "summary": "Configuration: Blueprint",
+                "details": null,
+                "meta": {
+                    "keys": [
+                        "max_embed_depth",
+                        "max_conflict_check_depth",
+                        "cache_graph_on_conflict_check"
+                    ],
+                    "sections": []
+                },
+                "related": [],
+                "tags": [
+                    "config",
+                    "blueprint"
                 ]
             },
             {
@@ -11498,6 +11542,12 @@
                 "type": "model",
                 "name": "Blueprint",
                 "summary": "Шаблон структуры данных для Entry."
+            },
+            {
+                "id": "config_area:blueprint",
+                "type": "config_area",
+                "name": "Blueprint",
+                "summary": "Configuration: Blueprint"
             }
         ],
         "blueprintembed": [
@@ -12518,6 +12568,12 @@
                 "type": "config_area",
                 "name": "Auth",
                 "summary": "Configuration: Auth"
+            },
+            {
+                "id": "config_area:blueprint",
+                "type": "config_area",
+                "name": "Blueprint",
+                "summary": "Configuration: Blueprint"
             },
             {
                 "id": "config_area:cache",
@@ -14761,5 +14817,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-20T19:05:17+00:00"
+    "generated_at": "2025-11-21T11:29:25+00:00"
 }
