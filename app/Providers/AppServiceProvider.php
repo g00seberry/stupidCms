@@ -48,11 +48,15 @@ use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Observers\EntryObserver;
+use App\Services\Blueprint\BlueprintDependencyGraphLoader;
+use App\Services\Blueprint\BlueprintDependencyGraphLoaderInterface;
 use App\Services\Blueprint\BlueprintStructureService;
 use App\Services\Blueprint\CyclicDependencyValidator;
 use App\Services\Blueprint\DependencyGraphService;
 use App\Services\Blueprint\MaterializationService;
 use App\Services\Blueprint\PathConflictValidator;
+use App\Services\Blueprint\PathMaterializer;
+use App\Services\Blueprint\PathMaterializerInterface;
 use App\Services\Entry\EntryIndexer;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
@@ -208,7 +212,24 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(DependencyGraphService::class);
         $this->app->singleton(CyclicDependencyValidator::class);
         $this->app->singleton(PathConflictValidator::class);
-        $this->app->singleton(MaterializationService::class);
+
+        // Blueprint materialization services
+        $this->app->bind(BlueprintDependencyGraphLoaderInterface::class, BlueprintDependencyGraphLoader::class);
+        $this->app->bind(PathMaterializerInterface::class, function ($app) {
+            $batchInsertSize = (int) config('blueprint.batch_insert_size', 500);
+            return new PathMaterializer($batchInsertSize);
+        });
+
+        $this->app->singleton(MaterializationService::class, function ($app) {
+            $maxEmbedDepth = (int) config('blueprint.max_embed_depth', 5);
+            return new MaterializationService(
+                $app->make(PathConflictValidator::class),
+                $app->make(BlueprintDependencyGraphLoaderInterface::class),
+                $app->make(PathMaterializerInterface::class),
+                $maxEmbedDepth
+            );
+        });
+
         $this->app->singleton(BlueprintStructureService::class);
 
         // Entry indexing service

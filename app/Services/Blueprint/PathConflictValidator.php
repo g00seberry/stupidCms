@@ -227,7 +227,7 @@ class PathConflictValidator
     ): array {
         $paths = [];
         $visited = [];
-        // Оптимизация уровня 5: Использовать SplQueue вместо array с array_shift (O(1) вместо O(n))
+        // Использовать SplQueue вместо array для эффективного обхода (O(1) вместо O(n))
         $queue = new SplQueue();
         $queue->enqueue([$rootBlueprintId, $baseParentPath, 0]); // [blueprint_id, base_path, depth]
 
