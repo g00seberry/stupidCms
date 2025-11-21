@@ -9,6 +9,7 @@ use App\Exceptions\Blueprint\PathConflictException;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
 use App\Models\Path;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -19,8 +20,14 @@ use Illuminate\Support\Facades\DB;
  * Использует конфигурационные параметры из config/blueprint.php.
  *
  * Оптимизации производительности:
+ * - Предзагрузка всего графа зависимостей одним набором запросов (уровень 2)
  * - Batch insert для всех путей одного уровня (вместо N отдельных INSERT)
  * - Batch update parent_id через CASE WHEN (вместо N отдельных UPDATE)
+ * - Оптимизированное получение ID после batch insert через индекс + время (уровень 3)
+ * - Объединение проходов по sourcePaths (уровень 4)
+ * - Chunk для больших batch insert (защита от max_allowed_packet в MySQL) (уровень 6)
+ *
+ * @see docs/data-core/blueprint-materialization-optimization.md
  */
 class MaterializationService
 {
@@ -40,6 +47,13 @@ class MaterializationService
      * @var int|null
      */
     private ?int $overrideMaxDepth = null;
+
+    /**
+     * Кеш предзагруженного графа зависимостей.
+     *
+     * @var array{paths: array<int, Collection>, embeds: array<int, Collection>}|null
+     */
+    private ?array $graphCache = null;
 
     /**
      * @param PathConflictValidator $conflictValidator
@@ -86,7 +100,7 @@ class MaterializationService
     {
         // Загрузить связи для работы
         $embed->load(['blueprint', 'embeddedBlueprint', 'hostPath']);
-        
+
         $hostBlueprint = $embed->blueprint;
         $embeddedBlueprint = $embed->embeddedBlueprint;
         $hostPath = $embed->hostPath;
@@ -107,7 +121,10 @@ class MaterializationService
             // 2. Удалить старые копии (включая транзитивные)
             Path::where('blueprint_embed_id', $embed->id)->delete();
 
-            // 3. Рекурсивно скопировать структуру
+            // 3. Предзагрузить весь граф зависимостей (оптимизация уровня 2)
+            $this->graphCache = $this->preloadDependencyGraph($embeddedBlueprint);
+
+            // 4. Рекурсивно скопировать структуру с использованием кеша
             $this->copyBlueprintRecursive(
                 blueprint: $embeddedBlueprint,
                 hostBlueprint: $hostBlueprint,
@@ -116,6 +133,9 @@ class MaterializationService
                 rootEmbed: $embed,
                 depth: 0
             );
+
+            // Очистить кеш после завершения
+            $this->graphCache = null;
         });
     }
 
@@ -149,29 +169,53 @@ class MaterializationService
         }
 
         // 1. Получить собственные поля blueprint (без source_blueprint_id)
-        $sourcePaths = $blueprint->paths()
-            ->whereNull('source_blueprint_id')
-            ->orderByRaw('LENGTH(full_path), full_path') // родители раньше детей
-            ->get();
+        // Использовать кеш, если доступен (оптимизация уровня 2)
+        if ($this->graphCache !== null && isset($this->graphCache['paths'][$blueprint->id])) {
+            // Кеш уже содержит отсортированные пути, но пересортируем для гарантии
+            // Используем исходный full_path для сортировки (родители раньше детей)
+            $sourcePaths = $this->graphCache['paths'][$blueprint->id]
+                ->sortBy(function ($path) {
+                    // Сортировка по длине full_path, затем по самому full_path
+                    // Это гарантирует, что родители (короткие пути) обрабатываются раньше детей
+                    return sprintf('%05d%s', strlen($path->full_path), $path->full_path);
+                })
+                ->values();
+        } else {
+            // Fallback: загрузить через запрос (оптимизация уровня 9: select только нужные поля)
+            $sourcePaths = $blueprint->paths()
+                ->whereNull('source_blueprint_id')
+                ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_required', 'is_indexed', 'sort_order', 'validation_rules'])
+                ->orderByRaw('LENGTH(full_path), full_path') // родители раньше детей
+                ->get();
+        }
 
         // 2. Карта соответствия: source path id → copy (id, full_path)
+        // Инициализировать заранее для использования в обоих ветвях (chunked и обычная вставка)
         $idMap = [];
         $pathMap = [];
 
-        // Собрать все данные для batch insert
+        // Оптимизация уровня 4: Объединение проходов - один проход вместо двух
         $pathsToInsert = [];
+        $tempPathMap = []; // id => full_path
+        $parentIdMap = []; // id => source_parent_id (для обновления после batch insert)
         $now = now();
 
-        // Первый проход: вычислить все full_path (используя временный pathMap)
-        $tempPathMap = [];
         foreach ($sourcePaths as $source) {
-            // Вычислить parent_id и full_path
+            // Вычислить parent_path и full_path
             if ($source->parent_id === null) {
-                // Поле верхнего уровня → привязать к baseParent
                 $parentPath = $baseParentPath;
+                $parentId = $baseParentId;
             } else {
-                // Дочернее поле → найти full_path родителя
                 $parentPath = $tempPathMap[$source->parent_id] ?? null;
+                if ($parentPath === null) {
+                    // Родитель еще не обработан - это ошибка сортировки
+                    throw new \LogicException(
+                        "Parent path for source path ID {$source->id} (name: {$source->name}, parent_id: {$source->parent_id}) not found in tempPathMap. " .
+                        "This indicates paths are not sorted correctly (parents before children)."
+                    );
+                }
+                $parentId = null; // Будет установлен после получения ID родителя
+                $parentIdMap[$source->id] = $source->parent_id;
             }
 
             $fullPath = $parentPath
@@ -179,20 +223,6 @@ class MaterializationService
                 : $source->name;
 
             $tempPathMap[$source->id] = $fullPath;
-        }
-
-        // Второй проход: подготовить данные для вставки и построить временный pathMap
-        foreach ($sourcePaths as $source) {
-            $fullPath = $tempPathMap[$source->id];
-
-            // Вычислить parent_id (будет обновлен после batch insert)
-            $parentId = null;
-            if ($source->parent_id !== null) {
-                // parent_id будет установлен после получения ID родителя
-                // Пока оставляем null, обновим после batch insert
-            } else {
-                $parentId = $baseParentId;
-            }
 
             // Подготовить данные для вставки
             $pathsToInsert[] = [
@@ -214,40 +244,82 @@ class MaterializationService
             ];
         }
 
-        // Batch insert всех путей
+        // Batch insert всех путей (оптимизация уровня 6: chunk для больших batch)
+        $insertedPaths = collect(); // Инициализировать для использования в обоих ветвях
         if (!empty($pathsToInsert)) {
-            Path::insert($pathsToInsert);
+            $batchSize = (int) config('blueprint.batch_insert_size', 500); // Защита от max_allowed_packet в MySQL
 
-            // Загрузить вставленные пути для получения ID
-            $insertedPaths = Path::query()
-                ->where('blueprint_id', $hostBlueprint->id)
-                ->where('blueprint_embed_id', $rootEmbed->id)
-                ->where('source_blueprint_id', $blueprint->id)
-                ->whereIn('full_path', array_column($pathsToInsert, 'full_path'))
-                ->get()
-                ->keyBy('full_path');
+            if (count($pathsToInsert) > $batchSize) {
+                // Большой batch: разбить на chunks
+                // Создать карту full_path => source для быстрого поиска
+                $fullPathToSource = [];
+                foreach ($sourcePaths as $source) {
+                    $fullPath = $tempPathMap[$source->id] ?? null;
+                    if ($fullPath) {
+                        $fullPathToSource[$fullPath] = $source;
+                    }
+                }
 
-            // Построить idMap и pathMap с реальными ID
-            foreach ($sourcePaths as $source) {
-                $fullPath = $tempPathMap[$source->id];
-                $insertedPath = $insertedPaths->get($fullPath);
+                foreach (array_chunk($pathsToInsert, $batchSize) as $chunk) {
+                    Path::insert($chunk);
 
-                if ($insertedPath) {
-                    $idMap[$source->id] = $insertedPath->id;
-                    $pathMap[$source->id] = $insertedPath->full_path;
+                    // Получить ID для этого chunk через индекс (оптимизация уровня 3)
+                    $chunkPaths = Path::query()
+                        ->where('blueprint_id', $hostBlueprint->id)
+                        ->where('blueprint_embed_id', $rootEmbed->id)
+                        ->where('source_blueprint_id', $blueprint->id)
+                        ->whereIn('full_path', array_column($chunk, 'full_path'))
+                        ->whereBetween('created_at', [
+                            $now->copy()->subSecond(),
+                            $now->copy()->addSecond()
+                        ])
+                        ->get();
+
+                    // Добавить в общую коллекцию insertedPaths
+                    $insertedPaths = $insertedPaths->merge($chunkPaths);
+
+                    // Добавить в общую карту только для paths из текущего chunk
+                    foreach ($chunkPaths as $insertedPath) {
+                        $source = $fullPathToSource[$insertedPath->full_path] ?? null;
+                        if ($source) {
+                            $idMap[$source->id] = $insertedPath->id;
+                            $pathMap[$source->id] = $insertedPath->full_path;
+                        }
+                    }
+                }
+            } else {
+                // Малый batch: обычная вставка
+                Path::insert($pathsToInsert);
+
+                // Оптимизация уровня 3: получить ID через индекс + временная метка
+                $insertedPaths = Path::query()
+                    ->where('blueprint_id', $hostBlueprint->id)
+                    ->where('blueprint_embed_id', $rootEmbed->id)
+                    ->where('source_blueprint_id', $blueprint->id)
+                    ->whereIn('full_path', array_column($pathsToInsert, 'full_path'))
+                    ->whereBetween('created_at', [
+                        $now->copy()->subSecond(),
+                        $now->copy()->addSecond()
+                    ])
+                    ->get();
+
+                // Построить idMap и pathMap с реальными ID
+                foreach ($sourcePaths as $source) {
+                    $fullPath = $tempPathMap[$source->id];
+                    $insertedPath = $insertedPaths->firstWhere('full_path', $fullPath);
+
+                    if ($insertedPath) {
+                        $idMap[$source->id] = $insertedPath->id;
+                        $pathMap[$source->id] = $insertedPath->full_path;
+                    }
                 }
             }
 
             // Обновить parent_id для дочерних путей batch update через CASE WHEN
             $updates = [];
-            foreach ($sourcePaths as $source) {
-                if ($source->parent_id !== null && isset($idMap[$source->parent_id])) {
-                    $fullPath = $tempPathMap[$source->id];
-                    $insertedPath = $insertedPaths->get($fullPath);
-                    
-                    if ($insertedPath && $insertedPath->parent_id !== $idMap[$source->parent_id]) {
-                        $updates[$insertedPath->id] = $idMap[$source->parent_id];
-                    }
+            foreach ($parentIdMap as $sourceId => $sourceParentId) {
+                if (isset($idMap[$sourceParentId]) && isset($idMap[$sourceId])) {
+                    $updates[$idMap[$sourceId]] = $idMap[$sourceParentId];
                 }
             }
 
@@ -280,9 +352,19 @@ class MaterializationService
         }
 
         // 3. Рекурсивно развернуть внутренние embeds
-        $innerEmbeds = $blueprint->embeds()
-            ->with(['hostPath', 'embeddedBlueprint'])
-            ->get();
+        // Использовать кеш, если доступен (оптимизация уровня 2)
+        if ($this->graphCache !== null && isset($this->graphCache['embeds'][$blueprint->id])) {
+            $innerEmbeds = $this->graphCache['embeds'][$blueprint->id];
+            // Убедиться, что это Collection
+            if (is_array($innerEmbeds)) {
+                $innerEmbeds = collect($innerEmbeds);
+            }
+        } else {
+            // Fallback: загрузить через запрос
+            $innerEmbeds = $blueprint->embeds()
+                ->with(['hostPath', 'embeddedBlueprint'])
+                ->get();
+        }
 
         foreach ($innerEmbeds as $innerEmbed) {
             /** @var BlueprintEmbed $innerEmbed */
@@ -340,6 +422,75 @@ class MaterializationService
         foreach ($embeds as $embed) {
             $this->materialize($embed);
         }
+    }
+
+    /**
+     * Предзагрузить весь граф зависимостей одним набором запросов (оптимизация уровня 2).
+     *
+     * Загружает все blueprint'ы, paths и embeds транзитивно связанные
+     * с корневым blueprint одним набором запросов.
+     *
+     * @param Blueprint $rootBlueprint Корневой blueprint
+     * @return array{paths: array<int, Collection>, embeds: array<int, Collection>}
+     */
+    private function preloadDependencyGraph(Blueprint $rootBlueprint): array
+    {
+        $visited = [];
+        $blueprintIds = [$rootBlueprint->id];
+        $depth = 0;
+        $maxDepth = $this->getMaxEmbedDepth();
+        $embedsCache = [];
+
+        // BFS: собрать все ID blueprint'ов в графе
+        while (!empty($blueprintIds) && $depth < $maxDepth) {
+            $currentIds = $blueprintIds;
+            $blueprintIds = [];
+
+            // Загрузить embeds одним запросом для текущего уровня
+            $embeds = BlueprintEmbed::query()
+                ->whereIn('blueprint_id', $currentIds)
+                ->with(['hostPath', 'embeddedBlueprint'])
+                ->get();
+
+            foreach ($currentIds as $blueprintId) {
+                if (isset($visited[$blueprintId])) {
+                    continue;
+                }
+                $visited[$blueprintId] = true;
+
+                // Сгруппировать embeds по blueprint_id
+                $blueprintEmbeds = $embeds->where('blueprint_id', $blueprintId);
+                if ($blueprintEmbeds->isNotEmpty()) {
+                    $embedsCache[$blueprintId] = $blueprintEmbeds;
+
+                    // Собрать ID встроенных blueprint'ов
+                    foreach ($blueprintEmbeds as $embed) {
+                        $embeddedId = $embed->embedded_blueprint_id;
+                        if (!isset($visited[$embeddedId])) {
+                            $blueprintIds[] = $embeddedId;
+                        }
+                    }
+                }
+            }
+
+            $depth++;
+        }
+
+        // Загрузить все paths одним запросом (оптимизация уровня 9: select только нужные поля)
+        $allBlueprintIds = array_keys($visited);
+        $paths = Path::query()
+            ->whereIn('blueprint_id', $allBlueprintIds)
+            ->whereNull('source_blueprint_id')
+            ->select(['id', 'blueprint_id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_required', 'is_indexed', 'sort_order', 'validation_rules'])
+            ->orderByRaw('LENGTH(full_path), full_path')
+            ->get()
+            ->groupBy('blueprint_id');
+
+        // Хранить как Collection, а не массив, для поддержки методов коллекции
+        return [
+            'paths' => $paths->map(fn($group) => $group->values()), // Каждая группа как Collection
+            'embeds' => $embedsCache,
+        ];
     }
 }
 

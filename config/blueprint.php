@@ -38,5 +38,15 @@ return [
      * @var bool
      */
     'cache_graph_on_conflict_check' => env('BLUEPRINT_CACHE_GRAPH', true),
+
+    /**
+     * Размер batch для вставки путей (защита от max_allowed_packet в MySQL).
+     *
+     * Разбивает большие batch insert на chunks для избежания ошибки
+     * "Packet too large". Рекомендуется 500 записей для MySQL.
+     *
+     * @var int
+     */
+    'batch_insert_size' => env('BLUEPRINT_BATCH_INSERT_SIZE', 500),
 ];
 

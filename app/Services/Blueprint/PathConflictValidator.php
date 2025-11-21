@@ -9,6 +9,7 @@ use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
 use App\Models\Path;
 use Illuminate\Support\Collection;
+use SplQueue;
 
 /**
  * Валидатор конфликтов full_path при материализации.
@@ -226,10 +227,12 @@ class PathConflictValidator
     ): array {
         $paths = [];
         $visited = [];
-        $queue = [[$rootBlueprintId, $baseParentPath, 0]]; // [blueprint_id, base_path, depth]
+        // Оптимизация уровня 5: Использовать SplQueue вместо array с array_shift (O(1) вместо O(n))
+        $queue = new SplQueue();
+        $queue->enqueue([$rootBlueprintId, $baseParentPath, 0]); // [blueprint_id, base_path, depth]
 
-        while (!empty($queue)) {
-            [$blueprintId, $basePath, $depth] = array_shift($queue);
+        while (!$queue->isEmpty()) {
+            [$blueprintId, $basePath, $depth] = $queue->dequeue();
 
             $basePathKey = $basePath ?? '';
             if ($depth >= $this->getMaxDepth() || isset($visited[$blueprintId][$basePathKey])) {
@@ -267,7 +270,7 @@ class PathConflictValidator
                 }
 
                 // Добавить в очередь для обработки
-                $queue[] = [$embed->embedded_blueprint_id, $newBasePath, $depth + 1];
+                $queue->enqueue([$embed->embedded_blueprint_id, $newBasePath, $depth + 1]);
             }
         }
 
