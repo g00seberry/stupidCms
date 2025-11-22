@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 197
+**Всего сущностей:** 198
 
 ## Содержание
 
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (24 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (78 сущностей)
+HTTP эндпоинты API (79 сущностей)
 
 ## Быстрая навигация
 
@@ -88,7 +88,7 @@ HTTP эндпоинты API (78 сущностей)
 - [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
 - [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
 - [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
-- *...и еще 68 сущностей*
+- *...и еще 69 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (78 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-21 17:10:59
+**Сгенерировано:** 2025-11-22 09:16:48
 
 Для обновления документации выполните:
 ```bash

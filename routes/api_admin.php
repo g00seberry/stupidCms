@@ -239,6 +239,8 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
             ->name('admin.v1.blueprints.dependencies');
         Route::get('/{blueprint}/embeddable', [BlueprintController::class, 'embeddable'])
             ->name('admin.v1.blueprints.embeddable');
+        Route::get('/{blueprint}/schema', [BlueprintController::class, 'schema'])
+            ->name('admin.v1.blueprints.schema');
 
         // CRUD Path
         Route::get('/{blueprint}/paths', [PathController::class, 'index'])

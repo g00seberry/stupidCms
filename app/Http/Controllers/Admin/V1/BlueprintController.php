@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\Blueprint\StoreBlueprintRequest;
 use App\Http\Requests\Admin\Blueprint\UpdateBlueprintRequest;
 use App\Http\Resources\Admin\BlueprintResource;
 use App\Models\Blueprint;
+use App\Models\Path;
 use App\Services\Blueprint\BlueprintStructureService;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
@@ -332,6 +333,127 @@ class BlueprintController extends Controller
                 'name' => $bp->name,
             ])->values(),
         ]);
+    }
+
+    /**
+     * Получить готовую JSON схему Blueprint из paths.
+     *
+     * Возвращает иерархическую JSON структуру со вложенными данными,
+     * представляющую все поля blueprint и их свойства.
+     *
+     * @group Admin ▸ Blueprints
+     * @name Get blueprint schema
+     * @authenticated
+     * @urlParam blueprint integer required ID blueprint. Example: 1
+     * @response status=200 {
+     *   "schema": {
+     *     "title": {
+     *       "type": "string",
+     *       "required": true,
+     *       "indexed": true,
+     *       "cardinality": "one",
+     *       "validation": {}
+     *     },
+     *     "author": {
+     *       "type": "json",
+     *       "required": false,
+     *       "indexed": false,
+     *       "cardinality": "one",
+     *       "validation": {},
+     *       "children": {
+     *         "name": {
+     *           "type": "string",
+     *           "required": true,
+     *           "indexed": false,
+     *           "cardinality": "one",
+     *           "validation": {}
+     *         },
+     *         "email": {
+     *           "type": "string",
+     *           "required": true,
+     *           "indexed": true,
+     *           "cardinality": "one",
+     *           "validation": {}
+     *         }
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * @param Blueprint $blueprint
+     * @return JsonResponse
+     */
+    public function schema(Blueprint $blueprint): JsonResponse
+    {
+        $paths = $blueprint->paths()
+            ->orderBy('sort_order')
+            ->get();
+
+        // Построить дерево
+        $tree = $this->buildPathTree($paths);
+
+        // Преобразовать в JSON схему
+        $schema = $this->buildSchema($tree);
+
+        return response()->json(['schema' => $schema]);
+    }
+
+    /**
+     * Построить дерево paths.
+     *
+     * Рекурсивно группирует paths по parent_id для формирования иерархии.
+     *
+     * @param \Illuminate\Support\Collection<int, Path> $paths
+     * @return \Illuminate\Support\Collection<int, Path>
+     */
+    private function buildPathTree($paths): \Illuminate\Support\Collection
+    {
+        $grouped = $paths->groupBy('parent_id');
+
+        $buildChildren = function ($parentId = null) use ($grouped, &$buildChildren) {
+            if (!isset($grouped[$parentId])) {
+                return collect();
+            }
+
+            return $grouped[$parentId]->map(function ($path) use ($buildChildren) {
+                $path->children = $buildChildren($path->id);
+                return $path;
+            });
+        };
+
+        return $buildChildren(null);
+    }
+
+    /**
+     * Построить JSON схему из дерева paths.
+     *
+     * Преобразует иерархическую структуру paths в JSON схему со вложенными данными.
+     *
+     * @param \Illuminate\Support\Collection<int, Path> $tree Дерево paths
+     * @return array<string, mixed> JSON схема
+     */
+    private function buildSchema($tree): array
+    {
+        $schema = [];
+
+        foreach ($tree as $path) {
+            $fieldSchema = [
+                'type' => $path->data_type,
+                'required' => (bool) $path->is_required,
+                'indexed' => (bool) $path->is_indexed,
+                'cardinality' => $path->cardinality,
+                'validation' => $path->validation_rules ?? [],
+            ];
+
+            // Если есть дочерние элементы, добавляем их в children
+            if ($path->children && $path->children->isNotEmpty()) {
+                $fieldSchema['children'] = $this->buildSchema($path->children);
+            }
+
+            $schema[$path->name] = $fieldSchema;
+        }
+
+        return $schema;
     }
 }
 

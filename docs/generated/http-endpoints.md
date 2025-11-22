@@ -196,6 +196,26 @@ POST /api/v1/admin/blueprints/{blueprint}/paths (api)
 
 ---
 
+## admin.v1.blueprints.schema
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/schema (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/schema`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `schema`
+
+
+---
+
 ## admin.v1.blueprints.show
 **ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}`
 **Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`

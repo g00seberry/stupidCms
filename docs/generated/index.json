@@ -5442,6 +5442,36 @@
             }
         },
         {
+            "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+            "type": "http_endpoint",
+            "name": "admin.v1.blueprints.schema",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+            "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)",
+            "details": null,
+            "meta": {
+                "method": "GET",
+                "uri": "/api/v1/admin/blueprints/{blueprint}/schema",
+                "group": "api",
+                "auth": "jwt",
+                "parameters": {
+                    "blueprint": {
+                        "required": true,
+                        "type": "string",
+                        "constraint": null
+                    }
+                },
+                "responses": []
+            },
+            "related": [],
+            "tags": {
+                "0": "api",
+                "2": "admin",
+                "4": "v1",
+                "6": "blueprints",
+                "7": "schema"
+            }
+        },
+        {
             "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
             "type": "http_endpoint",
             "name": "admin.v1.blueprints.paths.index",
@@ -11211,6 +11241,36 @@
                 }
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.schema",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\BlueprintController.php",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)",
+                "details": null,
+                "meta": {
+                    "method": "GET",
+                    "uri": "/api/v1/admin/blueprints/{blueprint}/schema",
+                    "group": "api",
+                    "auth": "jwt",
+                    "parameters": {
+                        "blueprint": {
+                            "required": true,
+                            "type": "string",
+                            "constraint": null
+                        }
+                    },
+                    "responses": []
+                },
+                "related": [],
+                "tags": {
+                    "0": "api",
+                    "2": "admin",
+                    "4": "v1",
+                    "6": "blueprints",
+                    "7": "schema"
+                }
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.index",
@@ -13336,6 +13396,12 @@
                 "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.schema",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.index",
@@ -13788,6 +13854,12 @@
                 "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.schema",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.index",
@@ -14232,6 +14304,12 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.embeddable",
                 "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            },
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.schema",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
@@ -14704,6 +14782,12 @@
                 "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
             },
             {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.schema",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)"
+            },
+            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.paths.index",
@@ -14750,6 +14834,14 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.embeddable",
                 "summary": "GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)"
+            }
+        ],
+        "schema": [
+            {
+                "id": "http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema",
+                "type": "http_endpoint",
+                "name": "admin.v1.blueprints.schema",
+                "summary": "GET /api/v1/admin/blueprints/{blueprint}/schema (api)"
             }
         ],
         "paths": [
@@ -14819,5 +14911,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-21T17:10:59+00:00"
+    "generated_at": "2025-11-22T09:16:48+00:00"
 }
