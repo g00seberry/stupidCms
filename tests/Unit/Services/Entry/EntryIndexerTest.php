@@ -38,7 +38,6 @@ test('индексация Entry с blueprint создаёт doc_values', functi
 
     expect($docValue)->not->toBeNull()
         ->and($docValue->value_string)->toBe('Test Article')
-        ->and($docValue->cardinality)->toBe('one')
         ->and($docValue->array_index)->toBeNull()
         ->and($docValue->value_int)->toBeNull()
         ->and($docValue->value_float)->toBeNull()
@@ -176,13 +175,12 @@ test('индексация явно очищает остальные value_* к
         ->and($docValue->value_string)->toBeNull()
         ->and($docValue->value_float)->toBeNull()
         ->and($docValue->value_bool)->toBeNull()
-        ->and($docValue->value_date)->toBeNull()
         ->and($docValue->value_datetime)->toBeNull()
         ->and($docValue->value_text)->toBeNull()
         ->and($docValue->value_json)->toBeNull();
 });
 
-test('индексация массива устанавливает cardinality=many и array_index', function () {
+test('индексация массива устанавливает array_index', function () {
     $blueprint = Blueprint::factory()->create();
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
 
@@ -205,7 +203,6 @@ test('индексация массива устанавливает cardinality
     $values = DocValue::where('entry_id', $entry->id)->orderBy('array_index')->get();
 
     expect($values)->toHaveCount(2)
-        ->and($values[0]->cardinality)->toBe('many')
         ->and($values[0]->array_index)->toBe(1)
         ->and($values[1]->array_index)->toBe(2);
 });
@@ -233,4 +230,59 @@ test('ref-типы не записываются в doc_values', function () {
 
     expect(DocValue::where('entry_id', $entry->id)->count())->toBe(0)
         ->and(DocRef::where('entry_id', $entry->id)->count())->toBe(1);
+});
+
+test('индексация date-типа сохраняется в value_datetime с временем 00:00:00', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'published_date',
+        'full_path' => 'published_date',
+        'data_type' => 'date',
+        'cardinality' => 'one',
+        'is_indexed' => true,
+    ]);
+
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'data_json' => ['published_date' => '2024-01-15'],
+    ]);
+
+    $this->indexer->index($entry);
+
+    $docValue = DocValue::where('entry_id', $entry->id)->first();
+
+    expect($docValue)->not->toBeNull()
+        ->and($docValue->value_datetime)->not->toBeNull()
+        ->and($docValue->value_datetime->format('Y-m-d'))->toBe('2024-01-15')
+        ->and($docValue->value_datetime->format('H:i:s'))->toBe('00:00:00');
+});
+
+test('индексация text-типа сохраняется в value_text', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'body',
+        'full_path' => 'body',
+        'data_type' => 'text',
+        'cardinality' => 'one',
+        'is_indexed' => true,
+    ]);
+
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'data_json' => ['body' => 'Long text content here'],
+    ]);
+
+    $this->indexer->index($entry);
+
+    $docValue = DocValue::where('entry_id', $entry->id)->first();
+
+    expect($docValue)->not->toBeNull()
+        ->and($docValue->value_text)->toBe('Long text content here')
+        ->and($docValue->value_string)->toBeNull();
 });

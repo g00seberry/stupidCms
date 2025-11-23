@@ -91,11 +91,15 @@ Eloquent модель для аудита изменений (Audit).
 
 Индексированное скалярное значение из Entry.data_json.
 
+### Details
+Использует уникальный индекс (entry_id, path_id, array_index) для обеспечения уникальности.
+array_index может быть NULL для cardinality=one, поэтому используется уникальный индекс вместо первичного ключа.
+
 ### Meta
 - **Table:** `doc_values`
-- **Fillable:** `entry_id`, `path_id`, `cardinality`, `array_index`, `value_string`, `value_int`, `value_float`, `value_bool`, `value_date`, `value_datetime`, `value_text`, `value_json`
+- **Fillable:** `entry_id`, `path_id`, `array_index`, `value_string`, `value_int`, `value_float`, `value_bool`, `value_datetime`, `value_text`, `value_json`
 - **Guarded:** `*`
-- **Casts:** `value_bool` => `boolean`, `value_json` => `array`
+- **Casts:** `value_bool` => `boolean`, `value_json` => `array`, `value_datetime` => `datetime`
 - **Relations:**
   - `entry`: belongsTo → `App\Models\Entry`
   - `path`: belongsTo → `App\Models\Path`

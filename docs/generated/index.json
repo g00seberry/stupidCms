@@ -155,19 +155,17 @@
             "name": "DocValue",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/DocValue.php",
             "summary": "Индексированное скалярное значение из Entry.data_json.",
-            "details": null,
+            "details": "Использует уникальный индекс (entry_id, path_id, array_index) для обеспечения уникальности.\narray_index может быть NULL для cardinality=one, поэтому используется уникальный индекс вместо первичного ключа.",
             "meta": {
                 "table": "doc_values",
                 "fillable": [
                     "entry_id",
                     "path_id",
-                    "cardinality",
                     "array_index",
                     "value_string",
                     "value_int",
                     "value_float",
                     "value_bool",
-                    "value_date",
                     "value_datetime",
                     "value_text",
                     "value_json"
@@ -177,7 +175,8 @@
                 ],
                 "casts": {
                     "value_bool": "boolean",
-                    "value_json": "array"
+                    "value_json": "array",
+                    "value_datetime": "datetime"
                 },
                 "relations": {
                     "entry": {
@@ -5946,19 +5945,17 @@
                 "name": "DocValue",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/DocValue.php",
                 "summary": "Индексированное скалярное значение из Entry.data_json.",
-                "details": null,
+                "details": "Использует уникальный индекс (entry_id, path_id, array_index) для обеспечения уникальности.\narray_index может быть NULL для cardinality=one, поэтому используется уникальный индекс вместо первичного ключа.",
                 "meta": {
                     "table": "doc_values",
                     "fillable": [
                         "entry_id",
                         "path_id",
-                        "cardinality",
                         "array_index",
                         "value_string",
                         "value_int",
                         "value_float",
                         "value_bool",
-                        "value_date",
                         "value_datetime",
                         "value_text",
                         "value_json"
@@ -5968,7 +5965,8 @@
                     ],
                     "casts": {
                         "value_bool": "boolean",
-                        "value_json": "array"
+                        "value_json": "array",
+                        "value_datetime": "datetime"
                     },
                     "relations": {
                         "entry": {
@@ -14911,5 +14909,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-22T09:16:48+00:00"
+    "generated_at": "2025-11-23T05:30:39+00:00"
 }

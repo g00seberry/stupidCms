@@ -207,3 +207,155 @@ test('whereRef фильтрует Entry по ref полям', function () {
         ->and($entries->first()->title)->toBe('Entry 1');
 });
 
+test('orderByPath сортирует Entry по string полям', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'data_type' => 'string',
+        'is_indexed' => true,
+    ]);
+
+    $entry1 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 1',
+        'data_json' => ['title' => 'Zebra'],
+    ]);
+
+    $entry2 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 2',
+        'data_json' => ['title' => 'Alpha'],
+    ]);
+
+    $entry3 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 3',
+        'data_json' => ['title' => 'Beta'],
+    ]);
+
+    $entries = Entry::orderByPath('title', 'asc')->get();
+
+    expect($entries)->toHaveCount(3)
+        ->and($entries[0]->id)->toBe($entry2->id)
+        ->and($entries[1]->id)->toBe($entry3->id)
+        ->and($entries[2]->id)->toBe($entry1->id);
+});
+
+test('orderByPath сортирует Entry по text полям', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'body',
+        'full_path' => 'body',
+        'data_type' => 'text',
+        'is_indexed' => true,
+    ]);
+
+    $entry1 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 1',
+        'data_json' => ['body' => 'Zebra content'],
+    ]);
+
+    $entry2 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 2',
+        'data_json' => ['body' => 'Alpha content'],
+    ]);
+
+    $entry3 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 3',
+        'data_json' => ['body' => 'Beta content'],
+    ]);
+
+    $entries = Entry::orderByPath('body', 'asc')->get();
+
+    expect($entries)->toHaveCount(3)
+        ->and($entries[0]->id)->toBe($entry2->id)
+        ->and($entries[1]->id)->toBe($entry3->id)
+        ->and($entries[2]->id)->toBe($entry1->id);
+});
+
+test('orderByPath сортирует Entry по int полям', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'price',
+        'full_path' => 'price',
+        'data_type' => 'int',
+        'is_indexed' => true,
+    ]);
+
+    $entry1 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 1',
+        'data_json' => ['price' => 300],
+    ]);
+
+    $entry2 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 2',
+        'data_json' => ['price' => 100],
+    ]);
+
+    $entry3 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 3',
+        'data_json' => ['price' => 200],
+    ]);
+
+    $entries = Entry::orderByPath('price', 'asc')->get();
+
+    expect($entries)->toHaveCount(3)
+        ->and($entries[0]->id)->toBe($entry2->id)
+        ->and($entries[1]->id)->toBe($entry3->id)
+        ->and($entries[2]->id)->toBe($entry1->id);
+});
+
+test('orderByPath сортирует Entry по date полям', function () {
+    $blueprint = Blueprint::factory()->create();
+    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
+
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'published_date',
+        'full_path' => 'published_date',
+        'data_type' => 'date',
+        'is_indexed' => true,
+    ]);
+
+    $entry1 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 1',
+        'data_json' => ['published_date' => '2024-03-15'],
+    ]);
+
+    $entry2 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 2',
+        'data_json' => ['published_date' => '2024-01-15'],
+    ]);
+
+    $entry3 = Entry::create([
+        'post_type_id' => $postType->id,
+        'title' => 'Entry 3',
+        'data_json' => ['published_date' => '2024-02-15'],
+    ]);
+
+    $entries = Entry::orderByPath('published_date', 'asc')->get();
+
+    expect($entries)->toHaveCount(3)
+        ->and($entries[0]->id)->toBe($entry2->id)
+        ->and($entries[1]->id)->toBe($entry3->id)
+        ->and($entries[2]->id)->toBe($entry1->id);
+});
+

@@ -10,21 +10,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Индексированное скалярное значение из Entry.data_json.
  *
+ * Использует уникальный индекс (entry_id, path_id, array_index) для обеспечения уникальности.
+ * array_index может быть NULL для cardinality=one, поэтому используется уникальный индекс вместо первичного ключа.
+ *
  * @property int $id
  * @property int $entry_id
  * @property int $path_id
- * @property string $cardinality Денормализованное значение из paths.cardinality: 'one' | 'many'
  * @property int|null $array_index Индекс в массиве (NULL для cardinality=one, обязателен для many)
  * @property string|null $value_string
  * @property int|null $value_int
  * @property float|null $value_float
  * @property bool|null $value_bool
- * @property string|null $value_date
- * @property string|null $value_datetime
+ * @property \Illuminate\Support\Carbon|null $value_datetime Используется для date и datetime типов
  * @property string|null $value_text
  * @property array|null $value_json
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
  *
  * @property-read \App\Models\Entry $entry
  * @property-read \App\Models\Path $path
@@ -32,18 +31,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DocValue extends Model
 {
     /**
+     * Отключить автоматическое управление timestamps.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * @var array<int, string>
      */
     protected $fillable = [
         'entry_id',
         'path_id',
-        'cardinality',
         'array_index',
         'value_string',
         'value_int',
         'value_float',
         'value_bool',
-        'value_date',
         'value_datetime',
         'value_text',
         'value_json',
@@ -55,6 +59,7 @@ class DocValue extends Model
     protected $casts = [
         'value_bool' => 'boolean',
         'value_json' => 'array',
+        'value_datetime' => 'datetime',
     ];
 
     /**

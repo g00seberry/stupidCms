@@ -134,12 +134,16 @@ trait HasDocumentData
     /**
      * Сортировать по индексированному полю.
      *
+     * Определяет колонку value_* по data_type из paths для корректной сортировки
+     * всех типов данных (string, text, int, float, bool, date, datetime).
+     *
      * @param Builder $query
      * @param string $fullPath
      * @param string $direction 'asc' | 'desc'
      * @return Builder
      *
      * @example Entry::orderByPath('price', 'desc')->get()
+     * @example Entry::orderByPath('body', 'asc')->get() // для text-полей
      */
     public function scopeOrderByPath(Builder $query, string $fullPath, string $direction = 'asc'): Builder
     {
@@ -152,7 +156,19 @@ trait HasDocumentData
                             ->where('full_path', $fullPath);
                     });
             })
-            ->orderBy('dv_sort.value_string', $direction)
+            ->leftJoin('paths as p_sort', 'p_sort.id', '=', 'dv_sort.path_id')
+            ->orderByRaw("
+                CASE
+                    WHEN p_sort.data_type = 'text' THEN dv_sort.value_text
+                    WHEN p_sort.data_type = 'string' THEN dv_sort.value_string
+                    WHEN p_sort.data_type = 'int' THEN CAST(dv_sort.value_int AS CHAR)
+                    WHEN p_sort.data_type = 'float' THEN CAST(dv_sort.value_float AS CHAR)
+                    WHEN p_sort.data_type = 'bool' THEN CAST(dv_sort.value_bool AS CHAR)
+                    WHEN p_sort.data_type IN ('date', 'datetime') THEN dv_sort.value_datetime
+                    WHEN p_sort.data_type = 'json' THEN CAST(dv_sort.value_json AS CHAR)
+                    ELSE dv_sort.value_string
+                END {$direction}
+            ")
             ->select('entries.*');
     }
 

@@ -20,8 +20,9 @@ use Illuminate\Support\Facades\Log;
  * - Для скалярных типов (string, int, float, bool, date, datetime, text, json) → doc_values
  * - Для ref-типов → только doc_refs (запись в doc_values запрещена)
  * - Явное сопоставление data_type → целевая колонка value_* с очисткой остальных
- * - cardinality записывается денормализованно для CHECK-констрейнтов
+ * - date-тип сохраняется в value_datetime с временем 00:00:00
  * - array_index: NULL для cardinality=one, обязателен (1-based) для cardinality=many
+ * - Логика проверки array_index реализована в EntryIndexer (без денормализации cardinality)
  */
 class EntryIndexer
 {
@@ -126,13 +127,11 @@ class EntryIndexer
         $baseData = [
             'entry_id' => $entry->id,
             'path_id' => $path->id,
-            'cardinality' => $path->cardinality,
             // Явная очистка всех value_* полей
             'value_string' => null,
             'value_int' => null,
             'value_float' => null,
             'value_bool' => null,
-            'value_date' => null,
             'value_datetime' => null,
             'value_text' => null,
             'value_json' => null,
@@ -218,7 +217,7 @@ class EntryIndexer
             'int' => 'value_int',
             'float' => 'value_float',
             'bool' => 'value_bool',
-            'date' => 'value_date',
+            'date' => 'value_datetime', // date теперь хранится в value_datetime
             'datetime' => 'value_datetime',
             'text' => 'value_text',
             'json' => 'value_json',
@@ -229,9 +228,11 @@ class EntryIndexer
     /**
      * Привести значение к нужному типу.
      *
-     * @param mixed $value
-     * @param string $dataType
-     * @return mixed
+     * Для date-типа сохраняет DateTime с временем 00:00:00 в value_datetime.
+     *
+     * @param mixed $value Исходное значение
+     * @param string $dataType Тип данных (string, int, float, bool, date, datetime, text, json)
+     * @return mixed Приведённое значение
      */
     private function castValue(mixed $value, string $dataType): mixed
     {
@@ -241,8 +242,8 @@ class EntryIndexer
             'float' => (float) $value,
             'bool' => (bool) $value,
             'date' => $value instanceof \DateTimeInterface
-                ? $value->format('Y-m-d')
-                : (is_string($value) ? $value : (string) $value),
+                ? $value->setTime(0, 0, 0) // Сохраняем дату в datetime с временем 00:00:00
+                : (is_string($value) ? now()->parse($value)->startOfDay() : now()->startOfDay()),
             'datetime' => $value instanceof \DateTimeInterface
                 ? $value
                 : (is_string($value) ? now()->parse($value) : now()),
