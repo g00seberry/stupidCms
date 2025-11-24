@@ -138,6 +138,32 @@ Eloquent модель для записей контента (Entry).
 
 ---
 
+## FormConfig
+**ID:** `model:App\Models\FormConfig`
+**Path:** `app/Models/FormConfig.php`
+
+Eloquent модель для конфигурации формы компонентов (FormConfig).
+
+### Details
+Хранит конфигурацию формы компонентов для конкретной пары PostType (slug) + Blueprint.
+Конфигурация представляет собой JSON объект, где ключи - это full_path из Path,
+а значения - EditComponent (конфигурация компонента редактирования).
+
+### Meta
+- **Table:** `form_configs`
+- **Fillable:** `post_type_slug`, `blueprint_id`, `config_json`
+- **Guarded:** `*`
+- **Casts:** `config_json` => `array`
+- **Relations:**
+  - `blueprint`: belongsTo → `App\Models\Blueprint`
+- **Factory:** `Database\Factories\FormConfigFactory`
+
+### Tags
+`formconfig`
+
+
+---
+
 ## Media
 **ID:** `model:App\Models\Media`
 **Path:** `app/Models/Media.php`

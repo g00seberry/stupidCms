@@ -2,12 +2,12 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 198
+**Всего сущностей:** 203
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (22 сущностей)
+Eloquent-модели для работы с БД (23 сущностей)
 
 ### [Domain Services](./domain-services.md)
 Доменные сервисы, действия, репозитории (65 сущностей)
@@ -19,7 +19,7 @@ Blade-шаблоны для рендеринга (8 сущностей)
 Логические секции конфигурации (24 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (79 сущностей)
+HTTP эндпоинты API (83 сущностей)
 
 ## Быстрая навигация
 
@@ -31,11 +31,11 @@ HTTP эндпоинты API (79 сущностей)
 - [DocRef](./models.md#docref) - Индексированная ссылка на другой Entry.
 - [DocValue](./models.md#docvalue) - Индексированное скалярное значение из Entry.data_json.
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
+- [FormConfig](./models.md#formconfig) - Eloquent модель для конфигурации формы компонентов (FormConfig).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 - [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
-- [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
-- *...и еще 12 сущностей*
+- *...и еще 13 сущностей*
 
 ### Domain Services
 
@@ -88,7 +88,7 @@ HTTP эндпоинты API (79 сущностей)
 - [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
 - [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
 - [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
-- *...и еще 69 сущностей*
+- *...и еще 73 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (79 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-23 05:30:39
+**Сгенерировано:** 2025-11-24 15:09:48
 
 Для обновления документации выполните:
 ```bash

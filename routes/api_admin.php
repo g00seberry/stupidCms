@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\V1\TemplateController;
 use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
+use App\Http\Controllers\Admin\V1\FormConfigController;
 use App\Http\Controllers\Admin\V1\MediaController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
@@ -100,6 +101,20 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::delete('/post-types/{slug}', [PostTypeController::class, 'destroy'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.destroy');
+    
+    // Form Configs (для конфигурации формы компонентов)
+    Route::get('/post-types/{post_type}/form-config/{blueprint}', [FormConfigController::class, 'show'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-config.show');
+    Route::put('/post-types/{post_type}/form-config/{blueprint}', [FormConfigController::class, 'update'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-config.update');
+    Route::delete('/post-types/{post_type}/form-config/{blueprint}', [FormConfigController::class, 'destroy'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-config.destroy');
+    Route::get('/post-types/{post_type}/form-configs', [FormConfigController::class, 'indexByPostType'])
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-configs.index');
     
     // Entries (full CRUD + soft-delete/restore)
     Route::get('/entries/statuses', [EntryController::class, 'statuses'])

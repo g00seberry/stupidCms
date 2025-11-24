@@ -914,6 +914,89 @@ DELETE /api/v1/admin/post-types/{slug} (api)
 
 ---
 
+## admin.v1.post-types.form-config.destroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/post-types/{post_type}/form-config/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type` (string, required)
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-config`
+
+
+---
+
+## admin.v1.post-types.form-config.show
+**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/post-types/{post_type}/form-config/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type` (string, required)
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-config`
+
+
+---
+
+## admin.v1.post-types.form-config.update
+**ID:** `http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)
+
+### Meta
+- **Method:** `PUT`
+- **URI:** `/api/v1/admin/post-types/{post_type}/form-config/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type` (string, required)
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-config`
+
+
+---
+
+## admin.v1.post-types.form-configs.index
+**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+GET /api/v1/admin/post-types/{post_type}/form-configs (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/post-types/{post_type}/form-configs`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-configs`
+
+
+---
+
 ## admin.v1.post-types.index
 **ID:** `http_endpoint:GET:/api/v1/admin/post-types`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
