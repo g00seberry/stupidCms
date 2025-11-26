@@ -311,7 +311,7 @@ Eloquent модель для исходящих сообщений (Outbox).
 - **Table:** `paths`
 - **Fillable:** `blueprint_id`, `parent_id`, `name`, `data_type`, `cardinality`, `is_required`, `is_indexed`, `sort_order`, `validation_rules`
 - **Guarded:** `source_blueprint_id`, `blueprint_embed_id`, `is_readonly`, `full_path`
-- **Casts:** `is_required` => `boolean`, `is_indexed` => `boolean`, `is_readonly` => `boolean`, `validation_rules` => `array`
+- **Casts:** `is_required` => `boolean`, `is_indexed` => `boolean`, `is_readonly` => `boolean`, `validation_rules` => `App\Casts\AsArrayPreservingOrder`
 - **Relations:**
   - `blueprint`: belongsTo → `App\Models\Blueprint`
   - `sourceBlueprint`: belongsTo → `App\Models\Blueprint`

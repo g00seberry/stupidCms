@@ -31,6 +31,7 @@ use App\Domain\Blueprint\Validation\Rules\Handlers\ArrayMinItemsRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\ArrayUniqueRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\ConditionalRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\ExistsRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\FieldComparisonRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\MaxRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\MinRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\NullableRuleHandler;
@@ -291,6 +292,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register('prohibited_if', new ConditionalRuleHandler());
             $registry->register('unique', new UniqueRuleHandler());
             $registry->register('exists', new ExistsRuleHandler());
+            $registry->register('field_comparison', new FieldComparisonRuleHandler());
 
             return $registry;
         });

@@ -122,5 +122,19 @@ interface RuleFactory
      * @return \App\Domain\Blueprint\Validation\Rules\ArrayUniqueRule
      */
     public function createArrayUniqueRule(): ArrayUniqueRule;
+
+    /**
+     * Создать правило сравнения поля с другим полем или константой.
+     *
+     * @param string $operator Оператор сравнения ('>=', '<=', '>', '<', '==', '!=')
+     * @param string $otherField Путь к другому полю для сравнения (например, 'content_json.start_date')
+     * @param mixed|null $constantValue Константное значение для сравнения (если указано, используется вместо otherField)
+     * @return \App\Domain\Blueprint\Validation\Rules\FieldComparisonRule
+     */
+    public function createFieldComparisonRule(
+        string $operator,
+        string $otherField,
+        mixed $constantValue = null
+    ): FieldComparisonRule;
 }
 

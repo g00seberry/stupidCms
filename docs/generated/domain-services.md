@@ -1,5 +1,120 @@
 # Domain Services
 
+## ArrayMaxItemsRule
+**ID:** `domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/ArrayMaxItemsRule.php`
+
+Доменное правило валидации: максимальное количество элементов в массиве.
+
+### Details
+Применяется только к полям с cardinality: 'many'.
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getValue`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## ArrayMaxItemsRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler.php`
+
+Обработчик правила ArrayMaxItemsRule.
+
+### Details
+Преобразует ArrayMaxItemsRule в строку Laravel правила валидации (например, 'max:10').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
+## ArrayMinItemsRule
+**ID:** `domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/ArrayMinItemsRule.php`
+
+Доменное правило валидации: минимальное количество элементов в массиве.
+
+### Details
+Применяется только к полям с cardinality: 'many'.
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getValue`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## ArrayMinItemsRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler.php`
+
+Обработчик правила ArrayMinItemsRule.
+
+### Details
+Преобразует ArrayMinItemsRule в строку Laravel правила валидации (например, 'min:2').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
+## ArrayUniqueRule
+**ID:** `domain_service:Blueprint/Validation/Rules/ArrayUniqueRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/ArrayUniqueRule.php`
+
+Доменное правило валидации: уникальность элементов массива.
+
+### Details
+Проверяет, что все элементы массива уникальны.
+Применяется только к полям с cardinality: 'many'.
+
+### Meta
+- **Methods:** `getType`, `getParams`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## ArrayUniqueRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler.php`
+
+Обработчик правила ArrayUniqueRule.
+
+### Details
+Преобразует ArrayUniqueRule в строку Laravel правила валидации ('distinct').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
 ## BladeTemplateResolver
 **ID:** `domain_service:View/BladeTemplateResolver`
 **Path:** `app/Domain/View/BladeTemplateResolver.php`
@@ -31,16 +146,57 @@
 
 ### Details
 Строит правила валидации Laravel для поля content_json на основе
-структуры Path в Blueprint. Преобразует full_path в точечную нотацию
-и применяет validation_rules из каждого Path.
+структуры Path в Blueprint. Использует EntryValidationService для построения
+доменных правил и LaravelValidationAdapter для преобразования в Laravel правила.
 Использует кэширование для оптимизации производительности.
 
 ### Meta
 - **Methods:** `buildRules`, `invalidateCache`
+- **Dependencies:** `App\Domain\Blueprint\Validation\EntryValidationServiceInterface`, `App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface`
 - **Interface:** `App\Domain\Blueprint\Validation\BlueprintContentValidatorInterface`
 
 ### Tags
 `blueprint`, `validation`
+
+
+---
+
+## ConditionalRule
+**ID:** `domain_service:Blueprint/Validation/Rules/ConditionalRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/ConditionalRule.php`
+
+Доменное правило валидации: условное правило.
+
+### Details
+Применяется в зависимости от значения другого поля.
+Типы: 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if'
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getField`, `getValue`, `getOperator`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## ConditionalRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler.php`
+
+Обработчик правила ConditionalRule.
+
+### Details
+Преобразует ConditionalRule в строку Laravel правила валидации
+(например, 'required_if:is_published,true').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
 
 
 ---
@@ -123,6 +279,27 @@
 
 ---
 
+## EntryValidationService
+**ID:** `domain_service:Blueprint/Validation/EntryValidationService`
+**Path:** `app/Domain/Blueprint/Validation/EntryValidationService.php`
+
+Доменный сервис валидации контента Entry на основе Blueprint.
+
+### Details
+Строит RuleSet для поля content_json на основе структуры Path в Blueprint.
+Преобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.
+
+### Meta
+- **Methods:** `buildRulesFor`
+- **Dependencies:** `App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface`, `App\Domain\Blueprint\Validation\Rules\RuleFactory`
+- **Interface:** `App\Domain\Blueprint\Validation\EntryValidationServiceInterface`
+
+### Tags
+`blueprint`, `validation`
+
+
+---
+
 ## ExifManager
 **ID:** `domain_service:Media/Services/ExifManager`
 **Path:** `app/Domain/Media/Services/ExifManager.php`
@@ -167,6 +344,46 @@
 
 ---
 
+## ExistsRule
+**ID:** `domain_service:Blueprint/Validation/Rules/ExistsRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/ExistsRule.php`
+
+Доменное правило валидации: существование значения.
+
+### Details
+Проверяет, что значение поля существует в указанной таблице/колонке.
+Применяется к полям типа ref (ссылки на другие сущности).
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getTable`, `getColumn`, `getWhereColumn`, `getWhereValue`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## ExistsRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ExistsRuleHandler.php`
+
+Обработчик правила ExistsRule.
+
+### Details
+Преобразует ExistsRule в строку Laravel правила валидации
+(например, 'exists:table,column').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
 ## FfprobeMediaMetadataPlugin
 **ID:** `domain_service:Media/Services/FfprobeMediaMetadataPlugin`
 **Path:** `app/Domain/Media/Services/FfprobeMediaMetadataPlugin.php`
@@ -183,6 +400,63 @@
 
 ### Tags
 `media`, `service`
+
+
+---
+
+## FieldComparisonRule
+**ID:** `domain_service:Blueprint/Validation/Rules/FieldComparisonRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/FieldComparisonRule.php`
+
+Доменное правило валидации: сравнение значения поля с другим полем или константой.
+
+### Details
+Поддерживает операторы: '>=', '<=', '>', '<', '==', '!='
+Может сравнивать с другим полем (otherField) или с константным значением (constantValue).
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getOperator`, `getOtherField`, `getConstantValue`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## FieldComparisonRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler.php`
+
+Обработчик правила FieldComparisonRule.
+
+### Details
+Преобразует FieldComparisonRule в Laravel custom rule FieldComparison.
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
+## FieldDefinition
+**ID:** `domain_service:Blueprint/Validation/Rules/FieldDefinition`
+**Path:** `app/Domain/Blueprint/Validation/Rules/FieldDefinition.php`
+
+Определение поля для валидации.
+
+### Details
+Содержит метаданные поля из Path, необходимые для построения правил валидации.
+
+### Meta
+- **Methods:** `isArray`, `isSingle`, `hasValidationRules`
+
+### Tags
+`blueprint`, `validation`, `rule`
 
 
 ---
@@ -324,6 +598,27 @@ Uses HS256 (HMAC with SHA-256) algorithm with a secret key.
 
 ---
 
+## LaravelValidationAdapter
+**ID:** `domain_service:Blueprint/Validation/Adapters/LaravelValidationAdapter`
+**Path:** `app/Domain/Blueprint/Validation/Adapters/LaravelValidationAdapter.php`
+
+Адаптер для преобразования доменных RuleSet в Laravel правила валидации.
+
+### Details
+Преобразует доменные Rule объекты в строки правил валидации Laravel
+через систему handlers.
+
+### Meta
+- **Methods:** `adapt`
+- **Dependencies:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry`
+- **Interface:** `App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface`
+
+### Tags
+`blueprint`, `validation`, `adapter`
+
+
+---
+
 ## ListMediaAction
 **ID:** `domain_service:Media/Actions/ListMediaAction`
 **Path:** `app/Domain/Media/Actions/ListMediaAction.php`
@@ -357,6 +652,45 @@ CQRS-действие: выборка списка медиа по параме�
 
 ### Tags
 `media`, `listener`
+
+
+---
+
+## MaxRule
+**ID:** `domain_service:Blueprint/Validation/Rules/MaxRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/MaxRule.php`
+
+Правило валидации: максимальное значение/длина.
+
+### Details
+Для строковых типов (string, text) означает максимальную длину.
+Для числовых типов (int, float) означает максимальное значение.
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getValue`, `getDataType`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## MaxRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/MaxRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/MaxRuleHandler.php`
+
+Обработчик правила MaxRule.
+
+### Details
+Преобразует MaxRule в строку Laravel правила валидации (например, 'max:500').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
 
 
 ---
@@ -600,6 +934,45 @@ Pipeline валидации медиа-файлов.
 
 ---
 
+## MinRule
+**ID:** `domain_service:Blueprint/Validation/Rules/MinRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/MinRule.php`
+
+Правило валидации: минимальное значение/длина.
+
+### Details
+Для строковых типов (string, text) означает минимальную длину.
+Для числовых типов (int, float) означает минимальное значение.
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getValue`, `getDataType`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## MinRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/MinRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/MinRuleHandler.php`
+
+Обработчик правила MinRule.
+
+### Details
+Преобразует MinRule в строку Laravel правила валидации (например, 'min:1').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
 ## NotReservedRoute
 **ID:** `domain_service:Pages/Validation/NotReservedRoute`
 **Path:** `app/Domain/Pages/Validation/NotReservedRoute.php`
@@ -656,6 +1029,44 @@ Null-реализация SearchClientInterface.
 
 ### Tags
 `search`, `client`
+
+
+---
+
+## NullableRule
+**ID:** `domain_service:Blueprint/Validation/Rules/NullableRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/NullableRule.php`
+
+Правило валидации: поле опционально (nullable).
+
+### Details
+Указывает, что поле может отсутствовать или быть null.
+
+### Meta
+- **Methods:** `getType`, `getParams`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## NullableRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/NullableRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/NullableRuleHandler.php`
+
+Обработчик правила NullableRule.
+
+### Details
+Преобразует NullableRule в строку Laravel правила валидации ('nullable').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
 
 
 ---
@@ -763,17 +1174,57 @@ Null-реализация SearchClientInterface.
 **ID:** `domain_service:Blueprint/Validation/PathValidationRulesConverter`
 **Path:** `app/Domain/Blueprint/Validation/PathValidationRulesConverter.php`
 
-Конвертер правил валидации из Path в Laravel правила валидации.
+Конвертер правил валидации из Path в доменные Rule объекты.
 
 ### Details
-Преобразует validation_rules из модели Path в массив правил валидации Laravel,
+Преобразует validation_rules из модели Path в массив доменных Rule объектов,
 учитывая data_type, is_required и cardinality.
 
 ### Meta
 - **Methods:** `convert`
+- **Dependencies:** `App\Domain\Blueprint\Validation\Rules\RuleFactory`
+- **Interface:** `App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface`
 
 ### Tags
 `blueprint`, `validation`
+
+
+---
+
+## PatternRule
+**ID:** `domain_service:Blueprint/Validation/Rules/PatternRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/PatternRule.php`
+
+Правило валидации: регулярное выражение (pattern).
+
+### Details
+Применяется только к строковым типам данных (string, text).
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getPattern`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## PatternRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/PatternRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/PatternRuleHandler.php`
+
+Обработчик правила PatternRule.
+
+### Details
+Преобразует PatternRule в строку Laravel правила валидации (например, 'regex:/pattern/').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
 
 
 ---
@@ -1083,6 +1534,44 @@ Job для реиндексации поискового индекса в фо�
 
 ---
 
+## RequiredRule
+**ID:** `domain_service:Blueprint/Validation/Rules/RequiredRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/RequiredRule.php`
+
+Правило валидации: поле обязательно.
+
+### Details
+Указывает, что поле должно присутствовать и не может быть null или пустым.
+
+### Meta
+- **Methods:** `getType`, `getParams`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## RequiredRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/RequiredRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/RequiredRuleHandler.php`
+
+Обработчик правила RequiredRule.
+
+### Details
+Преобразует RequiredRule в строку Laravel правила валидации ('required').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
 ## ReservedPattern
 **ID:** `domain_service:Routing/ReservedPattern`
 **Path:** `app/Domain/Routing/ReservedPattern.php`
@@ -1141,6 +1630,59 @@ Job для реиндексации поискового индекса в фо�
 
 ### Tags
 `sanitizer`
+
+
+---
+
+## RuleFactoryImpl
+**ID:** `domain_service:Blueprint/Validation/Rules/RuleFactoryImpl`
+**Path:** `app/Domain/Blueprint/Validation/Rules/RuleFactoryImpl.php`
+
+Реализация фабрики правил валидации.
+
+### Meta
+- **Methods:** `createMinRule`, `createMaxRule`, `createPatternRule`, `createRequiredRule`, `createNullableRule`, `createArrayMinItemsRule`, `createArrayMaxItemsRule`, `createConditionalRule`, `createUniqueRule`, `createExistsRule`, `createArrayUniqueRule`, `createFieldComparisonRule`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\RuleFactory`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## RuleHandlerRegistry
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/RuleHandlerRegistry`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/RuleHandlerRegistry.php`
+
+Реестр обработчиков правил валидации.
+
+### Details
+Управляет регистрацией и получением handlers для различных типов правил.
+
+### Meta
+- **Methods:** `register`, `getHandler`, `hasHandler`, `getRegisteredTypes`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
+## RuleSet
+**ID:** `domain_service:Blueprint/Validation/Rules/RuleSet`
+**Path:** `app/Domain/Blueprint/Validation/Rules/RuleSet.php`
+
+Набор правил валидации для полей.
+
+### Details
+Хранит правила валидации, сгруппированные по путям полей.
+Используется для построения полного набора правил валидации для Blueprint.
+
+### Meta
+- **Methods:** `addRule`, `getRulesForField`, `getAllRules`, `hasRulesForField`, `getFieldPaths`, `isEmpty`
+
+### Tags
+`blueprint`, `validation`, `rule`
 
 
 ---
@@ -1299,6 +1841,46 @@ Value Object для фильтра поиска по терму.
 
 ---
 
+## UniqueRule
+**ID:** `domain_service:Blueprint/Validation/Rules/UniqueRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/UniqueRule.php`
+
+Доменное правило валидации: уникальность значения.
+
+### Details
+Проверяет, что значение поля уникально в указанной таблице/колонке.
+Применяется к полям типа ref (ссылки на другие сущности) или string (для проверки уникальности в других таблицах).
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getTable`, `getColumn`, `getExceptColumn`, `getExceptValue`, `getWhereColumn`, `getWhereValue`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## UniqueRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/UniqueRuleHandler.php`
+
+Обработчик правила UniqueRule.
+
+### Details
+Преобразует UniqueRule в строку Laravel правила валидации
+(например, 'unique:table,column' или 'unique:table,column,except,id').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
 ## UpdateMediaMetadataAction
 **ID:** `domain_service:Media/Actions/UpdateMediaMetadataAction`
 **Path:** `app/Domain/Media/Actions/UpdateMediaMetadataAction.php`
@@ -1310,6 +1892,46 @@ CQRS-действие: обновление метаданных медиа (tit
 
 ### Tags
 `media`, `action`
+
+
+---
+
+## ValidationError
+**ID:** `domain_service:Blueprint/Validation/ValidationError`
+**Path:** `app/Domain/Blueprint/Validation/ValidationError.php`
+
+Ошибка валидации с доменной семантикой.
+
+### Details
+Содержит структурированную информацию об ошибке валидации:
+- путь поля
+- код ошибки (для локализации и обработки на фронтенде)
+- параметры ошибки
+- текстовое сообщение (опционально)
+
+### Meta
+- **Methods:** `getParam`, `hasParam`
+
+### Tags
+`blueprint`, `validation`
+
+
+---
+
+## ValidationResult
+**ID:** `domain_service:Blueprint/Validation/ValidationResult`
+**Path:** `app/Domain/Blueprint/Validation/ValidationResult.php`
+
+Результат валидации контента Entry.
+
+### Details
+Содержит информацию об ошибках валидации, сгруппированных по полям.
+
+### Meta
+- **Methods:** `addError`, `hasErrors`, `getErrors`, `getErrorsForField`, `getFieldsWithErrors`, `hasErrorsForField`
+
+### Tags
+`blueprint`, `validation`
 
 
 ---

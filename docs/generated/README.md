@@ -2,24 +2,15 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 205
+**Всего сущностей:** 237
 
 ## Содержание
-
-### [План рефакторинга системы валидации](../refactoring-plan-validation-system.md)
-Детальный план улучшения архитектуры системы валидации (4 этапа, 7-11 недель)
-
-### [Backend: Система валидации контента Entry](../backend-validation-system.md)
-Исчерпывающая техническая документация системы валидации на бэкенде
-
-### [Frontend: Правила валидации Path](../frontend-validation-rules.md)
-Документация для фронтенда по настройке правил валидации полей в Blueprint
 
 ### [Models](./models.md)
 Eloquent-модели для работы с БД (23 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (67 сущностей)
+Доменные сервисы, действия, репозитории (99 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -48,17 +39,17 @@ HTTP эндпоинты API (83 сущностей)
 
 ### Domain Services
 
+- [ArrayMaxItemsRule](./domain-services.md#arraymaxitemsrule) - Доменное правило валидации: максимальное количество элементов в массиве.
+- [ArrayMaxItemsRuleHandler](./domain-services.md#arraymaxitemsrulehandler) - Обработчик правила ArrayMaxItemsRule.
+- [ArrayMinItemsRule](./domain-services.md#arrayminitemsrule) - Доменное правило валидации: минимальное количество элементов в массиве.
+- [ArrayMinItemsRuleHandler](./domain-services.md#arrayminitemsrulehandler) - Обработчик правила ArrayMinItemsRule.
+- [ArrayUniqueRule](./domain-services.md#arrayuniquerule) - Доменное правило валидации: уникальность элементов массива.
+- [ArrayUniqueRuleHandler](./domain-services.md#arrayuniquerulehandler) - Обработчик правила ArrayUniqueRule.
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
 - [BlueprintContentValidator](./domain-services.md#blueprintcontentvalidator) - Валидатор контента Entry на основе Blueprint.
-- [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
-- [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
-- [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
-- [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
-- [ExifManager](./domain-services.md#exifmanager) - Менеджер для управления EXIF данными изображений.
-- [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
-- [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
-- [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- *...и еще 57 сущностей*
+- [ConditionalRule](./domain-services.md#conditionalrule) - Доменное правило валидации: условное правило.
+- [ConditionalRuleHandler](./domain-services.md#conditionalrulehandler) - Обработчик правила ConditionalRule.
+- *...и еще 89 сущностей*
 
 ### Blade Views
 
@@ -105,7 +96,7 @@ HTTP эндпоинты API (83 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-25 19:00:11
+**Сгенерировано:** 2025-11-26 11:04:29
 
 Для обновления документации выполните:
 ```bash

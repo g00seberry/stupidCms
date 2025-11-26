@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Blueprint\Validation;
 
+use App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface;
 use App\Domain\Blueprint\Validation\BlueprintContentValidator;
+use App\Domain\Blueprint\Validation\EntryValidationServiceInterface;
 use App\Models\Blueprint;
 use App\Models\Path;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +31,7 @@ test('builds rules for simple path', function () {
         'validation_rules' => null,
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules)->toHaveKey('content_json.title');
@@ -49,7 +51,7 @@ test('builds rules for nested path', function () {
         'validation_rules' => null,
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules)->toHaveKey('content_json.author.name');
@@ -72,7 +74,7 @@ test('builds rules with validation rules min max', function () {
         ],
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules['content_json.title'])->toContain('required');
@@ -95,7 +97,7 @@ test('builds rules with pattern validation', function () {
         ],
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules['content_json.phone'])->toContain('nullable');
@@ -118,7 +120,7 @@ test('builds rules for cardinality many', function () {
         ],
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     // Правило для самого массива
@@ -147,7 +149,7 @@ test('builds rules for nullable cardinality many', function () {
         'validation_rules' => null,
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules['content_json.tags'])->toContain('nullable');
@@ -158,7 +160,7 @@ test('builds rules for nullable cardinality many', function () {
 test('handles empty blueprint paths', function () {
     $blueprint = Blueprint::factory()->create();
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules)->toBeEmpty();
@@ -185,7 +187,7 @@ test('builds rules for multiple paths', function () {
         'validation_rules' => null,
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules)->toHaveKey('content_json.title');
@@ -208,7 +210,7 @@ test('builds rules for deep nested paths', function () {
         ],
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules)->toHaveKey('content_json.author.contacts.phone');
@@ -229,7 +231,7 @@ test('caches validation rules', function () {
         'validation_rules' => null,
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
 
     // Первый вызов
     $rules1 = $validator->buildRules($blueprint);
@@ -271,7 +273,7 @@ test('handles different data types correctly', function () {
         'validation_rules' => null,
     ]);
 
-    $validator = new BlueprintContentValidator();
+    $validator = app(BlueprintContentValidator::class);
     $rules = $validator->buildRules($blueprint);
 
     expect($rules['content_json.count'])->toContain('integer');

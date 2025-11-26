@@ -88,6 +88,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
                 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
                 'unique' => $this->handleUniqueRule($rules, $value),
                 'exists' => $this->handleExistsRule($rules, $value),
+                'field_comparison' => $this->handleFieldComparisonRule($rules, $value),
                 default => null, // Игнорируем неизвестные ключи
             };
         }
@@ -247,88 +248,37 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     }
 
     /**
-     * Статический метод для обратной совместимости.
+     * Обработать правило сравнения поля с другим полем или константой.
      *
-     * @deprecated Используйте экземпляр класса через PathValidationRulesConverterInterface
-     *             Этот метод будет удалён в будущих версиях.
-     * @param array<string, mixed>|null $validationRules
-     * @param string $dataType
-     * @param bool $isRequired
-     * @param string $cardinality
-     * @return array<int, string>
+     * Поддерживает форматы:
+     * - 'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date']
+     * - 'field_comparison' => ['operator' => '>=', 'value' => '2024-01-01'] (с константой)
+     * - 'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date', 'value' => null] (только поле)
+     *
+     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
+     * @param mixed $value Значение правила (массив)
+     * @return void
      */
-    public static function convertLegacy(
-        ?array $validationRules,
-        string $dataType,
-        bool $isRequired,
-        string $cardinality
-    ): array {
-        // Создаём временный экземпляр для обратной совместимости
-        $factory = app(RuleFactory::class);
-        $converter = new self($factory);
-        $rules = $converter->convert($validationRules, $dataType, $isRequired, $cardinality);
-
-        // Преобразуем Rule[] в string[] для обратной совместимости
-        // Это временное решение до полного рефакторинга
-        $stringRules = [];
-        foreach ($rules as $rule) {
-            $type = $rule->getType();
-            $params = $rule->getParams();
-
-            match ($type) {
-                'required' => $stringRules[] = 'required',
-                'nullable' => $stringRules[] = 'nullable',
-                'min' => $stringRules[] = 'min:'.($params['value'] ?? 0),
-                'max' => $stringRules[] = 'max:'.($params['value'] ?? PHP_INT_MAX),
-                'pattern' => $stringRules[] = self::buildPatternRuleString($params['pattern'] ?? '.*'),
-                default => null,
-            };
-        }
-
-        // Добавляем базовый тип (это временно, будет убрано в задаче 1.3)
-        $baseType = self::getBaseTypeStatic($dataType);
-        if ($baseType !== null) {
-            array_unshift($stringRules, $baseType);
-        }
-
-        return $stringRules;
-    }
-
-    /**
-     * @param string $dataType
-     * @return string|null
-     */
-    private static function getBaseTypeStatic(string $dataType): ?string
+    private function handleFieldComparisonRule(array &$rules, mixed $value): void
     {
-        return match ($dataType) {
-            'string', 'text' => 'string',
-            'int' => 'integer',
-            'float' => 'numeric',
-            'bool' => 'boolean',
-            'date' => 'date',
-            'datetime' => 'date',
-            'json' => 'array',
-            'ref' => 'integer',
-            default => null,
-        };
-    }
-
-    /**
-     * @param string $pattern
-     * @return string
-     */
-    private static function buildPatternRuleString(string $pattern): string
-    {
-        if ($pattern === '') {
-            return 'regex:/.*/';
+        if (! is_array($value)) {
+            return;
         }
 
-        if (preg_match('/^\/.+\/[gimsxADSUXJu]*$/', $pattern)) {
-            return "regex:{$pattern}";
+        $operator = $value['operator'] ?? '>=';
+        $otherField = $value['field'] ?? null;
+        $constantValue = $value['value'] ?? null;
+
+        // Если указано поле, используем его (приоритет полю над константой)
+        if ($otherField !== null && $otherField !== '') {
+            $rules[] = $this->ruleFactory->createFieldComparisonRule($operator, $otherField, null);
+            return;
         }
 
-        $escapedPattern = str_replace('/', '\/', $pattern);
-
-        return "regex:/{$escapedPattern}/";
+        // Если указано только константное значение, используем пустое поле (будет использоваться constantValue)
+        if ($constantValue !== null) {
+            $rules[] = $this->ruleFactory->createFieldComparisonRule($operator, '', $constantValue);
+        }
     }
+
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Blueprint\Validation\Rules;
 
+use App\Domain\Blueprint\Validation\Rules\FieldComparisonRule;
+
 /**
  * Реализация фабрики правил валидации.
  *
@@ -157,6 +159,22 @@ final class RuleFactoryImpl implements RuleFactory
     public function createArrayUniqueRule(): ArrayUniqueRule
     {
         return new ArrayUniqueRule();
+    }
+
+    /**
+     * Создать правило сравнения поля с другим полем или константой.
+     *
+     * @param string $operator Оператор сравнения ('>=', '<=', '>', '<', '==', '!=')
+     * @param string $otherField Путь к другому полю для сравнения (например, 'content_json.start_date')
+     * @param mixed|null $constantValue Константное значение для сравнения (если указано, используется вместо otherField)
+     * @return \App\Domain\Blueprint\Validation\Rules\FieldComparisonRule
+     */
+    public function createFieldComparisonRule(
+        string $operator,
+        string $otherField,
+        mixed $constantValue = null
+    ): FieldComparisonRule {
+        return new FieldComparisonRule($operator, $otherField, $constantValue);
     }
 }
 
