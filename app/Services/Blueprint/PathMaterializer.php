@@ -123,7 +123,7 @@ final class PathMaterializer implements PathMaterializerInterface
         // Fallback: загрузить через запрос
         return $blueprint->paths()
             ->whereNull('source_blueprint_id')
-            ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_required', 'is_indexed', 'sort_order', 'validation_rules'])
+            ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'sort_order', 'validation_rules'])
             ->orderByRaw('LENGTH(full_path), full_path')
             ->get();
     }
@@ -177,6 +177,8 @@ final class PathMaterializer implements PathMaterializerInterface
             $tempPathMap[$source->id] = $fullPath;
 
             // Подготовить данные для вставки
+            // validation_rules уже содержит 'required', поэтому is_required не нужен
+            // Сериализуем validation_rules в JSON для batch insert
             $pathsToInsert[] = [
                 'blueprint_id' => $hostBlueprint->id,
                 'source_blueprint_id' => $sourceBlueprint->id,
@@ -186,11 +188,10 @@ final class PathMaterializer implements PathMaterializerInterface
                 'full_path' => $fullPath,
                 'data_type' => $source->data_type,
                 'cardinality' => $source->cardinality,
-                'is_required' => $source->is_required,
                 'is_indexed' => $source->is_indexed,
                 'is_readonly' => true,
                 'sort_order' => $source->sort_order,
-                'validation_rules' => $source->validation_rules,
+                'validation_rules' => $source->validation_rules !== null ? json_encode($source->validation_rules) : null,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];

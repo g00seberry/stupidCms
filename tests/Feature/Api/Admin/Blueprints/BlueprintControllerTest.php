@@ -45,7 +45,7 @@ test('можно добавить поле в blueprint', function () {
     $response = $this->postJson("/api/v1/admin/blueprints/{$blueprint->id}/paths", [
         'name' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => true,
     ]);
 
@@ -128,7 +128,7 @@ test('можно получить JSON схему blueprint из paths', functio
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => true,
         'cardinality' => 'one',
     ]);
@@ -139,7 +139,7 @@ test('можно получить JSON схему blueprint из paths', functio
         'name' => 'author',
         'full_path' => 'author',
         'data_type' => 'json',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => false,
         'cardinality' => 'one',
     ]);
@@ -150,7 +150,7 @@ test('можно получить JSON схему blueprint из paths', functio
         'name' => 'name',
         'full_path' => 'author.name',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => false,
         'cardinality' => 'one',
     ]);
@@ -227,7 +227,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles',
         'data_type' => 'json',
         'cardinality' => 'many',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => false,
     ]);
 
@@ -239,7 +239,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.title',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => true,
     ]);
 
@@ -251,7 +251,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.tags',
         'data_type' => 'string',
         'cardinality' => 'many',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => true,
     ]);
 
@@ -263,7 +263,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.categories',
         'data_type' => 'int',
         'cardinality' => 'many',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => false,
     ]);
 
@@ -275,7 +275,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author',
         'data_type' => 'json',
         'cardinality' => 'one',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => false,
     ]);
 
@@ -287,7 +287,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.name',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => true,
     ]);
 
@@ -299,7 +299,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts',
         'data_type' => 'json',
         'cardinality' => 'many',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => false,
     ]);
 
@@ -311,7 +311,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts.type',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => false,
     ]);
 
@@ -323,7 +323,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts.value',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => true,
     ]);
 
@@ -335,7 +335,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts.metadata',
         'data_type' => 'string',
         'cardinality' => 'many',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => false,
     ]);
 
@@ -347,7 +347,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts.coordinates',
         'data_type' => 'json',
         'cardinality' => 'many',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'is_indexed' => false,
     ]);
 
@@ -359,7 +359,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts.coordinates.lat',
         'data_type' => 'float',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => false,
     ]);
 
@@ -371,7 +371,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         'full_path' => 'articles.author.contacts.coordinates.lng',
         'data_type' => 'float',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'is_indexed' => false,
     ]);
 

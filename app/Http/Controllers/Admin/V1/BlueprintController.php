@@ -439,7 +439,7 @@ class BlueprintController extends Controller
         foreach ($tree as $path) {
             $fieldSchema = [
                 'type' => $path->data_type,
-                'required' => (bool) $path->is_required,
+                'required' => (bool) ($path->validation_rules['required'] ?? false),
                 'indexed' => (bool) $path->is_indexed,
                 'cardinality' => $path->cardinality,
                 'validation' => $path->validation_rules ?? new \stdClass(),

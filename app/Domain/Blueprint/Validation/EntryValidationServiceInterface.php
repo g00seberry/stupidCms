@@ -24,9 +24,9 @@ interface EntryValidationServiceInterface
      * в доменный RuleSet для поля content_json.
      * Учитывает:
      * - data_type каждого Path (string, int, float, bool, date, datetime, json, ref)
-     * - is_required (RequiredRule или NullableRule)
+     * - required (из validation_rules['required'], RequiredRule или NullableRule)
      * - cardinality (one или many)
-     * - validation_rules (min, max, pattern и т.д.)
+     * - validation_rules (required, min, max, pattern и т.д.)
      * - вложенность путей (full_path → точечная нотация)
      *
      * @param \App\Models\Blueprint $blueprint Blueprint для валидации

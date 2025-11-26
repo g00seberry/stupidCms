@@ -24,9 +24,9 @@ test('validates content_json with min max rules on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 500,
         ],
@@ -83,9 +83,9 @@ test('validates content_json with pattern rules on create', function () {
         'name' => 'phone',
         'full_path' => 'phone',
         'data_type' => 'string',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
         ],
     ]);
@@ -127,9 +127,8 @@ test('validates content_json with required fields on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -167,9 +166,9 @@ test('validates content_json with nested paths on create', function () {
         'name' => 'name',
         'full_path' => 'author.name',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 2,
             'max' => 100,
         ],
@@ -214,9 +213,9 @@ test('validates content_json with cardinality many on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 50,
         ],
@@ -271,9 +270,9 @@ test('validates content_json with array min items rule on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
         'validation_rules' => [
+            'required' => true,
             'array_min_items' => 2,
             'min' => 1,
             'max' => 50,
@@ -317,9 +316,9 @@ test('validates content_json with array max items rule on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
         'validation_rules' => [
+            'required' => true,
             'array_max_items' => 5,
             'min' => 1,
             'max' => 50,
@@ -363,9 +362,9 @@ test('validates content_json with array min and max items rules together on crea
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
         'validation_rules' => [
+            'required' => true,
             'array_min_items' => 2,
             'array_max_items' => 5,
             'min' => 1,
@@ -424,9 +423,9 @@ test('validates content_json with required_if conditional rule on create', funct
         'name' => 'slug',
         'full_path' => 'slug',
         'data_type' => 'string',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'required_if' => ['field' => 'is_published', 'value' => true],
             'min' => 1,
             'max' => 255,
@@ -486,9 +485,9 @@ test('validates content_json with prohibited_unless conditional rule on create',
         'name' => 'draft_note',
         'full_path' => 'draft_note',
         'data_type' => 'text',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'prohibited_unless' => ['field' => 'is_published', 'value' => false],
         ],
     ]);
@@ -532,9 +531,9 @@ test('validates content_json with array unique rule on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
         'validation_rules' => [
+            'required' => true,
             'array_unique' => true,
             'min' => 1,
             'max' => 50,
@@ -583,9 +582,9 @@ test('validates content_json with exists rule for ref type on create', function 
         'name' => 'related_entry',
         'full_path' => 'related_entry',
         'data_type' => 'ref',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'exists' => ['table' => 'entries', 'column' => 'id'],
         ],
     ]);
@@ -627,9 +626,9 @@ test('validates content_json with min max rules on update', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 500,
         ],
@@ -672,9 +671,9 @@ test('validates content_json with integer type min max on create', function () {
         'name' => 'count',
         'full_path' => 'count',
         'data_type' => 'int',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 0,
             'max' => 100,
         ],
@@ -731,9 +730,8 @@ test('allows nullable optional fields on create', function () {
         'name' => 'description',
         'full_path' => 'description',
         'data_type' => 'text',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -770,18 +768,16 @@ test('validates multiple fields with different rules on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => ['min' => 1, 'max' => 500],
+        'validation_rules' => ['required' => true, 'min' => 1, 'max' => 500],
     ]);
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
         'name' => 'count',
         'full_path' => 'count',
         'data_type' => 'int',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => ['min' => 0, 'max' => 100],
+        'validation_rules' => ['required' => false, 'min' => 0, 'max' => 100],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);

@@ -26,9 +26,8 @@ test('builds rules for simple path', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $validator = app(BlueprintContentValidator::class);
@@ -46,9 +45,8 @@ test('builds rules for nested path', function () {
         'name' => 'name',
         'full_path' => 'author.name',
         'data_type' => 'string',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $validator = app(BlueprintContentValidator::class);
@@ -66,9 +64,9 @@ test('builds rules with validation rules min max', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 500,
         ],
@@ -90,9 +88,9 @@ test('builds rules with pattern validation', function () {
         'name' => 'phone',
         'full_path' => 'phone',
         'data_type' => 'string',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
         ],
     ]);
@@ -112,9 +110,9 @@ test('builds rules for cardinality many', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 50,
         ],
@@ -144,9 +142,8 @@ test('builds rules for nullable cardinality many', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => false,
         'cardinality' => 'many',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $validator = app(BlueprintContentValidator::class);
@@ -173,18 +170,16 @@ test('builds rules for multiple paths', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
         'name' => 'description',
         'full_path' => 'description',
         'data_type' => 'text',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $validator = app(BlueprintContentValidator::class);
@@ -203,9 +198,9 @@ test('builds rules for deep nested paths', function () {
         'name' => 'phone',
         'full_path' => 'author.contacts.phone',
         'data_type' => 'string',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
         ],
     ]);
@@ -226,9 +221,8 @@ test('caches validation rules', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $validator = app(BlueprintContentValidator::class);
@@ -250,27 +244,24 @@ test('handles different data types correctly', function () {
         'name' => 'count',
         'full_path' => 'count',
         'data_type' => 'int',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => ['min' => 0, 'max' => 100],
+        'validation_rules' => ['required' => true, 'min' => 0, 'max' => 100],
     ]);
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
         'name' => 'price',
         'full_path' => 'price',
         'data_type' => 'float',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => ['min' => 0],
+        'validation_rules' => ['required' => false, 'min' => 0],
     ]);
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
         'name' => 'is_active',
         'full_path' => 'is_active',
         'data_type' => 'bool',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $validator = app(BlueprintContentValidator::class);

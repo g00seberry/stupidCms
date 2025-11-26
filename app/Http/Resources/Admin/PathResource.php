@@ -22,8 +22,8 @@ class PathResource extends AdminJsonResource
      *
      * Возвращает массив с полями path, включая:
      * - Основные поля (id, blueprint_id, parent_id, name, full_path)
-     * - Метаданные (data_type, cardinality, is_required, is_indexed, is_readonly, sort_order)
-     * - Правила валидации (validation_rules)
+     * - Метаданные (data_type, cardinality, is_indexed, is_readonly, sort_order)
+     * - Правила валидации (validation_rules, содержащий required)
      * - Источник копии (source_blueprint_id, source_blueprint, blueprint_embed_id)
      * - Дочерние поля (children) - присутствует только если есть дочерние элементы
      * - Даты в ISO 8601 формате
@@ -41,7 +41,6 @@ class PathResource extends AdminJsonResource
             'full_path' => $this->full_path,
             'data_type' => $this->data_type,
             'cardinality' => $this->cardinality,
-            'is_required' => (bool) $this->is_required,
             'is_indexed' => (bool) $this->is_indexed,
             'is_readonly' => (bool) $this->is_readonly,
             'sort_order' => $this->sort_order,

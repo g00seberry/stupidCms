@@ -90,7 +90,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'title',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 10,
         ]);
@@ -98,7 +98,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'sku',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 20,
         ]);
@@ -106,7 +106,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'price',
             'data_type' => 'float',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 30,
         ]);
@@ -142,7 +142,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 10,
         ]);
@@ -150,7 +150,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'email',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 20,
         ]);
@@ -200,7 +200,7 @@ class BlueprintsSeeder extends Seeder
             'name' => 'city',
             'parent_id' => $addressGroup->id,
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 20,
         ]);
@@ -217,7 +217,7 @@ class BlueprintsSeeder extends Seeder
             'name' => 'country',
             'parent_id' => $addressGroup->id,
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 40,
         ]);
@@ -254,7 +254,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'email',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 30,
         ]);
@@ -333,7 +333,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'first_name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 10,
         ]);
@@ -341,7 +341,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'last_name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 20,
         ]);
@@ -384,7 +384,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 10,
         ]);
@@ -392,7 +392,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'registration_number',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 20,
         ]);
@@ -435,7 +435,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'title',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 10,
         ]);
@@ -443,7 +443,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'slug',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 20,
         ]);
@@ -451,7 +451,7 @@ class BlueprintsSeeder extends Seeder
         $this->structureService->createPath($blueprint, [
             'name' => 'content',
             'data_type' => 'text',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'sort_order' => 30,
         ]);
 
@@ -486,7 +486,7 @@ class BlueprintsSeeder extends Seeder
             'name' => 'name',
             'parent_id' => $authorGroup->id,
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
             'sort_order' => 10,
         ]);

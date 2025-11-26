@@ -83,14 +83,14 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($geoLocation, [
             'name' => 'latitude',
             'data_type' => 'float',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
         $this->service->createPath($geoLocation, [
             'name' => 'longitude',
             'data_type' => 'float',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -104,7 +104,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($timezone, [
             'name' => 'name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -155,7 +155,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($contactInfo, [
             'name' => 'email',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -189,14 +189,14 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($location, [
             'name' => 'country',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
         $this->service->createPath($location, [
             'name' => 'city',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -283,14 +283,14 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($person, [
             'name' => 'first_name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
         $this->service->createPath($person, [
             'name' => 'last_name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -336,7 +336,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($organization, [
             'name' => 'name',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -394,7 +394,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($event, [
             'name' => 'title',
             'data_type' => 'string',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 
@@ -406,7 +406,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->service->createPath($event, [
             'name' => 'start_date',
             'data_type' => 'datetime',
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
             'is_indexed' => true,
         ]);
 

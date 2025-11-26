@@ -29,9 +29,9 @@ test('validates float type with min max on create', function () {
         'name' => 'rating',
         'full_path' => 'rating',
         'data_type' => 'float',
-        'is_required' => false,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => false,
             'min' => 0.0,
             'max' => 5.0,
         ],
@@ -88,9 +88,8 @@ test('validates boolean type on create', function () {
         'name' => 'is_featured',
         'full_path' => 'is_featured',
         'data_type' => 'bool',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -139,9 +138,8 @@ test('validates date type on create', function () {
         'name' => 'published_at',
         'full_path' => 'published_at',
         'data_type' => 'date',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -181,9 +179,8 @@ test('validates datetime type on create', function () {
         'name' => 'created_at',
         'full_path' => 'created_at',
         'data_type' => 'datetime',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -223,9 +220,8 @@ test('validates json object type cardinality one on create', function () {
         'name' => 'author',
         'full_path' => 'author',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -283,9 +279,8 @@ test('validates json object type cardinality many on create', function () {
         'name' => 'authors',
         'full_path' => 'authors',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'many',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -362,9 +357,8 @@ test('validates single string value not array on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -405,7 +399,7 @@ test('validates single int value not array on create', function () {
         'name' => 'count',
         'full_path' => 'count',
         'data_type' => 'int',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => null,
     ]);
@@ -438,7 +432,7 @@ test('validates array of strings not single value on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => null,
     ]);
@@ -483,7 +477,7 @@ test('validates array of integers with mixed types on create', function () {
         'name' => 'scores',
         'full_path' => 'scores',
         'data_type' => 'int',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'many',
         'validation_rules' => null,
     ]);
@@ -532,9 +526,8 @@ test('validates required array field on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -573,7 +566,7 @@ test('validates nullable array field on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'many',
         'validation_rules' => null,
     ]);
@@ -625,9 +618,8 @@ test('validates empty array for required field without array_min_items on create
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'many',
-        'validation_rules' => null, // Нет array_min_items
+        'validation_rules' => ['required' => true], // Нет array_min_items
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -656,9 +648,9 @@ test('validates empty string for required field with min on create', function ()
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
         ],
     ]);
@@ -687,9 +679,8 @@ test('validates null for required field on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -720,7 +711,7 @@ test('validates min equals max on create', function () {
         'name' => 'code',
         'full_path' => 'code',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'min' => 5,
@@ -779,7 +770,7 @@ test('validates min max for array elements on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => [
             'min' => 2,
@@ -842,7 +833,7 @@ test('validates pattern for array elements on create', function () {
         'name' => 'phones',
         'full_path' => 'phones',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => [
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
@@ -890,7 +881,7 @@ test('validates required_unless conditional rule on create', function () {
         'name' => 'slug',
         'full_path' => 'slug',
         'data_type' => 'string',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'required_unless' => ['field' => 'is_published', 'value' => false],
@@ -932,7 +923,7 @@ test('validates prohibited_if conditional rule on create', function () {
         'name' => 'draft_note',
         'full_path' => 'draft_note',
         'data_type' => 'text',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'prohibited_if' => ['field' => 'is_published', 'value' => true],
@@ -978,7 +969,7 @@ test('validates required_if with operator on create', function () {
         'name' => 'draft_note',
         'full_path' => 'draft_note',
         'data_type' => 'text',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'required_if' => ['field' => 'is_published', 'value' => false, 'operator' => '=='],
@@ -1026,9 +1017,8 @@ test('validates nested field inside array of objects on create', function () {
         'name' => 'author',
         'full_path' => 'author',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'many',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     // Создаём вложенное поле name внутри author
@@ -1037,9 +1027,8 @@ test('validates nested field inside array of objects on create', function () {
         'name' => 'name',
         'full_path' => 'author.name',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -1118,9 +1107,8 @@ test('validates deep nested field inside array of objects on create', function (
         'name' => 'articles',
         'full_path' => 'articles',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'many',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     // articles.author (объект внутри массива)
@@ -1129,9 +1117,8 @@ test('validates deep nested field inside array of objects on create', function (
         'name' => 'author',
         'full_path' => 'articles.author',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     // articles.author.name (строка внутри объекта внутри массива)
@@ -1140,9 +1127,8 @@ test('validates deep nested field inside array of objects on create', function (
         'name' => 'name',
         'full_path' => 'articles.author.name',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -1191,7 +1177,7 @@ test('validates array inside object inside array on create', function () {
         'name' => 'articles',
         'full_path' => 'articles',
         'data_type' => 'json',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => null,
     ]);
@@ -1202,7 +1188,7 @@ test('validates array inside object inside array on create', function () {
         'name' => 'tags',
         'full_path' => 'articles.tags',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => null,
     ]);
@@ -1255,9 +1241,9 @@ test('validates required plus min max combination on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'min' => 5,
             'max' => 100,
         ],
@@ -1326,7 +1312,7 @@ test('validates nullable plus pattern plus min max combination on create', funct
         'name' => 'phone',
         'full_path' => 'phone',
         'data_type' => 'string',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
@@ -1383,7 +1369,7 @@ test('validates cardinality many plus array rules plus min max for elements on c
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => [
             'array_min_items' => 2,
@@ -1458,7 +1444,7 @@ test('validates required_if plus min max combination on create', function () {
         'name' => 'slug',
         'full_path' => 'slug',
         'data_type' => 'string',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'required_if' => 'is_published',
@@ -1535,7 +1521,7 @@ test('validates very long string on create', function () {
         'name' => 'content',
         'full_path' => 'content',
         'data_type' => 'text',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'max' => 10000,
@@ -1579,7 +1565,7 @@ test('validates very large array on create', function () {
         'name' => 'items',
         'full_path' => 'items',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => [
             'array_max_items' => 1000,
@@ -1623,7 +1609,7 @@ test('validates mixed types in array on create', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => null,
     ]);
@@ -1668,9 +1654,8 @@ test('validates deep nesting on create', function () {
         'name' => 'level1',
         'full_path' => 'level1',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     Path::factory()->create([
@@ -1678,9 +1663,8 @@ test('validates deep nesting on create', function () {
         'name' => 'level2',
         'full_path' => 'level1.level2',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     Path::factory()->create([
@@ -1688,9 +1672,8 @@ test('validates deep nesting on create', function () {
         'name' => 'level3',
         'full_path' => 'level1.level2.level3',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     Path::factory()->create([
@@ -1698,9 +1681,8 @@ test('validates deep nesting on create', function () {
         'name' => 'level4',
         'full_path' => 'level1.level2.level3.level4',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     Path::factory()->create([
@@ -1708,9 +1690,8 @@ test('validates deep nesting on create', function () {
         'name' => 'value',
         'full_path' => 'level1.level2.level3.level4.value',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -1768,7 +1749,7 @@ test('validates content_json on update with partial data', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'min' => 5,
@@ -1781,9 +1762,8 @@ test('validates content_json on update with partial data', function () {
         'name' => 'description',
         'full_path' => 'description',
         'data_type' => 'text',
-        'is_required' => false,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => false],
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
@@ -1826,7 +1806,7 @@ test('validates nested fields on update', function () {
         'name' => 'name',
         'full_path' => 'author.name',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'min' => 2,
@@ -1873,7 +1853,7 @@ test('validates array fields on update', function () {
         'name' => 'tags',
         'full_path' => 'tags',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'many',
         'validation_rules' => [
             'array_min_items' => 2,

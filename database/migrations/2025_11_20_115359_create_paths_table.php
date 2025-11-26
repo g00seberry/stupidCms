@@ -23,7 +23,6 @@ return new class extends Migration {
             $table->string('full_path', 2048);
             $table->enum('data_type', ['string', 'text', 'int', 'float', 'bool', 'date', 'datetime', 'json', 'ref']);
             $table->enum('cardinality', ['one', 'many'])->default('one');
-            $table->boolean('is_required')->default(false);
             $table->boolean('is_indexed')->default(false);
             $table->boolean('is_readonly')->default(false);
             $table->integer('sort_order')->default(0);

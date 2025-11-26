@@ -40,10 +40,10 @@ class PathSchemasTest extends TestCase
             'name' => 'title',
             'data_type' => 'string',
             'cardinality' => 'one',
-            'is_required' => true,
             'is_indexed' => true,
             'sort_order' => 0,
             'validation_rules' => [
+                'required' => true,
                 'min' => 1,
                 'max' => 500,
             ],
@@ -53,11 +53,11 @@ class PathSchemasTest extends TestCase
         $this->assertEquals('title', $path->full_path);
         $this->assertEquals('string', $path->data_type);
         $this->assertEquals('one', $path->cardinality);
-        $this->assertTrue($path->is_required);
+        $this->assertTrue($path->validation_rules['required'] ?? false);
         $this->assertTrue($path->is_indexed);
         $this->assertFalse((bool) $path->is_readonly); // is_readonly может быть null, проверяем как bool
         $this->assertNull($path->parent_id);
-        $this->assertEquals(['min' => 1, 'max' => 500], $path->validation_rules);
+        $this->assertEquals(['required' => true, 'min' => 1, 'max' => 500], $path->validation_rules);
 
         // Проверка через модель
         $paths = $blueprint->paths()->whereNull('parent_id')->get();
@@ -91,7 +91,7 @@ class PathSchemasTest extends TestCase
             'name' => 'phone',
             'data_type' => 'string',
             'parent_id' => $contactsPath->id,
-            'is_required' => false,
+            'validation_rules' => ['required' => false],
             'is_indexed' => true,
             'validation_rules' => [
                 'pattern' => '^\\+?[1-9]\\d{1,14}$',
@@ -132,14 +132,14 @@ class PathSchemasTest extends TestCase
             'name' => 'name',
             'data_type' => 'string',
             'parent_id' => $authorPath->id,
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
         ]);
 
         $emailPath = $this->service->createPath($blueprint, [
             'name' => 'email',
             'data_type' => 'string',
             'parent_id' => $authorPath->id,
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
         ]);
 
         $contactsPath = $this->service->createPath($blueprint, [
@@ -184,7 +184,7 @@ class PathSchemasTest extends TestCase
             'name' => 'tags',
             'data_type' => 'string',
             'cardinality' => 'many',
-            'is_required' => false,
+            'validation_rules' => ['required' => false],
             'is_indexed' => true,
         ]);
 
@@ -217,14 +217,14 @@ class PathSchemasTest extends TestCase
             'name' => 'image',
             'data_type' => 'ref',
             'parent_id' => $galleryPath->id,
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
         ]);
 
         $captionPath = $this->service->createPath($blueprint, [
             'name' => 'caption',
             'data_type' => 'string',
             'parent_id' => $galleryPath->id,
-            'is_required' => false,
+            'validation_rules' => ['required' => false],
         ]);
 
         // Проверка структуры
@@ -259,7 +259,7 @@ class PathSchemasTest extends TestCase
             'name' => 'featured_image',
             'data_type' => 'ref',
             'cardinality' => 'one',
-            'is_required' => false,
+            'validation_rules' => ['required' => false],
             'is_indexed' => true,
         ]);
 
@@ -284,7 +284,7 @@ class PathSchemasTest extends TestCase
             'name' => 'related_articles',
             'data_type' => 'ref',
             'cardinality' => 'many',
-            'is_required' => false,
+            'validation_rules' => ['required' => false],
             'is_indexed' => true,
         ]);
 
@@ -369,7 +369,7 @@ class PathSchemasTest extends TestCase
             'name' => 'title',
             'data_type' => 'string',
             'parent_id' => $sectionsPath->id,
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
         ]);
 
         $blocksPath = $this->service->createPath($blueprint, [
@@ -383,7 +383,7 @@ class PathSchemasTest extends TestCase
             'name' => 'type',
             'data_type' => 'string',
             'parent_id' => $blocksPath->id,
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
         ]);
 
         $dataPath = $this->service->createPath($blueprint, [
@@ -435,7 +435,7 @@ class PathSchemasTest extends TestCase
             'name' => 'title',
             'data_type' => 'string',
             'parent_id' => $articlePath->id,
-            'is_required' => true,
+            'validation_rules' => ['required' => true],
         ]);
 
         // text

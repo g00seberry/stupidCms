@@ -29,8 +29,8 @@ test('builds rules for simple path', function () {
         'full_path' => 'title',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 500,
         ],
@@ -56,8 +56,8 @@ test('builds rules for nullable path', function () {
         'full_path' => 'phone',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => false,
         'validation_rules' => [
+            'required' => false,
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
         ],
     ]);
@@ -79,8 +79,8 @@ test('builds rules for cardinality many', function () {
         'full_path' => 'tags',
         'data_type' => 'string',
         'cardinality' => 'many',
-        'is_required' => true,
         'validation_rules' => [
+            'required' => true,
             'min' => 1,
             'max' => 50,
         ],
@@ -119,8 +119,8 @@ test('builds rules for nested path', function () {
         'parent_id' => $authorPath->id,
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
         'validation_rules' => [
+            'required' => true,
             'min' => 2,
             'max' => 100,
         ],
@@ -147,7 +147,7 @@ test('builds rules for multiple paths', function () {
         'full_path' => 'title',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
     ]);
     
     Path::factory()->create([
@@ -156,7 +156,7 @@ test('builds rules for multiple paths', function () {
         'full_path' => 'phone',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
     ]);
 
     $service = app(EntryValidationServiceInterface::class);
@@ -184,8 +184,7 @@ test('handles path without validation rules', function () {
         'full_path' => 'title',
         'data_type' => 'string',
         'cardinality' => 'one',
-        'is_required' => true,
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
 
     $service = app(EntryValidationServiceInterface::class);

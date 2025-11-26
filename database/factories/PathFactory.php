@@ -29,11 +29,10 @@ class PathFactory extends Factory
             'full_path' => fn (array $attributes) => $attributes['name'],
             'data_type' => 'string',
             'cardinality' => 'one',
-            'is_required' => false,
             'is_indexed' => false,
             'is_readonly' => false,
             'sort_order' => 0,
-            'validation_rules' => null,
+            'validation_rules' => ['required' => false],
         ];
     }
 }

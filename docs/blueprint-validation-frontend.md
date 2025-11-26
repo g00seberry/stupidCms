@@ -31,11 +31,11 @@
             "full_path": "title",
             "data_type": "string",
             "cardinality": "one",
-            "is_required": true,
             "is_indexed": true,
             "is_readonly": false,
             "sort_order": 0,
             "validation_rules": {
+                "required": true,
                 "min": 5,
                 "max": 500
             },
@@ -51,11 +51,12 @@
             "full_path": "author",
             "data_type": "json",
             "cardinality": "one",
-            "is_required": true,
             "is_indexed": false,
             "is_readonly": false,
             "sort_order": 1,
-            "validation_rules": null,
+            "validation_rules": {
+                "required": true
+            },
             "children": [
                 {
                     "id": 3,
@@ -63,8 +64,8 @@
                     "full_path": "author.name",
                     "data_type": "string",
                     "cardinality": "one",
-                    "is_required": true,
                     "validation_rules": {
+                        "required": true,
                         "pattern": "/^[a-z\\s]+$/i"
                     }
                 },
@@ -74,8 +75,8 @@
                     "full_path": "author.email",
                     "data_type": "string",
                     "cardinality": "one",
-                    "is_required": true,
                     "validation_rules": {
+                        "required": true,
                         "pattern": "/^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$/i"
                     }
                 }
@@ -262,9 +263,9 @@ interface FieldComparisonRule {
     "name": "title",
     "data_type": "string",
     "cardinality": "one",
-    "is_required": true,
     "is_indexed": true,
     "validation_rules": {
+        "required": true,
         "min": 5,
         "max": 500
     }
@@ -293,7 +294,6 @@ interface FieldComparisonRule {
 {
     "name": "title",
     "data_type": "string",
-    "is_required": true,
     "validation_rules": {
         "min": 5,
         "max": 500
@@ -307,7 +307,6 @@ interface FieldComparisonRule {
 {
     "name": "email",
     "data_type": "string",
-    "is_required": true,
     "validation_rules": {
         "pattern": "/^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$/i"
     }
@@ -321,7 +320,6 @@ interface FieldComparisonRule {
     "name": "tags",
     "data_type": "string",
     "cardinality": "many",
-    "is_required": false,
     "validation_rules": {
         "array_min_items": 2,
         "array_max_items": 10,
@@ -346,7 +344,6 @@ interface FieldComparisonRule {
 {
     "name": "published_at",
     "data_type": "date",
-    "is_required": false,
     "validation_rules": {
         "required_if": "is_published"
     }
@@ -359,7 +356,6 @@ interface FieldComparisonRule {
 {
     "name": "published_at",
     "data_type": "date",
-    "is_required": false,
     "validation_rules": {
         "required_if": {
             "field": "is_published",
@@ -390,7 +386,6 @@ interface FieldComparisonRule {
 {
     "name": "slug",
     "data_type": "string",
-    "is_required": true,
     "validation_rules": {
         "unique": "entries"
     }
@@ -403,7 +398,6 @@ interface FieldComparisonRule {
 {
     "name": "slug",
     "data_type": "string",
-    "is_required": true,
     "validation_rules": {
         "unique": {
             "table": "entries",
@@ -429,7 +423,6 @@ interface FieldComparisonRule {
 {
     "name": "category_id",
     "data_type": "ref",
-    "is_required": true,
     "validation_rules": {
         "exists": "categories"
     }
@@ -442,7 +435,6 @@ interface FieldComparisonRule {
 {
     "name": "category_id",
     "data_type": "ref",
-    "is_required": true,
     "validation_rules": {
         "exists": {
             "table": "categories",
@@ -464,7 +456,6 @@ interface FieldComparisonRule {
 {
     "name": "end_date",
     "data_type": "date",
-    "is_required": true,
     "validation_rules": {
         "field_comparison": {
             "operator": ">=",
@@ -480,7 +471,6 @@ interface FieldComparisonRule {
 {
     "name": "start_date",
     "data_type": "date",
-    "is_required": true,
     "validation_rules": {
         "field_comparison": {
             "operator": ">=",
@@ -831,4 +821,3 @@ function compareValues(a: any, b: any, operator: string = "=="): boolean {
 
 -   [Документация системы валидации Blueprint](./blueprint-validation-system.md) — подробное описание бэкенд-системы
 -   [API документация](../generated/http-endpoints.md) — полная документация API endpoints
-

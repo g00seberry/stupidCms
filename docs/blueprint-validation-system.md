@@ -684,9 +684,8 @@ $validator->validate([
 -   `full_path` — материализованный путь (например, `'author.contacts.phone'`)
 -   `data_type` — тип данных: `string`, `text`, `int`, `float`, `bool`, `date`, `datetime`, `json`, `ref`
 -   `cardinality` — кардинальность: `'one'` или `'many'`
--   `is_required` — обязательное ли поле
 -   `is_indexed` — индексируется ли поле
--   `validation_rules` — JSON правила валидации (массив)
+-   `validation_rules` — JSON правила валидации (массив), включая `required` для обязательности поля
 
 **Пример `validation_rules`**:
 
@@ -728,9 +727,9 @@ Path::create([
     'name' => 'title',
     'full_path' => 'title',
     'data_type' => 'string',
-    'is_required' => true,
     'cardinality' => 'one',
     'validation_rules' => [
+        'required' => true,
         'min' => 1,
         'max' => 500,
     ],
@@ -758,9 +757,9 @@ Path::create([
     'name' => 'authors',
     'full_path' => 'authors',
     'data_type' => 'json',
-    'is_required' => false,
     'cardinality' => 'many',
     'validation_rules' => [
+        'required' => false,
         'array_min_items' => 1,
         'array_max_items' => 10,
     ],
@@ -772,9 +771,9 @@ Path::create([
     'name' => 'name',
     'full_path' => 'authors.name',
     'data_type' => 'string',
-    'is_required' => true,
     'cardinality' => 'one',
     'validation_rules' => [
+        'required' => true,
         'min' => 1,
         'max' => 100,
     ],
@@ -803,9 +802,9 @@ Path::create([
     'name' => 'published_at',
     'full_path' => 'published_at',
     'data_type' => 'datetime',
-    'is_required' => false,
     'cardinality' => 'one',
     'validation_rules' => [
+        'required' => false,
         'required_if' => 'is_published',
     ],
 ]);
@@ -831,9 +830,9 @@ Path::create([
     'name' => 'email',
     'full_path' => 'email',
     'data_type' => 'string',
-    'is_required' => true,
     'cardinality' => 'one',
     'validation_rules' => [
+        'required' => true,
         'unique' => [
             'table' => 'users',
             'column' => 'email',

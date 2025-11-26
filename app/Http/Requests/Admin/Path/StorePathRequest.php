@@ -15,10 +15,10 @@ use Illuminate\Validation\Rule;
  * - parent_id: опциональный ID родительского поля
  * - data_type: обязательный тип данных
  * - cardinality: опциональная кардинальность (one/many)
- * - is_required: опциональный флаг обязательности
  * - is_indexed: опциональный флаг индексации
  * - sort_order: опциональный порядок сортировки
  * - validation_rules: опциональные правила валидации (массив)
+ *   - validation_rules.required: опциональный флаг обязательности поля
  *
  * @package App\Http\Requests\Admin\Path
  */
@@ -44,10 +44,10 @@ class StorePathRequest extends FormRequest
      * - parent_id: опциональный ID родительского поля (существующий path)
      * - data_type: обязательный тип данных (enum)
      * - cardinality: опциональная кардинальность (one/many)
-     * - is_required: опциональный флаг обязательности
      * - is_indexed: опциональный флаг индексации
      * - sort_order: опциональный порядок сортировки (>= 0)
      * - validation_rules: опциональные правила валидации (массив)
+     *   - validation_rules.required: опциональный флаг обязательности поля
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -58,10 +58,10 @@ class StorePathRequest extends FormRequest
             'parent_id' => ['nullable', 'integer', 'exists:paths,id'],
             'data_type' => ['required', Rule::in(['string', 'text', 'int', 'float', 'bool', 'date', 'datetime', 'json', 'ref'])],
             'cardinality' => ['sometimes', Rule::in(['one', 'many'])],
-            'is_required' => ['sometimes', 'boolean'],
             'is_indexed' => ['sometimes', 'boolean'],
             'sort_order' => ['sometimes', 'integer', 'min:0'],
             'validation_rules' => ['nullable', 'array'],
+            'validation_rules.required' => ['sometimes', 'boolean'],
         ];
     }
 

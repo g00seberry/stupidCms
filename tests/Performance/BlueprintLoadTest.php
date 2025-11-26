@@ -418,8 +418,8 @@ class BlueprintLoadTest extends TestCase
         ]);
 
         $fields = [
-            ['name' => 'name', 'data_type' => 'string', 'is_required' => true],
-            ['name' => 'email', 'data_type' => 'string', 'is_required' => true],
+            ['name' => 'name', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
+            ['name' => 'email', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
             ['name' => 'bio', 'data_type' => 'text'],
             ['name' => 'avatar', 'data_type' => 'string'],
             ['name' => 'contacts', 'data_type' => 'json', 'cardinality' => 'one'],
@@ -458,7 +458,7 @@ class BlueprintLoadTest extends TestCase
         ]);
 
         $fields = [
-            ['name' => 'url', 'data_type' => 'string', 'is_required' => true],
+            ['name' => 'url', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
             ['name' => 'alt', 'data_type' => 'string'],
             ['name' => 'caption', 'data_type' => 'text'],
             ['name' => 'width', 'data_type' => 'int'],
@@ -506,10 +506,10 @@ class BlueprintLoadTest extends TestCase
     {
         $fields = [
             // Основные поля
-            ['name' => 'title', 'data_type' => 'string', 'is_required' => true, 'is_indexed' => true],
-            ['name' => 'slug', 'data_type' => 'string', 'is_required' => true],
+            ['name' => 'title', 'data_type' => 'string', 'validation_rules' => ['required' => true], 'is_indexed' => true],
+            ['name' => 'slug', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
             ['name' => 'excerpt', 'data_type' => 'text'],
-            ['name' => 'content', 'data_type' => 'text', 'is_required' => true],
+            ['name' => 'content', 'data_type' => 'text', 'validation_rules' => ['required' => true]],
             ['name' => 'published_at', 'data_type' => 'datetime'],
             ['name' => 'status', 'data_type' => 'string'],
 
@@ -589,7 +589,7 @@ class BlueprintLoadTest extends TestCase
         ]);
 
         $fields = [
-            ['name' => 'name', 'data_type' => 'string', 'is_required' => true],
+            ['name' => 'name', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
             ['name' => 'logo', 'data_type' => 'string'],
             ['name' => 'website', 'data_type' => 'string'],
             ['name' => 'description', 'data_type' => 'text'],
@@ -613,7 +613,7 @@ class BlueprintLoadTest extends TestCase
         ]);
 
         $fields = [
-            ['name' => 'name', 'data_type' => 'string', 'is_required' => true],
+            ['name' => 'name', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
             ['name' => 'slug', 'data_type' => 'string'],
             ['name' => 'description', 'data_type' => 'text'],
             ['name' => 'specifications', 'data_type' => 'json'],
@@ -643,9 +643,9 @@ class BlueprintLoadTest extends TestCase
         ]);
 
         $fields = [
-            ['name' => 'name', 'data_type' => 'string', 'is_required' => true],
-            ['name' => 'sku', 'data_type' => 'string', 'is_required' => true],
-            ['name' => 'price', 'data_type' => 'float', 'is_required' => true],
+            ['name' => 'name', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
+            ['name' => 'sku', 'data_type' => 'string', 'validation_rules' => ['required' => true]],
+            ['name' => 'price', 'data_type' => 'float', 'validation_rules' => ['required' => true]],
             ['name' => 'description', 'data_type' => 'text'],
             ['name' => 'category', 'data_type' => 'json'],
             ['name' => 'brand', 'data_type' => 'json'],

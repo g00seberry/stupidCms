@@ -32,7 +32,7 @@ test('validates unique rule with table name on create', function () {
         'name' => 'email',
         'full_path' => 'email',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'unique' => 'users',
@@ -78,7 +78,7 @@ test('validates unique rule with table and column on create', function () {
         'name' => 'email',
         'full_path' => 'email',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'unique' => ['table' => 'users', 'column' => 'email'],
@@ -124,7 +124,7 @@ test('validates unique rule with except on update', function () {
         'name' => 'email',
         'full_path' => 'email',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'unique' => [
@@ -162,7 +162,7 @@ test('validates unique rule with where condition on create', function () {
         'name' => 'email',
         'full_path' => 'email',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'unique' => [
@@ -203,7 +203,7 @@ test('validates exists rule with table and column on create', function () {
         'name' => 'related_entry',
         'full_path' => 'related_entry',
         'data_type' => 'ref',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'exists' => ['table' => 'entries', 'column' => 'id'],
@@ -250,7 +250,7 @@ test('validates exists rule with where condition on create', function () {
         'name' => 'related_entry',
         'full_path' => 'related_entry',
         'data_type' => 'ref',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'exists' => [
@@ -302,7 +302,7 @@ test('validates field_comparison with field on create', function () {
         'name' => 'start_date',
         'full_path' => 'start_date',
         'data_type' => 'date',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => null,
     ]);
@@ -312,7 +312,7 @@ test('validates field_comparison with field on create', function () {
         'name' => 'end_date',
         'full_path' => 'end_date',
         'data_type' => 'date',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date'],
@@ -358,7 +358,7 @@ test('validates field_comparison with constant value on create', function () {
         'name' => 'published_at',
         'full_path' => 'published_at',
         'data_type' => 'datetime',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'field_comparison' => ['operator' => '>=', 'value' => '2025-01-01'],
@@ -402,7 +402,7 @@ test('validates field_comparison with different operators on create', function (
         'name' => 'start_date',
         'full_path' => 'start_date',
         'data_type' => 'date',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => null,
     ]);
@@ -412,7 +412,7 @@ test('validates field_comparison with different operators on create', function (
         'name' => 'end_date',
         'full_path' => 'end_date',
         'data_type' => 'date',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'field_comparison' => ['operator' => '>', 'field' => 'content_json.start_date'],
@@ -462,7 +462,7 @@ test('validates field_comparison plus required_if combination on create', functi
         'name' => 'start_date',
         'full_path' => 'start_date',
         'data_type' => 'date',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => null,
     ]);
@@ -472,7 +472,7 @@ test('validates field_comparison plus required_if combination on create', functi
         'name' => 'end_date',
         'full_path' => 'end_date',
         'data_type' => 'date',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date'],
@@ -555,7 +555,7 @@ test('validates multi-level nested fields on create', function () {
         'name' => 'author',
         'full_path' => 'author',
         'data_type' => 'json',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => null,
     ]);
@@ -565,9 +565,8 @@ test('validates multi-level nested fields on create', function () {
         'name' => 'contacts',
         'full_path' => 'author.contacts',
         'data_type' => 'json',
-        'is_required' => true,
         'cardinality' => 'one',
-        'validation_rules' => null,
+        'validation_rules' => ['required' => true],
     ]);
     
     Path::factory()->create([
@@ -575,9 +574,9 @@ test('validates multi-level nested fields on create', function () {
         'name' => 'phone',
         'full_path' => 'author.contacts.phone',
         'data_type' => 'string',
-        'is_required' => true,
         'cardinality' => 'one',
         'validation_rules' => [
+            'required' => true,
             'pattern' => '^\\+?[1-9]\\d{1,14}$',
         ],
     ]);
@@ -647,7 +646,7 @@ test('validates special characters in strings on create', function () {
         'name' => 'title',
         'full_path' => 'title',
         'data_type' => 'string',
-        'is_required' => true,
+        'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
             'pattern' => '^[a-zA-Z0-9\\s]+$',
@@ -695,7 +694,7 @@ test('validates conditional rules on update', function () {
         'name' => 'slug',
         'full_path' => 'slug',
         'data_type' => 'string',
-        'is_required' => false,
+        'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
             'required_if' => ['field' => 'is_published', 'value' => true],

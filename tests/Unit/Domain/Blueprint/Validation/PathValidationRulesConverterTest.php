@@ -21,9 +21,8 @@ test('converts min max for string type', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['min' => 1, 'max' => 500],
+        ['required' => true, 'min' => 1, 'max' => 500],
         'string',
-        true,
         'one'
     );
 
@@ -39,9 +38,8 @@ test('converts min max for text type', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['min' => 10, 'max' => 1000],
+        ['required' => false, 'min' => 10, 'max' => 1000],
         'text',
-        false,
         'one'
     );
 
@@ -55,9 +53,8 @@ test('converts pattern for string type', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['pattern' => '^\\+?[1-9]\\d{1,14}$'],
+        ['required' => false, 'pattern' => '^\\+?[1-9]\\d{1,14}$'],
         'string',
-        false,
         'one'
     );
 
@@ -71,9 +68,8 @@ test('converts min max for integer type', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['min' => 0, 'max' => 100],
+        ['required' => true, 'min' => 0, 'max' => 100],
         'int',
-        true,
         'one'
     );
 
@@ -89,9 +85,8 @@ test('converts min max for float type preserves precision', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['min' => 0.5, 'max' => 5.5],
+        ['required' => false, 'min' => 0.5, 'max' => 5.5],
         'float',
-        false,
         'one'
     );
 
@@ -109,9 +104,8 @@ test('converts min max for float type with integer values', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['min' => 0, 'max' => 10],
+        ['required' => true, 'min' => 0, 'max' => 10],
         'float',
-        true,
         'one'
     );
 
@@ -125,16 +119,14 @@ test('handles required flag correctly', function () {
     $converter = createConverter();
     
     $requiredRules = $converter->convert(
-        null,
+        ['required' => true],
         'string',
-        true,
         'one'
     );
     
     $nullableRules = $converter->convert(
-        null,
+        ['required' => false],
         'string',
-        false,
         'one'
     );
 
@@ -148,10 +140,9 @@ test('handles cardinality many correctly', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['min' => 1, 'max' => 50],
+        ['required' => true, 'min' => 1, 'max' => 50],
         'string',
-        true, // is_required игнорируется для элементов массива
-        'many'
+        'many' // required игнорируется для элементов массива
     );
 
     // Для cardinality: 'many' не должно быть required/nullable
@@ -170,9 +161,8 @@ test('handles empty validation rules', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        [],
+        ['required' => true],
         'string',
-        true,
         'one'
     );
 
@@ -186,7 +176,6 @@ test('handles null validation rules', function () {
     $rules = $converter->convert(
         null,
         'string',
-        false,
         'one'
     );
 
@@ -199,9 +188,8 @@ test('validates min max relationship', function () {
     
     // Если min > max, оба правила игнорируются
     $rules = $converter->convert(
-        ['min' => 500, 'max' => 1],
+        ['required' => true, 'min' => 500, 'max' => 1],
         'string',
-        true,
         'one'
     );
 
@@ -214,9 +202,8 @@ test('handles pattern with delimiters', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['pattern' => '/^test$/i'],
+        ['required' => false, 'pattern' => '/^test$/i'],
         'string',
-        false,
         'one'
     );
 
@@ -229,9 +216,8 @@ test('handles pattern without delimiters', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['pattern' => '^[A-Za-z0-9]+$'],
+        ['required' => false, 'pattern' => '^[A-Za-z0-9]+$'],
         'string',
-        false,
         'one'
     );
 
@@ -244,9 +230,8 @@ test('handles invalid pattern gracefully', function () {
     $converter = createConverter();
     
     $rules = $converter->convert(
-        ['pattern' => ''],
+        ['required' => false, 'pattern' => ''],
         'string',
-        false,
         'one'
     );
 
@@ -260,12 +245,12 @@ test('handles all validation rules together', function () {
     
     $rules = $converter->convert(
         [
+            'required' => true,
             'min' => 1,
             'max' => 500,
             'pattern' => '^[A-Za-z0-9]+$',
         ],
         'string',
-        true,
         'one'
     );
 
@@ -281,12 +266,12 @@ test('ignores unknown validation rule keys', function () {
     
     $rules = $converter->convert(
         [
+            'required' => true,
             'min' => 1,
             'max' => 500,
             'unknown_key' => 'value',
         ],
         'string',
-        true,
         'one'
     );
 

@@ -39,9 +39,9 @@ final class EntryValidationService implements EntryValidationServiceInterface
      * в доменный RuleSet для поля content_json.
      * Учитывает:
      * - data_type каждого Path (string, int, float, bool, date, datetime, json, ref)
-     * - is_required (RequiredRule или NullableRule)
+     * - required (из validation_rules['required'], RequiredRule или NullableRule)
      * - cardinality (one или many)
-     * - validation_rules (min, max, pattern и т.д.)
+     * - validation_rules (required, min, max, pattern и т.д.)
      * - вложенность путей (full_path → точечная нотация)
      * - вложенные поля внутри массивов (замена сегментов на * для cardinality: 'many')
      *
@@ -54,7 +54,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
 
         // Загружаем все Path из blueprint (включая скопированные)
         $paths = $blueprint->paths()
-            ->select(['id', 'name', 'full_path', 'data_type', 'cardinality', 'is_required', 'validation_rules'])
+            ->select(['id', 'name', 'full_path', 'data_type', 'cardinality', 'validation_rules'])
             ->orderByRaw('LENGTH(full_path), full_path')
             ->get();
 
@@ -76,7 +76,8 @@ final class EntryValidationService implements EntryValidationServiceInterface
             if ($path->cardinality === ValidationConstants::CARDINALITY_MANY) {
                 // Правила для самого массива (required/nullable)
                 // Правило "array" будет добавлено в адаптере/FormRequest, так как это Laravel-специфично
-                if ($path->is_required) {
+                $isRequired = $path->validation_rules['required'] ?? false;
+                if ($isRequired) {
                     $ruleSet->addRule($fieldPath, $this->ruleFactory->createRequiredRule());
                 } else {
                     $ruleSet->addRule($fieldPath, $this->ruleFactory->createNullableRule());
@@ -109,7 +110,6 @@ final class EntryValidationService implements EntryValidationServiceInterface
                 $elementRules = $this->converter->convert(
                     $elementValidationRules,
                     $path->data_type,
-                    false, // Элементы массива не могут быть required
                     ValidationConstants::CARDINALITY_ONE, // Элементы обрабатываются как одиночные значения
                     $fieldName
                 );
@@ -144,7 +144,6 @@ final class EntryValidationService implements EntryValidationServiceInterface
                 $fieldRules = $this->converter->convert(
                     $path->validation_rules,
                     $path->data_type,
-                    $path->is_required,
                     ValidationConstants::CARDINALITY_ONE,
                     $fieldName
                 );

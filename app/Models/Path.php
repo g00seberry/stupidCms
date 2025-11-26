@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $full_path Материализованный путь (e.g., 'author.contacts.phone')
  * @property string $data_type string|text|int|float|bool|date|datetime|json|ref
  * @property string $cardinality one|many
- * @property bool $is_required
  * @property bool $is_indexed
  * @property bool $is_readonly Нельзя редактировать (копия)
  * @property int $sort_order
@@ -48,7 +47,6 @@ class Path extends Model
         'name',
         'data_type',
         'cardinality',
-        'is_required',
         'is_indexed',
         'sort_order',
         'validation_rules',
@@ -70,7 +68,6 @@ class Path extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_required' => 'boolean',
         'is_indexed' => 'boolean',
         'is_readonly' => 'boolean',
         'validation_rules' => 'array',
