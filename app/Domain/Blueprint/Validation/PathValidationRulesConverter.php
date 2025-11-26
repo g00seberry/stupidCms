@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Blueprint\Validation;
 
-use App\Domain\Blueprint\Validation\Rules\MaxRule;
-use App\Domain\Blueprint\Validation\Rules\MinRule;
-use App\Domain\Blueprint\Validation\Rules\NullableRule;
-use App\Domain\Blueprint\Validation\Rules\PatternRule;
-use App\Domain\Blueprint\Validation\Rules\RequiredRule;
 use App\Domain\Blueprint\Validation\Rules\Rule;
 use App\Domain\Blueprint\Validation\Rules\RuleFactory;
+use App\Domain\Blueprint\Validation\ValidationConstants;
 
 /**
  * Конвертер правил валидации из Path в доменные Rule объекты.
@@ -60,7 +56,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
         // Добавляем required или nullable
         // Для cardinality: 'many' required/nullable применяется к самому массиву,
         // а не к элементам, поэтому здесь не добавляем
-        if ($cardinality !== 'many') {
+        if ($cardinality !== ValidationConstants::CARDINALITY_MANY) {
             if ($isRequired) {
                 $rules[] = $this->ruleFactory->createRequiredRule();
             } else {
@@ -96,7 +92,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
         }
 
         // Добавляем правила для массивов (только для cardinality: 'many')
-        if ($cardinality === 'many') {
+        if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
             if ($arrayMinItems !== null && is_numeric($arrayMinItems)) {
                 $rules[] = $this->ruleFactory->createArrayMinItemsRule((int) $arrayMinItems);
             }
@@ -177,7 +173,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     private function handleArrayUniqueRule(array &$rules, string $cardinality): void
     {
         // Правило применяется только к массивам
-        if ($cardinality === 'many') {
+        if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
             $rules[] = $this->ruleFactory->createArrayUniqueRule();
         }
     }

@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Domain\Blueprint\Validation;
 
 use App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface;
+use App\Domain\Blueprint\Validation\DataTypeMapper;
 use App\Domain\Blueprint\Validation\EntryValidationServiceInterface;
+use App\Domain\Blueprint\Validation\FieldPathBuilder;
+use App\Domain\Blueprint\Validation\RuleArrayManipulator;
+use App\Domain\Blueprint\Validation\ValidationConstants;
 use App\Models\Blueprint;
 use Illuminate\Support\Facades\Cache;
 
@@ -31,10 +35,16 @@ final class BlueprintContentValidator implements BlueprintContentValidatorInterf
     /**
      * @param \App\Domain\Blueprint\Validation\EntryValidationServiceInterface $validationService Сервис для построения правил валидации
      * @param \App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface $adapter Адаптер для преобразования в Laravel правила
+     * @param \App\Domain\Blueprint\Validation\DataTypeMapper $dataTypeMapper Маппер типов данных
+     * @param \App\Domain\Blueprint\Validation\FieldPathBuilder $fieldPathBuilder Построитель путей полей
+     * @param \App\Domain\Blueprint\Validation\RuleArrayManipulator $ruleArrayManipulator Манипулятор массивов правил
      */
     public function __construct(
         private readonly EntryValidationServiceInterface $validationService,
-        private readonly LaravelValidationAdapterInterface $adapter
+        private readonly LaravelValidationAdapterInterface $adapter,
+        private readonly DataTypeMapper $dataTypeMapper,
+        private readonly FieldPathBuilder $fieldPathBuilder,
+        private readonly RuleArrayManipulator $ruleArrayManipulator
     ) {}
 
     /**
@@ -65,16 +75,16 @@ final class BlueprintContentValidator implements BlueprintContentValidatorInterf
             // Добавляем правило 'array' для полей с cardinality: 'many'
             // И базовый тип для элементов массива, если его нет
             foreach ($cardinalities as $fieldPath => $cardinality) {
-                if ($cardinality === 'many') {
+                if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
                     // Добавляем 'array' для самого массива
                     if (isset($rules[$fieldPath])) {
-                        $this->insertArrayRule($rules[$fieldPath]);
+                        $this->ruleArrayManipulator->ensureArrayRule($rules[$fieldPath]);
                     }
 
                     // Добавляем базовый тип для элементов массива, если правил нет
-                    $elementPath = $fieldPath.'.*';
+                    $elementPath = $fieldPath.ValidationConstants::ARRAY_ELEMENT_WILDCARD;
                     if (! isset($rules[$elementPath]) && isset($dataTypes[$elementPath])) {
-                        $baseType = $this->getBaseTypeForDataType($dataTypes[$elementPath]);
+                        $baseType = $this->dataTypeMapper->toLaravelRule($dataTypes[$elementPath]);
                         if ($baseType !== null) {
                             $rules[$elementPath] = [$baseType];
                         }
@@ -101,14 +111,20 @@ final class BlueprintContentValidator implements BlueprintContentValidatorInterf
             ->select(['full_path', 'data_type', 'cardinality'])
             ->get();
 
+        // Создаём маппинг full_path → cardinality для определения родительских массивов
+        $pathCardinalities = [];
         foreach ($paths as $path) {
-            $fieldPath = 'content_json.'.$path->full_path;
+            $pathCardinalities[$path->full_path] = $path->cardinality;
+        }
+
+        foreach ($paths as $path) {
+            $fieldPath = $this->fieldPathBuilder->buildFieldPath($path->full_path, $pathCardinalities);
             $dataTypes[$fieldPath] = $path->data_type;
             $cardinalities[$fieldPath] = $path->cardinality;
 
             // Для полей с cardinality: 'many' добавляем dataType для элементов массива
-            if ($path->cardinality === 'many') {
-                $elementPath = $fieldPath.'.*';
+            if ($path->cardinality === ValidationConstants::CARDINALITY_MANY) {
+                $elementPath = $fieldPath.ValidationConstants::ARRAY_ELEMENT_WILDCARD;
                 $dataTypes[$elementPath] = $path->data_type;
             }
         }
@@ -116,29 +132,6 @@ final class BlueprintContentValidator implements BlueprintContentValidatorInterf
         return [$dataTypes, $cardinalities];
     }
 
-    /**
-     * Вставить правило 'array' в массив правил после required/nullable.
-     *
-     * @param array<int, string> $rules Массив правил (изменяется по ссылке)
-     * @return void
-     */
-    private function insertArrayRule(array &$rules): void
-    {
-        // Ищем позицию после required/nullable
-        $insertPosition = 0;
-        foreach ($rules as $index => $rule) {
-            if (in_array($rule, ['required', 'nullable'], true)) {
-                $insertPosition = $index + 1;
-            } else {
-                break;
-            }
-        }
-
-        // Вставляем 'array' только если его ещё нет
-        if (! in_array('array', $rules, true)) {
-            array_splice($rules, $insertPosition, 0, ['array']);
-        }
-    }
 
     /**
      * Инвалидировать кэш правил валидации для blueprint.
@@ -154,25 +147,5 @@ final class BlueprintContentValidator implements BlueprintContentValidatorInterf
         Cache::forget($cacheKey);
     }
 
-    /**
-     * Получить базовый тип валидации Laravel по data_type Path.
-     *
-     * @param string $dataType Тип данных Path
-     * @return string|null Правило валидации Laravel или null
-     */
-    private function getBaseTypeForDataType(string $dataType): ?string
-    {
-        return match ($dataType) {
-            'string', 'text' => 'string',
-            'int' => 'integer',
-            'float' => 'numeric',
-            'bool' => 'boolean',
-            'date' => 'date',
-            'datetime' => 'date',
-            'json' => 'array',
-            'ref' => 'integer',
-            default => null,
-        };
-    }
 }
 

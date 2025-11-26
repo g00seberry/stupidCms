@@ -14,6 +14,7 @@ use App\Services\Blueprint\PathConflictValidator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
 /**
@@ -30,10 +31,8 @@ use Tests\TestCase;
  * - Количество SQL-запросов
  * - Использование памяти
  * - Производительность на разных масштабах данных
- *
- * @group performance
- * @group load
  */
+#[Group('performance'), Group('load')]
 class BlueprintLoadTest extends TestCase
 {
     use RefreshDatabase;

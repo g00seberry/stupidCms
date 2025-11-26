@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Domain\Blueprint\Validation;
 
 use App\Models\Blueprint;
-use App\Models\Path;
+use App\Domain\Blueprint\Validation\FieldPathBuilder;
 use App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface;
 use App\Domain\Blueprint\Validation\Rules\RuleFactory;
 use App\Domain\Blueprint\Validation\Rules\RuleSet;
+use App\Domain\Blueprint\Validation\ValidationConstants;
 
 /**
  * Доменный сервис валидации контента Entry на основе Blueprint.
@@ -23,10 +24,12 @@ final class EntryValidationService implements EntryValidationServiceInterface
     /**
      * @param \App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface $converter Конвертер правил валидации
      * @param \App\Domain\Blueprint\Validation\Rules\RuleFactory $ruleFactory Фабрика для создания правил
+     * @param \App\Domain\Blueprint\Validation\FieldPathBuilder $fieldPathBuilder Построитель путей полей
      */
     public function __construct(
         private readonly PathValidationRulesConverterInterface $converter,
-        private readonly RuleFactory $ruleFactory
+        private readonly RuleFactory $ruleFactory,
+        private readonly FieldPathBuilder $fieldPathBuilder
     ) {}
 
     /**
@@ -67,10 +70,10 @@ final class EntryValidationService implements EntryValidationServiceInterface
 
         // Обрабатываем каждый Path
         foreach ($paths as $path) {
-            $fieldPath = $this->buildFieldPath($path->full_path, $pathCardinalities);
+            $fieldPath = $this->fieldPathBuilder->buildFieldPath($path->full_path, $pathCardinalities);
 
             // Для cardinality: 'many' создаём правила для массива и для элементов
-            if ($path->cardinality === 'many') {
+            if ($path->cardinality === ValidationConstants::CARDINALITY_MANY) {
                 // Правила для самого массива (required/nullable)
                 // Правило "array" будет добавлено в адаптере/FormRequest, так как это Laravel-специфично
                 if ($path->is_required) {
@@ -107,7 +110,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
                     $elementValidationRules,
                     $path->data_type,
                     false, // Элементы массива не могут быть required
-                    'one', // Элементы обрабатываются как одиночные значения
+                    ValidationConstants::CARDINALITY_ONE, // Элементы обрабатываются как одиночные значения
                     $fieldName
                 );
 
@@ -117,21 +120,21 @@ final class EntryValidationService implements EntryValidationServiceInterface
                 $hasElementRules = false;
                 foreach ($elementRules as $rule) {
                     // Пропускаем RequiredRule и NullableRule для элементов массива
-                    if (! in_array($rule->getType(), ['required', 'nullable'], true)) {
-                        $ruleSet->addRule($fieldPath.'.*', $rule);
+                    if (! in_array($rule->getType(), ValidationConstants::getRequiredNullableRules(), true)) {
+                        $ruleSet->addRule($fieldPath.ValidationConstants::ARRAY_ELEMENT_WILDCARD, $rule);
                         $hasElementRules = true;
                     }
                 }
 
                 // Если нет правил для элементов, но data_type: 'json', добавляем placeholder правило,
                 // чтобы LaravelValidationAdapter мог добавить базовый тип 'array' для элементов
-                if (! $hasElementRules && $path->data_type === 'json') {
-                    $ruleSet->addRule($fieldPath.'.*', $this->ruleFactory->createNullableRule());
+                if (! $hasElementRules && $path->data_type === ValidationConstants::DATA_TYPE_JSON) {
+                    $ruleSet->addRule($fieldPath.ValidationConstants::ARRAY_ELEMENT_WILDCARD, $this->ruleFactory->createNullableRule());
                 }
 
                 // Добавляем правило array_unique для элементов массива
                 if ($arrayUniqueRule !== null) {
-                    $ruleSet->addRule($fieldPath.'.*', $arrayUniqueRule);
+                    $ruleSet->addRule($fieldPath.ValidationConstants::ARRAY_ELEMENT_WILDCARD, $arrayUniqueRule);
                 }
             } else {
                 // Для cardinality: 'one' создаём правила для самого поля
@@ -142,7 +145,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
                     $path->validation_rules,
                     $path->data_type,
                     $path->is_required,
-                    'one',
+                    ValidationConstants::CARDINALITY_ONE,
                     $fieldName
                 );
 
@@ -154,46 +157,6 @@ final class EntryValidationService implements EntryValidationServiceInterface
         }
 
         return $ruleSet;
-    }
-
-    /**
-     * Построить путь поля в точечной нотации для валидации.
-     *
-     * Преобразует full_path из Path в путь для content_json.
-     * Если родительский путь имеет cardinality: 'many', заменяет соответствующий сегмент на '*'.
-     * Например:
-     * - 'title' → 'content_json.title'
-     * - 'author.name' (где author имеет cardinality: 'one') → 'content_json.author.name'
-     * - 'author.name' (где author имеет cardinality: 'many') → 'content_json.author.*.name'
-     *
-     * @param string $fullPath Полный путь из Path (например, 'author.contacts.phone')
-     * @param array<string, string> $pathCardinalities Маппинг full_path → cardinality для всех путей
-     * @return string Путь в точечной нотации для валидации (например, 'content_json.author.contacts.phone' или 'content_json.author.*.contacts.phone')
-     */
-    private function buildFieldPath(string $fullPath, array $pathCardinalities): string
-    {
-        $segments = explode('.', $fullPath);
-        $resultSegments = [];
-
-        // Обрабатываем каждый сегмент пути
-        for ($i = 0; $i < count($segments); $i++) {
-            // Строим путь до текущего сегмента для проверки cardinality
-            $parentPath = implode('.', array_slice($segments, 0, $i));
-            
-            // Если это не первый сегмент, проверяем cardinality родительского пути
-            if ($i > 0 && isset($pathCardinalities[$parentPath]) && $pathCardinalities[$parentPath] === 'many') {
-                // Родительский путь - массив, заменяем текущий сегмент на '*'
-                // НО сохраняем имя сегмента для следующей итерации
-                $resultSegments[] = '*';
-                // Добавляем имя сегмента после '*'
-                $resultSegments[] = $segments[$i];
-            } else {
-                // Обычный сегмент пути
-                $resultSegments[] = $segments[$i];
-            }
-        }
-
-        return 'content_json.'.implode('.', $resultSegments);
     }
 }
 
