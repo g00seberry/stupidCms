@@ -23,6 +23,28 @@
 
 ---
 
+## BlueprintContentValidator
+**ID:** `domain_service:Blueprint/Validation/BlueprintContentValidator`
+**Path:** `app/Domain/Blueprint/Validation/BlueprintContentValidator.php`
+
+Валидатор контента Entry на основе Blueprint.
+
+### Details
+Строит правила валидации Laravel для поля content_json на основе
+структуры Path в Blueprint. Преобразует full_path в точечную нотацию
+и применяет validation_rules из каждого Path.
+Использует кэширование для оптимизации производительности.
+
+### Meta
+- **Methods:** `buildRules`, `invalidateCache`
+- **Interface:** `App\Domain\Blueprint\Validation\BlueprintContentValidatorInterface`
+
+### Tags
+`blueprint`, `validation`
+
+
+---
+
 ## CorruptionValidator
 **ID:** `domain_service:Media/Validation/CorruptionValidator`
 **Path:** `app/Domain/Media/Validation/CorruptionValidator.php`
@@ -733,6 +755,25 @@ Null-реализация SearchClientInterface.
 
 ### Tags
 `routing`
+
+
+---
+
+## PathValidationRulesConverter
+**ID:** `domain_service:Blueprint/Validation/PathValidationRulesConverter`
+**Path:** `app/Domain/Blueprint/Validation/PathValidationRulesConverter.php`
+
+Конвертер правил валидации из Path в Laravel правила валидации.
+
+### Details
+Преобразует validation_rules из модели Path в массив правил валидации Laravel,
+учитывая data_type, is_required и cardinality.
+
+### Meta
+- **Methods:** `convert`
+
+### Tags
+`blueprint`, `validation`
 
 
 ---

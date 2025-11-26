@@ -1,0 +1,334 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Blueprint\Validation;
+
+use App\Domain\Blueprint\Validation\Rules\MaxRule;
+use App\Domain\Blueprint\Validation\Rules\MinRule;
+use App\Domain\Blueprint\Validation\Rules\NullableRule;
+use App\Domain\Blueprint\Validation\Rules\PatternRule;
+use App\Domain\Blueprint\Validation\Rules\RequiredRule;
+use App\Domain\Blueprint\Validation\Rules\Rule;
+use App\Domain\Blueprint\Validation\Rules\RuleFactory;
+
+/**
+ * Конвертер правил валидации из Path в доменные Rule объекты.
+ *
+ * Преобразует validation_rules из модели Path в массив доменных Rule объектов,
+ * учитывая data_type, is_required и cardinality.
+ *
+ * @package App\Domain\Blueprint\Validation
+ */
+final class PathValidationRulesConverter implements PathValidationRulesConverterInterface
+{
+    /**
+     * @param \App\Domain\Blueprint\Validation\Rules\RuleFactory $ruleFactory Фабрика для создания правил
+     */
+    public function __construct(
+        private readonly RuleFactory $ruleFactory
+    ) {}
+
+    /**
+     * Преобразовать validation_rules из Path в доменные Rule объекты.
+     *
+     * Преобразует правила валидации с учётом:
+     * - data_type: определяет базовый тип валидации (string, integer, numeric, boolean, date, datetime)
+     * - is_required: добавляет RequiredRule или NullableRule (только для cardinality: 'one')
+     * - cardinality: для 'many' возвращает правила для элементов массива (без required/nullable,
+     *   так как они применяются к самому массиву в BlueprintContentValidator)
+     * - validation_rules: преобразует min/max и pattern в соответствующие Rule объекты
+     *
+     * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
+     * @param string $dataType Тип данных Path (string, text, int, float, bool, date, datetime, json, ref)
+     * @param bool $isRequired Обязательное ли поле (для cardinality: 'one')
+     * @param string $cardinality Кардинальность: 'one' или 'many'
+     * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
+     *         Для cardinality: 'one' - правила для самого поля
+     *         Для cardinality: 'many' - правила для элементов массива (без RequiredRule/NullableRule)
+     */
+    public function convert(
+        ?array $validationRules,
+        string $dataType,
+        bool $isRequired,
+        string $cardinality
+    ): array {
+        $rules = [];
+
+        // Добавляем required или nullable
+        // Для cardinality: 'many' required/nullable применяется к самому массиву,
+        // а не к элементам, поэтому здесь не добавляем
+        if ($cardinality !== 'many') {
+            if ($isRequired) {
+                $rules[] = $this->ruleFactory->createRequiredRule();
+            } else {
+                $rules[] = $this->ruleFactory->createNullableRule();
+            }
+        }
+
+        // Если нет validation_rules, возвращаем только базовые правила (required/nullable)
+        if ($validationRules === null || $validationRules === []) {
+            return $rules;
+        }
+
+        // Валидируем и преобразуем validation_rules в Rule объекты
+        $minValue = null;
+        $maxValue = null;
+        $arrayMinItems = null;
+        $arrayMaxItems = null;
+
+        foreach ($validationRules as $key => $value) {
+            match ($key) {
+                'min' => $minValue = $value,
+                'max' => $maxValue = $value,
+                'pattern' => $rules[] = $this->ruleFactory->createPatternRule($value),
+                'array_min_items' => $arrayMinItems = $value,
+                'array_max_items' => $arrayMaxItems = $value,
+                'array_unique' => $this->handleArrayUniqueRule($rules, $cardinality),
+                'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
+                'unique' => $this->handleUniqueRule($rules, $value),
+                'exists' => $this->handleExistsRule($rules, $value),
+                default => null, // Игнорируем неизвестные ключи
+            };
+        }
+
+        // Добавляем правила для массивов (только для cardinality: 'many')
+        if ($cardinality === 'many') {
+            if ($arrayMinItems !== null && is_numeric($arrayMinItems)) {
+                $rules[] = $this->ruleFactory->createArrayMinItemsRule((int) $arrayMinItems);
+            }
+            if ($arrayMaxItems !== null && is_numeric($arrayMaxItems)) {
+                $rules[] = $this->ruleFactory->createArrayMaxItemsRule((int) $arrayMaxItems);
+            }
+        }
+
+        // Валидируем min/max: min должен быть меньше или равен max
+        if ($minValue !== null && $maxValue !== null) {
+            $minNumeric = is_numeric($minValue) ? ($dataType === 'float' ? (float) $minValue : (int) $minValue) : null;
+            $maxNumeric = is_numeric($maxValue) ? ($dataType === 'float' ? (float) $maxValue : (int) $maxValue) : null;
+
+            if ($minNumeric !== null && $maxNumeric !== null && $minNumeric > $maxNumeric) {
+                // Если min > max, игнорируем оба правила (валидация не пройдёт)
+                // В реальном сценарии это должно логироваться, но для валидации просто пропускаем
+                return $rules;
+            }
+        }
+
+        // Добавляем min и max правила после валидации
+        if ($minValue !== null) {
+            $rules[] = $this->ruleFactory->createMinRule($minValue, $dataType);
+        }
+        if ($maxValue !== null) {
+            $rules[] = $this->ruleFactory->createMaxRule($maxValue, $dataType);
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Обработать условное правило валидации.
+     *
+     * Поддерживает форматы:
+     * - 'required_if' => 'field_name' (поле обязательно, если field_name существует)
+     * - 'required_if' => ['field_name' => 'value'] (поле обязательно, если field_name == value)
+     * - 'required_if' => ['field_name' => 'value', 'operator' => '!='] (с оператором)
+     *
+     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
+     * @param string $type Тип условного правила
+     * @param mixed $value Значение условия (строка или массив)
+     * @return void
+     */
+    private function handleConditionalRule(array &$rules, string $type, mixed $value): void
+    {
+        // Если значение - строка, это просто имя поля (required_if => 'is_published')
+        if (is_string($value)) {
+            $rules[] = $this->ruleFactory->createConditionalRule($type, $value, true);
+            return;
+        }
+
+        // Если значение - массив, извлекаем field, value и operator
+        if (is_array($value)) {
+            $field = $value['field'] ?? null;
+            $conditionValue = $value['value'] ?? true;
+            $operator = $value['operator'] ?? null;
+
+            if ($field === null) {
+                // Старый формат: ['is_published' => true]
+                $field = array_key_first($value);
+                $conditionValue = $value[$field] ?? true;
+            }
+
+            if ($field !== null) {
+                $rules[] = $this->ruleFactory->createConditionalRule($type, $field, $conditionValue, $operator);
+            }
+        }
+    }
+
+    /**
+     * Обработать правило уникальности элементов массива.
+     *
+     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
+     * @param string $cardinality Кардинальность поля
+     * @return void
+     */
+    private function handleArrayUniqueRule(array &$rules, string $cardinality): void
+    {
+        // Правило применяется только к массивам
+        if ($cardinality === 'many') {
+            $rules[] = $this->ruleFactory->createArrayUniqueRule();
+        }
+    }
+
+    /**
+     * Обработать правило уникальности значения.
+     *
+     * Поддерживает форматы:
+     * - 'unique' => 'table_name' (проверка в таблице по колонке 'id')
+     * - 'unique' => ['table' => 'table_name', 'column' => 'column_name']
+     * - 'unique' => ['table' => 'table_name', 'column' => 'column_name', 'except' => ['column' => 'id', 'value' => 1]]
+     * - 'unique' => ['table' => 'table_name', 'column' => 'column_name', 'where' => ['column' => 'status', 'value' => 'active']]
+     *
+     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
+     * @param mixed $value Значение правила (строка или массив)
+     * @return void
+     */
+    private function handleUniqueRule(array &$rules, mixed $value): void
+    {
+        if (is_string($value)) {
+            // Простой формат: 'unique' => 'table_name'
+            $rules[] = $this->ruleFactory->createUniqueRule($value);
+            return;
+        }
+
+        if (is_array($value)) {
+            $table = $value['table'] ?? null;
+            $column = $value['column'] ?? 'id';
+            $exceptColumn = $value['except']['column'] ?? null;
+            $exceptValue = $value['except']['value'] ?? null;
+            $whereColumn = $value['where']['column'] ?? null;
+            $whereValue = $value['where']['value'] ?? null;
+
+            if ($table !== null) {
+                $rules[] = $this->ruleFactory->createUniqueRule($table, $column, $exceptColumn, $exceptValue, $whereColumn, $whereValue);
+            }
+        }
+    }
+
+    /**
+     * Обработать правило существования значения.
+     *
+     * Поддерживает форматы:
+     * - 'exists' => 'table_name' (проверка в таблице по колонке 'id')
+     * - 'exists' => ['table' => 'table_name', 'column' => 'column_name']
+     * - 'exists' => ['table' => 'table_name', 'column' => 'column_name', 'where' => ['column' => 'status', 'value' => 'active']]
+     *
+     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
+     * @param mixed $value Значение правила (строка или массив)
+     * @return void
+     */
+    private function handleExistsRule(array &$rules, mixed $value): void
+    {
+        if (is_string($value)) {
+            // Простой формат: 'exists' => 'table_name'
+            $rules[] = $this->ruleFactory->createExistsRule($value);
+            return;
+        }
+
+        if (is_array($value)) {
+            $table = $value['table'] ?? null;
+            $column = $value['column'] ?? 'id';
+            $whereColumn = $value['where']['column'] ?? null;
+            $whereValue = $value['where']['value'] ?? null;
+
+            if ($table !== null) {
+                $rules[] = $this->ruleFactory->createExistsRule($table, $column, $whereColumn, $whereValue);
+            }
+        }
+    }
+
+    /**
+     * Статический метод для обратной совместимости.
+     *
+     * @deprecated Используйте экземпляр класса через PathValidationRulesConverterInterface
+     *             Этот метод будет удалён в будущих версиях.
+     * @param array<string, mixed>|null $validationRules
+     * @param string $dataType
+     * @param bool $isRequired
+     * @param string $cardinality
+     * @return array<int, string>
+     */
+    public static function convertLegacy(
+        ?array $validationRules,
+        string $dataType,
+        bool $isRequired,
+        string $cardinality
+    ): array {
+        // Создаём временный экземпляр для обратной совместимости
+        $factory = app(RuleFactory::class);
+        $converter = new self($factory);
+        $rules = $converter->convert($validationRules, $dataType, $isRequired, $cardinality);
+
+        // Преобразуем Rule[] в string[] для обратной совместимости
+        // Это временное решение до полного рефакторинга
+        $stringRules = [];
+        foreach ($rules as $rule) {
+            $type = $rule->getType();
+            $params = $rule->getParams();
+
+            match ($type) {
+                'required' => $stringRules[] = 'required',
+                'nullable' => $stringRules[] = 'nullable',
+                'min' => $stringRules[] = 'min:'.($params['value'] ?? 0),
+                'max' => $stringRules[] = 'max:'.($params['value'] ?? PHP_INT_MAX),
+                'pattern' => $stringRules[] = self::buildPatternRuleString($params['pattern'] ?? '.*'),
+                default => null,
+            };
+        }
+
+        // Добавляем базовый тип (это временно, будет убрано в задаче 1.3)
+        $baseType = self::getBaseTypeStatic($dataType);
+        if ($baseType !== null) {
+            array_unshift($stringRules, $baseType);
+        }
+
+        return $stringRules;
+    }
+
+    /**
+     * @param string $dataType
+     * @return string|null
+     */
+    private static function getBaseTypeStatic(string $dataType): ?string
+    {
+        return match ($dataType) {
+            'string', 'text' => 'string',
+            'int' => 'integer',
+            'float' => 'numeric',
+            'bool' => 'boolean',
+            'date' => 'date',
+            'datetime' => 'date',
+            'json' => 'array',
+            'ref' => 'integer',
+            default => null,
+        };
+    }
+
+    /**
+     * @param string $pattern
+     * @return string
+     */
+    private static function buildPatternRuleString(string $pattern): string
+    {
+        if ($pattern === '') {
+            return 'regex:/.*/';
+        }
+
+        if (preg_match('/^\/.+\/[gimsxADSUXJu]*$/', $pattern)) {
+            return "regex:{$pattern}";
+        }
+
+        $escapedPattern = str_replace('/', '\/', $pattern);
+
+        return "regex:/{$escapedPattern}/";
+    }
+}

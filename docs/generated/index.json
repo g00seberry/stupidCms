@@ -872,6 +872,47 @@
             ]
         },
         {
+            "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
+            "type": "domain_service",
+            "name": "BlueprintContentValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\BlueprintContentValidator.php",
+            "summary": "Валидатор контента Entry на основе Blueprint.",
+            "details": "Строит правила валидации Laravel для поля content_json на основе\nструктуры Path в Blueprint. Преобразует full_path в точечную нотацию\nи применяет validation_rules из каждого Path.\nИспользует кэширование для оптимизации производительности.",
+            "meta": {
+                "methods": [
+                    "buildRules",
+                    "invalidateCache"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Blueprint\\Validation\\BlueprintContentValidatorInterface"
+            },
+            "related": [],
+            "tags": [
+                "blueprint",
+                "validation"
+            ]
+        },
+        {
+            "id": "domain_service:Blueprint/Validation/PathValidationRulesConverter",
+            "type": "domain_service",
+            "name": "PathValidationRulesConverter",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\PathValidationRulesConverter.php",
+            "summary": "Конвертер правил валидации из Path в Laravel правила валидации.",
+            "details": "Преобразует validation_rules из модели Path в массив правил валидации Laravel,\nучитывая data_type, is_required и cardinality.",
+            "meta": {
+                "methods": [
+                    "convert"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "blueprint",
+                "validation"
+            ]
+        },
+        {
             "id": "domain_service:Entries/PublishingService",
             "type": "domain_service",
             "name": "PublishingService",
@@ -6832,6 +6873,47 @@
                 ]
             },
             {
+                "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
+                "type": "domain_service",
+                "name": "BlueprintContentValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\BlueprintContentValidator.php",
+                "summary": "Валидатор контента Entry на основе Blueprint.",
+                "details": "Строит правила валидации Laravel для поля content_json на основе\nструктуры Path в Blueprint. Преобразует full_path в точечную нотацию\nи применяет validation_rules из каждого Path.\nИспользует кэширование для оптимизации производительности.",
+                "meta": {
+                    "methods": [
+                        "buildRules",
+                        "invalidateCache"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Blueprint\\Validation\\BlueprintContentValidatorInterface"
+                },
+                "related": [],
+                "tags": [
+                    "blueprint",
+                    "validation"
+                ]
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/PathValidationRulesConverter",
+                "type": "domain_service",
+                "name": "PathValidationRulesConverter",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\PathValidationRulesConverter.php",
+                "summary": "Конвертер правил валидации из Path в Laravel правила валидации.",
+                "details": "Преобразует validation_rules из модели Path в массив правил валидации Laravel,\nучитывая data_type, is_required и cardinality.",
+                "meta": {
+                    "methods": [
+                        "convert"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "blueprint",
+                    "validation"
+                ]
+            },
+            {
                 "id": "domain_service:Entries/PublishingService",
                 "type": "domain_service",
                 "name": "PublishingService",
@@ -11940,6 +12022,18 @@
                 "summary": "Шаблон структуры данных для Entry."
             },
             {
+                "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
+                "type": "domain_service",
+                "name": "BlueprintContentValidator",
+                "summary": "Валидатор контента Entry на основе Blueprint."
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/PathValidationRulesConverter",
+                "type": "domain_service",
+                "name": "PathValidationRulesConverter",
+                "summary": "Конвертер правил валидации из Path в Laravel правила валидации."
+            },
+            {
                 "id": "config_area:blueprint",
                 "type": "config_area",
                 "name": "Blueprint",
@@ -12488,6 +12582,56 @@
                 "summary": "GET /api/v1/admin/auth/current (api)"
             }
         ],
+        "validation": [
+            {
+                "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
+                "type": "domain_service",
+                "name": "BlueprintContentValidator",
+                "summary": "Валидатор контента Entry на основе Blueprint."
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/PathValidationRulesConverter",
+                "type": "domain_service",
+                "name": "PathValidationRulesConverter",
+                "summary": "Конвертер правил валидации из Path в Laravel правила валидации."
+            },
+            {
+                "id": "domain_service:Media/Validation/CorruptionValidator",
+                "type": "domain_service",
+                "name": "CorruptionValidator",
+                "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaConfigValidator",
+                "type": "domain_service",
+                "name": "MediaConfigValidator",
+                "summary": "Валидатор конфигурации медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MediaValidationPipeline",
+                "type": "domain_service",
+                "name": "MediaValidationPipeline",
+                "summary": "Pipeline валидации медиа-файлов."
+            },
+            {
+                "id": "domain_service:Media/Validation/MimeSignatureValidator",
+                "type": "domain_service",
+                "name": "MimeSignatureValidator",
+                "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes)."
+            },
+            {
+                "id": "domain_service:Media/Validation/SizeLimitValidator",
+                "type": "domain_service",
+                "name": "SizeLimitValidator",
+                "summary": "Валидатор ограничений размера файла и размеров изображений/видео."
+            },
+            {
+                "id": "domain_service:Pages/Validation/NotReservedRoute",
+                "type": "domain_service",
+                "name": "NotReservedRoute",
+                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
+            }
+        ],
         "action": [
             {
                 "id": "domain_service:Media/Actions/ListMediaAction",
@@ -12686,44 +12830,6 @@
                 "type": "domain_service",
                 "name": "PluginsSynchronizer",
                 "summary": "Синхронизатор плагинов."
-            }
-        ],
-        "validation": [
-            {
-                "id": "domain_service:Media/Validation/CorruptionValidator",
-                "type": "domain_service",
-                "name": "CorruptionValidator",
-                "summary": "Валидатор проверки целостности (corruption) медиа-файлов."
-            },
-            {
-                "id": "domain_service:Media/Validation/MediaConfigValidator",
-                "type": "domain_service",
-                "name": "MediaConfigValidator",
-                "summary": "Валидатор конфигурации медиа-файлов."
-            },
-            {
-                "id": "domain_service:Media/Validation/MediaValidationPipeline",
-                "type": "domain_service",
-                "name": "MediaValidationPipeline",
-                "summary": "Pipeline валидации медиа-файлов."
-            },
-            {
-                "id": "domain_service:Media/Validation/MimeSignatureValidator",
-                "type": "domain_service",
-                "name": "MimeSignatureValidator",
-                "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes)."
-            },
-            {
-                "id": "domain_service:Media/Validation/SizeLimitValidator",
-                "type": "domain_service",
-                "name": "SizeLimitValidator",
-                "summary": "Валидатор ограничений размера файла и размеров изображений/видео."
-            },
-            {
-                "id": "domain_service:Pages/Validation/NotReservedRoute",
-                "type": "domain_service",
-                "name": "NotReservedRoute",
-                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
             }
         ],
         "page": [
@@ -15377,5 +15483,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-24T15:09:48+00:00"
+    "generated_at": "2025-11-25T19:00:11+00:00"
 }
