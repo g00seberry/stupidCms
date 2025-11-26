@@ -373,6 +373,7 @@
 ### Details
 Преобразует ExistsRule в строку Laravel правила валидации
 (например, 'exists:table,column').
+Для WHERE условий использует Rule объекты Laravel.
 
 ### Meta
 - **Methods:** `supports`, `handle`
@@ -1870,6 +1871,7 @@ Value Object для фильтра поиска по терму.
 ### Details
 Преобразует UniqueRule в строку Laravel правила валидации
 (например, 'unique:table,column' или 'unique:table,column,except,id').
+Для WHERE условий использует Rule объекты Laravel.
 
 ### Meta
 - **Methods:** `supports`, `handle`

@@ -7,6 +7,7 @@ namespace App\Domain\Blueprint\Validation\Adapters;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry;
 use App\Domain\Blueprint\Validation\Rules\Rule;
 use App\Domain\Blueprint\Validation\Rules\RuleSet;
+use App\Rules\JsonObject;
 
 /**
  * Адаптер для преобразования доменных RuleSet в Laravel правила валидации.
@@ -42,6 +43,33 @@ final class LaravelValidationAdapter implements LaravelValidationAdapterInterfac
     {
         $laravelRules = [];
 
+        // Сначала обрабатываем все поля, заканчивающиеся на .* с data_type: 'json' или 'array',
+        // чтобы добавить правило 'array' ДО обработки вложенных полей
+        $arrayElementFields = [];
+        foreach ($dataTypes as $field => $dataType) {
+            if (str_ends_with($field, '.*') && ($dataType === 'json' || $dataType === 'array')) {
+                $arrayElementFields[] = $field;
+            }
+        }
+
+        // Добавляем правило 'array' для элементов массивов с data_type: 'json' или 'array'
+        foreach ($arrayElementFields as $field) {
+            if (!isset($laravelRules[$field])) {
+                $laravelRules[$field] = ['array'];
+            } elseif (!in_array('array', $laravelRules[$field], true)) {
+                // Вставляем 'array' в начало (после required/nullable, если есть)
+                $insertPosition = 0;
+                foreach ($laravelRules[$field] as $index => $rule) {
+                    if (in_array($rule, ['required', 'nullable'], true)) {
+                        $insertPosition = $index + 1;
+                    } else {
+                        break;
+                    }
+                }
+                array_splice($laravelRules[$field], $insertPosition, 0, ['array']);
+            }
+        }
+
         foreach ($ruleSet->getAllRules() as $field => $rules) {
             $fieldRules = [];
 
@@ -64,15 +92,133 @@ final class LaravelValidationAdapter implements LaravelValidationAdapterInterfac
 
             // Добавляем базовый тип данных, если указан
             if (isset($dataTypes[$field])) {
-                $baseType = $this->getBaseTypeForDataType($dataTypes[$field]);
-                if ($baseType !== null) {
-                    // Вставляем базовый тип после required/nullable, но перед остальными правилами
-                    $this->insertBaseType($fieldRules, $baseType);
+                // Специальная обработка для типа 'array' (для массивов внутри массивов объектов)
+                if ($dataTypes[$field] === 'array') {
+                    if (!in_array('array', $fieldRules, true)) {
+                        $this->insertBaseType($fieldRules, 'array');
+                    }
+                } else {
+                    $baseType = $this->getBaseTypeForDataType($dataTypes[$field]);
+                    if ($baseType !== null) {
+                    // Для элементов массивов (заканчивающихся на .*) с data_type: 'json' или 'array'
+                    // правило 'array' уже добавлено в начале метода
+                    if (str_ends_with($field, '.*') && ($dataTypes[$field] === 'json' || $dataTypes[$field] === 'array')) {
+                        // Убеждаемся, что правило 'array' присутствует (должно быть уже добавлено)
+                        if (!in_array('array', $fieldRules, true)) {
+                            $this->insertBaseType($fieldRules, 'array');
+                        }
+                    } elseif ($dataTypes[$field] === 'json' && !str_ends_with($field, '.*')) {
+                            // Для json типа с cardinality: 'one' добавляем правило 'array' и проверку на объект
+                            if (!in_array('array', $fieldRules, true)) {
+                                $this->insertBaseType($fieldRules, 'array');
+                            }
+                            // Добавляем проверку, что это объект, а не массив
+                            // Используем кастомное правило JsonObject
+                            if (!in_array(JsonObject::class, $fieldRules, true) && !$this->hasJsonObjectRule($fieldRules)) {
+                                $fieldRules[] = new JsonObject();
+                            }
+                        } else {
+                            // Вставляем базовый тип после required/nullable, но перед остальными правилами
+                            $this->insertBaseType($fieldRules, $baseType);
+                        }
+                    }
                 }
             }
 
             if (! empty($fieldRules)) {
-                $laravelRules[$field] = $fieldRules;
+                // Если правило 'array' уже было добавлено для этого поля (например, для элементов массивов),
+                // убеждаемся, что оно не потеряется при объединении
+                if (isset($laravelRules[$field]) && in_array('array', $laravelRules[$field], true)) {
+                    // Объединяем правила, сохраняя 'array' в правильной позиции
+                    $existingRules = $laravelRules[$field];
+                    $mergedRules = array_merge($existingRules, $fieldRules);
+                    // Удаляем дубликаты, сохраняя порядок
+                    $laravelRules[$field] = array_values(array_unique($mergedRules, SORT_REGULAR));
+                    // Убеждаемся, что 'array' в правильной позиции (после required/nullable)
+                    $arrayIndex = array_search('array', $laravelRules[$field], true);
+                    if ($arrayIndex !== false && $arrayIndex > 0) {
+                        $hasNonRequiredBefore = false;
+                        for ($i = 0; $i < $arrayIndex; $i++) {
+                            if (!in_array($laravelRules[$field][$i], ['required', 'nullable'], true)) {
+                                $hasNonRequiredBefore = true;
+                                break;
+                            }
+                        }
+                        if ($hasNonRequiredBefore) {
+                            unset($laravelRules[$field][$arrayIndex]);
+                            $laravelRules[$field] = array_values($laravelRules[$field]);
+                            $insertPosition = 0;
+                            foreach ($laravelRules[$field] as $index => $rule) {
+                                if (in_array($rule, ['required', 'nullable'], true)) {
+                                    $insertPosition = $index + 1;
+                                } else {
+                                    break;
+                                }
+                            }
+                            array_splice($laravelRules[$field], $insertPosition, 0, ['array']);
+                        }
+                    }
+                } else {
+                    $laravelRules[$field] = $fieldRules;
+                }
+            }
+        }
+
+        // Добавляем базовый тип для полей из dataTypes, которые не имеют правил в ruleSet
+        // Это нужно для элементов массивов с data_type: 'json', которые должны быть объектами
+        foreach ($dataTypes as $field => $dataType) {
+            if (! isset($laravelRules[$field])) {
+                $baseType = $this->getBaseTypeForDataType($dataType);
+                if ($baseType !== null) {
+                    $laravelRules[$field] = [$baseType];
+                }
+            } elseif (str_ends_with($field, '.*') && ($dataType === 'json' || $dataType === 'array')) {
+                // Для элементов массивов с data_type: 'json' или 'array' убеждаемся, что правило 'array' присутствует
+                // даже если есть другие правила (например, для вложенных полей)
+                // Правило 'array' должно быть ПЕРВЫМ, чтобы Laravel правильно валидировал вложенные поля
+                $fieldRules = $laravelRules[$field];
+                if (!in_array('array', $fieldRules, true)) {
+                    // Вставляем 'array' в начало массива правил (после required/nullable, если есть)
+                    $insertPosition = 0;
+                    foreach ($fieldRules as $index => $rule) {
+                        if (in_array($rule, ['required', 'nullable'], true)) {
+                            $insertPosition = $index + 1;
+                        } else {
+                            break;
+                        }
+                    }
+                    array_splice($fieldRules, $insertPosition, 0, ['array']);
+                    $laravelRules[$field] = $fieldRules;
+                } else {
+                    // Если правило 'array' уже есть, убеждаемся, что оно в правильной позиции
+                    // (после required/nullable, но перед остальными правилами)
+                    $arrayIndex = array_search('array', $fieldRules, true);
+                    if ($arrayIndex !== false && $arrayIndex > 0) {
+                        // Проверяем, что перед 'array' только required/nullable
+                        $hasNonRequiredBefore = false;
+                        for ($i = 0; $i < $arrayIndex; $i++) {
+                            if (!in_array($fieldRules[$i], ['required', 'nullable'], true)) {
+                                $hasNonRequiredBefore = true;
+                                break;
+                            }
+                        }
+                        if ($hasNonRequiredBefore) {
+                            // Перемещаем 'array' в правильную позицию
+                            unset($fieldRules[$arrayIndex]);
+                            $fieldRules = array_values($fieldRules);
+                            $insertPosition = 0;
+                            foreach ($fieldRules as $index => $rule) {
+                                if (in_array($rule, ['required', 'nullable'], true)) {
+                                    $insertPosition = $index + 1;
+                                } else {
+                                    break;
+                                }
+                            }
+                            array_splice($fieldRules, $insertPosition, 0, ['array']);
+                            $laravelRules[$field] = $fieldRules;
+                        }
+                    }
+                }
             }
         }
 
@@ -122,6 +268,22 @@ final class LaravelValidationAdapter implements LaravelValidationAdapterInterfac
 
         // Вставляем базовый тип
         array_splice($rules, $insertPosition, 0, [$baseType]);
+    }
+
+    /**
+     * Проверить, есть ли правило JsonObject в массиве правил.
+     *
+     * @param array<int, string|object> $rules Массив правил
+     * @return bool
+     */
+    private function hasJsonObjectRule(array $rules): bool
+    {
+        foreach ($rules as $rule) {
+            if ($rule instanceof JsonObject) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

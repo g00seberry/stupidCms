@@ -30,6 +30,7 @@ interface PathValidationRulesConverterInterface
      * @param string $dataType Тип данных Path (string, text, int, float, bool, date, datetime, json, ref)
      * @param bool $isRequired Обязательное ли поле (для cardinality: 'one')
      * @param string $cardinality Кардинальность: 'one' или 'many'
+     * @param string|null $fieldName Имя поля (последний сегмент full_path) для использования в unique/exists правилах
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
      *         Для cardinality: 'one' - правила для самого поля
      *         Для cardinality: 'many' - правила для элементов массива (без RequiredRule/NullableRule)
@@ -38,7 +39,8 @@ interface PathValidationRulesConverterInterface
         ?array $validationRules,
         string $dataType,
         bool $isRequired,
-        string $cardinality
+        string $cardinality,
+        ?string $fieldName = null
     ): array;
 }
 

@@ -40,6 +40,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
      * - cardinality (one или many)
      * - validation_rules (min, max, pattern и т.д.)
      * - вложенность путей (full_path → точечная нотация)
+     * - вложенные поля внутри массивов (замена сегментов на * для cardinality: 'many')
      *
      * @param \App\Models\Blueprint $blueprint Blueprint для валидации
      * @return \App\Domain\Blueprint\Validation\Rules\RuleSet Набор правил валидации
@@ -58,9 +59,15 @@ final class EntryValidationService implements EntryValidationServiceInterface
             return $ruleSet;
         }
 
+        // Создаём маппинг full_path → cardinality для определения родительских массивов
+        $pathCardinalities = [];
+        foreach ($paths as $path) {
+            $pathCardinalities[$path->full_path] = $path->cardinality;
+        }
+
         // Обрабатываем каждый Path
         foreach ($paths as $path) {
-            $fieldPath = $this->buildFieldPath($path->full_path);
+            $fieldPath = $this->buildFieldPath($path->full_path, $pathCardinalities);
 
             // Для cardinality: 'many' создаём правила для массива и для элементов
             if ($path->cardinality === 'many') {
@@ -93,19 +100,33 @@ final class EntryValidationService implements EntryValidationServiceInterface
                     unset($elementValidationRules['array_min_items'], $elementValidationRules['array_max_items'], $elementValidationRules['array_unique']);
                 }
 
+                // Извлекаем имя поля из full_path (последний сегмент)
+                $fieldName = $path->name;
+                
                 $elementRules = $this->converter->convert(
                     $elementValidationRules,
                     $path->data_type,
                     false, // Элементы массива не могут быть required
-                    'one' // Элементы обрабатываются как одиночные значения
+                    'one', // Элементы обрабатываются как одиночные значения
+                    $fieldName
                 );
 
                 // Добавляем правила для элементов массива (без RequiredRule/NullableRule)
+                // ВАЖНО: Даже если нет validation_rules, нужно добавить пустое правило для элементов,
+                // чтобы LaravelValidationAdapter мог добавить базовый тип (например, 'array' для json)
+                $hasElementRules = false;
                 foreach ($elementRules as $rule) {
                     // Пропускаем RequiredRule и NullableRule для элементов массива
                     if (! in_array($rule->getType(), ['required', 'nullable'], true)) {
                         $ruleSet->addRule($fieldPath.'.*', $rule);
+                        $hasElementRules = true;
                     }
+                }
+
+                // Если нет правил для элементов, но data_type: 'json', добавляем placeholder правило,
+                // чтобы LaravelValidationAdapter мог добавить базовый тип 'array' для элементов
+                if (! $hasElementRules && $path->data_type === 'json') {
+                    $ruleSet->addRule($fieldPath.'.*', $this->ruleFactory->createNullableRule());
                 }
 
                 // Добавляем правило array_unique для элементов массива
@@ -114,11 +135,15 @@ final class EntryValidationService implements EntryValidationServiceInterface
                 }
             } else {
                 // Для cardinality: 'one' создаём правила для самого поля
+                // Извлекаем имя поля из full_path (последний сегмент)
+                $fieldName = $path->name;
+                
                 $fieldRules = $this->converter->convert(
                     $path->validation_rules,
                     $path->data_type,
                     $path->is_required,
-                    'one'
+                    'one',
+                    $fieldName
                 );
 
                 // Добавляем все правила для поля
@@ -135,14 +160,40 @@ final class EntryValidationService implements EntryValidationServiceInterface
      * Построить путь поля в точечной нотации для валидации.
      *
      * Преобразует full_path из Path в путь для content_json.
-     * Например: 'title' → 'content_json.title', 'author.name' → 'content_json.author.name'
+     * Если родительский путь имеет cardinality: 'many', заменяет соответствующий сегмент на '*'.
+     * Например:
+     * - 'title' → 'content_json.title'
+     * - 'author.name' (где author имеет cardinality: 'one') → 'content_json.author.name'
+     * - 'author.name' (где author имеет cardinality: 'many') → 'content_json.author.*.name'
      *
      * @param string $fullPath Полный путь из Path (например, 'author.contacts.phone')
-     * @return string Путь в точечной нотации для валидации (например, 'content_json.author.contacts.phone')
+     * @param array<string, string> $pathCardinalities Маппинг full_path → cardinality для всех путей
+     * @return string Путь в точечной нотации для валидации (например, 'content_json.author.contacts.phone' или 'content_json.author.*.contacts.phone')
      */
-    private function buildFieldPath(string $fullPath): string
+    private function buildFieldPath(string $fullPath, array $pathCardinalities): string
     {
-        return 'content_json.'.$fullPath;
+        $segments = explode('.', $fullPath);
+        $resultSegments = [];
+
+        // Обрабатываем каждый сегмент пути
+        for ($i = 0; $i < count($segments); $i++) {
+            // Строим путь до текущего сегмента для проверки cardinality
+            $parentPath = implode('.', array_slice($segments, 0, $i));
+            
+            // Если это не первый сегмент, проверяем cardinality родительского пути
+            if ($i > 0 && isset($pathCardinalities[$parentPath]) && $pathCardinalities[$parentPath] === 'many') {
+                // Родительский путь - массив, заменяем текущий сегмент на '*'
+                // НО сохраняем имя сегмента для следующей итерации
+                $resultSegments[] = '*';
+                // Добавляем имя сегмента после '*'
+                $resultSegments[] = $segments[$i];
+            } else {
+                // Обычный сегмент пути
+                $resultSegments[] = $segments[$i];
+            }
+        }
+
+        return 'content_json.'.implode('.', $resultSegments);
     }
 }
 

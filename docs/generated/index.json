@@ -484,7 +484,7 @@
                     "is_required": "boolean",
                     "is_indexed": "boolean",
                     "is_readonly": "boolean",
-                    "validation_rules": "App\\Casts\\AsArrayPreservingOrder"
+                    "validation_rules": "array"
                 },
                 "relations": {
                     "blueprint": {
@@ -1228,7 +1228,7 @@
             "name": "ExistsRuleHandler",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ExistsRuleHandler.php",
             "summary": "Обработчик правила ExistsRule.",
-            "details": "Преобразует ExistsRule в строку Laravel правила валидации\n(например, 'exists:table,column').",
+            "details": "Преобразует ExistsRule в строку Laravel правила валидации\n(например, 'exists:table,column').\nДля WHERE условий использует Rule объекты Laravel.",
             "meta": {
                 "methods": [
                     "supports",
@@ -1414,7 +1414,7 @@
             "name": "UniqueRuleHandler",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\UniqueRuleHandler.php",
             "summary": "Обработчик правила UniqueRule.",
-            "details": "Преобразует UniqueRule в строку Laravel правила валидации\n(например, 'unique:table,column' или 'unique:table,column,except,id').",
+            "details": "Преобразует UniqueRule в строку Laravel правила валидации\n(например, 'unique:table,column' или 'unique:table,column,except,id').\nДля WHERE условий использует Rule объекты Laravel.",
             "meta": {
                 "methods": [
                     "supports",
@@ -7249,7 +7249,7 @@
                         "is_required": "boolean",
                         "is_indexed": "boolean",
                         "is_readonly": "boolean",
-                        "validation_rules": "App\\Casts\\AsArrayPreservingOrder"
+                        "validation_rules": "array"
                     },
                     "relations": {
                         "blueprint": {
@@ -7995,7 +7995,7 @@
                 "name": "ExistsRuleHandler",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ExistsRuleHandler.php",
                 "summary": "Обработчик правила ExistsRule.",
-                "details": "Преобразует ExistsRule в строку Laravel правила валидации\n(например, 'exists:table,column').",
+                "details": "Преобразует ExistsRule в строку Laravel правила валидации\n(например, 'exists:table,column').\nДля WHERE условий использует Rule объекты Laravel.",
                 "meta": {
                     "methods": [
                         "supports",
@@ -8181,7 +8181,7 @@
                 "name": "UniqueRuleHandler",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\UniqueRuleHandler.php",
                 "summary": "Обработчик правила UniqueRule.",
-                "details": "Преобразует UniqueRule в строку Laravel правила валидации\n(например, 'unique:table,column' или 'unique:table,column,except,id').",
+                "details": "Преобразует UniqueRule в строку Laravel правила валидации\n(например, 'unique:table,column' или 'unique:table,column,except,id').\nДля WHERE условий использует Rule объекты Laravel.",
                 "meta": {
                     "methods": [
                         "supports",
@@ -17657,5 +17657,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-26T11:04:29+00:00"
+    "generated_at": "2025-11-26T15:24:54+00:00"
 }

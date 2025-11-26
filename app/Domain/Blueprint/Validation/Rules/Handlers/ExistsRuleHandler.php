@@ -6,12 +6,14 @@ namespace App\Domain\Blueprint\Validation\Rules\Handlers;
 
 use App\Domain\Blueprint\Validation\Rules\ExistsRule;
 use App\Domain\Blueprint\Validation\Rules\Rule;
+use Illuminate\Validation\Rules\Exists;
 
 /**
  * Обработчик правила ExistsRule.
  *
  * Преобразует ExistsRule в строку Laravel правила валидации
  * (например, 'exists:table,column').
+ * Для WHERE условий использует Rule объекты Laravel.
  *
  * @package App\Domain\Blueprint\Validation\Rules\Handlers
  */
@@ -36,11 +38,21 @@ final class ExistsRuleHandler implements RuleHandlerInterface
 
         $table = $rule->getTable();
         $column = $rule->getColumn();
+        $whereColumn = $rule->getWhereColumn();
+        $whereValue = $rule->getWhereValue();
 
+        // Если есть WHERE условие, используем Rule объект Laravel
+        if ($whereColumn !== null && $whereValue !== null) {
+            $laravelRule = \Illuminate\Validation\Rule::exists($table, $column);
+            
+            // Добавляем WHERE условие
+            $laravelRule->where($whereColumn, $whereValue);
+            
+            return [$laravelRule];
+        }
+
+        // Для простых случаев используем строковый формат
         $ruleString = "exists:{$table},{$column}";
-
-        // Примечание: WHERE условия для exists лучше реализовать через Rule::exists()->where()
-        // в будущих версиях, так как строковый формат не поддерживает сложные WHERE
 
         return [$ruleString];
     }

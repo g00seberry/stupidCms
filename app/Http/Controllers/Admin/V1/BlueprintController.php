@@ -442,7 +442,7 @@ class BlueprintController extends Controller
                 'required' => (bool) $path->is_required,
                 'indexed' => (bool) $path->is_indexed,
                 'cardinality' => $path->cardinality,
-                'validation' => $path->validation_rules ?? [],
+                'validation' => $path->validation_rules ?? new \stdClass(),
             ];
 
             // Если есть дочерние элементы, добавляем их в children

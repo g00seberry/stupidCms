@@ -6,12 +6,14 @@ namespace App\Domain\Blueprint\Validation\Rules\Handlers;
 
 use App\Domain\Blueprint\Validation\Rules\Rule;
 use App\Domain\Blueprint\Validation\Rules\UniqueRule;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * Обработчик правила UniqueRule.
  *
  * Преобразует UniqueRule в строку Laravel правила валидации
  * (например, 'unique:table,column' или 'unique:table,column,except,id').
+ * Для WHERE условий использует Rule объекты Laravel.
  *
  * @package App\Domain\Blueprint\Validation\Rules\Handlers
  */
@@ -38,7 +40,25 @@ final class UniqueRuleHandler implements RuleHandlerInterface
         $column = $rule->getColumn();
         $exceptColumn = $rule->getExceptColumn();
         $exceptValue = $rule->getExceptValue();
+        $whereColumn = $rule->getWhereColumn();
+        $whereValue = $rule->getWhereValue();
 
+        // Если есть WHERE условие, используем Rule объект Laravel
+        if ($whereColumn !== null && $whereValue !== null) {
+            $laravelRule = \Illuminate\Validation\Rule::unique($table, $column);
+            
+            // Добавляем WHERE условие
+            $laravelRule->where($whereColumn, $whereValue);
+            
+            // Добавляем исключение (для обновления)
+            if ($exceptColumn !== null && $exceptValue !== null) {
+                $laravelRule->ignore($exceptValue, $exceptColumn);
+            }
+            
+            return [$laravelRule];
+        }
+
+        // Для простых случаев используем строковый формат
         $ruleString = "unique:{$table},{$column}";
 
         // Добавляем исключение (для обновления)
@@ -46,9 +66,6 @@ final class UniqueRuleHandler implements RuleHandlerInterface
         if ($exceptColumn !== null && $exceptValue !== null) {
             $ruleString .= ",{$exceptValue},{$exceptColumn}";
         }
-
-        // Примечание: WHERE условия для unique лучше реализовать через Rule::unique()->where()
-        // в будущих версиях, так как строковый формат не поддерживает сложные WHERE
 
         return [$ruleString];
     }
