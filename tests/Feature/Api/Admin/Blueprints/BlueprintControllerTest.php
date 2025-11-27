@@ -160,19 +160,19 @@ test('можно получить JSON схему blueprint из paths', functio
     $response->assertOk()
         ->assertJsonStructure([
             'schema' => [
-                'title' => ['type', 'required', 'indexed', 'cardinality', 'validation'],
-                'author' => ['type', 'required', 'indexed', 'cardinality', 'validation', 'children'],
+                'title' => ['type', 'indexed', 'cardinality', 'validation'],
+                'author' => ['type', 'indexed', 'cardinality', 'validation', 'children'],
             ],
         ])
         ->assertJsonPath('schema.title.type', 'string')
-        ->assertJsonPath('schema.title.required', true)
+        ->assertJsonPath('schema.title.validation.required', true)
         ->assertJsonPath('schema.title.indexed', true)
         ->assertJsonPath('schema.title.cardinality', 'one')
         ->assertJsonPath('schema.author.type', 'json')
-        ->assertJsonPath('schema.author.required', false)
+        ->assertJsonPath('schema.author.validation.required', false)
         ->assertJsonPath('schema.author.indexed', false)
         ->assertJsonPath('schema.author.children.name.type', 'string')
-        ->assertJsonPath('schema.author.children.name.required', true);
+        ->assertJsonPath('schema.author.children.name.validation.required', true);
 });
 
 test('JSON схема blueprint возвращает пустую схему для blueprint без paths', function () {
@@ -381,12 +381,11 @@ test('JSON схема blueprint правильно обрабатывает ул
         // Проверка массива объектов articles[]
         ->assertJsonPath('schema.articles.type', 'json')
         ->assertJsonPath('schema.articles.cardinality', 'many')
-        ->assertJsonPath('schema.articles.required', true)
+        ->assertJsonPath('schema.articles.validation.required', true)
         ->assertJsonStructure([
             'schema' => [
                 'articles' => [
                     'type',
-                    'required',
                     'indexed',
                     'cardinality',
                     'validation',
@@ -397,7 +396,7 @@ test('JSON схема blueprint правильно обрабатывает ул
         // Проверка полей внутри объекта в массиве articles[].title
         ->assertJsonPath('schema.articles.children.title.type', 'string')
         ->assertJsonPath('schema.articles.children.title.cardinality', 'one')
-        ->assertJsonPath('schema.articles.children.title.required', true)
+        ->assertJsonPath('schema.articles.children.title.validation.required', true)
         ->assertJsonPath('schema.articles.children.title.indexed', true)
         // Проверка массива строк внутри объекта в массиве articles[].tags[]
         ->assertJsonPath('schema.articles.children.tags.type', 'string')
@@ -410,12 +409,12 @@ test('JSON схема blueprint правильно обрабатывает ул
         ->assertJsonPath('schema.articles.children.author.type', 'json')
         ->assertJsonPath('schema.articles.children.author.cardinality', 'one')
         ->assertJsonPath('schema.articles.children.author.children.name.type', 'string')
-        ->assertJsonPath('schema.articles.children.author.children.name.required', true)
+        ->assertJsonPath('schema.articles.children.author.children.name.validation.required', true)
         // Проверка массива объектов внутри объекта в массиве articles[].author.contacts[]
         ->assertJsonPath('schema.articles.children.author.children.contacts.type', 'json')
         ->assertJsonPath('schema.articles.children.author.children.contacts.cardinality', 'many')
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.type.type', 'string')
-        ->assertJsonPath('schema.articles.children.author.children.contacts.children.type.required', true)
+        ->assertJsonPath('schema.articles.children.author.children.contacts.children.type.validation.required', true)
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.value.type', 'string')
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.value.indexed', true)
         // Проверка массива строк внутри объекта в массиве объектов articles[].author.contacts[].metadata[]
@@ -425,10 +424,10 @@ test('JSON схема blueprint правильно обрабатывает ул
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.type', 'json')
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.cardinality', 'many')
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lat.type', 'float')
-        ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lat.required', true)
+        ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lat.validation.required', true)
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lat.cardinality', 'one')
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.type', 'float')
-        ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.required', true)
+        ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.validation.required', true)
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.cardinality', 'one');
 });
 

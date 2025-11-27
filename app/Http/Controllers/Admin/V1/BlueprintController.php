@@ -349,31 +349,27 @@ class BlueprintController extends Controller
      *   "schema": {
      *     "title": {
      *       "type": "string",
-     *       "required": true,
      *       "indexed": true,
      *       "cardinality": "one",
-     *       "validation": {}
+     *       "validation": {"required": true}
      *     },
      *     "author": {
      *       "type": "json",
-     *       "required": false,
      *       "indexed": false,
      *       "cardinality": "one",
      *       "validation": {},
      *       "children": {
      *         "name": {
      *           "type": "string",
-     *           "required": true,
      *           "indexed": false,
      *           "cardinality": "one",
-     *           "validation": {}
+     *           "validation": {"required": true}
      *         },
      *         "email": {
      *           "type": "string",
-     *           "required": true,
      *           "indexed": true,
      *           "cardinality": "one",
-     *           "validation": {}
+     *           "validation": {"required": true}
      *         }
      *       }
      *     }
@@ -439,7 +435,6 @@ class BlueprintController extends Controller
         foreach ($tree as $path) {
             $fieldSchema = [
                 'type' => $path->data_type,
-                'required' => (bool) ($path->validation_rules['required'] ?? false),
                 'indexed' => (bool) $path->is_indexed,
                 'cardinality' => $path->cardinality,
                 'validation' => $path->validation_rules ?? new \stdClass(),
