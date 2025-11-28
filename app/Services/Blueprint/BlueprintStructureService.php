@@ -11,11 +11,13 @@ use App\Exceptions\Blueprint\CannotDeleteCopiedPathException;
 use App\Exceptions\Blueprint\CannotEditCopiedPathException;
 use App\Exceptions\Blueprint\CyclicDependencyException;
 use App\Exceptions\Blueprint\DuplicateEmbedException;
+use App\Exceptions\Blueprint\DuplicatePathException;
 use App\Exceptions\Blueprint\InvalidHostPathException;
 use App\Exceptions\Blueprint\PathConflictException;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
 use App\Models\Path;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -124,34 +126,72 @@ class BlueprintStructureService
      *     validation_rules?: array
      * } $data
      * @return Path
+     * @throws DuplicatePathException Если путь с таким full_path уже существует
+     * @throws InvalidHostPathException Если parent_id не принадлежит blueprint
      */
     public function createPath(Blueprint $blueprint, array $data): Path
     {
         return DB::transaction(function () use ($blueprint, $data) {
-            // Вычислить full_path
-            $parentPath = isset($data['parent_id'])
-                ? Path::find($data['parent_id'])
-                : null;
+            // 1. Проверить и загрузить parent_path
+            $parentPath = null;
+            if (isset($data['parent_id'])) {
+                $parentPath = Path::find($data['parent_id']);
+                
+                if ($parentPath === null) {
+                    throw InvalidHostPathException::notOwnedByBlueprint(
+                        'parent_id=' . $data['parent_id'],
+                        $blueprint->code
+                    );
+                }
 
+                // Проверить, что parent_path принадлежит тому же blueprint
+                if ($parentPath->blueprint_id !== $blueprint->id) {
+                    throw InvalidHostPathException::notOwnedByBlueprint(
+                        $parentPath->full_path,
+                        $blueprint->code
+                    );
+                }
+            }
+
+            // 2. Вычислить full_path
             $fullPath = $parentPath
                 ? $parentPath->full_path . '.' . $data['name']
                 : $data['name'];
 
-            $path = new Path();
-            $path->forceFill([
-                'blueprint_id' => $blueprint->id,
-                'parent_id' => $data['parent_id'] ?? null,
-                'name' => $data['name'],
-                'full_path' => $fullPath,
-                'data_type' => $data['data_type'],
-                'cardinality' => $data['cardinality'] ?? 'one',
-                'is_indexed' => $data['is_indexed'] ?? false,
-                'sort_order' => $data['sort_order'] ?? 0,
-                'validation_rules' => $data['validation_rules'] ?? null,
-            ]);
-            $path->save();
+            // 3. Проверить уникальность full_path в blueprint
+            $exists = Path::query()
+                ->where('blueprint_id', $blueprint->id)
+                ->where('full_path', $fullPath)
+                ->exists();
 
-            // Событие изменения структуры
+            if ($exists) {
+                throw DuplicatePathException::create($fullPath, $blueprint->code);
+            }
+
+            // 4. Создать path
+            try {
+                $path = new Path();
+                $path->forceFill([
+                    'blueprint_id' => $blueprint->id,
+                    'parent_id' => $data['parent_id'] ?? null,
+                    'name' => $data['name'],
+                    'full_path' => $fullPath,
+                    'data_type' => $data['data_type'],
+                    'cardinality' => $data['cardinality'] ?? 'one',
+                    'is_indexed' => $data['is_indexed'] ?? false,
+                    'sort_order' => $data['sort_order'] ?? 0,
+                    'validation_rules' => $data['validation_rules'] ?? null,
+                ]);
+                $path->save();
+            } catch (QueryException $e) {
+                // Обработка ошибки уникальности из БД (на случай race condition)
+                if ($e->getCode() === '23000' || str_contains($e->getMessage(), 'uq_paths_full_path_per_blueprint')) {
+                    throw DuplicatePathException::create($fullPath, $blueprint->code);
+                }
+                throw $e;
+            }
+
+            // 5. Событие изменения структуры
             event(new BlueprintStructureChanged($blueprint));
 
             return $path;

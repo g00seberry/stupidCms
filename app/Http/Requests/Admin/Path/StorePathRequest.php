@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Path;
 
+use App\Models\Blueprint;
+use App\Models\Path;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 /**
  * Request для создания Path.
  *
  * Валидирует данные для создания поля blueprint:
  * - name: обязательное имя поля (regex: a-z0-9_)
- * - parent_id: опциональный ID родительского поля
+ * - parent_id: опциональный ID родительского поля (должен принадлежать тому же blueprint)
  * - data_type: обязательный тип данных
  * - cardinality: опциональная кардинальность (one/many)
  * - is_indexed: опциональный флаг индексации
@@ -63,6 +66,38 @@ class StorePathRequest extends FormRequest
             'validation_rules' => ['nullable', 'array'],
             'validation_rules.required' => ['sometimes', 'boolean'],
         ];
+    }
+
+    /**
+     * Настроить валидатор экземпляра.
+     *
+     * Добавляет проверку, что parent_id принадлежит тому же blueprint.
+     *
+     * @param \Illuminate\Validation\Validator $validator
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $blueprint = $this->route('blueprint');
+            $parentId = $this->input('parent_id');
+
+            if ($parentId === null || !($blueprint instanceof Blueprint)) {
+                return;
+            }
+
+            $parentPath = Path::find($parentId);
+            if ($parentPath === null) {
+                return; // Ошибка уже будет обработана правилом exists
+            }
+
+            if ($parentPath->blueprint_id !== $blueprint->id) {
+                $validator->errors()->add(
+                    'parent_id',
+                    "Родительское поле должно принадлежать тому же blueprint '{$blueprint->code}'."
+                );
+            }
+        });
     }
 
     /**

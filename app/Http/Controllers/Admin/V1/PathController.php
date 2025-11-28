@@ -84,7 +84,7 @@ class PathController extends Controller
      * @authenticated
      * @urlParam blueprint integer required ID blueprint. Example: 1
      * @bodyParam name string required Имя поля (a-z0-9_). Example: title
-     * @bodyParam parent_id integer ID родительского поля. Example: 5
+     * @bodyParam parent_id integer ID родительского поля (должен принадлежать тому же blueprint). Example: 5
      * @bodyParam data_type string required Тип данных. Values: string,text,int,float,bool,date,datetime,json,ref. Example: string
      * @bodyParam cardinality string Кардинальность. Values: one,many. Default: one.
      * @bodyParam is_indexed boolean Индексировать поле. Default: false.
@@ -106,6 +106,29 @@ class PathController extends Controller
      *     "validation_rules": {"required": true},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
+     *   }
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/unprocessable-entity",
+     *   "title": "Unprocessable Entity",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "Родительское поле должно принадлежать тому же blueprint 'article'.",
+     *   "meta": {
+     *     "errors": {
+     *       "parent_id": ["Родительское поле должно принадлежать тому же blueprint 'article'."]
+     *     }
+     *   }
+     * }
+     * @response status=409 {
+     *   "type": "https://stupidcms.dev/problems/conflict",
+     *   "title": "Conflict",
+     *   "status": 409,
+     *   "code": "CONFLICT",
+     *   "detail": "Путь 'author.test' уже существует в blueprint 'article'. Используйте другое имя поля или удалите существующий путь.",
+     *   "meta": {
+     *     "full_path": "author.test",
+     *     "blueprint_code": "article"
      *   }
      * }
      *
