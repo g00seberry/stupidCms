@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Path;
 
+use App\Http\Requests\Admin\Path\Concerns\PathValidationRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,11 +20,24 @@ use Illuminate\Validation\Rule;
  * - sort_order: опциональный порядок сортировки
  * - validation_rules: опциональные правила валидации (массив)
  *   - validation_rules.required: опциональный флаг обязательности поля
+ *   - validation_rules.min: опциональное минимальное значение (numeric)
+ *   - validation_rules.max: опциональное максимальное значение (numeric)
+ *   - validation_rules.pattern: опциональный regex паттерн (string)
+ *   - validation_rules.array_min_items: опциональное минимальное количество элементов массива (numeric)
+ *   - validation_rules.array_max_items: опциональное максимальное количество элементов массива (numeric)
+ *   - validation_rules.array_unique: опциональный флаг уникальности элементов массива (boolean)
+ *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (string или array)
+ *   - validation_rules.unique: опциональное правило уникальности (string или array)
+ *   - validation_rules.exists: опциональное правило существования (string или array)
+ *   - validation_rules.field_comparison: опциональное правило сравнения полей (array)
+ *   - validation_rules.*: разрешены любые дополнительные ключи
  *
  * @package App\Http\Requests\Admin\Path
  */
 class UpdatePathRequest extends FormRequest
 {
+    use PathValidationRules;
+
     /**
      * Определить, авторизован ли пользователь для выполнения запроса.
      *
@@ -48,21 +62,30 @@ class UpdatePathRequest extends FormRequest
      * - sort_order: опциональный порядок сортировки (>= 0)
      * - validation_rules: опциональные правила валидации (массив)
      *   - validation_rules.required: опциональный флаг обязательности поля
+     *   - validation_rules.min: опциональное минимальное значение (numeric)
+     *   - validation_rules.max: опциональное максимальное значение (numeric)
+     *   - validation_rules.pattern: опциональный regex паттерн (string)
+     *   - validation_rules.array_min_items: опциональное минимальное количество элементов массива (numeric)
+     *   - validation_rules.array_max_items: опциональное максимальное количество элементов массива (numeric)
+     *   - validation_rules.array_unique: опциональный флаг уникальности элементов массива (boolean)
+     *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (string или array)
+     *   - validation_rules.unique: опциональное правило уникальности (string или array)
+     *   - validation_rules.exists: опциональное правило существования (string или array)
+     *   - validation_rules.field_comparison: опциональное правило сравнения полей (array)
+     *   - validation_rules.*: разрешены любые дополнительные ключи
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        return [
-            'name' => ['sometimes', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
-            'parent_id' => ['sometimes', 'nullable', 'integer', 'exists:paths,id'],
-            'data_type' => ['sometimes', Rule::in(['string', 'text', 'int', 'float', 'bool', 'date', 'datetime', 'json', 'ref'])],
-            'cardinality' => ['sometimes', Rule::in(['one', 'many'])],
-            'is_indexed' => ['sometimes', 'boolean'],
-            'sort_order' => ['sometimes', 'integer', 'min:0'],
-            'validation_rules' => ['nullable', 'array'],
-            'validation_rules.required' => ['sometimes', 'boolean'],
-        ];
+        return array_merge(
+            [
+                'name' => ['sometimes', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+                'parent_id' => ['sometimes', 'nullable', 'integer', 'exists:paths,id'],
+            ],
+            $this->getCommonPathRules(),
+            $this->getValidationRulesRules()
+        );
     }
 
     /**
@@ -72,9 +95,7 @@ class UpdatePathRequest extends FormRequest
      */
     public function messages(): array
     {
-        return [
-            'name.regex' => 'Имя поля может содержать только строчные буквы, цифры и подчёркивания.',
-        ];
+        return $this->getPathValidationMessages();
     }
 }
 
