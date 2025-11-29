@@ -129,40 +129,34 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     /**
      * Обработать условное правило валидации.
      *
-     * Поддерживает форматы:
-     * - 'required_if' => 'field_name' (поле обязательно, если field_name существует)
-     * - 'required_if' => ['field_name' => 'value'] (поле обязательно, если field_name == value)
-     * - 'required_if' => ['field_name' => 'value', 'operator' => '!='] (с оператором)
+     * Поддерживает только расширенный формат:
+     * - 'required_if' => ['field' => 'is_published', 'value' => true, 'operator' => '==']
      *
      * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param string $type Тип условного правила
-     * @param mixed $value Значение условия (строка или массив)
+     * @param string $type Тип условного правила ('required_if', 'prohibited_unless', 'required_unless', 'prohibited_if')
+     * @param mixed $value Значение условия (должно быть массивом с ключами 'field', 'value', 'operator')
      * @return void
+     * @throws \InvalidArgumentException Если значение не является массивом или отсутствует обязательное поле 'field'
      */
     private function handleConditionalRule(array &$rules, string $type, mixed $value): void
     {
-        // Если значение - строка, это просто имя поля (required_if => 'is_published')
-        if (is_string($value)) {
-            $rules[] = $this->ruleFactory->createConditionalRule($type, $value, true);
-            return;
+        if (! is_array($value)) {
+            throw new \InvalidArgumentException(
+                "Условное правило '{$type}' должно быть массивом с ключами 'field', 'value' и опционально 'operator'."
+            );
         }
 
-        // Если значение - массив, извлекаем field, value и operator
-        if (is_array($value)) {
-            $field = $value['field'] ?? null;
-            $conditionValue = $value['value'] ?? true;
-            $operator = $value['operator'] ?? null;
+        $field = $value['field'] ?? null;
+        $conditionValue = $value['value'] ?? true;
+        $operator = $value['operator'] ?? null;
 
-            if ($field === null) {
-                // Старый формат: ['is_published' => true]
-                $field = array_key_first($value);
-                $conditionValue = $value[$field] ?? true;
-            }
-
-            if ($field !== null) {
-                $rules[] = $this->ruleFactory->createConditionalRule($type, $field, $conditionValue, $operator);
-            }
+        if ($field === null || $field === '') {
+            throw new \InvalidArgumentException(
+                "Условное правило '{$type}' должно содержать обязательное поле 'field'."
+            );
         }
+
+        $rules[] = $this->ruleFactory->createConditionalRule($type, $field, $conditionValue, $operator);
     }
 
     /**
@@ -183,74 +177,74 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     /**
      * Обработать правило уникальности значения.
      *
-     * Поддерживает форматы:
-     * - 'unique' => 'table_name' (проверка в таблице по колонке, соответствующей имени поля)
+     * Поддерживает только расширенный формат:
      * - 'unique' => ['table' => 'table_name', 'column' => 'column_name']
      * - 'unique' => ['table' => 'table_name', 'column' => 'column_name', 'except' => ['column' => 'id', 'value' => 1]]
      * - 'unique' => ['table' => 'table_name', 'column' => 'column_name', 'where' => ['column' => 'status', 'value' => 'active']]
      *
      * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param mixed $value Значение правила (строка или массив)
+     * @param mixed $value Значение правила (должно быть массивом с обязательным ключом 'table')
      * @param string|null $fieldName Имя поля (последний сегмент full_path) для использования как колонка по умолчанию
      * @return void
+     * @throws \InvalidArgumentException Если значение не является массивом или отсутствует обязательное поле 'table'
      */
     private function handleUniqueRule(array &$rules, mixed $value, ?string $fieldName = null): void
     {
-        if (is_string($value)) {
-            // Простой формат: 'unique' => 'table_name'
-            // Используем имя поля как колонку, если оно указано, иначе 'id'
-            $column = $fieldName ?? 'id';
-            $rules[] = $this->ruleFactory->createUniqueRule($value, $column);
-            return;
+        if (! is_array($value)) {
+            throw new \InvalidArgumentException(
+                "Правило 'unique' должно быть массивом с обязательным ключом 'table'."
+            );
         }
 
-        if (is_array($value)) {
-            $table = $value['table'] ?? null;
-            $column = $value['column'] ?? 'id';
-            $exceptColumn = $value['except']['column'] ?? null;
-            $exceptValue = $value['except']['value'] ?? null;
-            $whereColumn = $value['where']['column'] ?? null;
-            $whereValue = $value['where']['value'] ?? null;
+        $table = $value['table'] ?? null;
+        $column = $value['column'] ?? ($fieldName ?? 'id');
+        $exceptColumn = $value['except']['column'] ?? null;
+        $exceptValue = $value['except']['value'] ?? null;
+        $whereColumn = $value['where']['column'] ?? null;
+        $whereValue = $value['where']['value'] ?? null;
 
-            if ($table !== null) {
-                $rules[] = $this->ruleFactory->createUniqueRule($table, $column, $exceptColumn, $exceptValue, $whereColumn, $whereValue);
-            }
+        if ($table === null || $table === '') {
+            throw new \InvalidArgumentException(
+                "Правило 'unique' должно содержать обязательное поле 'table'."
+            );
         }
+
+        $rules[] = $this->ruleFactory->createUniqueRule($table, $column, $exceptColumn, $exceptValue, $whereColumn, $whereValue);
     }
 
     /**
      * Обработать правило существования значения.
      *
-     * Поддерживает форматы:
-     * - 'exists' => 'table_name' (проверка в таблице по колонке, соответствующей имени поля)
+     * Поддерживает только расширенный формат:
      * - 'exists' => ['table' => 'table_name', 'column' => 'column_name']
      * - 'exists' => ['table' => 'table_name', 'column' => 'column_name', 'where' => ['column' => 'status', 'value' => 'active']]
      *
      * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param mixed $value Значение правила (строка или массив)
+     * @param mixed $value Значение правила (должно быть массивом с обязательным ключом 'table')
      * @param string|null $fieldName Имя поля (последний сегмент full_path) для использования как колонка по умолчанию
      * @return void
+     * @throws \InvalidArgumentException Если значение не является массивом или отсутствует обязательное поле 'table'
      */
     private function handleExistsRule(array &$rules, mixed $value, ?string $fieldName = null): void
     {
-        if (is_string($value)) {
-            // Простой формат: 'exists' => 'table_name'
-            // Используем имя поля как колонку, если оно указано, иначе 'id'
-            $column = $fieldName ?? 'id';
-            $rules[] = $this->ruleFactory->createExistsRule($value, $column);
-            return;
+        if (! is_array($value)) {
+            throw new \InvalidArgumentException(
+                "Правило 'exists' должно быть массивом с обязательным ключом 'table'."
+            );
         }
 
-        if (is_array($value)) {
-            $table = $value['table'] ?? null;
-            $column = $value['column'] ?? 'id';
-            $whereColumn = $value['where']['column'] ?? null;
-            $whereValue = $value['where']['value'] ?? null;
+        $table = $value['table'] ?? null;
+        $column = $value['column'] ?? ($fieldName ?? 'id');
+        $whereColumn = $value['where']['column'] ?? null;
+        $whereValue = $value['where']['value'] ?? null;
 
-            if ($table !== null) {
-                $rules[] = $this->ruleFactory->createExistsRule($table, $column, $whereColumn, $whereValue);
-            }
+        if ($table === null || $table === '') {
+            throw new \InvalidArgumentException(
+                "Правило 'exists' должно содержать обязательное поле 'table'."
+            );
         }
+
+        $rules[] = $this->ruleFactory->createExistsRule($table, $column, $whereColumn, $whereValue);
     }
 
     /**

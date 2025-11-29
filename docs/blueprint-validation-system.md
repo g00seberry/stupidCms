@@ -349,45 +349,27 @@ $ruleFactory->createArrayUniqueRule();
 **Создание**:
 
 ```php
-// Простой формат: поле обязательно, если другое поле существует
-$ruleFactory->createConditionalRule('required_if', 'is_published', true);
-
 // С оператором
 $ruleFactory->createConditionalRule('required_if', 'status', 'active', '==');
 ```
 
 **Laravel правило**: `'required_if:is_published,true'`
 
-**Форматы в Path**:
+**Формат в Path** (только расширенный):
 
 ```json
-// Простой формат (строка)
 {
-  "validation_rules": {
-    "required_if": "is_published"
-  }
-}
-
-// Расширенный формат (массив)
-{
-  "validation_rules": {
-    "required_if": {
-      "field": "is_published",
-      "value": true,
-      "operator": "=="
+    "validation_rules": {
+        "required_if": {
+            "field": "is_published",
+            "value": true,
+            "operator": "=="
+        }
     }
-  }
-}
-
-// Старый формат (совместимость)
-{
-  "validation_rules": {
-    "required_if": {
-      "is_published": true
-    }
-  }
 }
 ```
+
+**Примечание**: Поле `operator` опционально, по умолчанию используется `'=='`. Поддерживаемые операторы: `'=='`, `'!='`, `'>'`, `'<'`, `'>='`, `'<='`.
 
 ---
 
@@ -409,9 +391,6 @@ $ruleFactory->createConditionalRule('required_if', 'status', 'active', '==');
 **Создание**:
 
 ```php
-// Простой формат
-$ruleFactory->createUniqueRule('users', 'email');
-
 // С исключением (для update)
 $ruleFactory->createUniqueRule('users', 'email', 'id', $userId);
 
@@ -421,34 +400,28 @@ $ruleFactory->createUniqueRule('users', 'email', null, null, 'status', 'active')
 
 **Laravel правило**: `'unique:users,email'` / `'unique:users,email,1,id'` / `'unique:users,email,NULL,id,status,active'`
 
-**Форматы в Path**:
+**Формат в Path** (только расширенный):
 
 ```json
-// Простой формат (строка)
 {
-  "validation_rules": {
-    "unique": "users"
-  }
-}
-
-// Расширенный формат
-{
-  "validation_rules": {
-    "unique": {
-      "table": "users",
-      "column": "email",
-      "except": {
-        "column": "id",
-        "value": 1
-      },
-      "where": {
-        "column": "status",
-        "value": "active"
-      }
+    "validation_rules": {
+        "unique": {
+            "table": "users",
+            "column": "email",
+            "except": {
+                "column": "id",
+                "value": 1
+            },
+            "where": {
+                "column": "status",
+                "value": "active"
+            }
+        }
     }
-  }
 }
 ```
+
+**Примечание**: Поле `table` обязательно. Поле `column` опционально, по умолчанию используется имя поля. Поля `except` и `where` опциональны.
 
 ---
 
@@ -467,39 +440,30 @@ $ruleFactory->createUniqueRule('users', 'email', null, null, 'status', 'active')
 **Создание**:
 
 ```php
-// Простой формат
-$ruleFactory->createExistsRule('categories', 'id');
-
 // С WHERE условием
 $ruleFactory->createExistsRule('categories', 'id', 'status', 'active');
 ```
 
 **Laravel правило**: `'exists:categories,id'` / `'exists:categories,id,NULL,NULL,status,active'`
 
-**Форматы в Path**:
+**Формат в Path** (только расширенный):
 
 ```json
-// Простой формат (строка)
 {
-  "validation_rules": {
-    "exists": "categories"
-  }
-}
-
-// Расширенный формат
-{
-  "validation_rules": {
-    "exists": {
-      "table": "categories",
-      "column": "id",
-      "where": {
-        "column": "status",
-        "value": "active"
-      }
+    "validation_rules": {
+        "exists": {
+            "table": "categories",
+            "column": "id",
+            "where": {
+                "column": "status",
+                "value": "active"
+            }
+        }
     }
-  }
 }
 ```
+
+**Примечание**: Поле `table` обязательно. Поле `column` опционально, по умолчанию используется имя поля. Поле `where` опционально.
 
 ---
 
@@ -697,7 +661,11 @@ $validator->validate([
     "array_min_items": 1,
     "array_max_items": 10,
     "array_unique": true,
-    "required_if": "is_published",
+    "required_if": {
+        "field": "is_published",
+        "value": true,
+        "operator": "=="
+    },
     "unique": {
         "table": "users",
         "column": "email"
@@ -805,7 +773,11 @@ Path::create([
     'cardinality' => 'one',
     'validation_rules' => [
         'required' => false,
-        'required_if' => 'is_published',
+        'required_if' => [
+            'field' => 'is_published',
+            'value' => true,
+            'operator' => '==',
+        ],
     ],
 ]);
 ```

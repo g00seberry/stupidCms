@@ -35,7 +35,7 @@ test('validates unique rule with table name on create', function () {
         'validation_rules' => ['required' => true],
         'cardinality' => 'one',
         'validation_rules' => [
-            'unique' => 'users',
+            'unique' => ['table' => 'users', 'column' => 'email'],
         ],
     ]);
 
@@ -476,7 +476,7 @@ test('validates field_comparison plus required_if combination on create', functi
         'cardinality' => 'one',
         'validation_rules' => [
             'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date'],
-            'required_if' => 'is_published',
+            'required_if' => ['field' => 'is_published', 'value' => true, 'operator' => '=='],
         ],
     ]);
 

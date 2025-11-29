@@ -1447,7 +1447,7 @@ test('validates required_if plus min max combination on create', function () {
         'validation_rules' => ['required' => false],
         'cardinality' => 'one',
         'validation_rules' => [
-            'required_if' => 'is_published',
+            'required_if' => ['field' => 'is_published', 'value' => true, 'operator' => '=='],
             'min' => 1,
             'max' => 255,
         ],

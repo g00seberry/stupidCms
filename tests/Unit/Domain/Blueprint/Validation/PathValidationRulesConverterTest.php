@@ -281,6 +281,121 @@ test('ignores unknown validation rule keys', function () {
         ->and($rules[2])->toBeInstanceOf(MaxRule::class);
 });
 
+test('throws exception for conditional rule with string format', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'required_if' => 'is_published'],
+        'string',
+        'one'
+    ))->toThrow(\InvalidArgumentException::class, "Условное правило 'required_if' должно быть массивом");
+});
+
+test('throws exception for conditional rule with old format', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'required_if' => ['is_published' => true]],
+        'string',
+        'one'
+    ))->toThrow(\InvalidArgumentException::class, "Условное правило 'required_if' должно содержать обязательное поле 'field'");
+});
+
+test('throws exception for conditional rule without field', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'required_if' => ['value' => true]],
+        'string',
+        'one'
+    ))->toThrow(\InvalidArgumentException::class, "Условное правило 'required_if' должно содержать обязательное поле 'field'");
+});
+
+test('accepts conditional rule with extended format', function () {
+    $converter = createConverter();
+    
+    $rules = $converter->convert(
+        ['required' => false, 'required_if' => ['field' => 'is_published', 'value' => true, 'operator' => '==']],
+        'string',
+        'one'
+    );
+
+    expect($rules)->toHaveCount(2)
+        ->and($rules[0])->toBeInstanceOf(NullableRule::class);
+});
+
+test('throws exception for unique rule with string format', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'unique' => 'users'],
+        'string',
+        'one',
+        'email'
+    ))->toThrow(\InvalidArgumentException::class, "Правило 'unique' должно быть массивом");
+});
+
+test('throws exception for unique rule without table', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'unique' => ['column' => 'email']],
+        'string',
+        'one',
+        'email'
+    ))->toThrow(\InvalidArgumentException::class, "Правило 'unique' должно содержать обязательное поле 'table'");
+});
+
+test('accepts unique rule with extended format', function () {
+    $converter = createConverter();
+    
+    $rules = $converter->convert(
+        ['required' => false, 'unique' => ['table' => 'users', 'column' => 'email']],
+        'string',
+        'one',
+        'email'
+    );
+
+    expect($rules)->toHaveCount(2)
+        ->and($rules[0])->toBeInstanceOf(NullableRule::class);
+});
+
+test('throws exception for exists rule with string format', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'exists' => 'categories'],
+        'string',
+        'one',
+        'category_id'
+    ))->toThrow(\InvalidArgumentException::class, "Правило 'exists' должно быть массивом");
+});
+
+test('throws exception for exists rule without table', function () {
+    $converter = createConverter();
+    
+    expect(fn() => $converter->convert(
+        ['required' => false, 'exists' => ['column' => 'id']],
+        'string',
+        'one',
+        'category_id'
+    ))->toThrow(\InvalidArgumentException::class, "Правило 'exists' должно содержать обязательное поле 'table'");
+});
+
+test('accepts exists rule with extended format', function () {
+    $converter = createConverter();
+    
+    $rules = $converter->convert(
+        ['required' => false, 'exists' => ['table' => 'categories', 'column' => 'id']],
+        'string',
+        'one',
+        'category_id'
+    );
+
+    expect($rules)->toHaveCount(2)
+        ->and($rules[0])->toBeInstanceOf(NullableRule::class);
+});
+
 /**
  * Создать экземпляр конвертера для тестов.
  *
