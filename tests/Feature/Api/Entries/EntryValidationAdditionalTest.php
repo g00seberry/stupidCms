@@ -400,8 +400,6 @@ test('validates single int value not array on create', function () {
         'full_path' => 'count',
         'data_type' => 'int',
         'validation_rules' => ['required' => true],
-        'cardinality' => 'one',
-        'validation_rules' => null,
     ]);
 
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);

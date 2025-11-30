@@ -50,38 +50,19 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     ): array {
         $rules = [];
 
-        // Извлекаем required из validation_rules
-        $isRequired = $validationRules['required'] ?? false;
-
-        // Добавляем required или nullable
-        // Для cardinality: 'many' required/nullable применяется к самому массиву,
-        // а не к элементам, поэтому здесь не добавляем
-        if ($cardinality !== ValidationConstants::CARDINALITY_MANY) {
-            if ($isRequired) {
-                $rules[] = $this->ruleFactory->createRequiredRule();
-            } else {
-                $rules[] = $this->ruleFactory->createNullableRule();
-            }
-        }
-
         // Если нет validation_rules, возвращаем только базовые правила (required/nullable)
         if ($validationRules === null || $validationRules === []) {
             return $rules;
         }
 
-        // Валидируем и преобразуем validation_rules в Rule объекты
-        $minValue = null;
-        $maxValue = null;
-        $arrayMinItems = null;
-        $arrayMaxItems = null;
-
         foreach ($validationRules as $key => $value) {
             match ($key) {
-                'min' => $minValue = $value,
-                'max' => $maxValue = $value,
+                'required' => $this->handleRequiredRule($rules, $value),
+                'min' => $rules[] = $this->ruleFactory->createMinRule($value, $dataType),
+                'max' => $rules[] = $this->ruleFactory->createMaxRule($value, $dataType),
                 'pattern' => $rules[] = $this->ruleFactory->createPatternRule($value),
-                'array_min_items' => $arrayMinItems = $value,
-                'array_max_items' => $arrayMaxItems = $value,
+                'array_min_items' => $rules[] = $this->ruleFactory->createArrayMinItemsRule((int) $value),
+                'array_max_items' => $rules[] = $this->ruleFactory->createArrayMaxItemsRule((int) $value),
                 'array_unique' => $this->handleArrayUniqueRule($rules, $cardinality),
                 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
                 'field_comparison' => $this->handleFieldComparisonRule($rules, $value),
@@ -89,39 +70,18 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
             };
         }
 
-        // Добавляем правила для массивов (только для cardinality: 'many')
-        if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
-            if ($arrayMinItems !== null && is_numeric($arrayMinItems)) {
-                $rules[] = $this->ruleFactory->createArrayMinItemsRule((int) $arrayMinItems);
-            }
-            if ($arrayMaxItems !== null && is_numeric($arrayMaxItems)) {
-                $rules[] = $this->ruleFactory->createArrayMaxItemsRule((int) $arrayMaxItems);
-            }
-        }
-
-        // Валидируем min/max: min должен быть меньше или равен max
-        if ($minValue !== null && $maxValue !== null) {
-            $minNumeric = is_numeric($minValue) ? ($dataType === 'float' ? (float) $minValue : (int) $minValue) : null;
-            $maxNumeric = is_numeric($maxValue) ? ($dataType === 'float' ? (float) $maxValue : (int) $maxValue) : null;
-
-            if ($minNumeric !== null && $maxNumeric !== null && $minNumeric > $maxNumeric) {
-                // Если min > max, игнорируем оба правила (валидация не пройдёт)
-                // В реальном сценарии это должно логироваться, но для валидации просто пропускаем
-                return $rules;
-            }
-        }
-
-        // Добавляем min и max правила после валидации
-        if ($minValue !== null) {
-            $rules[] = $this->ruleFactory->createMinRule($minValue, $dataType);
-        }
-        if ($maxValue !== null) {
-            $rules[] = $this->ruleFactory->createMaxRule($maxValue, $dataType);
-        }
-
         return $rules;
     }
 
+
+    private function handleRequiredRule(array &$rules, bool $isRequired): void
+    {
+        if ($isRequired) {
+            $rules[] = $this->ruleFactory->createRequiredRule();
+        } else {
+            $rules[] = $this->ruleFactory->createNullableRule();
+        }
+    }
     /**
      * Обработать условное правило валидации.
      *

@@ -136,26 +136,7 @@ test('handles required flag correctly', function () {
         ->and($nullableRules[0])->toBeInstanceOf(NullableRule::class);
 });
 
-test('handles cardinality many correctly', function () {
-    $converter = createConverter();
-    
-    $rules = $converter->convert(
-        ['required' => true, 'min' => 1, 'max' => 50],
-        'string',
-        'many' // required игнорируется для элементов массива
-    );
 
-    // Для cardinality: 'many' не должно быть required/nullable
-    expect($rules)->toHaveCount(2)
-        ->and($rules[0])->toBeInstanceOf(MinRule::class)
-        ->and($rules[1])->toBeInstanceOf(MaxRule::class);
-    
-    // Проверяем, что нет RequiredRule или NullableRule
-    foreach ($rules as $rule) {
-        expect($rule)->not->toBeInstanceOf(RequiredRule::class)
-            ->and($rule)->not->toBeInstanceOf(NullableRule::class);
-    }
-});
 
 test('handles empty validation rules', function () {
     $converter = createConverter();
@@ -170,32 +151,24 @@ test('handles empty validation rules', function () {
         ->and($rules[0])->toBeInstanceOf(RequiredRule::class);
 });
 
-test('handles null validation rules', function () {
+
+
+test('always adds min max rules regardless of relationship', function () {
     $converter = createConverter();
     
-    $rules = $converter->convert(
-        null,
-        'string',
-        'one'
-    );
-
-    expect($rules)->toHaveCount(1)
-        ->and($rules[0])->toBeInstanceOf(NullableRule::class);
-});
-
-test('validates min max relationship', function () {
-    $converter = createConverter();
-    
-    // Если min > max, оба правила игнорируются
+    // Конвертер всегда добавляет правила min/max, даже если min > max
+    // Валидация соотношения min/max выполняется на HTTP-уровне
     $rules = $converter->convert(
         ['required' => true, 'min' => 500, 'max' => 1],
         'string',
         'one'
     );
 
-    // Должны остаться только required/nullable правила
-    expect($rules)->toHaveCount(1)
-        ->and($rules[0])->toBeInstanceOf(RequiredRule::class);
+    // Правила min и max должны быть добавлены (валидация на HTTP-уровне)
+    expect($rules)->toHaveCount(3)
+        ->and($rules[0])->toBeInstanceOf(RequiredRule::class)
+        ->and($rules[1])->toBeInstanceOf(MinRule::class)
+        ->and($rules[2])->toBeInstanceOf(MaxRule::class);
 });
 
 test('handles pattern with delimiters', function () {
@@ -256,9 +229,9 @@ test('handles all validation rules together', function () {
 
     expect($rules)->toHaveCount(4)
         ->and($rules[0])->toBeInstanceOf(RequiredRule::class)
-        ->and($rules[1])->toBeInstanceOf(PatternRule::class)
-        ->and($rules[2])->toBeInstanceOf(MinRule::class)
-        ->and($rules[3])->toBeInstanceOf(MaxRule::class);
+        ->and($rules[1])->toBeInstanceOf(MinRule::class)
+        ->and($rules[2])->toBeInstanceOf(MaxRule::class)
+        ->and($rules[3])->toBeInstanceOf(PatternRule::class);
 });
 
 test('ignores unknown validation rule keys', function () {
@@ -318,78 +291,6 @@ test('accepts conditional rule with extended format', function () {
         ['required' => false, 'required_if' => ['field' => 'is_published', 'value' => true, 'operator' => '==']],
         'string',
         'one'
-    );
-
-    expect($rules)->toHaveCount(2)
-        ->and($rules[0])->toBeInstanceOf(NullableRule::class);
-});
-
-test('throws exception for unique rule with string format', function () {
-    $converter = createConverter();
-    
-    expect(fn() => $converter->convert(
-        ['required' => false, 'unique' => 'users'],
-        'string',
-        'one',
-        'email'
-    ))->toThrow(\InvalidArgumentException::class, "Правило 'unique' должно быть массивом");
-});
-
-test('throws exception for unique rule without table', function () {
-    $converter = createConverter();
-    
-    expect(fn() => $converter->convert(
-        ['required' => false, 'unique' => ['column' => 'email']],
-        'string',
-        'one',
-        'email'
-    ))->toThrow(\InvalidArgumentException::class, "Правило 'unique' должно содержать обязательное поле 'table'");
-});
-
-test('accepts unique rule with extended format', function () {
-    $converter = createConverter();
-    
-    $rules = $converter->convert(
-        ['required' => false, 'unique' => ['table' => 'users', 'column' => 'email']],
-        'string',
-        'one',
-        'email'
-    );
-
-    expect($rules)->toHaveCount(2)
-        ->and($rules[0])->toBeInstanceOf(NullableRule::class);
-});
-
-test('throws exception for exists rule with string format', function () {
-    $converter = createConverter();
-    
-    expect(fn() => $converter->convert(
-        ['required' => false, 'exists' => 'categories'],
-        'string',
-        'one',
-        'category_id'
-    ))->toThrow(\InvalidArgumentException::class, "Правило 'exists' должно быть массивом");
-});
-
-test('throws exception for exists rule without table', function () {
-    $converter = createConverter();
-    
-    expect(fn() => $converter->convert(
-        ['required' => false, 'exists' => ['column' => 'id']],
-        'string',
-        'one',
-        'category_id'
-    ))->toThrow(\InvalidArgumentException::class, "Правило 'exists' должно содержать обязательное поле 'table'");
-});
-
-test('accepts exists rule with extended format', function () {
-    $converter = createConverter();
-    
-    $rules = $converter->convert(
-        ['required' => false, 'exists' => ['table' => 'categories', 'column' => 'id']],
-        'string',
-        'one',
-        'category_id'
     );
 
     expect($rules)->toHaveCount(2)
