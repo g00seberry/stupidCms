@@ -27,7 +27,7 @@ final class ArrayMaxItemsRuleHandler implements RuleHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(Rule $rule, string $dataType): array
+    public function handle(Rule $rule): array
     {
         if (! $rule instanceof ArrayMaxItemsRule) {
             throw new \InvalidArgumentException('Expected ArrayMaxItemsRule instance');

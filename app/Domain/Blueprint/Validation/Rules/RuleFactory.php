@@ -17,19 +17,17 @@ interface RuleFactory
      * Создать правило минимального значения/длины.
      *
      * @param mixed $value Значение минимума
-     * @param string $dataType Тип данных (string, text, int, float)
      * @return \App\Domain\Blueprint\Validation\Rules\MinRule
      */
-    public function createMinRule(mixed $value, string $dataType): MinRule;
+    public function createMinRule(mixed $value): MinRule;
 
     /**
      * Создать правило максимального значения/длины.
      *
      * @param mixed $value Значение максимума
-     * @param string $dataType Тип данных (string, text, int, float)
      * @return \App\Domain\Blueprint\Validation\Rules\MaxRule
      */
-    public function createMaxRule(mixed $value, string $dataType): MaxRule;
+    public function createMaxRule(mixed $value): MaxRule;
 
     /**
      * Создать правило регулярного выражения.

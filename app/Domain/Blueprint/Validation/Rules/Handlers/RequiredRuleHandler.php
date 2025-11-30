@@ -27,7 +27,7 @@ final class RequiredRuleHandler implements RuleHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(Rule $rule, string $dataType): array
+    public function handle(Rule $rule): array
     {
         if (! $rule instanceof RequiredRule) {
             throw new \InvalidArgumentException('Expected RequiredRule instance');

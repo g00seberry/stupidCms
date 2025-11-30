@@ -28,9 +28,8 @@ interface RuleHandlerInterface
      * Обработать правило и преобразовать в Laravel правила валидации.
      *
      * @param \App\Domain\Blueprint\Validation\Rules\Rule $rule Доменное правило
-     * @param string $dataType Тип данных поля (string, int, float и т.д.)
      * @return array<int, string> Массив строк Laravel правил валидации
      */
-    public function handle(Rule $rule, string $dataType): array;
+    public function handle(Rule $rule): array;
 }
 

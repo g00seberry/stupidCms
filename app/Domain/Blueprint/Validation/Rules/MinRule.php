@@ -7,8 +7,8 @@ namespace App\Domain\Blueprint\Validation\Rules;
 /**
  * Правило валидации: минимальное значение/длина.
  *
- * Для строковых типов (string, text) означает минимальную длину.
- * Для числовых типов (int, float) означает минимальное значение.
+ * Может применяться к любым типам данных.
+ * Пользователь сам отвечает за корректность применения правила.
  *
  * @package App\Domain\Blueprint\Validation\Rules
  */
@@ -16,11 +16,9 @@ final class MinRule implements Rule
 {
     /**
      * @param mixed $value Минимальное значение
-     * @param string $dataType Тип данных (string, text, int, float)
      */
     public function __construct(
-        private readonly mixed $value,
-        private readonly string $dataType
+        private readonly mixed $value
     ) {}
 
     /**
@@ -42,7 +40,6 @@ final class MinRule implements Rule
     {
         return [
             'value' => $this->value,
-            'data_type' => $this->dataType,
         ];
     }
 
@@ -54,16 +51,6 @@ final class MinRule implements Rule
     public function getValue(): mixed
     {
         return $this->value;
-    }
-
-    /**
-     * Получить тип данных.
-     *
-     * @return string
-     */
-    public function getDataType(): string
-    {
-        return $this->dataType;
     }
 }
 

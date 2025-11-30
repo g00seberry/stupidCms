@@ -28,7 +28,7 @@ final class FieldComparisonRuleHandler implements RuleHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(Rule $rule, string $dataType): array
+    public function handle(Rule $rule): array
     {
         if (! $rule instanceof FieldComparisonRule) {
             throw new \InvalidArgumentException('Expected FieldComparisonRule instance');

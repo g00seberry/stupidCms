@@ -27,21 +27,19 @@ final class MinRuleHandler implements RuleHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(Rule $rule, string $dataType): array
+    public function handle(Rule $rule): array
     {
         if (! $rule instanceof MinRule) {
             throw new \InvalidArgumentException('Expected MinRule instance');
         }
 
-        $params = $rule->getParams();
-        $value = $params['value'] ?? 0;
-        $ruleDataType = $params['data_type'] ?? 'string';
+        $value = $rule->getValue();
 
         if (! is_numeric($value)) {
             return ['min:0'];
         }
 
-        $minValue = $ruleDataType === 'float' ? (float) $value : (int) $value;
+        $minValue = is_float($value) ? (float) $value : (int) $value;
 
         return ["min:{$minValue}"];
     }

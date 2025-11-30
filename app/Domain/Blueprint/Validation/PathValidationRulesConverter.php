@@ -6,13 +6,13 @@ namespace App\Domain\Blueprint\Validation;
 
 use App\Domain\Blueprint\Validation\Rules\Rule;
 use App\Domain\Blueprint\Validation\Rules\RuleFactory;
-use App\Domain\Blueprint\Validation\ValidationConstants;
 
 /**
  * Конвертер правил валидации из Path в доменные Rule объекты.
  *
- * Преобразует validation_rules из модели Path в массив доменных Rule объектов,
- * учитывая data_type, required (из validation_rules) и cardinality.
+ * Преобразует validation_rules из модели Path в массив доменных Rule объектов.
+ * Не выполняет проверок совместимости правил с типами данных или cardinality.
+ * Пользователь сам отвечает за корректность настройки правил.
  *
  * @package App\Domain\Blueprint\Validation
  */
@@ -28,20 +28,14 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     /**
      * Преобразовать validation_rules из Path в доменные Rule объекты.
      *
-     * Преобразует правила валидации с учётом:
-     * - data_type: определяет базовый тип валидации (string, integer, numeric, boolean, date, datetime)
-     * - required: извлекается из validation_rules['required'], добавляет RequiredRule или NullableRule (только для cardinality: 'one')
-     * - cardinality: для 'many' возвращает правила для элементов массива (без required/nullable,
-     *   так как они применяются к самому массиву в BlueprintContentValidator)
-     * - validation_rules: преобразует min/max, pattern и другие правила в соответствующие Rule объекты
+     * Преобразует все ключи из validation_rules в Rule объекты напрямую,
+     * без проверок совместимости с типами данных или cardinality.
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
-     *                                                   Должен содержать 'required' => true/false для обязательности поля
-     * @param string $dataType Тип данных Path (string, text, int, float, bool, date, datetime, json, ref)
-     * @param string $cardinality Кардинальность: 'one' или 'many'
+     * @param string $dataType Тип данных Path (не используется, оставлен для обратной совместимости)
+     * @param string $cardinality Кардинальность (не используется, оставлен для обратной совместимости)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
-     *         Для cardinality: 'one' - правила для самого поля
-     *         Для cardinality: 'many' - правила для элементов массива (без RequiredRule/NullableRule)
+     * @throws \InvalidArgumentException Если встречено неизвестное правило
      */
     public function convert(
         ?array $validationRules,
@@ -50,7 +44,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     ): array {
         $rules = [];
 
-        // Если нет validation_rules, возвращаем только базовые правила (required/nullable)
+        // Если нет validation_rules, возвращаем пустой массив
         if ($validationRules === null || $validationRules === []) {
             return $rules;
         }
@@ -58,22 +52,30 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
         foreach ($validationRules as $key => $value) {
             match ($key) {
                 'required' => $this->handleRequiredRule($rules, $value),
-                'min' => $rules[] = $this->ruleFactory->createMinRule($value, $dataType),
-                'max' => $rules[] = $this->ruleFactory->createMaxRule($value, $dataType),
+                'min' => $rules[] = $this->ruleFactory->createMinRule($value),
+                'max' => $rules[] = $this->ruleFactory->createMaxRule($value),
                 'pattern' => $rules[] = $this->ruleFactory->createPatternRule($value),
                 'array_min_items' => $rules[] = $this->ruleFactory->createArrayMinItemsRule((int) $value),
                 'array_max_items' => $rules[] = $this->ruleFactory->createArrayMaxItemsRule((int) $value),
-                'array_unique' => $this->handleArrayUniqueRule($rules, $cardinality),
+                'array_unique' => $rules[] = $this->ruleFactory->createArrayUniqueRule(),
                 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
                 'field_comparison' => $this->handleFieldComparisonRule($rules, $value),
-                default => null, // Игнорируем неизвестные ключи
+                default => throw new \InvalidArgumentException("Неизвестное правило валидации: {$key}"),
             };
         }
 
         return $rules;
     }
 
-
+    /**
+     * Обработать правило required/nullable.
+     *
+     * Добавляет RequiredRule или NullableRule в зависимости от значения.
+     *
+     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
+     * @param bool $isRequired Обязательность поля
+     * @return void
+     */
     private function handleRequiredRule(array &$rules, bool $isRequired): void
     {
         if ($isRequired) {
@@ -115,20 +117,6 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
         $rules[] = $this->ruleFactory->createConditionalRule($type, $field, $conditionValue, $operator);
     }
 
-    /**
-     * Обработать правило уникальности элементов массива.
-     *
-     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param string $cardinality Кардинальность поля
-     * @return void
-     */
-    private function handleArrayUniqueRule(array &$rules, string $cardinality): void
-    {
-        // Правило применяется только к массивам
-        if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
-            $rules[] = $this->ruleFactory->createArrayUniqueRule();
-        }
-    }
 
     /**
      * Обработать правило сравнения поля с другим полем или константой.

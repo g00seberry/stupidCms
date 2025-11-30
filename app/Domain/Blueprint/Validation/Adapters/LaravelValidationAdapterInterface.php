@@ -19,14 +19,12 @@ interface LaravelValidationAdapterInterface
      * Преобразовать RuleSet в массив правил Laravel.
      *
      * Преобразует доменные Rule объекты в строки правил валидации Laravel
-     * (например, 'required', 'string', 'min:1', 'max:500', 'regex:/pattern/').
-     * Также добавляет базовые типы данных (string, integer, numeric, boolean, date, array)
-     * на основе data_type из Path.
+     * (например, 'required', 'min:1', 'max:500', 'regex:/pattern/').
+     * Не добавляет базовые типы данных автоматически.
      *
      * @param \App\Domain\Blueprint\Validation\Rules\RuleSet $ruleSet Набор доменных правил
-     * @param array<string, string> $dataTypes Маппинг путей полей на типы данных
-     *         (например, ['content_json.title' => 'string', 'content_json.count' => 'int'])
-     * @return array<string, array<int, string>> Массив правил валидации Laravel,
+     * @param array<string, string> $dataTypes Маппинг путей полей на типы данных (не используется, оставлен для обратной совместимости)
+     * @return array<string, array<int, string|object>> Массив правил валидации Laravel,
      *         где ключи - пути полей, значения - массивы строк правил
      */
     public function adapt(RuleSet $ruleSet, array $dataTypes = []): array;

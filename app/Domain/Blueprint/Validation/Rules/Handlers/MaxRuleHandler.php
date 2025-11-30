@@ -27,21 +27,19 @@ final class MaxRuleHandler implements RuleHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(Rule $rule, string $dataType): array
+    public function handle(Rule $rule): array
     {
         if (! $rule instanceof MaxRule) {
             throw new \InvalidArgumentException('Expected MaxRule instance');
         }
 
-        $params = $rule->getParams();
-        $value = $params['value'] ?? PHP_INT_MAX;
-        $ruleDataType = $params['data_type'] ?? 'string';
+        $value = $rule->getValue();
 
         if (! is_numeric($value)) {
             return ['max:'.PHP_INT_MAX];
         }
 
-        $maxValue = $ruleDataType === 'float' ? (float) $value : (int) $value;
+        $maxValue = is_float($value) ? (float) $value : (int) $value;
 
         return ["max:{$maxValue}"];
     }

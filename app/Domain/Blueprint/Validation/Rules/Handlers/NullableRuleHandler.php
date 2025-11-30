@@ -27,7 +27,7 @@ final class NullableRuleHandler implements RuleHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(Rule $rule, string $dataType): array
+    public function handle(Rule $rule): array
     {
         if (! $rule instanceof NullableRule) {
             throw new \InvalidArgumentException('Expected NullableRule instance');

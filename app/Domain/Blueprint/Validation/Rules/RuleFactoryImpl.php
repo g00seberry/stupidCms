@@ -17,24 +17,22 @@ final class RuleFactoryImpl implements RuleFactory
      * Создать правило минимального значения/длины.
      *
      * @param mixed $value Значение минимума
-     * @param string $dataType Тип данных (string, text, int, float)
      * @return \App\Domain\Blueprint\Validation\Rules\MinRule
      */
-    public function createMinRule(mixed $value, string $dataType): MinRule
+    public function createMinRule(mixed $value): MinRule
     {
-        return new MinRule($value, $dataType);
+        return new MinRule($value);
     }
 
     /**
      * Создать правило максимального значения/длины.
      *
      * @param mixed $value Значение максимума
-     * @param string $dataType Тип данных (string, text, int, float)
      * @return \App\Domain\Blueprint\Validation\Rules\MaxRule
      */
-    public function createMaxRule(mixed $value, string $dataType): MaxRule
+    public function createMaxRule(mixed $value): MaxRule
     {
-        return new MaxRule($value, $dataType);
+        return new MaxRule($value);
     }
 
     /**

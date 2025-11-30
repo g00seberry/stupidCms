@@ -9,8 +9,8 @@ use App\Domain\Blueprint\Validation\Rules\Rule;
 /**
  * Интерфейс конвертера правил валидации из Path в доменные Rule объекты.
  *
- * Преобразует validation_rules из модели Path в массив доменных Rule объектов,
- * учитывая data_type, required (из validation_rules) и cardinality.
+ * Преобразует validation_rules из модели Path в массив доменных Rule объектов.
+ * Не выполняет проверок совместимости правил с типами данных или cardinality.
  *
  * @package App\Domain\Blueprint\Validation
  */
@@ -19,20 +19,14 @@ interface PathValidationRulesConverterInterface
     /**
      * Преобразовать validation_rules из Path в доменные Rule объекты.
      *
-     * Преобразует правила валидации с учётом:
-     * - data_type: определяет базовый тип валидации (string, integer, numeric, boolean, date)
-     * - required: извлекается из validation_rules['required'], добавляет RequiredRule или NullableRule (только для cardinality: 'one')
-     * - cardinality: для 'many' возвращает правила для элементов массива (без required/nullable,
-     *   так как они применяются к самому массиву в BlueprintContentValidator)
-     * - validation_rules: преобразует min/max, pattern и другие правила в соответствующие Rule объекты
+     * Преобразует все ключи из validation_rules в Rule объекты напрямую,
+     * без проверок совместимости с типами данных или cardinality.
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
-     *                                                   Должен содержать 'required' => true/false для обязательности поля
-     * @param string $dataType Тип данных Path (string, text, int, float, bool, date, datetime, json, ref)
-     * @param string $cardinality Кардинальность: 'one' или 'many'
+     * @param string $dataType Тип данных Path (не используется, оставлен для обратной совместимости)
+     * @param string $cardinality Кардинальность (не используется, оставлен для обратной совместимости)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
-     *         Для cardinality: 'one' - правила для самого поля
-     *         Для cardinality: 'many' - правила для элементов массива (без RequiredRule/NullableRule)
+     * @throws \InvalidArgumentException Если встречено неизвестное правило
      */
     public function convert(
         ?array $validationRules,
