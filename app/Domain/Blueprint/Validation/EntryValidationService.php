@@ -103,15 +103,11 @@ final class EntryValidationService implements EntryValidationServiceInterface
                 if ($elementValidationRules !== null && $elementValidationRules !== []) {
                     unset($elementValidationRules['array_min_items'], $elementValidationRules['array_max_items'], $elementValidationRules['array_unique']);
                 }
-
-                // Извлекаем имя поля из full_path (последний сегмент)
-                $fieldName = $path->name;
                 
                 $elementRules = $this->converter->convert(
                     $elementValidationRules,
                     $path->data_type,
-                    ValidationConstants::CARDINALITY_ONE, // Элементы обрабатываются как одиночные значения
-                    $fieldName
+                    ValidationConstants::CARDINALITY_ONE // Элементы обрабатываются как одиночные значения
                 );
 
                 // Добавляем правила для элементов массива (без RequiredRule/NullableRule)
@@ -138,14 +134,10 @@ final class EntryValidationService implements EntryValidationServiceInterface
                 }
             } else {
                 // Для cardinality: 'one' создаём правила для самого поля
-                // Извлекаем имя поля из full_path (последний сегмент)
-                $fieldName = $path->name;
-                
                 $fieldRules = $this->converter->convert(
                     $path->validation_rules,
                     $path->data_type,
-                    ValidationConstants::CARDINALITY_ONE,
-                    $fieldName
+                    ValidationConstants::CARDINALITY_ONE
                 );
 
                 // Добавляем все правила для поля

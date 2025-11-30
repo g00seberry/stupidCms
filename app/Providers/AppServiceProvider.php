@@ -30,7 +30,6 @@ use App\Domain\Blueprint\Validation\Rules\Handlers\ArrayMaxItemsRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\ArrayMinItemsRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\ArrayUniqueRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\ConditionalRuleHandler;
-use App\Domain\Blueprint\Validation\Rules\Handlers\ExistsRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\FieldComparisonRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\MaxRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\MinRuleHandler;
@@ -38,7 +37,6 @@ use App\Domain\Blueprint\Validation\Rules\Handlers\NullableRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\PatternRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RequiredRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry;
-use App\Domain\Blueprint\Validation\Rules\Handlers\UniqueRuleHandler;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
@@ -290,8 +288,6 @@ class AppServiceProvider extends ServiceProvider
             $registry->register('prohibited_unless', new ConditionalRuleHandler());
             $registry->register('required_unless', new ConditionalRuleHandler());
             $registry->register('prohibited_if', new ConditionalRuleHandler());
-            $registry->register('unique', new UniqueRuleHandler());
-            $registry->register('exists', new ExistsRuleHandler());
             $registry->register('field_comparison', new FieldComparisonRuleHandler());
 
             return $registry;

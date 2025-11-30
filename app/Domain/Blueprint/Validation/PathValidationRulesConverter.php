@@ -39,7 +39,6 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      *                                                   Должен содержать 'required' => true/false для обязательности поля
      * @param string $dataType Тип данных Path (string, text, int, float, bool, date, datetime, json, ref)
      * @param string $cardinality Кардинальность: 'one' или 'many'
-     * @param string|null $fieldName Имя поля (последний сегмент full_path) для использования в unique/exists правилах
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
      *         Для cardinality: 'one' - правила для самого поля
      *         Для cardinality: 'many' - правила для элементов массива (без RequiredRule/NullableRule)
@@ -47,8 +46,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
     public function convert(
         ?array $validationRules,
         string $dataType,
-        string $cardinality,
-        ?string $fieldName = null
+        string $cardinality
     ): array {
         $rules = [];
 
@@ -86,8 +84,6 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
                 'array_max_items' => $arrayMaxItems = $value,
                 'array_unique' => $this->handleArrayUniqueRule($rules, $cardinality),
                 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
-                'unique' => $this->handleUniqueRule($rules, $value, $fieldName),
-                'exists' => $this->handleExistsRule($rules, $value, $fieldName),
                 'field_comparison' => $this->handleFieldComparisonRule($rules, $value),
                 default => null, // Игнорируем неизвестные ключи
             };
@@ -172,79 +168,6 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
         if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
             $rules[] = $this->ruleFactory->createArrayUniqueRule();
         }
-    }
-
-    /**
-     * Обработать правило уникальности значения.
-     *
-     * Поддерживает только расширенный формат:
-     * - 'unique' => ['table' => 'table_name', 'column' => 'column_name']
-     * - 'unique' => ['table' => 'table_name', 'column' => 'column_name', 'except' => ['column' => 'id', 'value' => 1]]
-     * - 'unique' => ['table' => 'table_name', 'column' => 'column_name', 'where' => ['column' => 'status', 'value' => 'active']]
-     *
-     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param mixed $value Значение правила (должно быть массивом с обязательным ключом 'table')
-     * @param string|null $fieldName Имя поля (последний сегмент full_path) для использования как колонка по умолчанию
-     * @return void
-     * @throws \InvalidArgumentException Если значение не является массивом или отсутствует обязательное поле 'table'
-     */
-    private function handleUniqueRule(array &$rules, mixed $value, ?string $fieldName = null): void
-    {
-        if (! is_array($value)) {
-            throw new \InvalidArgumentException(
-                "Правило 'unique' должно быть массивом с обязательным ключом 'table'."
-            );
-        }
-
-        $table = $value['table'] ?? null;
-        $column = $value['column'] ?? ($fieldName ?? 'id');
-        $exceptColumn = $value['except']['column'] ?? null;
-        $exceptValue = $value['except']['value'] ?? null;
-        $whereColumn = $value['where']['column'] ?? null;
-        $whereValue = $value['where']['value'] ?? null;
-
-        if ($table === null || $table === '') {
-            throw new \InvalidArgumentException(
-                "Правило 'unique' должно содержать обязательное поле 'table'."
-            );
-        }
-
-        $rules[] = $this->ruleFactory->createUniqueRule($table, $column, $exceptColumn, $exceptValue, $whereColumn, $whereValue);
-    }
-
-    /**
-     * Обработать правило существования значения.
-     *
-     * Поддерживает только расширенный формат:
-     * - 'exists' => ['table' => 'table_name', 'column' => 'column_name']
-     * - 'exists' => ['table' => 'table_name', 'column' => 'column_name', 'where' => ['column' => 'status', 'value' => 'active']]
-     *
-     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param mixed $value Значение правила (должно быть массивом с обязательным ключом 'table')
-     * @param string|null $fieldName Имя поля (последний сегмент full_path) для использования как колонка по умолчанию
-     * @return void
-     * @throws \InvalidArgumentException Если значение не является массивом или отсутствует обязательное поле 'table'
-     */
-    private function handleExistsRule(array &$rules, mixed $value, ?string $fieldName = null): void
-    {
-        if (! is_array($value)) {
-            throw new \InvalidArgumentException(
-                "Правило 'exists' должно быть массивом с обязательным ключом 'table'."
-            );
-        }
-
-        $table = $value['table'] ?? null;
-        $column = $value['column'] ?? ($fieldName ?? 'id');
-        $whereColumn = $value['where']['column'] ?? null;
-        $whereValue = $value['where']['value'] ?? null;
-
-        if ($table === null || $table === '') {
-            throw new \InvalidArgumentException(
-                "Правило 'exists' должно содержать обязательное поле 'table'."
-            );
-        }
-
-        $rules[] = $this->ruleFactory->createExistsRule($table, $column, $whereColumn, $whereValue);
     }
 
     /**

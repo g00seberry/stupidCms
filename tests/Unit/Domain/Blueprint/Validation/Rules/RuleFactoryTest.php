@@ -147,38 +147,6 @@ test('creates conditional rule with operator', function () {
         ->and($rule->getOperator())->toBe('>=');
 });
 
-test('creates unique rule correctly', function () {
-    $factory = new RuleFactoryImpl();
-    
-    $rule = $factory->createUniqueRule('entries', 'slug');
-    
-    expect($rule)->toBeInstanceOf(\App\Domain\Blueprint\Validation\Rules\UniqueRule::class)
-        ->and($rule->getType())->toBe('unique')
-        ->and($rule->getTable())->toBe('entries')
-        ->and($rule->getColumn())->toBe('slug');
-});
-
-test('creates unique rule with except', function () {
-    $factory = new RuleFactoryImpl();
-    
-    $rule = $factory->createUniqueRule('entries', 'slug', 'id', 5);
-    
-    expect($rule)->toBeInstanceOf(\App\Domain\Blueprint\Validation\Rules\UniqueRule::class)
-        ->and($rule->getExceptColumn())->toBe('id')
-        ->and($rule->getExceptValue())->toBe(5);
-});
-
-test('creates exists rule correctly', function () {
-    $factory = new RuleFactoryImpl();
-    
-    $rule = $factory->createExistsRule('entries', 'id');
-    
-    expect($rule)->toBeInstanceOf(\App\Domain\Blueprint\Validation\Rules\ExistsRule::class)
-        ->and($rule->getType())->toBe('exists')
-        ->and($rule->getTable())->toBe('entries')
-        ->and($rule->getColumn())->toBe('id');
-});
-
 test('creates array unique rule correctly', function () {
     $factory = new RuleFactoryImpl();
     

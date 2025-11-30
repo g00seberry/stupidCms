@@ -81,42 +81,6 @@ interface RuleFactory
     public function createConditionalRule(string $type, string $field, mixed $value, ?string $operator = null): ConditionalRule;
 
     /**
-     * Создать правило уникальности значения.
-     *
-     * @param string $table Таблица для проверки
-     * @param string $column Колонка для проверки
-     * @param string|null $exceptColumn Колонка для исключения
-     * @param mixed $exceptValue Значение для исключения
-     * @param string|null $whereColumn Дополнительная колонка для WHERE
-     * @param mixed $whereValue Значение для WHERE
-     * @return \App\Domain\Blueprint\Validation\Rules\UniqueRule
-     */
-    public function createUniqueRule(
-        string $table,
-        string $column = 'id',
-        ?string $exceptColumn = null,
-        mixed $exceptValue = null,
-        ?string $whereColumn = null,
-        mixed $whereValue = null
-    ): UniqueRule;
-
-    /**
-     * Создать правило существования значения.
-     *
-     * @param string $table Таблица для проверки
-     * @param string $column Колонка для проверки
-     * @param string|null $whereColumn Дополнительная колонка для WHERE
-     * @param mixed $whereValue Значение для WHERE
-     * @return \App\Domain\Blueprint\Validation\Rules\ExistsRule
-     */
-    public function createExistsRule(
-        string $table,
-        string $column = 'id',
-        ?string $whereColumn = null,
-        mixed $whereValue = null
-    ): ExistsRule;
-
-    /**
      * Создать правило уникальности элементов массива.
      *
      * @return \App\Domain\Blueprint\Validation\Rules\ArrayUniqueRule

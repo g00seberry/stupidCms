@@ -570,55 +570,6 @@ test('validates content_json with array unique rule on create', function () {
     $response->assertStatus(201);
 });
 
-test('validates content_json with exists rule for ref type on create', function () {
-    $blueprint = Blueprint::factory()->create();
-    
-    // Создаём несколько Entry для ссылок
-    $referencedEntry1 = \App\Models\Entry::factory()->create();
-    $referencedEntry2 = \App\Models\Entry::factory()->create();
-    
-    Path::factory()->create([
-        'blueprint_id' => $blueprint->id,
-        'name' => 'related_entry',
-        'full_path' => 'related_entry',
-        'data_type' => 'ref',
-        'cardinality' => 'one',
-        'validation_rules' => [
-            'required' => false,
-            'exists' => ['table' => 'entries', 'column' => 'id'],
-        ],
-    ]);
-
-    $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
-
-    // Несуществующий ID
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/entries', [
-        'post_type' => $postType->slug,
-        'title' => 'Test Entry',
-        'content_json' => [
-            'related_entry' => 'non-existent-id',
-        ],
-    ]);
-
-    $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.related_entry']);
-
-    // Валидный ID
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/entries', [
-        'post_type' => $postType->slug,
-        'title' => 'Test Entry',
-        'content_json' => [
-            'related_entry' => $referencedEntry1->id,
-        ],
-    ]);
-
-    $response->assertStatus(201);
-});
-
 test('validates content_json with min max rules on update', function () {
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
