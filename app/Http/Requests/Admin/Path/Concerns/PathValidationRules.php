@@ -39,7 +39,6 @@ trait PathValidationRules
             'validation_rules.max' => ['sometimes', 'numeric'],
             'validation_rules.pattern' => ['sometimes', 'string'],
             'validation_rules.distinct' => ['sometimes', 'boolean'],
-            // Условные правила - только расширенный формат
             'validation_rules.required_if' => ['sometimes', 'array'],
             'validation_rules.required_if.field' => ['required_with:validation_rules.required_if', 'string'],
             'validation_rules.required_if.value' => ['required_with:validation_rules.required_if'],
