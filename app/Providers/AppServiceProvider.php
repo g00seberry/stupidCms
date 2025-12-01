@@ -21,8 +21,6 @@ use App\Domain\Media\Validation\MediaValidatorInterface;
 use App\Domain\Media\Validation\MimeSignatureValidator;
 use App\Domain\Media\Validation\SizeLimitValidator;
 use App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface;
-use App\Domain\Blueprint\Validation\BlueprintContentValidator;
-use App\Domain\Blueprint\Validation\BlueprintContentValidatorInterface;
 use App\Domain\Blueprint\Validation\EntryValidationServiceInterface;
 use App\Domain\Blueprint\Validation\PathValidationRulesConverter;
 use App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface;
@@ -55,7 +53,6 @@ use App\Domain\Media\Listeners\LogMediaEvent;
 use App\Domain\Media\Listeners\NotifyMediaEvent;
 use App\Domain\Media\Listeners\PurgeCdnCache;
 use App\Events\Blueprint\BlueprintStructureChanged;
-use App\Listeners\Blueprint\InvalidateValidationCache;
 use App\Listeners\Blueprint\RematerializeEmbeds;
 use App\Domain\Media\MediaRepository;
 use App\Domain\Options\OptionsRepository;
@@ -247,9 +244,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(BlueprintStructureService::class);
-
-        // Blueprint content validation
-        $this->app->singleton(BlueprintContentValidatorInterface::class, BlueprintContentValidator::class);
         
         // Rule factory
         $this->app->bind(
@@ -328,7 +322,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Регистрация слушателей событий blueprint
         Event::listen(BlueprintStructureChanged::class, RematerializeEmbeds::class);
-        Event::listen(BlueprintStructureChanged::class, InvalidateValidationCache::class);
 
         // Валидация конфигурации медиа-файлов
         (new MediaConfigValidator())->validate();
