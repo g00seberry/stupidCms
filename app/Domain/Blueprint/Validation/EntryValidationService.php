@@ -45,7 +45,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
 
         // Загружаем все Path из blueprint (включая скопированные)
         $paths = $blueprint->paths()
-            ->select(['id', 'name', 'full_path', 'validation_rules'])
+            ->select(['id', 'name', 'full_path', 'cardinality', 'validation_rules'])
             ->orderByRaw('LENGTH(full_path), full_path')
             ->get();
 
