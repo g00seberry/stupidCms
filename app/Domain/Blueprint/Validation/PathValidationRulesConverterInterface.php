@@ -24,7 +24,7 @@ interface PathValidationRulesConverterInterface
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
-     * @throws \InvalidArgumentException Если встречено неизвестное правило
+     * @throws \App\Domain\Blueprint\Validation\Exceptions\InvalidValidationRuleException Если встречено неизвестное правило
      */
     public function convert(?array $validationRules): array;
 }

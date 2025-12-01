@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Blueprint\Validation;
 
+use App\Domain\Blueprint\Validation\Exceptions\InvalidValidationRuleException;
 use App\Domain\Blueprint\Validation\Rules\Rule;
 use App\Domain\Blueprint\Validation\Rules\RuleFactory;
 
@@ -33,7 +34,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
-     * @throws \InvalidArgumentException Если встречено неизвестное правило
+     * @throws \App\Domain\Blueprint\Validation\Exceptions\InvalidValidationRuleException Если встречено неизвестное правило
      */
     public function convert(?array $validationRules): array {
         $rules = [];
@@ -52,7 +53,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
                 'distinct' => $rules[] = $this->ruleFactory->createDistinctRule(),
                 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
                 'field_comparison' => $this->handleFieldComparisonRule($rules, $value),
-                default => throw new \InvalidArgumentException("Неизвестное правило валидации: {$key}"),
+                default => throw new InvalidValidationRuleException("Неизвестное правило валидации: {$key}"),
             };
         }
 
@@ -86,12 +87,12 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      * @param string $type Тип условного правила ('required_if', 'prohibited_unless', 'required_unless', 'prohibited_if')
      * @param mixed $value Значение условия (должно быть массивом с ключами 'field', 'value', 'operator')
      * @return void
-     * @throws \InvalidArgumentException Если значение не является массивом или отсутствует обязательное поле 'field'
+     * @throws \App\Domain\Blueprint\Validation\Exceptions\InvalidValidationRuleException Если значение не является массивом или отсутствует обязательное поле 'field'
      */
     private function handleConditionalRule(array &$rules, string $type, mixed $value): void
     {
         if (! is_array($value)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidValidationRuleException(
                 "Условное правило '{$type}' должно быть массивом с ключами 'field', 'value' и опционально 'operator'."
             );
         }
@@ -101,7 +102,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
         $operator = $value['operator'] ?? null;
 
         if ($field === null || $field === '') {
-            throw new \InvalidArgumentException(
+            throw new InvalidValidationRuleException(
                 "Условное правило '{$type}' должно содержать обязательное поле 'field'."
             );
         }

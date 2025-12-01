@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 233
+**Всего сущностей:** 232
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (23 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (95 сущностей)
+Доменные сервисы, действия, репозитории (94 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -40,7 +40,6 @@ HTTP эндпоинты API (83 сущностей)
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
-- [BlueprintContentValidator](./domain-services.md#blueprintcontentvalidator) - Валидатор контента Entry на основе Blueprint.
 - [ConditionalRule](./domain-services.md#conditionalrule) - Доменное правило валидации: условное правило.
 - [ConditionalRuleHandler](./domain-services.md#conditionalrulehandler) - Обработчик правила ConditionalRule.
 - [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
@@ -49,7 +48,8 @@ HTTP эндпоинты API (83 сущностей)
 - [DistinctRuleHandler](./domain-services.md#distinctrulehandler) - Обработчик правила DistinctRule.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
-- *...и еще 85 сущностей*
+- [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
+- *...и еще 84 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (83 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-12-01 10:07:10
+**Сгенерировано:** 2025-12-01 10:55:36
 
 Для обновления документации выполните:
 ```bash

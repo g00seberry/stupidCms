@@ -893,33 +893,6 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
-            "type": "domain_service",
-            "name": "BlueprintContentValidator",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\BlueprintContentValidator.php",
-            "summary": "Валидатор контента Entry на основе Blueprint.",
-            "details": "Строит правила валидации Laravel для поля content_json на основе\nструктуры Path в Blueprint. Использует EntryValidationService для построения\nдоменных правил и LaravelValidationAdapter для преобразования в Laravel правила.\nИспользует кэширование для оптимизации производительности.",
-            "meta": {
-                "methods": [
-                    "buildRules",
-                    "invalidateCache"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface",
-                    "App\\Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapterInterface",
-                    "App\\Domain\\Blueprint\\Validation\\DataTypeMapper",
-                    "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder",
-                    "App\\Domain\\Blueprint\\Validation\\RuleArrayManipulator"
-                ],
-                "interface": "App\\Domain\\Blueprint\\Validation\\BlueprintContentValidatorInterface"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
-        },
-        {
             "id": "domain_service:Blueprint/Validation/DataTypeMapper",
             "type": "domain_service",
             "name": "DataTypeMapper",
@@ -7547,33 +7520,6 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
-                "type": "domain_service",
-                "name": "BlueprintContentValidator",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\BlueprintContentValidator.php",
-                "summary": "Валидатор контента Entry на основе Blueprint.",
-                "details": "Строит правила валидации Laravel для поля content_json на основе\nструктуры Path в Blueprint. Использует EntryValidationService для построения\nдоменных правил и LaravelValidationAdapter для преобразования в Laravel правила.\nИспользует кэширование для оптимизации производительности.",
-                "meta": {
-                    "methods": [
-                        "buildRules",
-                        "invalidateCache"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface",
-                        "App\\Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapterInterface",
-                        "App\\Domain\\Blueprint\\Validation\\DataTypeMapper",
-                        "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder",
-                        "App\\Domain\\Blueprint\\Validation\\RuleArrayManipulator"
-                    ],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\BlueprintContentValidatorInterface"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/DataTypeMapper",
                 "type": "domain_service",
                 "name": "DataTypeMapper",
@@ -13334,12 +13280,6 @@
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
-                "type": "domain_service",
-                "name": "BlueprintContentValidator",
-                "summary": "Валидатор контента Entry на основе Blueprint."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/DataTypeMapper",
                 "type": "domain_service",
                 "name": "DataTypeMapper",
@@ -14062,12 +14002,6 @@
                 "type": "domain_service",
                 "name": "LaravelValidationAdapter",
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/BlueprintContentValidator",
-                "type": "domain_service",
-                "name": "BlueprintContentValidator",
-                "summary": "Валидатор контента Entry на основе Blueprint."
             },
             {
                 "id": "domain_service:Blueprint/Validation/DataTypeMapper",
@@ -17311,5 +17245,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-01T10:07:10+00:00"
+    "generated_at": "2025-12-01T10:55:36+00:00"
 }
