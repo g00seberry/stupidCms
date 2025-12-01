@@ -52,22 +52,6 @@ interface RuleFactory
     public function createNullableRule(): NullableRule;
 
     /**
-     * Создать правило минимального количества элементов массива.
-     *
-     * @param int $value Минимальное количество элементов
-     * @return \App\Domain\Blueprint\Validation\Rules\ArrayMinItemsRule
-     */
-    public function createArrayMinItemsRule(int $value): ArrayMinItemsRule;
-
-    /**
-     * Создать правило максимального количества элементов массива.
-     *
-     * @param int $value Максимальное количество элементов
-     * @return \App\Domain\Blueprint\Validation\Rules\ArrayMaxItemsRule
-     */
-    public function createArrayMaxItemsRule(int $value): ArrayMaxItemsRule;
-
-    /**
      * Создать условное правило валидации.
      *
      * @param string $type Тип правила ('required_if', 'prohibited_unless', 'required_unless', 'prohibited_if')
@@ -81,9 +65,9 @@ interface RuleFactory
     /**
      * Создать правило уникальности элементов массива.
      *
-     * @return \App\Domain\Blueprint\Validation\Rules\ArrayUniqueRule
+     * @return \App\Domain\Blueprint\Validation\Rules\DistinctRule
      */
-    public function createArrayUniqueRule(): ArrayUniqueRule;
+    public function createDistinctRule(): DistinctRule;
 
     /**
      * Создать правило сравнения поля с другим полем или константой.

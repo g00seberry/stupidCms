@@ -26,12 +26,8 @@ use Illuminate\Validation\Validator;
  *   - validation_rules.min: опциональное минимальное значение (numeric)
  *   - validation_rules.max: опциональное максимальное значение (numeric)
  *   - validation_rules.pattern: опциональный regex паттерн (string)
- *   - validation_rules.array_min_items: опциональное минимальное количество элементов массива (numeric)
- *   - validation_rules.array_max_items: опциональное максимальное количество элементов массива (numeric)
- *   - validation_rules.array_unique: опциональный флаг уникальности элементов массива (boolean)
+ *   - validation_rules.distinct: опциональный флаг уникальности элементов массива (boolean)
  *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (расширенный формат: array с полями 'field', 'value', 'operator')
- *   - validation_rules.unique: опциональное правило уникальности (расширенный формат: array с обязательным полем 'table')
- *   - validation_rules.exists: опциональное правило существования (расширенный формат: array с обязательным полем 'table')
  *   - validation_rules.field_comparison: опциональное правило сравнения полей (array)
  *   - validation_rules.*: разрешены любые дополнительные ключи
  *
@@ -68,12 +64,8 @@ class StorePathRequest extends FormRequest
      *   - validation_rules.min: опциональное минимальное значение (numeric)
      *   - validation_rules.max: опциональное максимальное значение (numeric)
      *   - validation_rules.pattern: опциональный regex паттерн (string)
-     *   - validation_rules.array_min_items: опциональное минимальное количество элементов массива (numeric)
-     *   - validation_rules.array_max_items: опциональное максимальное количество элементов массива (numeric)
-     *   - validation_rules.array_unique: опциональный флаг уникальности элементов массива (boolean)
- *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (расширенный формат: array с полями 'field', 'value', 'operator')
- *   - validation_rules.unique: опциональное правило уникальности (расширенный формат: array с обязательным полем 'table')
- *   - validation_rules.exists: опциональное правило существования (расширенный формат: array с обязательным полем 'table')
+     *   - validation_rules.distinct: опциональный флаг уникальности элементов массива (boolean)
+     *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (расширенный формат: array с полями 'field', 'value', 'operator')
      *   - validation_rules.field_comparison: опциональное правило сравнения полей (array)
      *   - validation_rules.*: разрешены любые дополнительные ключи
      *

@@ -32,16 +32,10 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      * без проверок совместимости с типами данных или cardinality.
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
-     * @param string $dataType Тип данных Path (не используется, оставлен для обратной совместимости)
-     * @param string $cardinality Кардинальность (не используется, оставлен для обратной совместимости)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
      * @throws \InvalidArgumentException Если встречено неизвестное правило
      */
-    public function convert(
-        ?array $validationRules,
-        string $dataType,
-        string $cardinality
-    ): array {
+    public function convert(?array $validationRules): array {
         $rules = [];
 
         // Если нет validation_rules, возвращаем пустой массив
@@ -55,9 +49,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
                 'min' => $rules[] = $this->ruleFactory->createMinRule($value),
                 'max' => $rules[] = $this->ruleFactory->createMaxRule($value),
                 'pattern' => $rules[] = $this->ruleFactory->createPatternRule($value),
-                'array_min_items' => $rules[] = $this->ruleFactory->createArrayMinItemsRule((int) $value),
-                'array_max_items' => $rules[] = $this->ruleFactory->createArrayMaxItemsRule((int) $value),
-                'array_unique' => $rules[] = $this->ruleFactory->createArrayUniqueRule(),
+                'distinct' => $rules[] = $this->ruleFactory->createDistinctRule(),
                 'required_if', 'prohibited_unless', 'required_unless', 'prohibited_if' => $this->handleConditionalRule($rules, $key, $value),
                 'field_comparison' => $this->handleFieldComparisonRule($rules, $value),
                 default => throw new \InvalidArgumentException("Неизвестное правило валидации: {$key}"),

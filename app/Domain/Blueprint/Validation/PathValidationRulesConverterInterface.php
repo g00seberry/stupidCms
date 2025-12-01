@@ -23,15 +23,9 @@ interface PathValidationRulesConverterInterface
      * без проверок совместимости с типами данных или cardinality.
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
-     * @param string $dataType Тип данных Path (не используется, оставлен для обратной совместимости)
-     * @param string $cardinality Кардинальность (не используется, оставлен для обратной совместимости)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
      * @throws \InvalidArgumentException Если встречено неизвестное правило
      */
-    public function convert(
-        ?array $validationRules,
-        string $dataType,
-        string $cardinality
-    ): array;
+    public function convert(?array $validationRules): array;
 }
 

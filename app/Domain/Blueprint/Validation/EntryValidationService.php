@@ -45,7 +45,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
 
         // Загружаем все Path из blueprint (включая скопированные)
         $paths = $blueprint->paths()
-            ->select(['id', 'name', 'full_path', 'data_type', 'cardinality', 'validation_rules'])
+            ->select(['id', 'name', 'full_path', 'validation_rules'])
             ->orderByRaw('LENGTH(full_path), full_path')
             ->get();
 
@@ -63,12 +63,8 @@ final class EntryValidationService implements EntryValidationServiceInterface
         foreach ($paths as $path) {
             $fieldPath = $this->fieldPathBuilder->buildFieldPath($path->full_path, $pathCardinalities);
 
-            // Преобразуем validation_rules в Rule объекты (cardinality передаётся, но не используется для проверок)
-            $fieldRules = $this->converter->convert(
-                $path->validation_rules,
-                $path->data_type,
-                $path->cardinality
-            );
+            // Преобразуем validation_rules в Rule объекты
+            $fieldRules = $this->converter->convert($path->validation_rules);
 
             // Добавляем все правила для поля
             foreach ($fieldRules as $rule) {

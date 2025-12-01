@@ -22,8 +22,7 @@ trait PathValidationRules
      * - required: флаг обязательности поля
      * - min, max: минимальное и максимальное значение
      * - pattern: regex паттерн
-     * - array_min_items, array_max_items: ограничения для массивов
-     * - array_unique: флаг уникальности элементов массива
+     * - distinct: флаг уникальности элементов массива
      * - required_if, prohibited_unless, required_unless, prohibited_if: условные правила (расширенный формат)
      * - unique, exists: правила уникальности и существования (расширенный формат)
      * - field_comparison: правило сравнения полей
@@ -39,9 +38,7 @@ trait PathValidationRules
             'validation_rules.min' => ['sometimes', 'numeric'],
             'validation_rules.max' => ['sometimes', 'numeric'],
             'validation_rules.pattern' => ['sometimes', 'string'],
-            'validation_rules.array_min_items' => ['sometimes', 'numeric', 'min:0'],
-            'validation_rules.array_max_items' => ['sometimes', 'numeric', 'min:0'],
-            'validation_rules.array_unique' => ['sometimes', 'boolean'],
+            'validation_rules.distinct' => ['sometimes', 'boolean'],
             // Условные правила - только расширенный формат
             'validation_rules.required_if' => ['sometimes', 'array'],
             'validation_rules.required_if.field' => ['required_with:validation_rules.required_if', 'string'],
@@ -59,22 +56,6 @@ trait PathValidationRules
             'validation_rules.prohibited_if.field' => ['required_with:validation_rules.prohibited_if', 'string'],
             'validation_rules.prohibited_if.value' => ['required_with:validation_rules.prohibited_if'],
             'validation_rules.prohibited_if.operator' => ['sometimes', 'string', Rule::in(['==', '!=', '>', '<', '>=', '<='])],
-            // Правила уникальности и существования - только расширенный формат
-            'validation_rules.unique' => ['sometimes', 'array'],
-            'validation_rules.unique.table' => ['required_with:validation_rules.unique', 'string'],
-            'validation_rules.unique.column' => ['sometimes', 'string'],
-            'validation_rules.unique.except' => ['sometimes', 'array'],
-            'validation_rules.unique.except.column' => ['required_with:validation_rules.unique.except', 'string'],
-            'validation_rules.unique.except.value' => ['required_with:validation_rules.unique.except'],
-            'validation_rules.unique.where' => ['sometimes', 'array'],
-            'validation_rules.unique.where.column' => ['required_with:validation_rules.unique.where', 'string'],
-            'validation_rules.unique.where.value' => ['required_with:validation_rules.unique.where'],
-            'validation_rules.exists' => ['sometimes', 'array'],
-            'validation_rules.exists.table' => ['required_with:validation_rules.exists', 'string'],
-            'validation_rules.exists.column' => ['sometimes', 'string'],
-            'validation_rules.exists.where' => ['sometimes', 'array'],
-            'validation_rules.exists.where.column' => ['required_with:validation_rules.exists.where', 'string'],
-            'validation_rules.exists.where.value' => ['required_with:validation_rules.exists.where'],
             'validation_rules.field_comparison' => ['sometimes', 'array'],
             'validation_rules.*' => ['nullable'],
         ];
