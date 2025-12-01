@@ -25,7 +25,6 @@ final class DataTypeMapper
             ValidationConstants::DATA_TYPE_INT => 'integer',
             ValidationConstants::DATA_TYPE_FLOAT => 'numeric',
             ValidationConstants::DATA_TYPE_BOOL => 'boolean',
-            ValidationConstants::DATA_TYPE_DATE,
             ValidationConstants::DATA_TYPE_DATETIME => 'date',
             ValidationConstants::DATA_TYPE_JSON => ValidationConstants::RULE_ARRAY,
             ValidationConstants::DATA_TYPE_REF => 'integer',

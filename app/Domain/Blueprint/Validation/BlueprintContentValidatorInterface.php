@@ -22,7 +22,7 @@ interface BlueprintContentValidatorInterface
      * Анализирует все Path в blueprint и преобразует их validation_rules
      * в массив правил валидации Laravel для поля content_json.
      * Учитывает:
-     * - data_type каждого Path (string, int, float, bool, date, datetime, json, ref)
+     * - data_type каждого Path (string, int, float, bool, datetime, json, ref)
      * - validation_rules['required'] (required или nullable)
      * - cardinality (one или many)
      * - validation_rules (min, max, pattern и т.д.)

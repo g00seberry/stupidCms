@@ -42,7 +42,6 @@ final class ValidationConstants
     public const DATA_TYPE_INT = 'int';
     public const DATA_TYPE_FLOAT = 'float';
     public const DATA_TYPE_BOOL = 'bool';
-    public const DATA_TYPE_DATE = 'date';
     public const DATA_TYPE_DATETIME = 'datetime';
     public const DATA_TYPE_JSON = 'json';
     public const DATA_TYPE_REF = 'ref';

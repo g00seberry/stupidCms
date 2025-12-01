@@ -875,15 +875,13 @@
             "name": "LaravelValidationAdapter",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapter.php",
             "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации.",
-            "details": "Преобразует доменные Rule объекты в строки правил валидации Laravel\nчерез систему handlers.",
+            "details": "Преобразует доменные Rule объекты в строки правил валидации Laravel\nчерез систему handlers. Не добавляет базовые типы данных автоматически.\nПользователь сам отвечает за указание всех необходимых правил.",
             "meta": {
                 "methods": [
                     "adapt"
                 ],
                 "dependencies": [
-                    "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerRegistry",
-                    "App\\Domain\\Blueprint\\Validation\\DataTypeMapper",
-                    "App\\Domain\\Blueprint\\Validation\\RuleArrayManipulator"
+                    "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerRegistry"
                 ],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapterInterface"
             },
@@ -949,14 +947,13 @@
             "name": "EntryValidationService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\EntryValidationService.php",
             "summary": "Доменный сервис валидации контента Entry на основе Blueprint.",
-            "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.",
+            "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nНе выполняет проверок совместимости правил - пользователь сам настраивает правила.",
             "meta": {
                 "methods": [
                     "buildRulesFor"
                 ],
                 "dependencies": [
                     "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface",
-                    "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory",
                     "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder"
                 ],
                 "interface": "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface"
@@ -993,7 +990,7 @@
             "name": "PathValidationRulesConverter",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\PathValidationRulesConverter.php",
             "summary": "Конвертер правил валидации из Path в доменные Rule объекты.",
-            "details": "Преобразует validation_rules из модели Path в массив доменных Rule объектов,\nучитывая data_type, required (из validation_rules) и cardinality.",
+            "details": "Преобразует validation_rules из модели Path в массив доменных Rule объектов.\nНе выполняет проверок совместимости правил с типами данных или cardinality.\nПользователь сам отвечает за корректность настройки правил.",
             "meta": {
                 "methods": [
                     "convert"
@@ -1032,74 +1029,6 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule",
-            "type": "domain_service",
-            "name": "ArrayMaxItemsRule",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ArrayMaxItemsRule.php",
-            "summary": "Доменное правило валидации: максимальное количество элементов в массиве.",
-            "details": "Применяется только к полям с cardinality: 'many'.",
-            "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getValue"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
-        },
-        {
-            "id": "domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule",
-            "type": "domain_service",
-            "name": "ArrayMinItemsRule",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ArrayMinItemsRule.php",
-            "summary": "Доменное правило валидации: минимальное количество элементов в массиве.",
-            "details": "Применяется только к полям с cardinality: 'many'.",
-            "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getValue"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
-        },
-        {
-            "id": "domain_service:Blueprint/Validation/Rules/ArrayUniqueRule",
-            "type": "domain_service",
-            "name": "ArrayUniqueRule",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ArrayUniqueRule.php",
-            "summary": "Доменное правило валидации: уникальность элементов массива.",
-            "details": "Проверяет, что все элементы массива уникальны.\nПрименяется только к полям с cardinality: 'many'.",
-            "meta": {
-                "methods": [
-                    "getType",
-                    "getParams"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
-        },
-        {
             "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
             "type": "domain_service",
             "name": "ConditionalRule",
@@ -1125,20 +1054,16 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/Rules/ExistsRule",
+            "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
             "type": "domain_service",
-            "name": "ExistsRule",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ExistsRule.php",
-            "summary": "Доменное правило валидации: существование значения.",
-            "details": "Проверяет, что значение поля существует в указанной таблице/колонке.\nПрименяется к полям типа ref (ссылки на другие сущности).",
+            "name": "DistinctRule",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\DistinctRule.php",
+            "summary": "Правило валидации: уникальность элементов массива.",
+            "details": "Преобразуется в Laravel правило 'distinct'.\nМожет применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
             "meta": {
                 "methods": [
                     "getType",
-                    "getParams",
-                    "getTable",
-                    "getColumn",
-                    "getWhereColumn",
-                    "getWhereValue"
+                    "getParams"
                 ],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
@@ -1199,75 +1124,6 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler",
-            "type": "domain_service",
-            "name": "ArrayMaxItemsRuleHandler",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ArrayMaxItemsRuleHandler.php",
-            "summary": "Обработчик правила ArrayMaxItemsRule.",
-            "details": "Преобразует ArrayMaxItemsRule в строку Laravel правила валидации (например, 'max:10').",
-            "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
-        },
-        {
-            "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler",
-            "type": "domain_service",
-            "name": "ArrayMinItemsRuleHandler",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ArrayMinItemsRuleHandler.php",
-            "summary": "Обработчик правила ArrayMinItemsRule.",
-            "details": "Преобразует ArrayMinItemsRule в строку Laravel правила валидации (например, 'min:2').",
-            "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
-        },
-        {
-            "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler",
-            "type": "domain_service",
-            "name": "ArrayUniqueRuleHandler",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ArrayUniqueRuleHandler.php",
-            "summary": "Обработчик правила ArrayUniqueRule.",
-            "details": "Преобразует ArrayUniqueRule в строку Laravel правила валидации ('distinct').",
-            "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
-        },
-        {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
             "type": "domain_service",
             "name": "ConditionalRuleHandler",
@@ -1291,12 +1147,12 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler",
+            "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
             "type": "domain_service",
-            "name": "ExistsRuleHandler",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ExistsRuleHandler.php",
-            "summary": "Обработчик правила ExistsRule.",
-            "details": "Преобразует ExistsRule в строку Laravel правила валидации\n(например, 'exists:table,column').\nДля WHERE условий использует Rule объекты Laravel.",
+            "name": "DistinctRuleHandler",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\DistinctRuleHandler.php",
+            "summary": "Обработчик правила DistinctRule.",
+            "details": "Преобразует DistinctRule в строку Laravel правила валидации ('distinct').",
             "meta": {
                 "methods": [
                     "supports",
@@ -1477,41 +1333,17 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler",
-            "type": "domain_service",
-            "name": "UniqueRuleHandler",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\UniqueRuleHandler.php",
-            "summary": "Обработчик правила UniqueRule.",
-            "details": "Преобразует UniqueRule в строку Laravel правила валидации\n(например, 'unique:table,column' или 'unique:table,column,except,id').\nДля WHERE условий использует Rule объекты Laravel.",
-            "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
-        },
-        {
             "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
             "type": "domain_service",
             "name": "MaxRule",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\MaxRule.php",
             "summary": "Правило валидации: максимальное значение/длина.",
-            "details": "Для строковых типов (string, text) означает максимальную длину.\nДля числовых типов (int, float) означает максимальное значение.",
+            "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
             "meta": {
                 "methods": [
                     "getType",
                     "getParams",
-                    "getValue",
-                    "getDataType"
+                    "getValue"
                 ],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
@@ -1529,13 +1361,12 @@
             "name": "MinRule",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\MinRule.php",
             "summary": "Правило валидации: минимальное значение/длина.",
-            "details": "Для строковых типов (string, text) означает минимальную длину.\nДля числовых типов (int, float) означает минимальное значение.",
+            "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
             "meta": {
                 "methods": [
                     "getType",
                     "getParams",
-                    "getValue",
-                    "getDataType"
+                    "getValue"
                 ],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
@@ -1628,12 +1459,8 @@
                     "createPatternRule",
                     "createRequiredRule",
                     "createNullableRule",
-                    "createArrayMinItemsRule",
-                    "createArrayMaxItemsRule",
                     "createConditionalRule",
-                    "createUniqueRule",
-                    "createExistsRule",
-                    "createArrayUniqueRule",
+                    "createDistinctRule",
                     "createFieldComparisonRule"
                 ],
                 "dependencies": [],
@@ -1664,34 +1491,6 @@
                 ],
                 "dependencies": [],
                 "interface": null
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
-        },
-        {
-            "id": "domain_service:Blueprint/Validation/Rules/UniqueRule",
-            "type": "domain_service",
-            "name": "UniqueRule",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\UniqueRule.php",
-            "summary": "Доменное правило валидации: уникальность значения.",
-            "details": "Проверяет, что значение поля уникально в указанной таблице/колонке.\nПрименяется к полям типа ref (ссылки на другие сущности) или string (для проверки уникальности в других таблицах).",
-            "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getTable",
-                    "getColumn",
-                    "getExceptColumn",
-                    "getExceptValue",
-                    "getWhereColumn",
-                    "getWhereValue"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
             "tags": [
@@ -7730,15 +7529,13 @@
                 "name": "LaravelValidationAdapter",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapter.php",
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации.",
-                "details": "Преобразует доменные Rule объекты в строки правил валидации Laravel\nчерез систему handlers.",
+                "details": "Преобразует доменные Rule объекты в строки правил валидации Laravel\nчерез систему handlers. Не добавляет базовые типы данных автоматически.\nПользователь сам отвечает за указание всех необходимых правил.",
                 "meta": {
                     "methods": [
                         "adapt"
                     ],
                     "dependencies": [
-                        "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerRegistry",
-                        "App\\Domain\\Blueprint\\Validation\\DataTypeMapper",
-                        "App\\Domain\\Blueprint\\Validation\\RuleArrayManipulator"
+                        "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerRegistry"
                     ],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapterInterface"
                 },
@@ -7804,14 +7601,13 @@
                 "name": "EntryValidationService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\EntryValidationService.php",
                 "summary": "Доменный сервис валидации контента Entry на основе Blueprint.",
-                "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.",
+                "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nНе выполняет проверок совместимости правил - пользователь сам настраивает правила.",
                 "meta": {
                     "methods": [
                         "buildRulesFor"
                     ],
                     "dependencies": [
                         "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface",
-                        "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory",
                         "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder"
                     ],
                     "interface": "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface"
@@ -7848,7 +7644,7 @@
                 "name": "PathValidationRulesConverter",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\PathValidationRulesConverter.php",
                 "summary": "Конвертер правил валидации из Path в доменные Rule объекты.",
-                "details": "Преобразует validation_rules из модели Path в массив доменных Rule объектов,\nучитывая data_type, required (из validation_rules) и cardinality.",
+                "details": "Преобразует validation_rules из модели Path в массив доменных Rule объектов.\nНе выполняет проверок совместимости правил с типами данных или cardinality.\nПользователь сам отвечает за корректность настройки правил.",
                 "meta": {
                     "methods": [
                         "convert"
@@ -7887,74 +7683,6 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRule",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ArrayMaxItemsRule.php",
-                "summary": "Доменное правило валидации: максимальное количество элементов в массиве.",
-                "details": "Применяется только к полям с cardinality: 'many'.",
-                "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getValue"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRule",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ArrayMinItemsRule.php",
-                "summary": "Доменное правило валидации: минимальное количество элементов в массиве.",
-                "details": "Применяется только к полям с cardinality: 'many'.",
-                "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getValue"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayUniqueRule",
-                "type": "domain_service",
-                "name": "ArrayUniqueRule",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ArrayUniqueRule.php",
-                "summary": "Доменное правило валидации: уникальность элементов массива.",
-                "details": "Проверяет, что все элементы массива уникальны.\nПрименяется только к полям с cardinality: 'many'.",
-                "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
                 "type": "domain_service",
                 "name": "ConditionalRule",
@@ -7980,20 +7708,16 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ExistsRule",
+                "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
                 "type": "domain_service",
-                "name": "ExistsRule",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\ExistsRule.php",
-                "summary": "Доменное правило валидации: существование значения.",
-                "details": "Проверяет, что значение поля существует в указанной таблице/колонке.\nПрименяется к полям типа ref (ссылки на другие сущности).",
+                "name": "DistinctRule",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\DistinctRule.php",
+                "summary": "Правило валидации: уникальность элементов массива.",
+                "details": "Преобразуется в Laravel правило 'distinct'.\nМожет применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
                 "meta": {
                     "methods": [
                         "getType",
-                        "getParams",
-                        "getTable",
-                        "getColumn",
-                        "getWhereColumn",
-                        "getWhereValue"
+                        "getParams"
                     ],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
@@ -8054,75 +7778,6 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRuleHandler",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ArrayMaxItemsRuleHandler.php",
-                "summary": "Обработчик правила ArrayMaxItemsRule.",
-                "details": "Преобразует ArrayMaxItemsRule в строку Laravel правила валидации (например, 'max:10').",
-                "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRuleHandler",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ArrayMinItemsRuleHandler.php",
-                "summary": "Обработчик правила ArrayMinItemsRule.",
-                "details": "Преобразует ArrayMinItemsRule в строку Laravel правила валидации (например, 'min:2').",
-                "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayUniqueRuleHandler",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ArrayUniqueRuleHandler.php",
-                "summary": "Обработчик правила ArrayUniqueRule.",
-                "details": "Преобразует ArrayUniqueRule в строку Laravel правила валидации ('distinct').",
-                "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
                 "type": "domain_service",
                 "name": "ConditionalRuleHandler",
@@ -8146,12 +7801,12 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler",
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
                 "type": "domain_service",
-                "name": "ExistsRuleHandler",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\ExistsRuleHandler.php",
-                "summary": "Обработчик правила ExistsRule.",
-                "details": "Преобразует ExistsRule в строку Laravel правила валидации\n(например, 'exists:table,column').\nДля WHERE условий использует Rule объекты Laravel.",
+                "name": "DistinctRuleHandler",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\DistinctRuleHandler.php",
+                "summary": "Обработчик правила DistinctRule.",
+                "details": "Преобразует DistinctRule в строку Laravel правила валидации ('distinct').",
                 "meta": {
                     "methods": [
                         "supports",
@@ -8332,41 +7987,17 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler",
-                "type": "domain_service",
-                "name": "UniqueRuleHandler",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\UniqueRuleHandler.php",
-                "summary": "Обработчик правила UniqueRule.",
-                "details": "Преобразует UniqueRule в строку Laravel правила валидации\n(например, 'unique:table,column' или 'unique:table,column,except,id').\nДля WHERE условий использует Rule объекты Laravel.",
-                "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\MaxRule.php",
                 "summary": "Правило валидации: максимальное значение/длина.",
-                "details": "Для строковых типов (string, text) означает максимальную длину.\nДля числовых типов (int, float) означает максимальное значение.",
+                "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
                 "meta": {
                     "methods": [
                         "getType",
                         "getParams",
-                        "getValue",
-                        "getDataType"
+                        "getValue"
                     ],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
@@ -8384,13 +8015,12 @@
                 "name": "MinRule",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\MinRule.php",
                 "summary": "Правило валидации: минимальное значение/длина.",
-                "details": "Для строковых типов (string, text) означает минимальную длину.\nДля числовых типов (int, float) означает минимальное значение.",
+                "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
                 "meta": {
                     "methods": [
                         "getType",
                         "getParams",
-                        "getValue",
-                        "getDataType"
+                        "getValue"
                     ],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
@@ -8483,12 +8113,8 @@
                         "createPatternRule",
                         "createRequiredRule",
                         "createNullableRule",
-                        "createArrayMinItemsRule",
-                        "createArrayMaxItemsRule",
                         "createConditionalRule",
-                        "createUniqueRule",
-                        "createExistsRule",
-                        "createArrayUniqueRule",
+                        "createDistinctRule",
                         "createFieldComparisonRule"
                     ],
                     "dependencies": [],
@@ -8519,34 +8145,6 @@
                     ],
                     "dependencies": [],
                     "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/UniqueRule",
-                "type": "domain_service",
-                "name": "UniqueRule",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\UniqueRule.php",
-                "summary": "Доменное правило валидации: уникальность значения.",
-                "details": "Проверяет, что значение поля уникально в указанной таблице/колонке.\nПрименяется к полям типа ref (ссылки на другие сущности) или string (для проверки уникальности в других таблицах).",
-                "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getTable",
-                        "getColumn",
-                        "getExceptColumn",
-                        "getExceptValue",
-                        "getWhereColumn",
-                        "getWhereValue"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
                 "tags": [
@@ -13772,34 +13370,16 @@
                 "summary": "Манипулятор массивов правил валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRule",
-                "summary": "Доменное правило валидации: максимальное количество элементов в массиве."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRule",
-                "summary": "Доменное правило валидации: минимальное количество элементов в массиве."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayUniqueRule",
-                "type": "domain_service",
-                "name": "ArrayUniqueRule",
-                "summary": "Доменное правило валидации: уникальность элементов массива."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
                 "type": "domain_service",
                 "name": "ConditionalRule",
                 "summary": "Доменное правило валидации: условное правило."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ExistsRule",
+                "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
                 "type": "domain_service",
-                "name": "ExistsRule",
-                "summary": "Доменное правило валидации: существование значения."
+                "name": "DistinctRule",
+                "summary": "Правило валидации: уникальность элементов массива."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/FieldComparisonRule",
@@ -13814,34 +13394,16 @@
                 "summary": "Определение поля для валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMaxItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMinItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayUniqueRuleHandler",
-                "summary": "Обработчик правила ArrayUniqueRule."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
                 "type": "domain_service",
                 "name": "ConditionalRuleHandler",
                 "summary": "Обработчик правила ConditionalRule."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler",
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
                 "type": "domain_service",
-                "name": "ExistsRuleHandler",
-                "summary": "Обработчик правила ExistsRule."
+                "name": "DistinctRuleHandler",
+                "summary": "Обработчик правила DistinctRule."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler",
@@ -13886,12 +13448,6 @@
                 "summary": "Реестр обработчиков правил валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler",
-                "type": "domain_service",
-                "name": "UniqueRuleHandler",
-                "summary": "Обработчик правила UniqueRule."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
@@ -13932,12 +13488,6 @@
                 "type": "domain_service",
                 "name": "RuleSet",
                 "summary": "Набор правил валидации для полей."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/UniqueRule",
-                "type": "domain_service",
-                "name": "UniqueRule",
-                "summary": "Доменное правило валидации: уникальность значения."
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationConstants",
@@ -14550,34 +14100,16 @@
                 "summary": "Манипулятор массивов правил валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRule",
-                "summary": "Доменное правило валидации: максимальное количество элементов в массиве."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRule",
-                "summary": "Доменное правило валидации: минимальное количество элементов в массиве."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayUniqueRule",
-                "type": "domain_service",
-                "name": "ArrayUniqueRule",
-                "summary": "Доменное правило валидации: уникальность элементов массива."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
                 "type": "domain_service",
                 "name": "ConditionalRule",
                 "summary": "Доменное правило валидации: условное правило."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ExistsRule",
+                "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
                 "type": "domain_service",
-                "name": "ExistsRule",
-                "summary": "Доменное правило валидации: существование значения."
+                "name": "DistinctRule",
+                "summary": "Правило валидации: уникальность элементов массива."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/FieldComparisonRule",
@@ -14592,34 +14124,16 @@
                 "summary": "Определение поля для валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMaxItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMinItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayUniqueRuleHandler",
-                "summary": "Обработчик правила ArrayUniqueRule."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
                 "type": "domain_service",
                 "name": "ConditionalRuleHandler",
                 "summary": "Обработчик правила ConditionalRule."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler",
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
                 "type": "domain_service",
-                "name": "ExistsRuleHandler",
-                "summary": "Обработчик правила ExistsRule."
+                "name": "DistinctRuleHandler",
+                "summary": "Обработчик правила DistinctRule."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler",
@@ -14664,12 +14178,6 @@
                 "summary": "Реестр обработчиков правил валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler",
-                "type": "domain_service",
-                "name": "UniqueRuleHandler",
-                "summary": "Обработчик правила UniqueRule."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
@@ -14710,12 +14218,6 @@
                 "type": "domain_service",
                 "name": "RuleSet",
                 "summary": "Набор правил валидации для полей."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/UniqueRule",
-                "type": "domain_service",
-                "name": "UniqueRule",
-                "summary": "Доменное правило валидации: уникальность значения."
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationConstants",
@@ -14782,34 +14284,16 @@
         ],
         "rule": [
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRule",
-                "summary": "Доменное правило валидации: максимальное количество элементов в массиве."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRule",
-                "summary": "Доменное правило валидации: минимальное количество элементов в массиве."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/ArrayUniqueRule",
-                "type": "domain_service",
-                "name": "ArrayUniqueRule",
-                "summary": "Доменное правило валидации: уникальность элементов массива."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
                 "type": "domain_service",
                 "name": "ConditionalRule",
                 "summary": "Доменное правило валидации: условное правило."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/ExistsRule",
+                "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
                 "type": "domain_service",
-                "name": "ExistsRule",
-                "summary": "Доменное правило валидации: существование значения."
+                "name": "DistinctRule",
+                "summary": "Правило валидации: уникальность элементов массива."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/FieldComparisonRule",
@@ -14824,34 +14308,16 @@
                 "summary": "Определение поля для валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMaxItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMinItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayUniqueRuleHandler",
-                "summary": "Обработчик правила ArrayUniqueRule."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
                 "type": "domain_service",
                 "name": "ConditionalRuleHandler",
                 "summary": "Обработчик правила ConditionalRule."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler",
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
                 "type": "domain_service",
-                "name": "ExistsRuleHandler",
-                "summary": "Обработчик правила ExistsRule."
+                "name": "DistinctRuleHandler",
+                "summary": "Обработчик правила DistinctRule."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler",
@@ -14894,12 +14360,6 @@
                 "type": "domain_service",
                 "name": "RuleHandlerRegistry",
                 "summary": "Реестр обработчиков правил валидации."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler",
-                "type": "domain_service",
-                "name": "UniqueRuleHandler",
-                "summary": "Обработчик правила UniqueRule."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
@@ -14942,33 +14402,9 @@
                 "type": "domain_service",
                 "name": "RuleSet",
                 "summary": "Набор правил валидации для полей."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/UniqueRule",
-                "type": "domain_service",
-                "name": "UniqueRule",
-                "summary": "Доменное правило валидации: уникальность значения."
             }
         ],
         "handler": [
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMaxItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMaxItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayMinItemsRuleHandler",
-                "summary": "Обработчик правила ArrayMinItemsRule."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler",
-                "type": "domain_service",
-                "name": "ArrayUniqueRuleHandler",
-                "summary": "Обработчик правила ArrayUniqueRule."
-            },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
                 "type": "domain_service",
@@ -14976,10 +14412,10 @@
                 "summary": "Обработчик правила ConditionalRule."
             },
             {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler",
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
                 "type": "domain_service",
-                "name": "ExistsRuleHandler",
-                "summary": "Обработчик правила ExistsRule."
+                "name": "DistinctRuleHandler",
+                "summary": "Обработчик правила DistinctRule."
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler",
@@ -15022,12 +14458,6 @@
                 "type": "domain_service",
                 "name": "RuleHandlerRegistry",
                 "summary": "Реестр обработчиков правил валидации."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler",
-                "type": "domain_service",
-                "name": "UniqueRuleHandler",
-                "summary": "Обработчик правила UniqueRule."
             }
         ],
         "action": [
@@ -17881,5 +17311,5 @@
             }
         ]
     },
-    "generated_at": "2025-11-29T16:12:47+00:00"
+    "generated_at": "2025-12-01T10:07:10+00:00"
 }

@@ -135,7 +135,7 @@ trait HasDocumentData
      * Сортировать по индексированному полю.
      *
      * Определяет колонку value_* по data_type из paths для корректной сортировки
-     * всех типов данных (string, text, int, float, bool, date, datetime).
+     * всех типов данных (string, text, int, float, bool, datetime).
      *
      * @param Builder $query
      * @param string $fullPath
@@ -164,7 +164,7 @@ trait HasDocumentData
                     WHEN p_sort.data_type = 'int' THEN CAST(dv_sort.value_int AS CHAR)
                     WHEN p_sort.data_type = 'float' THEN CAST(dv_sort.value_float AS CHAR)
                     WHEN p_sort.data_type = 'bool' THEN CAST(dv_sort.value_bool AS CHAR)
-                    WHEN p_sort.data_type IN ('date', 'datetime') THEN dv_sort.value_datetime
+                    WHEN p_sort.data_type = 'datetime' THEN dv_sort.value_datetime
                     WHEN p_sort.data_type = 'json' THEN CAST(dv_sort.value_json AS CHAR)
                     ELSE dv_sort.value_string
                 END {$direction}

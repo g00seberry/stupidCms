@@ -74,7 +74,7 @@ trait PathValidationRules
     protected function getCommonPathRules(): array
     {
         return [
-            'data_type' => ['sometimes', Rule::in(['string', 'text', 'int', 'float', 'bool', 'date', 'datetime', 'json', 'ref'])],
+            'data_type' => ['sometimes', Rule::in(['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref'])],
             'cardinality' => ['sometimes', Rule::in(['one', 'many'])],
             'is_indexed' => ['sometimes', 'boolean'],
             'sort_order' => ['sometimes', 'integer', 'min:0'],

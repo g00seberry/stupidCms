@@ -348,7 +348,7 @@ class BlueprintsSeeder extends Seeder
 
         $this->structureService->createPath($blueprint, [
             'name' => 'birth_date',
-            'data_type' => 'date',
+            'data_type' => 'datetime',
             'is_indexed' => true,
             'sort_order' => 30,
         ]);
@@ -399,7 +399,7 @@ class BlueprintsSeeder extends Seeder
 
         $this->structureService->createPath($blueprint, [
             'name' => 'founded_at',
-            'data_type' => 'date',
+            'data_type' => 'datetime',
             'is_indexed' => true,
             'sort_order' => 30,
         ]);

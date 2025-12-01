@@ -1,120 +1,5 @@
 # Domain Services
 
-## ArrayMaxItemsRule
-**ID:** `domain_service:Blueprint/Validation/Rules/ArrayMaxItemsRule`
-**Path:** `app/Domain/Blueprint/Validation/Rules/ArrayMaxItemsRule.php`
-
-Доменное правило валидации: максимальное количество элементов в массиве.
-
-### Details
-Применяется только к полям с cardinality: 'many'.
-
-### Meta
-- **Methods:** `getType`, `getParams`, `getValue`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
-
-### Tags
-`blueprint`, `validation`, `rule`
-
-
----
-
-## ArrayMaxItemsRuleHandler
-**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler`
-**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ArrayMaxItemsRuleHandler.php`
-
-Обработчик правила ArrayMaxItemsRule.
-
-### Details
-Преобразует ArrayMaxItemsRule в строку Laravel правила валидации (например, 'max:10').
-
-### Meta
-- **Methods:** `supports`, `handle`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
-
-### Tags
-`blueprint`, `validation`, `rule`, `handler`
-
-
----
-
-## ArrayMinItemsRule
-**ID:** `domain_service:Blueprint/Validation/Rules/ArrayMinItemsRule`
-**Path:** `app/Domain/Blueprint/Validation/Rules/ArrayMinItemsRule.php`
-
-Доменное правило валидации: минимальное количество элементов в массиве.
-
-### Details
-Применяется только к полям с cardinality: 'many'.
-
-### Meta
-- **Methods:** `getType`, `getParams`, `getValue`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
-
-### Tags
-`blueprint`, `validation`, `rule`
-
-
----
-
-## ArrayMinItemsRuleHandler
-**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler`
-**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ArrayMinItemsRuleHandler.php`
-
-Обработчик правила ArrayMinItemsRule.
-
-### Details
-Преобразует ArrayMinItemsRule в строку Laravel правила валидации (например, 'min:2').
-
-### Meta
-- **Methods:** `supports`, `handle`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
-
-### Tags
-`blueprint`, `validation`, `rule`, `handler`
-
-
----
-
-## ArrayUniqueRule
-**ID:** `domain_service:Blueprint/Validation/Rules/ArrayUniqueRule`
-**Path:** `app/Domain/Blueprint/Validation/Rules/ArrayUniqueRule.php`
-
-Доменное правило валидации: уникальность элементов массива.
-
-### Details
-Проверяет, что все элементы массива уникальны.
-Применяется только к полям с cardinality: 'many'.
-
-### Meta
-- **Methods:** `getType`, `getParams`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
-
-### Tags
-`blueprint`, `validation`, `rule`
-
-
----
-
-## ArrayUniqueRuleHandler
-**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler`
-**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ArrayUniqueRuleHandler.php`
-
-Обработчик правила ArrayUniqueRule.
-
-### Details
-Преобразует ArrayUniqueRule в строку Laravel правила валидации ('distinct').
-
-### Meta
-- **Methods:** `supports`, `handle`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
-
-### Tags
-`blueprint`, `validation`, `rule`, `handler`
-
-
----
-
 ## BladeTemplateResolver
 **ID:** `domain_service:View/BladeTemplateResolver`
 **Path:** `app/Domain/View/BladeTemplateResolver.php`
@@ -238,6 +123,46 @@
 
 ---
 
+## DistinctRule
+**ID:** `domain_service:Blueprint/Validation/Rules/DistinctRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/DistinctRule.php`
+
+Правило валидации: уникальность элементов массива.
+
+### Details
+Преобразуется в Laravel правило 'distinct'.
+Может применяться к любым типам данных.
+Пользователь сам отвечает за корректность применения правила.
+
+### Meta
+- **Methods:** `getType`, `getParams`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## DistinctRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/DistinctRuleHandler.php`
+
+Обработчик правила DistinctRule.
+
+### Details
+Преобразует DistinctRule в строку Laravel правила валидации ('distinct').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
+
+
+---
+
 ## ElasticsearchSearchClient
 **ID:** `domain_service:Search/Clients/ElasticsearchSearchClient`
 **Path:** `app/Domain/Search/Clients/ElasticsearchSearchClient.php`
@@ -303,10 +228,11 @@
 ### Details
 Строит RuleSet для поля content_json на основе структуры Path в Blueprint.
 Преобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.
+Не выполняет проверок совместимости правил - пользователь сам настраивает правила.
 
 ### Meta
 - **Methods:** `buildRulesFor`
-- **Dependencies:** `App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface`, `App\Domain\Blueprint\Validation\Rules\RuleFactory`, `App\Domain\Blueprint\Validation\FieldPathBuilder`
+- **Dependencies:** `App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface`, `App\Domain\Blueprint\Validation\FieldPathBuilder`
 - **Interface:** `App\Domain\Blueprint\Validation\EntryValidationServiceInterface`
 
 ### Tags
@@ -355,47 +281,6 @@
 
 ### Tags
 `media`, `service`
-
-
----
-
-## ExistsRule
-**ID:** `domain_service:Blueprint/Validation/Rules/ExistsRule`
-**Path:** `app/Domain/Blueprint/Validation/Rules/ExistsRule.php`
-
-Доменное правило валидации: существование значения.
-
-### Details
-Проверяет, что значение поля существует в указанной таблице/колонке.
-Применяется к полям типа ref (ссылки на другие сущности).
-
-### Meta
-- **Methods:** `getType`, `getParams`, `getTable`, `getColumn`, `getWhereColumn`, `getWhereValue`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
-
-### Tags
-`blueprint`, `validation`, `rule`
-
-
----
-
-## ExistsRuleHandler
-**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/ExistsRuleHandler`
-**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/ExistsRuleHandler.php`
-
-Обработчик правила ExistsRule.
-
-### Details
-Преобразует ExistsRule в строку Laravel правила валидации
-(например, 'exists:table,column').
-Для WHERE условий использует Rule объекты Laravel.
-
-### Meta
-- **Methods:** `supports`, `handle`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
-
-### Tags
-`blueprint`, `validation`, `rule`, `handler`
 
 
 ---
@@ -640,11 +525,12 @@ Uses HS256 (HMAC with SHA-256) algorithm with a secret key.
 
 ### Details
 Преобразует доменные Rule объекты в строки правил валидации Laravel
-через систему handlers.
+через систему handlers. Не добавляет базовые типы данных автоматически.
+Пользователь сам отвечает за указание всех необходимых правил.
 
 ### Meta
 - **Methods:** `adapt`
-- **Dependencies:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry`, `App\Domain\Blueprint\Validation\DataTypeMapper`, `App\Domain\Blueprint\Validation\RuleArrayManipulator`
+- **Dependencies:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry`
 - **Interface:** `App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface`
 
 ### Tags
@@ -697,11 +583,11 @@ CQRS-действие: выборка списка медиа по параме�
 Правило валидации: максимальное значение/длина.
 
 ### Details
-Для строковых типов (string, text) означает максимальную длину.
-Для числовых типов (int, float) означает максимальное значение.
+Может применяться к любым типам данных.
+Пользователь сам отвечает за корректность применения правила.
 
 ### Meta
-- **Methods:** `getType`, `getParams`, `getValue`, `getDataType`
+- **Methods:** `getType`, `getParams`, `getValue`
 - **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
 
 ### Tags
@@ -975,11 +861,11 @@ Pipeline валидации медиа-файлов.
 Правило валидации: минимальное значение/длина.
 
 ### Details
-Для строковых типов (string, text) означает минимальную длину.
-Для числовых типов (int, float) означает минимальное значение.
+Может применяться к любым типам данных.
+Пользователь сам отвечает за корректность применения правила.
 
 ### Meta
-- **Methods:** `getType`, `getParams`, `getValue`, `getDataType`
+- **Methods:** `getType`, `getParams`, `getValue`
 - **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
 
 ### Tags
@@ -1211,8 +1097,9 @@ Null-реализация SearchClientInterface.
 Конвертер правил валидации из Path в доменные Rule объекты.
 
 ### Details
-Преобразует validation_rules из модели Path в массив доменных Rule объектов,
-учитывая data_type, required (из validation_rules) и cardinality.
+Преобразует validation_rules из модели Path в массив доменных Rule объектов.
+Не выполняет проверок совместимости правил с типами данных или cardinality.
+Пользователь сам отвечает за корректность настройки правил.
 
 ### Meta
 - **Methods:** `convert`
@@ -1693,7 +1580,7 @@ Job для реиндексации поискового индекса в фо�
 Реализация фабрики правил валидации.
 
 ### Meta
-- **Methods:** `createMinRule`, `createMaxRule`, `createPatternRule`, `createRequiredRule`, `createNullableRule`, `createArrayMinItemsRule`, `createArrayMaxItemsRule`, `createConditionalRule`, `createUniqueRule`, `createExistsRule`, `createArrayUniqueRule`, `createFieldComparisonRule`
+- **Methods:** `createMinRule`, `createMaxRule`, `createPatternRule`, `createRequiredRule`, `createNullableRule`, `createConditionalRule`, `createDistinctRule`, `createFieldComparisonRule`
 - **Interface:** `App\Domain\Blueprint\Validation\Rules\RuleFactory`
 
 ### Tags
@@ -1889,47 +1776,6 @@ Value Object для фильтра поиска по терму.
 
 ### Tags
 `media`, `service`
-
-
----
-
-## UniqueRule
-**ID:** `domain_service:Blueprint/Validation/Rules/UniqueRule`
-**Path:** `app/Domain/Blueprint/Validation/Rules/UniqueRule.php`
-
-Доменное правило валидации: уникальность значения.
-
-### Details
-Проверяет, что значение поля уникально в указанной таблице/колонке.
-Применяется к полям типа ref (ссылки на другие сущности) или string (для проверки уникальности в других таблицах).
-
-### Meta
-- **Methods:** `getType`, `getParams`, `getTable`, `getColumn`, `getExceptColumn`, `getExceptValue`, `getWhereColumn`, `getWhereValue`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
-
-### Tags
-`blueprint`, `validation`, `rule`
-
-
----
-
-## UniqueRuleHandler
-**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/UniqueRuleHandler`
-**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/UniqueRuleHandler.php`
-
-Обработчик правила UniqueRule.
-
-### Details
-Преобразует UniqueRule в строку Laravel правила валидации
-(например, 'unique:table,column' или 'unique:table,column,except,id').
-Для WHERE условий использует Rule объекты Laravel.
-
-### Meta
-- **Methods:** `supports`, `handle`
-- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
-
-### Tags
-`blueprint`, `validation`, `rule`, `handler`
 
 
 ---

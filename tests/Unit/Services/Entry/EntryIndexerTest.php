@@ -232,7 +232,7 @@ test('ref-типы не записываются в doc_values', function () {
         ->and(DocRef::where('entry_id', $entry->id)->count())->toBe(1);
 });
 
-test('индексация date-типа сохраняется в value_datetime с временем 00:00:00', function () {
+test('индексация datetime-типа сохраняется в value_datetime', function () {
     $blueprint = Blueprint::factory()->create();
     $postType = PostType::factory()->create(['blueprint_id' => $blueprint->id]);
 
@@ -240,7 +240,7 @@ test('индексация date-типа сохраняется в value_datetim
         'blueprint_id' => $blueprint->id,
         'name' => 'published_date',
         'full_path' => 'published_date',
-        'data_type' => 'date',
+        'data_type' => 'datetime',
         'cardinality' => 'one',
         'is_indexed' => true,
     ]);
@@ -256,8 +256,7 @@ test('индексация date-типа сохраняется в value_datetim
 
     expect($docValue)->not->toBeNull()
         ->and($docValue->value_datetime)->not->toBeNull()
-        ->and($docValue->value_datetime->format('Y-m-d'))->toBe('2024-01-15')
-        ->and($docValue->value_datetime->format('H:i:s'))->toBe('00:00:00');
+        ->and($docValue->value_datetime->format('Y-m-d'))->toBe('2024-01-15');
 });
 
 test('индексация text-типа сохраняется в value_text', function () {

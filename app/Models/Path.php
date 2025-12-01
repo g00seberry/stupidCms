@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $parent_id Родительский path
  * @property string $name Локальное имя поля
  * @property string $full_path Материализованный путь (e.g., 'author.contacts.phone')
- * @property string $data_type string|text|int|float|bool|date|datetime|json|ref
+ * @property string $data_type string|text|int|float|bool|datetime|json|ref
  * @property string $cardinality one|many
  * @property bool $is_indexed
  * @property bool $is_readonly Нельзя редактировать (копия)

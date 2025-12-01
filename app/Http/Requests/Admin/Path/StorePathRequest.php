@@ -79,7 +79,7 @@ class StorePathRequest extends FormRequest
             [
                 'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
                 'parent_id' => ['nullable', 'integer', 'exists:paths,id'],
-                'data_type' => ['required', Rule::in(['string', 'text', 'int', 'float', 'bool', 'date', 'datetime', 'json', 'ref'])],
+                'data_type' => ['required', Rule::in(['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref'])],
             ],
             [
                 'cardinality' => $commonRules['cardinality'],

@@ -329,7 +329,7 @@ test('orderByPath сортирует Entry по date полям', function () {
         'blueprint_id' => $blueprint->id,
         'name' => 'published_date',
         'full_path' => 'published_date',
-        'data_type' => 'date',
+        'data_type' => 'datetime',
         'is_indexed' => true,
     ]);
 

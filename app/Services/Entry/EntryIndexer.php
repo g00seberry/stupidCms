@@ -17,10 +17,9 @@ use Illuminate\Support\Facades\Log;
  * в реляционные таблицы для быстрых запросов.
  *
  * Правила индексации:
- * - Для скалярных типов (string, int, float, bool, date, datetime, text, json) → doc_values
+ * - Для скалярных типов (string, int, float, bool, datetime, text, json) → doc_values
  * - Для ref-типов → только doc_refs (запись в doc_values запрещена)
  * - Явное сопоставление data_type → целевая колонка value_* с очисткой остальных
- * - date-тип сохраняется в value_datetime с временем 00:00:00
  * - array_index: NULL для cardinality=one, обязателен (1-based) для cardinality=many
  * - Логика проверки array_index реализована в EntryIndexer (без денормализации cardinality)
  */
@@ -217,7 +216,6 @@ class EntryIndexer
             'int' => 'value_int',
             'float' => 'value_float',
             'bool' => 'value_bool',
-            'date' => 'value_datetime', // date теперь хранится в value_datetime
             'datetime' => 'value_datetime',
             'text' => 'value_text',
             'json' => 'value_json',
@@ -228,10 +226,8 @@ class EntryIndexer
     /**
      * Привести значение к нужному типу.
      *
-     * Для date-типа сохраняет DateTime с временем 00:00:00 в value_datetime.
-     *
      * @param mixed $value Исходное значение
-     * @param string $dataType Тип данных (string, int, float, bool, date, datetime, text, json)
+     * @param string $dataType Тип данных (string, int, float, bool, datetime, text, json)
      * @return mixed Приведённое значение
      */
     private function castValue(mixed $value, string $dataType): mixed
@@ -241,9 +237,6 @@ class EntryIndexer
             'int' => (int) $value,
             'float' => (float) $value,
             'bool' => (bool) $value,
-            'date' => $value instanceof \DateTimeInterface
-                ? $value->setTime(0, 0, 0) // Сохраняем дату в datetime с временем 00:00:00
-                : (is_string($value) ? now()->parse($value)->startOfDay() : now()->startOfDay()),
             'datetime' => $value instanceof \DateTimeInterface
                 ? $value
                 : (is_string($value) ? now()->parse($value) : now()),

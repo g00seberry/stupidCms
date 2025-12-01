@@ -296,7 +296,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
 
         $this->service->createPath($person, [
             'name' => 'birth_date',
-            'data_type' => 'date',
+            'data_type' => 'datetime',
             'is_indexed' => true,
         ]);
 
@@ -348,7 +348,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
 
         $this->service->createPath($organization, [
             'name' => 'founded_at',
-            'data_type' => 'date',
+            'data_type' => 'datetime',
             'is_indexed' => true,
         ]);
 

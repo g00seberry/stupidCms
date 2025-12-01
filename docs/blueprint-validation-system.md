@@ -547,7 +547,7 @@ $validator->validate([
 -   `blueprint_id` — владелец
 -   `name` — локальное имя поля
 -   `full_path` — материализованный путь (например, `'author.contacts.phone'`)
--   `data_type` — тип данных: `string`, `text`, `int`, `float`, `bool`, `date`, `datetime`, `json`, `ref`
+-   `data_type` — тип данных: `string`, `text`, `int`, `float`, `bool`, `datetime`, `json`, `ref`
 -   `cardinality` — кардинальность: `'one'` или `'many'`
 -   `is_indexed` — индексируется ли поле
 -   `validation_rules` — JSON правила валидации (массив), включая `required` для обязательности поля
@@ -857,7 +857,6 @@ $registry->register('custom', new CustomRuleHandler());
 | `int`            | `'integer'`              | Целое число                    |
 | `float`          | `'numeric'`              | Число с плавающей точкой       |
 | `bool`           | `'boolean'`              | Булево значение                |
-| `date`           | `'date'`                 | Дата                           |
 | `datetime`       | `'date'`                 | Дата и время                   |
 | `json`           | `'array'`                | JSON объект (массив в Laravel) |
 | `ref`            | `'integer'`              | Ссылка (ID)                    |

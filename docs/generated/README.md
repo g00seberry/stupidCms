@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 241
+**Всего сущностей:** 233
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (23 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (103 сущностей)
+Доменные сервисы, действия, репозитории (95 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -39,17 +39,17 @@ HTTP эндпоинты API (83 сущностей)
 
 ### Domain Services
 
-- [ArrayMaxItemsRule](./domain-services.md#arraymaxitemsrule) - Доменное правило валидации: максимальное количество элементов в массиве.
-- [ArrayMaxItemsRuleHandler](./domain-services.md#arraymaxitemsrulehandler) - Обработчик правила ArrayMaxItemsRule.
-- [ArrayMinItemsRule](./domain-services.md#arrayminitemsrule) - Доменное правило валидации: минимальное количество элементов в массиве.
-- [ArrayMinItemsRuleHandler](./domain-services.md#arrayminitemsrulehandler) - Обработчик правила ArrayMinItemsRule.
-- [ArrayUniqueRule](./domain-services.md#arrayuniquerule) - Доменное правило валидации: уникальность элементов массива.
-- [ArrayUniqueRuleHandler](./domain-services.md#arrayuniquerulehandler) - Обработчик правила ArrayUniqueRule.
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
 - [BlueprintContentValidator](./domain-services.md#blueprintcontentvalidator) - Валидатор контента Entry на основе Blueprint.
 - [ConditionalRule](./domain-services.md#conditionalrule) - Доменное правило валидации: условное правило.
 - [ConditionalRuleHandler](./domain-services.md#conditionalrulehandler) - Обработчик правила ConditionalRule.
-- *...и еще 93 сущностей*
+- [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
+- [DataTypeMapper](./domain-services.md#datatypemapper) - Маппер типов данных Path в правила валидации Laravel.
+- [DistinctRule](./domain-services.md#distinctrule) - Правило валидации: уникальность элементов массива.
+- [DistinctRuleHandler](./domain-services.md#distinctrulehandler) - Обработчик правила DistinctRule.
+- [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
+- [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
+- *...и еще 85 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (83 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-29 16:12:47
+**Сгенерировано:** 2025-12-01 10:07:10
 
 Для обновления документации выполните:
 ```bash

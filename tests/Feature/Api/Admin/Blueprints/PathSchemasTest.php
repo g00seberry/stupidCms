@@ -477,10 +477,10 @@ class PathSchemasTest extends TestCase
             'parent_id' => $articlePath->id,
         ]);
 
-        // date
+        // datetime
         $createdDatePath = $this->service->createPath($blueprint, [
             'name' => 'created_date',
-            'data_type' => 'date',
+            'data_type' => 'datetime',
             'parent_id' => $articlePath->id,
         ]);
 
@@ -530,7 +530,7 @@ class PathSchemasTest extends TestCase
         $this->assertEquals('float', $ratingPath->data_type);
         $this->assertEquals(['min' => 0, 'max' => 5], $ratingPath->validation_rules);
         $this->assertEquals('datetime', $publishedAtPath->data_type);
-        $this->assertEquals('date', $createdDatePath->data_type);
+        $this->assertEquals('datetime', $createdDatePath->data_type);
         $this->assertEquals('ref', $authorPath->data_type);
         $this->assertEquals('string', $tagsPath->data_type);
         $this->assertEquals('many', $tagsPath->cardinality);

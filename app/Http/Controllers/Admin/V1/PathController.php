@@ -85,7 +85,7 @@ class PathController extends Controller
      * @urlParam blueprint integer required ID blueprint. Example: 1
      * @bodyParam name string required Имя поля (a-z0-9_). Example: title
      * @bodyParam parent_id integer ID родительского поля (должен принадлежать тому же blueprint). Example: 5
-     * @bodyParam data_type string required Тип данных. Values: string,text,int,float,bool,date,datetime,json,ref. Example: string
+     * @bodyParam data_type string required Тип данных. Values: string,text,int,float,bool,datetime,json,ref. Example: string
      * @bodyParam cardinality string Кардинальность. Values: one,many. Default: one.
      * @bodyParam is_indexed boolean Индексировать поле. Default: false.
      * @bodyParam sort_order integer Порядок сортировки. Default: 0.
@@ -190,7 +190,7 @@ class PathController extends Controller
      * @urlParam path integer required ID path. Example: 1
      * @bodyParam name string Имя поля (a-z0-9_). Example: title_updated
      * @bodyParam parent_id integer ID родительского поля. Example: 5
-     * @bodyParam data_type string Тип данных. Values: string,text,int,float,bool,date,datetime,json,ref.
+     * @bodyParam data_type string Тип данных. Values: string,text,int,float,bool,datetime,json,ref.
      * @bodyParam cardinality string Кардинальность. Values: one,many.
      * @bodyParam is_indexed boolean Индексировать поле.
      * @bodyParam sort_order integer Порядок сортировки.
