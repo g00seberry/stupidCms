@@ -85,21 +85,6 @@
 
 ---
 
-## DataTypeMapper
-**ID:** `domain_service:Blueprint/Validation/DataTypeMapper`
-**Path:** `app/Domain/Blueprint/Validation/DataTypeMapper.php`
-
-Маппер типов данных Path в правила валидации Laravel.
-
-### Meta
-- **Methods:** `toLaravelRule`, `isArrayType`, `isJsonType`
-
-### Tags
-`blueprint`, `validation`
-
-
----
-
 ## DistinctRule
 **ID:** `domain_service:Blueprint/Validation/Rules/DistinctRule`
 **Path:** `app/Domain/Blueprint/Validation/Rules/DistinctRule.php`

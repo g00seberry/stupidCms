@@ -839,20 +839,7 @@ $this->app->singleton(RuleHandlerRegistry::class, function () {
 public const DATA_TYPE_EMAIL = 'email';
 ```
 
-2. Добавить маппинг в `DataTypeMapper`:
-
-```php
-public function toLaravelRule(string $dataType): ?string
-{
-    return match ($dataType) {
-        // ... существующие типы
-        ValidationConstants::DATA_TYPE_EMAIL => 'email',
-        default => null,
-    };
-}
-```
-
-3. Обновить документацию и тесты
+2. Обновить документацию и тесты
 
 ---
 
@@ -883,28 +870,6 @@ public function toLaravelRule(string $dataType): ?string
 - `DATA_TYPE_JSON` — `'json'`
 - `DATA_TYPE_REF` — `'ref'`
 - `DATA_TYPE_ARRAY` — `'array'`
-
-### DataTypeMapper
-
-**Путь:** `app/Domain/Blueprint/Validation/DataTypeMapper.php`
-
-**Назначение:** Преобразует типы данных Path в правила валидации Laravel.
-
-**Методы:**
-
-- `toLaravelRule(string $dataType): ?string` — преобразует тип данных в Laravel правило
-- `isArrayType(string $dataType): bool` — проверяет, является ли тип массивом
-- `isJsonType(string $dataType): bool` — проверяет, является ли тип JSON
-
-**Маппинг:**
-
-- `string`, `text` → `'string'`
-- `int` → `'integer'`
-- `float` → `'numeric'`
-- `bool` → `'boolean'`
-- `datetime` → `'date'`
-- `json`, `array` → `'array'`
-- `ref` → `'integer'`
 
 ### RuleArrayManipulator
 

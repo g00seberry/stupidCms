@@ -893,28 +893,6 @@
             ]
         },
         {
-            "id": "domain_service:Blueprint/Validation/DataTypeMapper",
-            "type": "domain_service",
-            "name": "DataTypeMapper",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\DataTypeMapper.php",
-            "summary": "Маппер типов данных Path в правила валидации Laravel.",
-            "details": null,
-            "meta": {
-                "methods": [
-                    "toLaravelRule",
-                    "isArrayType",
-                    "isJsonType"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
-        },
-        {
             "id": "domain_service:Blueprint/Validation/EntryValidationService",
             "type": "domain_service",
             "name": "EntryValidationService",
@@ -7520,28 +7498,6 @@
                 ]
             },
             {
-                "id": "domain_service:Blueprint/Validation/DataTypeMapper",
-                "type": "domain_service",
-                "name": "DataTypeMapper",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\DataTypeMapper.php",
-                "summary": "Маппер типов данных Path в правила валидации Laravel.",
-                "details": null,
-                "meta": {
-                    "methods": [
-                        "toLaravelRule",
-                        "isArrayType",
-                        "isJsonType"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
                 "type": "domain_service",
                 "name": "EntryValidationService",
@@ -13280,12 +13236,6 @@
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации."
             },
             {
-                "id": "domain_service:Blueprint/Validation/DataTypeMapper",
-                "type": "domain_service",
-                "name": "DataTypeMapper",
-                "summary": "Маппер типов данных Path в правила валидации Laravel."
-            },
-            {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
                 "type": "domain_service",
                 "name": "EntryValidationService",
@@ -14002,12 +13952,6 @@
                 "type": "domain_service",
                 "name": "LaravelValidationAdapter",
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации."
-            },
-            {
-                "id": "domain_service:Blueprint/Validation/DataTypeMapper",
-                "type": "domain_service",
-                "name": "DataTypeMapper",
-                "summary": "Маппер типов данных Path в правила валидации Laravel."
             },
             {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
@@ -17245,5 +17189,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-01T10:55:36+00:00"
+    "generated_at": "2025-12-01T11:17:27+00:00"
 }

@@ -2,7 +2,7 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 232
+**Всего сущностей:** 231
 
 ## Содержание
 
@@ -10,7 +10,7 @@
 Eloquent-модели для работы с БД (23 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (94 сущностей)
+Доменные сервисы, действия, репозитории (93 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
@@ -43,13 +43,13 @@ HTTP эндпоинты API (83 сущностей)
 - [ConditionalRule](./domain-services.md#conditionalrule) - Доменное правило валидации: условное правило.
 - [ConditionalRuleHandler](./domain-services.md#conditionalrulehandler) - Обработчик правила ConditionalRule.
 - [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
-- [DataTypeMapper](./domain-services.md#datatypemapper) - Маппер типов данных Path в правила валидации Laravel.
 - [DistinctRule](./domain-services.md#distinctrule) - Правило валидации: уникальность элементов массива.
 - [DistinctRuleHandler](./domain-services.md#distinctrulehandler) - Обработчик правила DistinctRule.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
-- *...и еще 84 сущностей*
+- [EntryValidationService](./domain-services.md#entryvalidationservice) - Доменный сервис валидации контента Entry на основе Blueprint.
+- *...и еще 83 сущностей*
 
 ### Blade Views
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (83 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-12-01 10:55:36
+**Сгенерировано:** 2025-12-01 11:17:27
 
 Для обновления документации выполните:
 ```bash
