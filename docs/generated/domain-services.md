@@ -332,9 +332,10 @@
 
 ### Details
 Преобразует full_path из Path в путь для валидации с учётом cardinality.
+Учитывает специфику правил валидации (например, distinct для массивов).
 
 ### Meta
-- **Methods:** `buildFieldPath`
+- **Methods:** `buildFieldPath`, `buildFieldPathForRule`
 
 ### Tags
 `blueprint`, `validation`

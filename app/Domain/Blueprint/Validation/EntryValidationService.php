@@ -35,6 +35,8 @@ final class EntryValidationService implements EntryValidationServiceInterface
      * Анализирует все Path в blueprint и преобразует их validation_rules
      * в доменный RuleSet для поля content_json.
      * Преобразует full_path в точечную нотацию с учётом cardinality для построения путей.
+     * Пути для правил строятся через FieldPathBuilder, который учитывает специфику правил
+     * (например, distinct для массивов должен применяться к элементам массива).
      *
      * @param \App\Models\Blueprint $blueprint Blueprint для валидации
      * @return \App\Domain\Blueprint\Validation\Rules\RuleSet Набор правил валидации
@@ -61,13 +63,18 @@ final class EntryValidationService implements EntryValidationServiceInterface
 
         // Обрабатываем каждый Path
         foreach ($paths as $path) {
-            $fieldPath = $this->fieldPathBuilder->buildFieldPath($path->full_path, $pathCardinalities);
-
             // Преобразуем validation_rules в Rule объекты
             $fieldRules = $this->converter->convert($path->validation_rules);
 
             // Добавляем все правила для поля
+            // Для каждого правила строим путь с учётом его специфики
             foreach ($fieldRules as $rule) {
+                $fieldPath = $this->fieldPathBuilder->buildFieldPathForRule(
+                    $path->full_path,
+                    $pathCardinalities,
+                    $rule,
+                    $path->cardinality
+                );
                 $ruleSet->addRule($fieldPath, $rule);
             }
         }

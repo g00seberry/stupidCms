@@ -921,10 +921,11 @@
             "name": "FieldPathBuilder",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\FieldPathBuilder.php",
             "summary": "Построитель путей полей для валидации.",
-            "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.",
+            "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.\nУчитывает специфику правил валидации (например, distinct для массивов).",
             "meta": {
                 "methods": [
-                    "buildFieldPath"
+                    "buildFieldPath",
+                    "buildFieldPathForRule"
                 ],
                 "dependencies": [],
                 "interface": null
@@ -7526,10 +7527,11 @@
                 "name": "FieldPathBuilder",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\FieldPathBuilder.php",
                 "summary": "Построитель путей полей для валидации.",
-                "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.",
+                "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.\nУчитывает специфику правил валидации (например, distinct для массивов).",
                 "meta": {
                     "methods": [
-                        "buildFieldPath"
+                        "buildFieldPath",
+                        "buildFieldPathForRule"
                     ],
                     "dependencies": [],
                     "interface": null
@@ -17189,5 +17191,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-01T11:17:27+00:00"
+    "generated_at": "2025-12-02T11:16:10+00:00"
 }

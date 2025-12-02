@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Domain\Blueprint\Validation\FieldPathBuilder;
 use App\Domain\Blueprint\Validation\ValidationConstants;
+use App\Domain\Blueprint\Validation\Rules\DistinctRule;
+use App\Domain\Blueprint\Validation\Rules\RequiredRule;
 
 beforeEach(function () {
     $this->builder = new FieldPathBuilder();
@@ -155,5 +157,75 @@ test('buildFieldPath handles alternating arrays and objects', function () {
     // sections имеет cardinality='many', поэтому blocks заменяется на *.blocks
     // sections.blocks имеет cardinality='many', поэтому content заменяется на *.content
     expect($result)->toBe('content_json.sections.*.blocks.*.content');
+});
+
+// 2.5. Обработка правил валидации
+
+test('buildFieldPathForRule applies distinct rule to array elements for fields with cardinality many', function () {
+    $pathCardinalities = [];
+    $rule = new DistinctRule();
+    $result = $this->builder->buildFieldPathForRule(
+        'reading_time_minutes',
+        $pathCardinalities,
+        $rule,
+        ValidationConstants::CARDINALITY_MANY
+    );
+
+    // Для distinct на массиве должен быть путь с .*
+    expect($result)->toBe('content_json.reading_time_minutes.*');
+});
+
+test('buildFieldPathForRule applies distinct rule to field itself for fields with cardinality one', function () {
+    $pathCardinalities = [];
+    $rule = new DistinctRule();
+    $result = $this->builder->buildFieldPathForRule(
+        'tags',
+        $pathCardinalities,
+        $rule,
+        ValidationConstants::CARDINALITY_ONE
+    );
+
+    // Для distinct на одиночном поле путь без .*
+    expect($result)->toBe('content_json.tags');
+});
+
+test('buildFieldPathForRule applies other rules to field itself regardless of cardinality', function () {
+    $pathCardinalities = [];
+    $rule = new RequiredRule();
+    
+    $resultMany = $this->builder->buildFieldPathForRule(
+        'reading_time_minutes',
+        $pathCardinalities,
+        $rule,
+        ValidationConstants::CARDINALITY_MANY
+    );
+    
+    $resultOne = $this->builder->buildFieldPathForRule(
+        'tags',
+        $pathCardinalities,
+        $rule,
+        ValidationConstants::CARDINALITY_ONE
+    );
+
+    // Для других правил путь без .* независимо от cardinality
+    expect($resultMany)->toBe('content_json.reading_time_minutes')
+        ->and($resultOne)->toBe('content_json.tags');
+});
+
+test('buildFieldPathForRule handles nested paths with distinct rule', function () {
+    $pathCardinalities = [
+        'author' => ValidationConstants::CARDINALITY_MANY,
+    ];
+    $rule = new DistinctRule();
+    
+    $result = $this->builder->buildFieldPathForRule(
+        'author.name',
+        $pathCardinalities,
+        $rule,
+        ValidationConstants::CARDINALITY_ONE
+    );
+
+    // Путь должен учитывать родительский массив, но distinct применяется к самому полю
+    expect($result)->toBe('content_json.author.*.name');
 });
 

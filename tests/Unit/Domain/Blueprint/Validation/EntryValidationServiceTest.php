@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Domain\Blueprint\Validation\EntryValidationService;
 use App\Domain\Blueprint\Validation\FieldPathBuilder;
 use App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface;
+use App\Domain\Blueprint\Validation\Rules\DistinctRule;
 use App\Domain\Blueprint\Validation\Rules\MaxRule;
 use App\Domain\Blueprint\Validation\Rules\MinRule;
 use App\Domain\Blueprint\Validation\Rules\NullableRule;
@@ -489,5 +490,54 @@ test('buildRulesFor correctly passes pathCardinalities to FieldPathBuilder', fun
     // FieldPathBuilder должен использовать cardinality для замены на wildcard
     // author имеет cardinality='many', поэтому name заменяется на *.name
     expect($result->hasRulesForField('content_json.author.*.name'))->toBeTrue();
+});
+
+test('buildRulesFor applies distinct rule to array elements for fields with cardinality many', function () {
+    $blueprint = Blueprint::factory()->create();
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'reading_time_minutes',
+        'full_path' => 'reading_time_minutes',
+        'cardinality' => 'many',
+        'validation_rules' => ['distinct' => true],
+    ]);
+
+    $distinctRule = new DistinctRule();
+    $this->converter->shouldReceive('convert')
+        ->once()
+        ->with(['distinct' => true])
+        ->andReturn([$distinctRule]);
+
+    $result = $this->service->buildRulesFor($blueprint);
+
+    // Для полей с cardinality "many" правило distinct должно применяться к элементам массива (field.*)
+    expect($result->hasRulesForField('content_json.reading_time_minutes.*'))->toBeTrue()
+        ->and($result->getRulesForField('content_json.reading_time_minutes.*'))->toHaveCount(1)
+        ->and($result->getRulesForField('content_json.reading_time_minutes.*')[0])->toBeInstanceOf(DistinctRule::class)
+        ->and($result->hasRulesForField('content_json.reading_time_minutes'))->toBeFalse();
+});
+
+test('buildRulesFor applies distinct rule to field itself for fields with cardinality one', function () {
+    $blueprint = Blueprint::factory()->create();
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'tags',
+        'full_path' => 'tags',
+        'cardinality' => 'one',
+        'validation_rules' => ['distinct' => true],
+    ]);
+
+    $distinctRule = new DistinctRule();
+    $this->converter->shouldReceive('convert')
+        ->once()
+        ->with(['distinct' => true])
+        ->andReturn([$distinctRule]);
+
+    $result = $this->service->buildRulesFor($blueprint);
+
+    // Для полей с cardinality "one" правило distinct применяется к самому полю
+    expect($result->hasRulesForField('content_json.tags'))->toBeTrue()
+        ->and($result->getRulesForField('content_json.tags'))->toHaveCount(1)
+        ->and($result->getRulesForField('content_json.tags')[0])->toBeInstanceOf(DistinctRule::class);
 });
 

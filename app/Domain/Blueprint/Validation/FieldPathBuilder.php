@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Blueprint\Validation;
 
+use App\Domain\Blueprint\Validation\Rules\DistinctRule;
+use App\Domain\Blueprint\Validation\Rules\Rule;
+
 /**
  * Построитель путей полей для валидации.
  *
  * Преобразует full_path из Path в путь для валидации с учётом cardinality.
+ * Учитывает специфику правил валидации (например, distinct для массивов).
  *
  * @package App\Domain\Blueprint\Validation
  */
@@ -51,6 +55,38 @@ final class FieldPathBuilder
         }
 
         return $prefix.implode('.', $resultSegments);
+    }
+
+    /**
+     * Построить путь поля для конкретного правила валидации.
+     *
+     * Строит путь с учётом cardinality и специфики правила.
+     * Для правил, которые должны применяться к элементам массива (например, distinct),
+     * добавляет wildcard для элементов массива.
+     *
+     * @param string $fullPath Полный путь из Path (например, 'reading_time_minutes')
+     * @param array<string, string> $pathCardinalities Маппинг full_path → cardinality для всех путей
+     * @param \App\Domain\Blueprint\Validation\Rules\Rule $rule Правило валидации
+     * @param string $currentPathCardinality Кардинальность текущего пути
+     * @param string $prefix Префикс для пути (по умолчанию 'content_json.')
+     * @return string Путь в точечной нотации для валидации
+     */
+    public function buildFieldPathForRule(
+        string $fullPath,
+        array $pathCardinalities,
+        Rule $rule,
+        string $currentPathCardinality,
+        string $prefix = ValidationConstants::CONTENT_JSON_PREFIX
+    ): string {
+        $basePath = $this->buildFieldPath($fullPath, $pathCardinalities, $prefix);
+
+        // Для правил, которые должны применяться к элементам массива (например, distinct),
+        // добавляем wildcard для элементов массива, если текущий путь - массив
+        if ($rule instanceof DistinctRule && $currentPathCardinality === ValidationConstants::CARDINALITY_MANY) {
+            return $basePath . ValidationConstants::ARRAY_ELEMENT_WILDCARD;
+        }
+
+        return $basePath;
     }
 }
 
