@@ -893,19 +893,42 @@
             ]
         },
         {
+            "id": "domain_service:Blueprint/Validation/DataTypeMapper",
+            "type": "domain_service",
+            "name": "DataTypeMapper",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\DataTypeMapper.php",
+            "summary": "Маппер типов данных Path в типы для валидации.",
+            "details": "Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)\nв типы для валидации (string, integer, numeric, boolean, date, array).",
+            "meta": {
+                "methods": [
+                    "mapToValidationType",
+                    "isSupported"
+                ],
+                "dependencies": [],
+                "interface": null
+            },
+            "related": [],
+            "tags": [
+                "blueprint",
+                "validation"
+            ]
+        },
+        {
             "id": "domain_service:Blueprint/Validation/EntryValidationService",
             "type": "domain_service",
             "name": "EntryValidationService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\EntryValidationService.php",
             "summary": "Доменный сервис валидации контента Entry на основе Blueprint.",
-            "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nНе выполняет проверок совместимости правил - пользователь сам настраивает правила.",
+            "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nАвтоматически создаёт правила типов данных на основе data_type, если они не указаны явно.",
             "meta": {
                 "methods": [
                     "buildRulesFor"
                 ],
                 "dependencies": [
                     "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface",
-                    "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder"
+                    "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder",
+                    "App\\Domain\\Blueprint\\Validation\\DataTypeMapper",
+                    "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
                 ],
                 "interface": "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface"
             },
@@ -924,8 +947,7 @@
             "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.\nУчитывает специфику правил валидации (например, distinct для массивов).",
             "meta": {
                 "methods": [
-                    "buildFieldPath",
-                    "buildFieldPathForRule"
+                    "buildFieldPath"
                 ],
                 "dependencies": [],
                 "interface": null
@@ -1285,6 +1307,29 @@
             ]
         },
         {
+            "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
+            "type": "domain_service",
+            "name": "TypeRuleHandler",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\TypeRuleHandler.php",
+            "summary": "Обработчик правила TypeRule.",
+            "details": "Преобразует TypeRule в строку Laravel правила валидации\n(например, 'string', 'integer', 'numeric', 'boolean', 'date', 'array').",
+            "meta": {
+                "methods": [
+                    "supports",
+                    "handle"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
+            },
+            "related": [],
+            "tags": [
+                "blueprint",
+                "validation",
+                "rule",
+                "handler"
+            ]
+        },
+        {
             "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
             "type": "domain_service",
             "name": "MaxRule",
@@ -1413,7 +1458,8 @@
                     "createNullableRule",
                     "createConditionalRule",
                     "createDistinctRule",
-                    "createFieldComparisonRule"
+                    "createFieldComparisonRule",
+                    "createTypeRule"
                 ],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
@@ -1443,6 +1489,29 @@
                 ],
                 "dependencies": [],
                 "interface": null
+            },
+            "related": [],
+            "tags": [
+                "blueprint",
+                "validation",
+                "rule"
+            ]
+        },
+        {
+            "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
+            "type": "domain_service",
+            "name": "TypeRule",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\TypeRule.php",
+            "summary": "Правило валидации: тип данных.",
+            "details": "Автоматически создаётся на основе data_type из Path.\nПреобразуется в соответствующее Laravel правило валидации (string, integer, numeric, boolean, date, array).",
+            "meta": {
+                "methods": [
+                    "getType",
+                    "getParams",
+                    "getDataType"
+                ],
+                "dependencies": [],
+                "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
             "tags": [
@@ -7499,19 +7568,42 @@
                 ]
             },
             {
+                "id": "domain_service:Blueprint/Validation/DataTypeMapper",
+                "type": "domain_service",
+                "name": "DataTypeMapper",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\DataTypeMapper.php",
+                "summary": "Маппер типов данных Path в типы для валидации.",
+                "details": "Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)\nв типы для валидации (string, integer, numeric, boolean, date, array).",
+                "meta": {
+                    "methods": [
+                        "mapToValidationType",
+                        "isSupported"
+                    ],
+                    "dependencies": [],
+                    "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "blueprint",
+                    "validation"
+                ]
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
                 "type": "domain_service",
                 "name": "EntryValidationService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\EntryValidationService.php",
                 "summary": "Доменный сервис валидации контента Entry на основе Blueprint.",
-                "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nНе выполняет проверок совместимости правил - пользователь сам настраивает правила.",
+                "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nАвтоматически создаёт правила типов данных на основе data_type, если они не указаны явно.",
                 "meta": {
                     "methods": [
                         "buildRulesFor"
                     ],
                     "dependencies": [
                         "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface",
-                        "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder"
+                        "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder",
+                        "App\\Domain\\Blueprint\\Validation\\DataTypeMapper",
+                        "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
                     ],
                     "interface": "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface"
                 },
@@ -7530,8 +7622,7 @@
                 "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.\nУчитывает специфику правил валидации (например, distinct для массивов).",
                 "meta": {
                     "methods": [
-                        "buildFieldPath",
-                        "buildFieldPathForRule"
+                        "buildFieldPath"
                     ],
                     "dependencies": [],
                     "interface": null
@@ -7891,6 +7982,29 @@
                 ]
             },
             {
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
+                "type": "domain_service",
+                "name": "TypeRuleHandler",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\Handlers\\TypeRuleHandler.php",
+                "summary": "Обработчик правила TypeRule.",
+                "details": "Преобразует TypeRule в строку Laravel правила валидации\n(например, 'string', 'integer', 'numeric', 'boolean', 'date', 'array').",
+                "meta": {
+                    "methods": [
+                        "supports",
+                        "handle"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
+                },
+                "related": [],
+                "tags": [
+                    "blueprint",
+                    "validation",
+                    "rule",
+                    "handler"
+                ]
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
@@ -8019,7 +8133,8 @@
                         "createNullableRule",
                         "createConditionalRule",
                         "createDistinctRule",
-                        "createFieldComparisonRule"
+                        "createFieldComparisonRule",
+                        "createTypeRule"
                     ],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
@@ -8049,6 +8164,29 @@
                     ],
                     "dependencies": [],
                     "interface": null
+                },
+                "related": [],
+                "tags": [
+                    "blueprint",
+                    "validation",
+                    "rule"
+                ]
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
+                "type": "domain_service",
+                "name": "TypeRule",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\Rules\\TypeRule.php",
+                "summary": "Правило валидации: тип данных.",
+                "details": "Автоматически создаётся на основе data_type из Path.\nПреобразуется в соответствующее Laravel правило валидации (string, integer, numeric, boolean, date, array).",
+                "meta": {
+                    "methods": [
+                        "getType",
+                        "getParams",
+                        "getDataType"
+                    ],
+                    "dependencies": [],
+                    "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
                 "tags": [
@@ -13238,6 +13376,12 @@
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации."
             },
             {
+                "id": "domain_service:Blueprint/Validation/DataTypeMapper",
+                "type": "domain_service",
+                "name": "DataTypeMapper",
+                "summary": "Маппер типов данных Path в типы для валидации."
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
                 "type": "domain_service",
                 "name": "EntryValidationService",
@@ -13340,6 +13484,12 @@
                 "summary": "Реестр обработчиков правил валидации."
             },
             {
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
+                "type": "domain_service",
+                "name": "TypeRuleHandler",
+                "summary": "Обработчик правила TypeRule."
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
@@ -13380,6 +13530,12 @@
                 "type": "domain_service",
                 "name": "RuleSet",
                 "summary": "Набор правил валидации для полей."
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
+                "type": "domain_service",
+                "name": "TypeRule",
+                "summary": "Правило валидации: тип данных."
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationConstants",
@@ -13956,6 +14112,12 @@
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации."
             },
             {
+                "id": "domain_service:Blueprint/Validation/DataTypeMapper",
+                "type": "domain_service",
+                "name": "DataTypeMapper",
+                "summary": "Маппер типов данных Path в типы для валидации."
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
                 "type": "domain_service",
                 "name": "EntryValidationService",
@@ -14058,6 +14220,12 @@
                 "summary": "Реестр обработчиков правил валидации."
             },
             {
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
+                "type": "domain_service",
+                "name": "TypeRuleHandler",
+                "summary": "Обработчик правила TypeRule."
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
@@ -14098,6 +14266,12 @@
                 "type": "domain_service",
                 "name": "RuleSet",
                 "summary": "Набор правил валидации для полей."
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
+                "type": "domain_service",
+                "name": "TypeRule",
+                "summary": "Правило валидации: тип данных."
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationConstants",
@@ -14242,6 +14416,12 @@
                 "summary": "Реестр обработчиков правил валидации."
             },
             {
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
+                "type": "domain_service",
+                "name": "TypeRuleHandler",
+                "summary": "Обработчик правила TypeRule."
+            },
+            {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
                 "type": "domain_service",
                 "name": "MaxRule",
@@ -14282,6 +14462,12 @@
                 "type": "domain_service",
                 "name": "RuleSet",
                 "summary": "Набор правил валидации для полей."
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
+                "type": "domain_service",
+                "name": "TypeRule",
+                "summary": "Правило валидации: тип данных."
             }
         ],
         "handler": [
@@ -14338,6 +14524,12 @@
                 "type": "domain_service",
                 "name": "RuleHandlerRegistry",
                 "summary": "Реестр обработчиков правил валидации."
+            },
+            {
+                "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
+                "type": "domain_service",
+                "name": "TypeRuleHandler",
+                "summary": "Обработчик правила TypeRule."
             }
         ],
         "action": [
@@ -17191,5 +17383,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-02T11:40:09+00:00"
+    "generated_at": "2025-12-02T15:15:43+00:00"
 }

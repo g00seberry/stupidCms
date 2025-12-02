@@ -31,6 +31,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      *
      * Преобразует все ключи из validation_rules в Rule объекты напрямую,
      * без проверок совместимости с типами данных или cardinality.
+     * Если ключ 'required' отсутствует, автоматически добавляет NullableRule по умолчанию.
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
@@ -44,9 +45,11 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
             return $rules;
         }
 
+        $hasRequiredRule = isset($validationRules['required']);
+
         foreach ($validationRules as $key => $value) {
             match ($key) {
-                'required' => $this->handleRequiredRule($rules, $value),
+                'required' => $rules[] = $this->ruleFactory->createRequiredRule(),
                 'min' => $rules[] = $this->ruleFactory->createMinRule($value),
                 'max' => $rules[] = $this->ruleFactory->createMaxRule($value),
                 'pattern' => $rules[] = $this->ruleFactory->createPatternRule($value),
@@ -57,26 +60,15 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
             };
         }
 
+        // Если не было явного правила required/nullable, добавляем nullable по умолчанию
+        if (! $hasRequiredRule) {
+            $rules[] = $this->ruleFactory->createNullableRule();
+        }
+
         return $rules;
     }
 
-    /**
-     * Обработать правило required/nullable.
-     *
-     * Добавляет RequiredRule или NullableRule в зависимости от значения.
-     *
-     * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
-     * @param bool $isRequired Обязательность поля
-     * @return void
-     */
-    private function handleRequiredRule(array &$rules, bool $isRequired): void
-    {
-        if ($isRequired) {
-            $rules[] = $this->ruleFactory->createRequiredRule();
-        } else {
-            $rules[] = $this->ruleFactory->createNullableRule();
-        }
-    }
+
     /**
      * Обработать условное правило валидации.
      *

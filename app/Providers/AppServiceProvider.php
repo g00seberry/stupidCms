@@ -32,6 +32,7 @@ use App\Domain\Blueprint\Validation\Rules\Handlers\MinRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\NullableRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\PatternRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RequiredRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\TypeRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
@@ -279,6 +280,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register('required_unless', new ConditionalRuleHandler());
             $registry->register('prohibited_if', new ConditionalRuleHandler());
             $registry->register('field_comparison', new FieldComparisonRuleHandler());
+            $registry->register('type', new TypeRuleHandler());
 
             return $registry;
         });

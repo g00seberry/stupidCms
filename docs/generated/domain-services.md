@@ -85,6 +85,25 @@
 
 ---
 
+## DataTypeMapper
+**ID:** `domain_service:Blueprint/Validation/DataTypeMapper`
+**Path:** `app/Domain/Blueprint/Validation/DataTypeMapper.php`
+
+Маппер типов данных Path в типы для валидации.
+
+### Details
+Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)
+в типы для валидации (string, integer, numeric, boolean, date, array).
+
+### Meta
+- **Methods:** `mapToValidationType`, `isSupported`
+
+### Tags
+`blueprint`, `validation`
+
+
+---
+
 ## DistinctRule
 **ID:** `domain_service:Blueprint/Validation/Rules/DistinctRule`
 **Path:** `app/Domain/Blueprint/Validation/Rules/DistinctRule.php`
@@ -195,11 +214,11 @@ JSON-представлению).
 ### Details
 Строит RuleSet для поля content_json на основе структуры Path в Blueprint.
 Преобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.
-Не выполняет проверок совместимости правил - пользователь сам настраивает правила.
+Автоматически создаёт правила типов данных на основе data_type, если они не указаны явно.
 
 ### Meta
 - **Methods:** `buildRulesFor`
-- **Dependencies:** `App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface`, `App\Domain\Blueprint\Validation\FieldPathBuilder`
+- **Dependencies:** `App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface`, `App\Domain\Blueprint\Validation\FieldPathBuilder`, `App\Domain\Blueprint\Validation\DataTypeMapper`, `App\Domain\Blueprint\Validation\Rules\RuleFactory`
 - **Interface:** `App\Domain\Blueprint\Validation\EntryValidationServiceInterface`
 
 ### Tags
@@ -340,7 +359,7 @@ JSON-представлению).
 Учитывает специфику правил валидации (например, distinct для массивов).
 
 ### Meta
-- **Methods:** `buildFieldPath`, `buildFieldPathForRule`
+- **Methods:** `buildFieldPath`
 
 ### Tags
 `blueprint`, `validation`
@@ -1548,7 +1567,7 @@ Job для реиндексации поискового индекса в фо�
 Реализация фабрики правил валидации.
 
 ### Meta
-- **Methods:** `createMinRule`, `createMaxRule`, `createPatternRule`, `createRequiredRule`, `createNullableRule`, `createConditionalRule`, `createDistinctRule`, `createFieldComparisonRule`
+- **Methods:** `createMinRule`, `createMaxRule`, `createPatternRule`, `createRequiredRule`, `createNullableRule`, `createConditionalRule`, `createDistinctRule`, `createFieldComparisonRule`, `createTypeRule`
 - **Interface:** `App\Domain\Blueprint\Validation\Rules\RuleFactory`
 
 ### Tags
@@ -1744,6 +1763,46 @@ Value Object для фильтра поиска по терму.
 
 ### Tags
 `media`, `service`
+
+
+---
+
+## TypeRule
+**ID:** `domain_service:Blueprint/Validation/Rules/TypeRule`
+**Path:** `app/Domain/Blueprint/Validation/Rules/TypeRule.php`
+
+Правило валидации: тип данных.
+
+### Details
+Автоматически создаётся на основе data_type из Path.
+Преобразуется в соответствующее Laravel правило валидации (string, integer, numeric, boolean, date, array).
+
+### Meta
+- **Methods:** `getType`, `getParams`, `getDataType`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Rule`
+
+### Tags
+`blueprint`, `validation`, `rule`
+
+
+---
+
+## TypeRuleHandler
+**ID:** `domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler`
+**Path:** `app/Domain/Blueprint/Validation/Rules/Handlers/TypeRuleHandler.php`
+
+Обработчик правила TypeRule.
+
+### Details
+Преобразует TypeRule в строку Laravel правила валидации
+(например, 'string', 'integer', 'numeric', 'boolean', 'date', 'array').
+
+### Meta
+- **Methods:** `supports`, `handle`
+- **Interface:** `App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerInterface`
+
+### Tags
+`blueprint`, `validation`, `rule`, `handler`
 
 
 ---

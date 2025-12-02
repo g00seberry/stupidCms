@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Blueprint\Validation;
+
+/**
+ * Маппер типов данных Path в типы для валидации.
+ *
+ * Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)
+ * в типы для валидации (string, integer, numeric, boolean, date, array).
+ *
+ * @package App\Domain\Blueprint\Validation
+ */
+final class DataTypeMapper
+{
+    /**
+     * Маппинг data_type → тип для валидации.
+     *
+     * @var array<string, string>
+     */
+    private const DATA_TYPE_MAPPING = [
+        'string' => 'string',
+        'text' => 'string',
+        'int' => 'integer',
+        'float' => 'numeric',
+        'bool' => 'boolean',
+        'datetime' => 'date',
+        'json' => 'array',
+        'ref' => 'integer',
+    ];
+
+    /**
+     * Преобразовать data_type в тип для валидации.
+     *
+     * @param string $dataType data_type из Path (string, text, int, float, bool, datetime, json, ref)
+     * @return string|null Тип для валидации или null, если тип неизвестен
+     */
+    public function mapToValidationType(string $dataType): ?string
+    {
+        return self::DATA_TYPE_MAPPING[$dataType] ?? null;
+    }
+
+    /**
+     * Проверить, поддерживается ли data_type.
+     *
+     * @param string $dataType data_type из Path
+     * @return bool true, если тип поддерживается
+     */
+    public function isSupported(string $dataType): bool
+    {
+        return isset(self::DATA_TYPE_MAPPING[$dataType]);
+    }
+}
+

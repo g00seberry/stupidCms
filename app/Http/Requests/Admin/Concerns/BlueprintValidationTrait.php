@@ -7,6 +7,7 @@ namespace App\Http\Requests\Admin\Concerns;
 use App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface;
 use App\Domain\Blueprint\Validation\EntryValidationServiceInterface;
 use App\Models\PostType;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -57,6 +58,10 @@ trait BlueprintValidationTrait
         // Адаптируем RuleSet в Laravel правила
         $adapter = app(LaravelValidationAdapterInterface::class);
         $laravelRules = $adapter->adapt($ruleSet);
+
+        Log::debug('Blueprint validation rules adapted', [
+            'laravelRules' => $laravelRules,
+        ]);
 
         // Добавляем все правила в валидатор
         foreach ($laravelRules as $field => $rules) {

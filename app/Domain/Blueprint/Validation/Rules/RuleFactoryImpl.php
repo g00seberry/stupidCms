@@ -112,5 +112,16 @@ final class RuleFactoryImpl implements RuleFactory
     ): FieldComparisonRule {
         return new FieldComparisonRule($operator, $otherField, $constantValue);
     }
+
+    /**
+     * Создать правило типа данных.
+     *
+     * @param string $type Тип данных (string, integer, numeric, boolean, date, array)
+     * @return \App\Domain\Blueprint\Validation\Rules\TypeRule
+     */
+    public function createTypeRule(string $type): TypeRule
+    {
+        return new TypeRule($type);
+    }
 }
 

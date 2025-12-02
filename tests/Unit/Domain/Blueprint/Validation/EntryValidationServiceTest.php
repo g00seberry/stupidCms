@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Domain\Blueprint\Validation\DataTypeMapper;
 use App\Domain\Blueprint\Validation\EntryValidationService;
 use App\Domain\Blueprint\Validation\FieldPathBuilder;
 use App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface;
@@ -11,7 +12,9 @@ use App\Domain\Blueprint\Validation\Rules\MinRule;
 use App\Domain\Blueprint\Validation\Rules\NullableRule;
 use App\Domain\Blueprint\Validation\Rules\PatternRule;
 use App\Domain\Blueprint\Validation\Rules\RequiredRule;
+use App\Domain\Blueprint\Validation\Rules\RuleFactory;
 use App\Domain\Blueprint\Validation\Rules\RuleSet;
+use App\Domain\Blueprint\Validation\Rules\TypeRule;
 use App\Models\Blueprint;
 use App\Models\Path;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,7 +25,23 @@ uses(TestCase::class, RefreshDatabase::class);
 beforeEach(function () {
     $this->converter = Mockery::mock(PathValidationRulesConverterInterface::class);
     $this->fieldPathBuilder = new FieldPathBuilder();
-    $this->service = new EntryValidationService($this->converter, $this->fieldPathBuilder);
+    $this->dataTypeMapper = new DataTypeMapper();
+    $this->ruleFactory = Mockery::mock(RuleFactory::class);
+    
+    // Настраиваем мок ruleFactory для автоматического создания TypeRule
+    // По умолчанию возвращаем TypeRule для любого типа
+    $this->ruleFactory->shouldReceive('createTypeRule')
+        ->byDefault()
+        ->andReturnUsing(function ($type) {
+            return new TypeRule($type);
+        });
+    
+    $this->service = new EntryValidationService(
+        $this->converter,
+        $this->fieldPathBuilder,
+        $this->dataTypeMapper,
+        $this->ruleFactory
+    );
 });
 
 afterEach(function () {
@@ -47,22 +66,28 @@ test('buildRulesFor processes blueprint with single simple path', function () {
         'name' => 'title',
         'full_path' => 'title',
         'cardinality' => 'one',
+        'data_type' => 'string',
         'validation_rules' => ['required' => true],
     ]);
 
     $requiredRule = new RequiredRule();
+    $typeRule = new TypeRule('string');
     $this->converter->shouldReceive('convert')
         ->once()
         ->with(['required' => true])
         ->andReturn([$requiredRule]);
+
+    $this->ruleFactory->shouldReceive('createTypeRule')
+        ->once()
+        ->with('string')
+        ->andReturn($typeRule);
 
     $result = $this->service->buildRulesFor($blueprint);
 
     expect($result)->toBeInstanceOf(RuleSet::class)
         ->and($result->isEmpty())->toBeFalse()
         ->and($result->hasRulesForField('content_json.title'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.title'))->toHaveCount(1)
-        ->and($result->getRulesForField('content_json.title')[0])->toBeInstanceOf(RequiredRule::class);
+        ->and($result->getRulesForField('content_json.title'))->toHaveCount(2);
 });
 
 test('buildRulesFor processes blueprint with multiple paths', function () {
@@ -72,6 +97,7 @@ test('buildRulesFor processes blueprint with multiple paths', function () {
         'name' => 'title',
         'full_path' => 'title',
         'cardinality' => 'one',
+        'data_type' => 'string',
         'validation_rules' => ['required' => true],
     ]);
     Path::factory()->create([
@@ -79,11 +105,14 @@ test('buildRulesFor processes blueprint with multiple paths', function () {
         'name' => 'description',
         'full_path' => 'description',
         'cardinality' => 'one',
+        'data_type' => 'text',
         'validation_rules' => ['required' => false],
     ]);
 
     $requiredRule = new RequiredRule();
     $nullableRule = new NullableRule();
+    $typeRule1 = new TypeRule('string');
+    $typeRule2 = new TypeRule('string');
 
     $this->converter->shouldReceive('convert')
         ->with(['required' => true])
@@ -93,6 +122,11 @@ test('buildRulesFor processes blueprint with multiple paths', function () {
         ->with(['required' => false])
         ->once()
         ->andReturn([$nullableRule]);
+
+    $this->ruleFactory->shouldReceive('createTypeRule')
+        ->with('string')
+        ->twice()
+        ->andReturn($typeRule1, $typeRule2);
 
     $result = $this->service->buildRulesFor($blueprint);
 
@@ -328,6 +362,7 @@ test('buildRulesFor correctly converts validation_rules to Rule objects', functi
         'name' => 'title',
         'full_path' => 'title',
         'cardinality' => 'one',
+        'data_type' => 'string',
         'validation_rules' => ['required' => true, 'min' => 3, 'max' => 255],
     ]);
 
@@ -342,7 +377,8 @@ test('buildRulesFor correctly converts validation_rules to Rule objects', functi
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->getRulesForField('content_json.title'))->toHaveCount(3);
+    // 3 правила из validation_rules + 1 автоматическое TypeRule = 4 правила
+    expect($result->getRulesForField('content_json.title'))->toHaveCount(4);
 });
 
 test('buildRulesFor correctly handles null validation_rules', function () {
@@ -352,6 +388,7 @@ test('buildRulesFor correctly handles null validation_rules', function () {
         'name' => 'title',
         'full_path' => 'title',
         'cardinality' => 'one',
+        'data_type' => 'string',
         'validation_rules' => null,
     ]);
 
@@ -362,7 +399,9 @@ test('buildRulesFor correctly handles null validation_rules', function () {
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->hasRulesForField('content_json.title'))->toBeFalse();
+    // Даже при null validation_rules автоматически создаётся TypeRule
+    expect($result->hasRulesForField('content_json.title'))->toBeTrue()
+        ->and($result->getRulesForField('content_json.title'))->toHaveCount(1);
 });
 
 test('buildRulesFor correctly handles empty validation_rules array', function () {
@@ -372,6 +411,7 @@ test('buildRulesFor correctly handles empty validation_rules array', function ()
         'name' => 'title',
         'full_path' => 'title',
         'cardinality' => 'one',
+        'data_type' => 'string',
         'validation_rules' => [],
     ]);
 
@@ -382,7 +422,9 @@ test('buildRulesFor correctly handles empty validation_rules array', function ()
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->hasRulesForField('content_json.title'))->toBeFalse();
+    // Даже при пустом validation_rules автоматически создаётся TypeRule
+    expect($result->hasRulesForField('content_json.title'))->toBeTrue()
+        ->and($result->getRulesForField('content_json.title'))->toHaveCount(1);
 });
 
 test('buildRulesFor correctly handles multiple rules for one path', function () {
@@ -392,6 +434,7 @@ test('buildRulesFor correctly handles multiple rules for one path', function () 
         'name' => 'title',
         'full_path' => 'title',
         'cardinality' => 'one',
+        'data_type' => 'string',
         'validation_rules' => [
             'required' => true,
             'min' => 3,
@@ -411,7 +454,8 @@ test('buildRulesFor correctly handles multiple rules for one path', function () 
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->getRulesForField('content_json.title'))->toHaveCount(4);
+    // 4 правила из validation_rules + 1 автоматическое TypeRule = 5 правил
+    expect($result->getRulesForField('content_json.title'))->toHaveCount(5);
 });
 
 // 1.4. Интеграция с зависимостями
@@ -499,23 +543,39 @@ test('buildRulesFor applies distinct rule to array itself for fields with cardin
         'name' => 'reading_time_minutes',
         'full_path' => 'reading_time_minutes',
         'cardinality' => 'many',
+        'data_type' => 'int',
         'validation_rules' => ['distinct' => true],
     ]);
 
     $distinctRule = new DistinctRule();
+    $arrayRule = new TypeRule('array');
+    $integerRule = new TypeRule('integer');
+    
     $this->converter->shouldReceive('convert')
         ->once()
         ->with(['distinct' => true])
         ->andReturn([$distinctRule]);
+    
+    $this->ruleFactory->shouldReceive('createTypeRule')
+        ->once()
+        ->with('array')
+        ->andReturn($arrayRule);
+    
+    $this->ruleFactory->shouldReceive('createTypeRule')
+        ->once()
+        ->with('integer')
+        ->andReturn($integerRule);
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    // Для полей с cardinality "many" правило distinct применяется к самому массиву (без .*),
-    // так как DistinctObjects проверяет уникальность элементов всего массива
+    // Для полей с cardinality "many":
+    // - правило array для самого массива (без .*)
+    // - правило distinct применяется к самому массиву (без .*)
+    // - правило integer для элементов массива (с .*)
     expect($result->hasRulesForField('content_json.reading_time_minutes'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.reading_time_minutes'))->toHaveCount(1)
-        ->and($result->getRulesForField('content_json.reading_time_minutes')[0])->toBeInstanceOf(DistinctRule::class)
-        ->and($result->hasRulesForField('content_json.reading_time_minutes.*'))->toBeFalse();
+        ->and($result->getRulesForField('content_json.reading_time_minutes'))->toHaveCount(2) // array + distinct
+        ->and($result->hasRulesForField('content_json.reading_time_minutes.*'))->toBeTrue() // integer для элементов
+        ->and($result->getRulesForField('content_json.reading_time_minutes.*'))->toHaveCount(1); // integer
 });
 
 test('buildRulesFor applies distinct rule to field itself for fields with cardinality one', function () {
@@ -525,6 +585,7 @@ test('buildRulesFor applies distinct rule to field itself for fields with cardin
         'name' => 'tags',
         'full_path' => 'tags',
         'cardinality' => 'one',
+        'data_type' => 'json',
         'validation_rules' => ['distinct' => true],
     ]);
 
@@ -537,8 +598,218 @@ test('buildRulesFor applies distinct rule to field itself for fields with cardin
     $result = $this->service->buildRulesFor($blueprint);
 
     // Для полей с cardinality "one" правило distinct применяется к самому полю
+    // + автоматически создаётся TypeRule
     expect($result->hasRulesForField('content_json.tags'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.tags'))->toHaveCount(1)
-        ->and($result->getRulesForField('content_json.tags')[0])->toBeInstanceOf(DistinctRule::class);
+        ->and($result->getRulesForField('content_json.tags'))->toHaveCount(2);
+});
+
+// 1.5. Автоматическое создание правил типов данных
+
+test('buildRulesFor automatically creates type rule when not explicit', function () {
+    $blueprint = Blueprint::factory()->create();
+    $path = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'cardinality' => 'one',
+        'data_type' => 'string',
+        'validation_rules' => ['required' => true],
+    ]);
+
+    $requiredRule = new RequiredRule();
+    $typeRule = new TypeRule('string');
+
+    $this->converter->shouldReceive('convert')
+        ->once()
+        ->with(['required' => true])
+        ->andReturn([$requiredRule]);
+
+    $this->ruleFactory->shouldReceive('createTypeRule')
+        ->once()
+        ->with('string')
+        ->andReturn($typeRule);
+
+    $result = $this->service->buildRulesFor($blueprint);
+
+    $fieldPath = 'content_json.title';
+    $rules = $result->getRulesForField($fieldPath);
+
+    // Проверяем, что есть правило типа string
+    $hasStringRule = false;
+    foreach ($rules as $rule) {
+        if ($rule instanceof TypeRule && $rule->getDataType() === 'string') {
+            $hasStringRule = true;
+            break;
+        }
+    }
+
+    expect($hasStringRule)->toBeTrue('Type rule should be automatically created')
+        ->and($result->getRulesForField($fieldPath))->toHaveCount(2);
+});
+
+test('buildRulesFor does not create type rule when explicit', function () {
+    $blueprint = Blueprint::factory()->create();
+    $path = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'cardinality' => 'one',
+        'data_type' => 'string',
+        'validation_rules' => ['type' => 'integer', 'required' => true],
+    ]);
+
+    $requiredRule = new RequiredRule();
+    $typeRule = new TypeRule('integer');
+
+    $this->converter->shouldReceive('convert')
+        ->once()
+        ->with(['type' => 'integer', 'required' => true])
+        ->andReturn([$typeRule, $requiredRule]);
+
+    $this->ruleFactory->shouldNotReceive('createTypeRule');
+
+    $result = $this->service->buildRulesFor($blueprint);
+
+    $fieldPath = 'content_json.title';
+    $rules = $result->getRulesForField($fieldPath);
+
+    // Проверяем, что нет автоматического правила типа string
+    $hasAutoStringRule = false;
+    foreach ($rules as $rule) {
+        if ($rule instanceof TypeRule && $rule->getDataType() === 'string') {
+            $hasAutoStringRule = true;
+            break;
+        }
+    }
+
+    expect($hasAutoStringRule)->toBeFalse('Auto type rule should not be created when explicit');
+});
+
+test('buildRulesFor does not create type rule when standard Laravel type rule is present', function () {
+    $blueprint = Blueprint::factory()->create();
+    $path = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'cardinality' => 'one',
+        'data_type' => 'string',
+        'validation_rules' => ['string' => true, 'required' => true],
+    ]);
+
+    $requiredRule = new RequiredRule();
+
+    $this->converter->shouldReceive('convert')
+        ->once()
+        ->with(['string' => true, 'required' => true])
+        ->andReturn([$requiredRule]);
+
+    $this->ruleFactory->shouldNotReceive('createTypeRule');
+
+    $result = $this->service->buildRulesFor($blueprint);
+
+    $fieldPath = 'content_json.title';
+    $rules = $result->getRulesForField($fieldPath);
+
+    // Проверяем, что нет автоматического правила типа
+    $hasAutoTypeRule = false;
+    foreach ($rules as $rule) {
+        if ($rule instanceof TypeRule) {
+            $hasAutoTypeRule = true;
+            break;
+        }
+    }
+
+    expect($hasAutoTypeRule)->toBeFalse('Auto type rule should not be created when standard Laravel rule is present');
+});
+
+test('buildRulesFor creates type rule for all data types', function () {
+    $dataTypes = [
+        'string' => 'string',
+        'text' => 'string',
+        'int' => 'integer',
+        'float' => 'numeric',
+        'bool' => 'boolean',
+        'datetime' => 'date',
+        'json' => 'array',
+        'ref' => 'integer',
+    ];
+
+    foreach ($dataTypes as $dataType => $expectedValidationType) {
+        $blueprint = Blueprint::factory()->create();
+        $path = Path::factory()->create([
+            'blueprint_id' => $blueprint->id,
+            'name' => 'field',
+            'full_path' => 'field',
+            'cardinality' => 'one',
+            'data_type' => $dataType,
+            'validation_rules' => null,
+        ]);
+
+        $typeRule = new TypeRule($expectedValidationType);
+
+        $this->converter->shouldReceive('convert')
+            ->once()
+            ->with(null)
+            ->andReturn([]);
+
+        $this->ruleFactory->shouldReceive('createTypeRule')
+            ->once()
+            ->with($expectedValidationType)
+            ->andReturn($typeRule);
+
+        $result = $this->service->buildRulesFor($blueprint);
+
+        $fieldPath = 'content_json.field';
+        $rules = $result->getRulesForField($fieldPath);
+
+        $hasTypeRule = false;
+        foreach ($rules as $rule) {
+            if ($rule instanceof TypeRule && $rule->getDataType() === $expectedValidationType) {
+                $hasTypeRule = true;
+                break;
+            }
+        }
+
+        expect($hasTypeRule)->toBeTrue("Type rule should be created for data_type: {$dataType}");
+    }
+});
+
+test('buildRulesFor does not create type rule when explicit type rule is in validation_rules', function () {
+    $blueprint = Blueprint::factory()->create();
+    $path = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'cardinality' => 'one',
+        'data_type' => 'string',
+        'validation_rules' => ['type' => 'integer', 'required' => true],
+    ]);
+
+    $requiredRule = new RequiredRule();
+    $typeRule = new TypeRule('integer');
+
+    $this->converter->shouldReceive('convert')
+        ->once()
+        ->with(['type' => 'integer', 'required' => true])
+        ->andReturn([$typeRule, $requiredRule]);
+
+    // Не должно вызываться createTypeRule, так как тип указан явно
+    $this->ruleFactory->shouldNotReceive('createTypeRule');
+
+    $result = $this->service->buildRulesFor($blueprint);
+
+    $fieldPath = 'content_json.title';
+    $rules = $result->getRulesForField($fieldPath);
+
+    // Проверяем, что нет автоматического правила типа string
+    $hasAutoStringRule = false;
+    foreach ($rules as $rule) {
+        if ($rule instanceof TypeRule && $rule->getDataType() === 'string') {
+            $hasAutoStringRule = true;
+            break;
+        }
+    }
+
+    expect($hasAutoStringRule)->toBeFalse('Auto type rule should not be created when explicit');
 });
 

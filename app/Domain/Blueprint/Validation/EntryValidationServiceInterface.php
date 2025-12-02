@@ -22,8 +22,11 @@ interface EntryValidationServiceInterface
      *
      * Анализирует все Path в blueprint и преобразует их validation_rules
      * в доменный RuleSet для поля content_json.
+     * Автоматически создаёт правила типов данных на основе data_type,
+     * если они не указаны явно в validation_rules.
+     *
      * Учитывает:
-     * - data_type каждого Path (string, int, float, bool, datetime, json, ref)
+     * - data_type каждого Path (автоматически создаёт правила типов: string, integer, numeric, boolean, date, array)
      * - required (из validation_rules['required'], RequiredRule или NullableRule)
      * - cardinality (one или many)
      * - validation_rules (required, min, max, pattern и т.д.)

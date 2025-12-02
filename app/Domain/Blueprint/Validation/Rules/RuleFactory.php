@@ -82,5 +82,13 @@ interface RuleFactory
         string $otherField,
         mixed $constantValue = null
     ): FieldComparisonRule;
+
+    /**
+     * Создать правило типа данных.
+     *
+     * @param string $type Тип данных (string, integer, numeric, boolean, date, array)
+     * @return \App\Domain\Blueprint\Validation\Rules\TypeRule
+     */
+    public function createTypeRule(string $type): TypeRule;
 }
 
