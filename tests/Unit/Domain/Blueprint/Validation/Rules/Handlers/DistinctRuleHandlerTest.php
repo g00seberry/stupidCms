@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Domain\Blueprint\Validation\Rules\DistinctRule;
 use App\Domain\Blueprint\Validation\Rules\Handlers\DistinctRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\MinRule;
+use App\Rules\DistinctObjects;
 
 /**
  * Unit-тесты для DistinctRuleHandler.
@@ -26,13 +27,13 @@ test('supports returns false for other types', function () {
     expect($this->handler->supports('pattern'))->toBeFalse();
 });
 
-test('handle returns distinct for DistinctRule', function () {
+test('handle returns DistinctObjects instance for DistinctRule', function () {
     $rule = new DistinctRule();
     $result = $this->handler->handle($rule);
 
     expect($result)->toBeArray();
-    expect($result)->toContain('distinct');
     expect($result)->toHaveCount(1);
+    expect($result[0])->toBeInstanceOf(DistinctObjects::class);
 });
 
 test('handle throws exception for wrong rule type', function () {

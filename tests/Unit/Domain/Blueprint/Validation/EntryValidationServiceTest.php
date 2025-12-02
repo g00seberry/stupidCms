@@ -492,7 +492,7 @@ test('buildRulesFor correctly passes pathCardinalities to FieldPathBuilder', fun
     expect($result->hasRulesForField('content_json.author.*.name'))->toBeTrue();
 });
 
-test('buildRulesFor applies distinct rule to array elements for fields with cardinality many', function () {
+test('buildRulesFor applies distinct rule to array itself for fields with cardinality many', function () {
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -510,11 +510,12 @@ test('buildRulesFor applies distinct rule to array elements for fields with card
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    // Для полей с cardinality "many" правило distinct должно применяться к элементам массива (field.*)
-    expect($result->hasRulesForField('content_json.reading_time_minutes.*'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.reading_time_minutes.*'))->toHaveCount(1)
-        ->and($result->getRulesForField('content_json.reading_time_minutes.*')[0])->toBeInstanceOf(DistinctRule::class)
-        ->and($result->hasRulesForField('content_json.reading_time_minutes'))->toBeFalse();
+    // Для полей с cardinality "many" правило distinct применяется к самому массиву (без .*),
+    // так как DistinctObjects проверяет уникальность элементов всего массива
+    expect($result->hasRulesForField('content_json.reading_time_minutes'))->toBeTrue()
+        ->and($result->getRulesForField('content_json.reading_time_minutes'))->toHaveCount(1)
+        ->and($result->getRulesForField('content_json.reading_time_minutes')[0])->toBeInstanceOf(DistinctRule::class)
+        ->and($result->hasRulesForField('content_json.reading_time_minutes.*'))->toBeFalse();
 });
 
 test('buildRulesFor applies distinct rule to field itself for fields with cardinality one', function () {

@@ -161,7 +161,7 @@ test('buildFieldPath handles alternating arrays and objects', function () {
 
 // 2.5. Обработка правил валидации
 
-test('buildFieldPathForRule applies distinct rule to array elements for fields with cardinality many', function () {
+test('buildFieldPathForRule applies distinct rule to array itself for fields with cardinality many', function () {
     $pathCardinalities = [];
     $rule = new DistinctRule();
     $result = $this->builder->buildFieldPathForRule(
@@ -171,8 +171,9 @@ test('buildFieldPathForRule applies distinct rule to array elements for fields w
         ValidationConstants::CARDINALITY_MANY
     );
 
-    // Для distinct на массиве должен быть путь с .*
-    expect($result)->toBe('content_json.reading_time_minutes.*');
+    // Для distinct правило применяется к самому массиву (без .*),
+    // так как DistinctObjects проверяет уникальность элементов всего массива
+    expect($result)->toBe('content_json.reading_time_minutes');
 });
 
 test('buildFieldPathForRule applies distinct rule to field itself for fields with cardinality one', function () {

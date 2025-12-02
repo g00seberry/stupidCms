@@ -65,16 +65,13 @@ final class EntryValidationService implements EntryValidationServiceInterface
         foreach ($paths as $path) {
             // Преобразуем validation_rules в Rule объекты
             $fieldRules = $this->converter->convert($path->validation_rules);
-
+            $fieldPath = $this->fieldPathBuilder->buildFieldPath(
+                $path->full_path,
+                $pathCardinalities,
+            );
             // Добавляем все правила для поля
             // Для каждого правила строим путь с учётом его специфики
             foreach ($fieldRules as $rule) {
-                $fieldPath = $this->fieldPathBuilder->buildFieldPathForRule(
-                    $path->full_path,
-                    $pathCardinalities,
-                    $rule,
-                    $path->cardinality
-                );
                 $ruleSet->addRule($fieldPath, $rule);
             }
         }

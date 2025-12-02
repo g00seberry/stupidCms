@@ -21,6 +21,7 @@ use App\Domain\Blueprint\Validation\Rules\NullableRule;
 use App\Domain\Blueprint\Validation\Rules\PatternRule;
 use App\Domain\Blueprint\Validation\Rules\RequiredRule;
 use App\Domain\Blueprint\Validation\Rules\RuleSet;
+use App\Rules\DistinctObjects;
 
 /**
  * Unit-тесты для LaravelValidationAdapter.
@@ -110,7 +111,7 @@ test('adapt converts PatternRule to Laravel regex rule', function () {
     expect($hasRegex)->toBeTrue();
 });
 
-test('adapt converts DistinctRule to Laravel rule', function () {
+test('adapt converts DistinctRule to DistinctObjects rule', function () {
     $ruleSet = new RuleSet();
     $ruleSet->addRule('content_json.tags', new DistinctRule());
 
@@ -118,7 +119,16 @@ test('adapt converts DistinctRule to Laravel rule', function () {
 
     expect($result)->toBeArray();
     expect($result)->toHaveKey('content_json.tags');
-    expect($result['content_json.tags'])->toContain('distinct');
+    expect($result['content_json.tags'])->toBeArray();
+    // Проверяем, что есть DistinctObjects правило
+    $hasDistinctObjects = false;
+    foreach ($result['content_json.tags'] as $rule) {
+        if ($rule instanceof DistinctObjects) {
+            $hasDistinctObjects = true;
+            break;
+        }
+    }
+    expect($hasDistinctObjects)->toBeTrue();
 });
 
 test('adapt converts ConditionalRule to Laravel rule', function () {
