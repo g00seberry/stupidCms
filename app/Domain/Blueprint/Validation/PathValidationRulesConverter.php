@@ -31,7 +31,10 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      *
      * Преобразует все ключи из validation_rules в Rule объекты напрямую,
      * без проверок совместимости с типами данных или cardinality.
-     * Если ключ 'required' отсутствует, автоматически добавляет NullableRule по умолчанию.
+     * 
+     * Логика обработки 'required':
+     * - Если 'required' => true, создается RequiredRule.
+     * - Если 'required' => false или ключ отсутствует, автоматически добавляется NullableRule.
      *
      * @param array<string, mixed>|null $validationRules Правила валидации из Path (может быть null)
      * @return list<\App\Domain\Blueprint\Validation\Rules\Rule> Массив доменных Rule объектов
@@ -47,7 +50,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
 
         foreach ($validationRules as $key => $value) {
             match ($key) {
-                'required' => $rules[] = $this->ruleFactory->createRequiredRule(),
+                'required' => $value ? $rules[] = $this->ruleFactory->createRequiredRule() : null,
                 'min' => $rules[] = $this->ruleFactory->createMinRule($value),
                 'max' => $rules[] = $this->ruleFactory->createMaxRule($value),
                 'pattern' => $rules[] = $this->ruleFactory->createPatternRule($value),
@@ -58,7 +61,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
             };
         }
 
-        $hasRequiredRule = $validationRules['required'] ?? false;
+        $hasRequiredRule = ($validationRules['required'] ?? false) === true;
         // Если не было явного правила required/nullable, добавляем nullable по умолчанию
         if (! $hasRequiredRule) {
             $rules[] = $this->ruleFactory->createNullableRule();
