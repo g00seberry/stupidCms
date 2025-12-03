@@ -91,7 +91,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
             
             // Если нет явного правила типа и data_type указан, создаём автоматически
             if (! $hasExplicitTypeRule && $path->data_type !== null) {
-                $validationType = $this->dataTypeMapper->mapToValidationType($path->data_type);
+                $validationType = $this->dataTypeMapper->mapToValidationType($path->data_type, $path->cardinality);
                 if ($validationType !== null) {
                     // Для cardinality = 'many' правило типа применяется к элементам массива
                     // Для cardinality = 'one' правило типа применяется к самому полю

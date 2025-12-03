@@ -19,47 +19,47 @@ final class DataTypeMapperTest extends TestCase
 
     public function test_maps_string_to_string(): void
     {
-        $this->assertEquals('string', $this->mapper->mapToValidationType('string'));
+        $this->assertEquals('string', $this->mapper->mapToValidationType('string', 'one'));
     }
 
     public function test_maps_text_to_string(): void
     {
-        $this->assertEquals('string', $this->mapper->mapToValidationType('text'));
+        $this->assertEquals('string', $this->mapper->mapToValidationType('text', 'one'));
     }
 
     public function test_maps_int_to_integer(): void
     {
-        $this->assertEquals('integer', $this->mapper->mapToValidationType('int'));
+        $this->assertEquals('integer', $this->mapper->mapToValidationType('int', 'one'));
     }
 
     public function test_maps_float_to_numeric(): void
     {
-        $this->assertEquals('numeric', $this->mapper->mapToValidationType('float'));
+        $this->assertEquals('numeric', $this->mapper->mapToValidationType('float', 'one'));
     }
 
     public function test_maps_bool_to_boolean(): void
     {
-        $this->assertEquals('boolean', $this->mapper->mapToValidationType('bool'));
+        $this->assertEquals('boolean', $this->mapper->mapToValidationType('bool', 'one'));
     }
 
     public function test_maps_datetime_to_date(): void
     {
-        $this->assertEquals('date', $this->mapper->mapToValidationType('datetime'));
+        $this->assertEquals('date', $this->mapper->mapToValidationType('datetime', 'one'));
     }
 
     public function test_maps_json_to_array(): void
     {
-        $this->assertEquals('array', $this->mapper->mapToValidationType('json'));
+        $this->assertEquals('array', $this->mapper->mapToValidationType('json', 'one'));
     }
 
     public function test_maps_ref_to_integer(): void
     {
-        $this->assertEquals('integer', $this->mapper->mapToValidationType('ref'));
+        $this->assertEquals('integer', $this->mapper->mapToValidationType('ref', 'one'));
     }
 
     public function test_returns_null_for_unknown_type(): void
     {
-        $this->assertNull($this->mapper->mapToValidationType('unknown'));
+        $this->assertNull($this->mapper->mapToValidationType('unknown', 'one'));
     }
 
     public function test_is_supported_returns_true_for_known_types(): void

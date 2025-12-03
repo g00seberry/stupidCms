@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Blueprint\Validation;
 
+use App\Domain\Blueprint\Validation\ValidationConstants;
+
 /**
  * Маппер типов данных Path в типы для валидации.
  *
@@ -36,8 +38,11 @@ final class DataTypeMapper
      * @param string $dataType data_type из Path (string, text, int, float, bool, datetime, json, ref)
      * @return string|null Тип для валидации или null, если тип неизвестен
      */
-    public function mapToValidationType(string $dataType): ?string
+    public function mapToValidationType(string $dataType, string $cardinality): ?string
     {
+        if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
+            return 'array';
+        }
         return self::DATA_TYPE_MAPPING[$dataType] ?? null;
     }
 
