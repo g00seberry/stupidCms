@@ -38,11 +38,6 @@ test('convert returns empty array for empty validation_rules', function () {
 });
 
 test('convert creates RequiredRule for required true', function () {
-    $requiredRule = new RequiredRule();
-    $this->ruleFactory->shouldReceive('createRequiredRule')
-        ->once()
-        ->andReturn($requiredRule);
-
     $result = $this->converter->convert(['required' => true]);
 
     expect($result)->toHaveCount(1)
@@ -387,13 +382,10 @@ test('convert ignores invalid format for field_comparison', function () {
 // 3.4. Комбинации правил
 
 test('convert handles multiple rules simultaneously', function () {
-    $requiredRule = new RequiredRule();
     $minRule = new MinRule(3);
     $maxRule = new MaxRule(100);
 
-    $this->ruleFactory->shouldReceive('createRequiredRule')
-        ->once()
-        ->andReturn($requiredRule);
+
     $this->ruleFactory->shouldReceive('createMinRule')
         ->once()
         ->with(3)
@@ -416,7 +408,6 @@ test('convert handles multiple rules simultaneously', function () {
 });
 
 test('convert handles all rule types together', function () {
-    $requiredRule = new RequiredRule();
     $minRule = new MinRule(5);
     $maxRule = new MaxRule(255);
     $patternRule = new PatternRule('/^test$/');
@@ -424,7 +415,6 @@ test('convert handles all rule types together', function () {
     $conditionalRule = new ConditionalRule('required_if', 'is_published', true, '==');
     $fieldComparisonRule = new FieldComparisonRule('>=', 'content_json.start_date', null);
 
-    $this->ruleFactory->shouldReceive('createRequiredRule')->andReturn($requiredRule);
     $this->ruleFactory->shouldReceive('createMinRule')->with(5)->andReturn($minRule);
     $this->ruleFactory->shouldReceive('createMaxRule')->with(255)->andReturn($maxRule);
     $this->ruleFactory->shouldReceive('createPatternRule')->with('/^test$/')->andReturn($patternRule);

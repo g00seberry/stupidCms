@@ -70,17 +70,19 @@ class EntryResource extends AdminJsonResource
     }
 
     /**
-     * Рекурсивно преобразовать JSON данные, чтобы пустые массивы стали объектами.
+     * Рекурсивно преобразовать JSON данные для сериализации.
      *
-     * Обеспечивает консистентность: пустые массивы и null преобразуются в stdClass,
-     * чтобы в JSON они были {} вместо [] или null.
+     * Преобразует ассоциативные массивы в объекты stdClass для корректной
+     * сериализации в JSON. Сохраняет типы данных: списки остаются массивами,
+     * null и пустые ассоциативные массивы становятся {}.
      *
      * @param mixed $value Значение для преобразования
      * @return mixed Преобразованное значение
      */
     private function transformJson(mixed $value): mixed
     {
-        if ($value === null || $value === []) {
+        // null становится пустым объектом
+        if ($value === null) {
             return new \stdClass();
         }
 
@@ -88,10 +90,13 @@ class EntryResource extends AdminJsonResource
             return $value;
         }
 
+        // Список (массив с числовыми ключами) - сохраняем как массив, даже если пустой
         if (array_is_list($value)) {
             return array_map(fn ($item) => $this->transformJson($item), $value);
         }
 
+        // Ассоциативный массив (объект) - преобразуем в stdClass
+        // Пустой ассоциативный массив станет {}
         $object = new \stdClass();
         foreach ($value as $key => $nested) {
             $object->{$key} = $this->transformJson($nested);

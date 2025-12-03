@@ -61,6 +61,7 @@ trait BlueprintValidationTrait
 
         Log::debug('Blueprint validation rules adapted', [
             'laravelRules' => $laravelRules,
+          
         ]);
 
         // Добавляем все правила в валидатор

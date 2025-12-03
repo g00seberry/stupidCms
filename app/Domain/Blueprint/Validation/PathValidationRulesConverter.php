@@ -45,8 +45,6 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
             return $rules;
         }
 
-        $hasRequiredRule = isset($validationRules['required']);
-
         foreach ($validationRules as $key => $value) {
             match ($key) {
                 'required' => $rules[] = $this->ruleFactory->createRequiredRule(),
@@ -60,6 +58,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
             };
         }
 
+        $hasRequiredRule = $validationRules['required'] ?? false;
         // Если не было явного правила required/nullable, добавляем nullable по умолчанию
         if (! $hasRequiredRule) {
             $rules[] = $this->ruleFactory->createNullableRule();
@@ -67,6 +66,7 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
 
         return $rules;
     }
+
 
 
     /**

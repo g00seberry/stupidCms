@@ -71,9 +71,6 @@ final class EntryValidationService implements EntryValidationServiceInterface
             // Преобразуем validation_rules в Rule объекты
             $fieldRules = $this->converter->convert($path->validation_rules);
             
-            // Проверяем, есть ли явное правило типа в validation_rules
-            $hasExplicitTypeRule = $this->hasExplicitTypeRule($path->validation_rules);
-            
             $fieldPath = $this->fieldPathBuilder->buildFieldPath(
                 $path->full_path,
                 $pathCardinalities,
@@ -81,62 +78,30 @@ final class EntryValidationService implements EntryValidationServiceInterface
             
             // Если cardinality = 'many', добавляем правило array для самого поля
             if ($path->cardinality === 'many') {
-                $hasExplicitArrayRule = $this->hasExplicitArrayRule($path->validation_rules);
-                if (! $hasExplicitArrayRule) {
-                    // Путь для самого массива (без *)
-                    $arrayFieldPath = $this->buildArrayFieldPath($path->full_path, $pathCardinalities);
-                    $ruleSet->addRule($arrayFieldPath, $this->ruleFactory->createTypeRule('array'));
-                }
-            }
-            
-            // Если нет явного правила типа и data_type указан, создаём автоматически
-            if (! $hasExplicitTypeRule && $path->data_type !== null) {
-                $validationType = $this->dataTypeMapper->mapToValidationType($path->data_type, $path->cardinality);
-                if ($validationType !== null) {
-                    // Для cardinality = 'many' правило типа применяется к элементам массива
-                    // Для cardinality = 'one' правило типа применяется к самому полю
-                    $fieldRules[] = $this->ruleFactory->createTypeRule($validationType);
-                }
+                $ruleSet->addRule($fieldPath, $this->ruleFactory->createTypeRule('array'));
             }
             
             // Добавляем все правила для поля (или элементов массива, если cardinality = 'many')
             foreach ($fieldRules as $rule) {
                 $ruleSet->addRule($fieldPath, $rule);
             }
-        }
-
-        return $ruleSet;
-    }
-
-    /**
-     * Проверить, есть ли явное правило типа в validation_rules.
-     *
-     * Проверяет наличие ключей 'type' или стандартных Laravel правил типов
-     * (string, integer, numeric, boolean, date, array) в validation_rules.
-     *
-     * @param array<string, mixed>|null $validationRules Правила валидации
-     * @return bool true, если найдено явное правило типа
-     */
-    private function hasExplicitTypeRule(?array $validationRules): bool
-    {
-        if ($validationRules === null || $validationRules === []) {
-            return false;
-        }
-
-        // Проверяем наличие ключа 'type'
-        if (isset($validationRules['type'])) {
-            return true;
-        }
-
-        // Проверяем наличие стандартных Laravel правил типов
-        $typeKeys = ['string', 'integer', 'int', 'numeric', 'boolean', 'bool', 'date', 'array'];
-        foreach ($typeKeys as $typeKey) {
-            if (isset($validationRules[$typeKey])) {
-                return true;
+            
+            $validationType = $this->dataTypeMapper->mapToValidationType($path->data_type, $path->cardinality);
+            if ($validationType !== null) {
+                // Для cardinality = 'many' правило типа применяется к элементам массива (с .*)
+                // Для cardinality = 'one' правило типа применяется к самому полю
+                if ($path->cardinality === 'many') {
+                    // Для полей с cardinality = 'many' правило типа применяется к элементам массива
+                    $typeFieldPath = $fieldPath . ValidationConstants::ARRAY_ELEMENT_WILDCARD;
+                    $ruleSet->addRule($typeFieldPath, $this->ruleFactory->createTypeRule($validationType));
+                } else {
+                    // Для полей с cardinality = 'one' правило типа применяется к самому полю
+                    $ruleSet->addRule($fieldPath, $this->ruleFactory->createTypeRule($validationType));
+                }
             }
         }
 
-        return false;
+        return $ruleSet;
     }
 
     /**

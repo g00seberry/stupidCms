@@ -35,14 +35,17 @@ final class DataTypeMapper
     /**
      * Преобразовать data_type в тип для валидации.
      *
+     * Для cardinality = 'many' возвращает тип элемента массива (не 'array', т.к. правило array добавляется отдельно).
+     * Для cardinality = 'one' возвращает тип самого поля.
+     *
      * @param string $dataType data_type из Path (string, text, int, float, bool, datetime, json, ref)
+     * @param string $cardinality Кардинальность поля ('one' или 'many')
      * @return string|null Тип для валидации или null, если тип неизвестен
      */
     public function mapToValidationType(string $dataType, string $cardinality): ?string
     {
-        if ($cardinality === ValidationConstants::CARDINALITY_MANY) {
-            return 'array';
-        }
+        // Для cardinality = 'many' возвращаем тип элемента массива (правило array добавляется отдельно)
+        // Для cardinality = 'one' возвращаем тип самого поля
         return self::DATA_TYPE_MAPPING[$dataType] ?? null;
     }
 

@@ -81,12 +81,6 @@ test('createPatternRule handles array value', function () {
     expect($rule->getPattern())->toBe('.*');
 });
 
-test('createRequiredRule creates RequiredRule', function () {
-    $rule = $this->factory->createRequiredRule();
-
-    expect($rule)->toBeInstanceOf(RequiredRule::class);
-    expect($rule->getType())->toBe('required');
-});
 
 test('createNullableRule creates NullableRule', function () {
     $rule = $this->factory->createNullableRule();

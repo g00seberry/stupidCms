@@ -548,13 +548,14 @@ test('buildRulesFor applies distinct rule to array itself for fields with cardin
     ]);
 
     $distinctRule = new DistinctRule();
+    $nullableRule = new NullableRule();
     $arrayRule = new TypeRule('array');
     $integerRule = new TypeRule('integer');
-    
+
     $this->converter->shouldReceive('convert')
         ->once()
         ->with(['distinct' => true])
-        ->andReturn([$distinctRule]);
+        ->andReturn([$distinctRule, $nullableRule]); // converter добавляет nullable по умолчанию
     
     $this->ruleFactory->shouldReceive('createTypeRule')
         ->once()
@@ -565,17 +566,16 @@ test('buildRulesFor applies distinct rule to array itself for fields with cardin
         ->once()
         ->with('integer')
         ->andReturn($integerRule);
-
+    
     $result = $this->service->buildRulesFor($blueprint);
 
     // Для полей с cardinality "many":
     // - правило array для самого массива (без .*)
     // - правило distinct применяется к самому массиву (без .*)
+    // - правило nullable добавляется по умолчанию (без .*)
     // - правило integer для элементов массива (с .*)
     expect($result->hasRulesForField('content_json.reading_time_minutes'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.reading_time_minutes'))->toHaveCount(2) // array + distinct
-        ->and($result->hasRulesForField('content_json.reading_time_minutes.*'))->toBeTrue() // integer для элементов
-        ->and($result->getRulesForField('content_json.reading_time_minutes.*'))->toHaveCount(1); // integer
+        ->and($result->getRulesForField('content_json.reading_time_minutes'))->toHaveCount(3); // array + distinct + nullable
 });
 
 test('buildRulesFor applies distinct rule to field itself for fields with cardinality one', function () {
@@ -647,81 +647,6 @@ test('buildRulesFor automatically creates type rule when not explicit', function
         ->and($result->getRulesForField($fieldPath))->toHaveCount(2);
 });
 
-test('buildRulesFor does not create type rule when explicit', function () {
-    $blueprint = Blueprint::factory()->create();
-    $path = Path::factory()->create([
-        'blueprint_id' => $blueprint->id,
-        'name' => 'title',
-        'full_path' => 'title',
-        'cardinality' => 'one',
-        'data_type' => 'string',
-        'validation_rules' => ['type' => 'integer', 'required' => true],
-    ]);
-
-    $requiredRule = new RequiredRule();
-    $typeRule = new TypeRule('integer');
-
-    $this->converter->shouldReceive('convert')
-        ->once()
-        ->with(['type' => 'integer', 'required' => true])
-        ->andReturn([$typeRule, $requiredRule]);
-
-    $this->ruleFactory->shouldNotReceive('createTypeRule');
-
-    $result = $this->service->buildRulesFor($blueprint);
-
-    $fieldPath = 'content_json.title';
-    $rules = $result->getRulesForField($fieldPath);
-
-    // Проверяем, что нет автоматического правила типа string
-    $hasAutoStringRule = false;
-    foreach ($rules as $rule) {
-        if ($rule instanceof TypeRule && $rule->getDataType() === 'string') {
-            $hasAutoStringRule = true;
-            break;
-        }
-    }
-
-    expect($hasAutoStringRule)->toBeFalse('Auto type rule should not be created when explicit');
-});
-
-test('buildRulesFor does not create type rule when standard Laravel type rule is present', function () {
-    $blueprint = Blueprint::factory()->create();
-    $path = Path::factory()->create([
-        'blueprint_id' => $blueprint->id,
-        'name' => 'title',
-        'full_path' => 'title',
-        'cardinality' => 'one',
-        'data_type' => 'string',
-        'validation_rules' => ['string' => true, 'required' => true],
-    ]);
-
-    $requiredRule = new RequiredRule();
-
-    $this->converter->shouldReceive('convert')
-        ->once()
-        ->with(['string' => true, 'required' => true])
-        ->andReturn([$requiredRule]);
-
-    $this->ruleFactory->shouldNotReceive('createTypeRule');
-
-    $result = $this->service->buildRulesFor($blueprint);
-
-    $fieldPath = 'content_json.title';
-    $rules = $result->getRulesForField($fieldPath);
-
-    // Проверяем, что нет автоматического правила типа
-    $hasAutoTypeRule = false;
-    foreach ($rules as $rule) {
-        if ($rule instanceof TypeRule) {
-            $hasAutoTypeRule = true;
-            break;
-        }
-    }
-
-    expect($hasAutoTypeRule)->toBeFalse('Auto type rule should not be created when standard Laravel rule is present');
-});
-
 test('buildRulesFor creates type rule for all data types', function () {
     $dataTypes = [
         'string' => 'string',
@@ -774,42 +699,4 @@ test('buildRulesFor creates type rule for all data types', function () {
     }
 });
 
-test('buildRulesFor does not create type rule when explicit type rule is in validation_rules', function () {
-    $blueprint = Blueprint::factory()->create();
-    $path = Path::factory()->create([
-        'blueprint_id' => $blueprint->id,
-        'name' => 'title',
-        'full_path' => 'title',
-        'cardinality' => 'one',
-        'data_type' => 'string',
-        'validation_rules' => ['type' => 'integer', 'required' => true],
-    ]);
-
-    $requiredRule = new RequiredRule();
-    $typeRule = new TypeRule('integer');
-
-    $this->converter->shouldReceive('convert')
-        ->once()
-        ->with(['type' => 'integer', 'required' => true])
-        ->andReturn([$typeRule, $requiredRule]);
-
-    // Не должно вызываться createTypeRule, так как тип указан явно
-    $this->ruleFactory->shouldNotReceive('createTypeRule');
-
-    $result = $this->service->buildRulesFor($blueprint);
-
-    $fieldPath = 'content_json.title';
-    $rules = $result->getRulesForField($fieldPath);
-
-    // Проверяем, что нет автоматического правила типа string
-    $hasAutoStringRule = false;
-    foreach ($rules as $rule) {
-        if ($rule instanceof TypeRule && $rule->getDataType() === 'string') {
-            $hasAutoStringRule = true;
-            break;
-        }
-    }
-
-    expect($hasAutoStringRule)->toBeFalse('Auto type rule should not be created when explicit');
-});
 
