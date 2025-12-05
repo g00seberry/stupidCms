@@ -123,7 +123,7 @@ test('url method returns flat url for page type', function () {
     expect($entry->url())->toBe('/test-page');
 });
 
-test('url method returns hierarchical url for non-page type', function () {
+test('url method returns flat url for all types', function () {
     $entry = new Entry();
     $entry->slug = 'test-post';
     
@@ -132,7 +132,8 @@ test('url method returns hierarchical url for non-page type', function () {
     
     $entry->setRelation('postType', $postType);
 
-    expect($entry->url())->toBe('/blog/test-post');
+    // Теперь все URL плоские, так как slug глобально уникален
+    expect($entry->url())->toBe('/test-post');
 });
 
 test('has no guarded attributes', function () {

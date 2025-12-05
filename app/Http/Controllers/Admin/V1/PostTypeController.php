@@ -43,6 +43,7 @@ class PostTypeController extends Controller
      * @bodyParam blueprint_id integer optional ID Blueprint для привязки к типу записи. Example: 1
      * @response status=201 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "product",
      *     "name": "Products",
      *     "options_json": {
@@ -52,6 +53,7 @@ class PostTypeController extends Controller
      *         }
      *       }
      *     },
+     *     "blueprint_id": null,
      *     "created_at": "2025-01-10T12:45:00+00:00",
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
@@ -136,9 +138,11 @@ class PostTypeController extends Controller
      * @response status=200 {
      *   "data": [
      *     {
+     *       "id": 1,
      *       "slug": "article",
      *       "name": "Articles",
      *       "options_json": {},
+     *       "blueprint_id": null,
      *       "created_at": "2025-01-10T12:00:00+00:00",
      *       "updated_at": "2025-01-10T12:45:00+00:00"
      *     }
@@ -191,12 +195,15 @@ class PostTypeController extends Controller
      * @group Admin ▸ Post types
      * @name Show post type
      * @authenticated
-     * @urlParam slug string required Slug PostType. Example: article
+     * @urlParam id int required ID PostType. Example: 1
      * @response status=200 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "article",
      *     "name": "Articles",
      *     "options_json": {},
+     *     "blueprint_id": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }
@@ -217,10 +224,10 @@ class PostTypeController extends Controller
      *   "title": "PostType not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Unknown post type slug: article",
+     *   "detail": "PostType not found: 1",
      *   "meta": {
      *     "request_id": "41111111-2222-3333-4444-555555555556",
-     *     "slug": "article"
+     *     "id": 1
      *   },
      *   "trace_id": "00-41111111222233334444555555555556-4111111122223333-01"
      * }
@@ -237,24 +244,11 @@ class PostTypeController extends Controller
      *   "trace_id": "00-46666666777788889999000000000000-4666666677778888-01"
      * }
      */
-    public function show(string $slug): PostTypeResource
+    public function show(int $id): PostTypeResource
     {
-        $type = PostType::query()->where('slug', $slug)->first();
-
-        if (! $type) {
-            $this->throwPostTypeNotFound($slug);
-        }
+        $type = PostType::findOrFail($id);
 
         return new PostTypeResource($type);
-    }
-
-    private function throwPostTypeNotFound(string $slug): never
-    {
-        $this->throwError(
-            ErrorCode::NOT_FOUND,
-            sprintf('Unknown post type slug: %s', $slug),
-            ['slug' => $slug],
-        );
     }
 
     /**
@@ -264,20 +258,21 @@ class PostTypeController extends Controller
      * принимает как целые числа, так и строковые представления чисел, преобразуя их в целые числа.
      *
      * @param \App\Http\Requests\Admin\UpdatePostTypeRequest $request Валидированный запрос
-     * @param string $slug Slug типа записи для обновления
+     * @param int $id ID типа записи для обновления
      * @return \App\Http\Resources\Admin\PostTypeResource Обновлённый тип записи
-     * @throws \App\Support\Errors\HttpErrorException Если тип записи не найден (ErrorCode::NOT_FOUND)
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException Если тип записи не найден (автоматически преобразуется в 404)
      *
      * @group Admin ▸ Post types
      * @name Update post type
      * @authenticated
-     * @urlParam slug string required Slug PostType. Example: article
+     * @urlParam id int required ID PostType. Example: 1
      * @bodyParam slug string optional Новый slug PostType. Example: article-updated
      * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @bodyParam blueprint_id integer optional ID Blueprint для привязки к типу записи. Example: 1
      * @response status=200 {
      *   "data": {
+     *     "id": 1,
      *     "slug": "article",
      *     "name": "Articles",
      *     "options_json": {
@@ -287,6 +282,8 @@ class PostTypeController extends Controller
      *         }
      *       }
      *     },
+     *     "blueprint_id": null,
+     *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:45:00+00:00"
      *   }
      * }
@@ -307,10 +304,10 @@ class PostTypeController extends Controller
      *   "title": "PostType not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Unknown post type slug: article",
+     *   "detail": "PostType not found: 1",
      *   "meta": {
      *     "request_id": "41111111-2222-3333-4444-555555555558",
-     *     "slug": "article"
+     *     "id": 1
      *   },
      *   "trace_id": "00-41111111222233334444555555555558-4111111122223333-01"
      * }
@@ -343,13 +340,9 @@ class PostTypeController extends Controller
      *   "trace_id": "00-46666666777788889999000000000001-4666666677778888-01"
      * }
      */
-    public function update(UpdatePostTypeRequest $request, string $slug): PostTypeResource
+    public function update(UpdatePostTypeRequest $request, int $id): PostTypeResource
     {
-        $type = PostType::query()->where('slug', $slug)->first();
-
-        if (! $type) {
-            $this->throwPostTypeNotFound($slug);
-        }
+        $type = PostType::findOrFail($id);
 
         $validated = $request->validated();
 
@@ -380,7 +373,7 @@ class PostTypeController extends Controller
      * @group Admin ▸ Post types
      * @name Delete post type
      * @authenticated
-     * @urlParam slug string required Slug PostType. Example: article
+     * @urlParam id int required ID PostType. Example: 1
      * @queryParam force boolean Каскадно удалить все записи (Entry) этого типа. Example: true
      * @response status=204 {}
      * @response status=401 {
@@ -407,10 +400,10 @@ class PostTypeController extends Controller
      *   "title": "PostType not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Unknown post type slug: article",
+     *   "detail": "PostType not found: 1",
      *   "meta": {
      *     "request_id": "41111111-2222-3333-4444-555555555561",
-     *     "slug": "article"
+     *     "id": 1
      *   },
      *   "trace_id": "00-41111111222233334444555555555561-4111111122223333-01"
      * }
@@ -439,13 +432,9 @@ class PostTypeController extends Controller
      *   "trace_id": "00-46666666777788889999000000000002-4666666677778888-01"
      * }
      */
-    public function destroy(Request $request, string $slug): Response
+    public function destroy(Request $request, int $id): Response
     {
-        $type = PostType::query()->where('slug', $slug)->first();
-
-        if (! $type) {
-            $this->throwPostTypeNotFound($slug);
-        }
+        $type = PostType::findOrFail($id);
 
         $force = $request->boolean('force');
 

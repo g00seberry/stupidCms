@@ -21,7 +21,7 @@ class EntryResource extends AdminJsonResource
      * Преобразовать ресурс в массив.
      *
      * Возвращает массив с полями записи, включая:
-     * - Основные поля (id, post_type, title, slug, status)
+     * - Основные поля (id, post_type_id, title, slug, status)
      * - JSON поля (content_json, meta_json) преобразованные в объекты
      * - Связанные сущности (author, terms, blueprint) при их загрузке
      * - Даты в ISO 8601 формате
@@ -33,7 +33,7 @@ class EntryResource extends AdminJsonResource
     {
         return [
             'id' => $this->id,
-            'post_type' => $this->postType?->slug,
+            'post_type_id' => $this->post_type_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,

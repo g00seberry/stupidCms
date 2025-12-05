@@ -92,27 +92,34 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::get('/post-types', [PostTypeController::class, 'index'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.index');
-    Route::get('/post-types/{slug}', [PostTypeController::class, 'show'])
+    Route::get('/post-types/{id}', [PostTypeController::class, 'show'])
+        ->where('id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.show');
-    Route::put('/post-types/{slug}', [PostTypeController::class, 'update'])
+    Route::put('/post-types/{id}', [PostTypeController::class, 'update'])
+        ->where('id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.update');
-    Route::delete('/post-types/{slug}', [PostTypeController::class, 'destroy'])
+    Route::delete('/post-types/{id}', [PostTypeController::class, 'destroy'])
+        ->where('id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.destroy');
     
     // Form Configs (для конфигурации формы компонентов)
-    Route::get('/post-types/{post_type}/form-config/{blueprint}', [FormConfigController::class, 'show'])
+    Route::get('/post-types/{post_type_id}/form-config/{blueprint}', [FormConfigController::class, 'show'])
+        ->where('post_type_id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.form-config.show');
-    Route::put('/post-types/{post_type}/form-config/{blueprint}', [FormConfigController::class, 'update'])
+    Route::put('/post-types/{post_type_id}/form-config/{blueprint}', [FormConfigController::class, 'update'])
+        ->where('post_type_id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.form-config.update');
-    Route::delete('/post-types/{post_type}/form-config/{blueprint}', [FormConfigController::class, 'destroy'])
+    Route::delete('/post-types/{post_type_id}/form-config/{blueprint}', [FormConfigController::class, 'destroy'])
+        ->where('post_type_id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.form-config.destroy');
-    Route::get('/post-types/{post_type}/form-configs', [FormConfigController::class, 'indexByPostType'])
+    Route::get('/post-types/{post_type_id}/form-configs', [FormConfigController::class, 'indexByPostType'])
+        ->where('post_type_id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.form-configs.index');
     

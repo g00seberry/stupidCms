@@ -250,11 +250,11 @@
             "name": "FormConfig",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/FormConfig.php",
             "summary": "Eloquent модель для конфигурации формы компонентов (FormConfig).",
-            "details": "Хранит конфигурацию формы компонентов для конкретной пары PostType (slug) + Blueprint.\nКонфигурация представляет собой JSON объект, где ключи - это full_path из Path,\nа значения - EditComponent (конфигурация компонента редактирования).",
+            "details": "Хранит конфигурацию формы компонентов для конкретной пары PostType (id) + Blueprint.\nКонфигурация представляет собой JSON объект, где ключи - это full_path из Path,\nа значения - EditComponent (конфигурация компонента редактирования).",
             "meta": {
                 "table": "form_configs",
                 "fillable": [
-                    "post_type_slug",
+                    "post_type_id",
                     "blueprint_id",
                     "config_json"
                 ],
@@ -265,6 +265,10 @@
                     "config_json": "array"
                 },
                 "relations": {
+                    "postType": {
+                        "type": "belongsTo",
+                        "related": "App\\Models\\PostType"
+                    },
                     "blueprint": {
                         "type": "belongsTo",
                         "related": "App\\Models\\Blueprint"
@@ -4991,19 +4995,19 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+            "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.form-config.show",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-            "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)",
+            "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)",
             "details": null,
             "meta": {
                 "method": "GET",
-                "uri": "/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "uri": "/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "post_type": {
+                    "post_type_id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -5026,19 +5030,19 @@
             }
         },
         {
-            "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+            "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.form-config.update",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-            "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)",
+            "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)",
             "details": null,
             "meta": {
                 "method": "PUT",
-                "uri": "/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "uri": "/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "post_type": {
+                    "post_type_id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -5061,19 +5065,19 @@
             }
         },
         {
-            "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+            "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.form-config.destroy",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-            "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)",
+            "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)",
             "details": null,
             "meta": {
                 "method": "DELETE",
-                "uri": "/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "uri": "/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "post_type": {
+                    "post_type_id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -5096,19 +5100,19 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+            "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.form-configs.index",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-            "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)",
+            "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)",
             "details": null,
             "meta": {
                 "method": "GET",
-                "uri": "/api/v1/admin/post-types/{post_type}/form-configs",
+                "uri": "/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "post_type": {
+                    "post_type_id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -6923,11 +6927,11 @@
                 "name": "FormConfig",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/FormConfig.php",
                 "summary": "Eloquent модель для конфигурации формы компонентов (FormConfig).",
-                "details": "Хранит конфигурацию формы компонентов для конкретной пары PostType (slug) + Blueprint.\nКонфигурация представляет собой JSON объект, где ключи - это full_path из Path,\nа значения - EditComponent (конфигурация компонента редактирования).",
+                "details": "Хранит конфигурацию формы компонентов для конкретной пары PostType (id) + Blueprint.\nКонфигурация представляет собой JSON объект, где ключи - это full_path из Path,\nа значения - EditComponent (конфигурация компонента редактирования).",
                 "meta": {
                     "table": "form_configs",
                     "fillable": [
-                        "post_type_slug",
+                        "post_type_id",
                         "blueprint_id",
                         "config_json"
                     ],
@@ -6938,6 +6942,10 @@
                         "config_json": "array"
                     },
                     "relations": {
+                        "postType": {
+                            "type": "belongsTo",
+                            "related": "App\\Models\\PostType"
+                        },
                         "blueprint": {
                             "type": "belongsTo",
                             "related": "App\\Models\\Blueprint"
@@ -11672,19 +11680,19 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.show",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)",
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)",
                 "details": null,
                 "meta": {
                     "method": "GET",
-                    "uri": "/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                    "uri": "/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "post_type": {
+                        "post_type_id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -11707,19 +11715,19 @@
                 }
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.update",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-                "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)",
+                "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)",
                 "details": null,
                 "meta": {
                     "method": "PUT",
-                    "uri": "/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                    "uri": "/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "post_type": {
+                        "post_type_id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -11742,19 +11750,19 @@
                 }
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.destroy",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-                "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)",
+                "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)",
                 "details": null,
                 "meta": {
                     "method": "DELETE",
-                    "uri": "/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                    "uri": "/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "post_type": {
+                        "post_type_id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -11777,19 +11785,19 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-configs.index",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\FormConfigController.php",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)",
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)",
                 "details": null,
                 "meta": {
                     "method": "GET",
-                    "uri": "/api/v1/admin/post-types/{post_type}/form-configs",
+                    "uri": "/api/v1/admin/post-types/{post_type_id}/form-configs",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "post_type": {
+                        "post_type_id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -15486,28 +15494,28 @@
                 "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.show",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.update",
-                "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-configs.index",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/entries/statuses",
@@ -15968,28 +15976,28 @@
                 "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.show",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.update",
-                "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-configs.index",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/entries/statuses",
@@ -16444,28 +16452,28 @@
                 "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.show",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.update",
-                "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-configs.index",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/entries/statuses",
@@ -16918,56 +16926,56 @@
                 "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.show",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.update",
-                "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-configs.index",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)"
             }
         ],
         "form-config": [
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.show",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.update",
-                "summary": "PUT /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type}/form-config/{blueprint}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-config.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{post_type}/form-config/{blueprint} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)"
             }
         ],
         "form-configs": [
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type}/form-configs",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.form-configs.index",
-                "summary": "GET /api/v1/admin/post-types/{post_type}/form-configs (api)"
+                "summary": "GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)"
             }
         ],
         "entries": [
@@ -17383,5 +17391,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-03T18:13:08+00:00"
+    "generated_at": "2025-12-04T16:27:30+00:00"
 }

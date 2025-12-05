@@ -42,7 +42,6 @@ class UtilsController extends Controller
      * @name Slugify preview
      * @authenticated
      * @queryParam title string required Заголовок (<=500). Example: New landing page
-     * @queryParam postType string Slug типа записи (для проверки уникальности). Default: page. Example: article
      * @response status=200 {
      *   "base": "new-landing-page",
      *   "unique": "new-landing-page-2"
@@ -93,7 +92,6 @@ class UtilsController extends Controller
         /** @var Validator $validator */
         $validator = validator($request->all(), [
             'title' => 'required|string|max:500',
-            'postType' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -109,7 +107,6 @@ class UtilsController extends Controller
         }
 
         $title = $request->input('title');
-        $postType = $request->input('postType', 'page');
 
         // Генерируем базовый slug
         $base = $this->slugifier->slugify($title);
@@ -118,15 +115,14 @@ class UtilsController extends Controller
             return new SlugifyPreviewResource('', '');
         }
 
-        // Проверяем уникальность
+        // Проверяем глобальную уникальность
         $unique = $this->uniqueSlugService->ensureUnique(
             $base,
-            function (string $slug) use ($postType) {
+            function (string $slug): bool {
                 try {
-                    // Проверка в скоупе post_type
+                    // Глобальная проверка уникальности slug
                     $exists = Entry::query()
                         ->where('slug', $slug)
-                        ->whereHas('postType', fn($q) => $q->where('slug', $postType))
                         ->exists();
 
                     // Проверка зарезервированных путей

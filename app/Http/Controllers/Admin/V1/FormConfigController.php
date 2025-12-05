@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Контроллер для управления конфигурацией формы компонентов (FormConfig) в админ-панели.
  *
  * Предоставляет CRUD операции для конфигурации формы:
- * - GET: получение конфигурации по post_type + blueprint
+     * - GET: получение конфигурации по post_type_id + blueprint
  * - PUT: сохранение/обновление конфигурации
  * - DELETE: удаление конфигурации
  * - GET: список конфигураций по типу контента
@@ -36,21 +36,25 @@ class FormConfigController extends Controller
     use ThrowsErrors;
 
     /**
-     * Проверить существование PostType по slug.
+     * Проверить существование PostType по ID.
      *
-     * @param string $postType Slug типа контента
-     * @return void
+     * @param int $postTypeId ID типа контента
+     * @return \App\Models\PostType
      * @throws \App\Support\Errors\ErrorException Если PostType не найден
      */
-    private function ensurePostTypeExists(string $postType): void
+    private function ensurePostTypeExists(int $postTypeId): PostType
     {
-        if (! PostType::query()->where('slug', $postType)->exists()) {
+        $postType = PostType::find($postTypeId);
+        
+        if (! $postType) {
             $this->throwError(
                 ErrorCode::NOT_FOUND,
-                "PostType not found: {$postType}",
-                ['slug' => $postType]
+                "PostType not found: {$postTypeId}",
+                ['post_type_id' => $postTypeId]
             );
         }
+        
+        return $postType;
     }
 
     /**
@@ -59,7 +63,7 @@ class FormConfigController extends Controller
      * @group Admin ▸ Form configs
      * @name Get form config
      * @authenticated
-     * @urlParam post_type string required Slug типа контента. Example: article
+     * @urlParam post_type_id integer required ID типа контента. Example: 1
      * @urlParam blueprint integer required ID blueprint. Example: 1
      * @response status=200 {
      *   "data": {
@@ -80,19 +84,19 @@ class FormConfigController extends Controller
      *   "title": "PostType not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "PostType not found: article"
+     *   "detail": "PostType not found: 1"
      * }
      *
-     * @param string $postType Slug типа контента
+     * @param int $postTypeId ID типа контента
      * @param \App\Models\Blueprint $blueprint Blueprint (route model binding)
      * @return \Illuminate\Http\JsonResponse|FormConfigResource
      */
-    public function show(string $postType, Blueprint $blueprint)
+    public function show(int $postTypeId, Blueprint $blueprint)
     {
-        $this->ensurePostTypeExists($postType);
+        $this->ensurePostTypeExists($postTypeId);
 
         $config = FormConfig::query()
-            ->where('post_type_slug', $postType)
+            ->where('post_type_id', $postTypeId)
             ->where('blueprint_id', $blueprint->id)
             ->first();
 
@@ -118,12 +122,12 @@ class FormConfigController extends Controller
      * @group Admin ▸ Form configs
      * @name Update form config
      * @authenticated
-     * @urlParam post_type string required Slug типа контента. Example: article
+     * @urlParam post_type_id integer required ID типа контента. Example: 1
      * @urlParam blueprint integer required ID blueprint. Example: 1
      * @bodyParam config_json object required JSON объект с конфигурацией (ключ - full_path, значение - EditComponent). Example: {"author.contacts.phone":{"name":"inputText","props":{"label":"Phone"}}}
      * @response status=200 {
      *   "data": {
-     *     "post_type_slug": "article",
+     *     "post_type_id": 1,
      *     "blueprint_id": 1,
      *     "config_json": {
      *       "author.contacts.phone": {
@@ -142,7 +146,7 @@ class FormConfigController extends Controller
      *   "title": "PostType not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "PostType not found: article"
+     *   "detail": "PostType not found: 1"
      * }
      * @response status=422 {
      *   "type": "https://stupidcms.dev/problems/validation-error",
@@ -153,22 +157,22 @@ class FormConfigController extends Controller
      * }
      *
      * @param \App\Http\Requests\Admin\FormPreset\StoreFormConfigRequest $request Валидированный запрос
-     * @param string $postType Slug типа контента
+     * @param int $postTypeId ID типа контента
      * @param \App\Models\Blueprint $blueprint Blueprint (route model binding)
      * @return FormConfigResource
      */
-    public function update(StoreFormConfigRequest $request, string $postType, Blueprint $blueprint): FormConfigResource
+    public function update(StoreFormConfigRequest $request, int $postTypeId, Blueprint $blueprint): FormConfigResource
     {
-        $this->ensurePostTypeExists($postType);
+        $postType = $this->ensurePostTypeExists($postTypeId);
 
         $validated = $request->validated();
         $configJson = $validated['config_json'] ?? [];
 
         /** @var FormConfig $config */
-        $config = DB::transaction(function () use ($postType, $blueprint, $configJson, $request) {
+        $config = DB::transaction(function () use ($postTypeId, $blueprint, $configJson, $request) {
             $config = FormConfig::query()->updateOrCreate(
                 [
-                    'post_type_slug' => $postType,
+                    'post_type_id' => $postTypeId,
                     'blueprint_id' => $blueprint->id,
                 ],
                 [
@@ -183,7 +187,7 @@ class FormConfigController extends Controller
 
             Log::info("Form config {$action}d", [
                 'action' => $action,
-                'post_type_slug' => $postType,
+                'post_type_id' => $postTypeId,
                 'blueprint_id' => $blueprint->id,
                 'blueprint_code' => $blueprint->code,
                 'user_id' => $request->user()?->id,
@@ -202,7 +206,7 @@ class FormConfigController extends Controller
      * @group Admin ▸ Form configs
      * @name Delete form config
      * @authenticated
-     * @urlParam post_type string required Slug типа контента. Example: article
+     * @urlParam post_type_id integer required ID типа контента. Example: 1
      * @urlParam blueprint integer required ID blueprint. Example: 1
      * @response status=204 {}
      * @response status=404 {
@@ -210,41 +214,41 @@ class FormConfigController extends Controller
      *   "title": "Form config not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "Form config not found for post_type=article, blueprint_id=1"
+     *   "detail": "Form config not found for post_type_id=1, blueprint_id=1"
      * }
      *
-     * @param string $postType Slug типа контента
+     * @param int $postTypeId ID типа контента
      * @param \App\Models\Blueprint $blueprint Blueprint (route model binding)
      * @param \Illuminate\Http\Request $request HTTP запрос
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function destroy(string $postType, Blueprint $blueprint, Request $request): Response
+    public function destroy(int $postTypeId, Blueprint $blueprint, Request $request): Response
     {
-        $this->ensurePostTypeExists($postType);
+        $this->ensurePostTypeExists($postTypeId);
 
         $config = FormConfig::query()
-            ->where('post_type_slug', $postType)
+            ->where('post_type_id', $postTypeId)
             ->where('blueprint_id', $blueprint->id)
             ->first();
 
         if (! $config) {
             $this->throwError(
                 ErrorCode::NOT_FOUND,
-                "Form config not found for post_type={$postType}, blueprint_id={$blueprint->id}",
+                "Form config not found for post_type_id={$postTypeId}, blueprint_id={$blueprint->id}",
                 [
-                    'post_type_slug' => $postType,
+                    'post_type_id' => $postTypeId,
                     'blueprint_id' => $blueprint->id,
                 ]
             );
         }
 
-        DB::transaction(function () use ($config, $postType, $blueprint, $request) {
+        DB::transaction(function () use ($config, $postTypeId, $blueprint, $request) {
             $config->delete();
 
             // Логирование операции
             Log::info('Form config deleted', [
                 'action' => 'delete',
-                'post_type_slug' => $postType,
+                'post_type_id' => $postTypeId,
                 'blueprint_id' => $blueprint->id,
                 'blueprint_code' => $blueprint->code,
                 'user_id' => $request->user()?->id,
@@ -260,11 +264,11 @@ class FormConfigController extends Controller
      * @group Admin ▸ Form configs
      * @name List form configs by post type
      * @authenticated
-     * @urlParam post_type string required Slug типа контента. Example: article
+     * @urlParam post_type_id integer required ID типа контента. Example: 1
      * @response status=200 {
      *   "data": [
      *     {
-     *       "post_type_slug": "article",
+     *       "post_type_id": 1,
      *       "blueprint_id": 1,
      *       "config_json": {
      *         "author.contacts.phone": {
@@ -284,18 +288,18 @@ class FormConfigController extends Controller
      *   "title": "PostType not found",
      *   "status": 404,
      *   "code": "NOT_FOUND",
-     *   "detail": "PostType not found: article"
+     *   "detail": "PostType not found: 1"
      * }
      *
-     * @param string $postType Slug типа контента
+     * @param int $postTypeId ID типа контента
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function indexByPostType(string $postType): AnonymousResourceCollection
+    public function indexByPostType(int $postTypeId): AnonymousResourceCollection
     {
-        $this->ensurePostTypeExists($postType);
+        $this->ensurePostTypeExists($postTypeId);
 
         $configs = FormConfig::query()
-            ->where('post_type_slug', $postType)
+            ->where('post_type_id', $postTypeId)
             ->with('blueprint')
             ->get();
 

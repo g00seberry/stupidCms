@@ -17,7 +17,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для обновления записи контента:
  * - Все поля опциональны (sometimes)
- * - Проверяет уникальность slug в рамках типа записи (исключая текущую запись)
+ * - Проверяет глобальную уникальность slug (исключая текущую запись)
  * - Проверяет зарезервированные пути
  *
  * @package App\Http\Requests\Admin
@@ -71,9 +71,6 @@ class UpdateEntryRequest extends FormRequest
             return [];
         }
 
-        $postType = $entry->postType;
-        $postTypeSlug = $postType ? $postType->slug : 'page';
-
         return [
             'title' => 'sometimes|required|string|max:500',
             'slug' => [
@@ -82,7 +79,7 @@ class UpdateEntryRequest extends FormRequest
                 'string',
                 'max:255',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/',
-                new UniqueEntrySlug($postTypeSlug, $entry->id),
+                new UniqueEntrySlug($entry->id),
                 new ReservedSlug(),
                 (new Publishable())->setData($this->all()),
             ],

@@ -21,16 +21,16 @@ test('admin can create entry', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
         ]);
 
     $response->assertCreated()
         ->assertJsonStructure([
-            'data' => ['id', 'post_type', 'title', 'slug', 'status'],
+            'data' => ['id', 'post_type_id', 'title', 'slug', 'status'],
         ])
         ->assertJsonPath('data.title', 'Test Article')
-        ->assertJsonPath('data.post_type', 'article');
+        ->assertJsonPath('data.post_type_id', $this->postType->id);
 
     $this->assertDatabaseHas('entries', [
         'title' => 'Test Article',
@@ -42,7 +42,7 @@ test('entry is created with correct author', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
         ]);
 
@@ -56,7 +56,7 @@ test('entry slug is auto-generated from title', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Laravel Testing Guide',
         ]);
 
@@ -68,7 +68,7 @@ test('entry can be created with custom slug', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Laravel Testing Guide',
             'slug' => 'custom-slug',
         ]);
@@ -81,7 +81,7 @@ test('entry is created as draft by default', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
         ]);
 
@@ -94,7 +94,7 @@ test('entry can be published immediately', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'is_published' => true,
         ]);
@@ -113,7 +113,7 @@ test('entry can be created with content_json', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => $content,
         ]);
@@ -130,7 +130,7 @@ test('entry can be created with meta_json', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'meta_json' => $meta,
         ]);
@@ -145,7 +145,7 @@ test('entry validation fails with missing title', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
         ]);
 
     $response->assertUnprocessable()
@@ -160,14 +160,14 @@ test('entry validation fails with missing post_type', function () {
         ]);
 
     $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['post_type']);
+        ->assertJsonValidationErrors(['post_type_id']);
 });
 
 test('entry validation fails with invalid post_type', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'non-existent',
+            'post_type_id' => 99999,
             'title' => 'Test Article',
         ]);
 
@@ -179,7 +179,7 @@ test('entry can be created with template_override', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'template_override' => 'templates.custom',
         ]);
@@ -203,7 +203,7 @@ test('duplicate slug is made unique', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
         ]);
 

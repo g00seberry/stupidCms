@@ -32,15 +32,14 @@ trait BlueprintValidationTrait
     {
         // Получаем PostType, если не передан
         if ($postType === null) {
-            $postTypeSlug = $this->input('post_type');
-            if (! $postTypeSlug) {
+            $postTypeId = $this->input('post_type_id');
+            if (! $postTypeId) {
                 return;
             }
 
             $postType = PostType::query()
                 ->with('blueprint')
-                ->where('slug', $postTypeSlug)
-                ->first();
+                ->find($postTypeId);
         }
 
         if (! $postType || ! $postType->blueprint) {

@@ -14,7 +14,9 @@ return new class extends Migration {
     {
         Schema::create('form_configs', function (Blueprint $table) {
             $table->id();
-            $table->string('post_type_slug', 64)->nullable(false);
+            $table->foreignId('post_type_id')
+                ->constrained('post_types')
+                ->restrictOnDelete();
             $table->foreignId('blueprint_id')
                 ->constrained('blueprints')
                 ->cascadeOnDelete();
@@ -22,10 +24,10 @@ return new class extends Migration {
             $table->timestamps();
 
             // Составной уникальный ключ
-            $table->unique(['post_type_slug', 'blueprint_id'], 'uq_form_configs_post_type_blueprint');
+            $table->unique(['post_type_id', 'blueprint_id'], 'uq_form_configs_post_type_blueprint');
 
             // Индексы для быстрого поиска
-            $table->index('post_type_slug');
+            $table->index('post_type_id');
             $table->index('blueprint_id');
         });
     }

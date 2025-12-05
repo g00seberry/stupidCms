@@ -30,7 +30,7 @@ test('admin can list entries', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['id', 'post_type', 'title', 'slug', 'status'],
+                '*' => ['id', 'post_type_id', 'title', 'slug', 'status'],
             ],
             'links',
             'meta' => ['current_page', 'last_page', 'per_page', 'total'],
@@ -69,7 +69,7 @@ test('entries can be filtered by post type', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/entries?post_type=article');
+        ->getJson('/api/v1/admin/entries?post_type_id=' . $this->postType->id);
 
     $response->assertOk()
         ->assertJsonCount(2, 'data');

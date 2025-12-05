@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $post_type_id ID типа записи
  * @property string $title Заголовок записи
- * @property string $slug Уникальный slug записи в рамках типа
+ * @property string $slug Глобально уникальный slug записи
  * @property string $status Статус записи: 'draft' или 'published'
  * @property array $data_json Произвольные структурированные данные контента
  * @property array|null $seo_json SEO-метаданные (title, description, keywords и т.д.)
@@ -177,31 +177,27 @@ class Entry extends Model
     /**
      * Скоуп: записи определённого типа.
      *
-     * Фильтрует записи по slug типа записи через связь postType.
+     * Фильтрует записи по ID типа записи.
      *
      * @param \Illuminate\Database\Eloquent\Builder<Entry> $q
-     * @param string $postTypeSlug Slug типа записи
+     * @param int $postTypeId ID типа записи
      * @return \Illuminate\Database\Eloquent\Builder<Entry>
      */
-    public function scopeOfType(Builder $q, string $postTypeSlug): Builder
+    public function scopeOfType(Builder $q, int $postTypeId): Builder
     {
-        return $q->whereHas('postType', fn($qq) => $qq->where('slug', $postTypeSlug));
+        return $q->where('post_type_id', $postTypeId);
     }
 
     /**
      * Получить публичный URL записи.
      *
-     * Для типа 'page' возвращает плоский URL (/slug),
-     * для остальных типов — иерархический URL (/type/slug).
-     * Если связь postType не загружена, выполняет дополнительный запрос.
+     * Возвращает плоский URL (/slug), так как slug глобально уникален.
      *
      * @return string Публичный URL записи
      */
     public function url(): string
     {
-        $slug = $this->slug;
-        $type = $this->relationLoaded('postType') ? $this->postType->slug : $this->postType()->value('slug');
-        return $type === 'page' ? "/{$slug}" : sprintf('/%s/%s', $type, $slug);
+        return "/{$this->slug}";
     }
 
     /**

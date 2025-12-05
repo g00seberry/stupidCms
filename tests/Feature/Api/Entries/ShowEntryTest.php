@@ -31,7 +31,7 @@ test('admin can view entry', function () {
 
     $response->assertOk()
         ->assertJsonStructure([
-            'data' => ['id', 'post_type', 'title', 'slug', 'status', 'author'],
+            'data' => ['id', 'post_type_id', 'title', 'slug', 'status', 'author'],
         ])
         ->assertJsonPath('data.id', $entry->id)
         ->assertJsonPath('data.title', 'Test Article');
@@ -53,7 +53,7 @@ test('entry includes author relationship', function () {
         ->assertJsonPath('data.author.name', 'John Doe');
 });
 
-test('entry includes post type relationship', function () {
+test('entry includes post type id', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
@@ -64,7 +64,7 @@ test('entry includes post type relationship', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.post_type', $this->postType->slug);
+        ->assertJsonPath('data.post_type_id', $this->postType->id);
 });
 
 test('not found returns 404', function () {

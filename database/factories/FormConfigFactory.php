@@ -29,7 +29,7 @@ class FormConfigFactory extends Factory
     public function definition(): array
     {
         return [
-            'post_type_slug' => PostType::factory()->create()->slug,
+            'post_type_id' => PostType::factory(),
             'blueprint_id' => Blueprint::factory(),
             'config_json' => [],
         ];

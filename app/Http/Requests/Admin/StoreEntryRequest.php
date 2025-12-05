@@ -16,9 +16,9 @@ use Illuminate\Validation\Validator;
  * Request для создания новой записи (Entry).
  *
  * Валидирует данные для создания записи контента:
- * - Обязательные: post_type, title
+ * - Обязательные: post_type_id, title
  * - Опциональные: slug (автогенерация), content_json, meta_json, published_at
- * - Проверяет уникальность slug в рамках типа записи
+ * - Проверяет глобальную уникальность slug
  * - Проверяет зарезервированные пути
  *
  * @package App\Http\Requests\Admin
@@ -42,9 +42,9 @@ class StoreEntryRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует:
-     * - post_type: обязательный slug типа записи (должен существовать)
+     * - post_type_id: обязательный ID типа записи (должен существовать)
      * - title: обязательный заголовок (максимум 500 символов)
-     * - slug: опциональный slug (regex, уникальность, зарезервированные пути)
+     * - slug: опциональный slug (regex, глобальная уникальность, зарезервированные пути)
      * - content_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
      * - meta_json: опциональный JSON массив
      * - is_published: опциональный boolean
@@ -56,17 +56,15 @@ class StoreEntryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $postTypeSlug = $this->input('post_type', 'page');
-
         return [
-            'post_type' => 'required|string|exists:post_types,slug',
+            'post_type_id' => 'required|integer|exists:post_types,id',
             'title' => 'required|string|max:500',
             'slug' => [
                 'nullable',
                 'string',
                 'max:255',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/',
-                new UniqueEntrySlug($postTypeSlug),
+                new UniqueEntrySlug(),
                 new ReservedSlug(),
                 (new Publishable())->setData($this->all()),
             ],
@@ -130,8 +128,8 @@ class StoreEntryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'post_type.required' => 'The post type field is required.',
-            'post_type.exists' => 'The specified post type does not exist.',
+            'post_type_id.required' => 'The post type id field is required.',
+            'post_type_id.exists' => 'The specified post type does not exist.',
             'title.required' => 'The title field is required.',
             'title.max' => 'The title may not be greater than 500 characters.',
             'slug.regex' => 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.',

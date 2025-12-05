@@ -54,6 +54,7 @@ class PostTypeResource extends AdminJsonResource
         $options = $this->options_json;
 
         return [
+            'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
             'options_json' => $options->toApiArray(),

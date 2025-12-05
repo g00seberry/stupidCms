@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\PostType;
 use App\Models\Taxonomy;
 use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,7 +16,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для обновления типа записи:
  * - Все поля опциональны (sometimes)
- * - Проверяет уникальность slug (исключая текущий тип)
+     * - Проверяет уникальность slug (исключая текущий тип по ID)
  * - Проверяет зарезервированные пути
  *
  * @package App\Http\Requests\Admin
@@ -47,7 +48,9 @@ class UpdatePostTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $slug = $this->route('slug');
+        $id = $this->route('id');
+        $postType = $id ? PostType::find($id) : null;
+        $currentSlug = $postType?->slug;
 
         return [
             'slug' => [
@@ -55,7 +58,7 @@ class UpdatePostTypeRequest extends FormRequest
                 'string',
                 'max:64',
                 'regex:/^[a-z0-9_-]+$/',
-                Rule::unique('post_types', 'slug')->ignore($slug, 'slug'),
+                Rule::unique('post_types', 'slug')->ignore($currentSlug, 'slug'),
                 new ReservedSlug(),
             ],
             'name' => [

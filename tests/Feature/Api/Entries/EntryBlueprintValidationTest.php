@@ -78,7 +78,7 @@ test('entry creation validates content_json with required field', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [
                 // title отсутствует - должно быть ошибка валидации
@@ -95,7 +95,7 @@ test('entry creation validates content_json with min rule', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [
                 'title' => 'Hi', // Меньше 5 символов - должно быть ошибка
@@ -113,7 +113,7 @@ test('entry creation validates content_json with max rule', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [
                 'title' => $longTitle,
@@ -129,7 +129,7 @@ test('entry creation validates content_json with nullable field', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [
                 'title' => 'Valid Title',
@@ -145,7 +145,7 @@ test('entry creation validates content_json with valid data', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [
                 'title' => 'Valid Title',
@@ -232,7 +232,7 @@ test('entry creation without Blueprint does not validate content_json', function
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'simple',
+            'post_type_id' => $postTypeWithoutBlueprint->id,
             'title' => 'Test Article',
             'content_json' => [
                 'any_field' => 'any_value',
@@ -247,7 +247,7 @@ test('entry creation with empty content_json validates required fields', functio
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [], // Пустой массив, но title и price обязательны
         ]);
@@ -283,7 +283,7 @@ test('entry creation with nested paths validates correctly', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
-            'post_type' => 'article',
+            'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
             'content_json' => [
                 'title' => 'Valid Title',

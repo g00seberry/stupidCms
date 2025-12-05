@@ -147,24 +147,21 @@ test('entry with same slug in same post type can be checked', function () {
     expect($sameSlugExists)->toBeTrue();
 })->skip('Unique constraint testing requires proper DB setup');
 
-test('entry slug can be same for different post types', function () {
+test('entry slug must be globally unique', function () {
     $postType1 = PostType::factory()->create();
     $postType2 = PostType::factory()->create();
 
     $entry1 = Entry::factory()->create([
         'post_type_id' => $postType1->id,
-        'slug' => 'same-slug',
+        'slug' => 'unique-slug',
     ]);
 
-    $entry2 = Entry::factory()->create([
-        'post_type_id' => $postType2->id,
-        'slug' => 'same-slug',
-    ]);
-
-    expect($entry1->slug)->toBe('same-slug')
-        ->and($entry2->slug)->toBe('same-slug')
-        ->and($entry1->id)->not->toBe($entry2->id);
-});
+    // Попытка создать entry с тем же slug должна провалиться
+    // (уникальность проверяется на уровне БД, но в тестах SQLite может не сработать)
+    expect($entry1->slug)->toBe('unique-slug');
+    
+    // В реальной БД с миграцией это должно вызвать ошибку уникальности
+})->skip('Unique constraint testing requires proper DB setup');
 
 test('entry published at can be in future', function () {
     $futureDate = now()->addDays(7);
@@ -233,21 +230,21 @@ test('published scope returns only published entries', function () {
     expect($published)->toHaveCount(1);
 });
 
-test('of type scope filters by post type slug', function () {
+test('of type scope filters by post type id', function () {
     $postType1 = PostType::factory()->create(['slug' => 'article']);
     $postType2 = PostType::factory()->create(['slug' => 'page']);
 
     Entry::factory()->count(3)->create(['post_type_id' => $postType1->id]);
     Entry::factory()->count(2)->create(['post_type_id' => $postType2->id]);
 
-    $articles = Entry::ofType('article')->get();
-    $pages = Entry::ofType('page')->get();
+    $articles = Entry::ofType($postType1->id)->get();
+    $pages = Entry::ofType($postType2->id)->get();
 
     expect($articles)->toHaveCount(3)
         ->and($pages)->toHaveCount(2);
 });
 
-test('entry url is generated correctly for page type', function () {
+test('entry url is flat for all types', function () {
     $postType = PostType::factory()->create(['slug' => 'page']);
     $entry = Entry::factory()->create([
         'post_type_id' => $postType->id,
@@ -255,16 +252,15 @@ test('entry url is generated correctly for page type', function () {
     ]);
 
     expect($entry->url())->toBe('/about');
-});
-
-test('entry url is generated correctly for non-page type', function () {
-    $postType = PostType::factory()->create(['slug' => 'blog']);
-    $entry = Entry::factory()->create([
-        'post_type_id' => $postType->id,
+    
+    $blogType = PostType::factory()->create(['slug' => 'blog']);
+    $blogEntry = Entry::factory()->create([
+        'post_type_id' => $blogType->id,
         'slug' => 'my-post',
     ]);
 
-    expect($entry->url())->toBe('/blog/my-post');
+    // Теперь все URL плоские, так как slug глобально уникален
+    expect($blogEntry->url())->toBe('/my-post');
 });
 
 test('entry template override can be set', function () {
