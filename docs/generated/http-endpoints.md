@@ -895,18 +895,18 @@ POST /api/v1/admin/plugins/sync (api)
 ---
 
 ## admin.v1.post-types.destroy
-**ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{slug}`
+**ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
 
-DELETE /api/v1/admin/post-types/{slug} (api)
+DELETE /api/v1/admin/post-types/{id} (api)
 
 ### Meta
 - **Method:** `DELETE`
-- **URI:** `/api/v1/admin/post-types/{slug}`
+- **URI:** `/api/v1/admin/post-types/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`
@@ -1016,18 +1016,18 @@ GET /api/v1/admin/post-types (api)
 ---
 
 ## admin.v1.post-types.show
-**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{slug}`
+**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
 
-GET /api/v1/admin/post-types/{slug} (api)
+GET /api/v1/admin/post-types/{id} (api)
 
 ### Meta
 - **Method:** `GET`
-- **URI:** `/api/v1/admin/post-types/{slug}`
+- **URI:** `/api/v1/admin/post-types/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`
@@ -1054,18 +1054,18 @@ POST /api/v1/admin/post-types (api)
 ---
 
 ## admin.v1.post-types.update
-**ID:** `http_endpoint:PUT:/api/v1/admin/post-types/{slug}`
+**ID:** `http_endpoint:PUT:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
 
-PUT /api/v1/admin/post-types/{slug} (api)
+PUT /api/v1/admin/post-types/{id} (api)
 
 ### Meta
 - **Method:** `PUT`
-- **URI:** `/api/v1/admin/post-types/{slug}`
+- **URI:** `/api/v1/admin/post-types/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`

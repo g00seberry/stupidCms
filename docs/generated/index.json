@@ -4908,19 +4908,19 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/admin/post-types/{slug}",
+            "id": "http_endpoint:GET:/api/v1/admin/post-types/{id}",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.show",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PostTypeController.php",
-            "summary": "GET /api/v1/admin/post-types/{slug} (api)",
+            "summary": "GET /api/v1/admin/post-types/{id} (api)",
             "details": null,
             "meta": {
                 "method": "GET",
-                "uri": "/api/v1/admin/post-types/{slug}",
+                "uri": "/api/v1/admin/post-types/{id}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "slug": {
+                    "id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -4937,19 +4937,19 @@
             }
         },
         {
-            "id": "http_endpoint:PUT:/api/v1/admin/post-types/{slug}",
+            "id": "http_endpoint:PUT:/api/v1/admin/post-types/{id}",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.update",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PostTypeController.php",
-            "summary": "PUT /api/v1/admin/post-types/{slug} (api)",
+            "summary": "PUT /api/v1/admin/post-types/{id} (api)",
             "details": null,
             "meta": {
                 "method": "PUT",
-                "uri": "/api/v1/admin/post-types/{slug}",
+                "uri": "/api/v1/admin/post-types/{id}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "slug": {
+                    "id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -4966,19 +4966,19 @@
             }
         },
         {
-            "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{slug}",
+            "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{id}",
             "type": "http_endpoint",
             "name": "admin.v1.post-types.destroy",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PostTypeController.php",
-            "summary": "DELETE /api/v1/admin/post-types/{slug} (api)",
+            "summary": "DELETE /api/v1/admin/post-types/{id} (api)",
             "details": null,
             "meta": {
                 "method": "DELETE",
-                "uri": "/api/v1/admin/post-types/{slug}",
+                "uri": "/api/v1/admin/post-types/{id}",
                 "group": "api",
                 "auth": "jwt",
                 "parameters": {
-                    "slug": {
+                    "id": {
                         "required": true,
                         "type": "string",
                         "constraint": null
@@ -11593,19 +11593,19 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.show",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PostTypeController.php",
-                "summary": "GET /api/v1/admin/post-types/{slug} (api)",
+                "summary": "GET /api/v1/admin/post-types/{id} (api)",
                 "details": null,
                 "meta": {
                     "method": "GET",
-                    "uri": "/api/v1/admin/post-types/{slug}",
+                    "uri": "/api/v1/admin/post-types/{id}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "slug": {
+                        "id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -11622,19 +11622,19 @@
                 }
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.update",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PostTypeController.php",
-                "summary": "PUT /api/v1/admin/post-types/{slug} (api)",
+                "summary": "PUT /api/v1/admin/post-types/{id} (api)",
                 "details": null,
                 "meta": {
                     "method": "PUT",
-                    "uri": "/api/v1/admin/post-types/{slug}",
+                    "uri": "/api/v1/admin/post-types/{id}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "slug": {
+                        "id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -11651,19 +11651,19 @@
                 }
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.destroy",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PostTypeController.php",
-                "summary": "DELETE /api/v1/admin/post-types/{slug} (api)",
+                "summary": "DELETE /api/v1/admin/post-types/{id} (api)",
                 "details": null,
                 "meta": {
                     "method": "DELETE",
-                    "uri": "/api/v1/admin/post-types/{slug}",
+                    "uri": "/api/v1/admin/post-types/{id}",
                     "group": "api",
                     "auth": "jwt",
                     "parameters": {
-                        "slug": {
+                        "id": {
                             "required": true,
                             "type": "string",
                             "constraint": null
@@ -15476,22 +15476,22 @@
                 "summary": "GET /api/v1/admin/post-types (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.show",
-                "summary": "GET /api/v1/admin/post-types/{slug} (api)"
+                "summary": "GET /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.update",
-                "summary": "PUT /api/v1/admin/post-types/{slug} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
@@ -15958,22 +15958,22 @@
                 "summary": "GET /api/v1/admin/post-types (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.show",
-                "summary": "GET /api/v1/admin/post-types/{slug} (api)"
+                "summary": "GET /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.update",
-                "summary": "PUT /api/v1/admin/post-types/{slug} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
@@ -16434,22 +16434,22 @@
                 "summary": "GET /api/v1/admin/post-types (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.show",
-                "summary": "GET /api/v1/admin/post-types/{slug} (api)"
+                "summary": "GET /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.update",
-                "summary": "PUT /api/v1/admin/post-types/{slug} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
@@ -16908,22 +16908,22 @@
                 "summary": "GET /api/v1/admin/post-types (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:GET:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.show",
-                "summary": "GET /api/v1/admin/post-types/{slug} (api)"
+                "summary": "GET /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:PUT:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.update",
-                "summary": "PUT /api/v1/admin/post-types/{slug} (api)"
+                "summary": "PUT /api/v1/admin/post-types/{id} (api)"
             },
             {
-                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{slug}",
+                "id": "http_endpoint:DELETE:/api/v1/admin/post-types/{id}",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.destroy",
-                "summary": "DELETE /api/v1/admin/post-types/{slug} (api)"
+                "summary": "DELETE /api/v1/admin/post-types/{id} (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}",
@@ -17391,5 +17391,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-04T16:27:30+00:00"
+    "generated_at": "2025-12-05T10:51:44+00:00"
 }

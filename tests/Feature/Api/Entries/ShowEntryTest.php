@@ -122,6 +122,38 @@ test('entry includes meta_json', function () {
         ->assertJsonPath('data.meta_json', $meta);
 });
 
+test('entry returns null for empty content_json', function () {
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'author_id' => $this->user->id,
+        'data_json' => [],
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('data.content_json', null);
+});
+
+test('entry returns null for null content_json', function () {
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'author_id' => $this->user->id,
+    ]);
+    // Устанавливаем data_json в null через прямой доступ к БД
+    $entry->data_json = null;
+    $entry->save();
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('data.content_json', null);
+});
+
 test('entry includes timestamps', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,

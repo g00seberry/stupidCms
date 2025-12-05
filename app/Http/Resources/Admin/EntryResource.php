@@ -22,7 +22,7 @@ class EntryResource extends AdminJsonResource
      *
      * Возвращает массив с полями записи, включая:
      * - Основные поля (id, post_type_id, title, slug, status)
-     * - JSON поля (content_json, meta_json) преобразованные в объекты
+     * - JSON поля (content_json, meta_json) преобразованные в объекты (null для пустых значений)
      * - Связанные сущности (author, terms, blueprint) при их загрузке
      * - Даты в ISO 8601 формате
      *
@@ -74,29 +74,33 @@ class EntryResource extends AdminJsonResource
      *
      * Преобразует ассоциативные массивы в объекты stdClass для корректной
      * сериализации в JSON. Сохраняет типы данных: списки остаются массивами,
-     * null и пустые ассоциативные массивы становятся {}.
+     * null и пустые массивы возвращаются как null.
      *
      * @param mixed $value Значение для преобразования
-     * @return mixed Преобразованное значение
+     * @return mixed Преобразованное значение (null для пустых значений)
      */
     private function transformJson(mixed $value): mixed
     {
-        // null становится пустым объектом
+        // null возвращается как null
         if ($value === null) {
-            return new \stdClass();
+            return null;
         }
 
         if (! is_array($value)) {
             return $value;
         }
 
-        // Список (массив с числовыми ключами) - сохраняем как массив, даже если пустой
+        // Пустой массив возвращается как null
+        if (empty($value)) {
+            return null;
+        }
+
+        // Список (массив с числовыми ключами) - сохраняем как массив
         if (array_is_list($value)) {
             return array_map(fn ($item) => $this->transformJson($item), $value);
         }
 
         // Ассоциативный массив (объект) - преобразуем в stdClass
-        // Пустой ассоциативный массив станет {}
         $object = new \stdClass();
         foreach ($value as $key => $nested) {
             $object->{$key} = $this->transformJson($nested);
