@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['is_admin' => true]);
-    $this->templatesPath = resource_path('views');
+    $this->templatesPath = resource_path('views/templates');
     
     // Clean up test templates after each test
     $this->testTemplates = [];
@@ -26,10 +26,10 @@ afterEach(function () {
     
     // Remove ONLY completely empty test directories (no production files)
     $testDirs = [
-        resource_path('views/test'),
-        resource_path('views/pages/nested'),
-        resource_path('views/pages/article'),
-        resource_path('views/pages'),
+        resource_path('views/templates/test'),
+        resource_path('views/templates/pages/nested'),
+        resource_path('views/templates/pages/article'),
+        resource_path('views/templates/pages'),
     ];
     
     foreach ($testDirs as $dir) {
@@ -59,7 +59,7 @@ test('admin can list templates', function () {
         ]);
 });
 
-test('list excludes system directories', function () {
+test('list only includes templates from templates directory', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->getJson('/api/v1/admin/templates');
@@ -68,14 +68,10 @@ test('list excludes system directories', function () {
     
     $templates = collect($response->json('data'));
     
-    // Should not include templates from excluded directories
-    $excludedPrefixes = ['admin.', 'errors.', 'layouts.', 'partials.', 'vendor.'];
-    
+    // All templates should start with templates.
     foreach ($templates as $template) {
         $name = $template['name'];
-        foreach ($excludedPrefixes as $prefix) {
-            expect($name)->not->toStartWith($prefix);
-        }
+        expect($name)->toStartWith('templates.');
     }
 });
 
@@ -103,18 +99,18 @@ test('list requires authentication', function () {
 
 test('admin can view template content', function () {
     // Create a test template
-    $templatePath = resource_path('views/test/show.blade.php');
+    $templatePath = resource_path('views/templates/test/show.blade.php');
     File::ensureDirectoryExists(dirname($templatePath));
     File::put($templatePath, '<div>Test Content</div>');
     $this->testTemplates[] = $templatePath;
 
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/templates/test.show');
+        ->getJson('/api/v1/admin/templates/templates.test.show');
 
     $response->assertOk()
-        ->assertJsonPath('data.name', 'test.show')
-        ->assertJsonPath('data.path', 'test/show.blade.php')
+        ->assertJsonPath('data.name', 'templates.test.show')
+        ->assertJsonPath('data.path', 'templates/test/show.blade.php')
         ->assertJsonPath('data.exists', true)
         ->assertJsonPath('data.content', '<div>Test Content</div>');
 });
@@ -122,7 +118,7 @@ test('admin can view template content', function () {
 test('show returns 404 for non-existent template', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/templates/non.existent');
+        ->getJson('/api/v1/admin/templates/templates.non.existent');
 
     $response->assertStatus(404)
         ->assertJsonPath('code', 'NOT_FOUND');
@@ -140,16 +136,16 @@ test('admin can create template', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/templates', [
-            'name' => 'pages.custom',
+            'name' => 'templates.pages.custom',
             'content' => '<div>New Template</div>',
         ]);
 
     $response->assertStatus(201)
-        ->assertJsonPath('data.name', 'pages.custom')
-        ->assertJsonPath('data.path', 'pages/custom.blade.php')
+        ->assertJsonPath('data.name', 'templates.pages.custom')
+        ->assertJsonPath('data.path', 'templates/pages/custom.blade.php')
         ->assertJsonPath('data.exists', true);
 
-    $templatePath = resource_path('views/pages/custom.blade.php');
+    $templatePath = resource_path('views/templates/pages/custom.blade.php');
     $this->testTemplates[] = $templatePath;
     
     expect(File::exists($templatePath))->toBeTrue();
@@ -158,7 +154,7 @@ test('admin can create template', function () {
 
 test('create returns conflict if template exists', function () {
     // Create template first
-    $templatePath = resource_path('views/pages/existing.blade.php');
+    $templatePath = resource_path('views/templates/pages/existing.blade.php');
     File::ensureDirectoryExists(dirname($templatePath));
     File::put($templatePath, '<div>Existing</div>');
     $this->testTemplates[] = $templatePath;
@@ -166,7 +162,7 @@ test('create returns conflict if template exists', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/templates', [
-            'name' => 'pages.existing',
+            'name' => 'templates.pages.existing',
             'content' => '<div>New</div>',
         ]);
 
@@ -187,13 +183,13 @@ test('create automatically creates directories', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/templates', [
-            'name' => 'pages.nested.deep',
+            'name' => 'templates.pages.nested.deep',
             'content' => '<div>Deep</div>',
         ]);
 
     $response->assertStatus(201);
 
-    $templatePath = resource_path('views/pages/nested/deep.blade.php');
+    $templatePath = resource_path('views/templates/pages/nested/deep.blade.php');
     $this->testTemplates[] = $templatePath;
     
     expect(File::exists($templatePath))->toBeTrue();
@@ -212,19 +208,19 @@ test('create requires authentication', function () {
 
 test('admin can update template', function () {
     // Create template first
-    $templatePath = resource_path('views/pages/update.blade.php');
+    $templatePath = resource_path('views/templates/pages/update.blade.php');
     File::ensureDirectoryExists(dirname($templatePath));
     File::put($templatePath, '<div>Original</div>');
     $this->testTemplates[] = $templatePath;
 
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/templates/pages.update', [
+        ->putJson('/api/v1/admin/templates/templates.pages.update', [
             'content' => '<div>Updated</div>',
         ]);
 
     $response->assertOk()
-        ->assertJsonPath('data.name', 'pages.update')
+        ->assertJsonPath('data.name', 'templates.pages.update')
         ->assertJsonPath('data.exists', true);
 
     expect(File::get($templatePath))->toBe('<div>Updated</div>');
@@ -233,7 +229,7 @@ test('admin can update template', function () {
 test('update returns 404 for non-existent template', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/templates/non.existent', [
+        ->putJson('/api/v1/admin/templates/templates.non.existent', [
             'content' => '<div>Test</div>',
         ]);
 
@@ -243,14 +239,14 @@ test('update returns 404 for non-existent template', function () {
 
 test('update validates content required', function () {
     // Create template first
-    $templatePath = resource_path('views/pages/validate.blade.php');
+    $templatePath = resource_path('views/templates/pages/validate.blade.php');
     File::ensureDirectoryExists(dirname($templatePath));
     File::put($templatePath, '<div>Original</div>');
     $this->testTemplates[] = $templatePath;
 
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/templates/pages.validate', []);
+        ->putJson('/api/v1/admin/templates/templates.pages.validate', []);
 
     $response->assertStatus(422)
         ->assertJsonValidationErrors('content');
@@ -270,13 +266,13 @@ test('template name converts to correct path', function () {
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/templates', [
-            'name' => 'pages.article.show',
+            'name' => 'templates.pages.article.show',
             'content' => '<div>Test</div>',
         ]);
 
     $response->assertStatus(201)
-        ->assertJsonPath('data.path', 'pages/article/show.blade.php');
+        ->assertJsonPath('data.path', 'templates/pages/article/show.blade.php');
 
-    $this->testTemplates[] = resource_path('views/pages/article/show.blade.php');
+    $this->testTemplates[] = resource_path('views/templates/pages/article/show.blade.php');
 });
 

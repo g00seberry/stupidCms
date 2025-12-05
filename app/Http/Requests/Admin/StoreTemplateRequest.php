@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Rules\TemplatePathRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -33,7 +34,7 @@ class StoreTemplateRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует:
-     * - name: обязательное имя шаблона (regex, максимум 255 символов)
+     * - name: обязательное имя шаблона (должно быть в папке templates, максимум 255 символов)
      * - content: обязательное содержимое шаблона
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -45,7 +46,7 @@ class StoreTemplateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[a-z0-9._-]+$/i',
+                new TemplatePathRule(app(\App\Domain\View\TemplatePathValidator::class)),
             ],
             'content' => [
                 'required',
@@ -63,7 +64,8 @@ class StoreTemplateRequest extends FormRequest
     {
         return [
             'name.required' => 'The name field is required.',
-            'name.regex' => 'The name may only contain letters, numbers, dots, underscores, and hyphens.',
+            'name.string' => 'The name must be a string.',
+            'name.max' => 'The name may not be greater than 255 characters.',
             'content.required' => 'The content field is required.',
         ];
     }
