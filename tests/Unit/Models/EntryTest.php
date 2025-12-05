@@ -116,7 +116,7 @@ test('url method returns flat url for page type', function () {
     $entry->slug = 'test-page';
     
     $postType = new PostType();
-    $postType->slug = 'page';
+    $postType->name = 'Page';
     
     $entry->setRelation('postType', $postType);
 
@@ -128,7 +128,7 @@ test('url method returns flat url for all types', function () {
     $entry->slug = 'test-post';
     
     $postType = new PostType();
-    $postType->slug = 'blog';
+    $postType->name = 'Blog';
     
     $entry->setRelation('postType', $postType);
 

@@ -22,8 +22,8 @@ test('has fillable attributes', function () {
 
     $fillable = $postType->getFillable();
 
-    expect($fillable)->toContain('slug')
-        ->and($fillable)->toContain('name')
+    expect($fillable)->toContain('name')
+        ->and($fillable)->toContain('template')
         ->and($fillable)->toContain('options_json');
 });
 
@@ -45,11 +45,10 @@ test('has entries relationship', function () {
         ->and($relation->getRelated())->toBeInstanceOf(Entry::class);
 });
 
-test('slug is unique', function () {
-    $postType1 = new PostType(['slug' => 'article']);
-    $postType2 = new PostType(['slug' => 'article']);
+test('template can be set', function () {
+    $postType1 = new PostType(['template' => 'templates.article']);
+    $postType2 = new PostType(['template' => 'templates.article']);
 
-    expect($postType1->slug)->toBe($postType2->slug);
-    // Uniqueness will be enforced by DB constraint
+    expect($postType1->template)->toBe($postType2->template);
 });
 

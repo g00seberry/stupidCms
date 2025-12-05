@@ -59,6 +59,7 @@ use App\Domain\Media\MediaRepository;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
+use App\Domain\View\TemplatePathValidator;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Observers\EntryObserver;
@@ -76,6 +77,7 @@ use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -83,6 +85,7 @@ use Illuminate\Support\ServiceProvider;
  *
  * Регистрирует основные сервисы:
  * - OptionsRepository (singleton)
+ * - TemplatePathValidator (singleton)
  * - TemplateResolver (scoped для совместимости с Octane/Swoole)
  * - RichTextSanitizer (singleton)
  * - JwtService (singleton)
@@ -110,11 +113,15 @@ class AppServiceProvider extends ServiceProvider
         // MediaRepository
         $this->app->singleton(MediaRepository::class, EloquentMediaRepository::class);
 
+        // Регистрация TemplatePathValidator
+        $this->app->singleton(TemplatePathValidator::class);
+
         // Регистрация TemplateResolver
         // Используем scoped вместо singleton для совместимости с Octane/Swoole
-        $this->app->scoped(TemplateResolver::class, function () {
+        $this->app->scoped(TemplateResolver::class, function ($app) {
             return new BladeTemplateResolver(
-                default: config('view_templates.default', 'entry'),
+                validator: $app->make(TemplatePathValidator::class),
+                default: config('view_templates.default', 'templates.index'),
             );
         });
 
@@ -298,6 +305,7 @@ class AppServiceProvider extends ServiceProvider
      * Загрузить сервисы приложения.
      *
      * Регистрирует EntryObserver для модели Entry.
+     * Регистрирует namespace для шаблонов в папке templates.
      * Регистрирует слушателей событий медиа-файлов.
      * Валидирует конфигурацию медиа-файлов.
      * Создаёт директорию для кэша HTMLPurifier.
@@ -307,6 +315,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Регистрация namespace для шаблонов
+        // Шаблоны должны находиться только в resources/views/templates
+        View::addNamespace('templates', resource_path('views/templates'));
+
         Entry::observe(EntryObserver::class);
 
         // Регистрация слушателей событий медиа-файлов

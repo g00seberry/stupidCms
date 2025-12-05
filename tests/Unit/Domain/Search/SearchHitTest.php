@@ -14,7 +14,7 @@ test('creates search hit with all parameters', function () {
 
     $hit = new SearchHit(
         id: '123',
-        postType: 'post',
+        postType: 1,
         slug: 'test-post',
         title: 'Test Title',
         excerpt: 'Test excerpt',
@@ -23,7 +23,7 @@ test('creates search hit with all parameters', function () {
     );
 
     expect($hit->id)->toBe('123')
-        ->and($hit->postType)->toBe('post')
+        ->and($hit->postType)->toBe(1)
         ->and($hit->slug)->toBe('test-post')
         ->and($hit->title)->toBe('Test Title')
         ->and($hit->excerpt)->toBe('Test excerpt')
@@ -34,7 +34,7 @@ test('creates search hit with all parameters', function () {
 test('creates search hit with nullable fields', function () {
     $hit = new SearchHit(
         id: '456',
-        postType: 'page',
+        postType: 2,
         slug: 'test-page',
         title: 'Page Title',
         excerpt: null,
@@ -48,7 +48,7 @@ test('creates search hit with nullable fields', function () {
 });
 
 test('search hit is immutable', function () {
-    $hit = new SearchHit('1', 'post', 'test', 'Title', null, null, []);
+    $hit = new SearchHit('1', 1, 'test', 'Title', null, null, []);
 
     // Все свойства readonly
     expect($hit->id)->toBe('1');

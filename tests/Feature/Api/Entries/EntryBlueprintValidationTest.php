@@ -68,7 +68,6 @@ beforeEach(function () {
 
     // Создаём PostType с привязкой к Blueprint
     $this->postType = PostType::factory()->create([
-        'slug' => 'article',
         'name' => 'Article',
         'blueprint_id' => $this->blueprint->id,
     ]);
@@ -224,7 +223,6 @@ test('entry update validates content_json with valid data', function () {
 test('entry creation without Blueprint does not validate content_json', function () {
     // Создаём PostType без Blueprint
     $postTypeWithoutBlueprint = PostType::factory()->create([
-        'slug' => 'simple',
         'name' => 'Simple',
         'blueprint_id' => null,
     ]);

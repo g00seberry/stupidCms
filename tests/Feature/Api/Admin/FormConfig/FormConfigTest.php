@@ -15,7 +15,7 @@ beforeEach(function () {
 });
 
 test('admin can get form config', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     $config = FormConfig::factory()
         ->withConfig([
@@ -40,7 +40,7 @@ test('admin can get form config', function () {
 });
 
 test('get form config returns empty object when not found', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->getJson("/api/v1/admin/post-types/{$postType->id}/form-config/{$blueprint->id}");
@@ -64,7 +64,7 @@ test('get form config returns 404 when post type not found', function () {
 });
 
 test('admin can create form config', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -97,7 +97,7 @@ test('admin can create form config', function () {
 });
 
 test('admin can update existing form config', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -137,7 +137,7 @@ test('admin can update existing form config', function () {
 });
 
 test('update form config validates config_json structure', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->putJson("/api/v1/admin/post-types/{$postType->id}/form-config/{$blueprint->id}", [
@@ -154,7 +154,7 @@ test('update form config validates config_json structure', function () {
 });
 
 test('update form config validates name field is required', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->putJson("/api/v1/admin/post-types/{$postType->id}/form-config/{$blueprint->id}", [
@@ -171,7 +171,7 @@ test('update form config validates name field is required', function () {
 });
 
 test('update form config validates paths exist in blueprint', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -206,7 +206,7 @@ test('update form config returns 404 when post type not found', function () {
 });
 
 test('admin can delete form config', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     $config = FormConfig::factory()->create([
             'post_type_id' => $postType->id,
@@ -223,7 +223,7 @@ test('admin can delete form config', function () {
 });
 
 test('delete form config returns 404 when config not found', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->deleteJson("/api/v1/admin/post-types/{$postType->id}/form-config/{$blueprint->id}");
@@ -243,7 +243,7 @@ test('delete form config returns 404 when post type not found', function () {
 });
 
 test('admin can list form configs by post type', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint1 = Blueprint::factory()->create();
     $blueprint2 = Blueprint::factory()->create();
 
@@ -262,7 +262,7 @@ test('admin can list form configs by post type', function () {
         ]);
 
     // Создаём конфигурацию для другого post type
-    $otherPostType = PostType::factory()->create(['slug' => 'page']);
+    $otherPostType = PostType::factory()->create(['name' => 'Page']);
     FormConfig::factory()->create([
         'post_type_id' => $otherPostType->id,
         'blueprint_id' => $blueprint1->id,
@@ -279,7 +279,7 @@ test('admin can list form configs by post type', function () {
 });
 
 test('list form configs returns empty array when no configs exist', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
 
     $response = $this->getJson("/api/v1/admin/post-types/{$postType->id}/form-configs");
 
@@ -296,7 +296,7 @@ test('list form configs returns 404 when post type not found', function () {
 });
 
 test('form config can handle complex nested paths', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -336,7 +336,7 @@ test('form config can handle complex nested paths', function () {
 });
 
 test('form config returns empty object when config_json is empty', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
     $config = FormConfig::factory()->create([
             'post_type_id' => $postType->id,
@@ -355,7 +355,7 @@ test('form config returns empty object when config_json is empty', function () {
 });
 
 test('form config validates config_json must be object not array', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->putJson("/api/v1/admin/post-types/{$postType->id}/form-config/{$blueprint->id}", [
@@ -367,7 +367,7 @@ test('form config validates config_json must be object not array', function () {
 });
 
 test('form config validates props must be object', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $blueprint = Blueprint::factory()->create();
 
     $response = $this->putJson("/api/v1/admin/post-types/{$postType->id}/form-config/{$blueprint->id}", [

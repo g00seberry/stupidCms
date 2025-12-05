@@ -12,7 +12,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['is_admin' => true]);
-    $this->postType = PostType::factory()->create(['slug' => 'page']);
+    $this->postType = PostType::factory()->create(['name' => 'Page']);
 });
 
 test('generates slug from title', function () {
@@ -66,7 +66,7 @@ test('checks reserved routes when generating slug', function () {
 });
 
 test('slug must be globally unique', function () {
-    $articleType = PostType::factory()->create(['slug' => 'article']);
+    $articleType = PostType::factory()->create(['name' => 'Article']);
 
     Entry::factory()->create([
         'post_type_id' => $articleType->id,

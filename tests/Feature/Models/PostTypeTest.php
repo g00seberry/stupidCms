@@ -15,27 +15,31 @@ use App\Domain\PostTypes\PostTypeOptions;
 
 test('post type can be created', function () {
     $postType = PostType::factory()->create([
-        'slug' => 'article',
         'name' => 'Article',
+        'template' => 'templates.article',
     ]);
 
     expect($postType)->toBeInstanceOf(PostType::class)
-        ->and($postType->slug)->toBe('article')
         ->and($postType->name)->toBe('Article')
+        ->and($postType->template)->toBe('templates.article')
         ->and($postType->exists)->toBeTrue();
 
     $this->assertDatabaseHas('post_types', [
         'id' => $postType->id,
-        'slug' => 'article',
+        'name' => 'Article',
+        'template' => 'templates.article',
     ]);
 });
 
-test('post type has unique slug', function () {
-    PostType::factory()->create(['slug' => 'unique-type']);
+test('post type can be created without template', function () {
+    $postType = PostType::factory()->create([
+        'name' => 'Article',
+        'template' => null,
+    ]);
 
-    $this->expectException(\Illuminate\Database\QueryException::class);
-
-    PostType::factory()->create(['slug' => 'unique-type']);
+    expect($postType)->toBeInstanceOf(PostType::class)
+        ->and($postType->name)->toBe('Article')
+        ->and($postType->template)->toBeNull();
 });
 
 test('post type can have multiple entries', function () {
@@ -169,12 +173,19 @@ test('post type options can be updated', function () {
     expect($postType->options_json->getAllowedTaxonomies())->toBe([3, 4, 5]);
 });
 
-test('post type slug cannot be changed to existing slug', function () {
-    PostType::factory()->create(['slug' => 'existing']);
-    $postType = PostType::factory()->create(['slug' => 'unique']);
+test('post type template can be updated', function () {
+    $postType = PostType::factory()->create([
+        'name' => 'Article',
+        'template' => null,
+    ]);
 
-    $this->expectException(\Illuminate\Database\QueryException::class);
+    $postType->update(['template' => 'templates.article']);
 
-    $postType->update(['slug' => 'existing']);
+    expect($postType->template)->toBe('templates.article');
+
+    $this->assertDatabaseHas('post_types', [
+        'id' => $postType->id,
+        'template' => 'templates.article',
+    ]);
 });
 

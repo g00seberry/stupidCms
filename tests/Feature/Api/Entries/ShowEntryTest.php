@@ -15,7 +15,7 @@ use App\Models\Blueprint;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['is_admin' => true]);
-    $this->postType = PostType::factory()->create(['slug' => 'article']);
+    $this->postType = PostType::factory()->create(['name' => 'Article']);
 });
 
 test('admin can view entry', function () {
@@ -177,7 +177,7 @@ test('entry includes blueprint from post type', function () {
     ]);
     
     $postType = PostType::factory()->create([
-        'slug' => 'article-with-blueprint',
+        'name' => 'Article with Blueprint',
         'blueprint_id' => $blueprint->id,
     ]);
     

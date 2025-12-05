@@ -33,14 +33,14 @@ test('entry can be created with factory', function () {
 });
 
 test('entry belongs to post type', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     $entry = Entry::factory()->create(['post_type_id' => $postType->id]);
 
     $entry->load('postType');
 
     expect($entry->postType)->toBeInstanceOf(PostType::class)
         ->and($entry->postType->id)->toBe($postType->id)
-        ->and($entry->postType->slug)->toBe('article');
+        ->and($entry->postType->name)->toBe('Article');
 });
 
 test('entry belongs to author', function () {
@@ -231,8 +231,8 @@ test('published scope returns only published entries', function () {
 });
 
 test('of type scope filters by post type id', function () {
-    $postType1 = PostType::factory()->create(['slug' => 'article']);
-    $postType2 = PostType::factory()->create(['slug' => 'page']);
+    $postType1 = PostType::factory()->create(['name' => 'Article']);
+    $postType2 = PostType::factory()->create(['name' => 'Page']);
 
     Entry::factory()->count(3)->create(['post_type_id' => $postType1->id]);
     Entry::factory()->count(2)->create(['post_type_id' => $postType2->id]);
@@ -245,7 +245,7 @@ test('of type scope filters by post type id', function () {
 });
 
 test('entry url is flat for all types', function () {
-    $postType = PostType::factory()->create(['slug' => 'page']);
+    $postType = PostType::factory()->create(['name' => 'Page']);
     $entry = Entry::factory()->create([
         'post_type_id' => $postType->id,
         'slug' => 'about',
@@ -253,7 +253,7 @@ test('entry url is flat for all types', function () {
 
     expect($entry->url())->toBe('/about');
     
-    $blogType = PostType::factory()->create(['slug' => 'blog']);
+    $blogType = PostType::factory()->create(['name' => 'Blog']);
     $blogEntry = Entry::factory()->create([
         'post_type_id' => $blogType->id,
         'slug' => 'my-post',

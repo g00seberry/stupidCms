@@ -55,8 +55,8 @@ class PostTypeResource extends AdminJsonResource
 
         return [
             'id' => $this->id,
-            'slug' => $this->slug,
             'name' => $this->name,
+            'template' => $this->template,
             'options_json' => $options->toApiArray(),
             'blueprint_id' => $this->blueprint_id,
             'created_at' => optional($this->created_at)->toIso8601String(),

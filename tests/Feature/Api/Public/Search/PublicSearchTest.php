@@ -15,7 +15,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->postType = PostType::factory()->create(['slug' => 'article']);
+    $this->postType = PostType::factory()->create(['name' => 'Article']);
 });
 
 test('public can search published entries', function () {
@@ -27,7 +27,7 @@ test('public can search published entries', function () {
             hits: [
                 new SearchHit(
                     id: '01HZZTEST1111111111111111',
-                    postType: 'article',
+                    postType: $this->postType->id,
                     slug: 'test-article',
                     title: 'Test Article',
                     excerpt: 'A test article excerpt',
@@ -133,11 +133,13 @@ test('search accepts post type filter', function () {
     $mockService->shouldReceive('search')
         ->once()
         ->andReturnUsing(function (SearchQuery $query) {
-            expect($query->postTypes())->toBe(['article', 'page']);
+            // post_type теперь принимает ID, а не slug
+            expect($query->postTypes())->toBeArray();
             return SearchResult::empty(1, 20);
         });
 
-    $response = $this->getJson('/api/v1/search?q=test&post_type[]=article&post_type[]=page');
+    $pagePostType = PostType::factory()->create(['name' => 'Page']);
+    $response = $this->getJson("/api/v1/search?q=test&post_type[]={$this->postType->id}&post_type[]={$pagePostType->id}");
 
     $response->assertOk();
 });
@@ -212,7 +214,7 @@ test('search highlights matches in results', function () {
             hits: [
                 new SearchHit(
                     id: '01HZZTEST1111111111111111',
-                    postType: 'article',
+                    postType: $this->postType->id,
                     slug: 'headless-cms',
                     title: 'Building a Headless CMS',
                     excerpt: 'How to build a headless CMS with Laravel',
@@ -244,7 +246,7 @@ test('search returns score for relevance sorting', function () {
             hits: [
                 new SearchHit(
                     id: '01HZZTEST1111111111111111',
-                    postType: 'article',
+                    postType: $this->postType->id,
                     slug: 'test-1',
                     title: 'Test Article 1',
                     excerpt: null,
@@ -253,7 +255,7 @@ test('search returns score for relevance sorting', function () {
                 ),
                 new SearchHit(
                     id: '01HZZTEST2222222222222222',
-                    postType: 'article',
+                    postType: $this->postType->id,
                     slug: 'test-2',
                     title: 'Test Article 2',
                     excerpt: null,

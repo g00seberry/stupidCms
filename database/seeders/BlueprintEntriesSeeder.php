@@ -42,8 +42,8 @@ class BlueprintEntriesSeeder extends Seeder
         }
 
         // Получить PostType
-        $productPostType = PostType::where('slug', 'product')->first();
-        $articlePostType = PostType::where('slug', 'article')->first();
+        $productPostType = PostType::where('name', 'Product')->first();
+        $articlePostType = PostType::where('name', 'Article')->first();
 
         if (!$productPostType || !$articlePostType) {
             $this->command->warn('PostTypes not found. Please run PostTypesTaxonomiesSeeder first.');
@@ -319,8 +319,8 @@ class BlueprintEntriesSeeder extends Seeder
      */
     private function printSummary(): void
     {
-        $productPostType = PostType::where('slug', 'product')->first();
-        $articlePostType = PostType::where('slug', 'article')->first();
+        $productPostType = PostType::where('name', 'Product')->first();
+        $articlePostType = PostType::where('name', 'Article')->first();
 
         $productsCount = 0;
         $articlesCount = 0;

@@ -7,14 +7,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | Настройки для BladeTemplateResolver, который выбирает шаблоны
-    | для рендера записей (Entry) по файловой конвенции:
+    | для рендера записей (Entry) на основе полей template:
     | 1. Entry.template_override (если задано — используется как полное имя вью)
-    | 2. entry--{postType}--{slug} (если существует)
-    | 3. entry--{postType} (если существует)
-    | 4. entry (глобальный)
+    | 2. PostType.template (если задано)
+    | 3. templates.index (дефолтный шаблон)
+    |
+    | Все шаблоны должны находиться в папке templates или дочерних папках.
     |
     */
 
-    'default' => env('VIEW_TEMPLATES_DEFAULT', 'entry'),
+    'default' => env('VIEW_TEMPLATES_DEFAULT', 'templates.index'),
 ];
 

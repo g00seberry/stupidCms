@@ -6,7 +6,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\PostType;
 use App\Models\Taxonomy;
-use App\Rules\ReservedSlug;
+use App\Rules\TemplatePathRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -16,8 +16,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для обновления типа записи:
  * - Все поля опциональны (sometimes)
-     * - Проверяет уникальность slug (исключая текущий тип по ID)
- * - Проверяет зарезервированные пути
+ * - template: путь к шаблону (должен быть в папке templates)
  *
  * @package App\Http\Requests\Admin
  */
@@ -39,8 +38,8 @@ class UpdatePostTypeRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует (все поля опциональны):
-     * - slug: slug (regex, уникальность, зарезервированные пути)
      * - name: название (максимум 255 символов)
+     * - template: путь к шаблону (должен быть в папке templates)
      * - options_json: обязательный объект (present, не массив)
      * - blueprint_id: опциональный ID Blueprint (nullable, должен существовать)
      *
@@ -48,23 +47,18 @@ class UpdatePostTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id');
-        $postType = $id ? PostType::find($id) : null;
-        $currentSlug = $postType?->slug;
-
         return [
-            'slug' => [
-                'sometimes',
-                'string',
-                'max:64',
-                'regex:/^[a-z0-9_-]+$/',
-                Rule::unique('post_types', 'slug')->ignore($currentSlug, 'slug'),
-                new ReservedSlug(),
-            ],
             'name' => [
                 'sometimes',
                 'string',
                 'max:255',
+            ],
+            'template' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:255',
+                new TemplatePathRule(app(\App\Domain\View\TemplatePathValidator::class)),
             ],
             'options_json' => [
                 'present',
@@ -106,7 +100,8 @@ class UpdatePostTypeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'slug.regex' => 'The slug may only contain lowercase letters, numbers, underscores, and hyphens.',
+            'template.string' => 'The template must be a string.',
+            'template.max' => 'The template may not be greater than 255 characters.',
             'options_json.present' => 'The options_json field is required.',
             'options_json.array' => 'The options_json field must be an object.',
             'blueprint_id.integer' => 'The blueprint_id must be an integer.',

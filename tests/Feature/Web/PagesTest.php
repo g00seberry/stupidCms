@@ -26,7 +26,7 @@ function ensureTemplate(string $relativePath, string $content): void
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->postType = PostType::factory()->create(['slug' => 'page']);
+    $this->postType = PostType::factory()->create(['name' => 'Page']);
     
     // Ensure templates exist (will NOT overwrite if already present)
     ensureTemplate('home/default.blade.php', '<h1>Default Home</h1>');
@@ -38,7 +38,7 @@ afterEach(function () {
     // These files are created INSIDE specific tests, not in beforeEach
     $testOnlyTemplates = [
         resource_path('views/pages/page.blade.php'),
-        resource_path('views/pages/custom-override.blade.php'),
+        resource_path('views/templates/pages/custom-override.blade.php'),
     ];
     
     foreach ($testOnlyTemplates as $template) {
@@ -256,7 +256,7 @@ test('entry page loads with post type relationship', function () {
 });
 
 test('entry page uses template override if specified', function () {
-    ensureTemplate('pages/custom-override.blade.php', '<div class="override">{{ $entry->title }}</div>');
+    ensureTemplate('templates/pages/custom-override.blade.php', '<div class="override">{{ $entry->title }}</div>');
 
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
@@ -265,7 +265,7 @@ test('entry page uses template override if specified', function () {
         'slug' => 'override-test',
         'status' => 'published',
         'published_at' => now()->subHour(),
-        'template_override' => 'pages.custom-override',
+        'template_override' => 'templates.pages.custom-override',
     ]);
 
     $response = $this->get('/override-test');

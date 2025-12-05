@@ -203,9 +203,13 @@ final class SearchService implements SearchServiceInterface
             $source = $hit['_source'] ?? [];
             $highlight = $hit['highlight'] ?? [];
 
+            $postTypeId = isset($source['post_type']) && is_numeric($source['post_type']) 
+                ? (int) $source['post_type'] 
+                : null;
+
             $hits[] = new SearchHit(
                 id: (string) ($source['id'] ?? $hit['_id'] ?? ''),
-                postType: (string) ($source['post_type'] ?? ''),
+                postType: $postTypeId,
                 slug: (string) ($source['slug'] ?? ''),
                 title: (string) ($source['title'] ?? ''),
                 excerpt: isset($source['excerpt']) ? (string) $source['excerpt'] : null,

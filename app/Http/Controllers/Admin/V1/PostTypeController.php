@@ -37,15 +37,15 @@ class PostTypeController extends Controller
      * @group Admin ▸ Post types
      * @name Create post type
      * @authenticated
-     * @bodyParam slug string required Уникальный slug PostType. Example: product
      * @bodyParam name string required Человекочитаемое название. Example: Products
+     * @bodyParam template string optional Путь к шаблону (должен быть в папке templates). Example: templates.article
      * @bodyParam options_json object Опциональные настройки. Example: {"fields":{"price":{"type":"number"}}}
      * @bodyParam blueprint_id integer optional ID Blueprint для привязки к типу записи. Example: 1
      * @response status=201 {
      *   "data": {
      *     "id": 1,
-     *     "slug": "product",
      *     "name": "Products",
+     *     "template": "templates.article",
      *     "options_json": {
      *       "fields": {
      *         "price": {
@@ -82,12 +82,12 @@ class PostTypeController extends Controller
      *   "title": "Validation Error",
      *   "status": 422,
      *   "code": "VALIDATION_ERROR",
-     *   "detail": "The slug has already been taken.",
+     *   "detail": "The template field is invalid.",
      *   "meta": {
      *     "request_id": "51111111-2222-3333-4444-555555555556",
      *     "errors": {
-     *       "slug": [
-     *         "The slug has already been taken."
+     *       "template": [
+     *         "The template must be a path within the templates directory."
      *       ]
      *     }
      *   },
@@ -115,11 +115,9 @@ class PostTypeController extends Controller
 
         /** @var PostType $postType */
         $postType = DB::transaction(function () use ($validated, $options) {
-            $slug = strtolower(trim($validated['slug']));
-
             return PostType::query()->create([
-                'slug' => $slug,
                 'name' => $validated['name'],
+                'template' => $validated['template'] ?? null,
                 'options_json' => $options,
                 'blueprint_id' => $validated['blueprint_id'] ?? null,
             ]);
@@ -139,8 +137,8 @@ class PostTypeController extends Controller
      *   "data": [
      *     {
      *       "id": 1,
-     *       "slug": "article",
      *       "name": "Articles",
+     *       "template": "templates.article",
      *       "options_json": {},
      *       "blueprint_id": null,
      *       "created_at": "2025-01-10T12:00:00+00:00",
@@ -183,7 +181,7 @@ class PostTypeController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $types = PostType::query()
-            ->orderBy('slug')
+            ->orderBy('name')
             ->get();
 
         return PostTypeResource::collection($types);
@@ -199,8 +197,8 @@ class PostTypeController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 1,
-     *     "slug": "article",
      *     "name": "Articles",
+     *     "template": "templates.article",
      *     "options_json": {},
      *     "blueprint_id": null,
      *     "created_at": "2025-01-10T12:00:00+00:00",
@@ -254,7 +252,7 @@ class PostTypeController extends Controller
     /**
      * Обновление настроек типа записи.
      *
-     * Обновляет slug, name, options_json и blueprint_id типа записи. Нормализует taxonomies в options_json:
+     * Обновляет name, template, options_json и blueprint_id типа записи. Нормализует taxonomies в options_json:
      * принимает как целые числа, так и строковые представления чисел, преобразуя их в целые числа.
      *
      * @param \App\Http\Requests\Admin\UpdatePostTypeRequest $request Валидированный запрос
@@ -266,15 +264,15 @@ class PostTypeController extends Controller
      * @name Update post type
      * @authenticated
      * @urlParam id int required ID PostType. Example: 1
-     * @bodyParam slug string optional Новый slug PostType. Example: article-updated
      * @bodyParam name string optional Человекочитаемое название. Example: Articles Updated
+     * @bodyParam template string optional Путь к шаблону (должен быть в папке templates). Example: templates.article
      * @bodyParam options_json object required JSON-объект схемы настроек. Example: {"fields":{"hero":{"type":"image"}}}
      * @bodyParam blueprint_id integer optional ID Blueprint для привязки к типу записи. Example: 1
      * @response status=200 {
      *   "data": {
      *     "id": 1,
-     *     "slug": "article",
      *     "name": "Articles",
+     *     "template": "templates.article",
      *     "options_json": {
      *       "fields": {
      *         "hero": {
@@ -347,11 +345,11 @@ class PostTypeController extends Controller
         $validated = $request->validated();
 
         DB::transaction(function () use ($type, $validated) {
-            if (isset($validated['slug'])) {
-                $type->slug = strtolower(trim($validated['slug']));
-            }
             if (isset($validated['name'])) {
                 $type->name = $validated['name'];
+            }
+            if (array_key_exists('template', $validated)) {
+                $type->template = $validated['template'];
             }
             if (array_key_exists('blueprint_id', $validated)) {
                 $type->blueprint_id = $validated['blueprint_id'];

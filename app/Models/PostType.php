@@ -18,8 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Каждый тип может иметь свои опции и настройки.
  *
  * @property int $id
- * @property string $slug Уникальный slug типа записи
  * @property string $name Название типа записи
+ * @property string|null $template Шаблон Blade для рендеринга записей этого типа
  * @property \App\Domain\PostTypes\PostTypeOptions $options_json Опции типа записи
  * @property int|null $blueprint_id Blueprint, определяющий структуру Entry
  * @property \Illuminate\Support\Carbon $created_at
@@ -41,8 +41,8 @@ class PostType extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'slug',
         'name',
+        'template',
         'options_json',
         'blueprint_id',
     ];

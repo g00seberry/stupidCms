@@ -590,21 +590,21 @@ class BlueprintsSeeder extends Seeder
     private function attachToPostTypes(Blueprint $simpleProduct, Blueprint $complexArticle): void
     {
         // Привязать Simple Product к product
-        $productPostType = PostType::where('slug', 'product')->first();
+        $productPostType = PostType::where('name', 'Product')->first();
         if ($productPostType) {
             $productPostType->update(['blueprint_id' => $simpleProduct->id]);
-            $this->command->info("  ✓ Attached '{$simpleProduct->code}' to PostType 'product'");
+            $this->command->info("  ✓ Attached '{$simpleProduct->code}' to PostType 'Product'");
         } else {
-            $this->command->warn("  ⚠ PostType 'product' not found, skipping attachment");
+            $this->command->warn("  ⚠ PostType 'Product' not found, skipping attachment");
         }
 
         // Привязать Complex Article к article
-        $articlePostType = PostType::where('slug', 'article')->first();
+        $articlePostType = PostType::where('name', 'Article')->first();
         if ($articlePostType) {
             $articlePostType->update(['blueprint_id' => $complexArticle->id]);
-            $this->command->info("  ✓ Attached '{$complexArticle->code}' to PostType 'article'");
+            $this->command->info("  ✓ Attached '{$complexArticle->code}' to PostType 'Article'");
         } else {
-            $this->command->warn("  ⚠ PostType 'article' not found, skipping attachment");
+            $this->command->warn("  ⚠ PostType 'Article' not found, skipping attachment");
         }
     }
 

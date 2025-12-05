@@ -17,7 +17,7 @@ final class SearchHit
 {
     /**
      * @param string $id ID записи
-     * @param string $postType Slug типа записи
+     * @param int|null $postType ID типа записи
      * @param string $slug Slug записи
      * @param string $title Заголовок записи
      * @param string|null $excerpt Краткое описание записи
@@ -26,7 +26,7 @@ final class SearchHit
      */
     public function __construct(
         public readonly string $id,
-        public readonly string $postType,
+        public readonly ?int $postType,
         public readonly string $slug,
         public readonly string $title,
         public readonly ?string $excerpt,

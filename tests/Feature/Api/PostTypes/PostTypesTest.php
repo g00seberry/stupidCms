@@ -27,23 +27,23 @@ test('admin can list post types', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['slug', 'name', 'options_json'],
+                '*' => ['name', 'template', 'options_json'],
             ],
         ])
         ->assertJsonCount(3, 'data');
 });
 
-test('post types are sorted by slug', function () {
-    PostType::factory()->create(['slug' => 'zebra']);
-    PostType::factory()->create(['slug' => 'article']);
+test('post types are sorted by name', function () {
+    PostType::factory()->create(['name' => 'Zebra']);
+    PostType::factory()->create(['name' => 'Article']);
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->getJson('/api/v1/admin/post-types');
 
     $response->assertOk()
-        ->assertJsonPath('data.0.slug', 'article')
-        ->assertJsonPath('data.1.slug', 'zebra');
+        ->assertJsonPath('data.0.name', 'Article')
+        ->assertJsonPath('data.1.name', 'Zebra');
 });
 
 // CREATE tests
@@ -51,37 +51,22 @@ test('admin can create post type', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/post-types', [
-            'slug' => 'product',
             'name' => 'Products',
+            'template' => 'templates.product',
             'options_json' => ['fields' => ['price' => ['type' => 'number']]],
         ]);
 
     $response->assertCreated()
-        ->assertJsonPath('data.slug', 'product')
-        ->assertJsonPath('data.name', 'Products');
+        ->assertJsonPath('data.name', 'Products')
+        ->assertJsonPath('data.template', 'templates.product');
 
     $this->assertDatabaseHas('post_types', [
-        'slug' => 'product',
         'name' => 'Products',
+        'template' => 'templates.product',
     ]);
 });
 
-test('post type slug is unique', function () {
-    PostType::factory()->create(['slug' => 'article']);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/post-types', [
-            'slug' => 'article',
-            'name' => 'Articles',
-            'options_json' => [],
-        ]);
-
-    $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['slug']);
-});
-
-test('post type validation fails with missing slug', function () {
+test('admin can create post type without template', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/post-types', [
@@ -89,8 +74,9 @@ test('post type validation fails with missing slug', function () {
             'options_json' => [],
         ]);
 
-    $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['slug']);
+    $response->assertCreated()
+        ->assertJsonPath('data.name', 'Products')
+        ->assertJsonPath('data.template', null);
 });
 
 test('post type validation fails with missing name', function () {
@@ -116,28 +102,27 @@ test('post type can be created with custom fields in options', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/post-types', [
-            'slug' => 'product',
             'name' => 'Products',
             'options_json' => $options,
         ]);
 
     $response->assertCreated();
     
-    $postType = PostType::where('slug', 'product')->first();
+    $postType = PostType::where('name', 'Products')->first();
     expect($postType->options_json->toArray())->toMatchArray($options);
 });
 
 // SHOW tests
 test('admin can view post type', function () {
-    $postType = PostType::factory()->create(['slug' => 'article', 'name' => 'Articles']);
+    $postType = PostType::factory()->create(['name' => 'Articles', 'template' => 'templates.article']);
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->getJson("/api/v1/admin/post-types/{$postType->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.slug', 'article')
-        ->assertJsonPath('data.name', 'Articles');
+        ->assertJsonPath('data.name', 'Articles')
+        ->assertJsonPath('data.template', 'templates.article');
 });
 
 test('show not found returns 404', function () {
@@ -150,7 +135,7 @@ test('show not found returns 404', function () {
 
 // UPDATE tests
 test('admin can update post type', function () {
-    $postType = PostType::factory()->create(['slug' => 'article', 'name' => 'Old Name']);
+    $postType = PostType::factory()->create(['name' => 'Old Name']);
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
@@ -163,30 +148,32 @@ test('admin can update post type', function () {
         ->assertJsonPath('data.name', 'New Name');
 
     $this->assertDatabaseHas('post_types', [
-        'slug' => 'article',
+        'id' => $postType->id,
         'name' => 'New Name',
     ]);
 });
 
-test('post type slug can be updated', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+test('post type template can be updated', function () {
+    $postType = PostType::factory()->create(['name' => 'Article']);
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->putJson("/api/v1/admin/post-types/{$postType->id}", [
-            'slug' => 'post',
+            'template' => 'templates.article',
             'options_json' => [],
         ]);
 
     $response->assertOk()
-        ->assertJsonPath('data.slug', 'post');
+        ->assertJsonPath('data.template', 'templates.article');
 
-    $this->assertDatabaseHas('post_types', ['slug' => 'post']);
-    $this->assertDatabaseMissing('post_types', ['slug' => 'article']);
+    $this->assertDatabaseHas('post_types', [
+        'id' => $postType->id,
+        'template' => 'templates.article',
+    ]);
 });
 
 test('post type options can be updated', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
 
     $newOptions = ['fields' => ['hero' => ['type' => 'image']]];
 
@@ -215,7 +202,7 @@ test('update not found returns 404', function () {
 
 // DELETE tests
 test('admin can delete post type', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
@@ -223,11 +210,11 @@ test('admin can delete post type', function () {
 
     $response->assertNoContent();
 
-    $this->assertDatabaseMissing('post_types', ['slug' => 'article']);
+    $this->assertDatabaseMissing('post_types', ['id' => $postType->id]);
 });
 
 test('cannot delete post type with entries', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     Entry::factory()->count(3)->create(['post_type_id' => $postType->id]);
 
     $response = $this->actingAs($this->user)
@@ -236,11 +223,11 @@ test('cannot delete post type with entries', function () {
 
     $response->assertStatus(409); // Conflict
 
-    $this->assertDatabaseHas('post_types', ['slug' => 'article']);
+    $this->assertDatabaseHas('post_types', ['id' => $postType->id]);
 });
 
 test('can force delete post type with entries', function () {
-    $postType = PostType::factory()->create(['slug' => 'article']);
+    $postType = PostType::factory()->create(['name' => 'Article']);
     Entry::factory()->count(3)->create(['post_type_id' => $postType->id]);
 
     $response = $this->actingAs($this->user)
@@ -249,7 +236,7 @@ test('can force delete post type with entries', function () {
 
     $response->assertNoContent();
 
-    $this->assertDatabaseMissing('post_types', ['slug' => 'article']);
+    $this->assertDatabaseMissing('post_types', ['id' => $postType->id]);
     $this->assertDatabaseMissing('entries', ['post_type_id' => $postType->id]);
 });
 

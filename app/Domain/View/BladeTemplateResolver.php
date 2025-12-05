@@ -8,87 +8,94 @@ use App\Models\Entry;
 use Illuminate\Support\Facades\View;
 
 /**
- * Резолвер для выбора Blade-шаблона по файловой конвенции.
- * 
- * Приоритет:
+ * Резолвер для выбора Blade-шаблона на основе полей template.
+ *
+ * Приоритет выбора шаблона:
  * 1. Entry.template_override (если задано — используется как полное имя вью)
- * 2. entry--{postType}--{slug} (если существует)
- * 3. entry--{postType} (если существует)
- * 4. entry (глобальный)
+ * 2. PostType.template (если задано)
+ * 3. templates.index (дефолтный шаблон)
+ *
+ * Все шаблоны должны находиться в папке templates или дочерних папках.
  */
 final class BladeTemplateResolver implements TemplateResolver
 {
+    /**
+     * @param \App\Domain\View\TemplatePathValidator $validator Валидатор путей шаблонов
+     * @param string $default Дефолтный шаблон
+     */
     public function __construct(
-        private string $default = 'entry',
+        private readonly TemplatePathValidator $validator,
+        private string $default = 'templates.index',
     ) {}
 
     /**
      * Возвращает имя blade-шаблона для рендера Entry.
      *
      * Приоритет выбора шаблона:
-     * 1. Entry.template_override (если задано — используется как полное имя вью)
-     * 2. entry--{postType}--{slug} (если существует)
-     * 3. entry--{postType} (если существует)
-     * 4. entry (глобальный шаблон по умолчанию)
+     * 1. Entry.template_override (если задано — используется как полное имя вью с валидацией)
+     * 2. PostType.template (если задано — используется с валидацией)
+     * 3. templates.index (дефолтный шаблон)
      *
      * @param \App\Models\Entry $entry Запись для рендеринга
      * @return string Имя Blade-шаблона
-     * @throws \InvalidArgumentException Если template_override указан, но шаблон не найден
+     * @throws \InvalidArgumentException Если template указан, но не валиден или не найден
      */
     public function forEntry(Entry $entry): string
     {
         // 1) Entry.template_override (если задано — используем как полное имя вью)
         if (!empty($entry->template_override)) {
             $override = $entry->template_override;
-            if (!View::exists($override)) {
+            
+            // Нормализуем путь и добавляем префикс, если нужно
+            // ensurePrefix гарантирует, что путь начинается с templates.
+            $normalized = $this->validator->ensurePrefix($override);
+            
+            if (!View::exists($normalized)) {
                 throw new \InvalidArgumentException(
-                    "Template override '{$override}' не найден. Убедитесь, что шаблон существует."
+                    "Template override '{$override}' не найден. Убедитесь, что шаблон существует в папке templates."
                 );
             }
-            return $override;
+            
+            return $normalized;
         }
 
-        // Получаем postType slug
-        $postTypeSlug = $this->getPostTypeSlug($entry);
-        
-        // Получаем entry slug
-        $entrySlug = $entry->slug;
-
-        // 2) Проверяем entry--{postType}--{slug}
-        if ($postTypeSlug && $entrySlug) {
-            $specificTemplate = "entry--{$postTypeSlug}--{$entrySlug}";
-            if (View::exists($specificTemplate)) {
-                return $specificTemplate;
+        // 2) PostType.template (если задано)
+        $postType = $this->getPostType($entry);
+        if ($postType !== null && !empty($postType->template)) {
+            $template = $postType->template;
+            
+            // Нормализуем путь и добавляем префикс, если нужно
+            // ensurePrefix гарантирует, что путь начинается с templates.
+            $normalized = $this->validator->ensurePrefix($template);
+            
+            if (!View::exists($normalized)) {
+                throw new \InvalidArgumentException(
+                    "Template '{$template}' для PostType не найден. Убедитесь, что шаблон существует в папке templates."
+                );
             }
+            
+            return $normalized;
         }
 
-        // 3) Проверяем entry--{postType}
-        if ($postTypeSlug) {
-            $typeTemplate = "entry--{$postTypeSlug}";
-            if (View::exists($typeTemplate)) {
-                return $typeTemplate;
-            }
-        }
-
-        // 4) Глобальный entry
+        // 3) Дефолтный шаблон
         return $this->default;
     }
 
     /**
-     * Получает slug postType из Entry.
+     * Получает PostType из Entry.
      *
-     * Использует загруженную связь, если доступна, иначе выполняет запрос к БД.
+     * Использует загруженную связь, если доступна, иначе загружает связь.
      *
      * @param \App\Models\Entry $entry Запись
-     * @return string|null Slug типа записи или null
+     * @return \App\Models\PostType|null Тип записи или null
      */
-    private function getPostTypeSlug(Entry $entry): ?string
+    private function getPostType(Entry $entry): ?\App\Models\PostType
     {
-        if ($entry->relationLoaded('postType') && $entry->postType) {
-            return $entry->postType->slug;
+        if (!$entry->relationLoaded('postType')) {
+            $entry->loadMissing('postType');
         }
 
-        return $entry->postType()->value('slug');
+        return $entry->postType;
     }
 }
 

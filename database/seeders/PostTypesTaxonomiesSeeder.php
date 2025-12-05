@@ -64,9 +64,9 @@ class PostTypesTaxonomiesSeeder extends Seeder
     {
         // Создаем PostType 'page'
         $pagePostType = PostType::firstOrCreate(
-            ['slug' => 'page'],
+            ['name' => 'Page'],
             [
-                'name' => 'Page',
+                'template' => null,
                 'options_json' => null,
             ]
         );
@@ -78,9 +78,9 @@ class PostTypesTaxonomiesSeeder extends Seeder
 
         // Создаем PostType 'article'
         $articlePostType = PostType::firstOrCreate(
-            ['slug' => 'article'],
+            ['name' => 'Article'],
             [
-                'name' => 'Article',
+                'template' => null,
                 'options_json' => [
                     'taxonomies' => [],
                 ],
@@ -94,9 +94,9 @@ class PostTypesTaxonomiesSeeder extends Seeder
 
         // Создаем PostType 'product'
         $productPostType = PostType::firstOrCreate(
-            ['slug' => 'product'],
+            ['name' => 'Product'],
             [
-                'name' => 'Product',
+                'template' => null,
                 'options_json' => [
                     'taxonomies' => [],
                 ],

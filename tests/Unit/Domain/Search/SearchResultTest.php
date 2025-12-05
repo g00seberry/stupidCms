@@ -9,8 +9,8 @@ uses();
 
 test('creates search result with all parameters', function () {
     $hits = [
-        new SearchHit('1', 'post', 'test-1', 'Test Title 1', 'Excerpt 1', 0.95, []),
-        new SearchHit('2', 'post', 'test-2', 'Test Title 2', 'Excerpt 2', 0.85, []),
+        new SearchHit('1', 1, 'test-1', 'Test Title 1', 'Excerpt 1', 0.95, []),
+        new SearchHit('2', 1, 'test-2', 'Test Title 2', 'Excerpt 2', 0.85, []),
     ];
 
     $result = new SearchResult($hits, 100, 1, 10, 15);
@@ -33,7 +33,7 @@ test('creates empty search result', function () {
 });
 
 test('search result is immutable', function () {
-    $hits = [new SearchHit('1', 'post', 'test', 'Title', null, null, [])];
+    $hits = [new SearchHit('1', 1, 'test', 'Title', null, null, [])];
     $result = new SearchResult($hits, 1, 1, 10, 0);
 
     // Все свойства readonly

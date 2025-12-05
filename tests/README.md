@@ -200,7 +200,7 @@ $entry = $this->createPublishedEntry();
 $draft = $this->createDraftEntry();
 
 // Тип записи
-$postType = $this->createPostType(['slug' => 'article']);
+$postType = $this->createPostType(['name' => 'Article']);
 ```
 
 ### MocksServices

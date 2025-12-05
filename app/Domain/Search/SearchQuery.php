@@ -19,7 +19,7 @@ final class SearchQuery
 {
     /**
      * @param string|null $query Текст поискового запроса
-     * @param list<string> $postTypes Список типов записей для фильтрации
+     * @param list<int|string> $postTypes Список ID типов записей для фильтрации (принимает как int, так и string для обратной совместимости)
      * @param list<\App\Domain\Search\ValueObjects\SearchTermFilter> $terms Список фильтров по термам
      * @param \Carbon\CarbonImmutable|null $from Начальная дата для фильтрации по дате публикации
      * @param \Carbon\CarbonImmutable|null $to Конечная дата для фильтрации по дате публикации
@@ -50,7 +50,7 @@ final class SearchQuery
     /**
      * Получить список типов записей для фильтрации.
      *
-     * @return list<string> Список slug'ов типов записей
+     * @return list<int|string> Список ID типов записей (может содержать строки для обратной совместимости)
      */
     public function postTypes(): array
     {

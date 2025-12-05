@@ -37,7 +37,7 @@ final class QuerySearchRequest extends FormRequest
      *
      * Валидирует:
      * - q: опциональный поисковый запрос (минимум 2 символа, максимум 200)
-     * - post_type: опциональный массив типов записей (максимум 10 элементов)
+     * - post_type: опциональный массив ID типов записей (максимум 10 элементов)
      * - term: опциональный массив фильтров по термам (формат: taxonomy_id:term_id, максимум 20 элементов)
      * - from/to: опциональные даты для фильтрации по дате публикации
      * - page/per_page: опциональные параметры пагинации
@@ -51,7 +51,7 @@ final class QuerySearchRequest extends FormRequest
         return [
             'q' => ['nullable', 'string', 'min:2', 'max:200'],
             'post_type' => ['nullable', 'array', 'max:10'],
-            'post_type.*' => ['string', 'max:64'],
+            'post_type.*' => ['required', 'integer', 'min:1'],
             'term' => ['nullable', 'array', 'max:20'],
             'term.*' => ['string', 'regex:/^[0-9]+:[0-9]+$/'],
             'from' => ['nullable', 'date'],
@@ -66,7 +66,7 @@ final class QuerySearchRequest extends FormRequest
      *
      * Нормализует входные данные:
      * - Обрезает пробелы в поисковом запросе (q)
-     * - Преобразует строку post_type в массив (через запятую)
+     * - Преобразует строку post_type в массив (через запятую) и конвертирует в integer
      * - Преобразует строку term в массив
      * - Обрезает пробелы в датах (from, to)
      *
@@ -89,10 +89,16 @@ final class QuerySearchRequest extends FormRequest
         }
 
         if (isset($input['post_type']) && is_array($input['post_type'])) {
-            $input['post_type'] = array_values(array_map(
-                static fn ($value): string => is_string($value) ? trim($value) : '',
+            $input['post_type'] = array_values(array_filter(array_map(
+                static function ($value): ?int {
+                    if (is_numeric($value)) {
+                        return (int) $value;
+                    }
+                    // Невалидные значения будут отфильтрованы валидацией
+                    return null;
+                },
                 $input['post_type']
-            ));
+            ), static fn ($value): bool => $value !== null));
         }
 
         if (isset($input['term']) && is_string($input['term'])) {

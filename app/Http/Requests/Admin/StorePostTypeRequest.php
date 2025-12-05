@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Models\Taxonomy;
-use App\Rules\ReservedSlug;
+use App\Rules\TemplatePathRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -14,8 +14,8 @@ use Illuminate\Validation\Validator;
  * Request для создания типа записи (PostType).
  *
  * Валидирует данные для создания типа записи:
- * - slug: обязательный уникальный slug (regex, зарезервированные пути)
  * - name: обязательное название (максимум 255 символов)
+ * - template: опциональный путь к шаблону (должен быть в папке templates)
  * - options_json: опциональный объект настроек
  *
  * @package App\Http\Requests\Admin
@@ -38,8 +38,8 @@ class StorePostTypeRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует:
-     * - slug: обязательный уникальный slug (regex, зарезервированные пути)
      * - name: обязательное название (максимум 255 символов)
+     * - template: опциональный путь к шаблону (должен быть в папке templates)
      * - options_json: опциональный объект (не массив)
      * - blueprint_id: опциональный ID Blueprint (nullable, должен существовать)
      *
@@ -48,18 +48,17 @@ class StorePostTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => [
-                'required',
-                'string',
-                'max:64',
-                'regex:/^[a-z0-9_-]+$/',
-                Rule::unique('post_types', 'slug'),
-                new ReservedSlug(),
-            ],
             'name' => [
                 'required',
                 'string',
                 'max:255',
+            ],
+            'template' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:255',
+                new TemplatePathRule(app(\App\Domain\View\TemplatePathValidator::class)),
             ],
             'options_json' => [
                 'sometimes',
@@ -91,9 +90,9 @@ class StorePostTypeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'slug.required' => 'The slug field is required.',
-            'slug.regex' => 'The slug may only contain lowercase letters, numbers, underscores, and hyphens.',
             'name.required' => 'The name field is required.',
+            'template.string' => 'The template must be a string.',
+            'template.max' => 'The template may not be greater than 255 characters.',
             'options_json.array' => 'The options_json field must be an object.',
             'blueprint_id.integer' => 'The blueprint_id must be an integer.',
             'blueprint_id.exists' => 'The specified blueprint does not exist.',

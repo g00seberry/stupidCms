@@ -33,9 +33,9 @@ class EntriesSeeder extends Seeder
             return;
         }
 
-        $pagePostType = PostType::where('slug', 'page')->first();
-        $articlePostType = PostType::where('slug', 'article')->first();
-        $productPostType = PostType::where('slug', 'product')->first();
+        $pagePostType = PostType::where('name', 'Page')->first();
+        $articlePostType = PostType::where('name', 'Article')->first();
+        $productPostType = PostType::where('name', 'Product')->first();
 
         if (!$pagePostType || !$articlePostType || !$productPostType) {
             $this->command->warn('PostTypes not found. Please run PostTypesTaxonomiesSeeder first.');

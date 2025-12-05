@@ -14,7 +14,7 @@ uses(TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->postType = PostType::factory()->create(['slug' => 'article']);
+    $this->postType = PostType::factory()->create(['name' => 'Article']);
 });
 
 test('passes for unique slug', function () {
@@ -46,7 +46,7 @@ test('fails for duplicate slug globally', function () {
 });
 
 test('fails for duplicate slug in different post type', function () {
-    $otherType = PostType::factory()->create(['slug' => 'page']);
+    $otherType = PostType::factory()->create(['name' => 'Page']);
     
     Entry::factory()->create([
         'post_type_id' => $otherType->id,

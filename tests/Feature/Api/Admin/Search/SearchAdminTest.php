@@ -14,7 +14,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create(['is_admin' => true]);
-    $this->postType = PostType::factory()->create(['slug' => 'article']);
+    $this->postType = PostType::factory()->create(['name' => 'Article']);
     
     // Enable search by default
     Config::set('search.enabled', true);

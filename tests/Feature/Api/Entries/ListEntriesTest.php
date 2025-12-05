@@ -14,7 +14,7 @@ use App\Models\PostType;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['is_admin' => true]);
-    $this->postType = PostType::factory()->create(['slug' => 'article']);
+    $this->postType = PostType::factory()->create(['name' => 'Article']);
 });
 
 test('admin can list entries', function () {
@@ -55,7 +55,7 @@ test('entries are paginated', function () {
 });
 
 test('entries can be filtered by post type', function () {
-    $blogPostType = PostType::factory()->create(['slug' => 'blog']);
+    $blogPostType = PostType::factory()->create(['name' => 'Blog']);
     
     Entry::factory()->count(2)->create([
         'post_type_id' => $this->postType->id,

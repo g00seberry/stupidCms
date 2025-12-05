@@ -34,7 +34,7 @@ final class SearchController extends Controller
      * @name Search entries
      * @unauthenticated
      * @queryParam q string Поисковая строка (2-200 символов). Example: headless cms
-     * @queryParam post_type[] string Список slug типов записей (до 10). Example: ["article","event"]
+     * @queryParam post_type[] string Список ID типов записей (до 10). Example: ["1","2"]
      * @queryParam term[] string Фильтр по термам в формате taxonomy:term (до 20 значений). Example: ["category:guides"]
      * @queryParam from date Дата публикации c (ISO 8601). Example: 2025-01-01
      * @queryParam to date Дата публикации до (>= from). Example: 2025-12-31
@@ -46,7 +46,7 @@ final class SearchController extends Controller
      *   "data": [
      *     {
      *       "id": "entries:42",
-     *       "post_type": "article",
+     *       "post_type": 1,
      *       "slug": "how-to-headless",
      *       "title": "How to build a headless CMS",
      *       "excerpt": "Step-by-step launch guide...",

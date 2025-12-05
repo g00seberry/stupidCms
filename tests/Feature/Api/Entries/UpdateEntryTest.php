@@ -14,7 +14,7 @@ use App\Models\PostType;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['is_admin' => true]);
-    $this->postType = PostType::factory()->create(['slug' => 'article']);
+    $this->postType = PostType::factory()->create(['name' => 'Article']);
 });
 
 test('admin can update entry', function () {

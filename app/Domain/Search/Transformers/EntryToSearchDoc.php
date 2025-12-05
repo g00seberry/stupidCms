@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
  *
  * Преобразует Entry в структуру документа для Elasticsearch:
  * извлекает текст из data_json, нормализует пробелы, формирует excerpt.
+ * Использует ID PostType вместо slug.
  *
  * @package App\Domain\Search\Transformers
  */
@@ -39,7 +40,7 @@ final class EntryToSearchDoc
 
         return array_filter([
             'id' => (string) $entry->getKey(),
-            'post_type' => (string) $entry->postType?->slug,
+            'post_type' => $entry->postType?->id !== null ? (string) $entry->postType->id : null,
             'slug' => (string) $entry->slug,
             'title' => (string) $entry->title,
             'excerpt' => $excerpt,
