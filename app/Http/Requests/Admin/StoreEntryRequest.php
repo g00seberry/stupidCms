@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\BlueprintValidationTrait;
+use App\Models\PostType;
 use App\Rules\Publishable;
 use App\Rules\ReservedSlug;
 use App\Rules\UniqueEntrySlug;
@@ -14,15 +16,16 @@ use Illuminate\Validation\Validator;
  * Request для создания новой записи (Entry).
  *
  * Валидирует данные для создания записи контента:
- * - Обязательные: post_type, title
+ * - Обязательные: post_type_id, title
  * - Опциональные: slug (автогенерация), content_json, meta_json, published_at
- * - Проверяет уникальность slug в рамках типа записи
+ * - Проверяет глобальную уникальность slug
  * - Проверяет зарезервированные пути
  *
  * @package App\Http\Requests\Admin
  */
 class StoreEntryRequest extends FormRequest
 {
+    use BlueprintValidationTrait;
     /**
      * Определить, авторизован ли пользователь для выполнения запроса.
      *
@@ -39,10 +42,11 @@ class StoreEntryRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует:
-     * - post_type: обязательный slug типа записи (должен существовать)
+     * - post_type_id: обязательный ID типа записи (должен существовать)
      * - title: обязательный заголовок (максимум 500 символов)
-     * - slug: опциональный slug (regex, уникальность, зарезервированные пути)
-     * - content_json/meta_json: опциональные JSON массивы
+     * - slug: опциональный slug (regex, глобальная уникальность, зарезервированные пути)
+     * - content_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
+     * - meta_json: опциональный JSON массив
      * - is_published: опциональный boolean
      * - published_at: опциональная дата публикации
      * - template_override: опциональный шаблон
@@ -52,21 +56,19 @@ class StoreEntryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $postTypeSlug = $this->input('post_type', 'page');
-
         return [
-            'post_type' => 'required|string|exists:post_types,slug',
+            'post_type_id' => 'required|integer|exists:post_types,id',
             'title' => 'required|string|max:500',
             'slug' => [
                 'nullable',
                 'string',
                 'max:255',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/',
-                new UniqueEntrySlug($postTypeSlug),
+                new UniqueEntrySlug(),
                 new ReservedSlug(),
                 (new Publishable())->setData($this->all()),
             ],
-            'content_json' => 'nullable|array',
+            'content_json' => ['nullable', 'array'],
             'meta_json' => 'nullable|array',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
@@ -97,12 +99,16 @@ class StoreEntryRequest extends FormRequest
      * Настроить валидатор с дополнительной логикой.
      *
      * Проверяет, что при публикации записи указан валидный slug.
+     * Добавляет динамические правила валидации для content_json из Blueprint.
      *
      * @param \Illuminate\Validation\Validator $validator Валидатор
      * @return void
      */
     public function withValidator(Validator $validator): void
     {
+        // Добавляем правила валидации для content_json из Blueprint
+        $this->addBlueprintValidationRules($validator);
+
         $validator->after(function (Validator $validator): void {
             if (! $this->boolean('is_published')) {
                 return;
@@ -122,8 +128,8 @@ class StoreEntryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'post_type.required' => 'The post type field is required.',
-            'post_type.exists' => 'The specified post type does not exist.',
+            'post_type_id.required' => 'The post type id field is required.',
+            'post_type_id.exists' => 'The specified post type does not exist.',
             'title.required' => 'The title field is required.',
             'title.max' => 'The title may not be greater than 500 characters.',
             'slug.regex' => 'The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.',
@@ -133,5 +139,6 @@ class StoreEntryRequest extends FormRequest
             'term_ids.*.exists' => 'One or more specified terms do not exist.',
         ];
     }
+
 }
 

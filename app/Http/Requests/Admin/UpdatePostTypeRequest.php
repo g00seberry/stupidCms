@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\PostType;
 use App\Models\Taxonomy;
 use App\Rules\ReservedSlug;
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,7 +16,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для обновления типа записи:
  * - Все поля опциональны (sometimes)
- * - Проверяет уникальность slug (исключая текущий тип)
+     * - Проверяет уникальность slug (исключая текущий тип по ID)
  * - Проверяет зарезервированные пути
  *
  * @package App\Http\Requests\Admin
@@ -41,12 +42,15 @@ class UpdatePostTypeRequest extends FormRequest
      * - slug: slug (regex, уникальность, зарезервированные пути)
      * - name: название (максимум 255 символов)
      * - options_json: обязательный объект (present, не массив)
+     * - blueprint_id: опциональный ID Blueprint (nullable, должен существовать)
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        $slug = $this->route('slug');
+        $id = $this->route('id');
+        $postType = $id ? PostType::find($id) : null;
+        $currentSlug = $postType?->slug;
 
         return [
             'slug' => [
@@ -54,7 +58,7 @@ class UpdatePostTypeRequest extends FormRequest
                 'string',
                 'max:64',
                 'regex:/^[a-z0-9_-]+$/',
-                Rule::unique('post_types', 'slug')->ignore($slug, 'slug'),
+                Rule::unique('post_types', 'slug')->ignore($currentSlug, 'slug'),
                 new ReservedSlug(),
             ],
             'name' => [
@@ -85,6 +89,12 @@ class UpdatePostTypeRequest extends FormRequest
                     }
                 },
             ],
+            'blueprint_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('blueprints', 'id'),
+            ],
         ];
     }
 
@@ -99,6 +109,8 @@ class UpdatePostTypeRequest extends FormRequest
             'slug.regex' => 'The slug may only contain lowercase letters, numbers, underscores, and hyphens.',
             'options_json.present' => 'The options_json field is required.',
             'options_json.array' => 'The options_json field must be an object.',
+            'blueprint_id.integer' => 'The blueprint_id must be an integer.',
+            'blueprint_id.exists' => 'The specified blueprint does not exist.',
         ];
     }
 

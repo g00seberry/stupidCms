@@ -36,7 +36,7 @@ test('ensures unique slug when base exists', function () {
 
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Test Page&postType=page');
+        ->getJson('/api/v1/admin/utils/slugify?title=Test Page');
 
     $response->assertOk()
         ->assertJsonPath('base', 'test-page')
@@ -65,7 +65,7 @@ test('checks reserved routes when generating slug', function () {
     expect($unique)->toBeString()->not->toBeEmpty();
 });
 
-test('slug scoped by post type', function () {
+test('slug must be globally unique', function () {
     $articleType = PostType::factory()->create(['slug' => 'article']);
 
     Entry::factory()->create([
@@ -74,14 +74,14 @@ test('slug scoped by post type', function () {
         'slug' => 'test',
     ]);
 
-    // Same slug for different post type should be available
+    // Same slug for different post type should fail (global uniqueness)
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Test&postType=page');
+        ->getJson('/api/v1/admin/utils/slugify?title=Test');
 
     $response->assertOk()
         ->assertJsonPath('base', 'test')
-        ->assertJsonPath('unique', 'test');
+        ->assertJsonPath('unique', 'test-2');
 });
 
 test('handles empty title', function () {
@@ -108,7 +108,7 @@ test('slugify requires authentication', function () {
     expect($response->status())->toBeIn([401, 419]);
 });
 
-test('defaults to page post type when not specified', function () {
+test('generates unique slug when base exists', function () {
     Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->admin->id,
@@ -147,7 +147,7 @@ test('generates incremental suffixes for multiple duplicates', function () {
 
     $response = $this->actingAs($this->admin)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Duplicate&postType=page');
+        ->getJson('/api/v1/admin/utils/slugify?title=Duplicate');
 
     $response->assertOk()
         ->assertJsonPath('base', 'duplicate')

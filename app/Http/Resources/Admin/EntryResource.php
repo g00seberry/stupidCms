@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
  * API Resource для Entry в админ-панели.
  *
  * Форматирует Entry для ответа API, включая связанные сущности
- * (postType, author, terms) при их загрузке.
+ * (postType, author, terms, blueprint) при их загрузке.
  *
  * @package App\Http\Resources\Admin
  */
@@ -21,9 +21,9 @@ class EntryResource extends AdminJsonResource
      * Преобразовать ресурс в массив.
      *
      * Возвращает массив с полями записи, включая:
-     * - Основные поля (id, post_type, title, slug, status)
-     * - JSON поля (content_json, meta_json) преобразованные в объекты
-     * - Связанные сущности (author, terms) при их загрузке
+     * - Основные поля (id, post_type_id, title, slug, status)
+     * - JSON поля (content_json, meta_json) преобразованные в объекты (null для пустых значений)
+     * - Связанные сущности (author, terms, blueprint) при их загрузке
      * - Даты в ISO 8601 формате
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
@@ -33,7 +33,7 @@ class EntryResource extends AdminJsonResource
     {
         return [
             'id' => $this->id,
-            'post_type' => $this->postType?->slug,
+            'post_type_id' => $this->post_type_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
@@ -57,6 +57,12 @@ class EntryResource extends AdminJsonResource
                     ];
                 });
             }),
+            'blueprint' => $this->when(
+                $this->postType?->relationLoaded('blueprint') && $this->postType?->blueprint,
+                function () {
+                    return BlueprintResource::make($this->postType->blueprint);
+                }
+            ),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'deleted_at' => $this->deleted_at?->toIso8601String(),
@@ -64,28 +70,37 @@ class EntryResource extends AdminJsonResource
     }
 
     /**
-     * Рекурсивно преобразовать JSON данные, чтобы пустые массивы стали объектами.
+     * Рекурсивно преобразовать JSON данные для сериализации.
      *
-     * Обеспечивает консистентность: пустые массивы и null преобразуются в stdClass,
-     * чтобы в JSON они были {} вместо [] или null.
+     * Преобразует ассоциативные массивы в объекты stdClass для корректной
+     * сериализации в JSON. Сохраняет типы данных: списки остаются массивами,
+     * null и пустые массивы возвращаются как null.
      *
      * @param mixed $value Значение для преобразования
-     * @return mixed Преобразованное значение
+     * @return mixed Преобразованное значение (null для пустых значений)
      */
     private function transformJson(mixed $value): mixed
     {
-        if ($value === null || $value === []) {
-            return new \stdClass();
+        // null возвращается как null
+        if ($value === null) {
+            return null;
         }
 
         if (! is_array($value)) {
             return $value;
         }
 
+        // Пустой массив возвращается как null
+        if (empty($value)) {
+            return null;
+        }
+
+        // Список (массив с числовыми ключами) - сохраняем как массив
         if (array_is_list($value)) {
             return array_map(fn ($item) => $this->transformJson($item), $value);
         }
 
+        // Ассоциативный массив (объект) - преобразуем в stdClass
         $object = new \stdClass();
         foreach ($value as $key => $nested) {
             $object->{$key} = $this->transformJson($nested);

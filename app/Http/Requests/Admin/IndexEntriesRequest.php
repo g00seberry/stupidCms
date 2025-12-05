@@ -32,7 +32,7 @@ class IndexEntriesRequest extends FormRequest
      * Получить правила валидации для запроса.
      *
      * Валидирует:
-     * - post_type: опциональный slug типа записи (должен существовать)
+     * - post_type_id: опциональный ID типа записи (должен существовать)
      * - status: опциональный статус (all, draft, published, scheduled, trashed)
      * - q: опциональный поисковый запрос (максимум 500 символов)
      * - author_id: опциональный ID автора (должен существовать)
@@ -47,7 +47,7 @@ class IndexEntriesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_type' => 'nullable|string|exists:post_types,slug',
+            'post_type_id' => 'nullable|integer|exists:post_types,id',
             'status' => 'nullable|string|in:all,draft,published,scheduled,trashed',
             'q' => 'nullable|string|max:500',
             'author_id' => 'nullable|integer|exists:users,id',
@@ -69,7 +69,7 @@ class IndexEntriesRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'post_type.exists' => 'The specified post type does not exist.',
+            'post_type_id.exists' => 'The specified post type does not exist.',
             'status.in' => 'Invalid status value.',
             'author_id.exists' => 'The specified author does not exist.',
             'term.*.exists' => 'One or more specified terms do not exist.',

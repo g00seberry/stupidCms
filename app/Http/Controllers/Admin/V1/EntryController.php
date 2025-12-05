@@ -54,7 +54,7 @@ class EntryController extends Controller
      * @group Admin ▸ Entries
      * @name List entries
      * @authenticated
-     * @queryParam post_type string Фильтр по slug PostType. Example: article
+     * @queryParam post_type_id int Фильтр по ID PostType. Example: 1
      * @queryParam status string Фильтр по статусу. Values: all,draft,published,scheduled,trashed. Default: all.
      * @queryParam q string Поиск по названию/slug (<=500 символов). Example: landing
      * @queryParam author_id int ID автора. Example: 7
@@ -68,12 +68,12 @@ class EntryController extends Controller
      *   "data": [
      *     {
      *       "id": 42,
-     *       "post_type": "article",
+     *       "post_type_id": 1,
      *       "title": "Headless CMS launch checklist",
      *       "slug": "launch-checklist",
      *       "status": "draft",
-     *       "content_json": {},
-     *       "meta_json": {},
+     *       "content_json": null,
+     *       "meta_json": null,
      *       "is_published": false,
      *       "published_at": null,
      *       "template_override": null,
@@ -139,11 +139,9 @@ class EntryController extends Controller
         $query = Entry::query()
             ->with(['postType', 'author', 'terms.taxonomy']);
 
-        // Filter by post_type
-        if (! empty($validated['post_type'])) {
-            $query->whereHas('postType', function ($q) use ($validated) {
-                $q->where('slug', $validated['post_type']);
-            });
+        // Filter by post_type_id
+        if (! empty($validated['post_type_id'])) {
+            $query->where('post_type_id', $validated['post_type_id']);
         }
 
         // Filter by status
@@ -211,6 +209,8 @@ class EntryController extends Controller
     /**
      * Получение записи по ID (включая удалённые).
      *
+     * Возвращает запись с blueprint, назначенным в родительском PostType.
+     *
      * @group Admin ▸ Entries
      * @name Show entry
      * @authenticated
@@ -218,7 +218,7 @@ class EntryController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 42,
-     *     "post_type": "article",
+     *     "post_type_id": 1,
      *     "title": "Headless CMS launch checklist",
      *     "slug": "launch-checklist",
      *     "status": "published",
@@ -283,7 +283,7 @@ class EntryController extends Controller
     public function show(int $id): EntryResource
     {
         $entry = Entry::query()
-            ->with(['postType', 'author', 'terms.taxonomy'])
+            ->with(['postType.blueprint', 'author', 'terms.taxonomy'])
             ->withTrashed()
             ->find($id);
 
@@ -302,7 +302,7 @@ class EntryController extends Controller
      * @group Admin ▸ Entries
      * @name Create entry
      * @authenticated
-     * @bodyParam post_type string required Существующий slug PostType. Example: article
+     * @bodyParam post_type_id int required Существующий ID PostType. Example: 1
      * @bodyParam title string required Заголовок (<=500 символов). Example: Headless CMS launch checklist
      * @bodyParam slug string Уникальный slug (генерируется автоматически, если не указан). Example: launch-checklist
      * @bodyParam content_json object Произвольные структурированные данные. Example: {"hero":{"title":"Launch"}}
@@ -314,7 +314,7 @@ class EntryController extends Controller
      * @response status=201 {
      *   "data": {
      *     "id": 42,
-     *     "post_type": "article",
+     *     "post_type_id": 1,
      *     "title": "Headless CMS launch checklist",
      *     "slug": "launch-checklist",
      *     "status": "published",
@@ -360,7 +360,7 @@ class EntryController extends Controller
      *   "meta": {
      *     "request_id": "7ceed543-b8b7-cb6c-3003-3f5ef51ce7c9",
      *     "errors": {
-     *       "post_type": [
+     *       "post_type_id": [
      *         "The specified post type does not exist."
      *       ],
      *       "slug": [
@@ -387,17 +387,13 @@ class EntryController extends Controller
     {
         $validated = $request->validated();
 
-        // Get post_type_id
-        $postType = PostType::query()->where('slug', $validated['post_type'])->first();
-        
-        if (! $postType) {
-            $this->throwInvalidPostType();
-        }
+        // Get post_type
+        $postType = PostType::findOrFail($validated['post_type_id']);
 
         // Auto-generate slug if not provided
         $slug = $validated['slug'] ?? null;
         if (empty($slug)) {
-            $slug = $this->generateUniqueSlug($validated['title'], $postType->slug);
+            $slug = $this->generateUniqueSlug($validated['title']);
         }
 
         // Determine status and published_at
@@ -453,7 +449,7 @@ class EntryController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 42,
-     *     "post_type": "article",
+     *     "post_type_id": 1,
      *     "title": "Updated checklist",
      *     "slug": "launch-checklist",
      *     "status": "draft",
@@ -762,9 +758,9 @@ class EntryController extends Controller
     }
 
     /**
-     * Generate a unique slug for the entry.
+     * Generate a globally unique slug for the entry.
      */
-    private function generateUniqueSlug(string $title, string $postTypeSlug): string
+    private function generateUniqueSlug(string $title): string
     {
         $base = $this->slugifier->slugify($title);
 
@@ -774,16 +770,9 @@ class EntryController extends Controller
 
         return $this->uniqueSlugService->ensureUnique(
             $base,
-            function (string $slug) use ($postTypeSlug) {
-                $postType = PostType::query()->where('slug', $postTypeSlug)->first();
-                
-                if (! $postType) {
-                    return false;
-                }
-
+            function (string $slug): bool {
                 return Entry::query()
                     ->withTrashed()
-                    ->where('post_type_id', $postType->id)
                     ->where('slug', $slug)
                     ->exists();
             }
@@ -806,17 +795,5 @@ class EntryController extends Controller
         );
     }
 
-    private function throwInvalidPostType(): never
-    {
-        $this->throwError(
-            ErrorCode::VALIDATION_ERROR,
-            'The specified post type does not exist.',
-            [
-                'errors' => [
-                    'post_type' => ['The specified post type does not exist.'],
-                ],
-            ],
-        );
-    }
 }
 

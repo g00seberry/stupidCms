@@ -18,6 +18,302 @@ GET /api/v1/admin/auth/current (api)
 
 ---
 
+## admin.v1.blueprints.can-delete
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/can-delete`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/can-delete`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `can-delete`
+
+
+---
+
+## admin.v1.blueprints.dependencies
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/dependencies`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/dependencies`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `dependencies`
+
+
+---
+
+## admin.v1.blueprints.destroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/blueprints/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+DELETE /api/v1/admin/blueprints/{blueprint} (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`
+
+
+---
+
+## admin.v1.blueprints.embeddable
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeddable`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/embeddable`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `embeddable`
+
+
+---
+
+## admin.v1.blueprints.embeds.index
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/embeds`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintEmbedController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/embeds (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/embeds`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `embeds`
+
+
+---
+
+## admin.v1.blueprints.embeds.store
+**ID:** `http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/embeds`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintEmbedController.php`
+
+POST /api/v1/admin/blueprints/{blueprint}/embeds (api)
+
+### Meta
+- **Method:** `POST`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/embeds`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `embeds`
+
+
+---
+
+## admin.v1.blueprints.index
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints`
+- **Group:** `api`
+- **Auth:** `jwt`
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`
+
+
+---
+
+## admin.v1.blueprints.paths.index
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/paths`
+**Path:** `app/Http/Controllers/Admin/V1/PathController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/paths (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/paths`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `paths`
+
+
+---
+
+## admin.v1.blueprints.paths.store
+**ID:** `http_endpoint:POST:/api/v1/admin/blueprints/{blueprint}/paths`
+**Path:** `app/Http/Controllers/Admin/V1/PathController.php`
+
+POST /api/v1/admin/blueprints/{blueprint}/paths (api)
+
+### Meta
+- **Method:** `POST`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/paths`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `paths`
+
+
+---
+
+## admin.v1.blueprints.schema
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}/schema`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints/{blueprint}/schema (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}/schema`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`, `schema`
+
+
+---
+
+## admin.v1.blueprints.show
+**ID:** `http_endpoint:GET:/api/v1/admin/blueprints/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+GET /api/v1/admin/blueprints/{blueprint} (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`
+
+
+---
+
+## admin.v1.blueprints.store
+**ID:** `http_endpoint:POST:/api/v1/admin/blueprints`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+POST /api/v1/admin/blueprints (api)
+
+### Meta
+- **Method:** `POST`
+- **URI:** `/api/v1/admin/blueprints`
+- **Group:** `api`
+- **Auth:** `jwt`
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`
+
+
+---
+
+## admin.v1.blueprints.update
+**ID:** `http_endpoint:PUT:/api/v1/admin/blueprints/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintController.php`
+
+PUT /api/v1/admin/blueprints/{blueprint} (api)
+
+### Meta
+- **Method:** `PUT`
+- **URI:** `/api/v1/admin/blueprints/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `blueprints`
+
+
+---
+
+## admin.v1.embeds.destroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/embeds/{embed}`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintEmbedController.php`
+
+DELETE /api/v1/admin/embeds/{embed} (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/embeds/{embed}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `embed` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `embeds`
+
+
+---
+
+## admin.v1.embeds.show
+**ID:** `http_endpoint:GET:/api/v1/admin/embeds/{embed}`
+**Path:** `app/Http/Controllers/Admin/V1/BlueprintEmbedController.php`
+
+GET /api/v1/admin/embeds/{embed} (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/embeds/{embed}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `embed` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `embeds`
+
+
+---
+
 ## admin.v1.entries.destroy
 **ID:** `http_endpoint:DELETE:/api/v1/admin/entries/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/EntryController.php`
@@ -462,6 +758,66 @@ PUT /api/v1/admin/options/{namespace}/{key} (api)
 
 ---
 
+## admin.v1.paths.destroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/paths/{path}`
+**Path:** `app/Http/Controllers/Admin/V1/PathController.php`
+
+DELETE /api/v1/admin/paths/{path} (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/paths/{path}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `path` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `paths`
+
+
+---
+
+## admin.v1.paths.show
+**ID:** `http_endpoint:GET:/api/v1/admin/paths/{path}`
+**Path:** `app/Http/Controllers/Admin/V1/PathController.php`
+
+GET /api/v1/admin/paths/{path} (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/paths/{path}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `path` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `paths`
+
+
+---
+
+## admin.v1.paths.update
+**ID:** `http_endpoint:PUT:/api/v1/admin/paths/{path}`
+**Path:** `app/Http/Controllers/Admin/V1/PathController.php`
+
+PUT /api/v1/admin/paths/{path} (api)
+
+### Meta
+- **Method:** `PUT`
+- **URI:** `/api/v1/admin/paths/{path}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `path` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `paths`
+
+
+---
+
 ## admin.v1.plugins.disable
 **ID:** `http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable`
 **Path:** `app/Http/Controllers/Admin/V1/PluginsController.php`
@@ -539,21 +895,104 @@ POST /api/v1/admin/plugins/sync (api)
 ---
 
 ## admin.v1.post-types.destroy
-**ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{slug}`
+**ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
 
-DELETE /api/v1/admin/post-types/{slug} (api)
+DELETE /api/v1/admin/post-types/{id} (api)
 
 ### Meta
 - **Method:** `DELETE`
-- **URI:** `/api/v1/admin/post-types/{slug}`
+- **URI:** `/api/v1/admin/post-types/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`
+
+
+---
+
+## admin.v1.post-types.form-config.destroy
+**ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+DELETE /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)
+
+### Meta
+- **Method:** `DELETE`
+- **URI:** `/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type_id` (string, required)
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-config`
+
+
+---
+
+## admin.v1.post-types.form-config.show
+**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+GET /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type_id` (string, required)
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-config`
+
+
+---
+
+## admin.v1.post-types.form-config.update
+**ID:** `http_endpoint:PUT:/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+PUT /api/v1/admin/post-types/{post_type_id}/form-config/{blueprint} (api)
+
+### Meta
+- **Method:** `PUT`
+- **URI:** `/api/v1/admin/post-types/{post_type_id}/form-config/{blueprint}`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type_id` (string, required)
+  - `blueprint` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-config`
+
+
+---
+
+## admin.v1.post-types.form-configs.index
+**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{post_type_id}/form-configs`
+**Path:** `app/Http/Controllers/Admin/V1/FormConfigController.php`
+
+GET /api/v1/admin/post-types/{post_type_id}/form-configs (api)
+
+### Meta
+- **Method:** `GET`
+- **URI:** `/api/v1/admin/post-types/{post_type_id}/form-configs`
+- **Group:** `api`
+- **Auth:** `jwt`
+- **Parameters:**
+  - `post_type_id` (string, required)
+
+### Tags
+`api`, `admin`, `v1`, `post-types`, `form-configs`
 
 
 ---
@@ -577,18 +1016,18 @@ GET /api/v1/admin/post-types (api)
 ---
 
 ## admin.v1.post-types.show
-**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{slug}`
+**ID:** `http_endpoint:GET:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
 
-GET /api/v1/admin/post-types/{slug} (api)
+GET /api/v1/admin/post-types/{id} (api)
 
 ### Meta
 - **Method:** `GET`
-- **URI:** `/api/v1/admin/post-types/{slug}`
+- **URI:** `/api/v1/admin/post-types/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`
@@ -615,18 +1054,18 @@ POST /api/v1/admin/post-types (api)
 ---
 
 ## admin.v1.post-types.update
-**ID:** `http_endpoint:PUT:/api/v1/admin/post-types/{slug}`
+**ID:** `http_endpoint:PUT:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
 
-PUT /api/v1/admin/post-types/{slug} (api)
+PUT /api/v1/admin/post-types/{id} (api)
 
 ### Meta
 - **Method:** `PUT`
-- **URI:** `/api/v1/admin/post-types/{slug}`
+- **URI:** `/api/v1/admin/post-types/{id}`
 - **Group:** `api`
 - **Auth:** `jwt`
 - **Parameters:**
-  - `slug` (string, required)
+  - `id` (string, required)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`

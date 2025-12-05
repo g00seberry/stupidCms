@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Rules;
 
 use App\Models\Entry;
-use App\Models\PostType;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- * Правило валидации: уникальность slug записи в рамках типа записи.
+ * Правило валидации: глобальная уникальность slug записи.
  *
- * Проверяет, что slug не занят другой записью того же типа.
+ * Проверяет, что slug не занят другой записью (глобальная уникальность).
  * Учитывает мягко удалённые записи. Поддерживает исключение записи по ID.
  *
  * @package App\Rules
@@ -20,11 +19,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class UniqueEntrySlug implements ValidationRule
 {
     /**
-     * @param string $postTypeSlug Slug типа записи для проверки уникальности
      * @param int|null $exceptEntryId ID записи, которую исключить из проверки (для update)
      */
     public function __construct(
-        private string $postTypeSlug,
         private ?int $exceptEntryId = null
     ) {
     }
@@ -32,7 +29,7 @@ class UniqueEntrySlug implements ValidationRule
     /**
      * Выполнить правило валидации.
      *
-     * Проверяет существование PostType и уникальность slug в его рамках.
+     * Проверяет глобальную уникальность slug (все записи, кроме исключенной).
      * Если slug занят (включая мягко удалённые записи), добавляет ошибку валидации.
      *
      * @param string $attribute Имя атрибута
@@ -46,18 +43,9 @@ class UniqueEntrySlug implements ValidationRule
             return;
         }
 
-        // Find post_type_id by slug
-        $postType = PostType::query()->where('slug', $this->postTypeSlug)->first();
-        
-        if (! $postType) {
-            $fail('The specified post type does not exist.');
-            return;
-        }
-
-        // Check if slug is already taken in this post_type (including soft-deleted)
+        // Check if slug is already taken globally (including soft-deleted)
         $query = Entry::query()
             ->withTrashed()
-            ->where('post_type_id', $postType->id)
             ->where('slug', $value);
 
         if ($this->exceptEntryId) {
@@ -65,7 +53,7 @@ class UniqueEntrySlug implements ValidationRule
         }
 
         if ($query->exists()) {
-            $fail('The slug is already taken for this post type.');
+            $fail('The slug is already taken.');
         }
     }
 }

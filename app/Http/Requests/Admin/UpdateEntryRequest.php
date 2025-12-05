@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\BlueprintValidationTrait;
 use App\Models\Entry;
 use App\Rules\Publishable;
 use App\Rules\ReservedSlug;
@@ -16,13 +17,14 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для обновления записи контента:
  * - Все поля опциональны (sometimes)
- * - Проверяет уникальность slug в рамках типа записи (исключая текущую запись)
+ * - Проверяет глобальную уникальность slug (исключая текущую запись)
  * - Проверяет зарезервированные пути
  *
  * @package App\Http\Requests\Admin
  */
 class UpdateEntryRequest extends FormRequest
 {
+    use BlueprintValidationTrait;
     /**
      * @var \App\Models\Entry|null Кэшированная модель записи
      */
@@ -46,7 +48,8 @@ class UpdateEntryRequest extends FormRequest
      * Валидирует (все поля опциональны):
      * - title: заголовок (максимум 500 символов)
      * - slug: slug (regex, уникальность, зарезервированные пути)
-     * - content_json/meta_json: JSON массивы
+     * - content_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
+     * - meta_json: опциональный JSON массив
      * - is_published: boolean
      * - published_at: дата публикации
      * - template_override: шаблон
@@ -57,15 +60,16 @@ class UpdateEntryRequest extends FormRequest
     public function rules(): array
     {
         $entryId = $this->route('id');
-        $entry = Entry::query()->withTrashed()->find($entryId);
+        // Используем eager loading для избежания N+1 запросов
+        $entry = Entry::query()
+            ->withTrashed()
+            ->with('postType.blueprint')
+            ->find($entryId);
         $this->entryModel = $entry;
         
         if (! $entry) {
             return [];
         }
-
-        $postType = $entry->postType;
-        $postTypeSlug = $postType ? $postType->slug : 'page';
 
         return [
             'title' => 'sometimes|required|string|max:500',
@@ -75,11 +79,11 @@ class UpdateEntryRequest extends FormRequest
                 'string',
                 'max:255',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/',
-                new UniqueEntrySlug($postTypeSlug, $entry->id),
+                new UniqueEntrySlug($entry->id),
                 new ReservedSlug(),
                 (new Publishable())->setData($this->all()),
             ],
-            'content_json' => 'sometimes|nullable|array',
+            'content_json' => ['sometimes', 'nullable', 'array'],
             'meta_json' => 'sometimes|nullable|array',
             'is_published' => 'sometimes|boolean',
             'published_at' => 'sometimes|nullable|date',
@@ -88,6 +92,7 @@ class UpdateEntryRequest extends FormRequest
             'term_ids.*' => 'integer|exists:terms,id',
         ];
     }
+
 
     /**
      * Получить кастомные сообщения для ошибок валидации.
@@ -113,6 +118,7 @@ class UpdateEntryRequest extends FormRequest
      *
      * Проверяет, что при публикации записи указан валидный slug
      * (либо в запросе, либо в существующей записи).
+     * Добавляет динамические правила валидации для content_json из Blueprint.
      *
      * @param \Illuminate\Validation\Validator $validator Валидатор
      * @return void
@@ -124,6 +130,9 @@ class UpdateEntryRequest extends FormRequest
         if (! $entry) {
             return;
         }
+
+        // Добавляем правила валидации для content_json из Blueprint
+        $this->addBlueprintValidationRules($validator, $entry->postType);
 
         $validator->after(function (Validator $validator) use ($entry): void {
             if (! $this->boolean('is_published')) {
@@ -138,5 +147,6 @@ class UpdateEntryRequest extends FormRequest
             }
         });
     }
+
 }
 

@@ -133,7 +133,7 @@ test('admin can view post type', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/post-types/article');
+        ->getJson("/api/v1/admin/post-types/{$postType->id}");
 
     $response->assertOk()
         ->assertJsonPath('data.slug', 'article')
@@ -143,7 +143,7 @@ test('admin can view post type', function () {
 test('show not found returns 404', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/post-types/non-existent');
+        ->getJson('/api/v1/admin/post-types/99999');
 
     $response->assertNotFound();
 });
@@ -154,7 +154,7 @@ test('admin can update post type', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/post-types/article', [
+        ->putJson("/api/v1/admin/post-types/{$postType->id}", [
             'name' => 'New Name',
             'options_json' => [],
         ]);
@@ -173,7 +173,7 @@ test('post type slug can be updated', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/post-types/article', [
+        ->putJson("/api/v1/admin/post-types/{$postType->id}", [
             'slug' => 'post',
             'options_json' => [],
         ]);
@@ -192,7 +192,7 @@ test('post type options can be updated', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/post-types/article', [
+        ->putJson("/api/v1/admin/post-types/{$postType->id}", [
             'options_json' => $newOptions,
         ]);
 
@@ -205,7 +205,7 @@ test('post type options can be updated', function () {
 test('update not found returns 404', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson('/api/v1/admin/post-types/non-existent', [
+        ->putJson('/api/v1/admin/post-types/99999', [
             'name' => 'New Name',
             'options_json' => [],
         ]);
@@ -219,7 +219,7 @@ test('admin can delete post type', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->deleteJson('/api/v1/admin/post-types/article');
+        ->deleteJson("/api/v1/admin/post-types/{$postType->id}");
 
     $response->assertNoContent();
 
@@ -232,7 +232,7 @@ test('cannot delete post type with entries', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->deleteJson('/api/v1/admin/post-types/article');
+        ->deleteJson("/api/v1/admin/post-types/{$postType->id}");
 
     $response->assertStatus(409); // Conflict
 
@@ -245,7 +245,7 @@ test('can force delete post type with entries', function () {
 
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->deleteJson('/api/v1/admin/post-types/article?force=1');
+        ->deleteJson("/api/v1/admin/post-types/{$postType->id}?force=1");
 
     $response->assertNoContent();
 
@@ -256,7 +256,7 @@ test('can force delete post type with entries', function () {
 test('delete not found returns 404', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->deleteJson('/api/v1/admin/post-types/non-existent');
+        ->deleteJson('/api/v1/admin/post-types/99999');
 
     $response->assertNotFound();
 });

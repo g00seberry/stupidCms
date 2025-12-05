@@ -32,6 +32,21 @@ Configuration: Auth
 
 ---
 
+## Blueprint
+**ID:** `config_area:blueprint`
+**Path:** `config/blueprint.php`
+
+Configuration: Blueprint
+
+### Meta
+- **Keys:** `max_embed_depth`, `max_conflict_check_depth`, `cache_graph_on_conflict_check`, `batch_insert_size`
+
+### Tags
+`config`, `blueprint`
+
+
+---
+
 ## Cache
 **ID:** `config_area:cache`
 **Path:** `config/cache.php`

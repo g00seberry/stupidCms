@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use App\Models\Entry;
 use App\Models\PostType;
+use App\Models\Blueprint;
 
 /**
  * Feature-тесты для GET /api/v1/admin/entries/{id}
@@ -30,7 +31,7 @@ test('admin can view entry', function () {
 
     $response->assertOk()
         ->assertJsonStructure([
-            'data' => ['id', 'post_type', 'title', 'slug', 'status', 'author'],
+            'data' => ['id', 'post_type_id', 'title', 'slug', 'status', 'author'],
         ])
         ->assertJsonPath('data.id', $entry->id)
         ->assertJsonPath('data.title', 'Test Article');
@@ -52,7 +53,7 @@ test('entry includes author relationship', function () {
         ->assertJsonPath('data.author.name', 'John Doe');
 });
 
-test('entry includes post type relationship', function () {
+test('entry includes post type id', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
@@ -63,7 +64,7 @@ test('entry includes post type relationship', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.post_type', $this->postType->slug);
+        ->assertJsonPath('data.post_type_id', $this->postType->id);
 });
 
 test('not found returns 404', function () {
@@ -121,6 +122,38 @@ test('entry includes meta_json', function () {
         ->assertJsonPath('data.meta_json', $meta);
 });
 
+test('entry returns null for empty content_json', function () {
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'author_id' => $this->user->id,
+        'data_json' => [],
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('data.content_json', null);
+});
+
+test('entry returns null for null content_json', function () {
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'author_id' => $this->user->id,
+    ]);
+    // Устанавливаем data_json в null через прямой доступ к БД
+    $entry->data_json = null;
+    $entry->save();
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('data.content_json', null);
+});
+
 test('entry includes timestamps', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
@@ -135,5 +168,50 @@ test('entry includes timestamps', function () {
         ->assertJsonStructure([
             'data' => ['created_at', 'updated_at', 'deleted_at'],
         ]);
+});
+
+test('entry includes blueprint from post type', function () {
+    $blueprint = Blueprint::factory()->create([
+        'code' => 'article-blueprint',
+        'name' => 'Article Blueprint',
+    ]);
+    
+    $postType = PostType::factory()->create([
+        'slug' => 'article-with-blueprint',
+        'blueprint_id' => $blueprint->id,
+    ]);
+    
+    $entry = Entry::factory()->create([
+        'post_type_id' => $postType->id,
+        'author_id' => $this->user->id,
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                'blueprint' => ['id', 'name', 'code', 'description', 'created_at', 'updated_at'],
+            ],
+        ])
+        ->assertJsonPath('data.blueprint.id', $blueprint->id)
+        ->assertJsonPath('data.blueprint.code', 'article-blueprint')
+        ->assertJsonPath('data.blueprint.name', 'Article Blueprint');
+});
+
+test('entry does not include blueprint when post type has no blueprint', function () {
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'author_id' => $this->user->id,
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->getJson("/api/v1/admin/entries/{$entry->id}");
+
+    $response->assertOk()
+        ->assertJsonMissingPath('data.blueprint');
 });
 

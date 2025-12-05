@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\V1\BlueprintController;
+use App\Http\Controllers\Admin\V1\BlueprintEmbedController;
 use App\Http\Controllers\Admin\V1\OptionsController;
+use App\Http\Controllers\Admin\V1\PathController;
 use App\Http\Controllers\Admin\V1\PathReservationController;
 use App\Http\Controllers\Admin\V1\PluginsController;
 use App\Http\Controllers\Admin\V1\SearchAdminController;
@@ -8,6 +11,7 @@ use App\Http\Controllers\Admin\V1\TemplateController;
 use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
+use App\Http\Controllers\Admin\V1\FormConfigController;
 use App\Http\Controllers\Admin\V1\MediaController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
@@ -88,15 +92,36 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::get('/post-types', [PostTypeController::class, 'index'])
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.index');
-    Route::get('/post-types/{slug}', [PostTypeController::class, 'show'])
+    Route::get('/post-types/{id}', [PostTypeController::class, 'show'])
+        ->where('id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.show');
-    Route::put('/post-types/{slug}', [PostTypeController::class, 'update'])
+    Route::put('/post-types/{id}', [PostTypeController::class, 'update'])
+        ->where('id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.update');
-    Route::delete('/post-types/{slug}', [PostTypeController::class, 'destroy'])
+    Route::delete('/post-types/{id}', [PostTypeController::class, 'destroy'])
+        ->where('id', '[0-9]+')
         ->middleware(EnsureCanManagePostTypes::class)
         ->name('admin.v1.post-types.destroy');
+    
+    // Form Configs (для конфигурации формы компонентов)
+    Route::get('/post-types/{post_type_id}/form-config/{blueprint}', [FormConfigController::class, 'show'])
+        ->where('post_type_id', '[0-9]+')
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-config.show');
+    Route::put('/post-types/{post_type_id}/form-config/{blueprint}', [FormConfigController::class, 'update'])
+        ->where('post_type_id', '[0-9]+')
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-config.update');
+    Route::delete('/post-types/{post_type_id}/form-config/{blueprint}', [FormConfigController::class, 'destroy'])
+        ->where('post_type_id', '[0-9]+')
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-config.destroy');
+    Route::get('/post-types/{post_type_id}/form-configs', [FormConfigController::class, 'indexByPostType'])
+        ->where('post_type_id', '[0-9]+')
+        ->middleware(EnsureCanManagePostTypes::class)
+        ->name('admin.v1.post-types.form-configs.index');
     
     // Entries (full CRUD + soft-delete/restore)
     Route::get('/entries/statuses', [EntryController::class, 'statuses'])
@@ -214,5 +239,60 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::post('/search/reindex', [SearchAdminController::class, 'reindex'])
         ->middleware(['can:search.reindex', 'throttle:search-reindex'])
         ->name('admin.v1.search.reindex');
+
+    // Blueprints (full CRUD + dependencies/embeddable)
+    Route::prefix('blueprints')->group(function () {
+        // CRUD Blueprint
+        Route::get('/', [BlueprintController::class, 'index'])
+            ->name('admin.v1.blueprints.index');
+        Route::post('/', [BlueprintController::class, 'store'])
+            ->name('admin.v1.blueprints.store');
+        Route::get('/{blueprint}', [BlueprintController::class, 'show'])
+            ->name('admin.v1.blueprints.show');
+        Route::put('/{blueprint}', [BlueprintController::class, 'update'])
+            ->name('admin.v1.blueprints.update');
+        Route::delete('/{blueprint}', [BlueprintController::class, 'destroy'])
+            ->name('admin.v1.blueprints.destroy');
+
+        // Вспомогательные endpoints
+        Route::get('/{blueprint}/can-delete', [BlueprintController::class, 'canDelete'])
+            ->name('admin.v1.blueprints.can-delete');
+        Route::get('/{blueprint}/dependencies', [BlueprintController::class, 'dependencies'])
+            ->name('admin.v1.blueprints.dependencies');
+        Route::get('/{blueprint}/embeddable', [BlueprintController::class, 'embeddable'])
+            ->name('admin.v1.blueprints.embeddable');
+        Route::get('/{blueprint}/schema', [BlueprintController::class, 'schema'])
+            ->name('admin.v1.blueprints.schema');
+
+        // CRUD Path
+        Route::get('/{blueprint}/paths', [PathController::class, 'index'])
+            ->name('admin.v1.blueprints.paths.index');
+        Route::post('/{blueprint}/paths', [PathController::class, 'store'])
+            ->name('admin.v1.blueprints.paths.store');
+
+        // CRUD BlueprintEmbed
+        Route::get('/{blueprint}/embeds', [BlueprintEmbedController::class, 'index'])
+            ->name('admin.v1.blueprints.embeds.index');
+        Route::post('/{blueprint}/embeds', [BlueprintEmbedController::class, 'store'])
+            ->name('admin.v1.blueprints.embeds.store');
+    });
+
+    // Path (глобальные операции)
+    Route::prefix('paths')->group(function () {
+        Route::get('/{path}', [PathController::class, 'show'])
+            ->name('admin.v1.paths.show');
+        Route::put('/{path}', [PathController::class, 'update'])
+            ->name('admin.v1.paths.update');
+        Route::delete('/{path}', [PathController::class, 'destroy'])
+            ->name('admin.v1.paths.destroy');
+    });
+
+    // BlueprintEmbed (глобальные операции)
+    Route::prefix('embeds')->group(function () {
+        Route::get('/{embed}', [BlueprintEmbedController::class, 'show'])
+            ->name('admin.v1.embeds.show');
+        Route::delete('/{embed}', [BlueprintEmbedController::class, 'destroy'])
+            ->name('admin.v1.embeds.destroy');
+    });
 });
 

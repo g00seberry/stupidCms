@@ -18,7 +18,7 @@ beforeEach(function () {
 });
 
 test('passes for unique slug', function () {
-    $rule = new UniqueEntrySlug('article');
+    $rule = new UniqueEntrySlug();
     
     $validator = Validator::make(
         ['slug' => 'unique-slug'],
@@ -28,14 +28,14 @@ test('passes for unique slug', function () {
     expect($validator->passes())->toBeTrue();
 });
 
-test('fails for duplicate slug in same post type', function () {
+test('fails for duplicate slug globally', function () {
     Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
         'slug' => 'duplicate-slug',
     ]);
 
-    $rule = new UniqueEntrySlug('article');
+    $rule = new UniqueEntrySlug();
     
     $validator = Validator::make(
         ['slug' => 'duplicate-slug'],
@@ -45,7 +45,7 @@ test('fails for duplicate slug in same post type', function () {
     expect($validator->fails())->toBeTrue();
 });
 
-test('passes for duplicate slug in different post type', function () {
+test('fails for duplicate slug in different post type', function () {
     $otherType = PostType::factory()->create(['slug' => 'page']);
     
     Entry::factory()->create([
@@ -54,14 +54,14 @@ test('passes for duplicate slug in different post type', function () {
         'slug' => 'same-slug',
     ]);
 
-    $rule = new UniqueEntrySlug('article');
+    $rule = new UniqueEntrySlug();
     
     $validator = Validator::make(
         ['slug' => 'same-slug'],
         ['slug' => [$rule]]
     );
 
-    expect($validator->passes())->toBeTrue();
+    expect($validator->fails())->toBeTrue();
 });
 
 test('passes for same entry on update', function () {
@@ -71,7 +71,7 @@ test('passes for same entry on update', function () {
         'slug' => 'existing-slug',
     ]);
 
-    $rule = new UniqueEntrySlug('article', $entry->id);
+    $rule = new UniqueEntrySlug($entry->id);
     
     $validator = Validator::make(
         ['slug' => 'existing-slug'],
@@ -90,7 +90,7 @@ test('fails for duplicate slug even if soft-deleted', function () {
     
     $entry->delete(); // Soft delete
 
-    $rule = new UniqueEntrySlug('article');
+    $rule = new UniqueEntrySlug();
     
     $validator = Validator::make(
         ['slug' => 'deleted-slug'],
@@ -101,35 +101,10 @@ test('fails for duplicate slug even if soft-deleted', function () {
 });
 
 test('passes for empty slug', function () {
-    $rule = new UniqueEntrySlug('article');
+    $rule = new UniqueEntrySlug();
     
     $validator = Validator::make(
         ['slug' => ''],
-        ['slug' => [$rule]]
-    );
-
-    expect($validator->passes())->toBeTrue();
-});
-
-test('fails if post type does not exist', function () {
-    $rule = new UniqueEntrySlug('non-existent-type');
-    
-    $validator = Validator::make(
-        ['slug' => 'test-slug'],
-        ['slug' => [$rule]]
-    );
-
-    expect($validator->fails())->toBeTrue()
-        ->and($validator->errors()->first('slug'))->toContain('post type does not exist');
-});
-
-test('works with numeric post type slug', function () {
-    $numericType = PostType::factory()->create(['slug' => '2024']);
-    
-    $rule = new UniqueEntrySlug('2024');
-    
-    $validator = Validator::make(
-        ['slug' => 'test-slug'],
         ['slug' => [$rule]]
     );
 

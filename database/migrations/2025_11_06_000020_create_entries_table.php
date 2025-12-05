@@ -29,27 +29,24 @@ return new class extends Migration {
         if (DB::getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE `entries` ADD `is_active` TINYINT(1) AS (CASE WHEN `deleted_at` IS NULL THEN 1 ELSE 0 END) STORED");
 
-            // Unique across post_type, slug for active rows
+            // Global unique constraint: slug must be unique across all entries (for active rows only)
             Schema::table('entries', function (Blueprint $table) {
-                $table->unique(['post_type_id','slug','is_active'], 'entries_unique_active_slug');
+                $table->unique(['slug','is_active'], 'entries_unique_active_slug');
             });
 
-            // Trigger to enforce global uniqueness of slugs for pages (post_type.slug = 'page') and check reserved routes
+            // Trigger to enforce global uniqueness of slugs and check reserved routes
             DB::unprepared(<<<'SQL'
-            CREATE TRIGGER trg_entries_pages_slug_unique_before_ins
+            CREATE TRIGGER trg_entries_slug_unique_before_ins
             BEFORE INSERT ON entries FOR EACH ROW
             BEGIN
-                DECLARE page_pt_id BIGINT;
-                SELECT id INTO page_pt_id FROM post_types WHERE slug = 'page' LIMIT 1;
-
-                IF page_pt_id IS NOT NULL AND NEW.post_type_id = page_pt_id AND NEW.deleted_at IS NULL THEN
+                -- Global uniqueness: check if slug already exists for active (non-deleted) entries
+                IF NEW.deleted_at IS NULL THEN
                     IF EXISTS (
                         SELECT 1 FROM entries e
-                        WHERE e.post_type_id = page_pt_id
-                          AND e.slug = NEW.slug
+                        WHERE e.slug = NEW.slug
                           AND e.deleted_at IS NULL
                     ) THEN
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Duplicate page slug (entries.slug) for active page';
+                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Duplicate slug: slug must be globally unique for active entries';
                     END IF;
                 END IF;
 
@@ -65,23 +62,20 @@ return new class extends Migration {
             SQL);
 
             DB::unprepared(<<<'SQL'
-            CREATE TRIGGER trg_entries_pages_slug_unique_before_upd
+            CREATE TRIGGER trg_entries_slug_unique_before_upd
             BEFORE UPDATE ON entries FOR EACH ROW
             BEGIN
-                DECLARE page_pt_id BIGINT;
-                -- Only act when slug or deleted_at or post_type_id changed
-                IF (NEW.slug <> OLD.slug) OR (NEW.deleted_at <> OLD.deleted_at) OR (NEW.post_type_id <> OLD.post_type_id) THEN
-                    SELECT id INTO page_pt_id FROM post_types WHERE slug = 'page' LIMIT 1;
-
-                    IF page_pt_id IS NOT NULL AND NEW.post_type_id = page_pt_id AND NEW.deleted_at IS NULL THEN
+                -- Only act when slug or deleted_at changed
+                IF (NEW.slug <> OLD.slug) OR (NEW.deleted_at <> OLD.deleted_at) THEN
+                    -- Global uniqueness: check if slug already exists for active (non-deleted) entries
+                    IF NEW.deleted_at IS NULL THEN
                         IF EXISTS (
                             SELECT 1 FROM entries e
-                            WHERE e.post_type_id = page_pt_id
-                              AND e.slug = NEW.slug
+                            WHERE e.slug = NEW.slug
                               AND e.deleted_at IS NULL
                               AND e.id <> OLD.id
                         ) THEN
-                            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Duplicate page slug (entries.slug) for active page';
+                            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Duplicate slug: slug must be globally unique for active entries';
                         END IF;
                     END IF;
 
@@ -97,9 +91,9 @@ return new class extends Migration {
             END
             SQL);
         } else {
-            // For SQLite, add a simple unique index (without is_active)
+            // For SQLite, add a simple unique index (global uniqueness)
             Schema::table('entries', function (Blueprint $table) {
-                $table->unique(['post_type_id','slug'], 'entries_unique_slug');
+                $table->unique(['slug'], 'entries_unique_slug');
             });
         }
     }
@@ -107,8 +101,8 @@ return new class extends Migration {
     public function down(): void
     {
         if (DB::getDriverName() !== 'sqlite') {
-            DB::unprepared('DROP TRIGGER IF EXISTS trg_entries_pages_slug_unique_before_ins');
-            DB::unprepared('DROP TRIGGER IF EXISTS trg_entries_pages_slug_unique_before_upd');
+            DB::unprepared('DROP TRIGGER IF EXISTS trg_entries_slug_unique_before_ins');
+            DB::unprepared('DROP TRIGGER IF EXISTS trg_entries_slug_unique_before_upd');
         }
         Schema::dropIfExists('entries');
     }

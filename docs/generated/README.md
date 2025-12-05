@@ -2,54 +2,54 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 174
+**Всего сущностей:** 234
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (17 сущностей)
+Eloquent-модели для работы с БД (23 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (65 сущностей)
+Доменные сервисы, действия, репозитории (96 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
 
 ### [Config Areas](./config-areas.md)
-Логические секции конфигурации (23 сущностей)
+Логические секции конфигурации (24 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (61 сущностей)
+HTTP эндпоинты API (83 сущностей)
 
 ## Быстрая навигация
 
 ### Models
 
 - [Audit](./models.md#audit) - Eloquent модель для аудита изменений (Audit).
+- [Blueprint](./models.md#blueprint) - Шаблон структуры данных для Entry.
+- [BlueprintEmbed](./models.md#blueprintembed) - Связь встраивания blueprint'а.
+- [DocRef](./models.md#docref) - Индексированная ссылка на другой Entry.
+- [DocValue](./models.md#docvalue) - Индексированное скалярное значение из Entry.data_json.
 - [Entry](./models.md#entry) - Eloquent модель для записей контента (Entry).
+- [FormConfig](./models.md#formconfig) - Eloquent модель для конфигурации формы компонентов (FormConfig).
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 - [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
-- [MediaVariant](./models.md#mediavariant) - Eloquent модель для вариантов медиа-файлов (MediaVariant).
-- [Option](./models.md#option) - Eloquent модель для опций системы (Option).
-- [Outbox](./models.md#outbox) - Eloquent модель для исходящих сообщений (Outbox).
-- [Plugin](./models.md#plugin) - Eloquent модель для плагинов (Plugin).
-- [PostType](./models.md#posttype) - Eloquent модель для типов записей (PostType).
-- *...и еще 7 сущностей*
+- *...и еще 13 сущностей*
 
 ### Domain Services
 
 - [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
+- [ConditionalRule](./domain-services.md#conditionalrule) - Доменное правило валидации: условное правило.
+- [ConditionalRuleHandler](./domain-services.md#conditionalrulehandler) - Обработчик правила ConditionalRule.
 - [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
+- [DataTypeMapper](./domain-services.md#datatypemapper) - Маппер типов данных Path в типы для валидации.
+- [DistinctRule](./domain-services.md#distinctrule) - Правило валидации: уникальность элементов массива.
+- [DistinctRuleHandler](./domain-services.md#distinctrulehandler) - Обработчик правила DistinctRule.
 - [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
-- [ExifManager](./domain-services.md#exifmanager) - Менеджер для управления EXIF данными изображений.
-- [ExiftoolMediaMetadataPlugin](./domain-services.md#exiftoolmediametadataplugin) - Плагин метаданных, основанный на утилите exiftool.
-- [FfprobeMediaMetadataPlugin](./domain-services.md#ffprobemediametadataplugin) - Плагин метаданных, основанный на утилите ffprobe.
-- [GdImageProcessor](./domain-services.md#gdimageprocessor) - Реализация ImageProcessor на базе GD.
-- [GenerateVariantJob](./domain-services.md#generatevariantjob) - Job для генерации варианта медиа-файла.
-- *...и еще 55 сущностей*
+- *...и еще 86 сущностей*
 
 ### Blade Views
 
@@ -66,6 +66,7 @@ HTTP эндпоинты API (61 сущностей)
 
 - [App](./config-areas.md#app) - Configuration: App
 - [Auth](./config-areas.md#auth) - Configuration: Auth
+- [Blueprint](./config-areas.md#blueprint) - Configuration: Blueprint
 - [Cache](./config-areas.md#cache) - Configuration: Cache
 - [Cors](./config-areas.md#cors) - Configuration: Cors
 - [Database](./config-areas.md#database) - Configuration: Database
@@ -73,22 +74,21 @@ HTTP эндпоинты API (61 сущностей)
 - [Errors](./config-areas.md#errors) - Configuration: Errors
 - [Filesystems](./config-areas.md#filesystems) - Configuration: Filesystems
 - [Jwt](./config-areas.md#jwt) - Configuration: Jwt
-- [Logging](./config-areas.md#logging) - Configuration: Logging
-- *...и еще 13 сущностей*
+- *...и еще 14 сущностей*
 
 ### HTTP Endpoints
 
 - [admin.v1.auth.current](./http-endpoints.md#admin-v1-auth-current) - GET /api/v1/admin/auth/current (api)
-- [admin.v1.entries.destroy](./http-endpoints.md#admin-v1-entries-destroy) - DELETE /api/v1/admin/entries/{id} (api)
-- [admin.v1.entries.index](./http-endpoints.md#admin-v1-entries-index) - GET /api/v1/admin/entries (api)
-- [admin.v1.entries.restore](./http-endpoints.md#admin-v1-entries-restore) - POST /api/v1/admin/entries/{id}/restore (api)
-- [admin.v1.entries.show](./http-endpoints.md#admin-v1-entries-show) - GET /api/v1/admin/entries/{id} (api)
-- [admin.v1.entries.statuses](./http-endpoints.md#admin-v1-entries-statuses) - GET /api/v1/admin/entries/statuses (api)
-- [admin.v1.entries.store](./http-endpoints.md#admin-v1-entries-store) - POST /api/v1/admin/entries (api)
-- [admin.v1.entries.terms.index](./http-endpoints.md#admin-v1-entries-terms-index) - GET /api/v1/admin/entries/{entry}/terms (api)
-- [admin.v1.entries.terms.sync](./http-endpoints.md#admin-v1-entries-terms-sync) - PUT /api/v1/admin/entries/{entry}/terms/sync (api)
-- [admin.v1.entries.update](./http-endpoints.md#admin-v1-entries-update) - PUT /api/v1/admin/entries/{id} (api)
-- *...и еще 51 сущностей*
+- [admin.v1.blueprints.can-delete](./http-endpoints.md#admin-v1-blueprints-can-delete) - GET /api/v1/admin/blueprints/{blueprint}/can-delete (api)
+- [admin.v1.blueprints.dependencies](./http-endpoints.md#admin-v1-blueprints-dependencies) - GET /api/v1/admin/blueprints/{blueprint}/dependencies (api)
+- [admin.v1.blueprints.destroy](./http-endpoints.md#admin-v1-blueprints-destroy) - DELETE /api/v1/admin/blueprints/{blueprint} (api)
+- [admin.v1.blueprints.embeddable](./http-endpoints.md#admin-v1-blueprints-embeddable) - GET /api/v1/admin/blueprints/{blueprint}/embeddable (api)
+- [admin.v1.blueprints.embeds.index](./http-endpoints.md#admin-v1-blueprints-embeds-index) - GET /api/v1/admin/blueprints/{blueprint}/embeds (api)
+- [admin.v1.blueprints.embeds.store](./http-endpoints.md#admin-v1-blueprints-embeds-store) - POST /api/v1/admin/blueprints/{blueprint}/embeds (api)
+- [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
+- [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
+- [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
+- *...и еще 73 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (61 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-11-19 14:10:49
+**Сгенерировано:** 2025-12-05 10:51:44
 
 Для обновления документации выполните:
 ```bash

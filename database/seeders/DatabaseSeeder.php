@@ -15,7 +15,9 @@ use Illuminate\Database\Seeder;
  * 1. AdminUserSeeder - создает административного пользователя
  * 2. PostTypesTaxonomiesSeeder - создает типы постов и таксономии
  * 3. TermsSeeder - создает термы для всех таксономий
- * 4. EntriesSeeder - создает примеры записей контента
+ * 4. BlueprintsSeeder - создает примеры Blueprint с различной сложностью
+ * 5. EntriesSeeder - создает примеры записей контента (без blueprint)
+ * 6. BlueprintEntriesSeeder - создает примеры записей с использованием Blueprint
  */
 class DatabaseSeeder extends Seeder
 {
@@ -32,7 +34,9 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             PostTypesTaxonomiesSeeder::class,
             TermsSeeder::class,
+            BlueprintsSeeder::class,
             EntriesSeeder::class,
+            BlueprintEntriesSeeder::class,
         ]);
 
         // User::factory(10)->create();

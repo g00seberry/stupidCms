@@ -20,6 +20,20 @@ use App\Domain\Media\Validation\MediaValidationPipeline;
 use App\Domain\Media\Validation\MediaValidatorInterface;
 use App\Domain\Media\Validation\MimeSignatureValidator;
 use App\Domain\Media\Validation\SizeLimitValidator;
+use App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface;
+use App\Domain\Blueprint\Validation\EntryValidationServiceInterface;
+use App\Domain\Blueprint\Validation\PathValidationRulesConverter;
+use App\Domain\Blueprint\Validation\PathValidationRulesConverterInterface;
+use App\Domain\Blueprint\Validation\Rules\Handlers\DistinctRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\ConditionalRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\FieldComparisonRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\MaxRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\MinRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\NullableRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\PatternRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\RequiredRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\TypeRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
@@ -39,6 +53,8 @@ use App\Domain\Media\Events\MediaUploaded;
 use App\Domain\Media\Listeners\LogMediaEvent;
 use App\Domain\Media\Listeners\NotifyMediaEvent;
 use App\Domain\Media\Listeners\PurgeCdnCache;
+use App\Events\Blueprint\BlueprintStructureChanged;
+use App\Listeners\Blueprint\RematerializeEmbeds;
 use App\Domain\Media\MediaRepository;
 use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
@@ -46,6 +62,16 @@ use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Observers\EntryObserver;
+use App\Services\Blueprint\BlueprintDependencyGraphLoader;
+use App\Services\Blueprint\BlueprintDependencyGraphLoaderInterface;
+use App\Services\Blueprint\BlueprintStructureService;
+use App\Services\Blueprint\CyclicDependencyValidator;
+use App\Services\Blueprint\DependencyGraphService;
+use App\Services\Blueprint\MaterializationService;
+use App\Services\Blueprint\PathConflictValidator;
+use App\Services\Blueprint\PathMaterializer;
+use App\Services\Blueprint\PathMaterializerInterface;
+use App\Services\Entry\EntryIndexer;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorKernel;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
@@ -195,6 +221,77 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RouteReloader::class, PluginsRouteReloader::class);
         $this->app->bind(PluginsSynchronizerInterface::class, PluginsSynchronizer::class);
         $this->app->bind(PluginActivatorInterface::class, PluginActivator::class);
+
+        // Blueprint services
+        $this->app->singleton(DependencyGraphService::class);
+        $this->app->singleton(CyclicDependencyValidator::class);
+        $this->app->singleton(PathConflictValidator::class);
+
+        // Blueprint materialization services
+        $this->app->bind(BlueprintDependencyGraphLoaderInterface::class, BlueprintDependencyGraphLoader::class);
+        $this->app->bind(PathMaterializerInterface::class, function ($app) {
+            $batchInsertSize = (int) config('blueprint.batch_insert_size', 500);
+            return new PathMaterializer($batchInsertSize);
+        });
+
+        $this->app->singleton(MaterializationService::class, function ($app) {
+            $maxEmbedDepth = (int) config('blueprint.max_embed_depth', 5);
+            return new MaterializationService(
+                $app->make(PathConflictValidator::class),
+                $app->make(BlueprintDependencyGraphLoaderInterface::class),
+                $app->make(PathMaterializerInterface::class),
+                $maxEmbedDepth
+            );
+        });
+
+        $this->app->singleton(BlueprintStructureService::class);
+        
+        // Rule factory
+        $this->app->bind(
+            \App\Domain\Blueprint\Validation\Rules\RuleFactory::class,
+            \App\Domain\Blueprint\Validation\Rules\RuleFactoryImpl::class
+        );
+        
+        // Path validation rules converter
+        $this->app->bind(
+            PathValidationRulesConverterInterface::class,
+            PathValidationRulesConverter::class
+        );
+        
+        // Entry validation service
+        $this->app->singleton(
+            \App\Domain\Blueprint\Validation\EntryValidationServiceInterface::class,
+            \App\Domain\Blueprint\Validation\EntryValidationService::class
+        );
+        
+        // Laravel validation adapter с registry handlers
+        $this->app->singleton(RuleHandlerRegistry::class, function () {
+            $registry = new RuleHandlerRegistry();
+
+            // Регистрируем все handlers
+            $registry->register('required', new RequiredRuleHandler());
+            $registry->register('nullable', new NullableRuleHandler());
+            $registry->register('min', new MinRuleHandler());
+            $registry->register('max', new MaxRuleHandler());
+            $registry->register('pattern', new PatternRuleHandler());
+            $registry->register('distinct', new DistinctRuleHandler());
+            $registry->register('required_if', new ConditionalRuleHandler());
+            $registry->register('prohibited_unless', new ConditionalRuleHandler());
+            $registry->register('required_unless', new ConditionalRuleHandler());
+            $registry->register('prohibited_if', new ConditionalRuleHandler());
+            $registry->register('field_comparison', new FieldComparisonRuleHandler());
+            $registry->register('type', new TypeRuleHandler());
+
+            return $registry;
+        });
+
+        $this->app->singleton(
+            \App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapterInterface::class,
+            \App\Domain\Blueprint\Validation\Adapters\LaravelValidationAdapter::class
+        );
+
+        // Entry indexing service
+        $this->app->singleton(EntryIndexer::class);
     }
 
     /**
@@ -224,6 +321,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(MediaDeleted::class, [LogMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [NotifyMediaEvent::class, 'handleMediaDeleted']);
         Event::listen(MediaDeleted::class, [PurgeCdnCache::class, 'handleMediaDeleted']);
+
+        // Регистрация слушателей событий blueprint
+        Event::listen(BlueprintStructureChanged::class, RematerializeEmbeds::class);
 
         // Валидация конфигурации медиа-файлов
         (new MediaConfigValidator())->validate();
