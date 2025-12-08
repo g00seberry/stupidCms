@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RefreshController;
 use App\Http\Controllers\MediaPreviewController;
-use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -39,10 +38,6 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/logout', [LogoutController::class, 'logout'])
         ->name('api.auth.logout')
         ->middleware(['jwt.auth', 'throttle:login', 'no-cache-auth']);
-
-    Route::get('/search', [SearchController::class, 'index'])
-        ->middleware('throttle:search-public')
-        ->name('api.v1.search');
 
     // Public media access with signed URLs (supports variants via ?variant=thumbnail)
     // Optional JWT auth allows admins to access deleted files even on public routes

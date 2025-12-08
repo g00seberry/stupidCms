@@ -23,8 +23,6 @@ return Application::configure(basePath: dirname(__DIR__))
         App\Console\Commands\RoutesReleaseCommand::class,
         App\Console\Commands\RoutesReserveCommand::class,
         App\Console\Commands\UserMakeAdminCommand::class,
-        App\Domain\Plugins\Commands\PluginsSyncCommand::class,
-        App\Domain\Search\Commands\SearchReindexCommand::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         // Encrypt cookies (except JWT tokens and CSRF token)

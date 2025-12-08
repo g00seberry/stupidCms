@@ -518,30 +518,6 @@
             ]
         },
         {
-            "id": "model:App\\Models\\Plugin",
-            "type": "model",
-            "name": "Plugin",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Plugin.php",
-            "summary": "Eloquent модель для плагинов (Plugin).",
-            "details": "Представляет плагины системы с информацией о состоянии, метаданных и синхронизации.\nИспользует ULID в качестве первичного ключа.",
-            "meta": {
-                "table": "plugins",
-                "fillable": [],
-                "guarded": [],
-                "casts": {
-                    "enabled": "boolean",
-                    "meta_json": "array",
-                    "last_synced_at": "immutable_datetime"
-                },
-                "relations": [],
-                "factory": null
-            },
-            "related": [],
-            "tags": [
-                "plugin"
-            ]
-        },
-        {
             "id": "model:App\\Models\\PostType",
             "type": "model",
             "name": "PostType",
@@ -551,8 +527,8 @@
             "meta": {
                 "table": "post_types",
                 "fillable": [
-                    "slug",
                     "name",
+                    "template",
                     "options_json",
                     "blueprint_id"
                 ],
@@ -2375,236 +2351,6 @@
             ]
         },
         {
-            "id": "domain_service:Plugins/Commands/PluginsSyncCommand",
-            "type": "domain_service",
-            "name": "PluginsSyncCommand",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Commands\\PluginsSyncCommand.php",
-            "summary": "Команда для синхронизации плагинов из файловой системы в БД.",
-            "details": null,
-            "meta": {
-                "methods": [
-                    "handle"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
-                ],
-                "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "command"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Events/PluginDisabled",
-            "type": "domain_service",
-            "name": "PluginDisabled",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginDisabled.php",
-            "summary": "Событие: плагин отключён.",
-            "details": "Отправляется после успешного отключения плагина в БД.",
-            "meta": {
-                "methods": [
-                    "dispatch",
-                    "dispatchIf",
-                    "dispatchUnless",
-                    "broadcast",
-                    "restoreModel"
-                ],
-                "dependencies": [
-                    "App\\Models\\Plugin"
-                ],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "event"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Events/PluginEnabled",
-            "type": "domain_service",
-            "name": "PluginEnabled",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginEnabled.php",
-            "summary": "Событие: плагин включён.",
-            "details": "Отправляется после успешного включения плагина в БД.",
-            "meta": {
-                "methods": [
-                    "dispatch",
-                    "dispatchIf",
-                    "dispatchUnless",
-                    "broadcast",
-                    "restoreModel"
-                ],
-                "dependencies": [
-                    "App\\Models\\Plugin"
-                ],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "event"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
-            "type": "domain_service",
-            "name": "PluginsRoutesReloaded",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsRoutesReloaded.php",
-            "summary": "Событие: маршруты плагинов перезагружены.",
-            "details": "Отправляется после успешной перезагрузки маршрутов плагинов.",
-            "meta": {
-                "methods": [
-                    "dispatch",
-                    "dispatchIf",
-                    "dispatchUnless",
-                    "broadcast",
-                    "restoreModel"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "event"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Events/PluginsSynced",
-            "type": "domain_service",
-            "name": "PluginsSynced",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsSynced.php",
-            "summary": "Событие: плагины синхронизированы.",
-            "details": "Отправляется после успешной синхронизации плагинов из файловой системы в БД.",
-            "meta": {
-                "methods": [
-                    "dispatch",
-                    "dispatchIf",
-                    "dispatchUnless",
-                    "broadcast",
-                    "restoreModel"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "event"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/PluginActivator",
-            "type": "domain_service",
-            "name": "PluginActivator",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginActivator.php",
-            "summary": "Активатор плагинов.",
-            "details": "Управляет включением и отключением плагинов с транзакционной безопасностью\nи автоматической перезагрузкой маршрутов.",
-            "meta": {
-                "methods": [
-                    "enable",
-                    "disable"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Plugins\\Contracts\\RouteReloader"
-                ],
-                "interface": "App\\Domain\\Plugins\\Contracts\\PluginActivatorInterface"
-            },
-            "related": [],
-            "tags": [
-                "plugin"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/PluginRegistry",
-            "type": "domain_service",
-            "name": "PluginRegistry",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginRegistry.php",
-            "summary": "Реестр плагинов.",
-            "details": "Управляет списком включённых плагинов и их провайдерами.",
-            "meta": {
-                "methods": [
-                    "enabled",
-                    "enabledProviders"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "plugin"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Services/PluginAutoloader",
-            "type": "domain_service",
-            "name": "PluginAutoloader",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginAutoloader.php",
-            "summary": "Автозагрузчик классов плагинов.",
-            "details": "Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.",
-            "meta": {
-                "methods": [
-                    "register"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "service"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Services/PluginsRouteReloader",
-            "type": "domain_service",
-            "name": "PluginsRouteReloader",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsRouteReloader.php",
-            "summary": "Перезагрузчик маршрутов плагинов.",
-            "details": "Очищает кэш маршрутов, регистрирует автозагрузку, регистрирует провайдеры\nвключённых плагинов и кэширует маршруты (если включено).",
-            "meta": {
-                "methods": [
-                    "reload"
-                ],
-                "dependencies": [
-                    "Illuminate\\Contracts\\Foundation\\Application",
-                    "App\\Domain\\Plugins\\PluginRegistry",
-                    "App\\Domain\\Plugins\\Services\\PluginAutoloader"
-                ],
-                "interface": "App\\Domain\\Plugins\\Contracts\\RouteReloader"
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "service"
-            ]
-        },
-        {
-            "id": "domain_service:Plugins/Services/PluginsSynchronizer",
-            "type": "domain_service",
-            "name": "PluginsSynchronizer",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsSynchronizer.php",
-            "summary": "Синхронизатор плагинов.",
-            "details": "Синхронизирует плагины из файловой системы в БД:\nобнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.",
-            "meta": {
-                "methods": [
-                    "sync"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Plugins\\Contracts\\RouteReloader"
-                ],
-                "interface": "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
-            },
-            "related": [],
-            "tags": [
-                "plugin",
-                "service"
-            ]
-        },
-        {
             "id": "domain_service:PostTypes/PostTypeOptions",
             "type": "domain_service",
             "name": "PostTypeOptions",
@@ -2764,304 +2510,19 @@
             ]
         },
         {
-            "id": "domain_service:Search/Clients/ElasticsearchSearchClient",
-            "type": "domain_service",
-            "name": "ElasticsearchSearchClient",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\ElasticsearchSearchClient.php",
-            "summary": "Реализация SearchClientInterface для Elasticsearch.",
-            "details": "Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.\nПоддерживает базовую аутентификацию и настройку SSL.",
-            "meta": {
-                "methods": [
-                    "search",
-                    "createIndex",
-                    "deleteIndex",
-                    "updateAliases",
-                    "getIndicesForAlias",
-                    "bulk",
-                    "refresh"
-                ],
-                "dependencies": [
-                    "Illuminate\\Http\\Client\\Factory"
-                ],
-                "interface": "App\\Domain\\Search\\SearchClientInterface"
-            },
-            "related": [],
-            "tags": [
-                "search",
-                "client"
-            ]
-        },
-        {
-            "id": "domain_service:Search/Clients/NullSearchClient",
-            "type": "domain_service",
-            "name": "NullSearchClient",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\NullSearchClient.php",
-            "summary": "Null-реализация SearchClientInterface.",
-            "details": "Используется когда поиск отключен. Все методы возвращают пустые результаты\nили выполняют no-op операции.",
-            "meta": {
-                "methods": [
-                    "search",
-                    "createIndex",
-                    "deleteIndex",
-                    "updateAliases",
-                    "getIndicesForAlias",
-                    "bulk",
-                    "refresh"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Search\\SearchClientInterface"
-            },
-            "related": [],
-            "tags": [
-                "search",
-                "client"
-            ]
-        },
-        {
-            "id": "domain_service:Search/Commands/SearchReindexCommand",
-            "type": "domain_service",
-            "name": "SearchReindexCommand",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Commands\\SearchReindexCommand.php",
-            "summary": "Команда для реиндексации поискового индекса.",
-            "details": null,
-            "meta": {
-                "methods": [
-                    "handle"
-                ],
-                "dependencies": [],
-                "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
-            },
-            "related": [],
-            "tags": [
-                "search",
-                "command"
-            ]
-        },
-        {
-            "id": "domain_service:Search/IndexManager",
-            "type": "domain_service",
-            "name": "IndexManager",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\IndexManager.php",
-            "summary": "Менеджер для управления индексами поиска.",
-            "details": "Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,\nпереключает алиасы и удаляет старые индексы.",
-            "meta": {
-                "methods": [
-                    "reindex"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Search\\SearchClientInterface",
-                    "App\\Domain\\Search\\Transformers\\EntryToSearchDoc"
-                ],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "search"
-            ]
-        },
-        {
-            "id": "domain_service:Search/Jobs/ReindexSearchJob",
-            "type": "domain_service",
-            "name": "ReindexSearchJob",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Jobs\\ReindexSearchJob.php",
-            "summary": "Job для реиндексации поискового индекса в фоновом режиме.",
-            "details": "Выполняет полную реиндексацию всех опубликованных записей через очередь.",
-            "meta": {
-                "methods": [
-                    "handle",
-                    "dispatch",
-                    "dispatchIf",
-                    "dispatchUnless",
-                    "dispatchSync",
-                    "dispatchAfterResponse",
-                    "withChain",
-                    "attempts",
-                    "delete",
-                    "fail",
-                    "release",
-                    "withFakeQueueInteractions",
-                    "assertDeleted",
-                    "assertNotDeleted",
-                    "assertFailed",
-                    "assertFailedWith",
-                    "assertNotFailed",
-                    "assertReleased",
-                    "assertNotReleased",
-                    "setJob",
-                    "onConnection",
-                    "onQueue",
-                    "onGroup",
-                    "withDeduplicator",
-                    "allOnConnection",
-                    "allOnQueue",
-                    "delay",
-                    "withoutDelay",
-                    "afterCommit",
-                    "beforeCommit",
-                    "through",
-                    "chain",
-                    "prependToChain",
-                    "appendToChain",
-                    "dispatchNextJobInChain",
-                    "invokeChainCatchCallbacks",
-                    "assertHasChain",
-                    "assertDoesntHaveChain",
-                    "restoreModel"
-                ],
-                "dependencies": [],
-                "interface": "Illuminate\\Contracts\\Queue\\ShouldQueue"
-            },
-            "related": [],
-            "tags": [
-                "search",
-                "job"
-            ]
-        },
-        {
-            "id": "domain_service:Search/SearchHit",
-            "type": "domain_service",
-            "name": "SearchHit",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchHit.php",
-            "summary": "Результат поиска (одна найденная запись).",
-            "details": "Представляет одну найденную запись с информацией о релевантности\nи подсветкой совпадений в тексте.",
-            "meta": {
-                "methods": [],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "search"
-            ]
-        },
-        {
-            "id": "domain_service:Search/SearchQuery",
-            "type": "domain_service",
-            "name": "SearchQuery",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchQuery.php",
-            "summary": "Value Object для поискового запроса.",
-            "details": "Инкапсулирует параметры поиска: текст запроса, фильтры по типам записей,\nтермам, датам, пагинацию.",
-            "meta": {
-                "methods": [
-                    "query",
-                    "postTypes",
-                    "terms",
-                    "from",
-                    "to",
-                    "page",
-                    "perPage",
-                    "offset",
-                    "isBlank"
-                ],
-                "dependencies": [
-                    "Carbon\\CarbonImmutable",
-                    "Carbon\\CarbonImmutable"
-                ],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "search"
-            ]
-        },
-        {
-            "id": "domain_service:Search/SearchResult",
-            "type": "domain_service",
-            "name": "SearchResult",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchResult.php",
-            "summary": "Результаты поискового запроса.",
-            "details": "Инкапсулирует результаты поиска: список найденных записей, общее количество,\nинформацию о пагинации и время выполнения запроса.",
-            "meta": {
-                "methods": [
-                    "hits",
-                    "total",
-                    "page",
-                    "perPage",
-                    "tookMs",
-                    "empty"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "search"
-            ]
-        },
-        {
-            "id": "domain_service:Search/SearchService",
-            "type": "domain_service",
-            "name": "SearchService",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchService.php",
-            "summary": "Сервис для выполнения поисковых запросов.",
-            "details": "Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).\nСтроит запросы, обрабатывает ошибки, маппит результаты.",
-            "meta": {
-                "methods": [
-                    "search"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Search\\SearchClientInterface",
-                    "App\\Support\\Errors\\ErrorFactory"
-                ],
-                "interface": "App\\Domain\\Search\\Contracts\\SearchServiceInterface"
-            },
-            "related": [],
-            "tags": [
-                "search"
-            ]
-        },
-        {
-            "id": "domain_service:Search/Transformers/EntryToSearchDoc",
-            "type": "domain_service",
-            "name": "EntryToSearchDoc",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Transformers\\EntryToSearchDoc.php",
-            "summary": "Трансформер Entry в документ для поискового индекса.",
-            "details": "Преобразует Entry в структуру документа для Elasticsearch:\nизвлекает текст из data_json, нормализует пробелы, формирует excerpt.",
-            "meta": {
-                "methods": [
-                    "transform"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "search",
-                "transformer"
-            ]
-        },
-        {
-            "id": "domain_service:Search/ValueObjects/SearchTermFilter",
-            "type": "domain_service",
-            "name": "SearchTermFilter",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
-            "summary": "Value Object для фильтра поиска по терму.",
-            "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:term_id\".",
-            "meta": {
-                "methods": [
-                    "fromString"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "search",
-                "valueobject"
-            ]
-        },
-        {
             "id": "domain_service:View/BladeTemplateResolver",
             "type": "domain_service",
             "name": "BladeTemplateResolver",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\View\\BladeTemplateResolver.php",
-            "summary": "Резолвер для выбора Blade-шаблона по файловой конвенции.",
-            "details": "Приоритет:\n1. Entry.template_override (если задано — используется как полное имя вью)\n2. entry--{postType}--{slug} (если существует)\n3. entry--{postType} (если существует)\n4. entry (глобальный)",
+            "summary": "Резолвер для выбора Blade-шаблона на основе полей template.",
+            "details": "Приоритет выбора шаблона:\n1. Entry.template_override (если задано — используется как полное имя вью)\n2. PostType.template (если задано)\n3. templates.index (дефолтный шаблон)\nВсе шаблоны должны находиться в папке templates или дочерних папках.",
             "meta": {
                 "methods": [
                     "forEntry"
                 ],
-                "dependencies": [],
+                "dependencies": [
+                    "App\\Domain\\View\\TemplatePathValidator"
+                ],
                 "interface": "App\\Domain\\View\\TemplateResolver"
             },
             "related": [],
@@ -3070,26 +2531,24 @@
             ]
         },
         {
-            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/entry.blade.php",
-            "type": "blade_view",
-            "name": "entry",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\entry.blade.php",
-            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\entry.blade.php",
-            "details": null,
+            "id": "domain_service:View/TemplatePathValidator",
+            "type": "domain_service",
+            "name": "TemplatePathValidator",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\View\\TemplatePathValidator.php",
+            "summary": "Валидатор путей шаблонов.",
+            "details": "Проверяет, что шаблон находится в папке templates или дочерних папках.\nВсе остальные директории считаются системными и недоступны для шаблонов.",
             "meta": {
-                "role": "page",
-                "variables": [
-                    "entry",
-                    "html",
-                    "content",
-                    "bodyHtml"
+                "methods": [
+                    "validate",
+                    "normalize",
+                    "ensurePrefix"
                 ],
-                "extends": "layouts.app",
-                "includes": []
+                "dependencies": [],
+                "interface": null
             },
             "related": [],
             "tags": [
-                "page"
+                "view"
             ]
         },
         {
@@ -3218,6 +2677,29 @@
                 "role": "page",
                 "variables": [],
                 "extends": null,
+                "includes": []
+            },
+            "related": [],
+            "tags": [
+                "page"
+            ]
+        },
+        {
+            "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/templates/index.blade.php",
+            "type": "blade_view",
+            "name": "index",
+            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\templates\\index.blade.php",
+            "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\templates\\index.blade.php",
+            "details": null,
+            "meta": {
+                "role": "page",
+                "variables": [
+                    "entry",
+                    "html",
+                    "content",
+                    "bodyHtml"
+                ],
+                "extends": "layouts.app",
                 "includes": []
             },
             "related": [],
@@ -3866,29 +3348,6 @@
             ]
         },
         {
-            "id": "config_area:plugins",
-            "type": "config_area",
-            "name": "Plugins",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/plugins.php",
-            "summary": "Configuration: Plugins",
-            "details": null,
-            "meta": {
-                "keys": [
-                    "path",
-                    "manifest",
-                    "auto_route_cache"
-                ],
-                "sections": [
-                    "manifest"
-                ]
-            },
-            "related": [],
-            "tags": [
-                "config",
-                "plugins"
-            ]
-        },
-        {
             "id": "config_area:purifier",
             "type": "config_area",
             "name": "Purifier",
@@ -4101,94 +3560,6 @@
             "tags": [
                 "config",
                 "scribe"
-            ]
-        },
-        {
-            "id": "config_area:search",
-            "type": "config_area",
-            "name": "Search",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/search.php",
-            "summary": "Configuration: Search",
-            "details": null,
-            "meta": {
-                "keys": [
-                    "enabled",
-                    "client",
-                    "hosts",
-                    "username",
-                    "password",
-                    "verify_ssl",
-                    "timeout",
-                    "indexes",
-                    "entries",
-                    "read_alias",
-                    "write_alias",
-                    "name_prefix",
-                    "settings",
-                    "number_of_shards",
-                    "number_of_replicas",
-                    "analysis",
-                    "filter",
-                    "ru_stop",
-                    "type",
-                    "stopwords",
-                    "ru_stemmer",
-                    "language",
-                    "en_stemmer",
-                    "analyzer",
-                    "ru_en",
-                    "tokenizer",
-                    "mappings",
-                    "dynamic",
-                    "properties",
-                    "id",
-                    "post_type",
-                    "slug",
-                    "title",
-                    "excerpt",
-                    "body_plain",
-                    "terms",
-                    "taxonomy",
-                    "published_at",
-                    "boost",
-                    "batch",
-                    "size",
-                    "pagination",
-                    "per_page",
-                    "max_per_page"
-                ],
-                "sections": [
-                    "client",
-                    "indexes",
-                    "entries",
-                    "settings",
-                    "analysis",
-                    "filter",
-                    "ru_stop",
-                    "ru_stemmer",
-                    "en_stemmer",
-                    "analyzer",
-                    "ru_en",
-                    "mappings",
-                    "properties",
-                    "id",
-                    "post_type",
-                    "slug",
-                    "title",
-                    "excerpt",
-                    "body_plain",
-                    "terms",
-                    "taxonomy",
-                    "published_at",
-                    "boost",
-                    "batch",
-                    "pagination"
-                ]
-            },
-            "related": [],
-            "tags": [
-                "config",
-                "search"
             ]
         },
         {
@@ -4478,28 +3849,6 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/search",
-            "type": "http_endpoint",
-            "name": "api.v1.search",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\SearchController.php",
-            "summary": "GET /api/v1/search (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/search",
-                "group": "api",
-                "auth": null,
-                "parameters": [],
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "3": "v1",
-                "4": "search"
-            }
-        },
-        {
             "id": "http_endpoint:GET:/api/v1/media/{id}",
             "type": "http_endpoint",
             "name": "api.v1.media.show",
@@ -4677,113 +4026,6 @@
                 "2": "admin",
                 "4": "v1",
                 "6": "templates"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/plugins",
-            "type": "http_endpoint",
-            "name": "admin.v1.plugins.index",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-            "summary": "GET /api/v1/admin/plugins (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/plugins",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": [],
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "plugins"
-            }
-        },
-        {
-            "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-            "type": "http_endpoint",
-            "name": "admin.v1.plugins.sync",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-            "summary": "POST /api/v1/admin/plugins/sync (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/plugins/sync",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": [],
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "plugins",
-                "7": "sync"
-            }
-        },
-        {
-            "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-            "type": "http_endpoint",
-            "name": "admin.v1.plugins.enable",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-            "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/plugins/{slug}/enable",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "slug": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "plugins",
-                "7": "enable"
-            }
-        },
-        {
-            "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-            "type": "http_endpoint",
-            "name": "admin.v1.plugins.disable",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-            "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/plugins/{slug}/disable",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "slug": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "plugins",
-                "7": "disable"
             }
         },
         {
@@ -6081,30 +5323,6 @@
             }
         },
         {
-            "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-            "type": "http_endpoint",
-            "name": "admin.v1.search.reindex",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\SearchAdminController.php",
-            "summary": "POST /api/v1/admin/search/reindex (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/search/reindex",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": [],
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "search",
-                "7": "reindex"
-            }
-        },
-        {
             "id": "http_endpoint:GET:/api/v1/admin/blueprints",
             "type": "http_endpoint",
             "name": "admin.v1.blueprints.index",
@@ -6621,32 +5839,6 @@
                 "4": "v1",
                 "6": "embeds"
             }
-        },
-        {
-            "id": "http_endpoint:GET:/{slug}",
-            "type": "http_endpoint",
-            "name": "page.show",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PageController.php",
-            "summary": "GET /{slug} (web)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/{slug}",
-                "group": "web",
-                "auth": null,
-                "parameters": {
-                    "slug": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": [
-                "web"
-            ]
         },
         {
             "id": "http_endpoint:GET:/storage/{path}",
@@ -7195,30 +6387,6 @@
                 ]
             },
             {
-                "id": "model:App\\Models\\Plugin",
-                "type": "model",
-                "name": "Plugin",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Plugin.php",
-                "summary": "Eloquent модель для плагинов (Plugin).",
-                "details": "Представляет плагины системы с информацией о состоянии, метаданных и синхронизации.\nИспользует ULID в качестве первичного ключа.",
-                "meta": {
-                    "table": "plugins",
-                    "fillable": [],
-                    "guarded": [],
-                    "casts": {
-                        "enabled": "boolean",
-                        "meta_json": "array",
-                        "last_synced_at": "immutable_datetime"
-                    },
-                    "relations": [],
-                    "factory": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin"
-                ]
-            },
-            {
                 "id": "model:App\\Models\\PostType",
                 "type": "model",
                 "name": "PostType",
@@ -7228,8 +6396,8 @@
                 "meta": {
                     "table": "post_types",
                     "fillable": [
-                        "slug",
                         "name",
+                        "template",
                         "options_json",
                         "blueprint_id"
                     ],
@@ -9054,236 +8222,6 @@
                 ]
             },
             {
-                "id": "domain_service:Plugins/Commands/PluginsSyncCommand",
-                "type": "domain_service",
-                "name": "PluginsSyncCommand",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Commands\\PluginsSyncCommand.php",
-                "summary": "Команда для синхронизации плагинов из файловой системы в БД.",
-                "details": null,
-                "meta": {
-                    "methods": [
-                        "handle"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
-                    ],
-                    "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "command"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginDisabled",
-                "type": "domain_service",
-                "name": "PluginDisabled",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginDisabled.php",
-                "summary": "Событие: плагин отключён.",
-                "details": "Отправляется после успешного отключения плагина в БД.",
-                "meta": {
-                    "methods": [
-                        "dispatch",
-                        "dispatchIf",
-                        "dispatchUnless",
-                        "broadcast",
-                        "restoreModel"
-                    ],
-                    "dependencies": [
-                        "App\\Models\\Plugin"
-                    ],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "event"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginEnabled",
-                "type": "domain_service",
-                "name": "PluginEnabled",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginEnabled.php",
-                "summary": "Событие: плагин включён.",
-                "details": "Отправляется после успешного включения плагина в БД.",
-                "meta": {
-                    "methods": [
-                        "dispatch",
-                        "dispatchIf",
-                        "dispatchUnless",
-                        "broadcast",
-                        "restoreModel"
-                    ],
-                    "dependencies": [
-                        "App\\Models\\Plugin"
-                    ],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "event"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
-                "type": "domain_service",
-                "name": "PluginsRoutesReloaded",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsRoutesReloaded.php",
-                "summary": "Событие: маршруты плагинов перезагружены.",
-                "details": "Отправляется после успешной перезагрузки маршрутов плагинов.",
-                "meta": {
-                    "methods": [
-                        "dispatch",
-                        "dispatchIf",
-                        "dispatchUnless",
-                        "broadcast",
-                        "restoreModel"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "event"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsSynced",
-                "type": "domain_service",
-                "name": "PluginsSynced",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Events\\PluginsSynced.php",
-                "summary": "Событие: плагины синхронизированы.",
-                "details": "Отправляется после успешной синхронизации плагинов из файловой системы в БД.",
-                "meta": {
-                    "methods": [
-                        "dispatch",
-                        "dispatchIf",
-                        "dispatchUnless",
-                        "broadcast",
-                        "restoreModel"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "event"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/PluginActivator",
-                "type": "domain_service",
-                "name": "PluginActivator",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginActivator.php",
-                "summary": "Активатор плагинов.",
-                "details": "Управляет включением и отключением плагинов с транзакционной безопасностью\nи автоматической перезагрузкой маршрутов.",
-                "meta": {
-                    "methods": [
-                        "enable",
-                        "disable"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Plugins\\Contracts\\RouteReloader"
-                    ],
-                    "interface": "App\\Domain\\Plugins\\Contracts\\PluginActivatorInterface"
-                },
-                "related": [],
-                "tags": [
-                    "plugin"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/PluginRegistry",
-                "type": "domain_service",
-                "name": "PluginRegistry",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\PluginRegistry.php",
-                "summary": "Реестр плагинов.",
-                "details": "Управляет списком включённых плагинов и их провайдерами.",
-                "meta": {
-                    "methods": [
-                        "enabled",
-                        "enabledProviders"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginAutoloader",
-                "type": "domain_service",
-                "name": "PluginAutoloader",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginAutoloader.php",
-                "summary": "Автозагрузчик классов плагинов.",
-                "details": "Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.",
-                "meta": {
-                    "methods": [
-                        "register"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "service"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginsRouteReloader",
-                "type": "domain_service",
-                "name": "PluginsRouteReloader",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsRouteReloader.php",
-                "summary": "Перезагрузчик маршрутов плагинов.",
-                "details": "Очищает кэш маршрутов, регистрирует автозагрузку, регистрирует провайдеры\nвключённых плагинов и кэширует маршруты (если включено).",
-                "meta": {
-                    "methods": [
-                        "reload"
-                    ],
-                    "dependencies": [
-                        "Illuminate\\Contracts\\Foundation\\Application",
-                        "App\\Domain\\Plugins\\PluginRegistry",
-                        "App\\Domain\\Plugins\\Services\\PluginAutoloader"
-                    ],
-                    "interface": "App\\Domain\\Plugins\\Contracts\\RouteReloader"
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "service"
-                ]
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginsSynchronizer",
-                "type": "domain_service",
-                "name": "PluginsSynchronizer",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Plugins\\Services\\PluginsSynchronizer.php",
-                "summary": "Синхронизатор плагинов.",
-                "details": "Синхронизирует плагины из файловой системы в БД:\nобнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.",
-                "meta": {
-                    "methods": [
-                        "sync"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Plugins\\Contracts\\RouteReloader"
-                    ],
-                    "interface": "App\\Domain\\Plugins\\Contracts\\PluginsSynchronizerInterface"
-                },
-                "related": [],
-                "tags": [
-                    "plugin",
-                    "service"
-                ]
-            },
-            {
                 "id": "domain_service:PostTypes/PostTypeOptions",
                 "type": "domain_service",
                 "name": "PostTypeOptions",
@@ -9443,305 +8381,41 @@
                 ]
             },
             {
-                "id": "domain_service:Search/Clients/ElasticsearchSearchClient",
-                "type": "domain_service",
-                "name": "ElasticsearchSearchClient",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\ElasticsearchSearchClient.php",
-                "summary": "Реализация SearchClientInterface для Elasticsearch.",
-                "details": "Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.\nПоддерживает базовую аутентификацию и настройку SSL.",
-                "meta": {
-                    "methods": [
-                        "search",
-                        "createIndex",
-                        "deleteIndex",
-                        "updateAliases",
-                        "getIndicesForAlias",
-                        "bulk",
-                        "refresh"
-                    ],
-                    "dependencies": [
-                        "Illuminate\\Http\\Client\\Factory"
-                    ],
-                    "interface": "App\\Domain\\Search\\SearchClientInterface"
-                },
-                "related": [],
-                "tags": [
-                    "search",
-                    "client"
-                ]
-            },
-            {
-                "id": "domain_service:Search/Clients/NullSearchClient",
-                "type": "domain_service",
-                "name": "NullSearchClient",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Clients\\NullSearchClient.php",
-                "summary": "Null-реализация SearchClientInterface.",
-                "details": "Используется когда поиск отключен. Все методы возвращают пустые результаты\nили выполняют no-op операции.",
-                "meta": {
-                    "methods": [
-                        "search",
-                        "createIndex",
-                        "deleteIndex",
-                        "updateAliases",
-                        "getIndicesForAlias",
-                        "bulk",
-                        "refresh"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Search\\SearchClientInterface"
-                },
-                "related": [],
-                "tags": [
-                    "search",
-                    "client"
-                ]
-            },
-            {
-                "id": "domain_service:Search/Commands/SearchReindexCommand",
-                "type": "domain_service",
-                "name": "SearchReindexCommand",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Commands\\SearchReindexCommand.php",
-                "summary": "Команда для реиндексации поискового индекса.",
-                "details": null,
-                "meta": {
-                    "methods": [
-                        "handle"
-                    ],
-                    "dependencies": [],
-                    "interface": "Symfony\\Component\\Console\\Command\\SignalableCommandInterface"
-                },
-                "related": [],
-                "tags": [
-                    "search",
-                    "command"
-                ]
-            },
-            {
-                "id": "domain_service:Search/IndexManager",
-                "type": "domain_service",
-                "name": "IndexManager",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\IndexManager.php",
-                "summary": "Менеджер для управления индексами поиска.",
-                "details": "Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,\nпереключает алиасы и удаляет старые индексы.",
-                "meta": {
-                    "methods": [
-                        "reindex"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Search\\SearchClientInterface",
-                        "App\\Domain\\Search\\Transformers\\EntryToSearchDoc"
-                    ],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "search"
-                ]
-            },
-            {
-                "id": "domain_service:Search/Jobs/ReindexSearchJob",
-                "type": "domain_service",
-                "name": "ReindexSearchJob",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Jobs\\ReindexSearchJob.php",
-                "summary": "Job для реиндексации поискового индекса в фоновом режиме.",
-                "details": "Выполняет полную реиндексацию всех опубликованных записей через очередь.",
-                "meta": {
-                    "methods": [
-                        "handle",
-                        "dispatch",
-                        "dispatchIf",
-                        "dispatchUnless",
-                        "dispatchSync",
-                        "dispatchAfterResponse",
-                        "withChain",
-                        "attempts",
-                        "delete",
-                        "fail",
-                        "release",
-                        "withFakeQueueInteractions",
-                        "assertDeleted",
-                        "assertNotDeleted",
-                        "assertFailed",
-                        "assertFailedWith",
-                        "assertNotFailed",
-                        "assertReleased",
-                        "assertNotReleased",
-                        "setJob",
-                        "onConnection",
-                        "onQueue",
-                        "onGroup",
-                        "withDeduplicator",
-                        "allOnConnection",
-                        "allOnQueue",
-                        "delay",
-                        "withoutDelay",
-                        "afterCommit",
-                        "beforeCommit",
-                        "through",
-                        "chain",
-                        "prependToChain",
-                        "appendToChain",
-                        "dispatchNextJobInChain",
-                        "invokeChainCatchCallbacks",
-                        "assertHasChain",
-                        "assertDoesntHaveChain",
-                        "restoreModel"
-                    ],
-                    "dependencies": [],
-                    "interface": "Illuminate\\Contracts\\Queue\\ShouldQueue"
-                },
-                "related": [],
-                "tags": [
-                    "search",
-                    "job"
-                ]
-            },
-            {
-                "id": "domain_service:Search/SearchHit",
-                "type": "domain_service",
-                "name": "SearchHit",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchHit.php",
-                "summary": "Результат поиска (одна найденная запись).",
-                "details": "Представляет одну найденную запись с информацией о релевантности\nи подсветкой совпадений в тексте.",
-                "meta": {
-                    "methods": [],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "search"
-                ]
-            },
-            {
-                "id": "domain_service:Search/SearchQuery",
-                "type": "domain_service",
-                "name": "SearchQuery",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchQuery.php",
-                "summary": "Value Object для поискового запроса.",
-                "details": "Инкапсулирует параметры поиска: текст запроса, фильтры по типам записей,\nтермам, датам, пагинацию.",
-                "meta": {
-                    "methods": [
-                        "query",
-                        "postTypes",
-                        "terms",
-                        "from",
-                        "to",
-                        "page",
-                        "perPage",
-                        "offset",
-                        "isBlank"
-                    ],
-                    "dependencies": [
-                        "Carbon\\CarbonImmutable",
-                        "Carbon\\CarbonImmutable"
-                    ],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "search"
-                ]
-            },
-            {
-                "id": "domain_service:Search/SearchResult",
-                "type": "domain_service",
-                "name": "SearchResult",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchResult.php",
-                "summary": "Результаты поискового запроса.",
-                "details": "Инкапсулирует результаты поиска: список найденных записей, общее количество,\nинформацию о пагинации и время выполнения запроса.",
-                "meta": {
-                    "methods": [
-                        "hits",
-                        "total",
-                        "page",
-                        "perPage",
-                        "tookMs",
-                        "empty"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "search"
-                ]
-            },
-            {
-                "id": "domain_service:Search/SearchService",
-                "type": "domain_service",
-                "name": "SearchService",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\SearchService.php",
-                "summary": "Сервис для выполнения поисковых запросов.",
-                "details": "Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).\nСтроит запросы, обрабатывает ошибки, маппит результаты.",
-                "meta": {
-                    "methods": [
-                        "search"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Search\\SearchClientInterface",
-                        "App\\Support\\Errors\\ErrorFactory"
-                    ],
-                    "interface": "App\\Domain\\Search\\Contracts\\SearchServiceInterface"
-                },
-                "related": [],
-                "tags": [
-                    "search"
-                ]
-            },
-            {
-                "id": "domain_service:Search/Transformers/EntryToSearchDoc",
-                "type": "domain_service",
-                "name": "EntryToSearchDoc",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\Transformers\\EntryToSearchDoc.php",
-                "summary": "Трансформер Entry в документ для поискового индекса.",
-                "details": "Преобразует Entry в структуру документа для Elasticsearch:\nизвлекает текст из data_json, нормализует пробелы, формирует excerpt.",
-                "meta": {
-                    "methods": [
-                        "transform"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "search",
-                    "transformer"
-                ]
-            },
-            {
-                "id": "domain_service:Search/ValueObjects/SearchTermFilter",
-                "type": "domain_service",
-                "name": "SearchTermFilter",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Search\\ValueObjects\\SearchTermFilter.php",
-                "summary": "Value Object для фильтра поиска по терму.",
-                "details": "Представляет фильтр по терму таксономии в формате \"taxonomy_id:term_id\".",
-                "meta": {
-                    "methods": [
-                        "fromString"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "search",
-                    "valueobject"
-                ]
-            },
-            {
                 "id": "domain_service:View/BladeTemplateResolver",
                 "type": "domain_service",
                 "name": "BladeTemplateResolver",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\View\\BladeTemplateResolver.php",
-                "summary": "Резолвер для выбора Blade-шаблона по файловой конвенции.",
-                "details": "Приоритет:\n1. Entry.template_override (если задано — используется как полное имя вью)\n2. entry--{postType}--{slug} (если существует)\n3. entry--{postType} (если существует)\n4. entry (глобальный)",
+                "summary": "Резолвер для выбора Blade-шаблона на основе полей template.",
+                "details": "Приоритет выбора шаблона:\n1. Entry.template_override (если задано — используется как полное имя вью)\n2. PostType.template (если задано)\n3. templates.index (дефолтный шаблон)\nВсе шаблоны должны находиться в папке templates или дочерних папках.",
                 "meta": {
                     "methods": [
                         "forEntry"
                     ],
-                    "dependencies": [],
+                    "dependencies": [
+                        "App\\Domain\\View\\TemplatePathValidator"
+                    ],
                     "interface": "App\\Domain\\View\\TemplateResolver"
+                },
+                "related": [],
+                "tags": [
+                    "view"
+                ]
+            },
+            {
+                "id": "domain_service:View/TemplatePathValidator",
+                "type": "domain_service",
+                "name": "TemplatePathValidator",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\View\\TemplatePathValidator.php",
+                "summary": "Валидатор путей шаблонов.",
+                "details": "Проверяет, что шаблон находится в папке templates или дочерних папках.\nВсе остальные директории считаются системными и недоступны для шаблонов.",
+                "meta": {
+                    "methods": [
+                        "validate",
+                        "normalize",
+                        "ensurePrefix"
+                    ],
+                    "dependencies": [],
+                    "interface": null
                 },
                 "related": [],
                 "tags": [
@@ -9750,29 +8424,6 @@
             }
         ],
         "blade_view": [
-            {
-                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/entry.blade.php",
-                "type": "blade_view",
-                "name": "entry",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\entry.blade.php",
-                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\entry.blade.php",
-                "details": null,
-                "meta": {
-                    "role": "page",
-                    "variables": [
-                        "entry",
-                        "html",
-                        "content",
-                        "bodyHtml"
-                    ],
-                    "extends": "layouts.app",
-                    "includes": []
-                },
-                "related": [],
-                "tags": [
-                    "page"
-                ]
-            },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/errors/404.blade.php",
                 "type": "blade_view",
@@ -9899,6 +8550,29 @@
                     "role": "page",
                     "variables": [],
                     "extends": null,
+                    "includes": []
+                },
+                "related": [],
+                "tags": [
+                    "page"
+                ]
+            },
+            {
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/templates/index.blade.php",
+                "type": "blade_view",
+                "name": "index",
+                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\templates\\index.blade.php",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\templates\\index.blade.php",
+                "details": null,
+                "meta": {
+                    "role": "page",
+                    "variables": [
+                        "entry",
+                        "html",
+                        "content",
+                        "bodyHtml"
+                    ],
+                    "extends": "layouts.app",
                     "includes": []
                 },
                 "related": [],
@@ -10549,29 +9223,6 @@
                 ]
             },
             {
-                "id": "config_area:plugins",
-                "type": "config_area",
-                "name": "Plugins",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/plugins.php",
-                "summary": "Configuration: Plugins",
-                "details": null,
-                "meta": {
-                    "keys": [
-                        "path",
-                        "manifest",
-                        "auto_route_cache"
-                    ],
-                    "sections": [
-                        "manifest"
-                    ]
-                },
-                "related": [],
-                "tags": [
-                    "config",
-                    "plugins"
-                ]
-            },
-            {
                 "id": "config_area:purifier",
                 "type": "config_area",
                 "name": "Purifier",
@@ -10784,94 +9435,6 @@
                 "tags": [
                     "config",
                     "scribe"
-                ]
-            },
-            {
-                "id": "config_area:search",
-                "type": "config_area",
-                "name": "Search",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/search.php",
-                "summary": "Configuration: Search",
-                "details": null,
-                "meta": {
-                    "keys": [
-                        "enabled",
-                        "client",
-                        "hosts",
-                        "username",
-                        "password",
-                        "verify_ssl",
-                        "timeout",
-                        "indexes",
-                        "entries",
-                        "read_alias",
-                        "write_alias",
-                        "name_prefix",
-                        "settings",
-                        "number_of_shards",
-                        "number_of_replicas",
-                        "analysis",
-                        "filter",
-                        "ru_stop",
-                        "type",
-                        "stopwords",
-                        "ru_stemmer",
-                        "language",
-                        "en_stemmer",
-                        "analyzer",
-                        "ru_en",
-                        "tokenizer",
-                        "mappings",
-                        "dynamic",
-                        "properties",
-                        "id",
-                        "post_type",
-                        "slug",
-                        "title",
-                        "excerpt",
-                        "body_plain",
-                        "terms",
-                        "taxonomy",
-                        "published_at",
-                        "boost",
-                        "batch",
-                        "size",
-                        "pagination",
-                        "per_page",
-                        "max_per_page"
-                    ],
-                    "sections": [
-                        "client",
-                        "indexes",
-                        "entries",
-                        "settings",
-                        "analysis",
-                        "filter",
-                        "ru_stop",
-                        "ru_stemmer",
-                        "en_stemmer",
-                        "analyzer",
-                        "ru_en",
-                        "mappings",
-                        "properties",
-                        "id",
-                        "post_type",
-                        "slug",
-                        "title",
-                        "excerpt",
-                        "body_plain",
-                        "terms",
-                        "taxonomy",
-                        "published_at",
-                        "boost",
-                        "batch",
-                        "pagination"
-                    ]
-                },
-                "related": [],
-                "tags": [
-                    "config",
-                    "search"
                 ]
             },
             {
@@ -11163,28 +9726,6 @@
                 }
             },
             {
-                "id": "http_endpoint:GET:/api/v1/search",
-                "type": "http_endpoint",
-                "name": "api.v1.search",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\SearchController.php",
-                "summary": "GET /api/v1/search (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/search",
-                    "group": "api",
-                    "auth": null,
-                    "parameters": [],
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "3": "v1",
-                    "4": "search"
-                }
-            },
-            {
                 "id": "http_endpoint:GET:/api/v1/media/{id}",
                 "type": "http_endpoint",
                 "name": "api.v1.media.show",
@@ -11362,113 +9903,6 @@
                     "2": "admin",
                     "4": "v1",
                     "6": "templates"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/plugins",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.index",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-                "summary": "GET /api/v1/admin/plugins (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/plugins",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": [],
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "plugins"
-                }
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.sync",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-                "summary": "POST /api/v1/admin/plugins/sync (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/plugins/sync",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": [],
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "plugins",
-                    "7": "sync"
-                }
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.enable",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-                "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/plugins/{slug}/enable",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "slug": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "plugins",
-                    "7": "enable"
-                }
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.disable",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PluginsController.php",
-                "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/plugins/{slug}/disable",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "slug": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "plugins",
-                    "7": "disable"
                 }
             },
             {
@@ -12766,30 +11200,6 @@
                 }
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-                "type": "http_endpoint",
-                "name": "admin.v1.search.reindex",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\SearchAdminController.php",
-                "summary": "POST /api/v1/admin/search/reindex (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/search/reindex",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": [],
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "search",
-                    "7": "reindex"
-                }
-            },
-            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.index",
@@ -13306,32 +11716,6 @@
                     "4": "v1",
                     "6": "embeds"
                 }
-            },
-            {
-                "id": "http_endpoint:GET:/{slug}",
-                "type": "http_endpoint",
-                "name": "page.show",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\PageController.php",
-                "summary": "GET /{slug} (web)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/{slug}",
-                    "group": "web",
-                    "auth": null,
-                    "parameters": {
-                        "slug": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": [
-                    "web"
-                ]
             },
             {
                 "id": "http_endpoint:GET:/storage/{path}",
@@ -13922,74 +12306,6 @@
                 "type": "model",
                 "name": "Path",
                 "summary": "Поле внутри blueprint с материализованным full_path."
-            }
-        ],
-        "plugin": [
-            {
-                "id": "model:App\\Models\\Plugin",
-                "type": "model",
-                "name": "Plugin",
-                "summary": "Eloquent модель для плагинов (Plugin)."
-            },
-            {
-                "id": "domain_service:Plugins/Commands/PluginsSyncCommand",
-                "type": "domain_service",
-                "name": "PluginsSyncCommand",
-                "summary": "Команда для синхронизации плагинов из файловой системы в БД."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginDisabled",
-                "type": "domain_service",
-                "name": "PluginDisabled",
-                "summary": "Событие: плагин отключён."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginEnabled",
-                "type": "domain_service",
-                "name": "PluginEnabled",
-                "summary": "Событие: плагин включён."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
-                "type": "domain_service",
-                "name": "PluginsRoutesReloaded",
-                "summary": "Событие: маршруты плагинов перезагружены."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsSynced",
-                "type": "domain_service",
-                "name": "PluginsSynced",
-                "summary": "Событие: плагины синхронизированы."
-            },
-            {
-                "id": "domain_service:Plugins/PluginActivator",
-                "type": "domain_service",
-                "name": "PluginActivator",
-                "summary": "Активатор плагинов."
-            },
-            {
-                "id": "domain_service:Plugins/PluginRegistry",
-                "type": "domain_service",
-                "name": "PluginRegistry",
-                "summary": "Реестр плагинов."
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginAutoloader",
-                "type": "domain_service",
-                "name": "PluginAutoloader",
-                "summary": "Автозагрузчик классов плагинов."
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginsRouteReloader",
-                "type": "domain_service",
-                "name": "PluginsRouteReloader",
-                "summary": "Перезагрузчик маршрутов плагинов."
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginsSynchronizer",
-                "type": "domain_service",
-                "name": "PluginsSynchronizer",
-                "summary": "Синхронизатор плагинов."
             }
         ],
         "posttype": [
@@ -14592,30 +12908,6 @@
                 "type": "domain_service",
                 "name": "MediaUploaded",
                 "summary": "Событие: медиа-файл загружен."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginDisabled",
-                "type": "domain_service",
-                "name": "PluginDisabled",
-                "summary": "Событие: плагин отключён."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginEnabled",
-                "type": "domain_service",
-                "name": "PluginEnabled",
-                "summary": "Событие: плагин включён."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsRoutesReloaded",
-                "type": "domain_service",
-                "name": "PluginsRoutesReloaded",
-                "summary": "Событие: маршруты плагинов перезагружены."
-            },
-            {
-                "id": "domain_service:Plugins/Events/PluginsSynced",
-                "type": "domain_service",
-                "name": "PluginsSynced",
-                "summary": "Событие: плагины синхронизированы."
             }
         ],
         "image": [
@@ -14644,12 +12936,6 @@
                 "type": "domain_service",
                 "name": "GenerateVariantJob",
                 "summary": "Job для генерации варианта медиа-файла."
-            },
-            {
-                "id": "domain_service:Search/Jobs/ReindexSearchJob",
-                "type": "domain_service",
-                "name": "ReindexSearchJob",
-                "summary": "Job для реиндексации поискового индекса в фоновом режиме."
             }
         ],
         "listener": [
@@ -14720,24 +13006,6 @@
                 "type": "domain_service",
                 "name": "StorageResolver",
                 "summary": "Резолвер дисков для медиа-хранилища."
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginAutoloader",
-                "type": "domain_service",
-                "name": "PluginAutoloader",
-                "summary": "Автозагрузчик классов плагинов."
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginsRouteReloader",
-                "type": "domain_service",
-                "name": "PluginsRouteReloader",
-                "summary": "Перезагрузчик маршрутов плагинов."
-            },
-            {
-                "id": "domain_service:Plugins/Services/PluginsSynchronizer",
-                "type": "domain_service",
-                "name": "PluginsSynchronizer",
-                "summary": "Синхронизатор плагинов."
             }
         ],
         "page": [
@@ -14746,12 +13014,6 @@
                 "type": "domain_service",
                 "name": "NotReservedRoute",
                 "summary": "Правило валидации: slug не должен быть зарезервированным путём."
-            },
-            {
-                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/entry.blade.php",
-                "type": "blade_view",
-                "name": "entry",
-                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\entry.blade.php"
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/errors/404.blade.php",
@@ -14794,20 +13056,12 @@
                 "type": "blade_view",
                 "name": "header",
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\partials\\header.blade.php"
-            }
-        ],
-        "command": [
-            {
-                "id": "domain_service:Plugins/Commands/PluginsSyncCommand",
-                "type": "domain_service",
-                "name": "PluginsSyncCommand",
-                "summary": "Команда для синхронизации плагинов из файловой системы в БД."
             },
             {
-                "id": "domain_service:Search/Commands/SearchReindexCommand",
-                "type": "domain_service",
-                "name": "SearchReindexCommand",
-                "summary": "Команда для реиндексации поискового индекса."
+                "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/templates/index.blade.php",
+                "type": "blade_view",
+                "name": "index",
+                "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\templates\\index.blade.php"
             }
         ],
         "routing": [
@@ -14850,128 +13104,18 @@
                 "summary": "Сервис для санитизации HTML контента."
             }
         ],
-        "search": [
-            {
-                "id": "domain_service:Search/Clients/ElasticsearchSearchClient",
-                "type": "domain_service",
-                "name": "ElasticsearchSearchClient",
-                "summary": "Реализация SearchClientInterface для Elasticsearch."
-            },
-            {
-                "id": "domain_service:Search/Clients/NullSearchClient",
-                "type": "domain_service",
-                "name": "NullSearchClient",
-                "summary": "Null-реализация SearchClientInterface."
-            },
-            {
-                "id": "domain_service:Search/Commands/SearchReindexCommand",
-                "type": "domain_service",
-                "name": "SearchReindexCommand",
-                "summary": "Команда для реиндексации поискового индекса."
-            },
-            {
-                "id": "domain_service:Search/IndexManager",
-                "type": "domain_service",
-                "name": "IndexManager",
-                "summary": "Менеджер для управления индексами поиска."
-            },
-            {
-                "id": "domain_service:Search/Jobs/ReindexSearchJob",
-                "type": "domain_service",
-                "name": "ReindexSearchJob",
-                "summary": "Job для реиндексации поискового индекса в фоновом режиме."
-            },
-            {
-                "id": "domain_service:Search/SearchHit",
-                "type": "domain_service",
-                "name": "SearchHit",
-                "summary": "Результат поиска (одна найденная запись)."
-            },
-            {
-                "id": "domain_service:Search/SearchQuery",
-                "type": "domain_service",
-                "name": "SearchQuery",
-                "summary": "Value Object для поискового запроса."
-            },
-            {
-                "id": "domain_service:Search/SearchResult",
-                "type": "domain_service",
-                "name": "SearchResult",
-                "summary": "Результаты поискового запроса."
-            },
-            {
-                "id": "domain_service:Search/SearchService",
-                "type": "domain_service",
-                "name": "SearchService",
-                "summary": "Сервис для выполнения поисковых запросов."
-            },
-            {
-                "id": "domain_service:Search/Transformers/EntryToSearchDoc",
-                "type": "domain_service",
-                "name": "EntryToSearchDoc",
-                "summary": "Трансформер Entry в документ для поискового индекса."
-            },
-            {
-                "id": "domain_service:Search/ValueObjects/SearchTermFilter",
-                "type": "domain_service",
-                "name": "SearchTermFilter",
-                "summary": "Value Object для фильтра поиска по терму."
-            },
-            {
-                "id": "config_area:search",
-                "type": "config_area",
-                "name": "Search",
-                "summary": "Configuration: Search"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/search",
-                "type": "http_endpoint",
-                "name": "api.v1.search",
-                "summary": "GET /api/v1/search (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-                "type": "http_endpoint",
-                "name": "admin.v1.search.reindex",
-                "summary": "POST /api/v1/admin/search/reindex (api)"
-            }
-        ],
-        "client": [
-            {
-                "id": "domain_service:Search/Clients/ElasticsearchSearchClient",
-                "type": "domain_service",
-                "name": "ElasticsearchSearchClient",
-                "summary": "Реализация SearchClientInterface для Elasticsearch."
-            },
-            {
-                "id": "domain_service:Search/Clients/NullSearchClient",
-                "type": "domain_service",
-                "name": "NullSearchClient",
-                "summary": "Null-реализация SearchClientInterface."
-            }
-        ],
-        "transformer": [
-            {
-                "id": "domain_service:Search/Transformers/EntryToSearchDoc",
-                "type": "domain_service",
-                "name": "EntryToSearchDoc",
-                "summary": "Трансформер Entry в документ для поискового индекса."
-            }
-        ],
-        "valueobject": [
-            {
-                "id": "domain_service:Search/ValueObjects/SearchTermFilter",
-                "type": "domain_service",
-                "name": "SearchTermFilter",
-                "summary": "Value Object для фильтра поиска по терму."
-            }
-        ],
         "view": [
             {
                 "id": "domain_service:View/BladeTemplateResolver",
                 "type": "domain_service",
                 "name": "BladeTemplateResolver",
-                "summary": "Резолвер для выбора Blade-шаблона по файловой конвенции."
+                "summary": "Резолвер для выбора Blade-шаблона на основе полей template."
+            },
+            {
+                "id": "domain_service:View/TemplatePathValidator",
+                "type": "domain_service",
+                "name": "TemplatePathValidator",
+                "summary": "Валидатор путей шаблонов."
             }
         ],
         "config": [
@@ -15060,12 +13204,6 @@
                 "summary": "Configuration: Options"
             },
             {
-                "id": "config_area:plugins",
-                "type": "config_area",
-                "name": "Plugins",
-                "summary": "Configuration: Plugins"
-            },
-            {
                 "id": "config_area:purifier",
                 "type": "config_area",
                 "name": "Purifier",
@@ -15082,12 +13220,6 @@
                 "type": "config_area",
                 "name": "Scribe",
                 "summary": "Configuration: Scribe"
-            },
-            {
-                "id": "config_area:search",
-                "type": "config_area",
-                "name": "Search",
-                "summary": "Configuration: Search"
             },
             {
                 "id": "config_area:security",
@@ -15244,38 +13376,6 @@
                 "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
             }
         ],
-        "plugins": [
-            {
-                "id": "config_area:plugins",
-                "type": "config_area",
-                "name": "Plugins",
-                "summary": "Configuration: Plugins"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/plugins",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.index",
-                "summary": "GET /api/v1/admin/plugins (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.sync",
-                "summary": "POST /api/v1/admin/plugins/sync (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.enable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.disable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)"
-            }
-        ],
         "purifier": [
             {
                 "id": "config_area:purifier",
@@ -15346,12 +13446,6 @@
                 "type": "http_endpoint",
                 "name": "home",
                 "summary": "GET // (web)"
-            },
-            {
-                "id": "http_endpoint:GET:/{slug}",
-                "type": "http_endpoint",
-                "name": "page.show",
-                "summary": "GET /{slug} (web)"
             }
         ],
         "api": [
@@ -15372,12 +13466,6 @@
                 "type": "http_endpoint",
                 "name": "api.auth.logout",
                 "summary": "POST /api/v1/auth/logout (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/search",
-                "type": "http_endpoint",
-                "name": "api.v1.search",
-                "summary": "GET /api/v1/search (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/media/{id}",
@@ -15420,30 +13508,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.templates.update",
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/plugins",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.index",
-                "summary": "GET /api/v1/admin/plugins (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.sync",
-                "summary": "POST /api/v1/admin/plugins/sync (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.enable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.disable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/reservations",
@@ -15720,12 +13784,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.options.restore",
                 "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-                "type": "http_endpoint",
-                "name": "admin.v1.search.reindex",
-                "summary": "POST /api/v1/admin/search/reindex (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
@@ -15856,12 +13914,6 @@
                 "summary": "POST /api/v1/auth/logout (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/search",
-                "type": "http_endpoint",
-                "name": "api.v1.search",
-                "summary": "GET /api/v1/search (api)"
-            },
-            {
                 "id": "http_endpoint:GET:/api/v1/media/{id}",
                 "type": "http_endpoint",
                 "name": "api.v1.media.show",
@@ -15902,30 +13954,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.templates.update",
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/plugins",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.index",
-                "summary": "GET /api/v1/admin/plugins (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.sync",
-                "summary": "POST /api/v1/admin/plugins/sync (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.enable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.disable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/reservations",
@@ -16202,12 +14230,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.options.restore",
                 "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-                "type": "http_endpoint",
-                "name": "admin.v1.search.reindex",
-                "summary": "POST /api/v1/admin/search/reindex (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
@@ -16380,30 +14402,6 @@
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/plugins",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.index",
-                "summary": "GET /api/v1/admin/plugins (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.sync",
-                "summary": "POST /api/v1/admin/plugins/sync (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.enable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.disable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)"
-            },
-            {
                 "id": "http_endpoint:GET:/api/v1/admin/reservations",
                 "type": "http_endpoint",
                 "name": "get.reservations",
@@ -16680,12 +14678,6 @@
                 "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
             },
             {
-                "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-                "type": "http_endpoint",
-                "name": "admin.v1.search.reindex",
-                "summary": "POST /api/v1/admin/search/reindex (api)"
-            },
-            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.index",
@@ -16842,36 +14834,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.templates.update",
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
-            }
-        ],
-        "sync": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.sync",
-                "summary": "POST /api/v1/admin/plugins/sync (api)"
-            },
-            {
-                "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
-                "type": "http_endpoint",
-                "name": "admin.v1.entries.terms.sync",
-                "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
-            }
-        ],
-        "enable": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.enable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/enable (api)"
-            }
-        ],
-        "disable": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable",
-                "type": "http_endpoint",
-                "name": "admin.v1.plugins.disable",
-                "summary": "POST /api/v1/admin/plugins/{slug}/disable (api)"
             }
         ],
         "reservations": [
@@ -17170,6 +15132,14 @@
                 "summary": "GET /api/v1/admin/taxonomies/{taxonomy}/terms/tree (api)"
             }
         ],
+        "sync": [
+            {
+                "id": "http_endpoint:PUT:/api/v1/admin/entries/{entry}/terms/sync",
+                "type": "http_endpoint",
+                "name": "admin.v1.entries.terms.sync",
+                "summary": "PUT /api/v1/admin/entries/{entry}/terms/sync (api)"
+            }
+        ],
         "bulk": [
             {
                 "id": "http_endpoint:POST:/api/v1/admin/media/bulk",
@@ -17202,14 +15172,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.bulkForceDestroy",
                 "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
-            }
-        ],
-        "reindex": [
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/search/reindex",
-                "type": "http_endpoint",
-                "name": "admin.v1.search.reindex",
-                "summary": "POST /api/v1/admin/search/reindex (api)"
             }
         ],
         "blueprints": [
@@ -17391,5 +15353,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-05T10:51:44+00:00"
+    "generated_at": "2025-12-08T14:51:31+00:00"
 }

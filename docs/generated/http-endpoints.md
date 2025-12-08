@@ -818,82 +818,6 @@ PUT /api/v1/admin/paths/{path} (api)
 
 ---
 
-## admin.v1.plugins.disable
-**ID:** `http_endpoint:POST:/api/v1/admin/plugins/{slug}/disable`
-**Path:** `app/Http/Controllers/Admin/V1/PluginsController.php`
-
-POST /api/v1/admin/plugins/{slug}/disable (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/plugins/{slug}/disable`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `slug` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `plugins`, `disable`
-
-
----
-
-## admin.v1.plugins.enable
-**ID:** `http_endpoint:POST:/api/v1/admin/plugins/{slug}/enable`
-**Path:** `app/Http/Controllers/Admin/V1/PluginsController.php`
-
-POST /api/v1/admin/plugins/{slug}/enable (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/plugins/{slug}/enable`
-- **Group:** `api`
-- **Auth:** `jwt`
-- **Parameters:**
-  - `slug` (string, required)
-
-### Tags
-`api`, `admin`, `v1`, `plugins`, `enable`
-
-
----
-
-## admin.v1.plugins.index
-**ID:** `http_endpoint:GET:/api/v1/admin/plugins`
-**Path:** `app/Http/Controllers/Admin/V1/PluginsController.php`
-
-GET /api/v1/admin/plugins (api)
-
-### Meta
-- **Method:** `GET`
-- **URI:** `/api/v1/admin/plugins`
-- **Group:** `api`
-- **Auth:** `jwt`
-
-### Tags
-`api`, `admin`, `v1`, `plugins`
-
-
----
-
-## admin.v1.plugins.sync
-**ID:** `http_endpoint:POST:/api/v1/admin/plugins/sync`
-**Path:** `app/Http/Controllers/Admin/V1/PluginsController.php`
-
-POST /api/v1/admin/plugins/sync (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/plugins/sync`
-- **Group:** `api`
-- **Auth:** `jwt`
-
-### Tags
-`api`, `admin`, `v1`, `plugins`, `sync`
-
-
----
-
 ## admin.v1.post-types.destroy
 **ID:** `http_endpoint:DELETE:/api/v1/admin/post-types/{id}`
 **Path:** `app/Http/Controllers/Admin/V1/PostTypeController.php`
@@ -1069,24 +993,6 @@ PUT /api/v1/admin/post-types/{id} (api)
 
 ### Tags
 `api`, `admin`, `v1`, `post-types`
-
-
----
-
-## admin.v1.search.reindex
-**ID:** `http_endpoint:POST:/api/v1/admin/search/reindex`
-**Path:** `app/Http/Controllers/Admin/V1/SearchAdminController.php`
-
-POST /api/v1/admin/search/reindex (api)
-
-### Meta
-- **Method:** `POST`
-- **URI:** `/api/v1/admin/search/reindex`
-- **Group:** `api`
-- **Auth:** `jwt`
-
-### Tags
-`api`, `admin`, `v1`, `search`, `reindex`
 
 
 ---
@@ -1454,23 +1360,6 @@ GET /api/v1/media/{id} (api)
 
 ---
 
-## api.v1.search
-**ID:** `http_endpoint:GET:/api/v1/search`
-**Path:** `app/Http/Controllers/SearchController.php`
-
-GET /api/v1/search (api)
-
-### Meta
-- **Method:** `GET`
-- **URI:** `/api/v1/search`
-- **Group:** `api`
-
-### Tags
-`api`, `v1`, `search`
-
-
----
-
 ## delete.path
 **ID:** `http_endpoint:DELETE:/api/v1/admin/reservations/{path}`
 **Path:** `app/Http/Controllers/Admin/V1/PathReservationController.php`
@@ -1537,25 +1426,6 @@ GET // (web)
 - **Method:** `GET`
 - **URI:** `//`
 - **Group:** `web`
-
-### Tags
-`web`
-
-
----
-
-## page.show
-**ID:** `http_endpoint:GET:/{slug}`
-**Path:** `app/Http/Controllers/PageController.php`
-
-GET /{slug} (web)
-
-### Meta
-- **Method:** `GET`
-- **URI:** `/{slug}`
-- **Group:** `web`
-- **Parameters:**
-  - `slug` (string, required)
 
 ### Tags
 `web`

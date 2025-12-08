@@ -145,7 +145,6 @@ test('restored entry retains all data', function () {
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
         'title' => 'Original Title',
-        'slug' => 'original-slug',
         'data_json' => ['key' => 'value'],
         'deleted_at' => now(),
     ]);
@@ -157,7 +156,6 @@ test('restored entry retains all data', function () {
     $freshEntry = $entry->fresh();
     
     expect($freshEntry->title)->toBe('Original Title')
-        ->and($freshEntry->slug)->toBe('original-slug')
         ->and($freshEntry->data_json)->toBe(['key' => 'value'])
         ->and($freshEntry->deleted_at)->toBeNull();
 });

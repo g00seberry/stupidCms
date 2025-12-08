@@ -326,26 +326,6 @@ Eloquent модель для исходящих сообщений (Outbox).
 
 ---
 
-## Plugin
-**ID:** `model:App\Models\Plugin`
-**Path:** `app/Models/Plugin.php`
-
-Eloquent модель для плагинов (Plugin).
-
-### Details
-Представляет плагины системы с информацией о состоянии, метаданных и синхронизации.
-Использует ULID в качестве первичного ключа.
-
-### Meta
-- **Table:** `plugins`
-- **Casts:** `enabled` => `boolean`, `meta_json` => `array`, `last_synced_at` => `immutable_datetime`
-
-### Tags
-`plugin`
-
-
----
-
 ## PostType
 **ID:** `model:App\Models\PostType`
 **Path:** `app/Models/PostType.php`
@@ -358,7 +338,7 @@ Eloquent модель для типов записей (PostType).
 
 ### Meta
 - **Table:** `post_types`
-- **Fillable:** `slug`, `name`, `options_json`, `blueprint_id`
+- **Fillable:** `name`, `template`, `options_json`, `blueprint_id`
 - **Guarded:** `*`
 - **Casts:** `options_json` => `App\Casts\AsPostTypeOptions`
 - **Relations:**

@@ -30,7 +30,7 @@ test('admin can list entries', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['id', 'post_type_id', 'title', 'slug', 'status'],
+                '*' => ['id', 'post_type_id', 'title', 'status'],
             ],
             'links',
             'meta' => ['current_page', 'last_page', 'per_page', 'total'],
@@ -118,27 +118,6 @@ test('entries can be searched by title', function () {
     $response->assertOk()
         ->assertJsonCount(1, 'data')
         ->assertJsonPath('data.0.title', 'Laravel Testing Guide');
-});
-
-test('entries can be searched by slug', function () {
-    Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->user->id,
-        'slug' => 'laravel-testing',
-    ]);
-    
-    Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->user->id,
-        'slug' => 'php-practices',
-    ]);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/entries?q=testing');
-
-    $response->assertOk()
-        ->assertJsonCount(1, 'data');
 });
 
 test('unauthenticated request returns 401', function () {

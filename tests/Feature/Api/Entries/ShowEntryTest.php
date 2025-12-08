@@ -31,7 +31,7 @@ test('admin can view entry', function () {
 
     $response->assertOk()
         ->assertJsonStructure([
-            'data' => ['id', 'post_type_id', 'title', 'slug', 'status', 'author'],
+            'data' => ['id', 'post_type_id', 'title', 'status', 'author'],
         ])
         ->assertJsonPath('data.id', $entry->id)
         ->assertJsonPath('data.title', 'Test Article');

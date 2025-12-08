@@ -15,8 +15,6 @@ use App\Models\PostType;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use App\Support\Http\AdminResponse;
-use App\Support\Slug\Slugifier;
-use App\Support\Slug\UniqueSlugService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +27,7 @@ use Illuminate\Support\Facades\DB;
  * Контроллер для управления записями (entries) в админ-панели.
  *
  * Предоставляет CRUD операции для записей: создание, чтение, обновление, удаление,
- * восстановление, управление статусами и slug'ами.
+ * восстановление, управление статусами.
  *
  * @package App\Http\Controllers\Admin\V1
  */
@@ -38,14 +36,8 @@ class EntryController extends Controller
     use AuthorizesRequests;
     use ThrowsErrors;
 
-    /**
-     * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
-     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
-     */
-    public function __construct(
-        private Slugifier $slugifier,
-        private UniqueSlugService $uniqueSlugService
-    ) {
+    public function __construct()
+    {
     }
 
     /**
@@ -56,7 +48,7 @@ class EntryController extends Controller
      * @authenticated
      * @queryParam post_type_id int Фильтр по ID PostType. Example: 1
      * @queryParam status string Фильтр по статусу. Values: all,draft,published,scheduled,trashed. Default: all.
-     * @queryParam q string Поиск по названию/slug (<=500 символов). Example: landing
+     * @queryParam q string Поиск по названию (<=500 символов). Example: landing
      * @queryParam author_id int ID автора. Example: 7
      * @queryParam term[] int ID термов (множественный фильтр). Example: [3,8]
      * @queryParam date_field string Поле даты для диапазона. Values: updated,published. Default: updated.
@@ -70,7 +62,6 @@ class EntryController extends Controller
      *       "id": 42,
      *       "post_type_id": 1,
      *       "title": "Headless CMS launch checklist",
-     *       "slug": "launch-checklist",
      *       "status": "draft",
      *       "content_json": null,
      *       "meta_json": null,
@@ -157,13 +148,10 @@ class EntryController extends Controller
             default => null, // 'all' - no filter
         };
 
-        // Search by title/slug
+        // Search by title
         if (! empty($validated['q'])) {
             $search = $validated['q'];
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('slug', 'like', "%{$search}%");
-            });
+            $query->where('title', 'like', "%{$search}%");
         }
 
         // Filter by author
@@ -220,7 +208,6 @@ class EntryController extends Controller
      *     "id": 42,
      *     "post_type_id": 1,
      *     "title": "Headless CMS launch checklist",
-     *     "slug": "launch-checklist",
      *     "status": "published",
      *     "is_published": true,
      *     "published_at": "2025-02-10T08:00:00+00:00",
@@ -304,7 +291,6 @@ class EntryController extends Controller
      * @authenticated
      * @bodyParam post_type_id int required Существующий ID PostType. Example: 1
      * @bodyParam title string required Заголовок (<=500 символов). Example: Headless CMS launch checklist
-     * @bodyParam slug string Уникальный slug (генерируется автоматически, если не указан). Example: launch-checklist
      * @bodyParam content_json object Произвольные структурированные данные. Example: {"hero":{"title":"Launch"}}
      * @bodyParam meta_json object SEO-метаданные. Example: {"title":"Launch","description":"Checklist"}
      * @bodyParam is_published boolean Опубликовать сразу. Default: false.
@@ -316,7 +302,6 @@ class EntryController extends Controller
      *     "id": 42,
      *     "post_type_id": 1,
      *     "title": "Headless CMS launch checklist",
-     *     "slug": "launch-checklist",
      *     "status": "published",
      *     "is_published": true,
      *     "published_at": "2025-02-10T08:00:00+00:00",
@@ -362,9 +347,6 @@ class EntryController extends Controller
      *     "errors": {
      *       "post_type_id": [
      *         "The specified post type does not exist."
-     *       ],
-     *       "slug": [
-     *         "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
      *       ]
      *     }
      *   },
@@ -390,12 +372,6 @@ class EntryController extends Controller
         // Get post_type
         $postType = PostType::findOrFail($validated['post_type_id']);
 
-        // Auto-generate slug if not provided
-        $slug = $validated['slug'] ?? null;
-        if (empty($slug)) {
-            $slug = $this->generateUniqueSlug($validated['title']);
-        }
-
         // Determine status and published_at
         $isPublished = $validated['is_published'] ?? false;
         $status = $isPublished ? 'published' : 'draft';
@@ -405,11 +381,10 @@ class EntryController extends Controller
             $publishedAt = $validated['published_at'] ?? Carbon::now('UTC');
         }
 
-        $entry = DB::transaction(function () use ($validated, $postType, $slug, $status, $publishedAt) {
+        $entry = DB::transaction(function () use ($validated, $postType, $status, $publishedAt) {
             $entry = Entry::create([
                 'post_type_id' => $postType->id,
                 'title' => $validated['title'],
-                'slug' => $slug,
                 'status' => $status,
                 'published_at' => $publishedAt,
                 'author_id' => Auth::id(),
@@ -439,7 +414,6 @@ class EntryController extends Controller
      * @authenticated
      * @urlParam id int required ID записи. Example: 42
      * @bodyParam title string Заголовок (<=500 символов). Example: Updated checklist
-     * @bodyParam slug string Уникальный slug (обязателен при публикации). Example: launch-checklist
      * @bodyParam content_json object Произвольные данные. Example: {"body":{"blocks":[]}}
      * @bodyParam meta_json object SEO-метаданные. Example: {"description":"Updated"}
      * @bodyParam is_published boolean Переключение статуса публикации.
@@ -451,7 +425,6 @@ class EntryController extends Controller
      *     "id": 42,
      *     "post_type_id": 1,
      *     "title": "Updated checklist",
-     *     "slug": "launch-checklist",
      *     "status": "draft",
      *     "is_published": false,
      *     "published_at": null,
@@ -492,14 +465,10 @@ class EntryController extends Controller
      *   "title": "Validation Error",
      *   "status": 422,
      *   "code": "VALIDATION_ERROR",
-     *   "detail": "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed.",
+     *   "detail": "The given data was invalid.",
      *   "meta": {
      *     "request_id": "eed543b8-b7cb-6c30-033f-3f5eb7cb6c30",
-     *     "errors": {
-     *       "slug": [
-     *         "The slug format is invalid. Only lowercase letters, numbers, and hyphens are allowed."
-     *       ]
-     *     }
+     *     "errors": {}
      *   },
      *   "trace_id": "00-eed543b8b7cb6c30033f3f5eb7cb6c30-eed543b8b7cb6c30-01"
      * }
@@ -532,10 +501,6 @@ class EntryController extends Controller
             // Update basic fields
             if (isset($validated['title'])) {
                 $entry->title = $validated['title'];
-            }
-
-            if (isset($validated['slug'])) {
-                $entry->slug = $validated['slug'];
             }
 
             if (array_key_exists('content_json', $validated)) {
@@ -757,27 +722,6 @@ class EntryController extends Controller
         ]);
     }
 
-    /**
-     * Generate a globally unique slug for the entry.
-     */
-    private function generateUniqueSlug(string $title): string
-    {
-        $base = $this->slugifier->slugify($title);
-
-        if (empty($base)) {
-            $base = 'entry';
-        }
-
-        return $this->uniqueSlugService->ensureUnique(
-            $base,
-            function (string $slug): bool {
-                return Entry::query()
-                    ->withTrashed()
-                    ->where('slug', $slug)
-                    ->exists();
-            }
-        );
-    }
 
     private function throwEntryNotFound(int $id, bool $trashed = false): never
     {

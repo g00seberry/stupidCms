@@ -18,12 +18,10 @@ use App\Models\Taxonomy;
 test('entry can be created with factory', function () {
     $entry = Entry::factory()->create([
         'title' => 'Test Entry',
-        'slug' => 'test-entry',
     ]);
 
     expect($entry)->toBeInstanceOf(Entry::class)
         ->and($entry->title)->toBe('Test Entry')
-        ->and($entry->slug)->toBe('test-entry')
         ->and($entry->exists)->toBeTrue();
 
     $this->assertDatabaseHas('entries', [
@@ -119,50 +117,6 @@ test('entry can be restored', function () {
     ]);
 });
 
-// Note: Unique constraint test for (post_type_id, slug) is skipped in SQLite :memory:
-// as the migration's unique index may not be fully functional in test environment.
-// This constraint should be tested in integration/acceptance tests with real DB.
-test('entry with same slug in same post type can be checked', function () {
-    $postType = PostType::factory()->create();
-    $user = User::factory()->create();
-    
-    $entry1 = Entry::create([
-        'post_type_id' => $postType->id,
-        'author_id' => $user->id,
-        'title' => 'First Entry',
-        'slug' => 'test-slug',
-        'status' => 'draft',
-        'data_json' => [],
-    ]);
-
-    expect($entry1->exists)->toBeTrue()
-        ->and($entry1->slug)->toBe('test-slug');
-
-    // In real application with proper DB constraints, this would fail
-    // For now, we just verify the entry was created successfully
-    $sameSlugExists = Entry::where('post_type_id', $postType->id)
-        ->where('slug', 'test-slug')
-        ->exists();
-    
-    expect($sameSlugExists)->toBeTrue();
-})->skip('Unique constraint testing requires proper DB setup');
-
-test('entry slug must be globally unique', function () {
-    $postType1 = PostType::factory()->create();
-    $postType2 = PostType::factory()->create();
-
-    $entry1 = Entry::factory()->create([
-        'post_type_id' => $postType1->id,
-        'slug' => 'unique-slug',
-    ]);
-
-    // Попытка создать entry с тем же slug должна провалиться
-    // (уникальность проверяется на уровне БД, но в тестах SQLite может не сработать)
-    expect($entry1->slug)->toBe('unique-slug');
-    
-    // В реальной БД с миграцией это должно вызвать ошибку уникальности
-})->skip('Unique constraint testing requires proper DB setup');
-
 test('entry published at can be in future', function () {
     $futureDate = now()->addDays(7);
     
@@ -242,25 +196,6 @@ test('of type scope filters by post type id', function () {
 
     expect($articles)->toHaveCount(3)
         ->and($pages)->toHaveCount(2);
-});
-
-test('entry url is flat for all types', function () {
-    $postType = PostType::factory()->create(['name' => 'Page']);
-    $entry = Entry::factory()->create([
-        'post_type_id' => $postType->id,
-        'slug' => 'about',
-    ]);
-
-    expect($entry->url())->toBe('/about');
-    
-    $blogType = PostType::factory()->create(['name' => 'Blog']);
-    $blogEntry = Entry::factory()->create([
-        'post_type_id' => $blogType->id,
-        'slug' => 'my-post',
-    ]);
-
-    // Теперь все URL плоские, так как slug глобально уникален
-    expect($blogEntry->url())->toBe('/my-post');
 });
 
 test('entry template override can be set', function () {

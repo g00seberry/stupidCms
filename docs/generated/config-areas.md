@@ -223,22 +223,6 @@ Configuration: Options
 
 ---
 
-## Plugins
-**ID:** `config_area:plugins`
-**Path:** `config/plugins.php`
-
-Configuration: Plugins
-
-### Meta
-- **Keys:** `path`, `manifest`, `auto_route_cache`
-- **Sections:** `manifest`
-
-### Tags
-`config`, `plugins`
-
-
----
-
 ## Purifier
 **ID:** `config_area:purifier`
 **Path:** `config/purifier.php`
@@ -283,22 +267,6 @@ Configuration: Scribe
 
 ### Tags
 `config`, `scribe`
-
-
----
-
-## Search
-**ID:** `config_area:search`
-**Path:** `config/search.php`
-
-Configuration: Search
-
-### Meta
-- **Keys:** `enabled`, `client`, `hosts`, `username`, `password`, `verify_ssl`, `timeout`, `indexes`, `entries`, `read_alias`, `write_alias`, `name_prefix`, `settings`, `number_of_shards`, `number_of_replicas`, `analysis`, `filter`, `ru_stop`, `type`, `stopwords`, `ru_stemmer`, `language`, `en_stemmer`, `analyzer`, `ru_en`, `tokenizer`, `mappings`, `dynamic`, `properties`, `id`, `post_type`, `slug`, `title`, `excerpt`, `body_plain`, `terms`, `taxonomy`, `published_at`, `boost`, `batch`, `size`, `pagination`, `per_page`, `max_per_page`
-- **Sections:** `client`, `indexes`, `entries`, `settings`, `analysis`, `filter`, `ru_stop`, `ru_stemmer`, `en_stemmer`, `analyzer`, `ru_en`, `mappings`, `properties`, `id`, `post_type`, `slug`, `title`, `excerpt`, `body_plain`, `terms`, `taxonomy`, `published_at`, `boost`, `batch`, `pagination`
-
-### Tags
-`config`, `search`
 
 
 ---

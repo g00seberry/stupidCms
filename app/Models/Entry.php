@@ -22,7 +22,6 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $post_type_id ID типа записи
  * @property string $title Заголовок записи
- * @property string $slug Глобально уникальный slug записи
  * @property string $status Статус записи: 'draft' или 'published'
  * @property array $data_json Произвольные структурированные данные контента
  * @property array|null $seo_json SEO-метаданные (title, description, keywords и т.д.)
@@ -188,17 +187,6 @@ class Entry extends Model
         return $q->where('post_type_id', $postTypeId);
     }
 
-    /**
-     * Получить публичный URL записи.
-     *
-     * Возвращает плоский URL (/slug), так как slug глобально уникален.
-     *
-     * @return string Публичный URL записи
-     */
-    public function url(): string
-    {
-        return "/{$this->slug}";
-    }
 
     /**
      * Create a new factory instance for the model.

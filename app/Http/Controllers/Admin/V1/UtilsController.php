@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\SlugifyPreviewResource;
-use App\Models\Entry;
 use App\Models\ReservedRoute;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
@@ -20,7 +19,7 @@ use Illuminate\Validation\Validator;
  * Контроллер для утилитарных операций в админ-панели.
  *
  * Предоставляет вспомогательные операции: генерация slug'ов,
- * проверка уникальности, предпросмотр результатов.
+ * проверка зарезервированных путей, предпросмотр результатов.
  *
  * @package App\Http\Controllers\Admin\V1
  */
@@ -115,26 +114,19 @@ class UtilsController extends Controller
             return new SlugifyPreviewResource('', '');
         }
 
-        // Проверяем глобальную уникальность
+        // Проверяем зарезервированные пути
         $unique = $this->uniqueSlugService->ensureUnique(
             $base,
             function (string $slug): bool {
                 try {
-                    // Глобальная проверка уникальности slug
-                    $exists = Entry::query()
-                        ->where('slug', $slug)
-                        ->exists();
-
                     // Проверка зарезервированных путей
-                    $reserved = ReservedRoute::query()
+                    return ReservedRoute::query()
                         ->where('path', $slug)
                         ->orWhere(function ($q) use ($slug) {
                             $q->where('kind', 'prefix')
                                 ->where('path', 'like', $slug . '/%');
                         })
                         ->exists();
-
-                    return $exists || $reserved;
                 } catch (\Exception $e) {
                     // Если таблиц нет (например, в тестах), считаем slug свободным
                     return false;

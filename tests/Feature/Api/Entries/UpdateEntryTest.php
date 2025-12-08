@@ -39,23 +39,6 @@ test('admin can update entry', function () {
     ]);
 });
 
-test('entry data is updated correctly', function () {
-    $entry = Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->user->id,
-        'slug' => 'old-slug',
-    ]);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'slug' => 'new-slug',
-        ]);
-
-    $response->assertOk()
-        ->assertJsonPath('data.slug', 'new-slug');
-});
-
 test('entry validation works on update', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,

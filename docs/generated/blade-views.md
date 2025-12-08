@@ -48,23 +48,6 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\home\de
 
 ---
 
-## entry
-**ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/entry.blade.php`
-**Path:** `resources/views/entry.blade.php`
-
-Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\entry.blade.php
-
-### Meta
-- **Role:** `page`
-- **Variables:** `entry`, `html`, `content`, `bodyHtml`
-- **Extends:** `layouts.app`
-
-### Tags
-`page`
-
-
----
-
 ## footer
 **ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/partials/footer.blade.php`
 **Path:** `resources/views/partials/footer.blade.php`
@@ -88,6 +71,23 @@ Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\partial
 
 ### Meta
 - **Role:** `page`
+
+### Tags
+`page`
+
+
+---
+
+## index
+**ID:** `blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/templates/index.blade.php`
+**Path:** `resources/views/templates/index.blade.php`
+
+Page template: C:\Users\dattebayo\Desktop\proj\stupidCms\resources/views\templates\index.blade.php
+
+### Meta
+- **Role:** `page`
+- **Variables:** `entry`, `html`, `content`, `bodyHtml`
+- **Extends:** `layouts.app`
 
 ### Tags
 `page`

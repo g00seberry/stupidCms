@@ -27,7 +27,7 @@ test('admin can create entry', function () {
 
     $response->assertCreated()
         ->assertJsonStructure([
-            'data' => ['id', 'post_type_id', 'title', 'slug', 'status'],
+            'data' => ['id', 'post_type_id', 'title', 'status'],
         ])
         ->assertJsonPath('data.title', 'Test Article')
         ->assertJsonPath('data.post_type_id', $this->postType->id);
@@ -50,31 +50,6 @@ test('entry is created with correct author', function () {
     
     $entry = Entry::latest()->first();
     expect($entry->author_id)->toBe($this->user->id);
-});
-
-test('entry slug is auto-generated from title', function () {
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/entries', [
-            'post_type_id' => $this->postType->id,
-            'title' => 'Laravel Testing Guide',
-        ]);
-
-    $response->assertCreated()
-        ->assertJsonPath('data.slug', 'laravel-testing-guide');
-});
-
-test('entry can be created with custom slug', function () {
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/entries', [
-            'post_type_id' => $this->postType->id,
-            'title' => 'Laravel Testing Guide',
-            'slug' => 'custom-slug',
-        ]);
-
-    $response->assertCreated()
-        ->assertJsonPath('data.slug', 'custom-slug');
 });
 
 test('entry is created as draft by default', function () {
@@ -189,28 +164,3 @@ test('entry can be created with template_override', function () {
     $entry = Entry::latest()->first();
     expect($entry->template_override)->toBe('templates.custom');
 });
-
-test('duplicate slug is made unique', function () {
-    // Create first entry
-    Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->user->id,
-        'title' => 'Test Article',
-        'slug' => 'test-article',
-    ]);
-
-    // Try to create second with same title (should auto-generate unique slug)
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/entries', [
-            'post_type_id' => $this->postType->id,
-            'title' => 'Test Article',
-        ]);
-
-    $response->assertCreated();
-    
-    $slug = $response->json('data.slug');
-    expect($slug)->not->toBe('test-article')
-        ->and($slug)->toStartWith('test-article-');
-});
-

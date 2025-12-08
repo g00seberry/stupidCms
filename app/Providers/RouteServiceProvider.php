@@ -14,9 +14,9 @@ use Illuminate\Support\Str;
 /**
  * Service Provider для маршрутизации.
  *
- * Настраивает rate limiters для API, login, refresh, search.
+ * Настраивает rate limiters для API, login, refresh.
  * Загружает маршруты в детерминированном порядке:
- * 1) Core → 2) Public API → 3) Admin API → 4) Plugins → 5) Content → 6) Fallback
+ * 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Fallback
  *
  * @package App\Providers
  */
@@ -62,18 +62,9 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(20)->by($key);
         });
 
-        RateLimiter::for('search-public', function (Request $request) {
-            return Limit::perMinute(240)->by($request->ip());
-        });
-
-        RateLimiter::for('search-reindex', function (Request $request) {
-            $identifier = $request->user()?->getAuthIdentifier();
-            return Limit::perMinute(10)->by($identifier ?: $request->ip());
-        });
-
         $this->routes(function () {
             // Порядок загрузки роутов (детерминированный):
-            // 1) Core → 2) Public API → 3) Admin API → 4) Plugins → 5) Content → 6) Fallback
+            // 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Fallback
             
             // 1) System/Core routes - загружаются первыми
             // Включают: /, статические сервисные пути

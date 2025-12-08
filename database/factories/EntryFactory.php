@@ -24,7 +24,6 @@ class EntryFactory extends Factory
         return [
             'post_type_id' => PostType::factory(),
             'title' => fake()->sentence(),
-            'slug' => fake()->unique()->slug(),
             'status' => 'draft',
             'published_at' => null,
             'author_id' => User::factory(),

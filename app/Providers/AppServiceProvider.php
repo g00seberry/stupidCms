@@ -41,12 +41,6 @@ use App\Domain\Auth\JwtService;
 use App\Domain\Auth\RefreshTokenRepository;
 use App\Domain\Auth\RefreshTokenRepositoryImpl;
 use App\Domain\Media\EloquentMediaRepository;
-use App\Domain\Plugins\Contracts\PluginActivatorInterface;
-use App\Domain\Plugins\Contracts\PluginsSynchronizerInterface;
-use App\Domain\Plugins\Contracts\RouteReloader;
-use App\Domain\Plugins\PluginActivator;
-use App\Domain\Plugins\Services\PluginsRouteReloader;
-use App\Domain\Plugins\Services\PluginsSynchronizer;
 use App\Domain\Media\Events\MediaDeleted;
 use App\Domain\Media\Events\MediaProcessed;
 use App\Domain\Media\Events\MediaUploaded;
@@ -223,11 +217,6 @@ class AppServiceProvider extends ServiceProvider
 
             return new MediaValidationPipeline($validatorsIterable);
         });
-
-        // Плагины
-        $this->app->bind(RouteReloader::class, PluginsRouteReloader::class);
-        $this->app->bind(PluginsSynchronizerInterface::class, PluginsSynchronizer::class);
-        $this->app->bind(PluginActivatorInterface::class, PluginActivator::class);
 
         // Blueprint services
         $this->app->singleton(DependencyGraphService::class);

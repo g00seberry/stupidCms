@@ -111,31 +111,6 @@ test('get statuses returns all statuses', function () {
         ->and($statuses)->toHaveCount(2);
 });
 
-test('url method returns flat url for page type', function () {
-    $entry = new Entry();
-    $entry->slug = 'test-page';
-    
-    $postType = new PostType();
-    $postType->name = 'Page';
-    
-    $entry->setRelation('postType', $postType);
-
-    expect($entry->url())->toBe('/test-page');
-});
-
-test('url method returns flat url for all types', function () {
-    $entry = new Entry();
-    $entry->slug = 'test-post';
-    
-    $postType = new PostType();
-    $postType->name = 'Blog';
-    
-    $entry->setRelation('postType', $postType);
-
-    // Теперь все URL плоские, так как slug глобально уникален
-    expect($entry->url())->toBe('/test-post');
-});
-
 test('has no guarded attributes', function () {
     $entry = new Entry();
 

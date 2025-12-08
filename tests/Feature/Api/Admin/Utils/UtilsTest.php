@@ -26,23 +26,6 @@ test('generates slug from title', function () {
         ->assertJsonPath('unique', 'new-landing-page');
 });
 
-test('ensures unique slug when base exists', function () {
-    // Create entry with slug
-    Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->admin->id,
-        'slug' => 'test-page',
-    ]);
-
-    $response = $this->actingAs($this->admin)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Test Page');
-
-    $response->assertOk()
-        ->assertJsonPath('base', 'test-page')
-        ->assertJsonPath('unique', 'test-page-2');
-});
-
 test('checks reserved routes when generating slug', function () {
     // Note: This behavior depends on UniqueSlugService checking ReservedRoute
     // in the callable provided by UtilsController
@@ -63,25 +46,6 @@ test('checks reserved routes when generating slug', function () {
     $unique = $response->json('unique');
     // Either 'api' or 'api-2' depending on implementation
     expect($unique)->toBeString()->not->toBeEmpty();
-});
-
-test('slug must be globally unique', function () {
-    $articleType = PostType::factory()->create(['name' => 'Article']);
-
-    Entry::factory()->create([
-        'post_type_id' => $articleType->id,
-        'author_id' => $this->admin->id,
-        'slug' => 'test',
-    ]);
-
-    // Same slug for different post type should fail (global uniqueness)
-    $response = $this->actingAs($this->admin)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Test');
-
-    $response->assertOk()
-        ->assertJsonPath('base', 'test')
-        ->assertJsonPath('unique', 'test-2');
 });
 
 test('handles empty title', function () {
@@ -108,21 +72,6 @@ test('slugify requires authentication', function () {
     expect($response->status())->toBeIn([401, 419]);
 });
 
-test('generates unique slug when base exists', function () {
-    Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->admin->id,
-        'slug' => 'test',
-    ]);
-
-    $response = $this->actingAs($this->admin)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Test');
-
-    $response->assertOk()
-        ->assertJsonPath('unique', 'test-2');
-});
-
 test('handles very long titles', function () {
     $longTitle = str_repeat('a', 600);
 
@@ -134,23 +83,3 @@ test('handles very long titles', function () {
     $response->assertStatus(422)
         ->assertJsonValidationErrors('title');
 });
-
-test('generates incremental suffixes for multiple duplicates', function () {
-    // Create multiple entries with same base
-    for ($i = 0; $i < 3; $i++) {
-        Entry::factory()->create([
-            'post_type_id' => $this->postType->id,
-            'author_id' => $this->admin->id,
-            'slug' => $i === 0 ? 'duplicate' : 'duplicate-' . ($i + 1),
-        ]);
-    }
-
-    $response = $this->actingAs($this->admin)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson('/api/v1/admin/utils/slugify?title=Duplicate');
-
-    $response->assertOk()
-        ->assertJsonPath('base', 'duplicate')
-        ->assertJsonPath('unique', 'duplicate-4');
-});
-

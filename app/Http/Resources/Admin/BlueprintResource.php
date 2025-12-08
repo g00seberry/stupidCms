@@ -47,7 +47,6 @@ class BlueprintResource extends AdminJsonResource
             'post_types' => $this->whenLoaded('postTypes', function () {
                 return $this->postTypes->map(fn($pt) => [
                     'id' => $pt->id,
-                    'slug' => $pt->slug,
                     'name' => $pt->name,
                 ]);
             }),

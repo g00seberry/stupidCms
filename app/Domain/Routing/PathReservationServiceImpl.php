@@ -127,7 +127,6 @@ final class PathReservationServiceImpl implements PathReservationService
         }
         
         // Кэшируем список первых сегментов зарезервированных путей для оптимизации
-        // Это снижает нагрузку на БД при частых проверках в PageController
         // Если первый сегмент не заблокирован, путь точно не зарезервирован
         $firstSegment = strtolower(ltrim(Str::before(ltrim($normalized, '/'), '/'), '/'));
         

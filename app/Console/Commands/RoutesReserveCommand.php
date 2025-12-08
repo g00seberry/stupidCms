@@ -25,7 +25,7 @@ class RoutesReserveCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'routes:reserve {path : The path to reserve} {source : The source identifier (e.g., system:feeds, plugin:shop)} {reason? : Optional reason for reservation}';
+    protected $signature = 'routes:reserve {path : The path to reserve} {source : The source identifier (e.g., system:feeds)} {reason? : Optional reason for reservation}';
 
     /**
      * Описание консольной команды.

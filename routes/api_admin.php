@@ -5,8 +5,6 @@ use App\Http\Controllers\Admin\V1\BlueprintEmbedController;
 use App\Http\Controllers\Admin\V1\OptionsController;
 use App\Http\Controllers\Admin\V1\PathController;
 use App\Http\Controllers\Admin\V1\PathReservationController;
-use App\Http\Controllers\Admin\V1\PluginsController;
-use App\Http\Controllers\Admin\V1\SearchAdminController;
 use App\Http\Controllers\Admin\V1\TemplateController;
 use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
@@ -60,22 +58,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->where('name', '.*')
         ->name('admin.v1.templates.update');
     
-    Route::get('/plugins', [PluginsController::class, 'index'])
-        ->middleware(['can:plugins.read', 'throttle:60,1'])
-        ->name('admin.v1.plugins.index');
-
-    Route::post('/plugins/sync', [PluginsController::class, 'sync'])
-        ->middleware(['can:plugins.sync', 'throttle:10,1'])
-        ->name('admin.v1.plugins.sync');
-
-    Route::post('/plugins/{slug}/enable', [PluginsController::class, 'enable'])
-        ->middleware(['can:plugins.toggle', 'throttle:10,1'])
-        ->name('admin.v1.plugins.enable');
-
-    Route::post('/plugins/{slug}/disable', [PluginsController::class, 'disable'])
-        ->middleware(['can:plugins.toggle', 'throttle:10,1'])
-        ->name('admin.v1.plugins.disable');
-
     // Path reservations
     Route::get('/reservations', [PathReservationController::class, 'index'])
         ->middleware('can:viewAny,' . ReservedRoute::class);
@@ -235,10 +217,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
             ->middleware(['can:options.restore', 'throttle:30,1'])
             ->name('admin.v1.options.restore');
     });
-
-    Route::post('/search/reindex', [SearchAdminController::class, 'reindex'])
-        ->middleware(['can:search.reindex', 'throttle:search-reindex'])
-        ->name('admin.v1.search.reindex');
 
     // Blueprints (full CRUD + dependencies/embeddable)
     Route::prefix('blueprints')->group(function () {

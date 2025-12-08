@@ -56,7 +56,7 @@ class EntriesSeeder extends Seeder
         $aboutPage = Entry::firstOrCreate(
             [
                 'post_type_id' => $pagePostType->id,
-                'slug' => 'about',
+                'title' => 'About Us',
             ],
             [
                 'title' => 'About Us',
@@ -76,7 +76,7 @@ class EntriesSeeder extends Seeder
         $contactPage = Entry::firstOrCreate(
             [
                 'post_type_id' => $pagePostType->id,
-                'slug' => 'contact',
+                'title' => 'Contact Us',
             ],
             [
                 'title' => 'Contact Us',
@@ -96,7 +96,7 @@ class EntriesSeeder extends Seeder
         $privacyPage = Entry::firstOrCreate(
             [
                 'post_type_id' => $pagePostType->id,
-                'slug' => 'privacy-policy',
+                'title' => 'Privacy Policy',
             ],
             [
                 'title' => 'Privacy Policy',
@@ -133,7 +133,7 @@ class EntriesSeeder extends Seeder
         $article1 = Entry::firstOrCreate(
             [
                 'post_type_id' => $articlePostType->id,
-                'slug' => 'introduction-to-laravel-12',
+                'title' => 'Introduction to Laravel 12',
             ],
             [
                 'title' => 'Introduction to Laravel 12',
@@ -158,7 +158,7 @@ class EntriesSeeder extends Seeder
         $article2 = Entry::firstOrCreate(
             [
                 'post_type_id' => $articlePostType->id,
-                'slug' => 'ai-trends-2025',
+                'title' => 'AI Trends in 2025',
             ],
             [
                 'title' => 'AI Trends in 2025',
@@ -185,7 +185,7 @@ class EntriesSeeder extends Seeder
         $article3 = Entry::firstOrCreate(
             [
                 'post_type_id' => $articlePostType->id,
-                'slug' => 'mobile-app-development-guide',
+                'title' => 'Complete Guide to Mobile App Development',
             ],
             [
                 'title' => 'Complete Guide to Mobile App Development',
@@ -220,7 +220,7 @@ class EntriesSeeder extends Seeder
         $product1 = Entry::firstOrCreate(
             [
                 'post_type_id' => $productPostType->id,
-                'slug' => 'premium-software-license',
+                'title' => 'Premium Software License',
             ],
             [
                 'title' => 'Premium Software License',
@@ -245,7 +245,7 @@ class EntriesSeeder extends Seeder
         $product2 = Entry::firstOrCreate(
             [
                 'post_type_id' => $productPostType->id,
-                'slug' => 'enterprise-solution',
+                'title' => 'Enterprise Solution Package',
             ],
             [
                 'title' => 'Enterprise Solution Package',
@@ -271,7 +271,7 @@ class EntriesSeeder extends Seeder
         Entry::firstOrCreate(
             [
                 'post_type_id' => $articlePostType->id,
-                'slug' => 'upcoming-features-draft',
+                'title' => 'Upcoming Features (Draft)',
             ],
             [
                 'title' => 'Upcoming Features (Draft)',

@@ -9,13 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      * 
-     * Добавляет индекс по slug для оптимизации поиска записей по slug в PageController.
+     * Миграция больше не выполняет действий (slug удалён из entries).
      */
     public function up(): void
     {
-        Schema::table('entries', function (Blueprint $table) {
-            $table->index('slug', 'entries_slug_idx');
-        });
+        // Пустая миграция - slug удалён из entries
     }
 
     /**
@@ -23,8 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('entries', function (Blueprint $table) {
-            $table->dropIndex('entries_slug_idx');
-        });
+        // Пустая миграция - slug удалён из entries
     }
 };

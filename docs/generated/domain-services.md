@@ -4,17 +4,18 @@
 **ID:** `domain_service:View/BladeTemplateResolver`
 **Path:** `app/Domain/View/BladeTemplateResolver.php`
 
-Резолвер для выбора Blade-шаблона по файловой конвенции.
+Резолвер для выбора Blade-шаблона на основе полей template.
 
 ### Details
-Приоритет:
+Приоритет выбора шаблона:
 1. Entry.template_override (если задано — используется как полное имя вью)
-2. entry--{postType}--{slug} (если существует)
-3. entry--{postType} (если существует)
-4. entry (глобальный)
+2. PostType.template (если задано)
+3. templates.index (дефолтный шаблон)
+Все шаблоны должны находиться в папке templates или дочерних папках.
 
 ### Meta
 - **Methods:** `forEntry`
+- **Dependencies:** `App\Domain\View\TemplatePathValidator`
 - **Interface:** `App\Domain\View\TemplateResolver`
 
 ### Tags
@@ -149,27 +150,6 @@ JSON-представлению).
 
 ---
 
-## ElasticsearchSearchClient
-**ID:** `domain_service:Search/Clients/ElasticsearchSearchClient`
-**Path:** `app/Domain/Search/Clients/ElasticsearchSearchClient.php`
-
-Реализация SearchClientInterface для Elasticsearch.
-
-### Details
-Использует HTTP клиент Laravel для взаимодействия с Elasticsearch API.
-Поддерживает базовую аутентификацию и настройку SSL.
-
-### Meta
-- **Methods:** `search`, `createIndex`, `deleteIndex`, `updateAliases`, `getIndicesForAlias`, `bulk`, `refresh`
-- **Dependencies:** `Illuminate\Http\Client\Factory`
-- **Interface:** `App\Domain\Search\SearchClientInterface`
-
-### Tags
-`search`, `client`
-
-
----
-
 ## EloquentMediaRepository
 **ID:** `domain_service:Media/EloquentMediaRepository`
 **Path:** `app/Domain/Media/EloquentMediaRepository.php`
@@ -182,25 +162,6 @@ JSON-представлению).
 
 ### Tags
 `media`
-
-
----
-
-## EntryToSearchDoc
-**ID:** `domain_service:Search/Transformers/EntryToSearchDoc`
-**Path:** `app/Domain/Search/Transformers/EntryToSearchDoc.php`
-
-Трансформер Entry в документ для поискового индекса.
-
-### Details
-Преобразует Entry в структуру документа для Elasticsearch:
-извлекает текст из data_json, нормализует пробелы, формирует excerpt.
-
-### Meta
-- **Methods:** `transform`
-
-### Tags
-`search`, `transformer`
 
 
 ---
@@ -462,26 +423,6 @@ Opaque-хэндл изображения для разных бэкендов.
 
 ### Tags
 `media`, `image`
-
-
----
-
-## IndexManager
-**ID:** `domain_service:Search/IndexManager`
-**Path:** `app/Domain/Search/IndexManager.php`
-
-Менеджер для управления индексами поиска.
-
-### Details
-Выполняет реиндексацию: создаёт новый индекс, индексирует все опубликованные записи,
-переключает алиасы и удаляет старые индексы.
-
-### Meta
-- **Methods:** `reindex`
-- **Dependencies:** `App\Domain\Search\SearchClientInterface`, `App\Domain\Search\Transformers\EntryToSearchDoc`
-
-### Tags
-`search`
 
 
 ---
@@ -920,26 +861,6 @@ Pipeline валидации медиа-файлов.
 
 ---
 
-## NullSearchClient
-**ID:** `domain_service:Search/Clients/NullSearchClient`
-**Path:** `app/Domain/Search/Clients/NullSearchClient.php`
-
-Null-реализация SearchClientInterface.
-
-### Details
-Используется когда поиск отключен. Все методы возвращают пустые результаты
-или выполняют no-op операции.
-
-### Meta
-- **Methods:** `search`, `createIndex`, `deleteIndex`, `updateAliases`, `getIndicesForAlias`, `bulk`, `refresh`
-- **Interface:** `App\Domain\Search\SearchClientInterface`
-
-### Tags
-`search`, `client`
-
-
----
-
 ## NullableRule
 **ID:** `domain_service:Blueprint/Validation/Rules/NullableRule`
 **Path:** `app/Domain/Blueprint/Validation/Rules/NullableRule.php`
@@ -1137,196 +1058,6 @@ Null-реализация SearchClientInterface.
 
 ---
 
-## PluginActivator
-**ID:** `domain_service:Plugins/PluginActivator`
-**Path:** `app/Domain/Plugins/PluginActivator.php`
-
-Активатор плагинов.
-
-### Details
-Управляет включением и отключением плагинов с транзакционной безопасностью
-и автоматической перезагрузкой маршрутов.
-
-### Meta
-- **Methods:** `enable`, `disable`
-- **Dependencies:** `App\Domain\Plugins\Contracts\RouteReloader`
-- **Interface:** `App\Domain\Plugins\Contracts\PluginActivatorInterface`
-
-### Tags
-`plugin`
-
-
----
-
-## PluginAutoloader
-**ID:** `domain_service:Plugins/Services/PluginAutoloader`
-**Path:** `app/Domain/Plugins/Services/PluginAutoloader.php`
-
-Автозагрузчик классов плагинов.
-
-### Details
-Регистрирует PSR-4 автозагрузку для классов плагинов в Composer ClassLoader.
-
-### Meta
-- **Methods:** `register`
-
-### Tags
-`plugin`, `service`
-
-
----
-
-## PluginDisabled
-**ID:** `domain_service:Plugins/Events/PluginDisabled`
-**Path:** `app/Domain/Plugins/Events/PluginDisabled.php`
-
-Событие: плагин отключён.
-
-### Details
-Отправляется после успешного отключения плагина в БД.
-
-### Meta
-- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
-- **Dependencies:** `App\Models\Plugin`
-
-### Tags
-`plugin`, `event`
-
-
----
-
-## PluginEnabled
-**ID:** `domain_service:Plugins/Events/PluginEnabled`
-**Path:** `app/Domain/Plugins/Events/PluginEnabled.php`
-
-Событие: плагин включён.
-
-### Details
-Отправляется после успешного включения плагина в БД.
-
-### Meta
-- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
-- **Dependencies:** `App\Models\Plugin`
-
-### Tags
-`plugin`, `event`
-
-
----
-
-## PluginRegistry
-**ID:** `domain_service:Plugins/PluginRegistry`
-**Path:** `app/Domain/Plugins/PluginRegistry.php`
-
-Реестр плагинов.
-
-### Details
-Управляет списком включённых плагинов и их провайдерами.
-
-### Meta
-- **Methods:** `enabled`, `enabledProviders`
-
-### Tags
-`plugin`
-
-
----
-
-## PluginsRouteReloader
-**ID:** `domain_service:Plugins/Services/PluginsRouteReloader`
-**Path:** `app/Domain/Plugins/Services/PluginsRouteReloader.php`
-
-Перезагрузчик маршрутов плагинов.
-
-### Details
-Очищает кэш маршрутов, регистрирует автозагрузку, регистрирует провайдеры
-включённых плагинов и кэширует маршруты (если включено).
-
-### Meta
-- **Methods:** `reload`
-- **Dependencies:** `Illuminate\Contracts\Foundation\Application`, `App\Domain\Plugins\PluginRegistry`, `App\Domain\Plugins\Services\PluginAutoloader`
-- **Interface:** `App\Domain\Plugins\Contracts\RouteReloader`
-
-### Tags
-`plugin`, `service`
-
-
----
-
-## PluginsRoutesReloaded
-**ID:** `domain_service:Plugins/Events/PluginsRoutesReloaded`
-**Path:** `app/Domain/Plugins/Events/PluginsRoutesReloaded.php`
-
-Событие: маршруты плагинов перезагружены.
-
-### Details
-Отправляется после успешной перезагрузки маршрутов плагинов.
-
-### Meta
-- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
-
-### Tags
-`plugin`, `event`
-
-
----
-
-## PluginsSyncCommand
-**ID:** `domain_service:Plugins/Commands/PluginsSyncCommand`
-**Path:** `app/Domain/Plugins/Commands/PluginsSyncCommand.php`
-
-Команда для синхронизации плагинов из файловой системы в БД.
-
-### Meta
-- **Methods:** `handle`
-- **Dependencies:** `App\Domain\Plugins\Contracts\PluginsSynchronizerInterface`
-- **Interface:** `Symfony\Component\Console\Command\SignalableCommandInterface`
-
-### Tags
-`plugin`, `command`
-
-
----
-
-## PluginsSynced
-**ID:** `domain_service:Plugins/Events/PluginsSynced`
-**Path:** `app/Domain/Plugins/Events/PluginsSynced.php`
-
-Событие: плагины синхронизированы.
-
-### Details
-Отправляется после успешной синхронизации плагинов из файловой системы в БД.
-
-### Meta
-- **Methods:** `dispatch`, `dispatchIf`, `dispatchUnless`, `broadcast`, `restoreModel`
-
-### Tags
-`plugin`, `event`
-
-
----
-
-## PluginsSynchronizer
-**ID:** `domain_service:Plugins/Services/PluginsSynchronizer`
-**Path:** `app/Domain/Plugins/Services/PluginsSynchronizer.php`
-
-Синхронизатор плагинов.
-
-### Details
-Синхронизирует плагины из файловой системы в БД:
-обнаруживает манифесты, создаёт/обновляет записи, удаляет несуществующие.
-
-### Meta
-- **Methods:** `sync`
-- **Dependencies:** `App\Domain\Plugins\Contracts\RouteReloader`
-- **Interface:** `App\Domain\Plugins\Contracts\PluginsSynchronizerInterface`
-
-### Tags
-`plugin`, `service`
-
-
----
-
 ## PostTypeOptions
 **ID:** `domain_service:PostTypes/PostTypeOptions`
 **Path:** `app/Domain/PostTypes/PostTypeOptions.php`
@@ -1419,25 +1150,6 @@ Data Transfer Object для RefreshToken.
 
 ### Tags
 `auth`
-
-
----
-
-## ReindexSearchJob
-**ID:** `domain_service:Search/Jobs/ReindexSearchJob`
-**Path:** `app/Domain/Search/Jobs/ReindexSearchJob.php`
-
-Job для реиндексации поискового индекса в фоновом режиме.
-
-### Details
-Выполняет полную реиндексацию всех опубликованных записей через очередь.
-
-### Meta
-- **Methods:** `handle`, `dispatch`, `dispatchIf`, `dispatchUnless`, `dispatchSync`, `dispatchAfterResponse`, `withChain`, `attempts`, `delete`, `fail`, `release`, `withFakeQueueInteractions`, `assertDeleted`, `assertNotDeleted`, `assertFailed`, `assertFailedWith`, `assertNotFailed`, `assertReleased`, `assertNotReleased`, `setJob`, `onConnection`, `onQueue`, `onGroup`, `withDeduplicator`, `allOnConnection`, `allOnQueue`, `delay`, `withoutDelay`, `afterCommit`, `beforeCommit`, `through`, `chain`, `prependToChain`, `appendToChain`, `dispatchNextJobInChain`, `invokeChainCatchCallbacks`, `assertHasChain`, `assertDoesntHaveChain`, `restoreModel`
-- **Interface:** `Illuminate\Contracts\Queue\ShouldQueue`
-
-### Tags
-`search`, `job`
 
 
 ---
@@ -1613,119 +1325,6 @@ Job для реиндексации поискового индекса в фо�
 
 ---
 
-## SearchHit
-**ID:** `domain_service:Search/SearchHit`
-**Path:** `app/Domain/Search/SearchHit.php`
-
-Результат поиска (одна найденная запись).
-
-### Details
-Представляет одну найденную запись с информацией о релевантности
-и подсветкой совпадений в тексте.
-
-### Meta
-
-
-### Tags
-`search`
-
-
----
-
-## SearchQuery
-**ID:** `domain_service:Search/SearchQuery`
-**Path:** `app/Domain/Search/SearchQuery.php`
-
-Value Object для поискового запроса.
-
-### Details
-Инкапсулирует параметры поиска: текст запроса, фильтры по типам записей,
-термам, датам, пагинацию.
-
-### Meta
-- **Methods:** `query`, `postTypes`, `terms`, `from`, `to`, `page`, `perPage`, `offset`, `isBlank`
-- **Dependencies:** `Carbon\CarbonImmutable`, `Carbon\CarbonImmutable`
-
-### Tags
-`search`
-
-
----
-
-## SearchReindexCommand
-**ID:** `domain_service:Search/Commands/SearchReindexCommand`
-**Path:** `app/Domain/Search/Commands/SearchReindexCommand.php`
-
-Команда для реиндексации поискового индекса.
-
-### Meta
-- **Methods:** `handle`
-- **Interface:** `Symfony\Component\Console\Command\SignalableCommandInterface`
-
-### Tags
-`search`, `command`
-
-
----
-
-## SearchResult
-**ID:** `domain_service:Search/SearchResult`
-**Path:** `app/Domain/Search/SearchResult.php`
-
-Результаты поискового запроса.
-
-### Details
-Инкапсулирует результаты поиска: список найденных записей, общее количество,
-информацию о пагинации и время выполнения запроса.
-
-### Meta
-- **Methods:** `hits`, `total`, `page`, `perPage`, `tookMs`, `empty`
-
-### Tags
-`search`
-
-
----
-
-## SearchService
-**ID:** `domain_service:Search/SearchService`
-**Path:** `app/Domain/Search/SearchService.php`
-
-Сервис для выполнения поисковых запросов.
-
-### Details
-Обрабатывает поисковые запросы через поисковый движок (Elasticsearch).
-Строит запросы, обрабатывает ошибки, маппит результаты.
-
-### Meta
-- **Methods:** `search`
-- **Dependencies:** `App\Domain\Search\SearchClientInterface`, `App\Support\Errors\ErrorFactory`
-- **Interface:** `App\Domain\Search\Contracts\SearchServiceInterface`
-
-### Tags
-`search`
-
-
----
-
-## SearchTermFilter
-**ID:** `domain_service:Search/ValueObjects/SearchTermFilter`
-**Path:** `app/Domain/Search/ValueObjects/SearchTermFilter.php`
-
-Value Object для фильтра поиска по терму.
-
-### Details
-Представляет фильтр по терму таксономии в формате "taxonomy_id:term_id".
-
-### Meta
-- **Methods:** `fromString`
-
-### Tags
-`search`, `valueobject`
-
-
----
-
 ## SizeLimitValidator
 **ID:** `domain_service:Media/Validation/SizeLimitValidator`
 **Path:** `app/Domain/Media/Validation/SizeLimitValidator.php`
@@ -1763,6 +1362,25 @@ Value Object для фильтра поиска по терму.
 
 ### Tags
 `media`, `service`
+
+
+---
+
+## TemplatePathValidator
+**ID:** `domain_service:View/TemplatePathValidator`
+**Path:** `app/Domain/View/TemplatePathValidator.php`
+
+Валидатор путей шаблонов.
+
+### Details
+Проверяет, что шаблон находится в папке templates или дочерних папках.
+Все остальные директории считаются системными и недоступны для шаблонов.
+
+### Meta
+- **Methods:** `validate`, `normalize`, `ensurePrefix`
+
+### Tags
+`view`
 
 
 ---

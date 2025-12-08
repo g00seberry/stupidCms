@@ -2,24 +2,24 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 234
+**Всего сущностей:** 204
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (23 сущностей)
+Eloquent-модели для работы с БД (22 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (96 сущностей)
+Доменные сервисы, действия, репозитории (76 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
 
 ### [Config Areas](./config-areas.md)
-Логические секции конфигурации (24 сущностей)
+Логические секции конфигурации (22 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (83 сущностей)
+HTTP эндпоинты API (76 сущностей)
 
 ## Быстрая навигация
 
@@ -35,30 +35,30 @@ HTTP эндпоинты API (83 сущностей)
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 - [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
-- *...и еще 13 сущностей*
+- *...и еще 12 сущностей*
 
 ### Domain Services
 
-- [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона по файловой конвенции.
+- [BladeTemplateResolver](./domain-services.md#bladetemplateresolver) - Резолвер для выбора Blade-шаблона на основе полей template.
 - [ConditionalRule](./domain-services.md#conditionalrule) - Доменное правило валидации: условное правило.
 - [ConditionalRuleHandler](./domain-services.md#conditionalrulehandler) - Обработчик правила ConditionalRule.
 - [CorruptionValidator](./domain-services.md#corruptionvalidator) - Валидатор проверки целостности (corruption) медиа-файлов.
 - [DataTypeMapper](./domain-services.md#datatypemapper) - Маппер типов данных Path в типы для валидации.
 - [DistinctRule](./domain-services.md#distinctrule) - Правило валидации: уникальность элементов массива.
 - [DistinctRuleHandler](./domain-services.md#distinctrulehandler) - Обработчик правила DistinctRule.
-- [ElasticsearchSearchClient](./domain-services.md#elasticsearchsearchclient) - Реализация SearchClientInterface для Elasticsearch.
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
-- [EntryToSearchDoc](./domain-services.md#entrytosearchdoc) - Трансформер Entry в документ для поискового индекса.
-- *...и еще 86 сущностей*
+- [EntryValidationService](./domain-services.md#entryvalidationservice) - Доменный сервис валидации контента Entry на основе Blueprint.
+- [ExifManager](./domain-services.md#exifmanager) - Менеджер для управления EXIF данными изображений.
+- *...и еще 66 сущностей*
 
 ### Blade Views
 
 - [404](./blade-views.md#404) - Page template: resources/views/errors/404.blade.php
 - [app](./blade-views.md#app) - Page template: resources/views/layouts/app.blade.php
 - [default](./blade-views.md#default) - Page template: resources/views/home/default.blade.php
-- [entry](./blade-views.md#entry) - Page template: resources/views/entry.blade.php
 - [footer](./blade-views.md#footer) - Page template: resources/views/partials/footer.blade.php
 - [header](./blade-views.md#header) - Page template: resources/views/partials/header.blade.php
+- [index](./blade-views.md#index) - Page template: resources/views/templates/index.blade.php
 - [public](./blade-views.md#public) - Page template: resources/views/layouts/public.blade.php
 - [show](./blade-views.md#show) - Page template: resources/views/pages/show.blade.php
 
@@ -74,7 +74,7 @@ HTTP эндпоинты API (83 сущностей)
 - [Errors](./config-areas.md#errors) - Configuration: Errors
 - [Filesystems](./config-areas.md#filesystems) - Configuration: Filesystems
 - [Jwt](./config-areas.md#jwt) - Configuration: Jwt
-- *...и еще 14 сущностей*
+- *...и еще 12 сущностей*
 
 ### HTTP Endpoints
 
@@ -88,7 +88,7 @@ HTTP эндпоинты API (83 сущностей)
 - [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
 - [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
 - [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
-- *...и еще 73 сущностей*
+- *...и еще 66 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (83 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-12-05 10:51:44
+**Сгенерировано:** 2025-12-08 14:51:31
 
 Для обновления документации выполните:
 ```bash

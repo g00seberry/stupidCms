@@ -24,7 +24,6 @@ test('returns default template when no specific templates exist', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
-        'slug' => 'test-article',
     ]);
 
     $template = $resolver->forEntry($entry);
@@ -111,7 +110,6 @@ test('uses post type template when specified', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $postType->id,
         'author_id' => $this->user->id,
-        'slug' => 'test-slug',
     ]);
 
     $template = $resolver->forEntry($entry);

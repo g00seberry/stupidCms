@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
  *
  * @property string $id ULID идентификатор
- * @property string $namespace Пространство имён опции (например, 'app', 'plugin.name')
+ * @property string $namespace Пространство имён опции (например, 'app', 'custom')
  * @property string $key Ключ опции (уникален в рамках namespace)
  * @property mixed $value_json Значение опции (любой JSON-совместимый тип)
  * @property string|null $description Описание опции

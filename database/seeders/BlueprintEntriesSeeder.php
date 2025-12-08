@@ -77,7 +77,7 @@ class BlueprintEntriesSeeder extends Seeder
         Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'laptop-pro-15',
+                'title' => 'Laptop Pro 15"',
             ],
             [
                 'title' => 'Laptop Pro 15"',
@@ -97,7 +97,7 @@ class BlueprintEntriesSeeder extends Seeder
         Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'wireless-mouse',
+                'title' => 'Wireless Mouse',
             ],
             [
                 'title' => 'Wireless Mouse',
@@ -117,7 +117,7 @@ class BlueprintEntriesSeeder extends Seeder
         Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'mechanical-keyboard',
+                'title' => 'Mechanical Keyboard RGB',
             ],
             [
                 'title' => 'Mechanical Keyboard RGB',
@@ -137,7 +137,7 @@ class BlueprintEntriesSeeder extends Seeder
         Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'usb-c-cable',
+                'title' => 'USB-C Cable 2m',
             ],
             [
                 'title' => 'USB-C Cable 2m',
@@ -169,7 +169,7 @@ class BlueprintEntriesSeeder extends Seeder
         $entry = Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'getting-started-with-laravel-12',
+                'title' => 'Getting Started with Laravel 12',
             ],
             [
                 'title' => 'Getting Started with Laravel 12',
@@ -211,7 +211,7 @@ class BlueprintEntriesSeeder extends Seeder
         $entry = Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'advanced-eloquent-techniques',
+                'title' => 'Advanced Eloquent Techniques',
             ],
             [
                 'title' => 'Advanced Eloquent Techniques',
@@ -253,7 +253,7 @@ class BlueprintEntriesSeeder extends Seeder
         $entry = Entry::firstOrCreate(
             [
                 'post_type_id' => $postType->id,
-                'slug' => 'building-restful-apis-with-laravel',
+                'title' => 'Building RESTful APIs with Laravel',
             ],
             [
                 'title' => 'Building RESTful APIs with Laravel',

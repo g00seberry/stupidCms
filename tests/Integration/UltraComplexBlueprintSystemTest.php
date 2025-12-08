@@ -509,7 +509,6 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->info('🔷 Creating PostType and Entry with ultra-complex data...');
 
         $eventPostType = PostType::create([
-            'slug' => 'event',
             'name' => 'Events',
             'blueprint_id' => $event->id,
         ]);
@@ -518,7 +517,6 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $eventEntry1 = Entry::create([
             'post_type_id' => $eventPostType->id,
             'title' => 'Laravel Conference 2025',
-            'slug' => 'laravel-conf-2025',
             'status' => Entry::STATUS_PUBLISHED,
             'published_at' => now(),
             'author_id' => $this->admin->id,
@@ -615,7 +613,6 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $eventEntry2 = Entry::create([
             'post_type_id' => $eventPostType->id,
             'title' => 'PHP Summit 2025',
-            'slug' => 'php-summit-2025',
             'status' => Entry::STATUS_PUBLISHED,
             'published_at' => now(),
             'author_id' => $this->admin->id,

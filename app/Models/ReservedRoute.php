@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $path Нормализованный путь (автоматически нормализуется при установке)
  * @property string $kind Тип резервации: 'path' (точное совпадение) или 'prefix' (префикс)
- * @property string|null $source Источник резервации (например, 'system', 'plugin.name')
+ * @property string|null $source Источник резервации (например, 'system')
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
