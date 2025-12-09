@@ -154,7 +154,7 @@ class BlueprintController extends Controller
      *     "embedded_in_count": 1,
      *     "post_types_count": 3,
      *     "post_types": [
-     *       {"id": 1, "slug": "article", "name": "Article"}
+     *       {"id": 1, "name": "Article"}
      *     ],
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"

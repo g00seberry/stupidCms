@@ -2,24 +2,24 @@
 
 Автоматически сгенерированная документация кодовой базы.
 
-**Всего сущностей:** 204
+**Всего сущностей:** 187
 
 ## Содержание
 
 ### [Models](./models.md)
-Eloquent-модели для работы с БД (22 сущностей)
+Eloquent-модели для работы с БД (20 сущностей)
 
 ### [Domain Services](./domain-services.md)
-Доменные сервисы, действия, репозитории (76 сущностей)
+Доменные сервисы, действия, репозитории (70 сущностей)
 
 ### [Blade Views](./blade-views.md)
 Blade-шаблоны для рендеринга (8 сущностей)
 
 ### [Config Areas](./config-areas.md)
-Логические секции конфигурации (22 сущностей)
+Логические секции конфигурации (21 сущностей)
 
 ### [HTTP Endpoints](./http-endpoints.md)
-HTTP эндпоинты API (76 сущностей)
+HTTP эндпоинты API (68 сущностей)
 
 ## Быстрая навигация
 
@@ -35,7 +35,7 @@ HTTP эндпоинты API (76 сущностей)
 - [Media](./models.md#media) - Eloquent модель для медиа-файлов (Media).
 - [MediaAvMetadata](./models.md#mediaavmetadata) - Eloquent модель для нормализованных AV-метаданных медиа (MediaAvMetadata).
 - [MediaImage](./models.md#mediaimage) - Eloquent модель для метаданных изображений (MediaImage).
-- *...и еще 12 сущностей*
+- *...и еще 10 сущностей*
 
 ### Domain Services
 
@@ -49,7 +49,7 @@ HTTP эндпоинты API (76 сущностей)
 - [EloquentMediaRepository](./domain-services.md#eloquentmediarepository) - Реализация MediaRepository на базе Eloquent.
 - [EntryValidationService](./domain-services.md#entryvalidationservice) - Доменный сервис валидации контента Entry на основе Blueprint.
 - [ExifManager](./domain-services.md#exifmanager) - Менеджер для управления EXIF данными изображений.
-- *...и еще 66 сущностей*
+- *...и еще 60 сущностей*
 
 ### Blade Views
 
@@ -74,7 +74,7 @@ HTTP эндпоинты API (76 сущностей)
 - [Errors](./config-areas.md#errors) - Configuration: Errors
 - [Filesystems](./config-areas.md#filesystems) - Configuration: Filesystems
 - [Jwt](./config-areas.md#jwt) - Configuration: Jwt
-- *...и еще 12 сущностей*
+- *...и еще 11 сущностей*
 
 ### HTTP Endpoints
 
@@ -88,7 +88,7 @@ HTTP эндпоинты API (76 сущностей)
 - [admin.v1.blueprints.index](./http-endpoints.md#admin-v1-blueprints-index) - GET /api/v1/admin/blueprints (api)
 - [admin.v1.blueprints.paths.index](./http-endpoints.md#admin-v1-blueprints-paths-index) - GET /api/v1/admin/blueprints/{blueprint}/paths (api)
 - [admin.v1.blueprints.paths.store](./http-endpoints.md#admin-v1-blueprints-paths-store) - POST /api/v1/admin/blueprints/{blueprint}/paths (api)
-- *...и еще 66 сущностей*
+- *...и еще 58 сущностей*
 
 ## Популярные теги
 
@@ -96,7 +96,7 @@ HTTP эндпоинты API (76 сущностей)
 
 ---
 
-**Сгенерировано:** 2025-12-08 14:51:31
+**Сгенерировано:** 2025-12-09 06:07:54
 
 Для обновления документации выполните:
 ```bash

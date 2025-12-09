@@ -6,12 +6,10 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\SlugifyPreviewResource;
-use App\Models\ReservedRoute;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\HttpErrorException;
 use App\Support\Slug\Slugifier;
-use App\Support\Slug\UniqueSlugService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 
@@ -19,7 +17,7 @@ use Illuminate\Validation\Validator;
  * Контроллер для утилитарных операций в админ-панели.
  *
  * Предоставляет вспомогательные операции: генерация slug'ов,
- * проверка зарезервированных путей, предпросмотр результатов.
+ * предпросмотр результатов.
  *
  * @package App\Http\Controllers\Admin\V1
  */
@@ -27,11 +25,9 @@ class UtilsController extends Controller
 {
     /**
      * @param \App\Support\Slug\Slugifier $slugifier Генератор slug'ов
-     * @param \App\Support\Slug\UniqueSlugService $uniqueSlugService Сервис для генерации уникальных slug'ов
      */
     public function __construct(
         private Slugifier $slugifier,
-        private UniqueSlugService $uniqueSlugService,
     ) {}
 
     /**
@@ -107,34 +103,16 @@ class UtilsController extends Controller
 
         $title = $request->input('title');
 
-        // Генерируем базовый slug
+        // Генерируем slug из заголовка
+        // Примечание: для обратной совместимости возвращаем base и unique
+        // (unique всегда равен base, проверка уникальности будет в будущем для route_nodes)
         $base = $this->slugifier->slugify($title);
 
         if (empty($base)) {
             return new SlugifyPreviewResource('', '');
         }
 
-        // Проверяем зарезервированные пути
-        $unique = $this->uniqueSlugService->ensureUnique(
-            $base,
-            function (string $slug): bool {
-                try {
-                    // Проверка зарезервированных путей
-                    return ReservedRoute::query()
-                        ->where('path', $slug)
-                        ->orWhere(function ($q) use ($slug) {
-                            $q->where('kind', 'prefix')
-                                ->where('path', 'like', $slug . '/%');
-                        })
-                        ->exists();
-                } catch (\Exception $e) {
-                    // Если таблиц нет (например, в тестах), считаем slug свободным
-                    return false;
-                }
-            }
-        );
-
-        return new SlugifyPreviewResource($base, $unique);
+        return new SlugifyPreviewResource($base, $base);
     }
 }
 

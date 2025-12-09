@@ -2,9 +2,7 @@
 
 use App\Http\Controllers\Admin\V1\BlueprintController;
 use App\Http\Controllers\Admin\V1\BlueprintEmbedController;
-use App\Http\Controllers\Admin\V1\OptionsController;
 use App\Http\Controllers\Admin\V1\PathController;
-use App\Http\Controllers\Admin\V1\PathReservationController;
 use App\Http\Controllers\Admin\V1\TemplateController;
 use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
@@ -19,7 +17,6 @@ use App\Http\Middleware\EnsureCanManagePostTypes;
 use App\Models\Entry;
 use App\Models\Media;
 use App\Models\Option;
-use App\Models\ReservedRoute;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -57,16 +54,7 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::put('/templates/{name}', [TemplateController::class, 'update'])
         ->where('name', '.*')
         ->name('admin.v1.templates.update');
-    
-    // Path reservations
-    Route::get('/reservations', [PathReservationController::class, 'index'])
-        ->middleware('can:viewAny,' . ReservedRoute::class);
-    Route::post('/reservations', [PathReservationController::class, 'store'])
-        ->middleware('can:create,' . ReservedRoute::class);
-    Route::delete('/reservations/{path}', [PathReservationController::class, 'destroy'])
-        ->where('path', '.*')
-        ->middleware('can:deleteAny,' . ReservedRoute::class);
-    
+
     // Post Types (full CRUD)
     Route::post('/post-types', [PostTypeController::class, 'store'])
         ->middleware(EnsureCanManagePostTypes::class)
@@ -196,27 +184,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->middleware('throttle:20,1')
         ->name('admin.v1.media.bulkForceDestroy');
 
-    Route::prefix('/options')->group(function () {
-        Route::get('/{namespace}', [OptionsController::class, 'index'])
-            ->middleware(['can:viewAny,' . Option::class, 'can:options.read', 'throttle:120,1'])
-            ->name('admin.v1.options.index');
-
-        Route::get('/{namespace}/{key}', [OptionsController::class, 'show'])
-            ->middleware(['can:options.read', 'throttle:120,1'])
-            ->name('admin.v1.options.show');
-
-        Route::put('/{namespace}/{key}', [OptionsController::class, 'put'])
-            ->middleware(['can:options.write', 'throttle:30,1'])
-            ->name('admin.v1.options.upsert');
-
-        Route::delete('/{namespace}/{key}', [OptionsController::class, 'destroy'])
-            ->middleware(['can:options.delete', 'throttle:30,1'])
-            ->name('admin.v1.options.destroy');
-
-        Route::post('/{namespace}/{key}/restore', [OptionsController::class, 'restore'])
-            ->middleware(['can:options.restore', 'throttle:30,1'])
-            ->name('admin.v1.options.restore');
-    });
 
     // Blueprints (full CRUD + dependencies/embeddable)
     Route::prefix('blueprints')->group(function () {

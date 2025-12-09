@@ -17,11 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         App\Console\Commands\CleanupExpiredRefreshTokens::class,
         App\Console\Commands\GenerateJwtKeys::class,
-        App\Console\Commands\OptionsGetCommand::class,
-        App\Console\Commands\OptionsSetCommand::class,
-        App\Console\Commands\RoutesListReservationsCommand::class,
-        App\Console\Commands\RoutesReleaseCommand::class,
-        App\Console\Commands\RoutesReserveCommand::class,
         App\Console\Commands\UserMakeAdminCommand::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {

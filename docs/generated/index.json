@@ -406,35 +406,6 @@
             ]
         },
         {
-            "id": "model:App\\Models\\Option",
-            "type": "model",
-            "name": "Option",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Option.php",
-            "summary": "Eloquent модель для опций системы (Option).",
-            "details": "Хранит настройки системы в формате ключ-значение с поддержкой пространств имён.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.",
-            "meta": {
-                "table": "options",
-                "fillable": [
-                    "namespace",
-                    "key",
-                    "value_json",
-                    "description"
-                ],
-                "guarded": [
-                    "*"
-                ],
-                "casts": {
-                    "value_json": "App\\Casts\\AsJsonValue"
-                },
-                "relations": [],
-                "factory": null
-            },
-            "related": [],
-            "tags": [
-                "option"
-            ]
-        },
-        {
             "id": "model:App\\Models\\Outbox",
             "type": "model",
             "name": "Outbox",
@@ -611,35 +582,6 @@
             "related": [],
             "tags": [
                 "refreshtoken"
-            ]
-        },
-        {
-            "id": "model:App\\Models\\ReservedRoute",
-            "type": "model",
-            "name": "ReservedRoute",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/ReservedRoute.php",
-            "summary": "Eloquent модель для зарезервированных путей (ReservedRoute).",
-            "details": "Хранит пути, которые зарезервированы системой и не могут использоваться\nдля записей контента. Поддерживает два типа: 'path' (точное совпадение)\nи 'prefix' (префикс пути).",
-            "meta": {
-                "table": "reserved_routes",
-                "fillable": [
-                    "path",
-                    "kind",
-                    "source"
-                ],
-                "guarded": [
-                    "*"
-                ],
-                "casts": {
-                    "created_at": "datetime",
-                    "updated_at": "datetime"
-                },
-                "relations": [],
-                "factory": null
-            },
-            "related": [],
-            "tags": [
-                "reservedroute"
             ]
         },
         {
@@ -2303,54 +2245,6 @@
             ]
         },
         {
-            "id": "domain_service:Options/OptionsRepository",
-            "type": "domain_service",
-            "name": "OptionsRepository",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Options\\OptionsRepository.php",
-            "summary": "Репозиторий для работы с опциями системы.",
-            "details": "Предоставляет доступ к опциям с кэшированием и поддержкой пространств имён.\nПоддерживает мягкое удаление и восстановление опций.",
-            "meta": {
-                "methods": [
-                    "get",
-                    "set",
-                    "delete",
-                    "restore",
-                    "getInt"
-                ],
-                "dependencies": [
-                    "Illuminate\\Contracts\\Cache\\Repository"
-                ],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "option"
-            ]
-        },
-        {
-            "id": "domain_service:Pages/Validation/NotReservedRoute",
-            "type": "domain_service",
-            "name": "NotReservedRoute",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Pages\\Validation\\NotReservedRoute.php",
-            "summary": "Правило валидации: slug не должен быть зарезервированным путём.",
-            "details": "Проверяет, что slug не совпадает с зарезервированными путями или префиксами.\nИспользуется для валидации slug'ов страниц.",
-            "meta": {
-                "methods": [
-                    "passes",
-                    "message"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Routing\\ReservedRouteRegistry"
-                ],
-                "interface": "Illuminate\\Contracts\\Validation\\Rule"
-            },
-            "related": [],
-            "tags": [
-                "page",
-                "validation"
-            ]
-        },
-        {
             "id": "domain_service:PostTypes/PostTypeOptions",
             "type": "domain_service",
             "name": "PostTypeOptions",
@@ -2388,101 +2282,6 @@
                     "normalize"
                 ],
                 "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "routing"
-            ]
-        },
-        {
-            "id": "domain_service:Routing/PathReservationServiceImpl",
-            "type": "domain_service",
-            "name": "PathReservationServiceImpl",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationServiceImpl.php",
-            "summary": "Реализация сервиса для резервации путей.",
-            "details": "Управляет зарезервированными путями с поддержкой статических путей из конфига\nи динамических резерваций из БД. Использует кэширование для оптимизации проверок.",
-            "meta": {
-                "methods": [
-                    "reservePath",
-                    "releasePath",
-                    "releaseBySource",
-                    "isReserved",
-                    "ownerOf"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Routing\\PathReservationStore"
-                ],
-                "interface": "App\\Domain\\Routing\\PathReservationService"
-            },
-            "related": [],
-            "tags": [
-                "routing"
-            ]
-        },
-        {
-            "id": "domain_service:Routing/PathReservationStoreImpl",
-            "type": "domain_service",
-            "name": "PathReservationStoreImpl",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationStoreImpl.php",
-            "summary": "Реализация PathReservationStore с использованием Eloquent.",
-            "details": "Использует модель ReservedRoute для хранения резерваций в БД.",
-            "meta": {
-                "methods": [
-                    "insert",
-                    "delete",
-                    "deleteIfOwnedBy",
-                    "deleteBySource",
-                    "exists",
-                    "ownerOf",
-                    "getAllPaths",
-                    "isUniqueViolation"
-                ],
-                "dependencies": [],
-                "interface": "App\\Domain\\Routing\\PathReservationStore"
-            },
-            "related": [],
-            "tags": [
-                "routing"
-            ]
-        },
-        {
-            "id": "domain_service:Routing/ReservedPattern",
-            "type": "domain_service",
-            "name": "ReservedPattern",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\ReservedPattern.php",
-            "summary": "Генератор регулярного выражения для плоских URL с исключением зарезервированных путей.",
-            "details": "Используется для создания негативного lookahead паттерна, который исключает\nзарезервированные первые сегменты из плоской маршрутизации /{slug}.\nПри route:cache список фиксируется до следующего деплоя/инвалидации.\nЭто приемлемо, так как сами плагины/система регистрируют свои конкретные роуты\nраньше и перехватят свои пути.",
-            "meta": {
-                "methods": [
-                    "slugRegex"
-                ],
-                "dependencies": [],
-                "interface": null
-            },
-            "related": [],
-            "tags": [
-                "routing"
-            ]
-        },
-        {
-            "id": "domain_service:Routing/ReservedRouteRegistry",
-            "type": "domain_service",
-            "name": "ReservedRouteRegistry",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\ReservedRouteRegistry.php",
-            "summary": "Реестр зарезервированных маршрутов.",
-            "details": "Объединяет статические пути из конфига и динамические из БД.\nИспользует кэширование для оптимизации частых проверок.",
-            "meta": {
-                "methods": [
-                    "all",
-                    "isReservedPath",
-                    "isReservedPrefix",
-                    "isReservedSlug",
-                    "clearCache"
-                ],
-                "dependencies": [
-                    "Illuminate\\Contracts\\Cache\\Repository"
-                ],
                 "interface": null
             },
             "related": [],
@@ -3325,29 +3124,6 @@
             ]
         },
         {
-            "id": "config_area:options",
-            "type": "config_area",
-            "name": "Options",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/options.php",
-            "summary": "Configuration: Options",
-            "details": null,
-            "meta": {
-                "keys": [
-                    "allowed",
-                    "site"
-                ],
-                "sections": [
-                    "allowed",
-                    "site"
-                ]
-            },
-            "related": [],
-            "tags": [
-                "config",
-                "options"
-            ]
-        },
-        {
             "id": "config_area:purifier",
             "type": "config_area",
             "name": "Purifier",
@@ -3668,9 +3444,6 @@
             "details": null,
             "meta": {
                 "keys": [
-                    "reserved_routes",
-                    "paths",
-                    "prefixes",
                     "slug",
                     "default",
                     "delimiter",
@@ -3721,9 +3494,6 @@
                     "Санкт-Петербург"
                 ],
                 "sections": [
-                    "reserved_routes",
-                    "paths",
-                    "prefixes",
                     "slug",
                     "default",
                     "stopWords",
@@ -4026,81 +3796,6 @@
                 "2": "admin",
                 "4": "v1",
                 "6": "templates"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/reservations",
-            "type": "http_endpoint",
-            "name": "get.reservations",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathReservationController.php",
-            "summary": "GET /api/v1/admin/reservations (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/reservations",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": [],
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "reservations"
-            }
-        },
-        {
-            "id": "http_endpoint:POST:/api/v1/admin/reservations",
-            "type": "http_endpoint",
-            "name": "post.reservations",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathReservationController.php",
-            "summary": "POST /api/v1/admin/reservations (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/reservations",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": [],
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "reservations"
-            }
-        },
-        {
-            "id": "http_endpoint:DELETE:/api/v1/admin/reservations/{path}",
-            "type": "http_endpoint",
-            "name": "delete.path",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathReservationController.php",
-            "summary": "DELETE /api/v1/admin/reservations/{path} (api)",
-            "details": null,
-            "meta": {
-                "method": "DELETE",
-                "uri": "/api/v1/admin/reservations/{path}",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "path": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "reservations"
             }
         },
         {
@@ -5157,172 +4852,6 @@
             }
         },
         {
-            "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
-            "type": "http_endpoint",
-            "name": "admin.v1.options.index",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-            "summary": "GET /api/v1/admin/options/{namespace} (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/options/{namespace}",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "namespace": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "options"
-            }
-        },
-        {
-            "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}/{key}",
-            "type": "http_endpoint",
-            "name": "admin.v1.options.show",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-            "summary": "GET /api/v1/admin/options/{namespace}/{key} (api)",
-            "details": null,
-            "meta": {
-                "method": "GET",
-                "uri": "/api/v1/admin/options/{namespace}/{key}",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "namespace": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    },
-                    "key": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "options"
-            }
-        },
-        {
-            "id": "http_endpoint:PUT:/api/v1/admin/options/{namespace}/{key}",
-            "type": "http_endpoint",
-            "name": "admin.v1.options.upsert",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-            "summary": "PUT /api/v1/admin/options/{namespace}/{key} (api)",
-            "details": null,
-            "meta": {
-                "method": "PUT",
-                "uri": "/api/v1/admin/options/{namespace}/{key}",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "namespace": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    },
-                    "key": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "options"
-            }
-        },
-        {
-            "id": "http_endpoint:DELETE:/api/v1/admin/options/{namespace}/{key}",
-            "type": "http_endpoint",
-            "name": "admin.v1.options.destroy",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-            "summary": "DELETE /api/v1/admin/options/{namespace}/{key} (api)",
-            "details": null,
-            "meta": {
-                "method": "DELETE",
-                "uri": "/api/v1/admin/options/{namespace}/{key}",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "namespace": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    },
-                    "key": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "options"
-            }
-        },
-        {
-            "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-            "type": "http_endpoint",
-            "name": "admin.v1.options.restore",
-            "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-            "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)",
-            "details": null,
-            "meta": {
-                "method": "POST",
-                "uri": "/api/v1/admin/options/{namespace}/{key}/restore",
-                "group": "api",
-                "auth": "jwt",
-                "parameters": {
-                    "namespace": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    },
-                    "key": {
-                        "required": true,
-                        "type": "string",
-                        "constraint": null
-                    }
-                },
-                "responses": []
-            },
-            "related": [],
-            "tags": {
-                "0": "api",
-                "2": "admin",
-                "4": "v1",
-                "6": "options",
-                "7": "restore"
-            }
-        },
-        {
             "id": "http_endpoint:GET:/api/v1/admin/blueprints",
             "type": "http_endpoint",
             "name": "admin.v1.blueprints.index",
@@ -6275,35 +5804,6 @@
                 ]
             },
             {
-                "id": "model:App\\Models\\Option",
-                "type": "model",
-                "name": "Option",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/Option.php",
-                "summary": "Eloquent модель для опций системы (Option).",
-                "details": "Хранит настройки системы в формате ключ-значение с поддержкой пространств имён.\nИспользует ULID в качестве первичного ключа. Поддерживает мягкое удаление.",
-                "meta": {
-                    "table": "options",
-                    "fillable": [
-                        "namespace",
-                        "key",
-                        "value_json",
-                        "description"
-                    ],
-                    "guarded": [
-                        "*"
-                    ],
-                    "casts": {
-                        "value_json": "App\\Casts\\AsJsonValue"
-                    },
-                    "relations": [],
-                    "factory": null
-                },
-                "related": [],
-                "tags": [
-                    "option"
-                ]
-            },
-            {
                 "id": "model:App\\Models\\Outbox",
                 "type": "model",
                 "name": "Outbox",
@@ -6480,35 +5980,6 @@
                 "related": [],
                 "tags": [
                     "refreshtoken"
-                ]
-            },
-            {
-                "id": "model:App\\Models\\ReservedRoute",
-                "type": "model",
-                "name": "ReservedRoute",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Models/ReservedRoute.php",
-                "summary": "Eloquent модель для зарезервированных путей (ReservedRoute).",
-                "details": "Хранит пути, которые зарезервированы системой и не могут использоваться\nдля записей контента. Поддерживает два типа: 'path' (точное совпадение)\nи 'prefix' (префикс пути).",
-                "meta": {
-                    "table": "reserved_routes",
-                    "fillable": [
-                        "path",
-                        "kind",
-                        "source"
-                    ],
-                    "guarded": [
-                        "*"
-                    ],
-                    "casts": {
-                        "created_at": "datetime",
-                        "updated_at": "datetime"
-                    },
-                    "relations": [],
-                    "factory": null
-                },
-                "related": [],
-                "tags": [
-                    "reservedroute"
                 ]
             },
             {
@@ -8174,54 +7645,6 @@
                 ]
             },
             {
-                "id": "domain_service:Options/OptionsRepository",
-                "type": "domain_service",
-                "name": "OptionsRepository",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Options\\OptionsRepository.php",
-                "summary": "Репозиторий для работы с опциями системы.",
-                "details": "Предоставляет доступ к опциям с кэшированием и поддержкой пространств имён.\nПоддерживает мягкое удаление и восстановление опций.",
-                "meta": {
-                    "methods": [
-                        "get",
-                        "set",
-                        "delete",
-                        "restore",
-                        "getInt"
-                    ],
-                    "dependencies": [
-                        "Illuminate\\Contracts\\Cache\\Repository"
-                    ],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "option"
-                ]
-            },
-            {
-                "id": "domain_service:Pages/Validation/NotReservedRoute",
-                "type": "domain_service",
-                "name": "NotReservedRoute",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Pages\\Validation\\NotReservedRoute.php",
-                "summary": "Правило валидации: slug не должен быть зарезервированным путём.",
-                "details": "Проверяет, что slug не совпадает с зарезервированными путями или префиксами.\nИспользуется для валидации slug'ов страниц.",
-                "meta": {
-                    "methods": [
-                        "passes",
-                        "message"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Routing\\ReservedRouteRegistry"
-                    ],
-                    "interface": "Illuminate\\Contracts\\Validation\\Rule"
-                },
-                "related": [],
-                "tags": [
-                    "page",
-                    "validation"
-                ]
-            },
-            {
                 "id": "domain_service:PostTypes/PostTypeOptions",
                 "type": "domain_service",
                 "name": "PostTypeOptions",
@@ -8259,101 +7682,6 @@
                         "normalize"
                     ],
                     "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "routing"
-                ]
-            },
-            {
-                "id": "domain_service:Routing/PathReservationServiceImpl",
-                "type": "domain_service",
-                "name": "PathReservationServiceImpl",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationServiceImpl.php",
-                "summary": "Реализация сервиса для резервации путей.",
-                "details": "Управляет зарезервированными путями с поддержкой статических путей из конфига\nи динамических резерваций из БД. Использует кэширование для оптимизации проверок.",
-                "meta": {
-                    "methods": [
-                        "reservePath",
-                        "releasePath",
-                        "releaseBySource",
-                        "isReserved",
-                        "ownerOf"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Routing\\PathReservationStore"
-                    ],
-                    "interface": "App\\Domain\\Routing\\PathReservationService"
-                },
-                "related": [],
-                "tags": [
-                    "routing"
-                ]
-            },
-            {
-                "id": "domain_service:Routing/PathReservationStoreImpl",
-                "type": "domain_service",
-                "name": "PathReservationStoreImpl",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\PathReservationStoreImpl.php",
-                "summary": "Реализация PathReservationStore с использованием Eloquent.",
-                "details": "Использует модель ReservedRoute для хранения резерваций в БД.",
-                "meta": {
-                    "methods": [
-                        "insert",
-                        "delete",
-                        "deleteIfOwnedBy",
-                        "deleteBySource",
-                        "exists",
-                        "ownerOf",
-                        "getAllPaths",
-                        "isUniqueViolation"
-                    ],
-                    "dependencies": [],
-                    "interface": "App\\Domain\\Routing\\PathReservationStore"
-                },
-                "related": [],
-                "tags": [
-                    "routing"
-                ]
-            },
-            {
-                "id": "domain_service:Routing/ReservedPattern",
-                "type": "domain_service",
-                "name": "ReservedPattern",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\ReservedPattern.php",
-                "summary": "Генератор регулярного выражения для плоских URL с исключением зарезервированных путей.",
-                "details": "Используется для создания негативного lookahead паттерна, который исключает\nзарезервированные первые сегменты из плоской маршрутизации /{slug}.\nПри route:cache список фиксируется до следующего деплоя/инвалидации.\nЭто приемлемо, так как сами плагины/система регистрируют свои конкретные роуты\nраньше и перехватят свои пути.",
-                "meta": {
-                    "methods": [
-                        "slugRegex"
-                    ],
-                    "dependencies": [],
-                    "interface": null
-                },
-                "related": [],
-                "tags": [
-                    "routing"
-                ]
-            },
-            {
-                "id": "domain_service:Routing/ReservedRouteRegistry",
-                "type": "domain_service",
-                "name": "ReservedRouteRegistry",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Routing\\ReservedRouteRegistry.php",
-                "summary": "Реестр зарезервированных маршрутов.",
-                "details": "Объединяет статические пути из конфига и динамические из БД.\nИспользует кэширование для оптимизации частых проверок.",
-                "meta": {
-                    "methods": [
-                        "all",
-                        "isReservedPath",
-                        "isReservedPrefix",
-                        "isReservedSlug",
-                        "clearCache"
-                    ],
-                    "dependencies": [
-                        "Illuminate\\Contracts\\Cache\\Repository"
-                    ],
                     "interface": null
                 },
                 "related": [],
@@ -9200,29 +8528,6 @@
                 ]
             },
             {
-                "id": "config_area:options",
-                "type": "config_area",
-                "name": "Options",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\config/options.php",
-                "summary": "Configuration: Options",
-                "details": null,
-                "meta": {
-                    "keys": [
-                        "allowed",
-                        "site"
-                    ],
-                    "sections": [
-                        "allowed",
-                        "site"
-                    ]
-                },
-                "related": [],
-                "tags": [
-                    "config",
-                    "options"
-                ]
-            },
-            {
                 "id": "config_area:purifier",
                 "type": "config_area",
                 "name": "Purifier",
@@ -9543,9 +8848,6 @@
                 "details": null,
                 "meta": {
                     "keys": [
-                        "reserved_routes",
-                        "paths",
-                        "prefixes",
                         "slug",
                         "default",
                         "delimiter",
@@ -9596,9 +8898,6 @@
                         "Санкт-Петербург"
                     ],
                     "sections": [
-                        "reserved_routes",
-                        "paths",
-                        "prefixes",
                         "slug",
                         "default",
                         "stopWords",
@@ -9903,81 +9202,6 @@
                     "2": "admin",
                     "4": "v1",
                     "6": "templates"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "get.reservations",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathReservationController.php",
-                "summary": "GET /api/v1/admin/reservations (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/reservations",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": [],
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "reservations"
-                }
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "post.reservations",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathReservationController.php",
-                "summary": "POST /api/v1/admin/reservations (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/reservations",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": [],
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "reservations"
-                }
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/reservations/{path}",
-                "type": "http_endpoint",
-                "name": "delete.path",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\PathReservationController.php",
-                "summary": "DELETE /api/v1/admin/reservations/{path} (api)",
-                "details": null,
-                "meta": {
-                    "method": "DELETE",
-                    "uri": "/api/v1/admin/reservations/{path}",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "path": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "reservations"
                 }
             },
             {
@@ -11031,172 +10255,6 @@
                     "6": "media",
                     "7": "bulk",
                     "8": "force"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.index",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-                "summary": "GET /api/v1/admin/options/{namespace} (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/options/{namespace}",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "namespace": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "options"
-                }
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.show",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-                "summary": "GET /api/v1/admin/options/{namespace}/{key} (api)",
-                "details": null,
-                "meta": {
-                    "method": "GET",
-                    "uri": "/api/v1/admin/options/{namespace}/{key}",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "namespace": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        },
-                        "key": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "options"
-                }
-            },
-            {
-                "id": "http_endpoint:PUT:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.upsert",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-                "summary": "PUT /api/v1/admin/options/{namespace}/{key} (api)",
-                "details": null,
-                "meta": {
-                    "method": "PUT",
-                    "uri": "/api/v1/admin/options/{namespace}/{key}",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "namespace": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        },
-                        "key": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "options"
-                }
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.destroy",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-                "summary": "DELETE /api/v1/admin/options/{namespace}/{key} (api)",
-                "details": null,
-                "meta": {
-                    "method": "DELETE",
-                    "uri": "/api/v1/admin/options/{namespace}/{key}",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "namespace": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        },
-                        "key": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "options"
-                }
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.restore",
-                "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app\\Http\\Controllers\\Admin\\V1\\OptionsController.php",
-                "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)",
-                "details": null,
-                "meta": {
-                    "method": "POST",
-                    "uri": "/api/v1/admin/options/{namespace}/{key}/restore",
-                    "group": "api",
-                    "auth": "jwt",
-                    "parameters": {
-                        "namespace": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        },
-                        "key": {
-                            "required": true,
-                            "type": "string",
-                            "constraint": null
-                        }
-                    },
-                    "responses": []
-                },
-                "related": [],
-                "tags": {
-                    "0": "api",
-                    "2": "admin",
-                    "4": "v1",
-                    "6": "options",
-                    "7": "restore"
                 }
             },
             {
@@ -12278,20 +11336,6 @@
                 "summary": "Eloquent модель для вариантов медиа-файлов (MediaVariant)."
             }
         ],
-        "option": [
-            {
-                "id": "model:App\\Models\\Option",
-                "type": "model",
-                "name": "Option",
-                "summary": "Eloquent модель для опций системы (Option)."
-            },
-            {
-                "id": "domain_service:Options/OptionsRepository",
-                "type": "domain_service",
-                "name": "OptionsRepository",
-                "summary": "Репозиторий для работы с опциями системы."
-            }
-        ],
         "outbox": [
             {
                 "id": "model:App\\Models\\Outbox",
@@ -12336,14 +11380,6 @@
                 "type": "model",
                 "name": "RefreshToken",
                 "summary": "Eloquent модель для JWT refresh токенов (RefreshToken)."
-            }
-        ],
-        "reservedroute": [
-            {
-                "id": "model:App\\Models\\ReservedRoute",
-                "type": "model",
-                "name": "ReservedRoute",
-                "summary": "Eloquent модель для зарезервированных путей (ReservedRoute)."
             }
         ],
         "taxonomy": [
@@ -12644,12 +11680,6 @@
                 "type": "domain_service",
                 "name": "SizeLimitValidator",
                 "summary": "Валидатор ограничений размера файла и размеров изображений/видео."
-            },
-            {
-                "id": "domain_service:Pages/Validation/NotReservedRoute",
-                "type": "domain_service",
-                "name": "NotReservedRoute",
-                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
             }
         ],
         "adapter": [
@@ -13008,13 +12038,37 @@
                 "summary": "Резолвер дисков для медиа-хранилища."
             }
         ],
-        "page": [
+        "routing": [
             {
-                "id": "domain_service:Pages/Validation/NotReservedRoute",
+                "id": "domain_service:Routing/PathNormalizer",
                 "type": "domain_service",
-                "name": "NotReservedRoute",
-                "summary": "Правило валидации: slug не должен быть зарезервированным путём."
+                "name": "PathNormalizer",
+                "summary": "Сервис для нормализации путей."
+            }
+        ],
+        "sanitizer": [
+            {
+                "id": "domain_service:Sanitizer/RichTextSanitizer",
+                "type": "domain_service",
+                "name": "RichTextSanitizer",
+                "summary": "Сервис для санитизации HTML контента."
+            }
+        ],
+        "view": [
+            {
+                "id": "domain_service:View/BladeTemplateResolver",
+                "type": "domain_service",
+                "name": "BladeTemplateResolver",
+                "summary": "Резолвер для выбора Blade-шаблона на основе полей template."
             },
+            {
+                "id": "domain_service:View/TemplatePathValidator",
+                "type": "domain_service",
+                "name": "TemplatePathValidator",
+                "summary": "Валидатор путей шаблонов."
+            }
+        ],
+        "page": [
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/errors/404.blade.php",
                 "type": "blade_view",
@@ -13062,60 +12116,6 @@
                 "type": "blade_view",
                 "name": "index",
                 "summary": "Page template: C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\resources/views\\templates\\index.blade.php"
-            }
-        ],
-        "routing": [
-            {
-                "id": "domain_service:Routing/PathNormalizer",
-                "type": "domain_service",
-                "name": "PathNormalizer",
-                "summary": "Сервис для нормализации путей."
-            },
-            {
-                "id": "domain_service:Routing/PathReservationServiceImpl",
-                "type": "domain_service",
-                "name": "PathReservationServiceImpl",
-                "summary": "Реализация сервиса для резервации путей."
-            },
-            {
-                "id": "domain_service:Routing/PathReservationStoreImpl",
-                "type": "domain_service",
-                "name": "PathReservationStoreImpl",
-                "summary": "Реализация PathReservationStore с использованием Eloquent."
-            },
-            {
-                "id": "domain_service:Routing/ReservedPattern",
-                "type": "domain_service",
-                "name": "ReservedPattern",
-                "summary": "Генератор регулярного выражения для плоских URL с исключением зарезервированных путей."
-            },
-            {
-                "id": "domain_service:Routing/ReservedRouteRegistry",
-                "type": "domain_service",
-                "name": "ReservedRouteRegistry",
-                "summary": "Реестр зарезервированных маршрутов."
-            }
-        ],
-        "sanitizer": [
-            {
-                "id": "domain_service:Sanitizer/RichTextSanitizer",
-                "type": "domain_service",
-                "name": "RichTextSanitizer",
-                "summary": "Сервис для санитизации HTML контента."
-            }
-        ],
-        "view": [
-            {
-                "id": "domain_service:View/BladeTemplateResolver",
-                "type": "domain_service",
-                "name": "BladeTemplateResolver",
-                "summary": "Резолвер для выбора Blade-шаблона на основе полей template."
-            },
-            {
-                "id": "domain_service:View/TemplatePathValidator",
-                "type": "domain_service",
-                "name": "TemplatePathValidator",
-                "summary": "Валидатор путей шаблонов."
             }
         ],
         "config": [
@@ -13196,12 +12196,6 @@
                 "type": "config_area",
                 "name": "Media",
                 "summary": "Configuration: Media"
-            },
-            {
-                "id": "config_area:options",
-                "type": "config_area",
-                "name": "Options",
-                "summary": "Configuration: Options"
             },
             {
                 "id": "config_area:purifier",
@@ -13338,44 +12332,6 @@
                 "summary": "Configuration: Mail"
             }
         ],
-        "options": [
-            {
-                "id": "config_area:options",
-                "type": "config_area",
-                "name": "Options",
-                "summary": "Configuration: Options"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.index",
-                "summary": "GET /api/v1/admin/options/{namespace} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.show",
-                "summary": "GET /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:PUT:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.upsert",
-                "summary": "PUT /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.destroy",
-                "summary": "DELETE /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.restore",
-                "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
-            }
-        ],
         "purifier": [
             {
                 "id": "config_area:purifier",
@@ -13508,24 +12464,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.templates.update",
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "get.reservations",
-                "summary": "GET /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "post.reservations",
-                "summary": "POST /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/reservations/{path}",
-                "type": "http_endpoint",
-                "name": "delete.path",
-                "summary": "DELETE /api/v1/admin/reservations/{path} (api)"
             },
             {
                 "id": "http_endpoint:POST:/api/v1/admin/post-types",
@@ -13754,36 +12692,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.bulkForceDestroy",
                 "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.index",
-                "summary": "GET /api/v1/admin/options/{namespace} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.show",
-                "summary": "GET /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:PUT:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.upsert",
-                "summary": "PUT /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.destroy",
-                "summary": "DELETE /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.restore",
-                "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
@@ -13956,24 +12864,6 @@
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "get.reservations",
-                "summary": "GET /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "post.reservations",
-                "summary": "POST /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/reservations/{path}",
-                "type": "http_endpoint",
-                "name": "delete.path",
-                "summary": "DELETE /api/v1/admin/reservations/{path} (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/post-types",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.store",
@@ -14200,36 +13090,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.bulkForceDestroy",
                 "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.index",
-                "summary": "GET /api/v1/admin/options/{namespace} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.show",
-                "summary": "GET /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:PUT:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.upsert",
-                "summary": "PUT /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.destroy",
-                "summary": "DELETE /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.restore",
-                "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
             },
             {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
@@ -14402,24 +13262,6 @@
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "get.reservations",
-                "summary": "GET /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "post.reservations",
-                "summary": "POST /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/reservations/{path}",
-                "type": "http_endpoint",
-                "name": "delete.path",
-                "summary": "DELETE /api/v1/admin/reservations/{path} (api)"
-            },
-            {
                 "id": "http_endpoint:POST:/api/v1/admin/post-types",
                 "type": "http_endpoint",
                 "name": "admin.v1.post-types.store",
@@ -14648,36 +13490,6 @@
                 "summary": "DELETE /api/v1/admin/media/bulk/force (api)"
             },
             {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.index",
-                "summary": "GET /api/v1/admin/options/{namespace} (api)"
-            },
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.show",
-                "summary": "GET /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:PUT:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.upsert",
-                "summary": "PUT /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/options/{namespace}/{key}",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.destroy",
-                "summary": "DELETE /api/v1/admin/options/{namespace}/{key} (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.restore",
-                "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
-            },
-            {
                 "id": "http_endpoint:GET:/api/v1/admin/blueprints",
                 "type": "http_endpoint",
                 "name": "admin.v1.blueprints.index",
@@ -14834,26 +13646,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.templates.update",
                 "summary": "PUT /api/v1/admin/templates/{name} (api)"
-            }
-        ],
-        "reservations": [
-            {
-                "id": "http_endpoint:GET:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "get.reservations",
-                "summary": "GET /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/reservations",
-                "type": "http_endpoint",
-                "name": "post.reservations",
-                "summary": "POST /api/v1/admin/reservations (api)"
-            },
-            {
-                "id": "http_endpoint:DELETE:/api/v1/admin/reservations/{path}",
-                "type": "http_endpoint",
-                "name": "delete.path",
-                "summary": "DELETE /api/v1/admin/reservations/{path} (api)"
             }
         ],
         "post-types": [
@@ -15016,12 +13808,6 @@
                 "type": "http_endpoint",
                 "name": "admin.v1.media.bulkRestore",
                 "summary": "POST /api/v1/admin/media/bulk/restore (api)"
-            },
-            {
-                "id": "http_endpoint:POST:/api/v1/admin/options/{namespace}/{key}/restore",
-                "type": "http_endpoint",
-                "name": "admin.v1.options.restore",
-                "summary": "POST /api/v1/admin/options/{namespace}/{key}/restore (api)"
             }
         ],
         "taxonomies": [
@@ -15353,5 +14139,5 @@
             }
         ]
     },
-    "generated_at": "2025-12-08T14:51:31+00:00"
+    "generated_at": "2025-12-09T06:07:54+00:00"
 }

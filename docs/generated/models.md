@@ -260,28 +260,6 @@ Eloquent модель для вариантов медиа-файлов (MediaVa
 
 ---
 
-## Option
-**ID:** `model:App\Models\Option`
-**Path:** `app/Models/Option.php`
-
-Eloquent модель для опций системы (Option).
-
-### Details
-Хранит настройки системы в формате ключ-значение с поддержкой пространств имён.
-Использует ULID в качестве первичного ключа. Поддерживает мягкое удаление.
-
-### Meta
-- **Table:** `options`
-- **Fillable:** `namespace`, `key`, `value_json`, `description`
-- **Guarded:** `*`
-- **Casts:** `value_json` => `App\Casts\AsJsonValue`
-
-### Tags
-`option`
-
-
----
-
 ## Outbox
 **ID:** `model:App\Models\Outbox`
 **Path:** `app/Models/Outbox.php`
@@ -390,29 +368,6 @@ Eloquent модель для JWT refresh токенов (RefreshToken).
 
 ### Tags
 `refreshtoken`
-
-
----
-
-## ReservedRoute
-**ID:** `model:App\Models\ReservedRoute`
-**Path:** `app/Models/ReservedRoute.php`
-
-Eloquent модель для зарезервированных путей (ReservedRoute).
-
-### Details
-Хранит пути, которые зарезервированы системой и не могут использоваться
-для записей контента. Поддерживает два типа: 'path' (точное совпадение)
-и 'prefix' (префикс пути).
-
-### Meta
-- **Table:** `reserved_routes`
-- **Fillable:** `path`, `kind`, `source`
-- **Guarded:** `*`
-- **Casts:** `created_at` => `datetime`, `updated_at` => `datetime`
-
-### Tags
-`reservedroute`
 
 
 ---

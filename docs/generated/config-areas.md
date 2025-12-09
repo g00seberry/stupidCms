@@ -207,22 +207,6 @@ Configuration: Media
 
 ---
 
-## Options
-**ID:** `config_area:options`
-**Path:** `config/options.php`
-
-Configuration: Options
-
-### Meta
-- **Keys:** `allowed`, `site`
-- **Sections:** `allowed`, `site`
-
-### Tags
-`config`, `options`
-
-
----
-
 ## Purifier
 **ID:** `config_area:purifier`
 **Path:** `config/purifier.php`
@@ -326,8 +310,8 @@ Configuration: Session
 Configuration: Stupidcms
 
 ### Meta
-- **Keys:** `reserved_routes`, `paths`, `prefixes`, `slug`, `default`, `delimiter`, `toLower`, `asciiOnly`, `maxLength`, `scheme`, `stopWords`, `reserved`, `schemes`, `ru_basic`, `map`, `а`, `б`, `в`, `г`, `д`, `е`, `ё`, `ж`, `з`, `и`, `й`, `к`, `л`, `м`, `н`, `о`, `п`, `р`, `с`, `т`, `у`, `ф`, `х`, `ц`, `ч`, `ш`, `щ`, `ъ`, `ы`, `ь`, `э`, `ю`, `я`, `exceptions`, `йога`, `Санкт-Петербург`
-- **Sections:** `reserved_routes`, `paths`, `prefixes`, `slug`, `default`, `stopWords`, `reserved`, `schemes`, `ru_basic`, `map`, `exceptions`
+- **Keys:** `slug`, `default`, `delimiter`, `toLower`, `asciiOnly`, `maxLength`, `scheme`, `stopWords`, `reserved`, `schemes`, `ru_basic`, `map`, `а`, `б`, `в`, `г`, `д`, `е`, `ё`, `ж`, `з`, `и`, `й`, `к`, `л`, `м`, `н`, `о`, `п`, `р`, `с`, `т`, `у`, `ф`, `х`, `ц`, `ч`, `ш`, `щ`, `ъ`, `ы`, `ь`, `э`, `ю`, `я`, `exceptions`, `йога`, `Санкт-Петербург`
+- **Sections:** `slug`, `default`, `stopWords`, `reserved`, `schemes`, `ru_basic`, `map`, `exceptions`
 
 ### Tags
 `config`, `stupidcms`

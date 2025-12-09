@@ -821,27 +821,6 @@ Pipeline валидации медиа-файлов.
 
 ---
 
-## NotReservedRoute
-**ID:** `domain_service:Pages/Validation/NotReservedRoute`
-**Path:** `app/Domain/Pages/Validation/NotReservedRoute.php`
-
-Правило валидации: slug не должен быть зарезервированным путём.
-
-### Details
-Проверяет, что slug не совпадает с зарезервированными путями или префиксами.
-Используется для валидации slug'ов страниц.
-
-### Meta
-- **Methods:** `passes`, `message`
-- **Dependencies:** `App\Domain\Routing\ReservedRouteRegistry`
-- **Interface:** `Illuminate\Contracts\Validation\Rule`
-
-### Tags
-`page`, `validation`
-
-
----
-
 ## NotifyMediaEvent
 **ID:** `domain_service:Media/Listeners/NotifyMediaEvent`
 **Path:** `app/Domain/Media/Listeners/NotifyMediaEvent.php`
@@ -919,26 +898,6 @@ Pipeline валидации медиа-файлов.
 
 ---
 
-## OptionsRepository
-**ID:** `domain_service:Options/OptionsRepository`
-**Path:** `app/Domain/Options/OptionsRepository.php`
-
-Репозиторий для работы с опциями системы.
-
-### Details
-Предоставляет доступ к опциям с кэшированием и поддержкой пространств имён.
-Поддерживает мягкое удаление и восстановление опций.
-
-### Meta
-- **Methods:** `get`, `set`, `delete`, `restore`, `getInt`
-- **Dependencies:** `Illuminate\Contracts\Cache\Repository`
-
-### Tags
-`option`
-
-
----
-
 ## PathNormalizer
 **ID:** `domain_service:Routing/PathNormalizer`
 **Path:** `app/Domain/Routing/PathNormalizer.php`
@@ -951,46 +910,6 @@ Pipeline валидации медиа-файлов.
 
 ### Meta
 - **Methods:** `normalize`
-
-### Tags
-`routing`
-
-
----
-
-## PathReservationServiceImpl
-**ID:** `domain_service:Routing/PathReservationServiceImpl`
-**Path:** `app/Domain/Routing/PathReservationServiceImpl.php`
-
-Реализация сервиса для резервации путей.
-
-### Details
-Управляет зарезервированными путями с поддержкой статических путей из конфига
-и динамических резерваций из БД. Использует кэширование для оптимизации проверок.
-
-### Meta
-- **Methods:** `reservePath`, `releasePath`, `releaseBySource`, `isReserved`, `ownerOf`
-- **Dependencies:** `App\Domain\Routing\PathReservationStore`
-- **Interface:** `App\Domain\Routing\PathReservationService`
-
-### Tags
-`routing`
-
-
----
-
-## PathReservationStoreImpl
-**ID:** `domain_service:Routing/PathReservationStoreImpl`
-**Path:** `app/Domain/Routing/PathReservationStoreImpl.php`
-
-Реализация PathReservationStore с использованием Eloquent.
-
-### Details
-Использует модель ReservedRoute для хранения резерваций в БД.
-
-### Meta
-- **Methods:** `insert`, `delete`, `deleteIfOwnedBy`, `deleteBySource`, `exists`, `ownerOf`, `getAllPaths`, `isUniqueViolation`
-- **Interface:** `App\Domain\Routing\PathReservationStore`
 
 ### Tags
 `routing`
@@ -1188,48 +1107,6 @@ Data Transfer Object для RefreshToken.
 
 ### Tags
 `blueprint`, `validation`, `rule`, `handler`
-
-
----
-
-## ReservedPattern
-**ID:** `domain_service:Routing/ReservedPattern`
-**Path:** `app/Domain/Routing/ReservedPattern.php`
-
-Генератор регулярного выражения для плоских URL с исключением зарезервированных путей.
-
-### Details
-Используется для создания негативного lookahead паттерна, который исключает
-зарезервированные первые сегменты из плоской маршрутизации /{slug}.
-При route:cache список фиксируется до следующего деплоя/инвалидации.
-Это приемлемо, так как сами плагины/система регистрируют свои конкретные роуты
-раньше и перехватят свои пути.
-
-### Meta
-- **Methods:** `slugRegex`
-
-### Tags
-`routing`
-
-
----
-
-## ReservedRouteRegistry
-**ID:** `domain_service:Routing/ReservedRouteRegistry`
-**Path:** `app/Domain/Routing/ReservedRouteRegistry.php`
-
-Реестр зарезервированных маршрутов.
-
-### Details
-Объединяет статические пути из конфига и динамические из БД.
-Использует кэширование для оптимизации частых проверок.
-
-### Meta
-- **Methods:** `all`, `isReservedPath`, `isReservedPrefix`, `isReservedSlug`, `clearCache`
-- **Dependencies:** `Illuminate\Contracts\Cache\Repository`
-
-### Tags
-`routing`
 
 
 ---

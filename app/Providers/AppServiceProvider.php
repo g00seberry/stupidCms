@@ -50,7 +50,6 @@ use App\Domain\Media\Listeners\PurgeCdnCache;
 use App\Events\Blueprint\BlueprintStructureChanged;
 use App\Listeners\Blueprint\RematerializeEmbeds;
 use App\Domain\Media\MediaRepository;
-use App\Domain\Options\OptionsRepository;
 use App\Domain\Sanitizer\RichTextSanitizer;
 use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplatePathValidator;
@@ -78,7 +77,6 @@ use Illuminate\Support\ServiceProvider;
  * Основной Service Provider приложения.
  *
  * Регистрирует основные сервисы:
- * - OptionsRepository (singleton)
  * - TemplatePathValidator (singleton)
  * - TemplateResolver (scoped для совместимости с Octane/Swoole)
  * - RichTextSanitizer (singleton)
@@ -99,11 +97,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Регистрация OptionsRepository
-        $this->app->singleton(OptionsRepository::class, function ($app) {
-            return new OptionsRepository($app->make(CacheRepository::class));
-        });
-
         // MediaRepository
         $this->app->singleton(MediaRepository::class, EloquentMediaRepository::class);
 

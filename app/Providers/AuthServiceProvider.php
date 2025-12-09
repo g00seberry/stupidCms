@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\{Entry, Media, Option, ReservedRoute, Term, User};
-use App\Policies\{EntryPolicy, MediaPolicy, OptionPolicy, RouteReservationPolicy, TermPolicy};
+use App\Models\{Entry, Media, Term, User};
+use App\Policies\{EntryPolicy, MediaPolicy, TermPolicy};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -28,8 +28,6 @@ class AuthServiceProvider extends ServiceProvider
         Entry::class => EntryPolicy::class,
         Term::class  => TermPolicy::class,
         Media::class => MediaPolicy::class,
-        Option::class => OptionPolicy::class,
-        ReservedRoute::class => RouteReservationPolicy::class,
     ];
 
     /**
@@ -49,7 +47,6 @@ class AuthServiceProvider extends ServiceProvider
      * - Глобальный доступ для администратора (is_admin=true)
      * - manage.posttypes, manage.entries, manage.taxonomies, manage.terms
      * - media.* (read, create, update, delete, restore)
-     * - options.* (read, write, delete, restore)
      *
      * @return void
      */
@@ -99,21 +96,6 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAdminPermission('media.restore');
         });
 
-        Gate::define('options.read', static function (User $user): bool {
-            return $user->hasAdminPermission('options.read');
-        });
-
-        Gate::define('options.write', static function (User $user): bool {
-            return $user->hasAdminPermission('options.write');
-        });
-
-        Gate::define('options.delete', static function (User $user): bool {
-            return $user->hasAdminPermission('options.delete');
-        });
-
-        Gate::define('options.restore', static function (User $user): bool {
-            return $user->hasAdminPermission('options.restore');
-        });
 
     }
 }

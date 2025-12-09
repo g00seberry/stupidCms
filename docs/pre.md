@@ -236,8 +236,6 @@ onNodeChanged(old_path, new_path)
 
 отключаемо флагом
 
-5. PathReservationService (используем существующий)
-
 Должен уметь:
 
 проверить “первый сегмент”
@@ -605,8 +603,6 @@ RouteResolver
 проверка публикации родителей
 
 проверка поведения с одинаковыми slug в разных ветках
-
-PathReservationService интеграции
 
 запрет reserved на первом уровне.
 

@@ -120,18 +120,17 @@
 1. Удалить валидацию slug из `StoreEntryRequest`:
 
     - Удалить правило `'slug' => [...]`
-    - Удалить импорты: `ReservedSlug`, `UniqueEntrySlug`
+    - Удалить импорты: `UniqueEntrySlug`
     - Удалить упоминания slug из PHPDoc
 
 2. Удалить валидацию slug из `UpdateEntryRequest`:
 
     - Удалить правило `'slug' => [...]`
-    - Удалить импорты: `ReservedSlug`, `UniqueEntrySlug`
+    - Удалить импорты: `UniqueEntrySlug`
     - Удалить упоминания slug из PHPDoc
 
 3. Удалить правила валидации:
     - `app/Rules/UniqueEntrySlug.php` — удалить файл полностью
-    - `app/Rules/ReservedSlug.php` — **НЕ удалять** (будет использоваться для route_nodes)
 
 ### Файлы для изменения
 
@@ -334,7 +333,6 @@
 1. Удалить тесты, специфичные для slug:
 
     - `tests/Unit/Rules/UniqueEntrySlugTest.php` — **удалить**
-    - `tests/Unit/Rules/ReservedSlugTest.php` — **НЕ удалять** (будет использоваться для route_nodes)
     - `tests/Feature/Web/PagesTest.php` — **удалить**
     - Части тестов в других файлах, проверяющие slug
 
@@ -372,7 +370,7 @@ php artisan test
 
 -   Все тесты проходят
 -   Нет ошибок компиляции
--   Нет упоминаний slug в тестах (кроме ReservedSlug для route_nodes)
+-   Нет упоминаний slug в тестах
 
 ---
 
@@ -452,7 +450,7 @@ php artisan test
 -   [ ] Все тесты проходят
 -   [ ] Линтер не выдаёт ошибок
 -   [ ] Документация обновлена
--   [ ] Нет упоминаний slug для Entry в коде (кроме ReservedSlug для route_nodes)
+-   [ ] Нет упоминаний slug для Entry в коде
 -   [ ] API работает корректно
 -   [ ] Поиск работает корректно (без slug)
 
@@ -462,11 +460,9 @@ php artisan test
 
 ### Что НЕ удалять
 
-1. **`app/Rules/ReservedSlug.php`** — будет использоваться для валидации route_nodes
-2. **`app/Domain/Routing/ReservedPattern.php`** — будет использоваться для route_nodes
-3. **`app/Domain/Routing/PathReservationService.php`** — будет использоваться для route_nodes
-4. **`app/Support/Slug/Slugifier.php`** и связанные классы — могут использоваться для route_nodes
-5. **`app/Http/Controllers/Admin/V1/UtilsController::slugify()`** — может использоваться для других целей
+2. **`app/Domain/Routing/ReservedPattern.php`** — удалён как легаси (не использовался)
+3. **`app/Support/Slug/Slugifier.php`** и связанные классы — могут использоваться для route_nodes
+4. **`app/Http/Controllers/Admin/V1/UtilsController::slugify()`** — может использоваться для других целей
 
 ### Что удалить полностью
 

@@ -45,9 +45,9 @@
 
 **Основные функции:**
 
-- Настройка rate limiters для различных типов запросов
-- Загрузка роутов в строгом порядке
-- Регистрация fallback-обработчика
+-   Настройка rate limiters для различных типов запросов
+-   Загрузка роутов в строгом порядке
+-   Регистрация fallback-обработчика
 
 **Ключевые методы:**
 
@@ -60,7 +60,7 @@ public function boot(): void
     RateLimiter::for('refresh', ...);
     RateLimiter::for('search-public', ...);
     RateLimiter::for('search-reindex', ...);
-    
+
     // Загрузка роутов
     $this->routes(function () {
         // Порядок загрузки...
@@ -89,14 +89,14 @@ public function boot(): void
 
 **Содержимое:**
 
-- `GET /` — главная страница (`HomeController`)
-- Тестовые маршруты (только в `testing` окружении)
-- Зарезервировано для статических сервисных путей (`/health`, `/feed.xml`, `/sitemap.xml`)
+-   `GET /` — главная страница (`HomeController`)
+-   Тестовые маршруты (только в `testing` окружении)
+-   Зарезервировано для статических сервисных путей (`/health`, `/feed.xml`, `/sitemap.xml`)
 
 **Особенности:**
 
-- Загружается первым, чтобы не перехватываться контентным catch-all
-- Использует `web` middleware для веб-запросов с CSRF
+-   Загружается первым, чтобы не перехватываться контентным catch-all
+-   Использует `web` middleware для веб-запросов с CSRF
 
 ### 2. routes/api.php
 
@@ -118,10 +118,10 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Безопасность:**
 
-- Rate limiting: `throttle:login`, `throttle:refresh`, `throttle:search-public`
-- CSRF исключён для `login` и `refresh` (credentials-based auth)
-- `logout` требует JWT аутентификации
-- `media` поддерживает опциональную JWT для доступа к удалённым файлам
+-   Rate limiting: `throttle:login`, `throttle:refresh`, `throttle:search-public`
+-   CSRF исключён для `login` и `refresh` (credentials-based auth)
+-   `logout` требует JWT аутентификации
+-   `media` поддерживает опциональную JWT для доступа к удалённым файлам
 
 ### 3. routes/api_admin.php
 
@@ -133,28 +133,26 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Основные группы:**
 
-- **Auth:** `GET /auth/current` — текущий пользователь
-- **Utils:** `GET /utils/slugify` — генерация slug (для будущей иерархической системы)
-- **Templates:** CRUD для шаблонов
-- **Plugins:** управление плагинами (`index`, `sync`, `enable`, `disable`)
-- **Reservations:** управление резервированием путей
-- **Post Types:** CRUD для типов записей
-- **Form Configs:** конфигурация форм компонентов
-- **Entries:** CRUD + soft-delete/restore
-- **Taxonomies:** CRUD для таксономий
-- **Terms:** управление терминами таксономий
-- **Media:** CRUD + bulk операции
-- **Options:** управление опциями системы
-- **Search:** `POST /search/reindex` — переиндексация
-- **Blueprints:** CRUD + зависимости/embeddable
-- **Paths:** глобальные операции с путями
+-   **Auth:** `GET /auth/current` — текущий пользователь
+-   **Utils:** `GET /utils/slugify` — генерация slug (для будущей иерархической системы)
+-   **Templates:** CRUD для шаблонов
+-   **Plugins:** управление плагинами (`index`, `sync`, `enable`, `disable`)
+-   **Post Types:** CRUD для типов записей
+-   **Form Configs:** конфигурация форм компонентов
+-   **Entries:** CRUD + soft-delete/restore
+-   **Taxonomies:** CRUD для таксономий
+-   **Terms:** управление терминами таксономий
+-   **Media:** CRUD + bulk операции
+-   **Search:** `POST /search/reindex` — переиндексация
+-   **Blueprints:** CRUD + зависимости/embeddable
+-   **Paths:** глобальные операции с путями
 
 **Безопасность:**
 
-- Все эндпоинты требуют JWT аутентификации (`jwt.auth`)
-- Rate limiting: `throttle:api` (120 запросов/минуту)
-- Дополнительные rate limiters для специфичных операций
-- Авторизация через Policies и `can:` middleware
+-   Все эндпоинты требуют JWT аутентификации (`jwt.auth`)
+-   Rate limiting: `throttle:api` (120 запросов/минуту)
+-   Дополнительные rate limiters для специфичных операций
+-   Авторизация через Policies и `can:` middleware
 
 ### 4. routes/web_content.php
 
@@ -170,8 +168,8 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Содержимое:**
 
-- `php artisan inspire` — пример команды
-- Расписание: ежедневная очистка истёкших refresh токенов в 02:00
+-   `php artisan inspire` — пример команды
+-   Расписание: ежедневная очистка истёкших refresh токенов в 02:00
 
 ### 6. routes/web.php
 
@@ -197,14 +195,14 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Функции:**
 
-- Приведение к нижнему регистру: `/About` → `/about`
-- Удаление завершающего слэша: `/about/` → `/about`
-- Сохранение query string
+-   Приведение к нижнему регистру: `/About` → `/about`
+-   Удаление завершающего слэша: `/about/` → `/about`
+-   Сохранение query string
 
 **Исключения:**
 
-- Системные пути: `admin`, `api`, `auth`, `login`, `logout`, `register`
-- Выполняется ДО роутинга, поэтому работает даже для несуществующих путей
+-   Системные пути: `admin`, `api`, `auth`, `login`, `logout`, `register`
+-   Выполняется ДО роутинга, поэтому работает даже для несуществующих путей
 
 **Пример:**
 
@@ -217,9 +215,9 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Исключения:**
 
-- `cms_at` — JWT access token cookie
-- `cms_rt` — JWT refresh token cookie
-- `cms_csrf` — CSRF token cookie
+-   `cms_at` — JWT access token cookie
+-   `cms_rt` — JWT refresh token cookie
+-   `cms_csrf` — CSRF token cookie
 
 Эти cookies не шифруются, так как они уже подписаны/защищены другими механизмами.
 
@@ -231,17 +229,17 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Включает:**
 
-- EncryptCookies
-- StartSession
-- ShareErrorsFromSession
-- VerifyCsrfToken (для state-changing запросов)
-- SubstituteBindings
+-   EncryptCookies
+-   StartSession
+-   ShareErrorsFromSession
+-   VerifyCsrfToken (для state-changing запросов)
+-   SubstituteBindings
 
 **Особенности:**
 
-- CSRF защита для POST/PUT/PATCH/DELETE
-- Сессии для веб-запросов
-- Поддержка Blade views
+-   CSRF защита для POST/PUT/PATCH/DELETE
+-   Сессии для веб-запросов
+-   Поддержка Blade views
 
 #### api
 
@@ -249,17 +247,17 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Включает:**
 
-- EncryptCookies (с исключениями)
-- ThrottleApi (120 запросов/минуту)
-- CORS (если настроен)
-- VerifyApiCsrf (дополнительно)
-- AddCacheVary (дополнительно)
+-   EncryptCookies (с исключениями)
+-   ThrottleApi (120 запросов/минуту)
+-   CORS (если настроен)
+-   VerifyApiCsrf (дополнительно)
+-   AddCacheVary (дополнительно)
 
 **Особенности:**
 
-- Stateless (без сессий)
-- CSRF проверка для state-changing запросов (кроме auth endpoints)
-- Rate limiting на уровне группы
+-   Stateless (без сессий)
+-   CSRF проверка для state-changing запросов (кроме auth endpoints)
+-   Rate limiting на уровне группы
 
 ### Специализированные middleware
 
@@ -273,17 +271,17 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Функции:**
 
-- Извлечение access token из cookie `cms_at`
-- Валидация токена (подпись, срок действия)
-- Проверка существования пользователя в БД
-- Установка аутентифицированного пользователя
+-   Извлечение access token из cookie `cms_at`
+-   Валидация токена (подпись, срок действия)
+-   Проверка существования пользователя в БД
+-   Установка аутентифицированного пользователя
 
 **Ошибки:**
 
-- `missing_token` — токен отсутствует
-- `invalid_token` — токен невалиден
-- `invalid_subject` — невалидный subject claim
-- `user_not_found` — пользователь не найден
+-   `missing_token` — токен отсутствует
+-   `invalid_token` — токен невалиден
+-   `invalid_subject` — невалидный subject claim
+-   `user_not_found` — пользователь не найден
 
 **Ответ:** 401 Unauthorized с заголовками `WWW-Authenticate: Bearer`, `Pragma: no-cache`
 
@@ -297,9 +295,9 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Функции:**
 
-- Аналогично `JwtAuth`, но не выбрасывает исключение при отсутствии токена
-- Устанавливает пользователя, если токен валиден
-- Позволяет анонимный доступ
+-   Аналогично `JwtAuth`, но не выбрасывает исключение при отсутствии токена
+-   Устанавливает пользователя, если токен валиден
+-   Позволяет анонимный доступ
 
 #### VerifyApiCsrf
 
@@ -311,15 +309,15 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Функции:**
 
-- Проверка CSRF токена из заголовка `X-CSRF-Token` или `X-XSRF-TOKEN`
-- Сравнение с cookie `cms_csrf` (timing-safe через `hash_equals`)
-- Применяется только к POST/PUT/PATCH/DELETE
-- Исключает `api.auth.login`, `api.auth.refresh`, `api.auth.logout`
+-   Проверка CSRF токена из заголовка `X-CSRF-Token` или `X-XSRF-TOKEN`
+-   Сравнение с cookie `cms_csrf` (timing-safe через `hash_equals`)
+-   Применяется только к POST/PUT/PATCH/DELETE
+-   Исключает `api.auth.login`, `api.auth.refresh`, `api.auth.logout`
 
 **Ошибки:**
 
-- 419 CSRF Token Mismatch
-- При ошибке выдаёт новый CSRF токен в cookie для восстановления клиента
+-   419 CSRF Token Mismatch
+-   При ошибке выдаёт новый CSRF токен в cookie для восстановления клиента
 
 #### RejectReservedIfMatched
 
@@ -337,8 +335,8 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Функции:**
 
-- Добавляет `Vary: Origin, Cookie` для правильного кэширования API ответов с cookies
-- Применяется после CORS и CSRF middleware
+-   Добавляет `Vary: Origin, Cookie` для правильного кэширования API ответов с cookies
+-   Применяется после CORS и CSRF middleware
 
 #### NoCacheAuth
 
@@ -348,154 +346,10 @@ GET    /api/v1/media/{id}      - Публичный доступ к медиа
 
 **Функции:**
 
-- Устанавливает `Cache-Control: no-store, no-cache, must-revalidate`
-- Предотвращает кэширование токенов и данных пользователя
+-   Устанавливает `Cache-Control: no-store, no-cache, must-revalidate`
+-   Предотвращает кэширование токенов и данных пользователя
 
 ---
-
-## Система резервирования путей
-
-### Обзор
-
-Система резервирования путей предотвращает конфликты между системными/плагинными маршрутами и контентными страницами.
-
-### Компоненты
-
-#### 1. ReservedPattern
-
-**Файл:** `app/Domain/Routing/ReservedPattern.php`
-
-**Назначение:** Генерация regex паттерна для исключения зарезервированных путей
-
-**Метод:** `ReservedPattern::slugRegex()`
-
-**Источники зарезервированных путей:**
-
-1. **Статические пути** из `config('stupidcms.reserved_routes.paths')`
-2. **Префиксы** из `config('stupidcms.reserved_routes.prefixes')`
-3. **Динамические резервации** из БД (`reserved_routes` таблица)
-
-**Алгоритм:**
-
-1. Собирает все зарезервированные первые сегменты
-2. Нормализует к lowercase
-3. Строит негативный lookahead: `(?!^(?:admin|api|...)$)`
-4. Объединяет с базовым паттерном slug
-
-**Пример результата:**
-
-```regex
-^(?!^(?:admin|api|auth)$)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$
-```
-
-#### 2. PathReservationService
-
-**Интерфейс:** `app/Domain/Routing/PathReservationService.php`
-
-**Реализация:** `app/Domain/Routing/PathReservationServiceImpl.php`
-
-**Назначение:** Управление динамическими резервациями путей
-
-**Методы:**
-
-- `reservePath(string $path, string $source, ?string $reason): void` — зарезервировать путь
-- `releasePath(string $path, string $source): void` — освободить путь
-- `releaseBySource(string $source): int` — освободить все пути источника
-- `isReserved(string $path): bool` — проверить резервацию
-- `ownerOf(string $path): ?string` — получить владельца пути
-
-**Особенности:**
-
-- Работает только с путями из конфига (kind='path')
-- Таблица `reserved_routes` используется для fallback-роутера и валидации slug'ов
-- Поддерживает статические пути из конфига
-
-#### 3. ReservedRoute (модель)
-
-**Файл:** `app/Models/ReservedRoute.php`
-
-**Таблица:** `reserved_routes`
-
-**Поля:**
-
-- `id` — первичный ключ
-- `path` — нормализованный путь (lowercase, без trailing slash)
-- `kind` — тип: `'path'` (точное совпадение) или `'prefix'` (префикс)
-- `source` — источник резервации (например, `'system:admin'`, `'plugin:example'`)
-- `created_at`, `updated_at` — временные метки
-
-**Особенности:**
-
-- Автоматическая нормализация пути при установке
-- STORED-колонка `path_norm` для регистронезависимой уникальности (MySQL/PostgreSQL)
-- Уникальный индекс на `path_norm`
-
-#### 4. ReservedRouteRegistry
-
-**Назначение:** Объединение зарезервированных путей из конфига и БД
-
-**Использование:** Будет использоваться для валидации путей в иерархической системе роутинга
-
-#### 5. ReservedSlug (правило валидации)
-
-**Файл:** `app/Rules/ReservedSlug.php`
-
-**Назначение:** Валидация путей на конфликты с зарезервированными путями (будет использоваться для иерархической системы)
-
-**Проверки:**
-
-- Для `kind='path'`: точное совпадение
-- Для `kind='prefix'`: совпадение или начало с префикса
-
-### Конфигурация
-
-**Файл:** `config/stupidcms.php`
-
-```php
-'reserved_routes' => [
-    'paths' => [
-        'admin', // строгое совпадение для "/admin"
-    ],
-    'prefixes' => [
-        'admin', // префикс для "/admin/*"
-        'api',   // префикс для "/api/*"
-    ],
-],
-```
-
-### Использование
-
-#### Резервирование пути плагином
-
-```php
-$pathReservationService = app(PathReservationService::class);
-$pathReservationService->reservePath('/my-plugin', 'plugin:my-plugin', 'Plugin routes');
-```
-
-#### Освобождение пути
-
-```php
-$pathReservationService->releasePath('/my-plugin', 'plugin:my-plugin');
-```
-
-#### Проверка резервации
-
-```php
-if ($pathReservationService->isReserved('/my-slug')) {
-    // Путь зарезервирован
-}
-```
-
-#### Валидация путей (для будущей иерархической системы)
-
-```php
-use App\Rules\ReservedSlug;
-
-// Пример для будущей системы
-$request->validate([
-    'path' => ['required', 'string', new ReservedSlug()],
-]);
-```
 
 ---
 
@@ -513,8 +367,8 @@ $request->validate([
 
 **Особенности:**
 
-- Проверяет существование класса провайдера перед регистрацией
-- Плагины загружаются после Admin API, но до Content routes
+-   Проверяет существование класса провайдера перед регистрацией
+-   Плагины загружаются после Admin API, но до Content routes
 
 ### Структура плагина
 
@@ -537,9 +391,7 @@ plugins/example/
     "name": "Example Plugin",
     "version": "1.0.0",
     "provider": "Plugins\\Example\\ExamplePluginServiceProvider",
-    "routes": [
-        "routes/plugin.php"
-    ]
+    "routes": ["routes/plugin.php"]
 }
 ```
 
@@ -570,32 +422,8 @@ public function boot(): void
 
 **Использование:**
 
-- При включении/отключении плагина
-- При синхронизации плагинов (`php artisan plugins:sync`)
-
-### Резервирование путей плагинами
-
-Плагины могут резервировать пути через `PathReservationService`:
-
-```php
-// В Service Provider плагина
-public function boot(): void
-{
-    $pathReservationService = app(PathReservationService::class);
-    $pathReservationService->reservePath('/my-plugin', 'plugin:my-plugin', 'Plugin routes');
-    
-    // Регистрация роутов...
-}
-
-public function register(): void
-{
-    // Освобождение при отключении
-    $this->app->terminating(function () {
-        $pathReservationService = app(PathReservationService::class);
-        $pathReservationService->releaseBySource('plugin:my-plugin');
-    });
-}
-```
+-   При включении/отключении плагина
+-   При синхронизации плагинов (`php artisan plugins:sync`)
 
 ---
 
@@ -619,19 +447,19 @@ Route::match(['POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], '{any?}', FallbackCo
 
 **Особенности:**
 
-- **НЕ** использует `web` middleware (иначе POST на несуществующий путь получит 419 CSRF вместо 404)
-- Регистрируется для всех HTTP методов отдельно
-- Определяет формат ответа по типу запроса (JSON/HTML)
+-   **НЕ** использует `web` middleware (иначе POST на несуществующий путь получит 419 CSRF вместо 404)
+-   Регистрируется для всех HTTP методов отдельно
+-   Определяет формат ответа по типу запроса (JSON/HTML)
 
 **Логика:**
 
 1. Логирует информацию о запросе (path, method, referer, accept, user_agent, ip)
 2. Если запрос ожидает JSON или является API (`expectsJson() || is('api/*') || wantsJson()`):
-   - Возвращает JSON с ошибкой `NOT_FOUND`
-   - Использует `ErrorResponseFactory` для форматирования
+    - Возвращает JSON с ошибкой `NOT_FOUND`
+    - Использует `ErrorResponseFactory` для форматирования
 3. Иначе:
-   - Возвращает HTML view `errors.404`
-   - Статус: 404 Not Found
+    - Возвращает HTML view `errors.404`
+    - Статус: 404 Not Found
 
 **Пример ответа JSON:**
 
@@ -761,9 +589,9 @@ Route::get('/media/config', [MediaController::class, 'config'])
 
 **Заголовки:**
 
-- `X-RateLimit-Limit` — максимальное количество запросов
-- `X-RateLimit-Remaining` — оставшееся количество запросов
-- `Retry-After` — секунды до сброса лимита
+-   `X-RateLimit-Limit` — максимальное количество запросов
+-   `X-RateLimit-Remaining` — оставшееся количество запросов
+-   `Retry-After` — секунды до сброса лимита
 
 ---
 
@@ -773,21 +601,21 @@ Route::get('/media/config', [MediaController::class, 'config'])
 
 #### Веб-запросы (web middleware)
 
-- Автоматическая защита для всех state-changing запросов (POST, PUT, PATCH, DELETE)
-- Токен передаётся через:
-  - Meta tag: `<meta name="csrf-token" content="{{ csrf_token() }}">`
-  - Header: `X-CSRF-TOKEN` или `X-XSRF-TOKEN`
-- Проверка через `VerifyCsrfToken` middleware
+-   Автоматическая защита для всех state-changing запросов (POST, PUT, PATCH, DELETE)
+-   Токен передаётся через:
+    -   Meta tag: `<meta name="csrf-token" content="{{ csrf_token() }}">`
+    -   Header: `X-CSRF-TOKEN` или `X-XSRF-TOKEN`
+-   Проверка через `VerifyCsrfToken` middleware
 
 #### API запросы
 
-- CSRF проверка через `VerifyApiCsrf` middleware
-- Исключения:
-  - `api.auth.login` — credentials-based auth
-  - `api.auth.refresh` — credentials-based auth
-  - `api.auth.logout` — использует JWT auth
-- Токен передаётся через заголовок `X-CSRF-Token` или `X-XSRF-TOKEN`
-- Cookie `cms_csrf` устанавливается при первом запросе
+-   CSRF проверка через `VerifyApiCsrf` middleware
+-   Исключения:
+    -   `api.auth.login` — credentials-based auth
+    -   `api.auth.refresh` — credentials-based auth
+    -   `api.auth.logout` — использует JWT auth
+-   Токен передаётся через заголовок `X-CSRF-Token` или `X-XSRF-TOKEN`
+-   Cookie `cms_csrf` устанавливается при первом запросе
 
 **Порядок middleware для API:**
 
@@ -799,23 +627,23 @@ CORS → CSRF → Vary → Auth
 
 #### Access Token
 
-- Хранится в cookie `cms_at`
-- Не шифруется (уже подписан)
-- Используется для аутентификации в админских эндпоинтах
-- Проверяется через `JwtAuth` middleware
+-   Хранится в cookie `cms_at`
+-   Не шифруется (уже подписан)
+-   Используется для аутентификации в админских эндпоинтах
+-   Проверяется через `JwtAuth` middleware
 
 #### Refresh Token
 
-- Хранится в cookie `cms_rt`
-- Не шифруется (уже подписан)
-- Используется для обновления access token
-- Проверяется через `RefreshController`
+-   Хранится в cookie `cms_rt`
+-   Не шифруется (уже подписан)
+-   Используется для обновления access token
+-   Проверяется через `RefreshController`
 
 #### Опциональная аутентификация
 
-- `OptionalJwtAuth` middleware позволяет анонимный доступ
-- Если токен валиден, устанавливает пользователя
-- Используется для публичных эндпоинтов с расширенными правами для админов
+-   `OptionalJwtAuth` middleware позволяет анонимный доступ
+-   Если токен валиден, устанавливает пользователя
+-   Используется для публичных эндпоинтов с расширенными правами для админов
 
 ### Авторизация
 
@@ -851,9 +679,9 @@ Route::middleware('can:manage.taxonomies')->group(function () {
 
 **Требования для кросс-сайтовых запросов:**
 
-- `SameSite=None; Secure` для cookies
-- `credentials: true` в CORS конфигурации
-- Правильные заголовки `Access-Control-Allow-Origin`, `Access-Control-Allow-Credentials`
+-   `SameSite=None; Secure` для cookies
+-   `credentials: true` в CORS конфигурации
+-   Правильные заголовки `Access-Control-Allow-Origin`, `Access-Control-Allow-Credentials`
 
 ---
 
@@ -873,8 +701,8 @@ Route::middleware('can:manage.taxonomies')->group(function () {
 
 **Исключения:**
 
-- Системные пути: `admin`, `api`, `auth`, `login`, `logout`, `register`
-- Определяется по первому сегменту пути
+-   Системные пути: `admin`, `api`, `auth`, `login`, `logout`, `register`
+-   Определяется по первому сегменту пути
 
 **Алгоритм:**
 
@@ -895,8 +723,8 @@ GET /api/v1/auth  → (без изменений)
 
 **Важно:**
 
-- Выполняется **ДО роутинга**, поэтому работает даже для несуществующих путей
-- Это гарантирует, что все запросы к публичным страницам приходят в каноническом виде
+-   Выполняется **ДО роутинга**, поэтому работает даже для несуществующих путей
+-   Это гарантирует, что все запросы к публичным страницам приходят в каноническом виде
 
 ---
 
@@ -921,7 +749,7 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
     Route::get('/custom-resource', [CustomResourceController::class, 'index'])
         ->middleware('can:viewAny,' . CustomResource::class)
         ->name('admin.v1.custom-resource.index');
-    
+
     Route::post('/custom-resource', [CustomResourceController::class, 'store'])
         ->middleware('can:create,' . CustomResource::class)
         ->name('admin.v1.custom-resource.store');
@@ -936,63 +764,6 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
 // Будет реализована иерархическая система через route_nodes
 ```
 
-### Резервирование пути для плагина
-
-```php
-// plugins/my-plugin/src/MyPluginServiceProvider.php
-public function boot(): void
-{
-    $pathReservationService = app(PathReservationService::class);
-    
-    // Резервируем путь
-    try {
-        $pathReservationService->reservePath('/my-plugin', 'plugin:my-plugin', 'Plugin routes');
-    } catch (PathAlreadyReservedException $e) {
-        // Путь уже зарезервирован
-    }
-    
-    // Регистрируем роуты
-    Route::middleware('web')
-        ->prefix('my-plugin')
-        ->group(__DIR__ . '/../../routes/plugin.php');
-}
-
-public function register(): void
-{
-    // Освобождаем путь при отключении плагина
-    $this->app->terminating(function () {
-        $pathReservationService = app(PathReservationService::class);
-        $pathReservationService->releaseBySource('plugin:my-plugin');
-    });
-}
-```
-
-### Добавление зарезервированного пути в конфиг
-
-```php
-// config/stupidcms.php
-return [
-    'reserved_routes' => [
-        'paths' => [
-            'admin',
-            'my-reserved-path', // Новый зарезервированный путь
-        ],
-        'prefixes' => [
-            'admin',
-            'api',
-            'my-prefix', // Новый зарезервированный префикс
-        ],
-    ],
-];
-```
-
-**Важно:** После изменения конфига необходимо очистить кэш роутов:
-
-```bash
-php artisan route:clear
-php artisan route:cache
-```
-
 ---
 
 ## Заключение
@@ -1000,8 +771,7 @@ php artisan route:cache
 Система роутинга в приложении обеспечивает:
 
 1. **Детерминированный порядок загрузки** — предотвращает конфликты между роутами
-2. **Гибкую систему резервирования путей** — защищает системные маршруты от конфликтов
-3. **Многоуровневую безопасность** — CSRF, JWT, rate limiting, авторизация
+2. **Многоуровневую безопасность** — CSRF, JWT, rate limiting, авторизация
 4. **Поддержку плагинов** — динамическая загрузка роутов плагинов
 5. **Канонизацию URL** — единообразие публичных URL
 6. **Корректную обработку ошибок** — fallback для 404 с правильным форматированием
@@ -1013,4 +783,3 @@ php artisan route:cache
 **Дата создания:** 2025-12-05  
 **Версия:** 1.0  
 **Автор:** Автоматически сгенерировано на основе анализа кодовой базы
-
