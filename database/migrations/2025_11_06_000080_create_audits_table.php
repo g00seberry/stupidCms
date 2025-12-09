@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('subject_type');
             $table->unsignedBigInteger('subject_id');
             $table->json('diff_json')->nullable();
+            $table->json('meta')->nullable()->comment('Additional metadata for security events');
             $table->string('ip', 45)->nullable();
             $table->string('ua')->nullable();
             $table->timestamps();

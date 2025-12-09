@@ -10,10 +10,10 @@ return new class extends Migration {
         Schema::create('entry_term', function (Blueprint $table) {
             $table->unsignedBigInteger('entry_id');
             $table->unsignedBigInteger('term_id');
-
             $table->primary(['entry_id','term_id']);
             $table->foreign('entry_id')->references('id')->on('entries')->onDelete('cascade');
             $table->foreign('term_id')->references('id')->on('terms')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

@@ -13,6 +13,10 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->json('admin_permissions')
+                ->nullable()
+                ->comment('List of granted admin abilities');
             $table->rememberToken();
             $table->timestamps();
         });

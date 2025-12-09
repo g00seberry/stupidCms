@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Schema;
  * Таблица индексированных скалярных значений из Entry.data_json.
  * Использует составной первичный ключ (entry_id, path_id, array_index).
  * date-тип сохраняется в value_datetime с временем 00:00:00.
+ *
+ * CHECK-констрейнт обеспечивает, что ровно одно value_* поле заполнено.
  */
 return new class extends Migration {
     /**
-     * Run the migrations.
-     *
-     * @return void
+     * Выполнить миграцию.
      */
     public function up(): void
     {
@@ -49,15 +49,47 @@ return new class extends Migration {
             $table->index('value_bool');
             $table->index('value_datetime');
         });
+
+        // Добавить CHECK-констрейнт (только для MySQL)
+        // Констрейнт: ровно одно value_* поле заполнено
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('
+                ALTER TABLE doc_values ADD CONSTRAINT chk_doc_values_single_value CHECK (
+                    (value_string IS NOT NULL) + 
+                    (value_int IS NOT NULL) + 
+                    (value_float IS NOT NULL) + 
+                    (value_bool IS NOT NULL) + 
+                    (value_datetime IS NOT NULL) + 
+                    (value_text IS NOT NULL) + 
+                    (value_json IS NOT NULL) = 1
+                )
+            ');
+        }
     }
 
     /**
-     * Reverse the migrations.
-     *
-     * @return void
+     * Откатить миграцию.
      */
     public function down(): void
     {
+        // Удаляем CHECK-констрейнт перед удалением таблицы (только для MySQL)
+        if (DB::getDriverName() === 'mysql') {
+            $constraints = DB::select("
+                SELECT CONSTRAINT_NAME
+                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'doc_values'
+                  AND CONSTRAINT_TYPE = 'CHECK'
+                  AND CONSTRAINT_NAME = 'chk_doc_values_single_value'
+            ");
+
+            $constraintNames = array_column($constraints, 'CONSTRAINT_NAME');
+
+            if (in_array('chk_doc_values_single_value', $constraintNames, true)) {
+                DB::statement('ALTER TABLE doc_values DROP CHECK chk_doc_values_single_value');
+            }
+        }
+
         Schema::dropIfExists('doc_values');
     }
 };

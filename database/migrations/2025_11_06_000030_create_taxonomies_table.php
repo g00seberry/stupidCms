@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->boolean('hierarchical')->default(false);
+            $table->json('options_json')->nullable();
             $table->timestamps();
         });
     }
