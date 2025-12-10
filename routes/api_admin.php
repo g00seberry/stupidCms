@@ -6,10 +6,12 @@ use App\Http\Controllers\Admin\V1\PathController;
 use App\Http\Controllers\Admin\V1\TemplateController;
 use App\Http\Controllers\Admin\V1\UtilsController;
 use App\Http\Controllers\Admin\V1\EntryController;
+use App\Http\Controllers\Admin\V1\EntryPreviewController;
 use App\Http\Controllers\Admin\V1\EntryTermsController;
 use App\Http\Controllers\Admin\V1\FormConfigController;
 use App\Http\Controllers\Admin\V1\MediaController;
 use App\Http\Controllers\Admin\V1\PostTypeController;
+use App\Http\Controllers\Admin\V1\RouteNodeController;
 use App\Http\Controllers\Admin\V1\TaxonomyController;
 use App\Http\Controllers\Admin\V1\TermController;
 use App\Http\Controllers\Auth\CurrentUserController;
@@ -105,6 +107,9 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         ->name('admin.v1.entries.store');
     Route::get('/entries/{id}', [EntryController::class, 'show'])
         ->name('admin.v1.entries.show');
+    Route::get('/entries/{entry}/preview', [EntryPreviewController::class, 'show'])
+        ->where('entry', '[0-9]+')
+        ->name('admin.v1.entries.preview');
     Route::put('/entries/{id}', [EntryController::class, 'update'])
         ->name('admin.v1.entries.update');
     Route::delete('/entries/{id}', [EntryController::class, 'destroy'])
@@ -239,5 +244,22 @@ Route::middleware(['jwt.auth', 'throttle:api'])->group(function () {
         Route::delete('/{embed}', [BlueprintEmbedController::class, 'destroy'])
             ->name('admin.v1.embeds.destroy');
     });
+
+    // Route Nodes (full CRUD + reorder)
+    Route::get('/routes', [RouteNodeController::class, 'index'])
+        ->name('admin.v1.routes.index');
+    Route::post('/routes', [RouteNodeController::class, 'store'])
+        ->name('admin.v1.routes.store');
+    Route::post('/routes/reorder', [RouteNodeController::class, 'reorder'])
+        ->name('admin.v1.routes.reorder');
+    Route::get('/routes/{id}', [RouteNodeController::class, 'show'])
+        ->where('id', '[0-9]+')
+        ->name('admin.v1.routes.show');
+    Route::patch('/routes/{id}', [RouteNodeController::class, 'update'])
+        ->where('id', '[0-9]+')
+        ->name('admin.v1.routes.update');
+    Route::delete('/routes/{id}', [RouteNodeController::class, 'destroy'])
+        ->where('id', '[0-9]+')
+        ->name('admin.v1.routes.destroy');
 });
 

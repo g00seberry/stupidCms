@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\RouteNodeRepository;
+use App\Services\DynamicRoutes\DynamicRouteCache;
+use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\DynamicRouteRegistrar;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 /**
@@ -16,7 +22,7 @@ use Illuminate\Support\Str;
  *
  * Настраивает rate limiters для API, login, refresh.
  * Загружает маршруты в детерминированном порядке:
- * 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Fallback
+ * 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Dynamic Routes → 6) Fallback
  *
  * @package App\Providers
  */
@@ -64,7 +70,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             // Порядок загрузки роутов (детерминированный):
-            // 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Fallback
+            // 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Dynamic Routes → 6) Fallback
             
             // 1) System/Core routes - загружаются первыми
             // Включают: /, статические сервисные пути
@@ -86,13 +92,18 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api/v1/admin')
                 ->group(base_path('routes/api_admin.php'));
 
-            // 5) Taxonomies & Content routes - загружаются пятыми
+            // 4) Taxonomies & Content routes - загружаются четвёртыми
             // Включают: динамические контентные маршруты, таксономии
             // Catch-all маршруты должны быть здесь, а не в core
             // Middleware CanonicalUrl применяется в глобальной web-группе (см. bootstrap/app.php)
             // и выполняет 301 редиректы ДО роутинга
             Route::middleware('web')
                 ->group(base_path('routes/web_content.php'));
+
+            // 5) Dynamic Routes - загружаются после content, но ДО fallback
+            // Маршруты из БД (route_nodes), управляемые через конструктор
+            // Проверка существования таблицы для graceful degradation при миграциях
+            $this->registerDynamicRoutes();
 
             // 6) Fallback - строго последним
             // Обрабатывает все несовпавшие запросы (404) для ВСЕХ HTTP методов
@@ -108,6 +119,38 @@ class RouteServiceProvider extends ServiceProvider
                 ->where('any', '.*')
                 ->fallback();
         });
+    }
+
+    /**
+     * Зарегистрировать динамические маршруты из БД.
+     *
+     * Загружает маршруты из таблицы route_nodes и регистрирует их через DynamicRouteRegistrar.
+     * Проверяет существование таблицы для graceful degradation при миграциях.
+     * При ошибке регистрации логирует, но не прерывает загрузку приложения.
+     *
+     * @return void
+     */
+    private function registerDynamicRoutes(): void
+    {
+        // Проверка существования таблицы для graceful degradation при миграциях
+        if (! Schema::hasTable('route_nodes')) {
+            return;
+        }
+
+        try {
+            $cache = app(DynamicRouteCache::class);
+            $repository = new RouteNodeRepository($cache);
+            $guard = new DynamicRouteGuard();
+            $registrar = new DynamicRouteRegistrar($repository, $guard);
+
+            $registrar->register();
+        } catch (\Throwable $e) {
+            // Логируем ошибку, но не прерываем загрузку приложения
+            Log::error('Dynamic routes: ошибка при регистрации маршрутов в RouteServiceProvider', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
     }
 
 }

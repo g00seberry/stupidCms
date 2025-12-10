@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands([
         App\Console\Commands\CleanupExpiredRefreshTokens::class,
+        App\Console\Commands\DynamicRoutesCacheCommand::class,
+        App\Console\Commands\DynamicRoutesClearCommand::class,
         App\Console\Commands\GenerateJwtKeys::class,
         App\Console\Commands\UserMakeAdminCommand::class,
     ])

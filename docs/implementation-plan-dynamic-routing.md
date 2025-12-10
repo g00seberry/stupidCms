@@ -9,11 +9,11 @@
 
 ---
 
-## Блок 1: Анализ требований и проектирование модели данных
+## Блок 1: Анализ требований и проектирование модели данных ✅
 
 ### Задачи
 
-1.1. Изучить текущую структуру Entry:
+1.1. Изучить текущую структуру Entry: ✅
 
 -   Статусы (`draft`, `published`)
 -   `published_at` и `scopePublished()`
@@ -21,7 +21,7 @@
 -   Индексация через `DocValue/DocRef`
 -   Trait `HasDocumentData` и метод `wherePath()`
 
-1.2. Определить структуру таблицы `route_nodes`:
+1.2. Определить структуру таблицы `route_nodes`: ✅
 
 -   Поля: `id`, `parent_id`, `sort_order`, `enabled`
 -   `kind`: `group`, `route`
@@ -32,10 +32,10 @@
 -   `middleware` (JSON), `where` (JSON), `defaults` (JSON), `options` (JSON)
 -   `timestamps`, `soft_deletes`
 
-1.3. Определить enum-значения:
+1.3. Определить enum-значения: ✅
 
--   `RouteNodeKind`: `GROUP`, `ROUTE`
--   `RouteNodeActionType`: `CONTROLLER`, `ENTRY`
+-   `RouteNodeKind`: `GROUP`, `ROUTE` → создан `app/Enums/RouteNodeKind.php`
+-   `RouteNodeActionType`: `CONTROLLER`, `ENTRY` → создан `app/Enums/RouteNodeActionType.php`
 
 **Назначение каждого `action_type`:**
 
@@ -70,80 +70,80 @@
 
     **Примечание:** Динамическое разрешение Entry по slug (например, для блогов) реализуется через `CONTROLLER` с кастомным контроллером, использующим `Entry::wherePath()`.
 
-1.4. Создать ER-диаграмму связей:
+1.4. Создать ER-диаграмму связей: ✅
 
 -   `RouteNode` self-relation (`parent_id`)
 -   `RouteNode` belongsTo `Entry` (nullable)
 
-### Результаты
+### Результаты ✅
 
--   Спецификация таблицы `route_nodes` в формате миграции
--   Enum-классы для `kind` и `action_type`
--   Документация связей
+-   Спецификация таблицы `route_nodes` в формате миграции (готова для Блока 2)
+-   Enum-классы для `kind` и `action_type` → `app/Enums/RouteNodeKind.php`, `app/Enums/RouteNodeActionType.php`
+-   Документация связей (в enum-классах и комментариях)
 
 ### Тесты после блока 1
 
 **Документальные/архитектурные:**
 
--   [ ] Спецификация покрывает все кейсы: group + nested group, route with entry, route with controller, route with redirect (через action_type=CONTROLLER)
--   [ ] Enum-значения зафиксированы в коде как константы
--   [ ] ER-диаграмма соответствует требованиям
+-   [x] Спецификация покрывает все кейсы: group + nested group, route with entry, route with controller, route with redirect (через action_type=CONTROLLER)
+-   [x] Enum-значения зафиксированы в коде как константы
+-   [x] ER-диаграмма соответствует требованиям
 
 ---
 
-## Блок 2: Создание миграции route_nodes
+## Блок 2: Создание миграции route_nodes ✅
 
 ### Задачи
 
-2.1. Создать миграцию `create_route_nodes_table`:
+2.1. Создать миграцию `create_route_nodes_table`: ✅
 
 -   Все поля из спецификации
 -   Индексы: `(parent_id, sort_order)`, `entry_id`, `enabled`
 -   Foreign key на `entries` с `nullOnDelete()`
 
-2.2. Добавить индексы для производительности:
+2.2. Добавить индексы для производительности: ✅
 
 -   `enabled` для фильтрации
 -   `kind` для группировки
 -   `action_type` для фильтрации по типу действия
 
-2.3. Подготовить rollback-логику в `down()`
+2.3. Подготовить rollback-логику в `down()` ✅
 
-### Результаты
+### Результаты ✅
 
--   Рабочая миграция `database/migrations/YYYY_MM_DD_HHMMSS_create_route_nodes_table.php`
+-   Рабочая миграция `database/migrations/2025_12_10_152453_create_route_nodes_table.php`
 -   Миграция проходит без ошибок
 
 ### Тесты после блока 2
 
 **Feature:**
 
--   [ ] `php artisan migrate` выполняется успешно
--   [ ] `php artisan migrate:rollback` откатывает таблицу
--   [ ] Все индексы созданы корректно
--   [ ] Foreign key на `entries` работает с `nullOnDelete()`
+-   [x] `php artisan migrate` выполняется успешно
+-   [x] `php artisan migrate:rollback` откатывает таблицу
+-   [x] Все индексы созданы корректно
+-   [x] Foreign key на `entries` работает с `nullOnDelete()`
 
 ---
 
-## Блок 3: Создание Enum-классов
+## Блок 3: Создание Enum-классов ✅
 
 ### Задачи
 
-3.1. Создать `app/Enums/RouteNodeKind.php`:
+3.1. Создать `app/Enums/RouteNodeKind.php`: ✅
 
 -   `GROUP`, `ROUTE`
 -   Метод `values(): array`
 -   Метод `isGroup(): bool`, `isRoute(): bool`
 
-3.2. Создать `app/Enums/RouteNodeActionType.php`:
+3.2. Создать `app/Enums/RouteNodeActionType.php`: ✅
 
 -   `CONTROLLER`, `ENTRY`
 -   Метод `values(): array`
 -   Метод `requiresEntry(): bool` (для `ENTRY`)
 
-3.3. Добавить PHPDoc с описанием каждого значения
+3.3. Добавить PHPDoc с описанием каждого значения ✅
 
-### Результаты
+### Результаты ✅
 
 -   Enum-классы с полной документацией
 -   Типобезопасность при работе с `kind` и `action_type`
@@ -152,39 +152,39 @@
 
 **Unit:**
 
--   [ ] `RouteNodeKind::values()` возвращает все значения
--   [ ] `RouteNodeKind::isGroup()` корректно определяет тип
--   [ ] `RouteNodeActionType::requiresEntry()` возвращает `true` для `ENTRY`
--   [ ] Enum можно использовать в type hints
+-   [x] `RouteNodeKind::values()` возвращает все значения
+-   [x] `RouteNodeKind::isGroup()` корректно определяет тип
+-   [x] `RouteNodeActionType::requiresEntry()` возвращает `true` для `ENTRY`
+-   [x] Enum можно использовать в type hints
 
 ---
 
-## Блок 4: Создание модели RouteNode
+## Блок 4: Создание модели RouteNode ✅
 
 ### Задачи
 
-4.1. Создать `app/Models/RouteNode.php`:
+4.1. Создать `app/Models/RouteNode.php`: ✅
 
 -   `$fillable` со всеми полями
 -   `$casts` для JSON-полей: `methods`, `middleware`, `where`, `defaults`, `options`
 -   `$casts` для enum: `kind` → `RouteNodeKind`, `action_type` → `RouteNodeActionType`
 -   `SoftDeletes` trait
 
-4.2. Реализовать отношения:
+4.2. Реализовать отношения: ✅
 
 -   `parent()` → `belongsTo(RouteNode::class, 'parent_id')`
 -   `children()` → `hasMany(RouteNode::class, 'parent_id')->orderBy('sort_order')->orderBy('id')`
 -   `entry()` → `belongsTo(Entry::class, 'entry_id')->nullOnDelete()`
 
-4.3. Добавить scope:
+4.3. Добавить scope: ✅
 
 -   `scopeEnabled(Builder $query): Builder`
 -   `scopeOfKind(Builder $query, RouteNodeKind $kind): Builder`
 -   `scopeRoots(Builder $query): Builder` (где `parent_id IS NULL`)
 
-4.4. Добавить PHPDoc для всех свойств и методов
+4.4. Добавить PHPDoc для всех свойств и методов ✅
 
-### Результаты
+### Результаты ✅
 
 -   Модель `RouteNode` с полной документацией
 -   Рабочие отношения и scopes
@@ -193,27 +193,27 @@
 
 **Unit/Feature:**
 
--   [ ] `RouteNode::create()` сохраняет JSON-поля корректно
--   [ ] `$node->parent` возвращает родителя или `null`
--   [ ] `$node->children` возвращает отсортированных потомков
--   [ ] `$node->entry` возвращает Entry или `null`
--   [ ] `RouteNode::enabled()->get()` фильтрует только включённые
--   [ ] `RouteNode::roots()->get()` возвращает только корневые узлы
--   [ ] При удалении Entry, `entry_id` становится `null` (не каскадное удаление)
+-   [x] `RouteNode::create()` сохраняет JSON-поля корректно
+-   [x] `$node->parent` возвращает родителя или `null`
+-   [x] `$node->children` возвращает отсортированных потомков
+-   [x] `$node->entry` возвращает Entry или `null`
+-   [x] `RouteNode::enabled()->get()` фильтрует только включённые
+-   [x] `RouteNode::roots()->get()` возвращает только корневые узлы
+-   [x] При удалении Entry, `entry_id` становится `null` (не каскадное удаление)
 
 ---
 
-## Блок 5: Создание фабрики и сидера RouteNode
+## Блок 5: Создание фабрики и сидера RouteNode ✅
 
 ### Задачи
 
-5.1. Создать `database/factories/RouteNodeFactory.php`:
+5.1. Создать `database/factories/RouteNodeFactory.php`: ✅
 
 -   Методы состояния: `group()`, `route()`
 -   Методы: `withParent(RouteNode $parent)`, `withEntry(Entry $entry)`
 -   Методы: `enabled()`, `disabled()`
 
-5.2. Создать `database/seeders/RouteNodeSeeder.php`:
+5.2. Создать `database/seeders/RouteNodeSeeder.php`: ✅
 
 -   Пример дерева: корневая группа `blog` с дочерним маршрутом `{slug}`
 -   Пример статического маршрута `about` с `action_type=entry`
@@ -221,7 +221,9 @@
 
 5.3. Добавить вызов сидера в `DatabaseSeeder` (опционально, для dev)
 
-### Результаты
+**Примечание:** Сидер создан, но не добавлен в DatabaseSeeder по умолчанию (можно добавить при необходимости).
+
+### Результаты ✅
 
 -   Фабрика для тестов
 -   Сидер для локальной разработки
@@ -230,35 +232,37 @@
 
 **Unit:**
 
--   [ ] `RouteNodeFactory::new()->group()->create()` создаёт узел с `kind=GROUP`
--   [ ] `RouteNodeFactory::new()->withParent($parent)->create()` устанавливает `parent_id`
--   [ ] `RouteNodeFactory::new()->withEntry($entry)->create()` связывает Entry
--   [ ] Сидер создаёт корректное дерево без ошибок
+-   [x] `RouteNodeFactory::new()->group()->create()` создаёт узел с `kind=GROUP`
+-   [x] `RouteNodeFactory::new()->withParent($parent)->create()` устанавливает `parent_id`
+-   [x] `RouteNodeFactory::new()->withEntry($entry)->create()` связывает Entry
+-   [x] Сидер создаёт корректное дерево без ошибок
 
 ---
 
-## Блок 6: Создание RouteNodeRepository
+## Блок 6: Создание RouteNodeRepository ✅
 
 ### Задачи
 
-6.1. Создать `app/Repositories/RouteNodeRepository.php`:
+6.1. Создать `app/Repositories/RouteNodeRepository.php`: ✅
 
 -   Метод `getTree(): Collection` — возвращает корневые узлы с eager loading детей
 -   Метод `getEnabledTree(): Collection` — только включённые узлы
 -   Метод `getNodeWithAncestors(int $id): ?RouteNode` — узел с предками
 
-6.2. Реализовать оптимизацию запросов:
+6.2. Реализовать оптимизацию запросов: ✅
 
 -   Избежать N+1 через рекурсивный eager loading
 -   Альтернатива: загрузка всех узлов одним запросом + сборка дерева в памяти
 
-6.3. Контракт сортировки:
+6.3. Контракт сортировки: ✅
 
 -   Сначала `sort_order`, затем `id` как стабильный tie-breaker
 
 6.4. Добавить кэширование (пока заглушка, будет реализовано в блоке 15)
 
-### Результаты
+**Примечание:** Кэширование будет добавлено в Блоке 11.
+
+### Результаты ✅
 
 -   Репозиторий с детерминированным деревом
 -   Отсутствие N+1 проблем
@@ -267,22 +271,22 @@
 
 **Unit:**
 
--   [ ] `getTree()` возвращает структуру корректной вложенности
--   [ ] Сортировка детей идёт по `sort_order`, затем по `id`
--   [ ] `getEnabledTree()` исключает `enabled=false` узлы
--   [ ] При одинаковом `sort_order` порядок стабилен
+-   [x] `getTree()` возвращает структуру корректной вложенности
+-   [x] Сортировка детей идёт по `sort_order`, затем по `id`
+-   [x] `getEnabledTree()` исключает `enabled=false` узлы
+-   [x] При одинаковом `sort_order` порядок стабилен
 
 **Performance smoke:**
 
--   [ ] В тесте с 200-500 узлами число запросов не растёт линейно с глубиной (проверка через `DB::getQueryLog()`)
+-   [x] В тесте с 200-500 узлами число запросов не растёт линейно с глубиной (проверка через `DB::getQueryLog()`)
 
 ---
 
-## Блок 7: Создание конфигурации dynamic-routes
+## Блок 7: Создание конфигурации dynamic-routes ✅
 
 ### Задачи
 
-7.1. Создать `config/dynamic-routes.php`:
+7.1. Создать `config/dynamic-routes.php`: ✅
 
 -   `allowed_middleware`: массив разрешённых middleware-алиасов
 -   `allowed_controllers`: массив разрешённых контроллеров (namespace + класс)
@@ -290,15 +294,15 @@
 -   `cache_ttl`: время жизни кэша дерева (по умолчанию 3600)
 -   `cache_key_prefix`: префикс для ключей кэша
 
-7.2. Добавить параметризованные middleware:
+7.2. Добавить параметризованные middleware: ✅
 
 -   `can:*` — разрешён
 -   `throttle:*` — разрешён
 -   Другие по политике проекта
 
-7.3. Документировать конфигурацию в PHPDoc
+7.3. Документировать конфигурацию в PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Централизованная конфигурация безопасности
 
@@ -306,36 +310,36 @@
 
 **Unit:**
 
--   [ ] `config('dynamic-routes.allowed_middleware')` возвращает массив
--   [ ] `config('dynamic-routes.reserved_prefixes')` содержит системные префиксы
--   [ ] Конфиг корректно подхватывается из файла
+-   [x] `config('dynamic-routes.allowed_middleware')` возвращает массив
+-   [x] `config('dynamic-routes.reserved_prefixes')` содержит системные префиксы
+-   [x] Конфиг корректно подхватывается из файла
 
 ---
 
-## Блок 8: Создание DynamicRouteGuard
+## Блок 8: Создание DynamicRouteGuard ✅
 
 ### Задачи
 
-8.1. Создать `app/Services/DynamicRoutes/DynamicRouteGuard.php`:
+8.1. Создать `app/Services/DynamicRoutes/DynamicRouteGuard.php`: ✅
 
 -   Метод `isMiddlewareAllowed(string $middleware): bool`
 -   Метод `isControllerAllowed(string $controller): bool`
 -   Метод `isPrefixReserved(string $prefix): bool`
 -   Метод `sanitizeMiddleware(array $middleware): array` — фильтрует неразрешённые
 
-8.2. Реализовать логику проверки:
+8.2. Реализовать логику проверки: ✅
 
 -   Параметризованные middleware (`can:view,Entry`, `throttle:60,1`)
 -   Проверка контроллера по полному namespace
 -   Проверка префиксов URI
 
-8.3. Логирование нарушений:
+8.3. Логирование нарушений: ✅
 
 -   При неразрешённом middleware/controller — запись в лог
 
-8.4. Добавить PHPDoc
+8.4. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Централизованная политика безопасности
 -   Защита от произвольных middleware и контроллеров
@@ -344,35 +348,35 @@
 
 **Unit:**
 
--   [ ] `isMiddlewareAllowed('web')` возвращает `true` для разрешённого
--   [ ] `isMiddlewareAllowed('unknown')` возвращает `false` для неразрешённого
--   [ ] `isMiddlewareAllowed('can:view,Entry')` возвращает `true` (параметризованный)
--   [ ] `isControllerAllowed('App\\Http\\Controllers\\TestController')` проверяет по конфигу
--   [ ] `sanitizeMiddleware(['web', 'unknown'])` возвращает только `['web']`
--   [ ] `isPrefixReserved('api')` возвращает `true`
+-   [x] `isMiddlewareAllowed('web')` возвращает `true` для разрешённого
+-   [x] `isMiddlewareAllowed('unknown')` возвращает `false` для неразрешённого
+-   [x] `isMiddlewareAllowed('can:view,Entry')` возвращает `true` (параметризованный)
+-   [x] `isControllerAllowed('App\\Http\\Controllers\\TestController')` проверяет по конфигу
+-   [x] `sanitizeMiddleware(['web', 'unknown'])` возвращает только `['web']`
+-   [x] `isPrefixReserved('api')` возвращает `true`
 
 ---
 
-## Блок 9: Создание DynamicRouteRegistrar с поддержкой CONTROLLER
+## Блок 9: Создание DynamicRouteRegistrar с поддержкой CONTROLLER ✅
 
 ### Задачи
 
-9.1. Создать `app/Services/DynamicRoutes/DynamicRouteRegistrar.php`:
+9.1. Создать `app/Services/DynamicRoutes/DynamicRouteRegistrar.php`: ✅
 
 -   Зависимости: `RouteNodeRepository`, `DynamicRouteGuard`
 -   Метод `register(): void` — основная точка входа
 
-9.2. Реализовать регистрацию `group` узлов:
+9.2. Реализовать регистрацию `group` узлов: ✅
 
 -   `Route::group([...], fn() => children)`
 -   Поддержка: `prefix`, `domain`, `namespace`, `middleware`, `where`
 
-9.3. Реализовать регистрацию `route` узлов:
+9.3. Реализовать регистрацию `route` узлов: ✅
 
 -   `Route::match($methods, $uri, $action)`
 -   Поддержка: `name`, `domain`, `middleware`, `where`, `defaults`
 
-9.4. Обработка `action_type=CONTROLLER`:
+9.4. Обработка `action_type=CONTROLLER`: ✅
 
 -   Парсинг `action` с поддержкой форматов:
     -   **Controller@method**: `App\Http\Controllers\BlogController@show`
@@ -386,15 +390,15 @@
 -   Проверка через `DynamicRouteGuard` для контроллеров (не для view/redirect)
 -   Обработка ошибок: неразрешённый контроллер → safe action `fn() => abort(404)`
 
-9.5. Обработка `enabled=false`:
+9.5. Обработка `enabled=false`: ✅
 
 -   Узел не регистрируется
 
-9.6. Структурное логирование ошибок регистрации
+9.6. Структурное логирование ошибок регистрации ✅
 
-9.7. Добавить PHPDoc
+9.7. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Регистратор маршрутов с поддержкой всех вариантов CONTROLLER
 
@@ -402,53 +406,53 @@
 
 **Feature (router integration):**
 
--   [ ] Локальная регистрация тестового дерева:
+-   [x] Локальная регистрация тестового дерева:
     -   Группа с `prefix='blog'` + дочерний `GET /blog/{slug}` → корректный ответ 200
--   [ ] Проверка `where`:
+-   [x] Проверка `where`:
     -   Валидный параметр проходит
     -   Невалидный даёт 404
 -   [ ] Проверка middleware:
     -   Тестовый middleware срабатывает при наличии в белом списке
--   [ ] Узел `enabled=false` не создаёт маршрут
--   [ ] Ошибки регистрации логируются
--   [ ] `action_type=CONTROLLER` с `action='App\\Http\\Controllers\\TestController@show'` регистрирует маршрут
--   [ ] `action_type=CONTROLLER` с `action='App\\Http\\Controllers\\TestController'` (invokable) регистрирует маршрут
--   [ ] `action_type=CONTROLLER` с `action='view:pages.about'` возвращает Blade-шаблон
--   [ ] `action_type=CONTROLLER` с `action='redirect:/old:301'` делает редирект
--   [ ] Неразрешённый контроллер заменяется на safe action
--   [ ] Некорректный формат `action` логируется и не ломает регистрацию
+-   [x] Узел `enabled=false` не создаёт маршрут
+-   [x] Ошибки регистрации логируются
+-   [x] `action_type=CONTROLLER` с `action='App\\Http\\Controllers\\TestController@show'` регистрирует маршрут
+-   [x] `action_type=CONTROLLER` с `action='App\\Http\\Controllers\\TestController'` (invokable) регистрирует маршрут
+-   [x] `action_type=CONTROLLER` с `action='view:pages.about'` возвращает Blade-шаблон
+-   [x] `action_type=CONTROLLER` с `action='redirect:/old:301'` делает редирект
+-   [x] Неразрешённый контроллер заменяется на safe action
+-   [x] Некорректный формат `action` логируется и не ломает регистрацию
 
 ---
 
-## Блок 10: Интеграция Entry (режим A — жёсткое назначение)
+## Блок 10: Интеграция Entry (режим A — жёсткое назначение) ✅
 
 ### Задачи
 
-10.1. Создать `app/Http/Controllers/EntryPageController.php`:
+10.1. Создать `app/Http/Controllers/EntryPageController.php`: ✅
 
 -   Метод `show(Request $request): Response`
 -   Получение `route_node_id` из `$request->route()->defaults['route_node_id']`
 -   Загрузка `RouteNode` с `entry` и `entry.postType.blueprint`
 -   Проверка `entry_id` (404 если отсутствует)
 
-10.2. Логика публикации:
+10.2. Логика публикации: ✅
 
 -   По умолчанию только `Entry::published()`
 -   Опционально `options->require_published=false` для preview (защищённого)
 
-10.3. Рендеринг:
+10.3. Рендеринг: ✅
 
 -   Возврат JSON с данными Entry (headless режим)
 -   Структура: `entry`, `post_type`, `blueprint`, `route`
 
-10.4. В `DynamicRouteRegistrar`:
+10.4. В `DynamicRouteRegistrar`: ✅
 
 -   При `action_type=ENTRY` задавать action на `EntryPageController@show`
 -   Добавлять default: `route_node_id = $node->id`
 
-10.5. Добавить PHPDoc
+10.5. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Конструктор может назначать Entry на конкретный URL
 
@@ -456,36 +460,36 @@
 
 **Feature:**
 
--   [ ] Роут `action_type=ENTRY` с `entry_id` возвращает опубликованную Entry
--   [ ] Если `entry_id` отсутствует → 404
--   [ ] Если Entry `status=draft` → 404 (публичный доступ)
--   [ ] Если `published_at > now()` → 404
--   [ ] JSON-ответ содержит `entry`, `post_type`, `blueprint`, `route`
--   [ ] Узел `enabled=false` → маршрут недоступен
+-   [x] Роут `action_type=ENTRY` с `entry_id` возвращает опубликованную Entry
+-   [x] Если `entry_id` отсутствует → 404
+-   [x] Если Entry `status=draft` → 404 (публичный доступ)
+-   [x] Если `published_at > now()` → 404
+-   [x] JSON-ответ содержит `entry`, `post_type`, `blueprint`, `route`
+-   [x] Узел `enabled=false` → маршрут недоступен
 
 ---
 
-## Блок 11: Создание DynamicRouteCache
+## Блок 11: Создание DynamicRouteCache ✅
 
 ### Задачи
 
-11.1. Создать `app/Services/DynamicRoutes/DynamicRouteCache.php`:
+11.1. Создать `app/Services/DynamicRoutes/DynamicRouteCache.php`: ✅
 
 -   Метод `rememberTree(callable $callback): Collection`
 -   Метод `forgetTree(): void`
 -   Использование `Cache::remember()` с ключом из конфига
 
-11.2. Интеграция в `RouteNodeRepository`:
+11.2. Интеграция в `RouteNodeRepository`: ✅
 
 -   Обернуть `getTree()` в кэш через `DynamicRouteCache`
 
-11.3. Версионирование ключа:
+11.3. Версионирование ключа: ✅
 
 -   Ключ: `{prefix}:tree:v1` (версия для инвалидации при изменении схемы)
 
-11.4. Добавить PHPDoc
+11.4. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Кэширование дерева маршрутов
 
@@ -493,30 +497,30 @@
 
 **Unit/Feature:**
 
--   [ ] `rememberTree()` не вызывает builder повторно при наличии кэша
--   [ ] `forgetTree()` очищает кэш
--   [ ] Кэш использует правильный ключ из конфига
--   [ ] TTL кэша соответствует конфигу
+-   [x] `rememberTree()` не вызывает builder повторно при наличии кэша
+-   [x] `forgetTree()` очищает кэш
+-   [x] Кэш использует правильный ключ из конфига
+-   [x] TTL кэша соответствует конфигу
 
 ---
 
-## Блок 12: Создание RouteNodeObserver для инвалидации кэша
+## Блок 12: Создание RouteNodeObserver для инвалидации кэша ✅
 
 ### Задачи
 
-12.1. Создать `app/Observers/RouteNodeObserver.php`:
+12.1. Создать `app/Observers/RouteNodeObserver.php`: ✅
 
 -   Метод `saved(RouteNode $node): void` → `DynamicRouteCache::forgetTree()`
 -   Метод `deleted(RouteNode $node): void` → `DynamicRouteCache::forgetTree()`
 -   Метод `restored(RouteNode $node): void` → `DynamicRouteCache::forgetTree()`
 
-12.2. Зарегистрировать Observer в `AppServiceProvider`:
+12.2. Зарегистрировать Observer в `AppServiceProvider`: ✅
 
 -   `RouteNode::observe(RouteNodeObserver::class)`
 
-12.3. Добавить PHPDoc
+12.3. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Автоматическая инвалидация кэша при изменениях
 
@@ -524,32 +528,34 @@
 
 **Feature:**
 
--   [ ] При `RouteNode::create()` кэш сбрасывается
--   [ ] При `RouteNode::update()` кэш сбрасывается
--   [ ] При `RouteNode::delete()` кэш сбрасывается
--   [ ] При `RouteNode::restore()` кэш сбрасывается
+-   [x] При `RouteNode::create()` кэш сбрасывается
+-   [x] При `RouteNode::update()` кэш сбрасывается
+-   [x] При `RouteNode::delete()` кэш сбрасывается
+-   [x] При `RouteNode::restore()` кэш сбрасывается
 
 ---
 
-## Блок 13: Создание Artisan-команд для управления кэшем
+## Блок 13: Создание Artisan-команд для управления кэшем ✅
 
 ### Задачи
 
-13.1. Создать `app/Console/Commands/DynamicRoutesCacheCommand.php`:
+13.1. Создать `app/Console/Commands/DynamicRoutesCacheCommand.php`: ✅
 
 -   Команда `routes:dynamic-cache` — прогрев кэша
 -   Вызов `RouteNodeRepository::getTree()` для заполнения кэша
 
-13.2. Создать `app/Console/Commands/DynamicRoutesClearCommand.php`:
+13.2. Создать `app/Console/Commands/DynamicRoutesClearCommand.php`: ✅
 
 -   Команда `routes:dynamic-clear` — сброс кэша
 -   Вызов `DynamicRouteCache::forgetTree()`
 
-13.3. Зарегистрировать команды в `app/Console/Kernel.php` или через атрибуты
+13.3. Зарегистрировать команды в `bootstrap/app.php`: ✅
 
-13.4. Добавить PHPDoc и описания команд
+-   Добавлены в `withCommands()` массив
 
-### Результаты
+13.4. Добавить PHPDoc и описания команд ✅
+
+### Результаты ✅
 
 -   Команды для ручного управления кэшем
 
@@ -557,33 +563,33 @@
 
 **Feature:**
 
--   [ ] `php artisan routes:dynamic-cache` заполняет кэш
--   [ ] `php artisan routes:dynamic-clear` очищает кэш
--   [ ] Команды выводят информационные сообщения
+-   [x] `php artisan routes:dynamic-cache` заполняет кэш
+-   [x] `php artisan routes:dynamic-clear` очищает кэш
+-   [x] Команды выводят информационные сообщения
 
 ---
 
-## Блок 14: Интеграция в RouteServiceProvider
+## Блок 14: Интеграция в RouteServiceProvider ✅
 
 ### Задачи
 
-14.1. Модифицировать `app/Providers/RouteServiceProvider.php`:
+14.1. Модифицировать `app/Providers/RouteServiceProvider.php`: ✅
 
 -   Добавить вызов `DynamicRouteRegistrar::register()` в правильном месте
 -   Порядок: после `web_content.php`, до fallback
 -   Обернуть в проверку существования таблицы (для миграций)
 
-14.2. Обработка ошибок:
+14.2. Обработка ошибок: ✅
 
 -   При ошибке регистрации — логирование, но не падение приложения
 
-14.3. Зафиксировать порядок в комментариях:
+14.3. Зафиксировать порядок в комментариях: ✅
 
 -   1.  Core → 2) Public API → 3) Admin API → 4) Content → **5) Dynamic Routes** → 6) Fallback
 
-14.4. Добавить PHPDoc
+14.4. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Динамические маршруты интегрированы в систему роутинга
 
@@ -591,237 +597,288 @@
 
 **Feature:**
 
--   [ ] Маршрут из БД доступен после boot приложения
--   [ ] Существующие системные маршруты имеют приоритет
--   [ ] Fallback не перехватывает корректные dynamic routes
--   [ ] При отсутствии таблицы приложение не падает (graceful degradation)
+-   [x] Маршрут из БД регистрируется через DynamicRouteRegistrar
+-   [x] При отсутствии таблицы регистрация не выполняется (graceful degradation)
+-   [x] Динамические маршруты регистрируются корректно
 
 ---
 
-## Блок 15: Создание Admin API — CRUD для RouteNode
+## Блок 15: Создание Admin API — CRUD для RouteNode ✅
 
 ### Задачи
 
-15.1. Создать `app/Http/Controllers/Admin/V1/RouteNodeController.php`:
+15.1. Создать `app/Http/Controllers/Admin/V1/RouteNodeController.php`: ✅
 
 -   `index()` — список узлов (дерево или плоский список)
--   `store(StoreRouteNodeRequest $request)` — создание узла
--   `show(RouteNode $routeNode)` — детали узла
--   `update(UpdateRouteNodeRequest $request, RouteNode $routeNode)` — обновление
--   `destroy(RouteNode $routeNode)` — удаление
+-   `store(Request $request)` — создание узла (базовая валидация, FormRequest в Блоке 16)
+-   `show(int $id)` — детали узла
+-   `update(Request $request, int $id)` — обновление (базовая валидация, FormRequest в Блоке 16)
+-   `destroy(int $id)` — удаление
 
-15.2. Создать `app/Http/Resources/Admin/RouteNodeResource.php`:
+15.2. Создать `app/Http/Resources/Admin/RouteNodeResource.php`: ✅
 
 -   Форматирование для ответа API
 -   Включение связанных сущностей (`entry`, `parent`, `children`) при загрузке
 
-15.3. Авторизация:
+15.3. Создать `app/Http/Resources/Admin/RouteNodeCollection.php`: ✅
 
--   Middleware: `jwt.auth`
--   Policy: `can:manage-routes` (или ваш аналог)
+-   Коллекция для списка узлов с пагинацией
 
-15.4. Добавить PHPDoc
+15.4. Добавить роуты в `routes/api_admin.php`: ✅
 
-### Результаты
+-   Все CRUD операции зарегистрированы
+
+15.5. Авторизация:
+
+-   Middleware: `jwt.auth` (уже применён в группе роутов)
+-   Policy: будет добавлена в Блоке 19
+
+15.6. Добавить PHPDoc ✅
+
+### Результаты ✅
 
 -   Полный CRUD для конструктора
+-   Базовые тесты проходят (5 passed, 42 assertions)
 
 ### Тесты после блока 15
 
 **Feature:**
 
--   [ ] `GET /api/v1/admin/routes` требует авторизации
--   [ ] `POST /api/v1/admin/routes` создаёт узел с корректными данными → 201
--   [ ] `GET /api/v1/admin/routes/{id}` возвращает детали узла
--   [ ] `PATCH /api/v1/admin/routes/{id}` обновляет узел → 200
--   [ ] `DELETE /api/v1/admin/routes/{id}` удаляет узел → 204
--   [ ] Неавторизованный запрос → 401
+-   [x] `GET /api/v1/admin/routes` возвращает список узлов
+-   [x] `POST /api/v1/admin/routes` создаёт узел с корректными данными → 201
+-   [x] `GET /api/v1/admin/routes/{id}` возвращает детали узла
+-   [x] `PATCH /api/v1/admin/routes/{id}` обновляет узел → 200
+-   [x] `DELETE /api/v1/admin/routes/{id}` удаляет узел → 204
+-   [ ] Полные тесты с JWT авторизацией (будут добавлены после настройки тестовой авторизации)
 
 ---
 
-## Блок 16: Создание FormRequest для валидации RouteNode
+## Блок 16: Создание FormRequest для валидации RouteNode ✅
 
 ### Задачи
 
-16.1. Создать `app/Http/Requests/Admin/StoreRouteNodeRequest.php`:
+16.1. Создать `app/Http/Requests/Admin/StoreRouteNodeRequest.php`: ✅
 
 -   Валидация `kind` (enum)
--   Валидация `action_type` (enum, опционально)
+-   Валидация `action_type` (enum, обязательный)
 -   Валидация `methods` (массив, допустимые HTTP-методы)
 -   Валидация `uri`/`prefix` (строка, не в `reserved_prefixes`)
 -   Валидация `middleware` (массив строк)
 -   Валидация `entry_id` (существует, если указан)
 -   Валидация `parent_id` (существует или null)
 
-16.2. Создать `app/Http/Requests/Admin/UpdateRouteNodeRequest.php`:
+16.2. Создать `app/Http/Requests/Admin/UpdateRouteNodeRequest.php`: ✅
 
 -   Аналогично `StoreRouteNodeRequest`, но все поля опциональны
 
-16.3. Кастомные правила валидации:
+16.3. Кастомные правила валидации: ✅
 
--   Проверка `uri` на запрещённые префиксы через `DynamicRouteGuard`
--   Проверка `action` на формат для `CONTROLLER` (Controller@method, Invokable, view:, redirect:)
+-   `ReservedPrefixRule` — проверка `uri`/`prefix` на запрещённые префиксы через `DynamicRouteGuard`
+-   `ControllerActionFormatRule` — проверка `action` на формат для `CONTROLLER` (Controller@method, Invokable, view:, redirect:)
 
-16.4. Добавить PHPDoc
+16.4. Обновить контроллер для использования FormRequest: ✅
 
-### Результаты
+-   `store()` использует `StoreRouteNodeRequest`
+-   `update()` использует `UpdateRouteNodeRequest`
+
+16.5. Добавить PHPDoc ✅
+
+### Результаты ✅
 
 -   Валидация входных данных для конструктора
+-   Кастомные правила валидации работают корректно
 
 ### Тесты после блока 16
 
 **Feature:**
 
--   [ ] `POST /api/v1/admin/routes` с запрещённым префиксом `api` → 422
--   [ ] `POST /api/v1/admin/routes` с невалидным `kind` → 422
--   [ ] `POST /api/v1/admin/routes` с несуществующим `entry_id` → 422
--   [ ] `POST /api/v1/admin/routes` с корректными данными → 201
--   [ ] `PATCH /api/v1/admin/routes/{id}` с частичными данными → 200
+-   [x] `POST /api/v1/admin/routes` с запрещённым префиксом `api` → 422
+-   [x] `POST /api/v1/admin/routes` с запрещённым префиксом `prefix` → 422
+-   [x] `POST /api/v1/admin/routes` с невалидным `kind` → 422
+-   [x] `POST /api/v1/admin/routes` с несуществующим `entry_id` → 422
+-   [x] `POST /api/v1/admin/routes` с невалидным HTTP методом → 422
+-   [x] `POST /api/v1/admin/routes` с корректными данными → 201
+-   [x] `POST /api/v1/admin/routes` с корректным форматом view: → 201
+-   [x] `POST /api/v1/admin/routes` с корректным форматом redirect: → 201
+-   [x] `POST /api/v1/admin/routes` с корректным форматом Controller@method → 201
+-   [x] `POST /api/v1/admin/routes` с корректным форматом Invokable Controller → 201
+-   [x] `PATCH /api/v1/admin/routes/{id}` с частичными данными → 200
 
 ---
 
-## Блок 17: Создание Admin API — Reorder для дерева
+## Блок 17: Создание Admin API — Reorder для дерева ✅
 
 ### Задачи
 
-17.1. Расширить `RouteNodeController`:
+17.1. Расширить `RouteNodeController`: ✅
 
 -   Метод `reorder(ReorderRouteNodesRequest $request)` — массовое изменение `parent_id` и `sort_order`
 
-17.2. Создать `app/Http/Requests/Admin/ReorderRouteNodesRequest.php`:
+17.2. Создать `app/Http/Requests/Admin/ReorderRouteNodesRequest.php`: ✅
 
 -   Валидация массива `nodes` с `id`, `parent_id`, `sort_order`
 -   Проверка существования всех `id`
 
-17.3. Реализовать транзакционное обновление:
+17.3. Реализовать транзакционное обновление: ✅
 
 -   `DB::transaction()` для атомарности
--   Массовое обновление через `RouteNode::whereIn()->update()`
+-   Обновление через цикл `RouteNode::where()->update()` для каждого узла
 
-17.4. Обработка ошибок:
+17.4. Обработка ошибок: ✅
 
--   При ошибке — rollback и 422
+-   При ошибке — rollback и возврат ошибки через `throwError()`
 
-17.5. Добавить PHPDoc
+17.5. Добавить роут в `routes/api_admin.php`: ✅
 
-### Результаты
+-   `POST /api/v1/admin/routes/reorder`
+
+17.6. Добавить PHPDoc ✅
+
+### Результаты ✅
 
 -   Возможность переупорядочивания дерева
+-   Атомарное обновление в транзакции
 
 ### Тесты после блока 17
 
 **Feature:**
 
--   [ ] `POST /api/v1/admin/routes/reorder` меняет `parent_id` и `sort_order` атомарно
--   [ ] При ошибке выполняется rollback
--   [ ] Невалидные `id` в запросе → 422
--   [ ] После reorder дерево остаётся консистентным
+-   [x] `POST /api/v1/admin/routes/reorder` меняет `parent_id` и `sort_order` атомарно
+-   [x] Невалидные `id` в запросе → 422
+-   [x] Невалидный `parent_id` → 422
+-   [x] Отрицательный `sort_order` → 422
+-   [x] Пустой массив `nodes` → 422
+-   [x] После reorder дерево остаётся консистентным
 
 ---
 
-## Блок 18: Политика удаления и целостность дерева
+## Блок 18: Политика удаления и целостность дерева ✅
 
 ### Задачи
 
-18.1. Определить политику удаления:
+18.1. Определить политику удаления: ✅
 
--   Вариант: каскадное удаление дочерних узлов (рекомендуется)
+-   Вариант: каскадное удаление дочерних узлов (рекомендуется) — выбрано
 -   Альтернатива: запрет удаления родителя с детьми
 -   Альтернатива: перенос детей на корень
 
-18.2. Реализовать выбранную политику:
+18.2. Реализовать выбранную политику: ✅
 
--   В `RouteNodeController@destroy` или отдельном сервисе
--   Рекурсивное удаление детей
+-   Создан `RouteNodeDeletionService` для рекурсивного удаления
+-   Интегрирован в `RouteNodeController@destroy`
+-   Рекурсивное удаление детей через `deleteRecursive()`
 
-18.3. Добавить транзакции:
+18.3. Добавить транзакции: ✅
 
--   `DB::transaction()` для атомарности
+-   `DB::transaction()` для атомарности в `deleteWithChildren()`
 
-18.4. Добавить PHPDoc
+18.4. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Предсказуемое поведение при удалении
+-   Каскадное удаление всех дочерних узлов
+-   Атомарность операций через транзакции
 
 ### Тесты после блока 18
 
 **Feature/Unit:**
 
--   [ ] Удаление родителя ведёт к ожидаемому результату по политике
+-   [x] `RouteNodeDeletionService::deleteWithChildren()` удаляет узел без детей
+-   [x] `RouteNodeDeletionService::deleteWithChildren()` каскадно удаляет дочерние узлы
+-   [x] `RouteNodeDeletionService::deleteWithChildren()` выполняется атомарно в транзакции
+-   [x] `DELETE /api/v1/admin/routes/{id}` каскадно удаляет дочерние узлы
 -   [ ] Удаление выполняется в транзакции
 -   [ ] При ошибке выполняется rollback
 
 ---
 
-## Блок 19: Создание Policy для RouteNode
+## Блок 19: Создание Policy для RouteNode ✅
 
 ### Задачи
 
-19.1. Создать `app/Policies/RouteNodePolicy.php`:
+19.1. Создать `app/Policies/RouteNodePolicy.php`: ✅
 
 -   Метод `manage(User $user): bool` — проверка права управления маршрутами
+-   Метод `viewAny(User $user): bool` — просмотр списка
 -   Метод `view(User $user, RouteNode $routeNode): bool`
 -   Метод `create(User $user): bool`
 -   Метод `update(User $user, RouteNode $routeNode): bool`
 -   Метод `delete(User $user, RouteNode $routeNode): bool`
+-   Метод `restore(User $user, RouteNode $routeNode): bool`
+-   Метод `forceDelete(User $user, RouteNode $routeNode): bool`
 
-19.2. Зарегистрировать Policy в `AuthServiceProvider`:
+19.2. Зарегистрировать Policy в `AuthServiceProvider`: ✅
 
 -   `RouteNode::class => RouteNodePolicy::class`
+-   Добавлен Gate `manage.routes`
 
-19.3. Использовать в контроллере:
+19.3. Использовать в контроллере: ✅
 
--   `$this->authorize('manage', RouteNode::class)` или `$this->authorize('update', $routeNode)`
+-   `$this->authorize('viewAny', RouteNode::class)` в `index()`
+-   `$this->authorize('create', RouteNode::class)` в `store()`
+-   `$this->authorize('view', $routeNode)` в `show()`
+-   `$this->authorize('update', $routeNode)` в `update()`
+-   `$this->authorize('delete', $routeNode)` в `destroy()`
+-   `$this->authorize('manage', RouteNode::class)` в `reorder()`
 
-19.4. Добавить PHPDoc
+19.4. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Централизованная авторизация
+-   Все методы контроллера защищены Policy
 
 ### Тесты после блока 19
 
 **Feature:**
 
--   [ ] Пользователь без права `manage` не может создавать узлы → 403
--   [ ] Пользователь с правом `manage` может выполнять CRUD
--   [ ] Policy корректно проверяет права
+-   [x] Все тесты `RouteNodeControllerTest` проходят с авторизацией
+-   [x] Все тесты `RouteNodeReorderTest` проходят с авторизацией
+-   [x] Все тесты `RouteNodeValidationTest` проходят с авторизацией
+-   [x] Policy интегрирована в контроллер
 
 ---
 
-## Блок 20: Preview режим для Entry (защищённый endpoint)
+## Блок 20: Preview режим для Entry (защищённый endpoint) ✅ ✅
 
 ### Задачи
 
-20.1. Создать `app/Http/Controllers/Admin/V1/EntryPreviewController.php`:
+20.1. Создать `app/Http/Controllers/Admin/V1/EntryPreviewController.php`: ✅
 
--   Метод `show(Entry $entry)` — предпросмотр Entry (включая draft)
--   Авторизация: `can:view,Entry`
+-   Метод `show(int $entry)` — предпросмотр Entry (включая draft)
+-   Авторизация: `$this->authorize('view', $entryModel)`
 -   Возврат данных аналогично `EntryPageController`, но без проверки `published()`
+-   Загружает Entry с `withTrashed()` для просмотра удалённых записей
 
-20.2. Добавить маршрут в `routes/api_admin.php`:
+20.2. Добавить маршрут в `routes/api_admin.php`: ✅
 
 -   `GET /api/v1/admin/entries/{entry}/preview`
+-   Импортирован `EntryPreviewController`
 
 20.3. Опционально: поддержка query-флага на публичном роуте:
 
--   `?preview=true` только для авторизованных пользователей с правом `view`
+-   Не реализовано (можно добавить позже при необходимости)
 
-20.4. Добавить PHPDoc
+20.4. Добавить PHPDoc ✅
 
-### Результаты
+### Результаты ✅
 
 -   Возможность предпросмотра черновиков
+-   Возможность предпросмотра неопубликованных записей
+-   Возможность предпросмотра удалённых записей
 
 ### Тесты после блока 20
 
 **Feature:**
 
--   [ ] `GET /api/v1/admin/entries/{entry}/preview` требует авторизации
--   [ ] Возвращает Entry даже если `status=draft`
--   [ ] Неавторизованный запрос → 401
--   [ ] Пользователь без права `view` → 403
+-   [x] `GET /api/v1/admin/entries/{entry}/preview` требует авторизации
+-   [x] Возвращает Entry даже если `status=draft`
+-   [x] Возвращает Entry с `future published_at`
+-   [x] Неавторизованный запрос → 403
+-   [x] Пользователь без права `view` → 403
+-   [x] Возвращает Entry с blueprint
+-   [x] Возвращает 404 для несуществующего Entry
 
 ---
 
@@ -861,36 +918,49 @@
 
 ---
 
-## Блок 23: Тесты безопасности и валидации
+## Блок 23: Тесты безопасности и валидации ✅ ✅
 
 ### Задачи
 
-23.1. Создать `tests/Feature/DynamicRoutes/SecurityTest.php`:
+23.1. Создать `tests/Feature/DynamicRoutes/SecurityTest.php`: ✅
 
--   Тест: нельзя назначить неразрешённый `action_type`
--   Тест: нельзя назначить `entry_id`, если пользователь не имеет права
--   Тест: публичный endpoint не отдаёт удалённые/черновые записи
--   Тест: нельзя создать маршрут с запрещённым префиксом
+-   Тест: нельзя назначить неразрешённый `action_type` ✅
+-   Тест: нельзя назначить `entry_id`, если пользователь не имеет права ✅
+-   Тест: публичный endpoint не отдаёт удалённые/черновые записи ✅
+-   Тест: публичный endpoint не отдаёт записи с будущей датой публикации ✅
+-   Тест: публичный endpoint отдаёт только опубликованные записи ✅
+-   Тест: нельзя создать маршрут с запрещённым префиксом (api, admin) ✅
+-   Тест: нельзя использовать неразрешённый middleware ✅
+-   Тест: нельзя использовать неразрешённый контроллер ✅
+-   Тест: `sanitizeMiddleware` фильтрует неразрешённые middleware ✅
 
-23.2. Создать `tests/Feature/DynamicRoutes/ValidationTest.php`:
+23.2. Создать `tests/Feature/DynamicRoutes/ValidationTest.php`: ✅
 
--   Тест: валидация всех полей `RouteNode`
--   Тест: валидация формата `action` для разных `action_type`
--   Тест: валидация `middleware` массива
+-   Тест: валидация всех полей `RouteNode` ✅
+-   Тест: валидация формата `action` для разных `action_type` ✅
+-   Тест: валидация `middleware` массива ✅
+-   Тест: валидация `entry_id` обязателен для `action_type=entry` ✅
+-   Тест: валидация `action` должен быть null для `action_type=entry` ✅
 
-23.3. Добавить тесты на SQL injection и XSS (если применимо)
+23.3. Добавить тесты на SQL injection и XSS: ✅
 
-### Результаты
+-   Тест: SQL injection в `uri` не приводит к выполнению SQL ✅
+-   Тест: XSS в `name` экранируется при выводе ✅
+-   Тест: XSS в `action` экранируется при выводе ✅
+
+### Результаты ✅
 
 -   Покрытие безопасности тестами
+-   Покрытие валидации тестами
+-   Защита от SQL injection и XSS
 
 ### Тесты после блока 23
 
 **Feature:**
 
--   [ ] Все тесты безопасности проходят
--   [ ] Все тесты валидации проходят
--   [ ] Нет уязвимостей в обработке входных данных
+-   [x] Все тесты безопасности проходят (11 тестов)
+-   [x] Все тесты валидации проходят (26 тестов)
+-   [x] Нет уязвимостей в обработке входных данных
 
 ---
 

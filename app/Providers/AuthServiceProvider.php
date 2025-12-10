@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\{Entry, Media, Term, User};
-use App\Policies\{EntryPolicy, MediaPolicy, TermPolicy};
+use App\Models\{Entry, Media, RouteNode, Term, User};
+use App\Policies\{EntryPolicy, MediaPolicy, RouteNodePolicy, TermPolicy};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,9 +25,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Entry::class => EntryPolicy::class,
-        Term::class  => TermPolicy::class,
-        Media::class => MediaPolicy::class,
+        Entry::class    => EntryPolicy::class,
+        Term::class     => TermPolicy::class,
+        Media::class    => MediaPolicy::class,
+        RouteNode::class => RouteNodePolicy::class,
     ];
 
     /**
@@ -74,6 +75,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('manage.terms', static function (User $user): bool {
             return $user->hasAdminPermission('manage.terms');
+        });
+
+        Gate::define('manage.routes', static function (User $user): bool {
+            return $user->hasAdminPermission('manage.routes');
         });
 
         Gate::define('media.read', static function (User $user): bool {

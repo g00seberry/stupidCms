@@ -55,7 +55,9 @@ use App\Domain\View\BladeTemplateResolver;
 use App\Domain\View\TemplatePathValidator;
 use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
+use App\Models\RouteNode;
 use App\Observers\EntryObserver;
+use App\Observers\RouteNodeObserver;
 use App\Services\Blueprint\BlueprintDependencyGraphLoader;
 use App\Services\Blueprint\BlueprintDependencyGraphLoaderInterface;
 use App\Services\Blueprint\BlueprintStructureService;
@@ -302,6 +304,7 @@ class AppServiceProvider extends ServiceProvider
         View::addNamespace('templates', resource_path('views/templates'));
 
         Entry::observe(EntryObserver::class);
+        RouteNode::observe(RouteNodeObserver::class);
 
         // Регистрация слушателей событий медиа-файлов
         Event::listen(MediaUploaded::class, [LogMediaEvent::class, 'handleMediaUploaded']);
