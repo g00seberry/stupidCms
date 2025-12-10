@@ -24,17 +24,17 @@
 1.2. Определить структуру таблицы `route_nodes`:
 
 -   Поля: `id`, `parent_id`, `sort_order`, `enabled`
--   `kind`: `group`, `route`, `redirect`
+-   `kind`: `group`, `route`
 -   `name`, `domain`, `prefix`, `namespace`
 -   `methods` (JSON), `uri`
--   `action_type`, `action`, `view`
+-   `action_type`, `action`
 -   `entry_id` (nullable FK на `entries`)
 -   `middleware` (JSON), `where` (JSON), `defaults` (JSON), `options` (JSON)
 -   `timestamps`, `soft_deletes`
 
 1.3. Определить enum-значения:
 
--   `RouteNodeKind`: `GROUP`, `ROUTE`, `REDIRECT`
+-   `RouteNodeKind`: `GROUP`, `ROUTE`
 -   `RouteNodeActionType`: `CONTROLLER`, `ENTRY`
 
 **Назначение каждого `action_type`:**
@@ -85,7 +85,7 @@
 
 **Документальные/архитектурные:**
 
--   [ ] Спецификация покрывает все кейсы: group + nested group, route with entry, route with controller, redirect
+-   [ ] Спецификация покрывает все кейсы: group + nested group, route with entry, route with controller, route with redirect (через action_type=CONTROLLER)
 -   [ ] Enum-значения зафиксированы в коде как константы
 -   [ ] ER-диаграмма соответствует требованиям
 
@@ -131,9 +131,9 @@
 
 3.1. Создать `app/Enums/RouteNodeKind.php`:
 
--   `GROUP`, `ROUTE`, `REDIRECT`
+-   `GROUP`, `ROUTE`
 -   Метод `values(): array`
--   Метод `isGroup(): bool`, `isRoute(): bool`, `isRedirect(): bool`
+-   Метод `isGroup(): bool`, `isRoute(): bool`
 
 3.2. Создать `app/Enums/RouteNodeActionType.php`:
 
@@ -209,7 +209,7 @@
 
 5.1. Создать `database/factories/RouteNodeFactory.php`:
 
--   Методы состояния: `group()`, `route()`, `redirect()`
+-   Методы состояния: `group()`, `route()`
 -   Методы: `withParent(RouteNode $parent)`, `withEntry(Entry $entry)`
 -   Методы: `enabled()`, `disabled()`
 
@@ -217,7 +217,7 @@
 
 -   Пример дерева: корневая группа `blog` с дочерним маршрутом `{slug}`
 -   Пример статического маршрута `about` с `action_type=entry`
--   Пример redirect-узла
+-   Пример redirect через `action_type=CONTROLLER` с `action='redirect:/new-page:301'`
 
 5.3. Добавить вызов сидера в `DatabaseSeeder` (опционально, для dev)
 
