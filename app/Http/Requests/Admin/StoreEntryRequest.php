@@ -13,7 +13,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для создания записи контента:
  * - Обязательные: post_type_id, title
- * - Опциональные: data_json, meta_json, published_at
+ * - Опциональные: data_json, published_at
  *
  * @package App\Http\Requests\Admin
  */
@@ -39,7 +39,6 @@ class StoreEntryRequest extends FormRequest
      * - post_type_id: обязательный ID типа записи (должен существовать)
      * - title: обязательный заголовок (максимум 500 символов)
      * - data_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
-     * - meta_json: опциональный JSON массив
      * - is_published: опциональный boolean
      * - published_at: опциональная дата публикации
      * - template_override: опциональный шаблон
@@ -53,7 +52,6 @@ class StoreEntryRequest extends FormRequest
             'post_type_id' => 'required|integer|exists:post_types,id',
             'title' => 'required|string|max:500',
             'data_json' => ['nullable', 'array'],
-            'meta_json' => 'nullable|array',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
             'template_override' => 'nullable|string|max:255',

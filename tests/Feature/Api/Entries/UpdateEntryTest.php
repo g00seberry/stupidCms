@@ -85,27 +85,6 @@ test('can update data_json', function () {
     expect($freshEntry->data_json)->toBe($newContent);
 });
 
-test('can update meta_json', function () {
-    $entry = Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->user->id,
-        'seo_json' => ['old' => 'meta'],
-    ]);
-
-    $newMeta = ['title' => 'New SEO Title', 'description' => 'New description'];
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'meta_json' => $newMeta,
-        ]);
-
-    $response->assertOk();
-    
-    $freshEntry = $entry->fresh();
-    expect($freshEntry->seo_json)->toBe($newMeta);
-});
-
 test('can publish draft entry', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,

@@ -66,10 +66,6 @@ class EntriesSeeder extends Seeder
                 'data_json' => [
                     'content' => '<h1>About Our Company</h1><p>We are a leading technology company...</p>',
                 ],
-                'seo_json' => [
-                    'title' => 'About Us - Our Company',
-                    'description' => 'Learn more about our company and mission.',
-                ],
             ]
         );
 
@@ -86,10 +82,6 @@ class EntriesSeeder extends Seeder
                 'data_json' => [
                     'content' => '<h1>Get in Touch</h1><p>Email: contact@example.com</p><p>Phone: +1 234 567 8900</p>',
                 ],
-                'seo_json' => [
-                    'title' => 'Contact Us',
-                    'description' => 'Get in touch with our team.',
-                ],
             ]
         );
 
@@ -105,10 +97,6 @@ class EntriesSeeder extends Seeder
                 'author_id' => $adminUser->id,
                 'data_json' => [
                     'content' => '<h1>Privacy Policy</h1><p>Your privacy is important to us...</p>',
-                ],
-                'seo_json' => [
-                    'title' => 'Privacy Policy',
-                    'description' => 'Our privacy policy and data protection practices.',
                 ],
             ]
         );
@@ -144,11 +132,6 @@ class EntriesSeeder extends Seeder
                     'content' => '<h1>Laravel 12: What\'s New?</h1><p>Laravel 12 introduces many exciting features...</p>',
                     'excerpt' => 'Discover the latest features in Laravel 12 framework.',
                 ],
-                'seo_json' => [
-                    'title' => 'Introduction to Laravel 12 - Complete Guide',
-                    'description' => 'Learn about the new features and improvements in Laravel 12.',
-                    'keywords' => 'laravel, php, framework, web development',
-                ],
             ]
         );
         if ($webDevCategory && $tutorialTag) {
@@ -168,10 +151,6 @@ class EntriesSeeder extends Seeder
                 'data_json' => [
                     'content' => '<h1>Top AI Trends for 2025</h1><p>Artificial Intelligence continues to evolve...</p>',
                     'excerpt' => 'Explore the most important AI trends shaping 2025.',
-                ],
-                'seo_json' => [
-                    'title' => 'AI Trends 2025 - Future of Artificial Intelligence',
-                    'description' => 'Discover the latest trends and developments in AI technology.',
                 ],
             ]
         );
@@ -195,10 +174,6 @@ class EntriesSeeder extends Seeder
                 'data_json' => [
                     'content' => '<h1>Mobile App Development Guide</h1><p>Building mobile apps requires careful planning...</p>',
                     'excerpt' => 'A comprehensive guide to mobile app development.',
-                ],
-                'seo_json' => [
-                    'title' => 'Mobile App Development Guide 2025',
-                    'description' => 'Learn everything you need to know about mobile app development.',
                 ],
             ]
         );
@@ -232,10 +207,6 @@ class EntriesSeeder extends Seeder
                     'price' => 99.99,
                     'currency' => 'USD',
                 ],
-                'seo_json' => [
-                    'title' => 'Premium Software License - Buy Now',
-                    'description' => 'Purchase a premium software license with lifetime updates.',
-                ],
             ]
         );
         if ($techCategory && $usaRegion) {
@@ -256,10 +227,6 @@ class EntriesSeeder extends Seeder
                     'content' => '<h1>Enterprise Solution</h1><p>Complete enterprise package for large organizations...</p>',
                     'price' => 999.99,
                     'currency' => 'USD',
-                ],
-                'seo_json' => [
-                    'title' => 'Enterprise Solution Package',
-                    'description' => 'Enterprise-grade solution for your business needs.',
                 ],
             ]
         );

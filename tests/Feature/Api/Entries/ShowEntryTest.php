@@ -106,22 +106,6 @@ test('entry includes data_json', function () {
         ->assertJsonPath('data.data_json', $content);
 });
 
-test('entry includes meta_json', function () {
-    $meta = ['title' => 'SEO Title', 'description' => 'SEO Description'];
-    $entry = Entry::factory()->create([
-        'post_type_id' => $this->postType->id,
-        'author_id' => $this->user->id,
-        'seo_json' => $meta,
-    ]);
-
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->getJson("/api/v1/admin/entries/{$entry->id}");
-
-    $response->assertOk()
-        ->assertJsonPath('data.meta_json', $meta);
-});
-
 test('entry returns null for empty data_json', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,

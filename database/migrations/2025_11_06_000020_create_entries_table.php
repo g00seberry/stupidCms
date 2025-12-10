@@ -27,7 +27,6 @@ return new class extends Migration {
             $table->timestamp('published_at')->nullable()->index();
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->json('data_json');
-            $table->json('seo_json')->nullable();
             $table->string('template_override')->nullable();
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();

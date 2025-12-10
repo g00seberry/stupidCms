@@ -99,23 +99,6 @@ test('entry can be created with data_json', function () {
     expect($entry->data_json)->toBe($content);
 });
 
-test('entry can be created with meta_json', function () {
-    $meta = ['title' => 'SEO Title', 'description' => 'SEO Description'];
-    
-    $response = $this->actingAs($this->user)
-        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
-        ->postJson('/api/v1/admin/entries', [
-            'post_type_id' => $this->postType->id,
-            'title' => 'Test Article',
-            'meta_json' => $meta,
-        ]);
-
-    $response->assertCreated();
-    
-    $entry = Entry::latest()->first();
-    expect($entry->seo_json)->toBe($meta);
-});
-
 test('entry validation fails with missing title', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])

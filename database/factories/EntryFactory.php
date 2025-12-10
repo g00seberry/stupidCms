@@ -28,7 +28,6 @@ class EntryFactory extends Factory
             'published_at' => null,
             'author_id' => User::factory(),
             'data_json' => [],
-            'seo_json' => null,
             'template_override' => null,
             'version' => 1,
         ];

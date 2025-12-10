@@ -83,7 +83,7 @@ test('post type validation fails with missing name', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/post-types', [
-            'name' => 'Products',
+           
             'options_json' => [],
         ]);
 

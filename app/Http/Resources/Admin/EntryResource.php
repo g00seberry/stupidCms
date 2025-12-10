@@ -22,7 +22,7 @@ class EntryResource extends AdminJsonResource
      *
      * Возвращает массив с полями записи, включая:
      * - Основные поля (id, post_type_id, title, status)
-     * - JSON поля (data_json, meta_json) преобразованные в объекты (null для пустых значений)
+     * - JSON поля (data_json) преобразованные в объекты (null для пустых значений)
      * - Связанные сущности (author, terms, blueprint) при их загрузке
      * - Даты в ISO 8601 формате
      *
@@ -37,7 +37,6 @@ class EntryResource extends AdminJsonResource
             'title' => $this->title,
             'status' => $this->status,
             'data_json' => $this->transformJson($this->data_json),
-            'meta_json' => $this->transformJson($this->seo_json),
             'is_published' => $this->status === 'published',
             'published_at' => $this->published_at?->toIso8601String(),
             'template_override' => $this->template_override,

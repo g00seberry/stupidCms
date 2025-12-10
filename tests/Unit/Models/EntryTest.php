@@ -29,15 +29,6 @@ test('casts data_json to array', function () {
         ->and($casts['data_json'])->toBe('array');
 });
 
-test('casts seo_json to array', function () {
-    $entry = new Entry();
-
-    $casts = $entry->getCasts();
-
-    expect($casts)->toHaveKey('seo_json')
-        ->and($casts['seo_json'])->toBe('array');
-});
-
 test('casts published_at to datetime', function () {
     $entry = new Entry();
 

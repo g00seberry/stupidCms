@@ -24,7 +24,6 @@ use Illuminate\Support\Carbon;
  * @property string $title Заголовок записи
  * @property string $status Статус записи: 'draft' или 'published'
  * @property array $data_json Произвольные структурированные данные контента
- * @property array|null $seo_json SEO-метаданные (title, description, keywords и т.д.)
  * @property \Illuminate\Support\Carbon|null $published_at Дата и время публикации (UTC)
  * @property string|null $template_override Кастомный шаблон Blade для рендеринга
  * @property int $author_id ID автора записи
@@ -68,7 +67,6 @@ class Entry extends Model
      */
     protected $casts = [
         'data_json' => 'array',
-        'seo_json' => 'array',
         'published_at' => 'datetime',
     ];
 

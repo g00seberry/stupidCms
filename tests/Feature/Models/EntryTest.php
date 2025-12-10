@@ -146,23 +146,6 @@ test('entry data json stores custom fields', function () {
         ->and($entry->data_json['nested']['key'])->toBe('value');
 });
 
-test('entry seo json stores metadata', function () {
-    $seo = [
-        'title' => 'SEO Title',
-        'description' => 'SEO Description',
-        'keywords' => ['keyword1', 'keyword2'],
-    ];
-
-    $entry = Entry::factory()->create([
-        'seo_json' => $seo,
-    ]);
-
-    $entry->refresh();
-
-    expect($entry->seo_json)->toBe($seo)
-        ->and($entry->seo_json['title'])->toBe('SEO Title');
-});
-
 test('published scope returns only published entries', function () {
     Entry::factory()->create([
         'status' => 'published',
