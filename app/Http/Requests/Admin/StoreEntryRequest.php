@@ -13,7 +13,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для создания записи контента:
  * - Обязательные: post_type_id, title
- * - Опциональные: content_json, meta_json, published_at
+ * - Опциональные: data_json, meta_json, published_at
  *
  * @package App\Http\Requests\Admin
  */
@@ -38,7 +38,7 @@ class StoreEntryRequest extends FormRequest
      * Валидирует:
      * - post_type_id: обязательный ID типа записи (должен существовать)
      * - title: обязательный заголовок (максимум 500 символов)
-     * - content_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
+     * - data_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
      * - meta_json: опциональный JSON массив
      * - is_published: опциональный boolean
      * - published_at: опциональная дата публикации
@@ -52,7 +52,7 @@ class StoreEntryRequest extends FormRequest
         return [
             'post_type_id' => 'required|integer|exists:post_types,id',
             'title' => 'required|string|max:500',
-            'content_json' => ['nullable', 'array'],
+            'data_json' => ['nullable', 'array'],
             'meta_json' => 'nullable|array',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
@@ -82,14 +82,14 @@ class StoreEntryRequest extends FormRequest
     /**
      * Настроить валидатор с дополнительной логикой.
      *
-     * Добавляет динамические правила валидации для content_json из Blueprint.
+     * Добавляет динамические правила валидации для data_json из Blueprint.
      *
      * @param \Illuminate\Validation\Validator $validator Валидатор
      * @return void
      */
     public function withValidator(Validator $validator): void
     {
-        // Добавляем правила валидации для content_json из Blueprint
+        // Добавляем правила валидации для data_json из Blueprint
         $this->addBlueprintValidationRules($validator);
     }
 

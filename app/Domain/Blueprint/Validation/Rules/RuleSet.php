@@ -24,7 +24,7 @@ final class RuleSet
     /**
      * Добавить правило для поля.
      *
-     * @param string $fieldPath Путь поля в точечной нотации (например, 'content_json.title')
+     * @param string $fieldPath Путь поля в точечной нотации (например, 'data_json.title')
      * @param \App\Domain\Blueprint\Validation\Rules\Rule $rule Правило валидации
      * @return void
      */

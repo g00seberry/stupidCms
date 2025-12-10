@@ -63,7 +63,7 @@ class EntryController extends Controller
      *       "post_type_id": 1,
      *       "title": "Headless CMS launch checklist",
      *       "status": "draft",
-     *       "content_json": null,
+     *       "data_json": null,
      *       "meta_json": null,
      *       "is_published": false,
      *       "published_at": null,
@@ -211,7 +211,7 @@ class EntryController extends Controller
      *     "status": "published",
      *     "is_published": true,
      *     "published_at": "2025-02-10T08:00:00+00:00",
-     *     "content_json": {},
+     *     "data_json": {},
      *     "meta_json": {},
      *     "template_override": null,
      *     "author": {
@@ -291,7 +291,7 @@ class EntryController extends Controller
      * @authenticated
      * @bodyParam post_type_id int required Существующий ID PostType. Example: 1
      * @bodyParam title string required Заголовок (<=500 символов). Example: Headless CMS launch checklist
-     * @bodyParam content_json object Произвольные структурированные данные. Example: {"hero":{"title":"Launch"}}
+     * @bodyParam data_json object Произвольные структурированные данные. Example: {"hero":{"title":"Launch"}}
      * @bodyParam meta_json object SEO-метаданные. Example: {"title":"Launch","description":"Checklist"}
      * @bodyParam is_published boolean Опубликовать сразу. Default: false.
      * @bodyParam published_at datetime Дата публикации (ISO 8601). Example: 2025-02-10T08:00:00Z
@@ -305,7 +305,7 @@ class EntryController extends Controller
      *     "status": "published",
      *     "is_published": true,
      *     "published_at": "2025-02-10T08:00:00+00:00",
-     *     "content_json": {
+     *     "data_json": {
      *       "hero": {
      *         "title": "Launch"
      *       }
@@ -388,7 +388,7 @@ class EntryController extends Controller
                 'status' => $status,
                 'published_at' => $publishedAt,
                 'author_id' => Auth::id(),
-                'data_json' => $validated['content_json'] ?? [],
+                'data_json' => $validated['data_json'] ?? [],
                 'seo_json' => $validated['meta_json'] ?? null,
                 'template_override' => $validated['template_override'] ?? null,
             ]);
@@ -414,7 +414,7 @@ class EntryController extends Controller
      * @authenticated
      * @urlParam id int required ID записи. Example: 42
      * @bodyParam title string Заголовок (<=500 символов). Example: Updated checklist
-     * @bodyParam content_json object Произвольные данные. Example: {"body":{"blocks":[]}}
+     * @bodyParam data_json object Произвольные данные. Example: {"body":{"blocks":[]}}
      * @bodyParam meta_json object SEO-метаданные. Example: {"description":"Updated"}
      * @bodyParam is_published boolean Переключение статуса публикации.
      * @bodyParam published_at datetime Дата публикации (ISO 8601).
@@ -428,7 +428,7 @@ class EntryController extends Controller
      *     "status": "draft",
      *     "is_published": false,
      *     "published_at": null,
-     *     "content_json": {},
+     *     "data_json": {},
      *     "meta_json": {},
      *     "template_override": null,
      *     "created_at": "2025-02-09T10:15:00+00:00",
@@ -503,8 +503,8 @@ class EntryController extends Controller
                 $entry->title = $validated['title'];
             }
 
-            if (array_key_exists('content_json', $validated)) {
-                $entry->data_json = $validated['content_json'] ?? [];
+            if (array_key_exists('data_json', $validated)) {
+                $entry->data_json = $validated['data_json'] ?? [];
             }
 
             if (array_key_exists('meta_json', $validated)) {

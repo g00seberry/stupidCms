@@ -18,7 +18,7 @@ namespace App\Domain\Blueprint\Validation;
 final class ValidationError
 {
     /**
-     * @param string $field Путь поля в точечной нотации (например, 'content_json.title')
+     * @param string $field Путь поля в точечной нотации (например, 'data_json.title')
      * @param string $code Код ошибки (например, 'BLUEPRINT_REQUIRED', 'BLUEPRINT_MIN_LENGTH')
      * @param array<string, mixed> $params Параметры ошибки (например, ['min' => 1, 'max' => 500])
      * @param string|null $message Текстовое сообщение об ошибке (опционально)

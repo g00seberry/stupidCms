@@ -9,12 +9,12 @@ use Tests\TestCase;
 uses(TestCase::class);
 
 test('passes when value is greater than or equal to other field', function () {
-    $rule = new FieldComparison('>=', 'content_json.start_date');
+    $rule = new FieldComparison('>=', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-15',
-            'content_json' => [
+            'data_json' => [
                 'start_date' => '2024-01-01',
             ],
         ],
@@ -25,12 +25,12 @@ test('passes when value is greater than or equal to other field', function () {
 });
 
 test('fails when value is less than other field', function () {
-    $rule = new FieldComparison('>=', 'content_json.start_date');
+    $rule = new FieldComparison('>=', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-01',
-            'content_json' => [
+            'data_json' => [
                 'start_date' => '2024-01-15',
             ],
         ],
@@ -41,12 +41,12 @@ test('fails when value is less than other field', function () {
 });
 
 test('passes when value equals other field', function () {
-    $rule = new FieldComparison('==', 'content_json.start_date');
+    $rule = new FieldComparison('==', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-01',
-            'content_json' => [
+            'data_json' => [
                 'start_date' => '2024-01-01',
             ],
         ],
@@ -57,12 +57,12 @@ test('passes when value equals other field', function () {
 });
 
 test('passes when value is not equal to other field', function () {
-    $rule = new FieldComparison('!=', 'content_json.start_date');
+    $rule = new FieldComparison('!=', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-15',
-            'content_json' => [
+            'data_json' => [
                 'start_date' => '2024-01-01',
             ],
         ],
@@ -95,12 +95,12 @@ test('fails when value is less than constant', function () {
 });
 
 test('skips validation when other field is missing', function () {
-    $rule = new FieldComparison('>=', 'content_json.start_date');
+    $rule = new FieldComparison('>=', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-15',
-            'content_json' => [],
+            'data_json' => [],
         ],
         ['end_date' => [$rule]]
     );
@@ -110,12 +110,12 @@ test('skips validation when other field is missing', function () {
 });
 
 test('skips validation when current value is null', function () {
-    $rule = new FieldComparison('>=', 'content_json.start_date');
+    $rule = new FieldComparison('>=', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => null,
-            'content_json' => [
+            'data_json' => [
                 'start_date' => '2024-01-01',
             ],
         ],
@@ -127,12 +127,12 @@ test('skips validation when current value is null', function () {
 });
 
 test('handles numeric comparison correctly', function () {
-    $rule = new FieldComparison('>', 'content_json.min_price');
+    $rule = new FieldComparison('>', 'data_json.min_price');
 
     $validator = Validator::make(
         [
             'price' => 150,
-            'content_json' => [
+            'data_json' => [
                 'min_price' => 100,
             ],
         ],
@@ -143,12 +143,12 @@ test('handles numeric comparison correctly', function () {
 });
 
 test('handles date string comparison correctly', function () {
-    $rule = new FieldComparison('>=', 'content_json.start_date');
+    $rule = new FieldComparison('>=', 'data_json.start_date');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-15',
-            'content_json' => [
+            'data_json' => [
                 'start_date' => '2024-01-01',
             ],
         ],
@@ -159,12 +159,12 @@ test('handles date string comparison correctly', function () {
 });
 
 test('handles less than operator', function () {
-    $rule = new FieldComparison('<', 'content_json.max_price');
+    $rule = new FieldComparison('<', 'data_json.max_price');
 
     $validator = Validator::make(
         [
             'price' => 150,
-            'content_json' => [
+            'data_json' => [
                 'max_price' => 200,
             ],
         ],
@@ -175,12 +175,12 @@ test('handles less than operator', function () {
 });
 
 test('handles less than or equal operator', function () {
-    $rule = new FieldComparison('<=', 'content_json.max_price');
+    $rule = new FieldComparison('<=', 'data_json.max_price');
 
     $validator = Validator::make(
         [
             'price' => 200,
-            'content_json' => [
+            'data_json' => [
                 'max_price' => 200,
             ],
         ],
@@ -191,12 +191,12 @@ test('handles less than or equal operator', function () {
 });
 
 test('handles nested field paths', function () {
-    $rule = new FieldComparison('>=', 'content_json.dates.start');
+    $rule = new FieldComparison('>=', 'data_json.dates.start');
 
     $validator = Validator::make(
         [
             'end_date' => '2024-01-15',
-            'content_json' => [
+            'data_json' => [
                 'dates' => [
                     'start' => '2024-01-01',
                 ],

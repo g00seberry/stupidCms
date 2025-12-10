@@ -83,10 +83,10 @@ test('correctly handles all comparison operators', function () {
 });
 
 test('correctly handles nested field paths', function () {
-    $rule = new ConditionalRule('required_if', 'content_json.is_published', true);
+    $rule = new ConditionalRule('required_if', 'data_json.is_published', true);
 
-    expect($rule->getField())->toBe('content_json.is_published');
-    expect($rule->getParams()['field'])->toBe('content_json.is_published');
+    expect($rule->getField())->toBe('data_json.is_published');
+    expect($rule->getParams()['field'])->toBe('data_json.is_published');
 });
 
 

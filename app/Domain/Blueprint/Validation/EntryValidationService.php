@@ -13,7 +13,7 @@ use App\Domain\Blueprint\Validation\Rules\RuleSet;
 /**
  * Доменный сервис валидации контента Entry на основе Blueprint.
  *
- * Строит RuleSet для поля content_json на основе структуры Path в Blueprint.
+ * Строит RuleSet для поля data_json на основе структуры Path в Blueprint.
  * Преобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.
  * Автоматически создаёт правила типов данных на основе data_type, если они не указаны явно.
  *
@@ -38,7 +38,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
      * Построить RuleSet для Blueprint.
      *
      * Анализирует все Path в blueprint и преобразует их validation_rules
-     * в доменный RuleSet для поля content_json.
+     * в доменный RuleSet для поля data_json.
      * Автоматически добавляет правила типов данных на основе data_type,
      * если они не указаны явно в validation_rules.
      *
@@ -157,7 +157,7 @@ final class EntryValidationService implements EntryValidationServiceInterface
         // Добавляем последний сегмент без *
         $resultSegments[] = $segments[count($segments) - 1];
 
-        return ValidationConstants::CONTENT_JSON_PREFIX . implode('.', $resultSegments);
+        return ValidationConstants::data_json_PREFIX . implode('.', $resultSegments);
     }
 }
 

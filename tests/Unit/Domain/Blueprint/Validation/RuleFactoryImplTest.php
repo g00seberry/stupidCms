@@ -123,21 +123,21 @@ test('createDistinctRule creates DistinctRule', function () {
 });
 
 test('createFieldComparisonRule creates FieldComparisonRule with field', function () {
-    $rule = $this->factory->createFieldComparisonRule('>=', 'content_json.start_date');
+    $rule = $this->factory->createFieldComparisonRule('>=', 'data_json.start_date');
 
     expect($rule)->toBeInstanceOf(FieldComparisonRule::class);
     expect($rule->getType())->toBe('field_comparison');
     expect($rule->getOperator())->toBe('>=');
-    expect($rule->getOtherField())->toBe('content_json.start_date');
+    expect($rule->getOtherField())->toBe('data_json.start_date');
     expect($rule->getConstantValue())->toBeNull();
 });
 
 test('createFieldComparisonRule creates FieldComparisonRule with constant', function () {
-    $rule = $this->factory->createFieldComparisonRule('>=', 'content_json.start_date', '2024-01-01');
+    $rule = $this->factory->createFieldComparisonRule('>=', 'data_json.start_date', '2024-01-01');
 
     expect($rule)->toBeInstanceOf(FieldComparisonRule::class);
     expect($rule->getOperator())->toBe('>=');
-    expect($rule->getOtherField())->toBe('content_json.start_date');
+    expect($rule->getOtherField())->toBe('data_json.start_date');
     expect($rule->getConstantValue())->toBe('2024-01-01');
 });
 

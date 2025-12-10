@@ -90,7 +90,7 @@ test('can view soft deleted entry', function () {
         ->assertJsonPath('data.id', $entry->id);
 });
 
-test('entry includes content_json', function () {
+test('entry includes data_json', function () {
     $content = ['blocks' => [['type' => 'paragraph', 'data' => ['text' => 'Hello']]]];
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
@@ -103,7 +103,7 @@ test('entry includes content_json', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.content_json', $content);
+        ->assertJsonPath('data.data_json', $content);
 });
 
 test('entry includes meta_json', function () {
@@ -122,7 +122,7 @@ test('entry includes meta_json', function () {
         ->assertJsonPath('data.meta_json', $meta);
 });
 
-test('entry returns null for empty content_json', function () {
+test('entry returns null for empty data_json', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
@@ -134,10 +134,10 @@ test('entry returns null for empty content_json', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.content_json', null);
+        ->assertJsonPath('data.data_json', null);
 });
 
-test('entry returns null for null content_json', function () {
+test('entry returns null for null data_json', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
@@ -151,7 +151,7 @@ test('entry returns null for null content_json', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.content_json', null);
+        ->assertJsonPath('data.data_json', null);
 });
 
 test('entry includes timestamps', function () {

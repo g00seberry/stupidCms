@@ -82,7 +82,7 @@ test('entry can be published immediately', function () {
     expect($entry->published_at)->not->toBeNull();
 });
 
-test('entry can be created with content_json', function () {
+test('entry can be created with data_json', function () {
     $content = ['blocks' => [['type' => 'paragraph', 'data' => ['text' => 'Hello']]]];
     
     $response = $this->actingAs($this->user)
@@ -90,7 +90,7 @@ test('entry can be created with content_json', function () {
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => $content,
+            'data_json' => $content,
         ]);
 
     $response->assertCreated();

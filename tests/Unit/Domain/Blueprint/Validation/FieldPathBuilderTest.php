@@ -13,16 +13,16 @@ beforeEach(function () {
 
 // 2.1. Простые пути
 
-test('buildFieldPath adds content_json prefix to simple path', function () {
+test('buildFieldPath adds data_json prefix to simple path', function () {
     $result = $this->builder->buildFieldPath('title', []);
 
-    expect($result)->toBe('content_json.title');
+    expect($result)->toBe('data_json.title');
 });
 
 test('buildFieldPath handles empty path', function () {
     $result = $this->builder->buildFieldPath('', []);
 
-    expect($result)->toBe('content_json.');
+    expect($result)->toBe('data_json.');
 });
 
 // 2.2. Вложенные пути
@@ -30,19 +30,19 @@ test('buildFieldPath handles empty path', function () {
 test('buildFieldPath handles single level nesting', function () {
     $result = $this->builder->buildFieldPath('author.name', []);
 
-    expect($result)->toBe('content_json.author.name');
+    expect($result)->toBe('data_json.author.name');
 });
 
 test('buildFieldPath handles multi level nesting', function () {
     $result = $this->builder->buildFieldPath('author.contacts.phone', []);
 
-    expect($result)->toBe('content_json.author.contacts.phone');
+    expect($result)->toBe('data_json.author.contacts.phone');
 });
 
 test('buildFieldPath handles deep nesting', function () {
     $result = $this->builder->buildFieldPath('level1.level2.level3.level4.level5.field', []);
 
-    expect($result)->toBe('content_json.level1.level2.level3.level4.level5.field');
+    expect($result)->toBe('data_json.level1.level2.level3.level4.level5.field');
 });
 
 // 2.3. Обработка cardinality
@@ -56,7 +56,7 @@ test('buildFieldPath replaces segment with wildcard if parent has cardinality ma
 
     // Если 'author' имеет cardinality='many', то сегмент 'contacts' заменяется на '*.contacts'
     // Но сам 'author' остается как есть
-    expect($result)->toBe('content_json.author.*.contacts');
+    expect($result)->toBe('data_json.author.*.contacts');
 });
 
 test('buildFieldPath handles multiple array levels', function () {
@@ -69,7 +69,7 @@ test('buildFieldPath handles multiple array levels', function () {
 
     // items имеет cardinality='many', поэтому tags заменяется на *.tags
     // items.tags имеет cardinality='many', поэтому name заменяется на *.name
-    expect($result)->toBe('content_json.items.*.tags.*.name');
+    expect($result)->toBe('data_json.items.*.tags.*.name');
 });
 
 test('buildFieldPath does not replace segment if parent has cardinality one', function () {
@@ -79,7 +79,7 @@ test('buildFieldPath does not replace segment if parent has cardinality one', fu
 
     $result = $this->builder->buildFieldPath('author.contacts', $pathCardinalities);
 
-    expect($result)->toBe('content_json.author.contacts');
+    expect($result)->toBe('data_json.author.contacts');
 });
 
 test('buildFieldPath handles first segment correctly', function () {
@@ -87,7 +87,7 @@ test('buildFieldPath handles first segment correctly', function () {
 
     $result = $this->builder->buildFieldPath('title', $pathCardinalities);
 
-    expect($result)->toBe('content_json.title');
+    expect($result)->toBe('data_json.title');
 });
 
 test('buildFieldPath handles nested arrays correctly', function () {
@@ -100,7 +100,7 @@ test('buildFieldPath handles nested arrays correctly', function () {
 
     // author имеет cardinality='many', поэтому contacts заменяется на *.contacts
     // author.contacts имеет cardinality='many', поэтому phone заменяется на *.phone
-    expect($result)->toBe('content_json.author.*.contacts.*.phone');
+    expect($result)->toBe('data_json.author.*.contacts.*.phone');
 });
 
 test('buildFieldPath handles mixed structure arrays and objects', function () {
@@ -112,7 +112,7 @@ test('buildFieldPath handles mixed structure arrays and objects', function () {
 
     // events имеет cardinality='many', поэтому venue заменяется на *.venue
     // остальные сегменты - объекты, остаются как есть
-    expect($result)->toBe('content_json.events.*.venue.location.coordinates.lat');
+    expect($result)->toBe('data_json.events.*.venue.location.coordinates.lat');
 });
 
 // 2.4. Граничные случаи
@@ -121,7 +121,7 @@ test('buildFieldPath handles path with maximum nesting', function () {
     $deepPath = implode('.', array_fill(0, 20, 'level'));
     $result = $this->builder->buildFieldPath($deepPath, []);
 
-    expect($result)->toStartWith('content_json.');
+    expect($result)->toStartWith('data_json.');
     expect($result)->toContain('level');
 });
 
@@ -143,7 +143,7 @@ test('buildFieldPath handles complex nested arrays', function () {
     // products имеет cardinality='many', поэтому variants заменяется на *.variants
     // products.variants имеет cardinality='many', поэтому options заменяется на *.options
     // products.variants.options имеет cardinality='many', поэтому name заменяется на *.name
-    expect($result)->toBe('content_json.products.*.variants.*.options.*.name');
+    expect($result)->toBe('data_json.products.*.variants.*.options.*.name');
 });
 
 test('buildFieldPath handles alternating arrays and objects', function () {
@@ -156,7 +156,7 @@ test('buildFieldPath handles alternating arrays and objects', function () {
 
     // sections имеет cardinality='many', поэтому blocks заменяется на *.blocks
     // sections.blocks имеет cardinality='many', поэтому content заменяется на *.content
-    expect($result)->toBe('content_json.sections.*.blocks.*.content');
+    expect($result)->toBe('data_json.sections.*.blocks.*.content');
 });
 
 // 2.5. Обработка правил валидации

@@ -21,7 +21,7 @@ interface EntryValidationServiceInterface
      * Построить RuleSet для Blueprint.
      *
      * Анализирует все Path в blueprint и преобразует их validation_rules
-     * в доменный RuleSet для поля content_json.
+     * в доменный RuleSet для поля data_json.
      * Автоматически создаёт правила типов данных на основе data_type,
      * если они не указаны явно в validation_rules.
      *

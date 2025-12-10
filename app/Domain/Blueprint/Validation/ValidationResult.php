@@ -23,7 +23,7 @@ final class ValidationResult
     /**
      * Добавить ошибку валидации для поля.
      *
-     * @param string $field Путь поля в точечной нотации (например, 'content_json.title')
+     * @param string $field Путь поля в точечной нотации (например, 'data_json.title')
      * @param \App\Domain\Blueprint\Validation\ValidationError $error Ошибка валидации
      * @return void
      */

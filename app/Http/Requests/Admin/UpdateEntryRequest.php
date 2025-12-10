@@ -42,7 +42,7 @@ class UpdateEntryRequest extends FormRequest
      *
      * Валидирует (все поля опциональны):
      * - title: заголовок (максимум 500 символов)
-     * - content_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
+     * - data_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
      * - meta_json: опциональный JSON массив
      * - is_published: boolean
      * - published_at: дата публикации
@@ -67,7 +67,7 @@ class UpdateEntryRequest extends FormRequest
 
         return [
             'title' => 'sometimes|required|string|max:500',
-            'content_json' => ['sometimes', 'nullable', 'array'],
+            'data_json' => ['sometimes', 'nullable', 'array'],
             'meta_json' => 'sometimes|nullable|array',
             'is_published' => 'sometimes|boolean',
             'published_at' => 'sometimes|nullable|date',
@@ -97,7 +97,7 @@ class UpdateEntryRequest extends FormRequest
     /**
      * Настроить валидатор с дополнительной логикой.
      *
-     * Добавляет динамические правила валидации для content_json из Blueprint.
+     * Добавляет динамические правила валидации для data_json из Blueprint.
      *
      * @param \Illuminate\Validation\Validator $validator Валидатор
      * @return void
@@ -110,7 +110,7 @@ class UpdateEntryRequest extends FormRequest
             return;
         }
 
-        // Добавляем правила валидации для content_json из Blueprint
+        // Добавляем правила валидации для data_json из Blueprint
         $this->addBlueprintValidationRules($validator, $entry->postType);
     }
 

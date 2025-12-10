@@ -297,11 +297,11 @@ test('convert handles conditional rule with default operator', function () {
 // 3.3. Правило field_comparison
 
 test('convert creates FieldComparisonRule for field comparison', function () {
-    $fieldComparisonRule = new FieldComparisonRule('>=', 'content_json.start_date', null);
+    $fieldComparisonRule = new FieldComparisonRule('>=', 'data_json.start_date', null);
     $nullableRule = new NullableRule();
     $this->ruleFactory->shouldReceive('createFieldComparisonRule')
         ->once()
-        ->with('>=', 'content_json.start_date', null)
+        ->with('>=', 'data_json.start_date', null)
         ->andReturn($fieldComparisonRule);
     $this->ruleFactory->shouldReceive('createNullableRule')
         ->once()
@@ -310,14 +310,14 @@ test('convert creates FieldComparisonRule for field comparison', function () {
     $result = $this->converter->convert([
         'field_comparison' => [
             'operator' => '>=',
-            'field' => 'content_json.start_date',
+            'field' => 'data_json.start_date',
         ],
     ]);
 
     expect($result)->toHaveCount(2)
         ->and($result[0])->toBeInstanceOf(FieldComparisonRule::class)
         ->and($result[0]->getOperator())->toBe('>=')
-        ->and($result[0]->getOtherField())->toBe('content_json.start_date')
+        ->and($result[0]->getOtherField())->toBe('data_json.start_date')
         ->and($result[1])->toBeInstanceOf(NullableRule::class);
 });
 
@@ -346,11 +346,11 @@ test('convert creates FieldComparisonRule for constant comparison', function () 
 });
 
 test('convert prioritizes field over constant in field_comparison', function () {
-    $fieldComparisonRule = new FieldComparisonRule('>=', 'content_json.start_date', null);
+    $fieldComparisonRule = new FieldComparisonRule('>=', 'data_json.start_date', null);
     $nullableRule = new NullableRule();
     $this->ruleFactory->shouldReceive('createFieldComparisonRule')
         ->once()
-        ->with('>=', 'content_json.start_date', null)
+        ->with('>=', 'data_json.start_date', null)
         ->andReturn($fieldComparisonRule);
     $this->ruleFactory->shouldReceive('createNullableRule')
         ->once()
@@ -359,13 +359,13 @@ test('convert prioritizes field over constant in field_comparison', function () 
     $result = $this->converter->convert([
         'field_comparison' => [
             'operator' => '>=',
-            'field' => 'content_json.start_date',
+            'field' => 'data_json.start_date',
             'value' => '2024-01-01',
         ],
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0]->getOtherField())->toBe('content_json.start_date')
+        ->and($result[0]->getOtherField())->toBe('data_json.start_date')
         ->and($result[0]->getConstantValue())->toBeNull()
         ->and($result[1])->toBeInstanceOf(NullableRule::class);
 });
@@ -422,7 +422,7 @@ test('convert handles all rule types together', function () {
     $patternRule = new PatternRule('/^test$/');
     $distinctRule = new DistinctRule();
     $conditionalRule = new ConditionalRule('required_if', 'is_published', true, '==');
-    $fieldComparisonRule = new FieldComparisonRule('>=', 'content_json.start_date', null);
+    $fieldComparisonRule = new FieldComparisonRule('>=', 'data_json.start_date', null);
 
     $this->ruleFactory->shouldReceive('createRequiredRule')->andReturn($requiredRule);
     $this->ruleFactory->shouldReceive('createMinRule')->with(5)->andReturn($minRule);
@@ -433,7 +433,7 @@ test('convert handles all rule types together', function () {
         ->with('required_if', 'is_published', true, '==')
         ->andReturn($conditionalRule);
     $this->ruleFactory->shouldReceive('createFieldComparisonRule')
-        ->with('>=', 'content_json.start_date', null)
+        ->with('>=', 'data_json.start_date', null)
         ->andReturn($fieldComparisonRule);
 
     $result = $this->converter->convert([
@@ -449,7 +449,7 @@ test('convert handles all rule types together', function () {
         ],
         'field_comparison' => [
             'operator' => '>=',
-            'field' => 'content_json.start_date',
+            'field' => 'data_json.start_date',
         ],
     ]);
 

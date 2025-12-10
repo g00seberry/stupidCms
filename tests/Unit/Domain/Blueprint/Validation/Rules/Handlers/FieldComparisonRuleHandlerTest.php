@@ -28,7 +28,7 @@ test('supports returns false for other types', function () {
 });
 
 test('handle returns correct Laravel rule for field comparison', function () {
-    $rule = new FieldComparisonRule('>=', 'content_json.start_date');
+    $rule = new FieldComparisonRule('>=', 'data_json.start_date');
     $result = $this->handler->handle($rule);
 
     expect($result)->toBeArray();
@@ -37,7 +37,7 @@ test('handle returns correct Laravel rule for field comparison', function () {
 });
 
 test('handle returns correct Laravel rule for constant comparison', function () {
-    $rule = new FieldComparisonRule('>=', 'content_json.start_date', '2024-01-01');
+    $rule = new FieldComparisonRule('>=', 'data_json.start_date', '2024-01-01');
     $result = $this->handler->handle($rule);
 
     expect($result)->toBeArray();
@@ -69,14 +69,14 @@ test('handle correctly passes operator to FieldComparison', function () {
 });
 
 test('handle correctly passes otherField to FieldComparison', function () {
-    $rule = new FieldComparisonRule('>=', 'content_json.start_date', '2024-01-01');
+    $rule = new FieldComparisonRule('>=', 'data_json.start_date', '2024-01-01');
     $result = $this->handler->handle($rule);
 
     expect($result[0])->toBeInstanceOf(\App\Rules\FieldComparison::class);
 });
 
 test('handle correctly passes constantValue to FieldComparison', function () {
-    $rule = new FieldComparisonRule('>=', 'content_json.start_date', '2024-01-01');
+    $rule = new FieldComparisonRule('>=', 'data_json.start_date', '2024-01-01');
     $result = $this->handler->handle($rule);
 
     expect($result[0])->toBeInstanceOf(\App\Rules\FieldComparison::class);

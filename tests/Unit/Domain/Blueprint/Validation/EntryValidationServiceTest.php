@@ -86,8 +86,8 @@ test('buildRulesFor processes blueprint with single simple path', function () {
 
     expect($result)->toBeInstanceOf(RuleSet::class)
         ->and($result->isEmpty())->toBeFalse()
-        ->and($result->hasRulesForField('content_json.title'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.title'))->toHaveCount(2);
+        ->and($result->hasRulesForField('data_json.title'))->toBeTrue()
+        ->and($result->getRulesForField('data_json.title'))->toHaveCount(2);
 });
 
 test('buildRulesFor processes blueprint with multiple paths', function () {
@@ -132,8 +132,8 @@ test('buildRulesFor processes blueprint with multiple paths', function () {
 
     expect($result)->toBeInstanceOf(RuleSet::class)
         ->and($result->isEmpty())->toBeFalse()
-        ->and($result->hasRulesForField('content_json.title'))->toBeTrue()
-        ->and($result->hasRulesForField('content_json.description'))->toBeTrue();
+        ->and($result->hasRulesForField('data_json.title'))->toBeTrue()
+        ->and($result->hasRulesForField('data_json.description'))->toBeTrue();
 });
 
 test('buildRulesFor loads paths in correct order by length', function () {
@@ -171,14 +171,14 @@ test('buildRulesFor loads paths in correct order by length', function () {
 
     // Проверяем, что все paths обработаны
     expect($result->getFieldPaths())->toHaveCount(3)
-        ->and($result->hasRulesForField('content_json.level1'))->toBeTrue()
-        ->and($result->hasRulesForField('content_json.level1.level2'))->toBeTrue()
-        ->and($result->hasRulesForField('content_json.level1.level2.level3'))->toBeTrue();
+        ->and($result->hasRulesForField('data_json.level1'))->toBeTrue()
+        ->and($result->hasRulesForField('data_json.level1.level2'))->toBeTrue()
+        ->and($result->hasRulesForField('data_json.level1.level2.level3'))->toBeTrue();
 });
 
 // 1.2. Преобразование путей
 
-test('buildRulesFor correctly transforms simple path title to content_json.title', function () {
+test('buildRulesFor correctly transforms simple path title to data_json.title', function () {
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -195,10 +195,10 @@ test('buildRulesFor correctly transforms simple path title to content_json.title
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->hasRulesForField('content_json.title'))->toBeTrue();
+    expect($result->hasRulesForField('data_json.title'))->toBeTrue();
 });
 
-test('buildRulesFor correctly transforms nested path author.name to content_json.author.name', function () {
+test('buildRulesFor correctly transforms nested path author.name to data_json.author.name', function () {
     $blueprint = Blueprint::factory()->create();
     Path::factory()->create([
         'blueprint_id' => $blueprint->id,
@@ -215,7 +215,7 @@ test('buildRulesFor correctly transforms nested path author.name to content_json
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->hasRulesForField('content_json.author.name'))->toBeTrue();
+    expect($result->hasRulesForField('data_json.author.name'))->toBeTrue();
 });
 
 test('buildRulesFor correctly handles cardinality many for parent path', function () {
@@ -255,7 +255,7 @@ test('buildRulesFor correctly handles cardinality many for parent path', functio
     $result = $this->service->buildRulesFor($blueprint);
 
     // author имеет cardinality='many', поэтому contacts заменяется на *.contacts
-    expect($result->hasRulesForField('content_json.author.*.contacts.phone'))->toBeTrue();
+    expect($result->hasRulesForField('data_json.author.*.contacts.phone'))->toBeTrue();
 });
 
 test('buildRulesFor correctly handles multiple array levels', function () {
@@ -296,7 +296,7 @@ test('buildRulesFor correctly handles multiple array levels', function () {
 
     // items имеет cardinality='many', поэтому tags заменяется на *.tags
     // items.tags имеет cardinality='many', поэтому name заменяется на *.name
-    expect($result->hasRulesForField('content_json.items.*.tags.*.name'))->toBeTrue();
+    expect($result->hasRulesForField('data_json.items.*.tags.*.name'))->toBeTrue();
 });
 
 test('buildRulesFor correctly handles mixed structures', function () {
@@ -350,7 +350,7 @@ test('buildRulesFor correctly handles mixed structures', function () {
     $result = $this->service->buildRulesFor($blueprint);
 
     // events имеет cardinality='many', поэтому venue заменяется на *.venue
-    expect($result->hasRulesForField('content_json.events.*.venue.location.coordinates.lat'))->toBeTrue();
+    expect($result->hasRulesForField('data_json.events.*.venue.location.coordinates.lat'))->toBeTrue();
 });
 
 // 1.3. Обработка validation_rules
@@ -378,7 +378,7 @@ test('buildRulesFor correctly converts validation_rules to Rule objects', functi
     $result = $this->service->buildRulesFor($blueprint);
 
     // 3 правила из validation_rules + 1 автоматическое TypeRule = 4 правила
-    expect($result->getRulesForField('content_json.title'))->toHaveCount(4);
+    expect($result->getRulesForField('data_json.title'))->toHaveCount(4);
 });
 
 test('buildRulesFor correctly handles null validation_rules', function () {
@@ -400,8 +400,8 @@ test('buildRulesFor correctly handles null validation_rules', function () {
     $result = $this->service->buildRulesFor($blueprint);
 
     // Даже при null validation_rules автоматически создаётся TypeRule
-    expect($result->hasRulesForField('content_json.title'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.title'))->toHaveCount(1);
+    expect($result->hasRulesForField('data_json.title'))->toBeTrue()
+        ->and($result->getRulesForField('data_json.title'))->toHaveCount(1);
 });
 
 test('buildRulesFor correctly handles empty validation_rules array', function () {
@@ -423,8 +423,8 @@ test('buildRulesFor correctly handles empty validation_rules array', function ()
     $result = $this->service->buildRulesFor($blueprint);
 
     // Даже при пустом validation_rules автоматически создаётся TypeRule
-    expect($result->hasRulesForField('content_json.title'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.title'))->toHaveCount(1);
+    expect($result->hasRulesForField('data_json.title'))->toBeTrue()
+        ->and($result->getRulesForField('data_json.title'))->toHaveCount(1);
 });
 
 test('buildRulesFor correctly handles multiple rules for one path', function () {
@@ -455,7 +455,7 @@ test('buildRulesFor correctly handles multiple rules for one path', function () 
     $result = $this->service->buildRulesFor($blueprint);
 
     // 4 правила из validation_rules + 1 автоматическое TypeRule = 5 правил
-    expect($result->getRulesForField('content_json.title'))->toHaveCount(5);
+    expect($result->getRulesForField('data_json.title'))->toHaveCount(5);
 });
 
 // 1.4. Интеграция с зависимостями
@@ -477,8 +477,8 @@ test('buildRulesFor uses FieldPathBuilder for building paths', function () {
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    // FieldPathBuilder должен добавить префикс content_json.
-    expect($result->hasRulesForField('content_json.title'))->toBeTrue();
+    // FieldPathBuilder должен добавить префикс data_json.
+    expect($result->hasRulesForField('data_json.title'))->toBeTrue();
 });
 
 test('buildRulesFor uses PathValidationRulesConverter for converting rules', function () {
@@ -499,7 +499,7 @@ test('buildRulesFor uses PathValidationRulesConverter for converting rules', fun
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    expect($result->getRulesForField('content_json.title')[0])->toBeInstanceOf(RequiredRule::class);
+    expect($result->getRulesForField('data_json.title')[0])->toBeInstanceOf(RequiredRule::class);
 });
 
 test('buildRulesFor correctly passes pathCardinalities to FieldPathBuilder', function () {
@@ -533,7 +533,7 @@ test('buildRulesFor correctly passes pathCardinalities to FieldPathBuilder', fun
 
     // FieldPathBuilder должен использовать cardinality для замены на wildcard
     // author имеет cardinality='many', поэтому name заменяется на *.name
-    expect($result->hasRulesForField('content_json.author.*.name'))->toBeTrue();
+    expect($result->hasRulesForField('data_json.author.*.name'))->toBeTrue();
 });
 
 test('buildRulesFor applies distinct rule to array itself for fields with cardinality many', function () {
@@ -574,8 +574,8 @@ test('buildRulesFor applies distinct rule to array itself for fields with cardin
     // - правило distinct применяется к самому массиву (без .*)
     // - правило nullable добавляется по умолчанию (без .*)
     // - правило integer для элементов массива (с .*)
-    expect($result->hasRulesForField('content_json.reading_time_minutes'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.reading_time_minutes'))->toHaveCount(3); // array + distinct + nullable
+    expect($result->hasRulesForField('data_json.reading_time_minutes'))->toBeTrue()
+        ->and($result->getRulesForField('data_json.reading_time_minutes'))->toHaveCount(3); // array + distinct + nullable
 });
 
 test('buildRulesFor applies distinct rule to field itself for fields with cardinality one', function () {
@@ -599,8 +599,8 @@ test('buildRulesFor applies distinct rule to field itself for fields with cardin
 
     // Для полей с cardinality "one" правило distinct применяется к самому полю
     // + автоматически создаётся TypeRule
-    expect($result->hasRulesForField('content_json.tags'))->toBeTrue()
-        ->and($result->getRulesForField('content_json.tags'))->toHaveCount(2);
+    expect($result->hasRulesForField('data_json.tags'))->toBeTrue()
+        ->and($result->getRulesForField('data_json.tags'))->toHaveCount(2);
 });
 
 // 1.5. Автоматическое создание правил типов данных
@@ -631,7 +631,7 @@ test('buildRulesFor automatically creates type rule when not explicit', function
 
     $result = $this->service->buildRulesFor($blueprint);
 
-    $fieldPath = 'content_json.title';
+    $fieldPath = 'data_json.title';
     $rules = $result->getRulesForField($fieldPath);
 
     // Проверяем, что есть правило типа string
@@ -684,7 +684,7 @@ test('buildRulesFor creates type rule for all data types', function () {
 
         $result = $this->service->buildRulesFor($blueprint);
 
-        $fieldPath = 'content_json.field';
+        $fieldPath = 'data_json.field';
         $rules = $result->getRulesForField($fieldPath);
 
         $hasTypeRule = false;

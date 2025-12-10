@@ -17,18 +17,18 @@ final class FieldPathBuilder
     /**
      * Построить путь поля в точечной нотации для валидации.
      *
-     * Преобразует full_path из Path в путь для content_json.
+     * Преобразует full_path из Path в путь для data_json.
      * Если родительский путь имеет cardinality: 'many', заменяет соответствующий сегмент на '*'.
      *
      * @param string $fullPath Полный путь из Path (например, 'author.contacts.phone')
      * @param array<string, string> $pathCardinalities Маппинг full_path → cardinality для всех путей
-     * @param string $prefix Префикс для пути (по умолчанию 'content_json.')
+     * @param string $prefix Префикс для пути (по умолчанию 'data_json.')
      * @return string Путь в точечной нотации для валидации
      */
     public function buildFieldPath(
         string $fullPath,
         array $pathCardinalities,
-        string $prefix = ValidationConstants::CONTENT_JSON_PREFIX
+        string $prefix = ValidationConstants::data_json_PREFIX
     ): string {
         $segments = explode('.', $fullPath);
         $resultSegments = [];

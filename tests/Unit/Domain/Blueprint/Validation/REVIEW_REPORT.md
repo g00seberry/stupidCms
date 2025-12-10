@@ -46,7 +46,7 @@ uses(TestCase::class)->in('Unit/Domain/Blueprint/Validation');
 
 ```php
 $hasRegex = false;
-foreach ($result['content_json.email'] as $rule) {
+foreach ($result['data_json.email'] as $rule) {
     if (is_string($rule) && str_starts_with($rule, 'regex:')) {
         $hasRegex = true;
         break;
@@ -110,4 +110,3 @@ expect($hasRegex)->toBeTrue();
 1. **Высокий:** Удалить дублирующие `uses()` (может вызвать конфликты)
 2. **Средний:** Добавить TODO для пропущенного теста
 3. **Низкий:** Улучшить документацию и добавить граничные случаи
-

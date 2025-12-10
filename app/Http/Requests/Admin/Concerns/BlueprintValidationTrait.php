@@ -18,7 +18,7 @@ use Illuminate\Validation\Validator;
 trait BlueprintValidationTrait
 {
     /**
-     * Добавить правила валидации для content_json из Blueprint.
+     * Добавить правила валидации для data_json из Blueprint.
      *
      * Использует доменный сервис EntryValidationService для построения RuleSet
      * и адаптер LaravelValidationAdapter для преобразования в Laravel правила.

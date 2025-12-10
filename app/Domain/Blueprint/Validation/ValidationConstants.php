@@ -25,9 +25,9 @@ final class ValidationConstants
     public const CARDINALITY_MANY = 'many';
 
     /**
-     * Префикс для полей content_json.
+     * Префикс для полей data_json.
      */
-    public const CONTENT_JSON_PREFIX = 'content_json.';
+    public const data_json_PREFIX = 'data_json.';
 
     /**
      * Wildcard для элементов массивов.

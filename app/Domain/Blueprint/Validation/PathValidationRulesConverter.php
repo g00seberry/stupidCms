@@ -110,9 +110,9 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      * Обработать правило сравнения поля с другим полем или константой.
      *
      * Поддерживает форматы:
-     * - 'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date']
+     * - 'field_comparison' => ['operator' => '>=', 'field' => 'data_json.start_date']
      * - 'field_comparison' => ['operator' => '>=', 'value' => '2024-01-01'] (с константой)
-     * - 'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date', 'value' => null] (только поле)
+     * - 'field_comparison' => ['operator' => '>=', 'field' => 'data_json.start_date', 'value' => null] (только поле)
      *
      * @param list<\App\Domain\Blueprint\Validation\Rules\Rule> $rules Массив правил (изменяется по ссылке)
      * @param mixed $value Значение правила (массив)

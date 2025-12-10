@@ -313,7 +313,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'name' => 'conditional_required',
             'data_type' => 'string',
             'validation_rules' => [
-                'required_if' => ['field' => 'content_json.is_published', 'value' => true, 'operator' => '=='],
+                'required_if' => ['field' => 'data_json.is_published', 'value' => true, 'operator' => '=='],
             ],
             'is_indexed' => false,
             'sort_order' => $sortOrder,
@@ -341,7 +341,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'name' => 'end_date',
             'data_type' => 'datetime',
             'validation_rules' => [
-                'field_comparison' => ['operator' => '>=', 'field' => 'content_json.start_date'],
+                'field_comparison' => ['operator' => '>=', 'field' => 'data_json.start_date'],
             ],
             'is_indexed' => true,
             'sort_order' => $sortOrder,

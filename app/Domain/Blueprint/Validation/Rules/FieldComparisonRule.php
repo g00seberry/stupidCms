@@ -16,7 +16,7 @@ final class FieldComparisonRule implements Rule
 {
     /**
      * @param string $operator Оператор сравнения ('>=', '<=', '>', '<', '==', '!=')
-     * @param string $otherField Путь к другому полю для сравнения (например, 'content_json.start_date')
+     * @param string $otherField Путь к другому полю для сравнения (например, 'data_json.start_date')
      * @param mixed|null $constantValue Константное значение для сравнения (если указано, используется вместо otherField)
      */
     public function __construct(

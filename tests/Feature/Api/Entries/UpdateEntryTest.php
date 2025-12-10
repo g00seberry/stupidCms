@@ -64,7 +64,7 @@ test('not found returns 404', function () {
     $response->assertNotFound();
 });
 
-test('can update content_json', function () {
+test('can update data_json', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'author_id' => $this->user->id,
@@ -76,7 +76,7 @@ test('can update content_json', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'content_json' => $newContent,
+            'data_json' => $newContent,
         ]);
 
     $response->assertOk();

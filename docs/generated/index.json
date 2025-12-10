@@ -23,9 +23,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "audit"
-            ]
+            "tags": ["audit"]
         },
         {
             "id": "model:App\\Models\\Blueprint",
@@ -36,14 +34,8 @@
             "details": null,
             "meta": {
                 "table": "blueprints",
-                "fillable": [
-                    "name",
-                    "code",
-                    "description"
-                ],
-                "guarded": [
-                    "*"
-                ],
+                "fillable": ["name", "code", "description"],
+                "guarded": ["*"],
                 "casts": [],
                 "relations": {
                     "paths": {
@@ -66,9 +58,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "blueprint"
-            ]
+            "tags": ["blueprint"]
         },
         {
             "id": "model:App\\Models\\BlueprintEmbed",
@@ -84,9 +74,7 @@
                     "embedded_blueprint_id",
                     "host_path_id"
                 ],
-                "guarded": [
-                    "*"
-                ],
+                "guarded": ["*"],
                 "casts": [],
                 "relations": {
                     "blueprint": {
@@ -105,9 +93,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "blueprintembed"
-            ]
+            "tags": ["blueprintembed"]
         },
         {
             "id": "model:App\\Models\\DocRef",
@@ -124,9 +110,7 @@
                     "array_index",
                     "target_entry_id"
                 ],
-                "guarded": [
-                    "*"
-                ],
+                "guarded": ["*"],
                 "casts": [],
                 "relations": {
                     "entry": {
@@ -145,9 +129,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "docref"
-            ]
+            "tags": ["docref"]
         },
         {
             "id": "model:App\\Models\\DocValue",
@@ -170,9 +152,7 @@
                     "value_text",
                     "value_json"
                 ],
-                "guarded": [
-                    "*"
-                ],
+                "guarded": ["*"],
                 "casts": {
                     "value_bool": "boolean",
                     "value_json": "array",
@@ -191,9 +171,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "docvalue"
-            ]
+            "tags": ["docvalue"]
         },
         {
             "id": "model:App\\Models\\Entry",
@@ -240,9 +218,7 @@
                 "factory": "Database\\Factories\\EntryFactory"
             },
             "related": [],
-            "tags": [
-                "entry"
-            ]
+            "tags": ["entry"]
         },
         {
             "id": "model:App\\Models\\FormConfig",
@@ -253,14 +229,8 @@
             "details": "Хранит конфигурацию формы компонентов для конкретной пары PostType (id) + Blueprint.\nКонфигурация представляет собой JSON объект, где ключи - это full_path из Path,\nа значения - EditComponent (конфигурация компонента редактирования).",
             "meta": {
                 "table": "form_configs",
-                "fillable": [
-                    "post_type_id",
-                    "blueprint_id",
-                    "config_json"
-                ],
-                "guarded": [
-                    "*"
-                ],
+                "fillable": ["post_type_id", "blueprint_id", "config_json"],
+                "guarded": ["*"],
                 "casts": {
                     "config_json": "array"
                 },
@@ -277,9 +247,7 @@
                 "factory": "Database\\Factories\\FormConfigFactory"
             },
             "related": [],
-            "tags": [
-                "formconfig"
-            ]
+            "tags": ["formconfig"]
         },
         {
             "id": "model:App\\Models\\Media",
@@ -313,9 +281,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "media"
-            ]
+            "tags": ["media"]
         },
         {
             "id": "model:App\\Models\\MediaAvMetadata",
@@ -343,9 +309,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "mediaavmetadata"
-            ]
+            "tags": ["mediaavmetadata"]
         },
         {
             "id": "model:App\\Models\\MediaImage",
@@ -372,9 +336,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "mediaimage"
-            ]
+            "tags": ["mediaimage"]
         },
         {
             "id": "model:App\\Models\\MediaVariant",
@@ -401,9 +363,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "mediavariant"
-            ]
+            "tags": ["mediavariant"]
         },
         {
             "id": "model:App\\Models\\Outbox",
@@ -425,9 +385,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "outbox"
-            ]
+            "tags": ["outbox"]
         },
         {
             "id": "model:App\\Models\\Path",
@@ -484,9 +442,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "path"
-            ]
+            "tags": ["path"]
         },
         {
             "id": "model:App\\Models\\PostType",
@@ -503,9 +459,7 @@
                     "options_json",
                     "blueprint_id"
                 ],
-                "guarded": [
-                    "*"
-                ],
+                "guarded": ["*"],
                 "casts": {
                     "options_json": "App\\Casts\\AsPostTypeOptions"
                 },
@@ -522,9 +476,7 @@
                 "factory": "Database\\Factories\\PostTypeFactory"
             },
             "related": [],
-            "tags": [
-                "posttype"
-            ]
+            "tags": ["posttype"]
         },
         {
             "id": "model:App\\Models\\Redirect",
@@ -542,9 +494,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "redirect"
-            ]
+            "tags": ["redirect"]
         },
         {
             "id": "model:App\\Models\\RefreshToken",
@@ -563,9 +513,7 @@
                     "revoked_at",
                     "parent_jti"
                 ],
-                "guarded": [
-                    "*"
-                ],
+                "guarded": ["*"],
                 "casts": {
                     "expires_at": "datetime",
                     "used_at": "datetime",
@@ -580,9 +528,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "refreshtoken"
-            ]
+            "tags": ["refreshtoken"]
         },
         {
             "id": "model:App\\Models\\Taxonomy",
@@ -608,9 +554,7 @@
                 "factory": "Database\\Factories\\TaxonomyFactory"
             },
             "related": [],
-            "tags": [
-                "taxonomy"
-            ]
+            "tags": ["taxonomy"]
         },
         {
             "id": "model:App\\Models\\Term",
@@ -655,9 +599,7 @@
                 "factory": "Database\\Factories\\TermFactory"
             },
             "related": [],
-            "tags": [
-                "term"
-            ]
+            "tags": ["term"]
         },
         {
             "id": "model:App\\Models\\TermTree",
@@ -675,9 +617,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "termtree"
-            ]
+            "tags": ["termtree"]
         },
         {
             "id": "model:App\\Models\\User",
@@ -688,15 +628,8 @@
             "details": "Представляет пользователей системы с поддержкой аутентификации и авторизации.\nПоддерживает административные права и разрешения.",
             "meta": {
                 "table": "users",
-                "fillable": [
-                    "name",
-                    "email",
-                    "password",
-                    "email_verified_at"
-                ],
-                "guarded": [
-                    "is_admin"
-                ],
+                "fillable": ["name", "email", "password", "email_verified_at"],
+                "guarded": ["is_admin"],
                 "casts": [],
                 "relations": {
                     "entries": {
@@ -715,9 +648,7 @@
                 "factory": null
             },
             "related": [],
-            "tags": [
-                "user"
-            ]
+            "tags": ["user"]
         },
         {
             "id": "domain_service:Auth/JwtService",
@@ -737,9 +668,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "auth"
-            ]
+            "tags": ["auth"]
         },
         {
             "id": "domain_service:Auth/RefreshTokenDto",
@@ -749,10 +678,7 @@
             "summary": "Data Transfer Object для RefreshToken.",
             "details": "Предоставляет типобезопасный доступ к данным refresh токена\nбез раскрытия Eloquent модели.",
             "meta": {
-                "methods": [
-                    "isValid",
-                    "isInvalid"
-                ],
+                "methods": ["isValid", "isInvalid"],
                 "dependencies": [
                     "Carbon\\Carbon",
                     "Carbon\\Carbon",
@@ -763,9 +689,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "auth"
-            ]
+            "tags": ["auth"]
         },
         {
             "id": "domain_service:Auth/RefreshTokenRepositoryImpl",
@@ -787,9 +711,7 @@
                 "interface": "App\\Domain\\Auth\\RefreshTokenRepository"
             },
             "related": [],
-            "tags": [
-                "auth"
-            ]
+            "tags": ["auth"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Adapters/LaravelValidationAdapter",
@@ -799,20 +721,14 @@
             "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации.",
             "details": "Преобразует доменные Rule объекты в строки правил валидации Laravel\nчерез систему handlers. Не добавляет базовые типы данных автоматически.\nПользователь сам отвечает за указание всех необходимых правил.",
             "meta": {
-                "methods": [
-                    "adapt"
-                ],
+                "methods": ["adapt"],
                 "dependencies": [
                     "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerRegistry"
                 ],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapterInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "adapter"
-            ]
+            "tags": ["blueprint", "validation", "adapter"]
         },
         {
             "id": "domain_service:Blueprint/Validation/DataTypeMapper",
@@ -822,18 +738,12 @@
             "summary": "Маппер типов данных Path в типы для валидации.",
             "details": "Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)\nв типы для валидации (string, integer, numeric, boolean, date, array).",
             "meta": {
-                "methods": [
-                    "mapToValidationType",
-                    "isSupported"
-                ],
+                "methods": ["mapToValidationType", "isSupported"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/EntryValidationService",
@@ -841,11 +751,9 @@
             "name": "EntryValidationService",
             "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\EntryValidationService.php",
             "summary": "Доменный сервис валидации контента Entry на основе Blueprint.",
-            "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nАвтоматически создаёт правила типов данных на основе data_type, если они не указаны явно.",
+            "details": "Строит RuleSet для поля data_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nАвтоматически создаёт правила типов данных на основе data_type, если они не указаны явно.",
             "meta": {
-                "methods": [
-                    "buildRulesFor"
-                ],
+                "methods": ["buildRulesFor"],
                 "dependencies": [
                     "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface",
                     "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder",
@@ -855,10 +763,7 @@
                 "interface": "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/FieldPathBuilder",
@@ -868,17 +773,12 @@
             "summary": "Построитель путей полей для валидации.",
             "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.\nУчитывает специфику правил валидации (например, distinct для массивов).",
             "meta": {
-                "methods": [
-                    "buildFieldPath"
-                ],
+                "methods": ["buildFieldPath"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/PathValidationRulesConverter",
@@ -888,19 +788,14 @@
             "summary": "Конвертер правил валидации из Path в доменные Rule объекты.",
             "details": "Преобразует validation_rules из модели Path в массив доменных Rule объектов.\nНе выполняет проверок совместимости правил с типами данных или cardinality.\nПользователь сам отвечает за корректность настройки правил.",
             "meta": {
-                "methods": [
-                    "convert"
-                ],
+                "methods": ["convert"],
                 "dependencies": [
                     "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
                 ],
                 "interface": "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/RuleArrayManipulator",
@@ -919,10 +814,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
@@ -943,11 +835,7 @@
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
@@ -957,19 +845,12 @@
             "summary": "Правило валидации: уникальность элементов массива.",
             "details": "Преобразуется в кастомное правило DistinctObjects, которое сравнивает\nэлементы массива по их JSON-сериализации. Это обеспечивает корректную\nработу с массивами объектов - объекты сравниваются как строки (по их\nJSON-представлению).\nМожет применяться к любым типам данных (простые значения и объекты).\nПользователь сам отвечает за корректность применения правила.",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams"
-                ],
+                "methods": ["getType", "getParams"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/FieldComparisonRule",
@@ -990,11 +871,7 @@
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/FieldDefinition",
@@ -1004,20 +881,12 @@
             "summary": "Определение поля для валидации.",
             "details": "Содержит метаданные поля из Path, необходимые для построения правил валидации.",
             "meta": {
-                "methods": [
-                    "isArray",
-                    "isSingle",
-                    "hasValidationRules"
-                ],
+                "methods": ["isArray", "isSingle", "hasValidationRules"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
@@ -1027,20 +896,12 @@
             "summary": "Обработчик правила ConditionalRule.",
             "details": "Преобразует ConditionalRule в строку Laravel правила валидации\n(например, 'required_if:is_published,true').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
@@ -1050,20 +911,12 @@
             "summary": "Обработчик правила DistinctRule.",
             "details": "Преобразует DistinctRule в кастомное правило DistinctObjects,\nкоторое сравнивает элементы массива по их JSON-сериализации.\nЭто обеспечивает корректную работу с массивами объектов.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler",
@@ -1073,20 +926,12 @@
             "summary": "Обработчик правила FieldComparisonRule.",
             "details": "Преобразует FieldComparisonRule в Laravel custom rule FieldComparison.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/MaxRuleHandler",
@@ -1096,20 +941,12 @@
             "summary": "Обработчик правила MaxRule.",
             "details": "Преобразует MaxRule в строку Laravel правила валидации (например, 'max:500').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/MinRuleHandler",
@@ -1119,20 +956,12 @@
             "summary": "Обработчик правила MinRule.",
             "details": "Преобразует MinRule в строку Laravel правила валидации (например, 'min:1').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/NullableRuleHandler",
@@ -1142,20 +971,12 @@
             "summary": "Обработчик правила NullableRule.",
             "details": "Преобразует NullableRule в строку Laravel правила валидации ('nullable').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/PatternRuleHandler",
@@ -1165,20 +986,12 @@
             "summary": "Обработчик правила PatternRule.",
             "details": "Преобразует PatternRule в строку Laravel правила валидации (например, 'regex:/pattern/').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/RequiredRuleHandler",
@@ -1188,20 +1001,12 @@
             "summary": "Обработчик правила RequiredRule.",
             "details": "Преобразует RequiredRule в строку Laravel правила валидации ('required').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/RuleHandlerRegistry",
@@ -1221,12 +1026,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
@@ -1236,20 +1036,12 @@
             "summary": "Обработчик правила TypeRule.",
             "details": "Преобразует TypeRule в строку Laravel правила валидации\n(например, 'string', 'integer', 'numeric', 'boolean', 'date', 'array').",
             "meta": {
-                "methods": [
-                    "supports",
-                    "handle"
-                ],
+                "methods": ["supports", "handle"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule",
-                "handler"
-            ]
+            "tags": ["blueprint", "validation", "rule", "handler"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
@@ -1259,20 +1051,12 @@
             "summary": "Правило валидации: максимальное значение/длина.",
             "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getValue"
-                ],
+                "methods": ["getType", "getParams", "getValue"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/MinRule",
@@ -1282,20 +1066,12 @@
             "summary": "Правило валидации: минимальное значение/длина.",
             "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getValue"
-                ],
+                "methods": ["getType", "getParams", "getValue"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/NullableRule",
@@ -1305,19 +1081,12 @@
             "summary": "Правило валидации: поле опционально (nullable).",
             "details": "Указывает, что поле может отсутствовать или быть null.",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams"
-                ],
+                "methods": ["getType", "getParams"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/PatternRule",
@@ -1327,20 +1096,12 @@
             "summary": "Правило валидации: регулярное выражение (pattern).",
             "details": "Применяется только к строковым типам данных (string, text).",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getPattern"
-                ],
+                "methods": ["getType", "getParams", "getPattern"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/RequiredRule",
@@ -1350,19 +1111,12 @@
             "summary": "Правило валидации: поле обязательно.",
             "details": "Указывает, что поле должно присутствовать и не может быть null или пустым.",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams"
-                ],
+                "methods": ["getType", "getParams"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/RuleFactoryImpl",
@@ -1387,11 +1141,7 @@
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/RuleSet",
@@ -1413,11 +1163,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
@@ -1427,20 +1173,12 @@
             "summary": "Правило валидации: тип данных.",
             "details": "Автоматически создаётся на основе data_type из Path.\nПреобразуется в соответствующее Laravel правило валидации (string, integer, numeric, boolean, date, array).",
             "meta": {
-                "methods": [
-                    "getType",
-                    "getParams",
-                    "getDataType"
-                ],
+                "methods": ["getType", "getParams", "getDataType"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation",
-                "rule"
-            ]
+            "tags": ["blueprint", "validation", "rule"]
         },
         {
             "id": "domain_service:Blueprint/Validation/ValidationConstants",
@@ -1450,17 +1188,12 @@
             "summary": "Константы для системы валидации Blueprint.",
             "details": null,
             "meta": {
-                "methods": [
-                    "getRequiredNullableRules"
-                ],
+                "methods": ["getRequiredNullableRules"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/ValidationError",
@@ -1470,18 +1203,12 @@
             "summary": "Ошибка валидации с доменной семантикой.",
             "details": "Содержит структурированную информацию об ошибке валидации:\n- путь поля\n- код ошибки (для локализации и обработки на фронтенде)\n- параметры ошибки\n- текстовое сообщение (опционально)",
             "meta": {
-                "methods": [
-                    "getParam",
-                    "hasParam"
-                ],
+                "methods": ["getParam", "hasParam"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Blueprint/Validation/ValidationResult",
@@ -1503,10 +1230,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "blueprint",
-                "validation"
-            ]
+            "tags": ["blueprint", "validation"]
         },
         {
             "id": "domain_service:Entries/PublishingService",
@@ -1516,16 +1240,12 @@
             "summary": "Сервис для применения правил публикации записей.",
             "details": "Обрабатывает логику публикации Entry: автозаполнение published_at,\nвалидация инвариантов (дата публикации не в будущем).",
             "meta": {
-                "methods": [
-                    "applyAndValidate"
-                ],
+                "methods": ["applyAndValidate"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "entry"
-            ]
+            "tags": ["entry"]
         },
         {
             "id": "domain_service:Media/Actions/ListMediaAction",
@@ -1535,19 +1255,12 @@
             "summary": "CQRS-действие: выборка списка медиа по параметрам запроса.",
             "details": null,
             "meta": {
-                "methods": [
-                    "execute"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Media\\MediaRepository"
-                ],
+                "methods": ["execute"],
+                "dependencies": ["App\\Domain\\Media\\MediaRepository"],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "action"
-            ]
+            "tags": ["media", "action"]
         },
         {
             "id": "domain_service:Media/Actions/MediaForceDeleteAction",
@@ -1557,17 +1270,12 @@
             "summary": "Действие для окончательного удаления медиа-файла.",
             "details": "Выполняет полное (hard) удаление медиа-файла: удаляет физические файлы\n(основной файл и все варианты) с диска, затем удаляет записи из БД.\nОтправляет событие MediaDeleted после успешного удаления.",
             "meta": {
-                "methods": [
-                    "execute"
-                ],
+                "methods": ["execute"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "action"
-            ]
+            "tags": ["media", "action"]
         },
         {
             "id": "domain_service:Media/Actions/MediaStoreAction",
@@ -1577,9 +1285,7 @@
             "summary": "Действие для сохранения медиа-файла.",
             "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.\nИспользует общую систему ошибок (HttpErrorException) для обработки ошибок валидации\nи сохранения файла.",
             "meta": {
-                "methods": [
-                    "execute"
-                ],
+                "methods": ["execute"],
                 "dependencies": [
                     "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
                     "App\\Domain\\Media\\Services\\StorageResolver",
@@ -1590,10 +1296,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "action"
-            ]
+            "tags": ["media", "action"]
         },
         {
             "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
@@ -1603,17 +1306,12 @@
             "summary": "CQRS-действие: обновление метаданных медиа (title, alt).",
             "details": null,
             "meta": {
-                "methods": [
-                    "execute"
-                ],
+                "methods": ["execute"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "action"
-            ]
+            "tags": ["media", "action"]
         },
         {
             "id": "domain_service:Media/DTO/MediaMetadataDTO",
@@ -1623,18 +1321,12 @@
             "summary": "DTO для нормализованных метаданных медиа-файла.",
             "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).\nДанные из DTO используются для создания записей в специализированных таблицах:\n- width, height, exif → MediaImage (для изображений)\n- durationMs, bitrateKbps, frameRate, frameCount, videoCodec, audioCodec → MediaAvMetadata (для видео/аудио)",
             "meta": {
-                "methods": [
-                    "toArray",
-                    "fromArray"
-                ],
+                "methods": ["toArray", "fromArray"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "dto"
-            ]
+            "tags": ["media", "dto"]
         },
         {
             "id": "domain_service:Media/EloquentMediaRepository",
@@ -1644,18 +1336,12 @@
             "summary": "Реализация MediaRepository на базе Eloquent.",
             "details": null,
             "meta": {
-                "methods": [
-                    "buildQuery",
-                    "paginate",
-                    "get"
-                ],
+                "methods": ["buildQuery", "paginate", "get"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Media\\MediaRepository"
             },
             "related": [],
-            "tags": [
-                "media"
-            ]
+            "tags": ["media"]
         },
         {
             "id": "domain_service:Media/Events/MediaDeleted",
@@ -1672,16 +1358,11 @@
                     "broadcast",
                     "restoreModel"
                 ],
-                "dependencies": [
-                    "App\\Models\\Media"
-                ],
+                "dependencies": ["App\\Models\\Media"],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "event"
-            ]
+            "tags": ["media", "event"]
         },
         {
             "id": "domain_service:Media/Events/MediaProcessed",
@@ -1705,10 +1386,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "event"
-            ]
+            "tags": ["media", "event"]
         },
         {
             "id": "domain_service:Media/Events/MediaUploaded",
@@ -1725,16 +1403,11 @@
                     "broadcast",
                     "restoreModel"
                 ],
-                "dependencies": [
-                    "App\\Models\\Media"
-                ],
+                "dependencies": ["App\\Models\\Media"],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "event"
-            ]
+            "tags": ["media", "event"]
         },
         {
             "id": "domain_service:Media/Images/GdImageProcessor",
@@ -1757,10 +1430,7 @@
                 "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
             },
             "related": [],
-            "tags": [
-                "media",
-                "image"
-            ]
+            "tags": ["media", "image"]
         },
         {
             "id": "domain_service:Media/Images/GlideImageProcessor",
@@ -1779,16 +1449,11 @@
                     "destroy",
                     "supports"
                 ],
-                "dependencies": [
-                    "Intervention\\Image\\ImageManager"
-                ],
+                "dependencies": ["Intervention\\Image\\ImageManager"],
                 "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
             },
             "related": [],
-            "tags": [
-                "media",
-                "image"
-            ]
+            "tags": ["media", "image"]
         },
         {
             "id": "domain_service:Media/Images/ImageRef",
@@ -1803,10 +1468,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "image"
-            ]
+            "tags": ["media", "image"]
         },
         {
             "id": "domain_service:Media/Jobs/GenerateVariantJob",
@@ -1862,10 +1524,7 @@
                 "interface": "Illuminate\\Contracts\\Queue\\ShouldQueue"
             },
             "related": [],
-            "tags": [
-                "media",
-                "job"
-            ]
+            "tags": ["media", "job"]
         },
         {
             "id": "domain_service:Media/Listeners/LogMediaEvent",
@@ -1884,10 +1543,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "listener"
-            ]
+            "tags": ["media", "listener"]
         },
         {
             "id": "domain_service:Media/Listeners/NotifyMediaEvent",
@@ -1906,10 +1562,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "listener"
-            ]
+            "tags": ["media", "listener"]
         },
         {
             "id": "domain_service:Media/Listeners/PurgeCdnCache",
@@ -1928,10 +1581,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "listener"
-            ]
+            "tags": ["media", "listener"]
         },
         {
             "id": "domain_service:Media/MediaQuery",
@@ -1951,15 +1601,11 @@
                     "page",
                     "perPage"
                 ],
-                "dependencies": [
-                    "App\\Domain\\Media\\MediaDeletedFilter"
-                ],
+                "dependencies": ["App\\Domain\\Media\\MediaDeletedFilter"],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media"
-            ]
+            "tags": ["media"]
         },
         {
             "id": "domain_service:Media/Services/ExifManager",
@@ -1975,16 +1621,11 @@
                     "filterExif",
                     "extractColorProfile"
                 ],
-                "dependencies": [
-                    "App\\Domain\\Media\\Images\\ImageProcessor"
-                ],
+                "dependencies": ["App\\Domain\\Media\\Images\\ImageProcessor"],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/ExiftoolMediaMetadataPlugin",
@@ -1994,18 +1635,12 @@
             "summary": "Плагин метаданных, основанный на утилите exiftool.",
             "details": "Использует exiftool для извлечения детальных метаданных из изображений,\nвидео и аудио файлов. Особенно полезен для EXIF данных и метаданных,\nнедоступных через другие инструменты.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "extract"
-                ],
+                "methods": ["supports", "extract"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
@@ -2015,18 +1650,12 @@
             "summary": "Плагин метаданных, основанный на утилите ffprobe.",
             "details": "Использует ffprobe для извлечения длительности, битрейта и фреймов\nдля аудио/видео файлов и возвращает нормализованный набор полей.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "extract"
-                ],
+                "methods": ["supports", "extract"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
@@ -2036,20 +1665,12 @@
             "summary": "Плагин метаданных, основанный на библиотеке getID3.",
             "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "extract"
-                ],
-                "dependencies": [
-                    "getID3"
-                ],
+                "methods": ["supports", "extract"],
+                "dependencies": ["getID3"],
                 "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -2059,9 +1680,7 @@
             "summary": "Сервис для извлечения метаданных из медиа-файлов.",
             "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
             "meta": {
-                "methods": [
-                    "extract"
-                ],
+                "methods": ["extract"],
                 "dependencies": [
                     "App\\Domain\\Media\\Images\\ImageProcessor",
                     "Illuminate\\Contracts\\Cache\\Repository"
@@ -2069,10 +1688,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/MediainfoMediaMetadataPlugin",
@@ -2082,18 +1698,12 @@
             "summary": "Плагин метаданных, основанный на утилите mediainfo.",
             "details": "Использует mediainfo для извлечения метаданных видео/аудио файлов\nс более детальной информацией, чем ffprobe (например, для некоторых форматов).",
             "meta": {
-                "methods": [
-                    "supports",
-                    "extract"
-                ],
+                "methods": ["supports", "extract"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/OnDemandVariantService",
@@ -2103,20 +1713,12 @@
             "summary": "Сервис для генерации вариантов медиа-файлов по требованию.",
             "details": "Генерирует варианты изображений (thumbnails, resized) на лету\nчерез абстракцию ImageProcessor (gd/imagick/glide/external).",
             "meta": {
-                "methods": [
-                    "ensureVariant",
-                    "generateVariant"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Media\\Images\\ImageProcessor"
-                ],
+                "methods": ["ensureVariant", "generateVariant"],
+                "dependencies": ["App\\Domain\\Media\\Images\\ImageProcessor"],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Services/StorageResolver",
@@ -2126,18 +1728,12 @@
             "summary": "Резолвер дисков для медиа-хранилища.",
             "details": "Инкапсулирует логику выбора диска по типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.kinds\n- media.disks.default",
             "meta": {
-                "methods": [
-                    "resolveDiskName",
-                    "filesystemForUpload"
-                ],
+                "methods": ["resolveDiskName", "filesystemForUpload"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "service"
-            ]
+            "tags": ["media", "service"]
         },
         {
             "id": "domain_service:Media/Validation/CorruptionValidator",
@@ -2147,20 +1743,12 @@
             "summary": "Валидатор проверки целостности (corruption) медиа-файлов.",
             "details": "Проверяет, что файл не повреждён и может быть корректно обработан.\nДля изображений пытается открыть файл через ImageProcessor.\nДля видео/аудио проверка выполняется через плагины метаданных.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "validate"
-                ],
-                "dependencies": [
-                    "App\\Domain\\Media\\Images\\ImageProcessor"
-                ],
+                "methods": ["supports", "validate"],
+                "dependencies": ["App\\Domain\\Media\\Images\\ImageProcessor"],
                 "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
             },
             "related": [],
-            "tags": [
-                "media",
-                "validation"
-            ]
+            "tags": ["media", "validation"]
         },
         {
             "id": "domain_service:Media/Validation/MediaConfigValidator",
@@ -2170,17 +1758,12 @@
             "summary": "Валидатор конфигурации медиа-файлов.",
             "details": "Проверяет корректность конфигурации, включая обязательные варианты изображений.",
             "meta": {
-                "methods": [
-                    "validate"
-                ],
+                "methods": ["validate"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "validation"
-            ]
+            "tags": ["media", "validation"]
         },
         {
             "id": "domain_service:Media/Validation/MediaValidationPipeline",
@@ -2190,17 +1773,12 @@
             "summary": "Pipeline валидации медиа-файлов.",
             "details": "Последовательно применяет все зарегистрированные валидаторы к файлу.\nОстанавливается на первой ошибке валидации.",
             "meta": {
-                "methods": [
-                    "validate"
-                ],
+                "methods": ["validate"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "media",
-                "validation"
-            ]
+            "tags": ["media", "validation"]
         },
         {
             "id": "domain_service:Media/Validation/MimeSignatureValidator",
@@ -2210,18 +1788,12 @@
             "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes).",
             "details": "Определяет реальный MIME-тип файла по его сигнатурам и сравнивает\nс заявленным типом. Защищает от подмены расширения файла.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "validate"
-                ],
+                "methods": ["supports", "validate"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
             },
             "related": [],
-            "tags": [
-                "media",
-                "validation"
-            ]
+            "tags": ["media", "validation"]
         },
         {
             "id": "domain_service:Media/Validation/SizeLimitValidator",
@@ -2231,18 +1803,12 @@
             "summary": "Валидатор ограничений размера файла и размеров изображений/видео.",
             "details": "Проверяет, что размер файла и размеры контента (ширина/высота для изображений,\nдлительность для видео/аудио) не превышают установленные лимиты.",
             "meta": {
-                "methods": [
-                    "supports",
-                    "validate"
-                ],
+                "methods": ["supports", "validate"],
                 "dependencies": [],
                 "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
             },
             "related": [],
-            "tags": [
-                "media",
-                "validation"
-            ]
+            "tags": ["media", "validation"]
         },
         {
             "id": "domain_service:PostTypes/PostTypeOptions",
@@ -2266,9 +1832,7 @@
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "posttype"
-            ]
+            "tags": ["posttype"]
         },
         {
             "id": "domain_service:Routing/PathNormalizer",
@@ -2278,16 +1842,12 @@
             "summary": "Сервис для нормализации путей.",
             "details": "Приводит пути к единому формату: удаляет query/fragment, гарантирует ведущий слэш,\nубирает trailing слэш, приводит к нижнему регистру, применяет Unicode NFC нормализацию.",
             "meta": {
-                "methods": [
-                    "normalize"
-                ],
+                "methods": ["normalize"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "routing"
-            ]
+            "tags": ["routing"]
         },
         {
             "id": "domain_service:Sanitizer/RichTextSanitizer",
@@ -2297,16 +1857,12 @@
             "summary": "Сервис для санитизации HTML контента.",
             "details": "Очищает HTML от потенциально опасных элементов и атрибутов через HTMLPurifier.\nАвтоматически добавляет rel=\"noopener noreferrer\" к ссылкам с target=\"_blank\"\nдля защиты от атак через window.opener.",
             "meta": {
-                "methods": [
-                    "sanitize"
-                ],
+                "methods": ["sanitize"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "sanitizer"
-            ]
+            "tags": ["sanitizer"]
         },
         {
             "id": "domain_service:View/BladeTemplateResolver",
@@ -2316,18 +1872,12 @@
             "summary": "Резолвер для выбора Blade-шаблона на основе полей template.",
             "details": "Приоритет выбора шаблона:\n1. Entry.template_override (если задано — используется как полное имя вью)\n2. PostType.template (если задано)\n3. templates.index (дефолтный шаблон)\nВсе шаблоны должны находиться в папке templates или дочерних папках.",
             "meta": {
-                "methods": [
-                    "forEntry"
-                ],
-                "dependencies": [
-                    "App\\Domain\\View\\TemplatePathValidator"
-                ],
+                "methods": ["forEntry"],
+                "dependencies": ["App\\Domain\\View\\TemplatePathValidator"],
                 "interface": "App\\Domain\\View\\TemplateResolver"
             },
             "related": [],
-            "tags": [
-                "view"
-            ]
+            "tags": ["view"]
         },
         {
             "id": "domain_service:View/TemplatePathValidator",
@@ -2337,18 +1887,12 @@
             "summary": "Валидатор путей шаблонов.",
             "details": "Проверяет, что шаблон находится в папке templates или дочерних папках.\nВсе остальные директории считаются системными и недоступны для шаблонов.",
             "meta": {
-                "methods": [
-                    "validate",
-                    "normalize",
-                    "ensurePrefix"
-                ],
+                "methods": ["validate", "normalize", "ensurePrefix"],
                 "dependencies": [],
                 "interface": null
             },
             "related": [],
-            "tags": [
-                "view"
-            ]
+            "tags": ["view"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/errors/404.blade.php",
@@ -2359,16 +1903,12 @@
             "details": null,
             "meta": {
                 "role": "page",
-                "variables": [
-                    "path"
-                ],
+                "variables": ["path"],
                 "extends": null,
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/home/default.blade.php",
@@ -2384,9 +1924,7 @@
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/app.blade.php",
@@ -2399,15 +1937,10 @@
                 "role": "page",
                 "variables": [],
                 "extends": null,
-                "includes": [
-                    "partials.header",
-                    "partials.footer"
-                ]
+                "includes": ["partials.header", "partials.footer"]
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/public.blade.php",
@@ -2423,9 +1956,7 @@
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
@@ -2436,16 +1967,12 @@
             "details": null,
             "meta": {
                 "role": "page",
-                "variables": [
-                    "entry"
-                ],
+                "variables": ["entry"],
                 "extends": "layouts.public",
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/partials/footer.blade.php",
@@ -2461,9 +1988,7 @@
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/partials/header.blade.php",
@@ -2479,9 +2004,7 @@
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/templates/index.blade.php",
@@ -2492,19 +2015,12 @@
             "details": null,
             "meta": {
                 "role": "page",
-                "variables": [
-                    "entry",
-                    "html",
-                    "content",
-                    "bodyHtml"
-                ],
+                "variables": ["entry", "html", "content", "bodyHtml"],
                 "extends": "layouts.app",
                 "includes": []
             },
             "related": [],
-            "tags": [
-                "page"
-            ]
+            "tags": ["page"]
         },
         {
             "id": "config_area:app",
@@ -2530,16 +2046,10 @@
                     "driver",
                     "store"
                 ],
-                "sections": [
-                    "previous_keys",
-                    "maintenance"
-                ]
+                "sections": ["previous_keys", "maintenance"]
             },
             "related": [],
-            "tags": [
-                "config",
-                "app"
-            ]
+            "tags": ["config", "app"]
         },
         {
             "id": "config_area:auth",
@@ -2579,10 +2089,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "auth"
-            ]
+            "tags": ["config", "auth"]
         },
         {
             "id": "config_area:blueprint",
@@ -2601,10 +2108,7 @@
                 "sections": []
             },
             "related": [],
-            "tags": [
-                "config",
-                "blueprint"
-            ]
+            "tags": ["config", "blueprint"]
         },
         {
             "id": "config_area:cache",
@@ -2662,10 +2166,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "cache"
-            ]
+            "tags": ["config", "cache"]
         },
         {
             "id": "config_area:cors",
@@ -2694,10 +2195,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "cors"
-            ]
+            "tags": ["config", "cors"]
         },
         {
             "id": "config_area:database",
@@ -2763,10 +2261,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "database"
-            ]
+            "tags": ["config", "database"]
         },
         {
             "id": "config_area:docs",
@@ -2805,10 +2300,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "docs"
-            ]
+            "tags": ["config", "docs"]
         },
         {
             "id": "config_area:errors",
@@ -2850,10 +2342,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "errors"
-            ]
+            "tags": ["config", "errors"]
         },
         {
             "id": "config_area:filesystems",
@@ -2885,20 +2374,10 @@
                     "use_path_style_endpoint",
                     "links"
                 ],
-                "sections": [
-                    "disks",
-                    "local",
-                    "public",
-                    "media",
-                    "s3",
-                    "links"
-                ]
+                "sections": ["disks", "local", "public", "media", "s3", "links"]
             },
             "related": [],
-            "tags": [
-                "config",
-                "filesystems"
-            ]
+            "tags": ["config", "filesystems"]
         },
         {
             "id": "config_area:jwt",
@@ -2924,15 +2403,10 @@
                     "samesite",
                     "path"
                 ],
-                "sections": [
-                    "cookies"
-                ]
+                "sections": ["cookies"]
             },
             "related": [],
-            "tags": [
-                "config",
-                "jwt"
-            ]
+            "tags": ["config", "jwt"]
         },
         {
             "id": "config_area:logging",
@@ -2995,10 +2469,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "logging"
-            ]
+            "tags": ["config", "logging"]
         },
         {
             "id": "config_area:mail",
@@ -3054,10 +2525,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "mail"
-            ]
+            "tags": ["config", "mail"]
         },
         {
             "id": "config_area:media",
@@ -3118,10 +2586,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "media"
-            ]
+            "tags": ["config", "media"]
         },
         {
             "id": "config_area:purifier",
@@ -3170,10 +2635,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "purifier"
-            ]
+            "tags": ["config", "purifier"]
         },
         {
             "id": "config_area:queue",
@@ -3225,10 +2687,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "queue"
-            ]
+            "tags": ["config", "queue"]
         },
         {
             "id": "config_area:scribe",
@@ -3333,10 +2792,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "scribe"
-            ]
+            "tags": ["config", "scribe"]
         },
         {
             "id": "config_area:security",
@@ -3355,15 +2811,10 @@
                     "domain",
                     "path"
                 ],
-                "sections": [
-                    "csrf"
-                ]
+                "sections": ["csrf"]
             },
             "related": [],
-            "tags": [
-                "config",
-                "security"
-            ]
+            "tags": ["config", "security"]
         },
         {
             "id": "config_area:services",
@@ -3394,10 +2845,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "services"
-            ]
+            "tags": ["config", "services"]
         },
         {
             "id": "config_area:session",
@@ -3425,15 +2873,10 @@
                     "same_site",
                     "partitioned"
                 ],
-                "sections": [
-                    "lottery"
-                ]
+                "sections": ["lottery"]
             },
             "related": [],
-            "tags": [
-                "config",
-                "session"
-            ]
+            "tags": ["config", "session"]
         },
         {
             "id": "config_area:stupidcms",
@@ -3505,10 +2948,7 @@
                 ]
             },
             "related": [],
-            "tags": [
-                "config",
-                "stupidcms"
-            ]
+            "tags": ["config", "stupidcms"]
         },
         {
             "id": "config_area:view_templates",
@@ -3518,16 +2958,11 @@
             "summary": "Configuration: View_templates",
             "details": null,
             "meta": {
-                "keys": [
-                    "default"
-                ],
+                "keys": ["default"],
                 "sections": []
             },
             "related": [],
-            "tags": [
-                "config",
-                "view_templates"
-            ]
+            "tags": ["config", "view_templates"]
         },
         {
             "id": "http_endpoint:GET://",
@@ -3545,9 +2980,7 @@
                 "responses": []
             },
             "related": [],
-            "tags": [
-                "web"
-            ]
+            "tags": ["web"]
         },
         {
             "id": "http_endpoint:POST:/api/v1/auth/login",
@@ -5391,9 +4824,7 @@
                 "responses": []
             },
             "related": [],
-            "tags": [
-                "storage"
-            ]
+            "tags": ["storage"]
         }
     ],
     "by_type": {
@@ -5421,9 +4852,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "audit"
-                ]
+                "tags": ["audit"]
             },
             {
                 "id": "model:App\\Models\\Blueprint",
@@ -5434,14 +4863,8 @@
                 "details": null,
                 "meta": {
                     "table": "blueprints",
-                    "fillable": [
-                        "name",
-                        "code",
-                        "description"
-                    ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "fillable": ["name", "code", "description"],
+                    "guarded": ["*"],
                     "casts": [],
                     "relations": {
                         "paths": {
@@ -5464,9 +4887,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint"
-                ]
+                "tags": ["blueprint"]
             },
             {
                 "id": "model:App\\Models\\BlueprintEmbed",
@@ -5482,9 +4903,7 @@
                         "embedded_blueprint_id",
                         "host_path_id"
                     ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "guarded": ["*"],
                     "casts": [],
                     "relations": {
                         "blueprint": {
@@ -5503,9 +4922,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprintembed"
-                ]
+                "tags": ["blueprintembed"]
             },
             {
                 "id": "model:App\\Models\\DocRef",
@@ -5522,9 +4939,7 @@
                         "array_index",
                         "target_entry_id"
                     ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "guarded": ["*"],
                     "casts": [],
                     "relations": {
                         "entry": {
@@ -5543,9 +4958,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "docref"
-                ]
+                "tags": ["docref"]
             },
             {
                 "id": "model:App\\Models\\DocValue",
@@ -5568,9 +4981,7 @@
                         "value_text",
                         "value_json"
                     ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "guarded": ["*"],
                     "casts": {
                         "value_bool": "boolean",
                         "value_json": "array",
@@ -5589,9 +5000,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "docvalue"
-                ]
+                "tags": ["docvalue"]
             },
             {
                 "id": "model:App\\Models\\Entry",
@@ -5638,9 +5047,7 @@
                     "factory": "Database\\Factories\\EntryFactory"
                 },
                 "related": [],
-                "tags": [
-                    "entry"
-                ]
+                "tags": ["entry"]
             },
             {
                 "id": "model:App\\Models\\FormConfig",
@@ -5651,14 +5058,8 @@
                 "details": "Хранит конфигурацию формы компонентов для конкретной пары PostType (id) + Blueprint.\nКонфигурация представляет собой JSON объект, где ключи - это full_path из Path,\nа значения - EditComponent (конфигурация компонента редактирования).",
                 "meta": {
                     "table": "form_configs",
-                    "fillable": [
-                        "post_type_id",
-                        "blueprint_id",
-                        "config_json"
-                    ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "fillable": ["post_type_id", "blueprint_id", "config_json"],
+                    "guarded": ["*"],
                     "casts": {
                         "config_json": "array"
                     },
@@ -5675,9 +5076,7 @@
                     "factory": "Database\\Factories\\FormConfigFactory"
                 },
                 "related": [],
-                "tags": [
-                    "formconfig"
-                ]
+                "tags": ["formconfig"]
             },
             {
                 "id": "model:App\\Models\\Media",
@@ -5711,9 +5110,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "media"
-                ]
+                "tags": ["media"]
             },
             {
                 "id": "model:App\\Models\\MediaAvMetadata",
@@ -5741,9 +5138,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "mediaavmetadata"
-                ]
+                "tags": ["mediaavmetadata"]
             },
             {
                 "id": "model:App\\Models\\MediaImage",
@@ -5770,9 +5165,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "mediaimage"
-                ]
+                "tags": ["mediaimage"]
             },
             {
                 "id": "model:App\\Models\\MediaVariant",
@@ -5799,9 +5192,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "mediavariant"
-                ]
+                "tags": ["mediavariant"]
             },
             {
                 "id": "model:App\\Models\\Outbox",
@@ -5823,9 +5214,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "outbox"
-                ]
+                "tags": ["outbox"]
             },
             {
                 "id": "model:App\\Models\\Path",
@@ -5882,9 +5271,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "path"
-                ]
+                "tags": ["path"]
             },
             {
                 "id": "model:App\\Models\\PostType",
@@ -5901,9 +5288,7 @@
                         "options_json",
                         "blueprint_id"
                     ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "guarded": ["*"],
                     "casts": {
                         "options_json": "App\\Casts\\AsPostTypeOptions"
                     },
@@ -5920,9 +5305,7 @@
                     "factory": "Database\\Factories\\PostTypeFactory"
                 },
                 "related": [],
-                "tags": [
-                    "posttype"
-                ]
+                "tags": ["posttype"]
             },
             {
                 "id": "model:App\\Models\\Redirect",
@@ -5940,9 +5323,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "redirect"
-                ]
+                "tags": ["redirect"]
             },
             {
                 "id": "model:App\\Models\\RefreshToken",
@@ -5961,9 +5342,7 @@
                         "revoked_at",
                         "parent_jti"
                     ],
-                    "guarded": [
-                        "*"
-                    ],
+                    "guarded": ["*"],
                     "casts": {
                         "expires_at": "datetime",
                         "used_at": "datetime",
@@ -5978,9 +5357,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "refreshtoken"
-                ]
+                "tags": ["refreshtoken"]
             },
             {
                 "id": "model:App\\Models\\Taxonomy",
@@ -6006,9 +5383,7 @@
                     "factory": "Database\\Factories\\TaxonomyFactory"
                 },
                 "related": [],
-                "tags": [
-                    "taxonomy"
-                ]
+                "tags": ["taxonomy"]
             },
             {
                 "id": "model:App\\Models\\Term",
@@ -6053,9 +5428,7 @@
                     "factory": "Database\\Factories\\TermFactory"
                 },
                 "related": [],
-                "tags": [
-                    "term"
-                ]
+                "tags": ["term"]
             },
             {
                 "id": "model:App\\Models\\TermTree",
@@ -6073,9 +5446,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "termtree"
-                ]
+                "tags": ["termtree"]
             },
             {
                 "id": "model:App\\Models\\User",
@@ -6092,9 +5463,7 @@
                         "password",
                         "email_verified_at"
                     ],
-                    "guarded": [
-                        "is_admin"
-                    ],
+                    "guarded": ["is_admin"],
                     "casts": [],
                     "relations": {
                         "entries": {
@@ -6113,9 +5482,7 @@
                     "factory": null
                 },
                 "related": [],
-                "tags": [
-                    "user"
-                ]
+                "tags": ["user"]
             }
         ],
         "domain_service": [
@@ -6137,9 +5504,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "auth"
-                ]
+                "tags": ["auth"]
             },
             {
                 "id": "domain_service:Auth/RefreshTokenDto",
@@ -6149,10 +5514,7 @@
                 "summary": "Data Transfer Object для RefreshToken.",
                 "details": "Предоставляет типобезопасный доступ к данным refresh токена\nбез раскрытия Eloquent модели.",
                 "meta": {
-                    "methods": [
-                        "isValid",
-                        "isInvalid"
-                    ],
+                    "methods": ["isValid", "isInvalid"],
                     "dependencies": [
                         "Carbon\\Carbon",
                         "Carbon\\Carbon",
@@ -6163,9 +5525,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "auth"
-                ]
+                "tags": ["auth"]
             },
             {
                 "id": "domain_service:Auth/RefreshTokenRepositoryImpl",
@@ -6187,9 +5547,7 @@
                     "interface": "App\\Domain\\Auth\\RefreshTokenRepository"
                 },
                 "related": [],
-                "tags": [
-                    "auth"
-                ]
+                "tags": ["auth"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Adapters/LaravelValidationAdapter",
@@ -6199,20 +5557,14 @@
                 "summary": "Адаптер для преобразования доменных RuleSet в Laravel правила валидации.",
                 "details": "Преобразует доменные Rule объекты в строки правил валидации Laravel\nчерез систему handlers. Не добавляет базовые типы данных автоматически.\nПользователь сам отвечает за указание всех необходимых правил.",
                 "meta": {
-                    "methods": [
-                        "adapt"
-                    ],
+                    "methods": ["adapt"],
                     "dependencies": [
                         "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerRegistry"
                     ],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Adapters\\LaravelValidationAdapterInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "adapter"
-                ]
+                "tags": ["blueprint", "validation", "adapter"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/DataTypeMapper",
@@ -6222,18 +5574,12 @@
                 "summary": "Маппер типов данных Path в типы для валидации.",
                 "details": "Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)\nв типы для валидации (string, integer, numeric, boolean, date, array).",
                 "meta": {
-                    "methods": [
-                        "mapToValidationType",
-                        "isSupported"
-                    ],
+                    "methods": ["mapToValidationType", "isSupported"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/EntryValidationService",
@@ -6241,11 +5587,9 @@
                 "name": "EntryValidationService",
                 "path": "C:\\Users\\dattebayo\\Desktop\\proj\\stupidCms\\app/Domain\\Blueprint\\Validation\\EntryValidationService.php",
                 "summary": "Доменный сервис валидации контента Entry на основе Blueprint.",
-                "details": "Строит RuleSet для поля content_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nАвтоматически создаёт правила типов данных на основе data_type, если они не указаны явно.",
+                "details": "Строит RuleSet для поля data_json на основе структуры Path в Blueprint.\nПреобразует full_path в точечную нотацию и применяет validation_rules из каждого Path.\nАвтоматически создаёт правила типов данных на основе data_type, если они не указаны явно.",
                 "meta": {
-                    "methods": [
-                        "buildRulesFor"
-                    ],
+                    "methods": ["buildRulesFor"],
                     "dependencies": [
                         "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface",
                         "App\\Domain\\Blueprint\\Validation\\FieldPathBuilder",
@@ -6255,10 +5599,7 @@
                     "interface": "App\\Domain\\Blueprint\\Validation\\EntryValidationServiceInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/FieldPathBuilder",
@@ -6268,17 +5609,12 @@
                 "summary": "Построитель путей полей для валидации.",
                 "details": "Преобразует full_path из Path в путь для валидации с учётом cardinality.\nУчитывает специфику правил валидации (например, distinct для массивов).",
                 "meta": {
-                    "methods": [
-                        "buildFieldPath"
-                    ],
+                    "methods": ["buildFieldPath"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/PathValidationRulesConverter",
@@ -6288,19 +5624,14 @@
                 "summary": "Конвертер правил валидации из Path в доменные Rule объекты.",
                 "details": "Преобразует validation_rules из модели Path в массив доменных Rule объектов.\nНе выполняет проверок совместимости правил с типами данных или cardinality.\nПользователь сам отвечает за корректность настройки правил.",
                 "meta": {
-                    "methods": [
-                        "convert"
-                    ],
+                    "methods": ["convert"],
                     "dependencies": [
                         "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
                     ],
                     "interface": "App\\Domain\\Blueprint\\Validation\\PathValidationRulesConverterInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/RuleArrayManipulator",
@@ -6319,10 +5650,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/ConditionalRule",
@@ -6343,11 +5671,7 @@
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/DistinctRule",
@@ -6357,19 +5681,12 @@
                 "summary": "Правило валидации: уникальность элементов массива.",
                 "details": "Преобразуется в кастомное правило DistinctObjects, которое сравнивает\nэлементы массива по их JSON-сериализации. Это обеспечивает корректную\nработу с массивами объектов - объекты сравниваются как строки (по их\nJSON-представлению).\nМожет применяться к любым типам данных (простые значения и объекты).\nПользователь сам отвечает за корректность применения правила.",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams"
-                    ],
+                    "methods": ["getType", "getParams"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/FieldComparisonRule",
@@ -6390,11 +5707,7 @@
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/FieldDefinition",
@@ -6404,20 +5717,12 @@
                 "summary": "Определение поля для валидации.",
                 "details": "Содержит метаданные поля из Path, необходимые для построения правил валидации.",
                 "meta": {
-                    "methods": [
-                        "isArray",
-                        "isSingle",
-                        "hasValidationRules"
-                    ],
+                    "methods": ["isArray", "isSingle", "hasValidationRules"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/ConditionalRuleHandler",
@@ -6427,20 +5732,12 @@
                 "summary": "Обработчик правила ConditionalRule.",
                 "details": "Преобразует ConditionalRule в строку Laravel правила валидации\n(например, 'required_if:is_published,true').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/DistinctRuleHandler",
@@ -6450,20 +5747,12 @@
                 "summary": "Обработчик правила DistinctRule.",
                 "details": "Преобразует DistinctRule в кастомное правило DistinctObjects,\nкоторое сравнивает элементы массива по их JSON-сериализации.\nЭто обеспечивает корректную работу с массивами объектов.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/FieldComparisonRuleHandler",
@@ -6473,20 +5762,12 @@
                 "summary": "Обработчик правила FieldComparisonRule.",
                 "details": "Преобразует FieldComparisonRule в Laravel custom rule FieldComparison.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/MaxRuleHandler",
@@ -6496,20 +5777,12 @@
                 "summary": "Обработчик правила MaxRule.",
                 "details": "Преобразует MaxRule в строку Laravel правила валидации (например, 'max:500').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/MinRuleHandler",
@@ -6519,20 +5792,12 @@
                 "summary": "Обработчик правила MinRule.",
                 "details": "Преобразует MinRule в строку Laravel правила валидации (например, 'min:1').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/NullableRuleHandler",
@@ -6542,20 +5807,12 @@
                 "summary": "Обработчик правила NullableRule.",
                 "details": "Преобразует NullableRule в строку Laravel правила валидации ('nullable').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/PatternRuleHandler",
@@ -6565,20 +5822,12 @@
                 "summary": "Обработчик правила PatternRule.",
                 "details": "Преобразует PatternRule в строку Laravel правила валидации (например, 'regex:/pattern/').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/RequiredRuleHandler",
@@ -6588,20 +5837,12 @@
                 "summary": "Обработчик правила RequiredRule.",
                 "details": "Преобразует RequiredRule в строку Laravel правила валидации ('required').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/RuleHandlerRegistry",
@@ -6621,12 +5862,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/Handlers/TypeRuleHandler",
@@ -6636,20 +5872,12 @@
                 "summary": "Обработчик правила TypeRule.",
                 "details": "Преобразует TypeRule в строку Laravel правила валидации\n(например, 'string', 'integer', 'numeric', 'boolean', 'date', 'array').",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "handle"
-                    ],
+                    "methods": ["supports", "handle"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Handlers\\RuleHandlerInterface"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule",
-                    "handler"
-                ]
+                "tags": ["blueprint", "validation", "rule", "handler"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/MaxRule",
@@ -6659,20 +5887,12 @@
                 "summary": "Правило валидации: максимальное значение/длина.",
                 "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getValue"
-                    ],
+                    "methods": ["getType", "getParams", "getValue"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/MinRule",
@@ -6682,20 +5902,12 @@
                 "summary": "Правило валидации: минимальное значение/длина.",
                 "details": "Может применяться к любым типам данных.\nПользователь сам отвечает за корректность применения правила.",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getValue"
-                    ],
+                    "methods": ["getType", "getParams", "getValue"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/NullableRule",
@@ -6705,19 +5917,12 @@
                 "summary": "Правило валидации: поле опционально (nullable).",
                 "details": "Указывает, что поле может отсутствовать или быть null.",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams"
-                    ],
+                    "methods": ["getType", "getParams"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/PatternRule",
@@ -6727,20 +5932,12 @@
                 "summary": "Правило валидации: регулярное выражение (pattern).",
                 "details": "Применяется только к строковым типам данных (string, text).",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getPattern"
-                    ],
+                    "methods": ["getType", "getParams", "getPattern"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/RequiredRule",
@@ -6750,19 +5947,12 @@
                 "summary": "Правило валидации: поле обязательно.",
                 "details": "Указывает, что поле должно присутствовать и не может быть null или пустым.",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams"
-                    ],
+                    "methods": ["getType", "getParams"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/RuleFactoryImpl",
@@ -6787,11 +5977,7 @@
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\RuleFactory"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/RuleSet",
@@ -6813,11 +5999,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/Rules/TypeRule",
@@ -6827,20 +6009,12 @@
                 "summary": "Правило валидации: тип данных.",
                 "details": "Автоматически создаётся на основе data_type из Path.\nПреобразуется в соответствующее Laravel правило валидации (string, integer, numeric, boolean, date, array).",
                 "meta": {
-                    "methods": [
-                        "getType",
-                        "getParams",
-                        "getDataType"
-                    ],
+                    "methods": ["getType", "getParams", "getDataType"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Blueprint\\Validation\\Rules\\Rule"
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation",
-                    "rule"
-                ]
+                "tags": ["blueprint", "validation", "rule"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationConstants",
@@ -6850,17 +6024,12 @@
                 "summary": "Константы для системы валидации Blueprint.",
                 "details": null,
                 "meta": {
-                    "methods": [
-                        "getRequiredNullableRules"
-                    ],
+                    "methods": ["getRequiredNullableRules"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationError",
@@ -6870,18 +6039,12 @@
                 "summary": "Ошибка валидации с доменной семантикой.",
                 "details": "Содержит структурированную информацию об ошибке валидации:\n- путь поля\n- код ошибки (для локализации и обработки на фронтенде)\n- параметры ошибки\n- текстовое сообщение (опционально)",
                 "meta": {
-                    "methods": [
-                        "getParam",
-                        "hasParam"
-                    ],
+                    "methods": ["getParam", "hasParam"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Blueprint/Validation/ValidationResult",
@@ -6903,10 +6066,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "blueprint",
-                    "validation"
-                ]
+                "tags": ["blueprint", "validation"]
             },
             {
                 "id": "domain_service:Entries/PublishingService",
@@ -6916,16 +6076,12 @@
                 "summary": "Сервис для применения правил публикации записей.",
                 "details": "Обрабатывает логику публикации Entry: автозаполнение published_at,\nвалидация инвариантов (дата публикации не в будущем).",
                 "meta": {
-                    "methods": [
-                        "applyAndValidate"
-                    ],
+                    "methods": ["applyAndValidate"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "entry"
-                ]
+                "tags": ["entry"]
             },
             {
                 "id": "domain_service:Media/Actions/ListMediaAction",
@@ -6935,19 +6091,12 @@
                 "summary": "CQRS-действие: выборка списка медиа по параметрам запроса.",
                 "details": null,
                 "meta": {
-                    "methods": [
-                        "execute"
-                    ],
-                    "dependencies": [
-                        "App\\Domain\\Media\\MediaRepository"
-                    ],
+                    "methods": ["execute"],
+                    "dependencies": ["App\\Domain\\Media\\MediaRepository"],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "action"
-                ]
+                "tags": ["media", "action"]
             },
             {
                 "id": "domain_service:Media/Actions/MediaForceDeleteAction",
@@ -6957,17 +6106,12 @@
                 "summary": "Действие для окончательного удаления медиа-файла.",
                 "details": "Выполняет полное (hard) удаление медиа-файла: удаляет физические файлы\n(основной файл и все варианты) с диска, затем удаляет записи из БД.\nОтправляет событие MediaDeleted после успешного удаления.",
                 "meta": {
-                    "methods": [
-                        "execute"
-                    ],
+                    "methods": ["execute"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "action"
-                ]
+                "tags": ["media", "action"]
             },
             {
                 "id": "domain_service:Media/Actions/MediaStoreAction",
@@ -6977,9 +6121,7 @@
                 "summary": "Действие для сохранения медиа-файла.",
                 "details": "Обрабатывает загрузку файла: сохранение на диск, извлечение метаданных,\nсоздание записи Media в БД и (опционально) нормализованных AV-метаданных\nв отдельной таблице.\nИспользует общую систему ошибок (HttpErrorException) для обработки ошибок валидации\nи сохранения файла.",
                 "meta": {
-                    "methods": [
-                        "execute"
-                    ],
+                    "methods": ["execute"],
                     "dependencies": [
                         "App\\Domain\\Media\\Services\\MediaMetadataExtractor",
                         "App\\Domain\\Media\\Services\\StorageResolver",
@@ -6990,10 +6132,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "action"
-                ]
+                "tags": ["media", "action"]
             },
             {
                 "id": "domain_service:Media/Actions/UpdateMediaMetadataAction",
@@ -7003,17 +6142,12 @@
                 "summary": "CQRS-действие: обновление метаданных медиа (title, alt).",
                 "details": null,
                 "meta": {
-                    "methods": [
-                        "execute"
-                    ],
+                    "methods": ["execute"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "action"
-                ]
+                "tags": ["media", "action"]
             },
             {
                 "id": "domain_service:Media/DTO/MediaMetadataDTO",
@@ -7023,18 +6157,12 @@
                 "summary": "DTO для нормализованных метаданных медиа-файла.",
                 "details": "Представляет унифицированную структуру метаданных, извлечённых\nиз различных источников (ImageProcessor, ffprobe, mediainfo, exiftool).\nДанные из DTO используются для создания записей в специализированных таблицах:\n- width, height, exif → MediaImage (для изображений)\n- durationMs, bitrateKbps, frameRate, frameCount, videoCodec, audioCodec → MediaAvMetadata (для видео/аудио)",
                 "meta": {
-                    "methods": [
-                        "toArray",
-                        "fromArray"
-                    ],
+                    "methods": ["toArray", "fromArray"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "dto"
-                ]
+                "tags": ["media", "dto"]
             },
             {
                 "id": "domain_service:Media/EloquentMediaRepository",
@@ -7044,18 +6172,12 @@
                 "summary": "Реализация MediaRepository на базе Eloquent.",
                 "details": null,
                 "meta": {
-                    "methods": [
-                        "buildQuery",
-                        "paginate",
-                        "get"
-                    ],
+                    "methods": ["buildQuery", "paginate", "get"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Media\\MediaRepository"
                 },
                 "related": [],
-                "tags": [
-                    "media"
-                ]
+                "tags": ["media"]
             },
             {
                 "id": "domain_service:Media/Events/MediaDeleted",
@@ -7072,16 +6194,11 @@
                         "broadcast",
                         "restoreModel"
                     ],
-                    "dependencies": [
-                        "App\\Models\\Media"
-                    ],
+                    "dependencies": ["App\\Models\\Media"],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "event"
-                ]
+                "tags": ["media", "event"]
             },
             {
                 "id": "domain_service:Media/Events/MediaProcessed",
@@ -7105,10 +6222,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "event"
-                ]
+                "tags": ["media", "event"]
             },
             {
                 "id": "domain_service:Media/Events/MediaUploaded",
@@ -7125,16 +6239,11 @@
                         "broadcast",
                         "restoreModel"
                     ],
-                    "dependencies": [
-                        "App\\Models\\Media"
-                    ],
+                    "dependencies": ["App\\Models\\Media"],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "event"
-                ]
+                "tags": ["media", "event"]
             },
             {
                 "id": "domain_service:Media/Images/GdImageProcessor",
@@ -7157,10 +6266,7 @@
                     "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "image"
-                ]
+                "tags": ["media", "image"]
             },
             {
                 "id": "domain_service:Media/Images/GlideImageProcessor",
@@ -7179,16 +6285,11 @@
                         "destroy",
                         "supports"
                     ],
-                    "dependencies": [
-                        "Intervention\\Image\\ImageManager"
-                    ],
+                    "dependencies": ["Intervention\\Image\\ImageManager"],
                     "interface": "App\\Domain\\Media\\Images\\ImageProcessor"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "image"
-                ]
+                "tags": ["media", "image"]
             },
             {
                 "id": "domain_service:Media/Images/ImageRef",
@@ -7203,10 +6304,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "image"
-                ]
+                "tags": ["media", "image"]
             },
             {
                 "id": "domain_service:Media/Jobs/GenerateVariantJob",
@@ -7262,10 +6360,7 @@
                     "interface": "Illuminate\\Contracts\\Queue\\ShouldQueue"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "job"
-                ]
+                "tags": ["media", "job"]
             },
             {
                 "id": "domain_service:Media/Listeners/LogMediaEvent",
@@ -7284,10 +6379,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "listener"
-                ]
+                "tags": ["media", "listener"]
             },
             {
                 "id": "domain_service:Media/Listeners/NotifyMediaEvent",
@@ -7306,10 +6398,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "listener"
-                ]
+                "tags": ["media", "listener"]
             },
             {
                 "id": "domain_service:Media/Listeners/PurgeCdnCache",
@@ -7328,10 +6417,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "listener"
-                ]
+                "tags": ["media", "listener"]
             },
             {
                 "id": "domain_service:Media/MediaQuery",
@@ -7351,15 +6437,11 @@
                         "page",
                         "perPage"
                     ],
-                    "dependencies": [
-                        "App\\Domain\\Media\\MediaDeletedFilter"
-                    ],
+                    "dependencies": ["App\\Domain\\Media\\MediaDeletedFilter"],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media"
-                ]
+                "tags": ["media"]
             },
             {
                 "id": "domain_service:Media/Services/ExifManager",
@@ -7381,10 +6463,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/ExiftoolMediaMetadataPlugin",
@@ -7394,18 +6473,12 @@
                 "summary": "Плагин метаданных, основанный на утилите exiftool.",
                 "details": "Использует exiftool для извлечения детальных метаданных из изображений,\nвидео и аудио файлов. Особенно полезен для EXIF данных и метаданных,\nнедоступных через другие инструменты.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "extract"
-                    ],
+                    "methods": ["supports", "extract"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/FfprobeMediaMetadataPlugin",
@@ -7415,18 +6488,12 @@
                 "summary": "Плагин метаданных, основанный на утилите ffprobe.",
                 "details": "Использует ffprobe для извлечения длительности, битрейта и фреймов\nдля аудио/видео файлов и возвращает нормализованный набор полей.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "extract"
-                    ],
+                    "methods": ["supports", "extract"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/GetId3MediaMetadataPlugin",
@@ -7436,20 +6503,12 @@
                 "summary": "Плагин метаданных, основанный на библиотеке getID3.",
                 "details": "Использует getID3 для извлечения метаданных видео/аудио файлов.\ngetID3 - это чистая PHP библиотека, не требующая внешних утилит.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "extract"
-                    ],
-                    "dependencies": [
-                        "getID3"
-                    ],
+                    "methods": ["supports", "extract"],
+                    "dependencies": ["getID3"],
                     "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/MediaMetadataExtractor",
@@ -7459,9 +6518,7 @@
                 "summary": "Сервис для извлечения метаданных из медиа-файлов.",
                 "details": "Извлекает размеры изображений, EXIF данные и другую информацию\nиз загруженных файлов. Использует плагины (getID3, ffprobe/mediainfo/exiftool)\nс graceful fallback и кэшированием результатов.",
                 "meta": {
-                    "methods": [
-                        "extract"
-                    ],
+                    "methods": ["extract"],
                     "dependencies": [
                         "App\\Domain\\Media\\Images\\ImageProcessor",
                         "Illuminate\\Contracts\\Cache\\Repository"
@@ -7469,10 +6526,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/MediainfoMediaMetadataPlugin",
@@ -7482,18 +6536,12 @@
                 "summary": "Плагин метаданных, основанный на утилите mediainfo.",
                 "details": "Использует mediainfo для извлечения метаданных видео/аудио файлов\nс более детальной информацией, чем ffprobe (например, для некоторых форматов).",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "extract"
-                    ],
+                    "methods": ["supports", "extract"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Media\\Services\\MediaMetadataPlugin"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/OnDemandVariantService",
@@ -7503,20 +6551,14 @@
                 "summary": "Сервис для генерации вариантов медиа-файлов по требованию.",
                 "details": "Генерирует варианты изображений (thumbnails, resized) на лету\nчерез абстракцию ImageProcessor (gd/imagick/glide/external).",
                 "meta": {
-                    "methods": [
-                        "ensureVariant",
-                        "generateVariant"
-                    ],
+                    "methods": ["ensureVariant", "generateVariant"],
                     "dependencies": [
                         "App\\Domain\\Media\\Images\\ImageProcessor"
                     ],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Services/StorageResolver",
@@ -7526,18 +6568,12 @@
                 "summary": "Резолвер дисков для медиа-хранилища.",
                 "details": "Инкапсулирует логику выбора диска по типу медиа (MIME/kind),\nиспользуя конфигурацию config/media.php:\n- media.disks.kinds\n- media.disks.default",
                 "meta": {
-                    "methods": [
-                        "resolveDiskName",
-                        "filesystemForUpload"
-                    ],
+                    "methods": ["resolveDiskName", "filesystemForUpload"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "service"
-                ]
+                "tags": ["media", "service"]
             },
             {
                 "id": "domain_service:Media/Validation/CorruptionValidator",
@@ -7547,20 +6583,14 @@
                 "summary": "Валидатор проверки целостности (corruption) медиа-файлов.",
                 "details": "Проверяет, что файл не повреждён и может быть корректно обработан.\nДля изображений пытается открыть файл через ImageProcessor.\nДля видео/аудио проверка выполняется через плагины метаданных.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "validate"
-                    ],
+                    "methods": ["supports", "validate"],
                     "dependencies": [
                         "App\\Domain\\Media\\Images\\ImageProcessor"
                     ],
                     "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "validation"
-                ]
+                "tags": ["media", "validation"]
             },
             {
                 "id": "domain_service:Media/Validation/MediaConfigValidator",
@@ -7570,17 +6600,12 @@
                 "summary": "Валидатор конфигурации медиа-файлов.",
                 "details": "Проверяет корректность конфигурации, включая обязательные варианты изображений.",
                 "meta": {
-                    "methods": [
-                        "validate"
-                    ],
+                    "methods": ["validate"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "validation"
-                ]
+                "tags": ["media", "validation"]
             },
             {
                 "id": "domain_service:Media/Validation/MediaValidationPipeline",
@@ -7590,17 +6615,12 @@
                 "summary": "Pipeline валидации медиа-файлов.",
                 "details": "Последовательно применяет все зарегистрированные валидаторы к файлу.\nОстанавливается на первой ошибке валидации.",
                 "meta": {
-                    "methods": [
-                        "validate"
-                    ],
+                    "methods": ["validate"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "validation"
-                ]
+                "tags": ["media", "validation"]
             },
             {
                 "id": "domain_service:Media/Validation/MimeSignatureValidator",
@@ -7610,18 +6630,12 @@
                 "summary": "Валидатор MIME-типа по сигнатурам файла (magic bytes).",
                 "details": "Определяет реальный MIME-тип файла по его сигнатурам и сравнивает\nс заявленным типом. Защищает от подмены расширения файла.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "validate"
-                    ],
+                    "methods": ["supports", "validate"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "validation"
-                ]
+                "tags": ["media", "validation"]
             },
             {
                 "id": "domain_service:Media/Validation/SizeLimitValidator",
@@ -7631,18 +6645,12 @@
                 "summary": "Валидатор ограничений размера файла и размеров изображений/видео.",
                 "details": "Проверяет, что размер файла и размеры контента (ширина/высота для изображений,\nдлительность для видео/аудио) не превышают установленные лимиты.",
                 "meta": {
-                    "methods": [
-                        "supports",
-                        "validate"
-                    ],
+                    "methods": ["supports", "validate"],
                     "dependencies": [],
                     "interface": "App\\Domain\\Media\\Validation\\MediaValidatorInterface"
                 },
                 "related": [],
-                "tags": [
-                    "media",
-                    "validation"
-                ]
+                "tags": ["media", "validation"]
             },
             {
                 "id": "domain_service:PostTypes/PostTypeOptions",
@@ -7666,9 +6674,7 @@
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "posttype"
-                ]
+                "tags": ["posttype"]
             },
             {
                 "id": "domain_service:Routing/PathNormalizer",
@@ -7678,16 +6684,12 @@
                 "summary": "Сервис для нормализации путей.",
                 "details": "Приводит пути к единому формату: удаляет query/fragment, гарантирует ведущий слэш,\nубирает trailing слэш, приводит к нижнему регистру, применяет Unicode NFC нормализацию.",
                 "meta": {
-                    "methods": [
-                        "normalize"
-                    ],
+                    "methods": ["normalize"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "routing"
-                ]
+                "tags": ["routing"]
             },
             {
                 "id": "domain_service:Sanitizer/RichTextSanitizer",
@@ -7697,16 +6699,12 @@
                 "summary": "Сервис для санитизации HTML контента.",
                 "details": "Очищает HTML от потенциально опасных элементов и атрибутов через HTMLPurifier.\nАвтоматически добавляет rel=\"noopener noreferrer\" к ссылкам с target=\"_blank\"\nдля защиты от атак через window.opener.",
                 "meta": {
-                    "methods": [
-                        "sanitize"
-                    ],
+                    "methods": ["sanitize"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "sanitizer"
-                ]
+                "tags": ["sanitizer"]
             },
             {
                 "id": "domain_service:View/BladeTemplateResolver",
@@ -7716,18 +6714,14 @@
                 "summary": "Резолвер для выбора Blade-шаблона на основе полей template.",
                 "details": "Приоритет выбора шаблона:\n1. Entry.template_override (если задано — используется как полное имя вью)\n2. PostType.template (если задано)\n3. templates.index (дефолтный шаблон)\nВсе шаблоны должны находиться в папке templates или дочерних папках.",
                 "meta": {
-                    "methods": [
-                        "forEntry"
-                    ],
+                    "methods": ["forEntry"],
                     "dependencies": [
                         "App\\Domain\\View\\TemplatePathValidator"
                     ],
                     "interface": "App\\Domain\\View\\TemplateResolver"
                 },
                 "related": [],
-                "tags": [
-                    "view"
-                ]
+                "tags": ["view"]
             },
             {
                 "id": "domain_service:View/TemplatePathValidator",
@@ -7737,18 +6731,12 @@
                 "summary": "Валидатор путей шаблонов.",
                 "details": "Проверяет, что шаблон находится в папке templates или дочерних папках.\nВсе остальные директории считаются системными и недоступны для шаблонов.",
                 "meta": {
-                    "methods": [
-                        "validate",
-                        "normalize",
-                        "ensurePrefix"
-                    ],
+                    "methods": ["validate", "normalize", "ensurePrefix"],
                     "dependencies": [],
                     "interface": null
                 },
                 "related": [],
-                "tags": [
-                    "view"
-                ]
+                "tags": ["view"]
             }
         ],
         "blade_view": [
@@ -7761,16 +6749,12 @@
                 "details": null,
                 "meta": {
                     "role": "page",
-                    "variables": [
-                        "path"
-                    ],
+                    "variables": ["path"],
                     "extends": null,
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/home/default.blade.php",
@@ -7786,9 +6770,7 @@
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/app.blade.php",
@@ -7801,15 +6783,10 @@
                     "role": "page",
                     "variables": [],
                     "extends": null,
-                    "includes": [
-                        "partials.header",
-                        "partials.footer"
-                    ]
+                    "includes": ["partials.header", "partials.footer"]
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/layouts/public.blade.php",
@@ -7825,9 +6802,7 @@
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/pages/show.blade.php",
@@ -7838,16 +6813,12 @@
                 "details": null,
                 "meta": {
                     "role": "page",
-                    "variables": [
-                        "entry"
-                    ],
+                    "variables": ["entry"],
                     "extends": "layouts.public",
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/partials/footer.blade.php",
@@ -7863,9 +6834,7 @@
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/partials/header.blade.php",
@@ -7881,9 +6850,7 @@
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             },
             {
                 "id": "blade_view:C:/Users/dattebayo/Desktop/proj/stupidCms/resources/views/templates/index.blade.php",
@@ -7894,19 +6861,12 @@
                 "details": null,
                 "meta": {
                     "role": "page",
-                    "variables": [
-                        "entry",
-                        "html",
-                        "content",
-                        "bodyHtml"
-                    ],
+                    "variables": ["entry", "html", "content", "bodyHtml"],
                     "extends": "layouts.app",
                     "includes": []
                 },
                 "related": [],
-                "tags": [
-                    "page"
-                ]
+                "tags": ["page"]
             }
         ],
         "config_area": [
@@ -7934,16 +6894,10 @@
                         "driver",
                         "store"
                     ],
-                    "sections": [
-                        "previous_keys",
-                        "maintenance"
-                    ]
+                    "sections": ["previous_keys", "maintenance"]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "app"
-                ]
+                "tags": ["config", "app"]
             },
             {
                 "id": "config_area:auth",
@@ -7983,10 +6937,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "auth"
-                ]
+                "tags": ["config", "auth"]
             },
             {
                 "id": "config_area:blueprint",
@@ -8005,10 +6956,7 @@
                     "sections": []
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "blueprint"
-                ]
+                "tags": ["config", "blueprint"]
             },
             {
                 "id": "config_area:cache",
@@ -8066,10 +7014,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "cache"
-                ]
+                "tags": ["config", "cache"]
             },
             {
                 "id": "config_area:cors",
@@ -8098,10 +7043,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "cors"
-                ]
+                "tags": ["config", "cors"]
             },
             {
                 "id": "config_area:database",
@@ -8167,10 +7109,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "database"
-                ]
+                "tags": ["config", "database"]
             },
             {
                 "id": "config_area:docs",
@@ -8209,10 +7148,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "docs"
-                ]
+                "tags": ["config", "docs"]
             },
             {
                 "id": "config_area:errors",
@@ -8254,10 +7190,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "errors"
-                ]
+                "tags": ["config", "errors"]
             },
             {
                 "id": "config_area:filesystems",
@@ -8299,10 +7232,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "filesystems"
-                ]
+                "tags": ["config", "filesystems"]
             },
             {
                 "id": "config_area:jwt",
@@ -8328,15 +7258,10 @@
                         "samesite",
                         "path"
                     ],
-                    "sections": [
-                        "cookies"
-                    ]
+                    "sections": ["cookies"]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "jwt"
-                ]
+                "tags": ["config", "jwt"]
             },
             {
                 "id": "config_area:logging",
@@ -8399,10 +7324,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "logging"
-                ]
+                "tags": ["config", "logging"]
             },
             {
                 "id": "config_area:mail",
@@ -8458,10 +7380,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "mail"
-                ]
+                "tags": ["config", "mail"]
             },
             {
                 "id": "config_area:media",
@@ -8522,10 +7441,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "media"
-                ]
+                "tags": ["config", "media"]
             },
             {
                 "id": "config_area:purifier",
@@ -8574,10 +7490,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "purifier"
-                ]
+                "tags": ["config", "purifier"]
             },
             {
                 "id": "config_area:queue",
@@ -8629,10 +7542,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "queue"
-                ]
+                "tags": ["config", "queue"]
             },
             {
                 "id": "config_area:scribe",
@@ -8737,10 +7647,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "scribe"
-                ]
+                "tags": ["config", "scribe"]
             },
             {
                 "id": "config_area:security",
@@ -8759,15 +7666,10 @@
                         "domain",
                         "path"
                     ],
-                    "sections": [
-                        "csrf"
-                    ]
+                    "sections": ["csrf"]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "security"
-                ]
+                "tags": ["config", "security"]
             },
             {
                 "id": "config_area:services",
@@ -8798,10 +7700,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "services"
-                ]
+                "tags": ["config", "services"]
             },
             {
                 "id": "config_area:session",
@@ -8829,15 +7728,10 @@
                         "same_site",
                         "partitioned"
                     ],
-                    "sections": [
-                        "lottery"
-                    ]
+                    "sections": ["lottery"]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "session"
-                ]
+                "tags": ["config", "session"]
             },
             {
                 "id": "config_area:stupidcms",
@@ -8909,10 +7803,7 @@
                     ]
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "stupidcms"
-                ]
+                "tags": ["config", "stupidcms"]
             },
             {
                 "id": "config_area:view_templates",
@@ -8922,16 +7813,11 @@
                 "summary": "Configuration: View_templates",
                 "details": null,
                 "meta": {
-                    "keys": [
-                        "default"
-                    ],
+                    "keys": ["default"],
                     "sections": []
                 },
                 "related": [],
-                "tags": [
-                    "config",
-                    "view_templates"
-                ]
+                "tags": ["config", "view_templates"]
             }
         ],
         "http_endpoint": [
@@ -8951,9 +7837,7 @@
                     "responses": []
                 },
                 "related": [],
-                "tags": [
-                    "web"
-                ]
+                "tags": ["web"]
             },
             {
                 "id": "http_endpoint:POST:/api/v1/auth/login",
@@ -10797,9 +9681,7 @@
                     "responses": []
                 },
                 "related": [],
-                "tags": [
-                    "storage"
-                ]
+                "tags": ["storage"]
             }
         ]
     },

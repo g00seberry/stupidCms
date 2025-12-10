@@ -9,7 +9,7 @@ use App\Models\PostType;
 use App\Models\User;
 
 /**
- * Feature-тесты для валидации content_json через Blueprint.
+ * Feature-тесты для валидации data_json через Blueprint.
  *
  * Тестирует интеграцию:
  * - EntryValidationService
@@ -73,13 +73,13 @@ beforeEach(function () {
     ]);
 });
 
-test('entry creation validates content_json with required field', function () {
+test('entry creation validates data_json with required field', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 // title отсутствует - должно быть ошибка валидации
                 'description' => 'Some description',
                 'price' => 100,
@@ -87,26 +87,26 @@ test('entry creation validates content_json with required field', function () {
         ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.title']);
+    $response->assertJsonValidationErrors(['data_json.title']);
 });
 
-test('entry creation validates content_json with min rule', function () {
+test('entry creation validates data_json with min rule', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 'title' => 'Hi', // Меньше 5 символов - должно быть ошибка
                 'price' => 100,
             ],
         ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.title']);
+    $response->assertJsonValidationErrors(['data_json.title']);
 });
 
-test('entry creation validates content_json with max rule', function () {
+test('entry creation validates data_json with max rule', function () {
     $longTitle = str_repeat('a', 101); // Больше 100 символов
 
     $response = $this->actingAs($this->user)
@@ -114,23 +114,23 @@ test('entry creation validates content_json with max rule', function () {
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 'title' => $longTitle,
                 'price' => 100,
             ],
         ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.title']);
+    $response->assertJsonValidationErrors(['data_json.title']);
 });
 
-test('entry creation validates content_json with nullable field', function () {
+test('entry creation validates data_json with nullable field', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 'title' => 'Valid Title',
                 'price' => 100,
                 // description отсутствует, но nullable - должно пройти
@@ -140,13 +140,13 @@ test('entry creation validates content_json with nullable field', function () {
     $response->assertCreated();
 });
 
-test('entry creation validates content_json with valid data', function () {
+test('entry creation validates data_json with valid data', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 'title' => 'Valid Title',
                 'description' => 'Valid description with more than 10 chars',
                 'price' => 100,
@@ -160,7 +160,7 @@ test('entry creation validates content_json with valid data', function () {
     ]);
 });
 
-test('entry creation validates content_json with min rule for numeric field', function () {
+test('entry creation validates data_json with min rule for numeric field', function () {
     // TODO: Laravel min правило для числовых значений проверяет минимальное значение,
     // но может не работать для отрицательных чисел без дополнительных правил.
     // Для полноценной проверки нужно:
@@ -171,7 +171,7 @@ test('entry creation validates content_json with min rule for numeric field', fu
     $this->markTestSkipped('Laravel min rule для числовых значений требует дополнительной настройки');
 });
 
-test('entry update validates content_json with Blueprint rules', function () {
+test('entry update validates data_json with Blueprint rules', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'title' => 'Original Title',
@@ -184,17 +184,17 @@ test('entry update validates content_json with Blueprint rules', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'content_json' => [
+            'data_json' => [
                 'title' => 'Hi', // Меньше 5 символов - должно быть ошибка
                 'price' => 100,
             ],
         ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.title']);
+    $response->assertJsonValidationErrors(['data_json.title']);
 });
 
-test('entry update validates content_json with valid data', function () {
+test('entry update validates data_json with valid data', function () {
     $entry = Entry::factory()->create([
         'post_type_id' => $this->postType->id,
         'title' => 'Original Title',
@@ -207,7 +207,7 @@ test('entry update validates content_json with valid data', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'content_json' => [
+            'data_json' => [
                 'title' => 'Updated Valid Title',
                 'description' => 'Updated description with more than 10 chars',
                 'price' => 200,
@@ -220,7 +220,7 @@ test('entry update validates content_json with valid data', function () {
     expect($entry->data_json['price'])->toBe(200);
 });
 
-test('entry creation without Blueprint does not validate content_json', function () {
+test('entry creation without Blueprint does not validate data_json', function () {
     // Создаём PostType без Blueprint
     $postTypeWithoutBlueprint = PostType::factory()->create([
         'name' => 'Simple',
@@ -232,7 +232,7 @@ test('entry creation without Blueprint does not validate content_json', function
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $postTypeWithoutBlueprint->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 'any_field' => 'any_value',
             ],
         ]);
@@ -241,17 +241,17 @@ test('entry creation without Blueprint does not validate content_json', function
     $response->assertCreated();
 });
 
-test('entry creation with empty content_json validates required fields', function () {
+test('entry creation with empty data_json validates required fields', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [], // Пустой массив, но title и price обязательны
+            'data_json' => [], // Пустой массив, но title и price обязательны
         ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.title', 'content_json.price']);
+    $response->assertJsonValidationErrors(['data_json.title', 'data_json.price']);
 });
 
 test('entry creation with nested paths validates correctly', function () {
@@ -283,7 +283,7 @@ test('entry creation with nested paths validates correctly', function () {
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'content_json' => [
+            'data_json' => [
                 'title' => 'Valid Title',
                 'price' => 100,
                 'author' => [
@@ -293,6 +293,6 @@ test('entry creation with nested paths validates correctly', function () {
         ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['content_json.author.name']);
+    $response->assertJsonValidationErrors(['data_json.author.name']);
 });
 
