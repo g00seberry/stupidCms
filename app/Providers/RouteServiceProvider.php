@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Repositories\RouteNodeRepository;
+use App\Services\DynamicRoutes\DeclarativeRouteLoader;
 use App\Services\DynamicRoutes\DynamicRouteCache;
 use App\Services\DynamicRoutes\DynamicRouteGuard;
 use App\Services\DynamicRoutes\DynamicRouteRegistrar;
@@ -72,38 +73,11 @@ class RouteServiceProvider extends ServiceProvider
             // Порядок загрузки роутов (детерминированный):
             // 1) Core → 2) Public API → 3) Admin API → 4) Content → 5) Dynamic Routes → 6) Fallback
             
-            // 1) System/Core routes - загружаются первыми
-            // Включают: /, статические сервисные пути
-            // Используют middleware('web') для веб-запросов с CSRF
-            Route::middleware('web')
-                ->group(base_path('routes/web_core.php'));
-
-            // 2) Public API routes - загружаются после core, но ДО admin API
-            // Включают: /api/v1/auth/login и другие публичные API endpoints
-            // Используют middleware('api') для stateless API без CSRF
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
-
-            // 3) Admin API routes - загружаются после public API, но ДО плагинов
-            // КРИТИЧНО: должны быть до плагинов, чтобы /api/v1/admin/* не перехватывались catch-all
-            // Используют middleware('api') для stateless API без CSRF
-            Route::middleware('api')
-                ->prefix('api/v1/admin')
-                ->group(base_path('routes/api_admin.php'));
-
-            // 4) Taxonomies & Content routes - загружаются четвёртыми
-            // Включают: динамические контентные маршруты, таксономии
-            // Catch-all маршруты должны быть здесь, а не в core
-            // Middleware CanonicalUrl применяется в глобальной web-группе (см. bootstrap/app.php)
-            // и выполняет 301 редиректы ДО роутинга
-            Route::middleware('web')
-                ->group(base_path('routes/web_content.php'));
-
-            // 5) Dynamic Routes - загружаются после content, но ДО fallback
-            // Маршруты из БД (route_nodes), управляемые через конструктор
-            // Проверка существования таблицы для graceful degradation при миграциях
-            $this->registerDynamicRoutes();
+            // 1-5) Декларативные и динамические маршруты
+            // Регистрируются через единый DynamicRouteRegistrar::register()
+            // Декларативные и динамические маршруты объединены в общее дерево через RouteNodeRepository::getEnabledTree()
+            // Порядок: декларативные (web_core.php → api.php → api_admin.php → web_content.php) → динамические из БД
+            $this->registerAllRoutes();
 
             // 6) Fallback - строго последним
             // Обрабатывает все несовпавшие запросы (404) для ВСЕХ HTTP методов
@@ -122,31 +96,32 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Зарегистрировать динамические маршруты из БД.
+     * Зарегистрировать все маршруты (декларативные и динамические).
      *
-     * Загружает маршруты из таблицы route_nodes и регистрирует их через DynamicRouteRegistrar.
-     * Проверяет существование таблицы для graceful degradation при миграциях.
+     * Создаёт единый экземпляр DynamicRouteRegistrar с DeclarativeRouteLoader
+     * и регистрирует все маршруты через метод register().
+     * Порядок регистрации: декларативные → динамические из БД.
      * При ошибке регистрации логирует, но не прерывает загрузку приложения.
      *
      * @return void
      */
-    private function registerDynamicRoutes(): void
+    private function registerAllRoutes(): void
     {
-        // Проверка существования таблицы для graceful degradation при миграциях
-        if (! Schema::hasTable('route_nodes')) {
-            return;
-        }
-
         try {
+            $loader = new DeclarativeRouteLoader();
             $cache = app(DynamicRouteCache::class);
-            $repository = new RouteNodeRepository($cache);
-            $guard = new DynamicRouteGuard();
+            $repository = new RouteNodeRepository($cache, $loader);
+            $guard = new DynamicRouteGuard($repository, $loader);
             $registrar = new DynamicRouteRegistrar($repository, $guard);
 
+            // Регистрируем все маршруты (декларативные и динамические)
+            // Декларативные и динамические маршруты объединены в общее дерево через RouteNodeRepository::getEnabledTree()
+            // Порядок: декларативные маршруты идут первыми (имеют приоритет)
+            // Если таблицы route_nodes нет, динамические маршруты просто не загрузятся
             $registrar->register();
         } catch (\Throwable $e) {
             // Логируем ошибку, но не прерываем загрузку приложения
-            Log::error('Dynamic routes: ошибка при регистрации маршрутов в RouteServiceProvider', [
+            Log::error('Routes: ошибка при регистрации маршрутов', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

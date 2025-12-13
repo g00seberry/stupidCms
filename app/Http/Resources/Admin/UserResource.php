@@ -42,7 +42,6 @@ class UserResource extends AdminJsonResource
      */
     public function toArray($request): array
     {
-        /** @var User $user */
         $user = $this->resource;
 
         return [

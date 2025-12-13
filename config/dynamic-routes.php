@@ -24,10 +24,15 @@ return [
     | Параметризованные middleware поддерживаются через паттерны:
     | - 'can:*' - разрешает все middleware вида can:action,Model
     | - 'throttle:*' - разрешает все middleware вида throttle:60,1
+    | - 'App\Http\Middleware\*' - разрешает все middleware из этого namespace
     |
     | Примеры:
     | - 'web' - стандартный web middleware (CSRF, сессии)
+    | - 'api' - стандартный api middleware (stateless, без CSRF)
     | - 'auth' - требует аутентификации
+    | - 'jwt.auth' - JWT аутентификация
+    | - 'jwt.auth.optional' - опциональная JWT аутентификация
+    | - 'no-cache-auth' - запрет кэширования для auth endpoints
     | - 'can:view,Entry' - проверка прав доступа
     | - 'throttle:60,1' - rate limiting
     |
@@ -40,6 +45,13 @@ return [
         'verified',
         'can:*', // Параметризованный: can:action,Model
         'throttle:*', // Параметризованный: throttle:maxAttempts,decayMinutes
+        // JWT middleware
+        'jwt.auth',
+        'jwt.auth.optional',
+        // Cache control middleware
+        'no-cache-auth',
+        // Custom middleware classes (wildcard для всех middleware из App\Http\Middleware)
+        'App\\Http\\Middleware\\*',
     ],
 
     /*

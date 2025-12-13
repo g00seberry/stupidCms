@@ -8,6 +8,7 @@ use App\Enums\RouteNodeActionType;
 use App\Enums\RouteNodeKind;
 use App\Rules\ControllerActionFormatRule;
 use App\Rules\ReservedPrefixRule;
+use App\Rules\RouteConflictRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -76,7 +77,13 @@ class StoreRouteNodeRequest extends FormRequest
             'namespace' => ['nullable', 'string', 'max:255'],
             'methods' => ['nullable', 'array'],
             'methods.*' => [Rule::in($httpMethods)],
-            'uri' => ['nullable', 'string', 'max:255', new ReservedPrefixRule()],
+            'uri' => [
+                'nullable',
+                'string',
+                'max:255',
+                new ReservedPrefixRule(),
+                new RouteConflictRule(),
+            ],
             'action_type' => ['required', Rule::in($actionTypeValues)],
             'action' => [
                 'nullable',

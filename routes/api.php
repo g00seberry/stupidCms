@@ -1,48 +1,68 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\RefreshController;
-use App\Http\Controllers\MediaPreviewController;
-use Illuminate\Support\Facades\Route;
+declare(strict_types=1);
+
+use App\Enums\RouteNodeActionType;
+use App\Enums\RouteNodeKind;
 
 /**
- * Public API routes.
- * 
- * Загружаются с middleware('api'), что обеспечивает:
- * - CSRF защиту для state-changing запросов (POST, PUT, PATCH, DELETE)
- *   исключая api.auth.login, api.auth.refresh, api.auth.logout (проверяется через routeIs)
- * - Throttle для защиты от злоупотреблений
- * - Правильную обработку JSON запросов
- * 
- * Безопасность:
- * - Rate limiting настроен для каждого endpoint отдельно
- * - Все публичные state-changing операции либо excluded из CSRF (auth endpoints),
- *   либо защищены JWT auth (админские endpoints в routes/api_admin.php)
- * - Для кросс-сайтовых запросов (SPA на другом origin) требуется:
- *   - SameSite=None; Secure для cookies
- *   - CORS с credentials: true
+ * Декларативные маршруты для публичного API.
+ *
+ * Эти маршруты загружаются автоматически и имеют приоритет над маршрутами из БД.
+ * Используются для статических системных маршрутов, которые не должны изменяться через UI.
+ *
+ * @return array<int, array<string, mixed>>
  */
-Route::prefix('v1')->group(function () {
-    // Authentication endpoints
-    // Cache-Control: no-store prevents caching of auth responses
-    Route::post('/auth/login', [LoginController::class, 'login'])
-        ->name('api.auth.login')
-        ->middleware(['throttle:login', 'no-cache-auth']);
-    
-    Route::post('/auth/refresh', [RefreshController::class, 'refresh'])
-        ->name('api.auth.refresh')
-        ->middleware(['throttle:refresh', 'no-cache-auth']);
-
-    // Logout requires authentication - CSRF not needed with JWT guard
-    Route::post('/auth/logout', [LogoutController::class, 'logout'])
-        ->name('api.auth.logout')
-        ->middleware(['jwt.auth', 'throttle:login', 'no-cache-auth']);
-
-    // Public media access with signed URLs (supports variants via ?variant=thumbnail)
-    // Optional JWT auth allows admins to access deleted files even on public routes
-    Route::get('/media/{id}', [MediaPreviewController::class, 'show'])
-        ->middleware(['jwt.auth.optional', 'throttle:api'])
-        ->name('api.v1.media.show');
-});
+return [
+    // Группа для публичных API маршрутов
+    // Полный префикс: api/v1
+    // Middleware группа 'api' применяется в RouteServiceProvider через Route::middleware('api')
+    // sort_order = -999 (второй в порядке регистрации)
+    [
+        'kind' => RouteNodeKind::GROUP,
+        'sort_order' => -999,
+        'prefix' => 'api/v1',
+        'middleware' => ['api'],
+        'children' => [
+            // Authentication endpoints
+            [
+                'kind' => RouteNodeKind::ROUTE,
+                'uri' => '/auth/login',
+                'methods' => ['POST'],
+                'action_type' => RouteNodeActionType::CONTROLLER,
+                'action' => 'App\Http\Controllers\Auth\LoginController@login',
+                'name' => 'api.auth.login',
+                'middleware' => ['throttle:login', 'no-cache-auth'],
+            ],
+            [
+                'kind' => RouteNodeKind::ROUTE,
+                'uri' => '/auth/refresh',
+                'methods' => ['POST'],
+                'action_type' => RouteNodeActionType::CONTROLLER,
+                'action' => 'App\Http\Controllers\Auth\RefreshController@refresh',
+                'name' => 'api.auth.refresh',
+                'middleware' => ['throttle:refresh', 'no-cache-auth'],
+            ],
+            [
+                'kind' => RouteNodeKind::ROUTE,
+                'uri' => '/auth/logout',
+                'methods' => ['POST'],
+                'action_type' => RouteNodeActionType::CONTROLLER,
+                'action' => 'App\Http\Controllers\Auth\LogoutController@logout',
+                'name' => 'api.auth.logout',
+                'middleware' => ['jwt.auth', 'throttle:login', 'no-cache-auth'],
+            ],
+            // Public media access
+            [
+                'kind' => RouteNodeKind::ROUTE,
+                'uri' => '/media/{id}',
+                'methods' => ['GET'],
+                'action_type' => RouteNodeActionType::CONTROLLER,
+                'action' => 'App\Http\Controllers\MediaPreviewController@show',
+                'name' => 'api.v1.media.show',
+                'middleware' => ['jwt.auth.optional', 'throttle:api'],
+            ],
+        ],
+    ],
+];
 

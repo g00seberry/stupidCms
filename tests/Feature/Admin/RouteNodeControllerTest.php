@@ -121,7 +121,7 @@ test('DELETE /api/v1/admin/routes/{id} удаляет узел → 204', functio
     ]);
 });
 
-test('GET /api/v1/admin/routes возвращает список узлов', function () {
+test('GET /api/v1/admin/routes возвращает список всех маршрутов (декларативные + из БД)', function () {
 
     RouteNode::factory()->count(3)->route()->create();
 
@@ -130,16 +130,32 @@ test('GET /api/v1/admin/routes возвращает список узлов', fu
     $response->assertStatus(200)
         ->assertJsonStructure([
             'data' => [
-                '*' => [
-                    'id',
-                    'kind',
-                    'uri',
-                    'action_type',
+                'declarative' => [
+                    '*' => [
+                        'id',
+                        'uri',
+                        'methods',
+                        'name',
+                        'source',
+                    ],
+                ],
+                'database' => [
+                    '*' => [
+                        'id',
+                        'uri',
+                        'methods',
+                        'name',
+                        'source',
+                    ],
                 ],
             ],
-            'links',
-            'meta',
         ]);
+    
+    // Проверяем, что есть декларативные маршруты
+    $response->assertJsonPath('data.declarative', fn ($value) => is_array($value));
+    
+    // Проверяем, что есть маршруты из БД
+    $response->assertJsonPath('data.database', fn ($value) => is_array($value) && count($value) === 3);
 });
 
 test('DELETE /api/v1/admin/routes/{id} каскадно удаляет дочерние узлы', function () {

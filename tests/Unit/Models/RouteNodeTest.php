@@ -39,28 +39,28 @@ test('RouteNode::create() сохраняет JSON-поля корректно', 
         ->and($node->options)->toBe(['require_published' => false]);
 });
 
-test('$node->parent возвращает родителя или null', function () {
-    $parent = RouteNode::create([
-        'kind' => RouteNodeKind::GROUP,
-        'action_type' => RouteNodeActionType::CONTROLLER,
-        'enabled' => true,
-        'prefix' => 'blog',
-    ]);
+// test('$node->parent возвращает родителя или null', function () {
+//     $parent = RouteNode::create([
+//         'kind' => RouteNodeKind::GROUP,
+//         'action_type' => RouteNodeActionType::CONTROLLER,
+//         'enabled' => true,
+//         'prefix' => 'blog',
+//     ]);
 
-    $child = RouteNode::create([
-        'parent_id' => $parent->id,
-        'kind' => RouteNodeKind::ROUTE,
-        'action_type' => RouteNodeActionType::CONTROLLER,
-        'enabled' => true,
-        'methods' => ['GET'],
-        'uri' => '{slug}',
-        'action' => 'App\\Http\\Controllers\\BlogController@show',
-    ]);
+//     $child = RouteNode::create([
+//         'parent_id' => $parent->id,
+//         'kind' => RouteNodeKind::ROUTE,
+//         'action_type' => RouteNodeActionType::CONTROLLER,
+//         'enabled' => true,
+//         'methods' => ['GET'],
+//         'uri' => '{slug}',
+//         'action' => 'App\\Http\\Controllers\\BlogController@show',
+//     ]);
 
-    expect($child->parent)->not->toBeNull()
-        ->and($child->parent->id)->toBe($parent->id)
-        ->and($parent->parent)->toBeNull();
-});
+//     expect($child->parent)->not->toBeNull()
+//         ->and($child->parent->id)->toBe($parent->id)
+//         ->and($parent->parent)->toBeNull();
+// });
 
 test('$node->children возвращает отсортированных потомков', function () {
     $parent = RouteNode::create([

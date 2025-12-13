@@ -8,17 +8,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReorderRouteNodesRequest;
 use App\Http\Requests\Admin\StoreRouteNodeRequest;
 use App\Http\Requests\Admin\UpdateRouteNodeRequest;
-use App\Http\Resources\Admin\RouteNodeCollection;
+use App\Enums\RouteNodeKind;
 use App\Http\Resources\Admin\RouteNodeResource;
 use App\Models\RouteNode;
+use App\Repositories\RouteNodeRepository;
+use App\Services\DynamicRoutes\DeclarativeRouteLoader;
+use App\Services\DynamicRoutes\DynamicRouteCache;
 use App\Services\DynamicRoutes\RouteNodeDeletionService;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -42,33 +47,35 @@ class RouteNodeController extends Controller
     }
 
     /**
-     * Список узлов маршрутов.
+     * Список всех маршрутов (декларативные + из БД).
+     *
+     * Возвращает объединённый список всех маршрутов с меткой источника.
+     * Используется для отображения всех маршрутов в UI.
      *
      * @group Admin ▸ Routes
-     * @name List route nodes
+     * @name List all routes
      * @authenticated
-     * @queryParam parent_id int Фильтр по ID родителя. Example: 1
-     * @queryParam kind string Фильтр по типу. Values: group,route. Example: route
-     * @queryParam enabled boolean Фильтр по статусу. Example: true
-     * @queryParam per_page int Размер страницы (10-100). Default: 15.
      * @response status=200 {
-     *   "data": [
-     *     {
-     *       "id": 1,
-     *       "parent_id": null,
-     *       "sort_order": 0,
-     *       "enabled": true,
-     *       "kind": "route",
-     *       "name": "home",
-     *       "uri": "/",
-     *       "action_type": "controller",
-     *       "action": "App\\Http\\Controllers\\HomeController",
-     *       "created_at": "2025-01-10T12:00:00+00:00",
-     *       "updated_at": "2025-01-10T12:00:00+00:00"
-     *     }
-     *   ],
-     *   "links": {...},
-     *   "meta": {...}
+     *   "data": {
+     *     "declarative": [
+     *       {
+     *         "id": -1,
+     *         "uri": "/",
+     *         "methods": ["GET"],
+     *         "name": "home",
+     *         "source": "web_core.php"
+     *       }
+     *     ],
+     *     "database": [
+     *       {
+     *         "id": 1,
+     *         "uri": "/about",
+     *         "methods": ["GET"],
+     *         "name": "about",
+     *         "source": "database"
+     *       }
+     *     ]
+     *   }
      * }
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
@@ -77,47 +84,37 @@ class RouteNodeController extends Controller
      *   "code": "UNAUTHORIZED"
      * }
      */
-    public function index(Request $request): RouteNodeCollection
+    public function index(Request $request): JsonResponse
     {
         $this->authorize('viewAny', RouteNode::class);
 
-        $query = RouteNode::query()
-            ->with(['parent', 'children', 'entry']);
+        $cache = app(DynamicRouteCache::class);
+        $loader = new DeclarativeRouteLoader();
+        $repository = new RouteNodeRepository($cache, $loader);
 
-        // Фильтр по parent_id
-        if ($request->has('parent_id')) {
-            $parentId = $request->input('parent_id');
-            if ($parentId === 'null' || $parentId === null) {
-                $query->whereNull('parent_id');
+        // Разделяем декларативные и динамические маршруты из общего дерева
+        $allNodes = $repository->getEnabledTree();
+        $declarativeNodes = new Collection();
+        $databaseNodes = new Collection();
+
+        foreach ($allNodes as $node) {
+            $source = $node->options['source'] ?? 'database';
+            if ($source === 'declarative' || isset($node->options['declarative'])) {
+                $declarativeNodes->push($node);
             } else {
-                $query->where('parent_id', (int) $parentId);
+                $databaseNodes->push($node);
             }
         }
 
-        // Фильтр по kind
-        if ($request->has('kind')) {
-            $kind = $request->input('kind');
-            if (in_array($kind, ['group', 'route'], true)) {
-                $query->where('kind', $kind);
-            }
-        }
+        $declarativeRoutes = $this->flattenRoutes($declarativeNodes, 'declarative');
+        $databaseRoutes = $this->flattenRoutes($databaseNodes, 'database');
 
-        // Фильтр по enabled
-        if ($request->has('enabled')) {
-            $enabled = filter_var($request->input('enabled'), FILTER_VALIDATE_BOOLEAN);
-            $query->where('enabled', $enabled);
-        }
-
-        // Сортировка
-        $query->orderBy('sort_order')->orderBy('id');
-
-        // Пагинация
-        $perPage = (int) ($request->input('per_page', 15));
-        $perPage = max(10, min(100, $perPage));
-
-        $collection = $query->paginate($perPage);
-
-        return new RouteNodeCollection($collection);
+        return response()->json([
+            'data' => [
+                'declarative' => $declarativeRoutes,
+                'database' => $databaseRoutes,
+            ],
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -417,6 +414,55 @@ class RouteNodeController extends Controller
                 ['error' => $e->getMessage()],
             );
         }
+    }
+
+
+    /**
+     * Преобразовать дерево маршрутов в плоский список.
+     *
+     * Рекурсивно обходит дерево и собирает только маршруты (не группы).
+     *
+     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\RouteNode> $nodes Коллекция узлов
+     * @param string $source Источник маршрутов
+     * @return array<int, array<string, mixed>> Плоский список маршрутов
+     */
+    private function flattenRoutes(Collection $nodes, string $source): array
+    {
+        $routes = [];
+
+        foreach ($nodes as $node) {
+            if ($node->kind === RouteNodeKind::GROUP) {
+                // Для группы рекурсивно обрабатываем детей
+                if ($node->relationLoaded('children') && $node->children) {
+                    $childRoutes = $this->flattenRoutes($node->children, $source);
+                    $routes = array_merge($routes, $childRoutes);
+                }
+            } elseif ($node->kind === RouteNodeKind::ROUTE) {
+                // Для маршрута добавляем в список
+                $routeData = [
+                    'id' => $node->id,
+                    'uri' => $node->uri,
+                    'methods' => $node->methods,
+                    'name' => $node->name,
+                    'action_type' => $node->action_type?->value,
+                    'action' => $node->action,
+                    'enabled' => $node->enabled,
+                    'source' => $node->options['source'] ?? $source,
+                ];
+
+                if ($node->domain) {
+                    $routeData['domain'] = $node->domain;
+                }
+
+                if ($node->middleware) {
+                    $routeData['middleware'] = $node->middleware;
+                }
+
+                $routes[] = $routeData;
+            }
+        }
+
+        return $routes;
     }
 }
 

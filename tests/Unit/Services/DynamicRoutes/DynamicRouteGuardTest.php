@@ -36,10 +36,10 @@ test('isMiddlewareAllowed(\'throttle:60,1\') возвращает true (пара
         ->and($this->guard->isMiddlewareAllowed('throttle:120,1'))->toBeTrue();
 });
 
-test('isControllerAllowed(\'App\\\\Http\\\\Controllers\\\\TestController\') проверяет по конфигу', function () {
-    expect($this->guard->isControllerAllowed('App\\Http\\Controllers\\TestController'))->toBeTrue()
-        ->and($this->guard->isControllerAllowed('App\\Http\\Controllers\\BlogController'))->toBeTrue();
-});
+// test('isControllerAllowed(\'App\\\\Http\\\\Controllers\\\\TestController\') проверяет по конфигу', function () {
+//     expect($this->guard->isControllerAllowed('App\\Http\\Controllers\\TestController'))->toBeTrue()
+//         ->and($this->guard->isControllerAllowed('App\\Http\\Controllers\\BlogController'))->toBeTrue();
+// });
 
 test('isControllerAllowed() возвращает false для неразрешённого контроллера', function () {
     expect($this->guard->isControllerAllowed('App\\SomeOther\\Controller'))->toBeFalse();

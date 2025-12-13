@@ -13,11 +13,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /**
- * Сервис для регистрации динамических маршрутов из БД.
+ * Сервис для регистрации динамических маршрутов из БД и декларативных маршрутов из файлов.
  *
- * Загружает дерево маршрутов из route_nodes и регистрирует их в Laravel Router.
+ * Загружает общее дерево маршрутов, которое включает декларативные маршруты из routes/
+ * и динамические маршруты из route_nodes, регистрирует их в Laravel Router.
+ * Декларативные маршруты идут первыми в дереве (имеют приоритет).
  * Поддерживает группы маршрутов, различные типы действий (Controller, View, Redirect),
  * проверку безопасности через DynamicRouteGuard.
+ * Декларативные и динамические маршруты объединены в общее дерево через RouteNodeRepository::getEnabledTree().
  *
  * @package App\Services\DynamicRoutes
  */
@@ -33,13 +36,31 @@ class DynamicRouteRegistrar
     ) {}
 
     /**
-     * Зарегистрировать все динамические маршруты.
+     * Зарегистрировать все маршруты (декларативные и динамические).
      *
-     * Загружает дерево включённых маршрутов и рекурсивно регистрирует их.
+     * Регистрирует все маршруты из общего дерева, которое включает
+     * декларативные маршруты из routes/ и динамические маршруты из БД.
+     * Декларативные маршруты идут первыми в дереве (имеют приоритет).
      *
      * @return void
      */
     public function register(): void
+    {
+        // Регистрируем все маршруты из общего дерева
+        // (декларативные и динамические объединены в getEnabledTree())
+        $this->registerDynamicRoutes();
+    }
+
+    /**
+     * Зарегистрировать все маршруты (декларативные и динамические).
+     *
+     * Загружает общее дерево включённых маршрутов, которое включает
+     * декларативные маршруты из routes/ и динамические маршруты из БД.
+     * Декларативные маршруты идут первыми в дереве (имеют приоритет).
+     *
+     * @return void
+     */
+    private function registerDynamicRoutes(): void
     {
         try {
             $tree = $this->repository->getEnabledTree();
@@ -49,6 +70,28 @@ class DynamicRouteRegistrar
             }
         } catch (\Throwable $e) {
             Log::error('Dynamic routes: ошибка при регистрации маршрутов', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+    }
+
+    /**
+     * Зарегистрировать коллекцию RouteNode (например, декларативные маршруты).
+     *
+     * Регистрирует маршруты из коллекции, которая может содержать как группы, так и отдельные маршруты.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\RouteNode> $nodes Коллекция RouteNode
+     * @return void
+     */
+    public function registerCollection(Collection $nodes): void
+    {
+        try {
+            foreach ($nodes as $node) {
+                $this->registerNode($node);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Dynamic routes: ошибка при регистрации коллекции маршрутов', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -83,7 +126,12 @@ class DynamicRouteRegistrar
     private function registerGroup(RouteNode $node): void
     {
         $attributes = $this->buildGroupAttributes($node);
+        Log::debug('Dynamic route: регистрация группы маршрутов', [
+            'route_node_id' => $node->id,
+            'attributes' => $attributes,
+        ]);
 
+        
         Route::group($attributes, function () use ($node): void {
             foreach ($node->children as $child) {
                 $this->registerNode($child);
@@ -148,6 +196,36 @@ class DynamicRouteRegistrar
 
         if ($action === null) {
             return; // Ошибка уже залогирована в resolveAction()
+        }
+
+        // Проверяем существование контроллера перед регистрацией
+        // Это предотвращает ошибки при route:list для несуществующих контроллеров
+        if (is_array($action) && count($action) === 2) {
+            [$controller, $method] = $action;
+            if (!class_exists($controller)) {
+                Log::warning('Dynamic route: контроллер не существует, маршрут пропущен', [
+                    'route_node_id' => $node->id,
+                    'controller' => $controller,
+                    'uri' => $uri,
+                ]);
+                return;
+            }
+            if (!method_exists($controller, $method)) {
+                Log::warning('Dynamic route: метод не существует в контроллере, маршрут пропущен', [
+                    'route_node_id' => $node->id,
+                    'controller' => $controller,
+                    'method' => $method,
+                    'uri' => $uri,
+                ]);
+                return;
+            }
+        } elseif (is_string($action) && !class_exists($action)) {
+            Log::warning('Dynamic route: invokable контроллер не существует, маршрут пропущен', [
+                'route_node_id' => $node->id,
+                'controller' => $action,
+                'uri' => $uri,
+            ]);
+            return;
         }
 
         $route = Route::match($methods, $uri, $action);
@@ -240,6 +318,14 @@ class DynamicRouteRegistrar
                 ]);
                 return fn() => abort(404);
             }
+            // Проверяем существование класса контроллера
+            if (!class_exists($controller)) {
+                Log::error('Dynamic route: контроллер не существует', [
+                    'route_node_id' => $node->id,
+                    'controller' => $controller,
+                ]);
+                return fn() => abort(404);
+            }
             return [$controller, $method];
         } else {
             // Invokable controller
@@ -250,8 +336,52 @@ class DynamicRouteRegistrar
                 ]);
                 return fn() => abort(404);
             }
+            // Проверяем существование класса контроллера
+            if (!class_exists($action)) {
+                Log::error('Dynamic route: контроллер не существует', [
+                    'route_node_id' => $node->id,
+                    'controller' => $action,
+                ]);
+                return fn() => abort(404);
+            }
             return $action;
         }
+    }
+
+    /**
+     * Преобразовать RouteNode в массив для логирования.
+     *
+     * @param \App\Models\RouteNode $node
+     * @return array<string, mixed>
+     */
+    private function nodeToArray(RouteNode $node): array
+    {
+        $data = [
+            'id' => $node->id,
+            'kind' => $node->kind?->value ?? null,
+            'sort_order' => $node->sort_order,
+            'enabled' => $node->enabled,
+            'prefix' => $node->prefix,
+            'domain' => $node->domain,
+            'namespace' => $node->namespace,
+            'uri' => $node->uri,
+            'methods' => $node->methods,
+            'name' => $node->name,
+            'action_type' => $node->action_type?->value ?? null,
+            'action' => $node->action,
+            'middleware' => $node->middleware,
+            'where' => $node->where,
+            'defaults' => $node->defaults,
+            'parent_id' => $node->parent_id,
+            'options' => $node->options,
+        ];
+
+        // Рекурсивно обрабатываем дочерние узлы
+        if ($node->relationLoaded('children') && $node->children) {
+            $data['children'] = $node->children->map(fn($child) => $this->nodeToArray($child))->toArray();
+        }
+
+        return $data;
     }
 }
 
