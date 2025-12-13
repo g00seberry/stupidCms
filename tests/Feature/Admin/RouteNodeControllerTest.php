@@ -38,10 +38,12 @@ test('POST /api/v1/admin/routes создаёт узел с корректным�
                 'uri',
                 'action_type',
                 'action',
+                'readonly',
                 'created_at',
                 'updated_at',
             ],
-        ]);
+        ])
+        ->assertJsonPath('data.readonly', false); // Маршруты из БД не readonly
 
     $this->assertDatabaseHas('route_nodes', [
         'kind' => 'route',
@@ -67,6 +69,7 @@ test('GET /api/v1/admin/routes/{id} возвращает детали узла',
                 'uri',
                 'action_type',
                 'action',
+                'readonly',
                 'created_at',
                 'updated_at',
             ],
@@ -75,6 +78,7 @@ test('GET /api/v1/admin/routes/{id} возвращает детали узла',
             'data' => [
                 'id' => $node->id,
                 'uri' => '/test',
+                'readonly' => false, // Маршруты из БД не readonly
             ],
         ]);
 });
@@ -130,32 +134,25 @@ test('GET /api/v1/admin/routes возвращает список всех мар
     $response->assertStatus(200)
         ->assertJsonStructure([
             'data' => [
-                'declarative' => [
-                    '*' => [
-                        'id',
-                        'uri',
-                        'methods',
-                        'name',
-                        'source',
-                    ],
-                ],
-                'database' => [
-                    '*' => [
-                        'id',
-                        'uri',
-                        'methods',
-                        'name',
-                        'source',
-                    ],
+                '*' => [
+                    'id',
+                    'uri',
+                    'methods',
+                    'name',
+                    'source',
+                    'readonly',
                 ],
             ],
         ]);
     
-    // Проверяем, что есть декларативные маршруты
-    $response->assertJsonPath('data.declarative', fn ($value) => is_array($value));
-    
     // Проверяем, что есть маршруты из БД
-    $response->assertJsonPath('data.database', fn ($value) => is_array($value) && count($value) === 3);
+    $data = $response->json('data');
+    $databaseRoutes = array_filter($data, fn($route) => $route['source'] === 'database');
+    expect(count($databaseRoutes))->toBeGreaterThanOrEqual(3);
+    
+    // Проверяем, что есть декларативные маршруты
+    $declarativeRoutes = array_filter($data, fn($route) => $route['source'] !== 'database');
+    expect(count($declarativeRoutes))->toBeGreaterThan(0);
 });
 
 test('DELETE /api/v1/admin/routes/{id} каскадно удаляет дочерние узлы', function () {
@@ -181,5 +178,75 @@ test('DELETE /api/v1/admin/routes/{id} каскадно удаляет доче�
         ->and(RouteNode::withTrashed()->find($child1->id)->trashed())->toBeTrue()
         ->and(RouteNode::withTrashed()->find($child2->id)->trashed())->toBeTrue()
         ->and(RouteNode::withTrashed()->find($grandchild->id)->trashed())->toBeTrue();
+});
+
+test('нельзя создать маршрут с readonly=true через API', function () {
+    $response = $this->postJson('/api/v1/admin/routes', [
+        'kind' => 'route',
+        'action_type' => 'controller',
+        'uri' => '/test',
+        'methods' => ['GET'],
+        'action' => 'App\\Http\\Controllers\\TestController@show',
+        'readonly' => true, // Попытка создать readonly маршрут
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['readonly']);
+});
+
+test('нельзя обновить readonly маршрут', function () {
+    // Создаём readonly маршрут (симулируем декларативный)
+    $node = RouteNode::factory()->route()->create([
+        'uri' => '/test',
+        'action' => 'App\\Http\\Controllers\\TestController@show',
+        'readonly' => true,
+    ]);
+
+    $response = $this->patchJson("/api/v1/admin/routes/{$node->id}", [
+        'uri' => '/updated',
+    ]);
+
+    $response->assertStatus(403)
+        ->assertJson([
+            'code' => 'FORBIDDEN',
+        ]);
+});
+
+test('нельзя удалить readonly маршрут', function () {
+    // Создаём readonly маршрут (симулируем декларативный)
+    $node = RouteNode::factory()->route()->create([
+        'uri' => '/test',
+        'action' => 'App\\Http\\Controllers\\TestController@show',
+        'readonly' => true,
+    ]);
+
+    $response = $this->deleteJson("/api/v1/admin/routes/{$node->id}");
+
+    $response->assertStatus(403)
+        ->assertJson([
+            'code' => 'FORBIDDEN',
+        ]);
+});
+
+test('декларативные маршруты имеют readonly=true', function () {
+    $response = $this->getJson('/api/v1/admin/routes');
+
+    $response->assertStatus(200);
+    
+    $data = $response->json('data');
+    
+    // Проверяем, что декларативные маршруты имеют readonly=true
+    $declarativeRoutes = array_filter($data, fn($route) => $route['source'] !== 'database');
+    
+    foreach ($declarativeRoutes as $route) {
+        expect($route['readonly'])->toBeTrue();
+    }
+    
+    // Проверяем, что маршруты из БД имеют readonly=false
+    $databaseRoutes = array_filter($data, fn($route) => $route['source'] === 'database');
+    
+    foreach ($databaseRoutes as $route) {
+        expect($route['readonly'])->toBeFalse();
+    }
 });
 

@@ -28,6 +28,7 @@ return new class extends Migration {
             // Сортировка и состояние
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('enabled')->default(true)->index();
+            $table->boolean('readonly')->default(false)->index(); // Защита от изменения декларативных маршрутов
             
             // Тип узла
             $table->enum('kind', ['group', 'route'])->index();

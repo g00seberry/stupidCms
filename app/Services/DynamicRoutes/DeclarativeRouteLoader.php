@@ -114,6 +114,7 @@ class DeclarativeRouteLoader
             $node->parent_id = $parent?->id;
             $node->enabled = $data['enabled'] ?? true;
             $node->sort_order = $data['sort_order'] ?? 0;
+            $node->readonly = true; // Все декларативные маршруты защищены от изменения
             
             // Временное логирование для диагностики
             if ($kind === RouteNodeKind::GROUP && $parent === null) {

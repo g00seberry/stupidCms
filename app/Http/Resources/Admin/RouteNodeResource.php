@@ -39,6 +39,7 @@ class RouteNodeResource extends AdminJsonResource
             'parent_id' => $node->parent_id,
             'sort_order' => $node->sort_order,
             'enabled' => $node->enabled,
+            'readonly' => $node->readonly ?? false,
             'kind' => $node->kind?->value ?? $node->getRawOriginal('kind'),
             'name' => $node->name,
             'domain' => $node->domain,

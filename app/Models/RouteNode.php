@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $parent_id ID родительского узла (NULL для корневых)
  * @property int $sort_order Порядок сортировки среди детей одного родителя
  * @property bool $enabled Включён ли узел (регистрируется ли маршрут)
+ * @property bool $readonly Защита от изменения (true для декларативных маршрутов)
  * @property \App\Enums\RouteNodeKind $kind Тип узла: GROUP или ROUTE
  * @property string|null $name Имя маршрута (Route::name())
  * @property string|null $domain Домен для маршрута
@@ -59,6 +60,7 @@ class RouteNode extends Model
         'parent_id',
         'sort_order',
         'enabled',
+        'readonly',
         'kind',
         'name',
         'domain',
@@ -82,6 +84,7 @@ class RouteNode extends Model
      */
     protected $casts = [
         'enabled' => 'boolean',
+        'readonly' => 'boolean',
         'kind' => RouteNodeKind::class,
         'action_type' => RouteNodeActionType::class,
         'methods' => 'array',

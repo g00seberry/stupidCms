@@ -49,33 +49,31 @@ class RouteNodeController extends Controller
     /**
      * Список всех маршрутов (декларативные + из БД).
      *
-     * Возвращает объединённый список всех маршрутов с меткой источника.
+     * Возвращает объединённый плоский список всех маршрутов с меткой источника.
      * Используется для отображения всех маршрутов в UI.
      *
      * @group Admin ▸ Routes
      * @name List all routes
      * @authenticated
      * @response status=200 {
-     *   "data": {
-     *     "declarative": [
-     *       {
-     *         "id": -1,
-     *         "uri": "/",
-     *         "methods": ["GET"],
-     *         "name": "home",
-     *         "source": "web_core.php"
-     *       }
-     *     ],
-     *     "database": [
-     *       {
-     *         "id": 1,
-     *         "uri": "/about",
-     *         "methods": ["GET"],
-     *         "name": "about",
-     *         "source": "database"
-     *       }
-     *     ]
-     *   }
+     *   "data": [
+     *     {
+     *       "id": -1,
+     *       "uri": "/",
+     *       "methods": ["GET"],
+     *       "name": "home",
+     *       "source": "web_core.php",
+     *       "readonly": true
+     *     },
+     *     {
+     *       "id": 1,
+     *       "uri": "/about",
+     *       "methods": ["GET"],
+     *       "name": "about",
+     *       "source": "database",
+     *       "readonly": false
+     *     }
+     *   ]
      * }
      * @response status=401 {
      *   "type": "https://stupidcms.dev/problems/unauthorized",
@@ -92,28 +90,14 @@ class RouteNodeController extends Controller
         $loader = new DeclarativeRouteLoader();
         $repository = new RouteNodeRepository($cache, $loader);
 
-        // Разделяем декларативные и динамические маршруты из общего дерева
+        // Получаем все маршруты из общего дерева
         $allNodes = $repository->getEnabledTree();
-        $declarativeNodes = new Collection();
-        $databaseNodes = new Collection();
 
-        foreach ($allNodes as $node) {
-            $source = $node->options['source'] ?? 'database';
-            if ($source === 'declarative' || isset($node->options['declarative'])) {
-                $declarativeNodes->push($node);
-            } else {
-                $databaseNodes->push($node);
-            }
-        }
-
-        $declarativeRoutes = $this->flattenRoutes($declarativeNodes, 'declarative');
-        $databaseRoutes = $this->flattenRoutes($databaseNodes, 'database');
+        // Преобразуем дерево в плоский список
+        $routes = $this->flattenRoutes($allNodes);
 
         return response()->json([
-            'data' => [
-                'declarative' => $declarativeRoutes,
-                'database' => $databaseRoutes,
-            ],
+            'data' => $routes,
         ], Response::HTTP_OK);
     }
 
@@ -267,6 +251,14 @@ class RouteNodeController extends Controller
             );
         }
 
+        // Проверка readonly: декларативные маршруты нельзя изменять
+        if ($routeNode->readonly) {
+            $this->forbidden(
+                'Cannot update readonly route node. Declarative routes cannot be modified.',
+                ['route_node_id' => $id, 'readonly' => true],
+            );
+        }
+
         $validated = $request->validated();
 
         DB::transaction(function () use ($routeNode, $validated) {
@@ -316,6 +308,14 @@ class RouteNodeController extends Controller
                 ErrorCode::NOT_FOUND,
                 sprintf('Route node with ID %d does not exist.', $id),
                 ['route_node_id' => $id],
+            );
+        }
+
+        // Проверка readonly: декларативные маршруты нельзя удалять
+        if ($routeNode->readonly) {
+            $this->forbidden(
+                'Cannot delete readonly route node. Declarative routes cannot be deleted.',
+                ['route_node_id' => $id, 'readonly' => true],
             );
         }
 
@@ -423,10 +423,9 @@ class RouteNodeController extends Controller
      * Рекурсивно обходит дерево и собирает только маршруты (не группы).
      *
      * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\RouteNode> $nodes Коллекция узлов
-     * @param string $source Источник маршрутов
      * @return array<int, array<string, mixed>> Плоский список маршрутов
      */
-    private function flattenRoutes(Collection $nodes, string $source): array
+    private function flattenRoutes(Collection $nodes): array
     {
         $routes = [];
 
@@ -434,7 +433,7 @@ class RouteNodeController extends Controller
             if ($node->kind === RouteNodeKind::GROUP) {
                 // Для группы рекурсивно обрабатываем детей
                 if ($node->relationLoaded('children') && $node->children) {
-                    $childRoutes = $this->flattenRoutes($node->children, $source);
+                    $childRoutes = $this->flattenRoutes($node->children);
                     $routes = array_merge($routes, $childRoutes);
                 }
             } elseif ($node->kind === RouteNodeKind::ROUTE) {
@@ -447,7 +446,8 @@ class RouteNodeController extends Controller
                     'action_type' => $node->action_type?->value,
                     'action' => $node->action,
                     'enabled' => $node->enabled,
-                    'source' => $node->options['source'] ?? $source,
+                    'readonly' => $node->readonly ?? false,
+                    'source' => $node->options['source'] ?? 'database',
                 ];
 
                 if ($node->domain) {

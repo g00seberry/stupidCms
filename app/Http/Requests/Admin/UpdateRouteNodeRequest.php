@@ -94,6 +94,7 @@ class UpdateRouteNodeRequest extends FormRequest
             'where' => ['nullable', 'array'],
             'defaults' => ['nullable', 'array'],
             'options' => ['nullable', 'array'],
+            'readonly' => ['prohibited'], // Поле readonly нельзя изменять через API
         ];
     }
 
