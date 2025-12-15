@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReorderRouteNodesRequest;
 use App\Http\Requests\Admin\StoreRouteNodeRequest;
 use App\Http\Requests\Admin\UpdateRouteNodeRequest;
-use App\Enums\RouteNodeKind;
 use App\Http\Resources\Admin\RouteNodeResource;
 use App\Models\RouteNode;
 use App\Repositories\RouteNodeRepository;
@@ -18,12 +17,10 @@ use App\Services\DynamicRoutes\RouteNodeDeletionService;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -49,8 +46,8 @@ class RouteNodeController extends Controller
     /**
      * Список всех маршрутов (декларативные + из БД).
      *
-     * Возвращает объединённый плоский список всех маршрутов с меткой источника.
-     * Используется для отображения всех маршрутов в UI.
+     * Возвращает иерархическое дерево всех маршрутов с сохранением вложенности.
+     * Используется для отображения всех маршрутов в UI с поддержкой последовательной загрузки узлов.
      *
      * @group Admin ▸ Routes
      * @name List all routes
@@ -59,19 +56,24 @@ class RouteNodeController extends Controller
      *   "data": [
      *     {
      *       "id": -1,
-     *       "uri": "/",
-     *       "methods": ["GET"],
-     *       "name": "home",
-     *       "source": "web_core.php",
-     *       "readonly": true
+     *       "kind": "group",
+     *       "prefix": "api/v1",
+     *       "children": [
+     *         {
+     *           "id": -2,
+     *           "kind": "route",
+     *           "uri": "/auth/login",
+     *           "methods": ["POST"],
+     *           "name": "api.auth.login"
+     *         }
+     *       ]
      *     },
      *     {
      *       "id": 1,
+     *       "kind": "route",
      *       "uri": "/about",
      *       "methods": ["GET"],
-     *       "name": "about",
-     *       "source": "database",
-     *       "readonly": false
+     *       "name": "about"
      *     }
      *   ]
      * }
@@ -93,12 +95,8 @@ class RouteNodeController extends Controller
         // Получаем все маршруты из общего дерева
         $allNodes = $repository->getEnabledTree();
 
-        // Преобразуем дерево в плоский список
-        $routes = $this->flattenRoutes($allNodes);
-
-        return response()->json([
-            'data' => $routes,
-        ], Response::HTTP_OK);
+        // Возвращаем иерархическое дерево с сохранением вложенности
+        return RouteNodeResource::collection($allNodes)->response();
     }
 
     /**
@@ -417,52 +415,5 @@ class RouteNodeController extends Controller
     }
 
 
-    /**
-     * Преобразовать дерево маршрутов в плоский список.
-     *
-     * Рекурсивно обходит дерево и собирает только маршруты (не группы).
-     *
-     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\RouteNode> $nodes Коллекция узлов
-     * @return array<int, array<string, mixed>> Плоский список маршрутов
-     */
-    private function flattenRoutes(Collection $nodes): array
-    {
-        $routes = [];
-
-        foreach ($nodes as $node) {
-            if ($node->kind === RouteNodeKind::GROUP) {
-                // Для группы рекурсивно обрабатываем детей
-                if ($node->relationLoaded('children') && $node->children) {
-                    $childRoutes = $this->flattenRoutes($node->children);
-                    $routes = array_merge($routes, $childRoutes);
-                }
-            } elseif ($node->kind === RouteNodeKind::ROUTE) {
-                // Для маршрута добавляем в список
-                $routeData = [
-                    'id' => $node->id,
-                    'uri' => $node->uri,
-                    'methods' => $node->methods,
-                    'name' => $node->name,
-                    'action_type' => $node->action_type?->value,
-                    'action' => $node->action,
-                    'enabled' => $node->enabled,
-                    'readonly' => $node->readonly ?? false,
-                    'source' => $node->options['source'] ?? 'database',
-                ];
-
-                if ($node->domain) {
-                    $routeData['domain'] = $node->domain;
-                }
-
-                if ($node->middleware) {
-                    $routeData['middleware'] = $node->middleware;
-                }
-
-                $routes[] = $routeData;
-            }
-        }
-
-        return $routes;
-    }
 }
 

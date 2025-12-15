@@ -4,31 +4,42 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domain\View\TemplateResolver;
 use App\Models\Entry;
 use App\Models\RouteNode;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 /**
  * Контроллер для отображения Entry через динамические маршруты.
  *
  * Используется для маршрутов с action_type='entry' (жёсткое назначение Entry на URL).
- * Возвращает JSON с данными Entry в headless режиме.
+ * Возвращает Blade view с данными Entry согласно BladeTemplateResolver.
  *
  * @package App\Http\Controllers
  */
 final class EntryPageController
 {
     /**
+     * @param \App\Domain\View\TemplateResolver $templateResolver Резолвер шаблонов
+     */
+    public function __construct(
+        private readonly TemplateResolver $templateResolver,
+    ) {}
+
+    /**
      * Отобразить Entry по маршруту.
      *
      * Получает route_node_id из defaults маршрута, загружает RouteNode с Entry
-     * и возвращает JSON с данными Entry, PostType, Blueprint и Route.
+     * и возвращает Blade view с данными Entry согласно приоритету шаблонов:
+     * 1. Entry.template_override
+     * 2. PostType.template
+     * 3. templates.index (дефолтный)
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
-     * @return \Illuminate\Http\JsonResponse JSON ответ с данными Entry
+     * @return \Illuminate\Contracts\View\View Blade view с Entry
      */
-    public function show(Request $request): JsonResponse
+    public function show(Request $request): View
     {
         // Получаем route_node_id из defaults маршрута
         $routeNodeId = $request->route()?->defaults['route_node_id'] ?? null;
@@ -70,32 +81,12 @@ final class EntryPageController
             }
         }
 
-        // Формируем ответ
-        return response()->json([
-            'entry' => [
-                'id' => $entry->id,
-                'title' => $entry->title,
-                'status' => $entry->status,
-                'published_at' => $entry->published_at?->toIso8601String(),
-                'data_json' => $entry->data_json,
-                'template_override' => $entry->template_override,
-                'created_at' => $entry->created_at->toIso8601String(),
-                'updated_at' => $entry->updated_at->toIso8601String(),
-            ],
-            'post_type' => $entry->postType ? [
-                'id' => $entry->postType->id,
-                'name' => $entry->postType->name,
-                'template' => $entry->postType->template,
-            ] : null,
-            'blueprint' => $entry->postType?->blueprint ? [
-                'id' => $entry->postType->blueprint->id,
-                'name' => $entry->postType->blueprint->name,
-            ] : null,
-            'route' => [
-                'id' => $routeNode->id,
-                'uri' => $routeNode->uri,
-                'name' => $routeNode->name,
-            ],
+        // Получаем имя шаблона через TemplateResolver
+        $templateName = $this->templateResolver->forEntry($entry);
+
+        // Возвращаем view с передачей Entry
+        return view($templateName, [
+            'entry' => $entry,
         ]);
     }
 }

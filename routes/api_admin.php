@@ -652,7 +652,7 @@ return [
             [
                 'kind' => RouteNodeKind::ROUTE,
                 'uri' => '/routes/{id}',
-                'methods' => ['PATCH'],
+                'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
                 'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@update',
                 'name' => 'admin.v1.routes.update',
