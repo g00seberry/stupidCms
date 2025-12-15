@@ -55,7 +55,6 @@ class UpdateRouteNodeRequest extends FormRequest
      * - middleware: массив middleware
      * - where: массив ограничений параметров
      * - defaults: массив значений по умолчанию
-     * - options: массив опций
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -93,7 +92,6 @@ class UpdateRouteNodeRequest extends FormRequest
             'middleware.*' => ['string'],
             'where' => ['nullable', 'array'],
             'defaults' => ['nullable', 'array'],
-            'options' => ['nullable', 'array'],
             'readonly' => ['prohibited'], // Поле readonly нельзя изменять через API
         ];
     }

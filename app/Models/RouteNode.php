@@ -38,7 +38,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property array|null $middleware Массив middleware
  * @property array|null $where Ограничения параметров маршрута
  * @property array|null $defaults Значения по умолчанию для параметров
- * @property array|null $options Дополнительные опции
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at Дата мягкого удаления
@@ -74,7 +73,6 @@ class RouteNode extends Model
         'middleware',
         'where',
         'defaults',
-        'options',
     ];
 
     /**
@@ -91,7 +89,6 @@ class RouteNode extends Model
         'middleware' => 'array',
         'where' => 'array',
         'defaults' => 'array',
-        'options' => 'array',
     ];
 
     /**

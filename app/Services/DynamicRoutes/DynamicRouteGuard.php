@@ -282,8 +282,9 @@ class DynamicRouteGuard
         // Проверяем конфликты
         $conflict = $this->checkConflict($uri, $methods, $excludeId);
         if ($conflict) {
-            $source = $conflict->options['source'] ?? 'database';
-            $sourceLabel = $source === 'database' ? 'БД' : 'декларативный файл';
+            // Определяем источник по ID: отрицательные ID = декларативные маршруты
+            $isDeclarative = $conflict->id < 0;
+            $sourceLabel = $isDeclarative ? 'декларативный файл' : 'БД';
             
             return [
                 'allowed' => false,

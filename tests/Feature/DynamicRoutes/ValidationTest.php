@@ -216,19 +216,7 @@ test('Валидация defaults: должен быть массивом', func
         ->assertJsonValidationErrors(['defaults']);
 });
 
-test('Валидация options: должен быть массивом', function () {
-    $response = $this->postJson('/api/v1/admin/routes', [
-        'kind' => 'route',
-        'action_type' => 'controller',
-        'uri' => '/test',
-        'methods' => ['GET'],
-        'action' => 'App\\Http\\Controllers\\TestController@show',
-        'options' => 'value', // Не массив
-    ]);
-
-    $response->assertStatus(422)
-        ->assertJsonValidationErrors(['options']);
-});
+// Тест удалён: поле options больше не поддерживается
 
 test('Валидация parent_id: должен существовать', function () {
     $response = $this->postJson('/api/v1/admin/routes', [

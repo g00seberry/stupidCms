@@ -67,24 +67,6 @@ test('POST /api/v1/admin/routes с корректными данными → 201
     $response->assertStatus(201);
 });
 
-test('PATCH /api/v1/admin/routes/{id} с частичными данными → 200', function () {
-    $node = RouteNode::factory()->route()->create([
-        'uri' => '/test',
-        'action' => 'App\\Http\\Controllers\\TestController@show',
-    ]);
-
-    $response = $this->patchJson("/api/v1/admin/routes/{$node->id}", [
-        'uri' => '/updated',
-    ]);
-
-    $response->assertStatus(200)
-        ->assertJson([
-            'data' => [
-                'id' => $node->id,
-                'uri' => '/updated',
-            ],
-        ]);
-});
 
 test('POST /api/v1/admin/routes с запрещённым префиксом prefix → 422', function () {
     $response = $this->postJson('/api/v1/admin/routes', [

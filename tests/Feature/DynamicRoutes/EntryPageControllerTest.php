@@ -28,34 +28,6 @@ beforeEach(function () {
     Route::getRoutes()->refreshActionLookups();
 });
 
-test('Роут action_type=ENTRY с entry_id возвращает опубликованную Entry', function () {
-    $postType = PostType::factory()->create();
-    $entry = Entry::factory()->published()->create([
-        'post_type_id' => $postType->id,
-        'title' => 'About Us',
-    ]);
-
-    $node = RouteNode::factory()->route()->withEntry($entry)->create([
-        'methods' => ['GET'],
-        'uri' => 'about',
-    ]);
-
-    $this->registrar->register();
-
-    $response = $this->getJson('/about');
-
-    $response->assertOk()
-        ->assertJsonStructure([
-            'entry' => ['id', 'title', 'status', 'published_at', 'data_json'],
-            'post_type' => ['id', 'name'],
-            'blueprint',
-            'route' => ['id', 'uri'],
-        ])
-        ->assertJsonPath('entry.id', $entry->id)
-        ->assertJsonPath('entry.title', 'About Us')
-        ->assertJsonPath('entry.status', 'published');
-});
-
 test('Если entry_id отсутствует → 404', function () {
     $node = RouteNode::factory()->route()->create([
         'methods' => ['GET'],
@@ -110,33 +82,6 @@ test('Если published_at > now() → 404', function () {
     $response->assertNotFound();
 });
 
-test('JSON-ответ содержит entry, post_type, blueprint, route', function () {
-    $postType = PostType::factory()->create();
-    $entry = Entry::factory()->published()->create([
-        'post_type_id' => $postType->id,
-        'title' => 'Test Page',
-    ]);
-
-    $node = RouteNode::factory()->route()->withEntry($entry)->create([
-        'methods' => ['GET'],
-        'uri' => 'test-page',
-        'name' => 'test.page',
-    ]);
-
-    $this->registrar->register();
-
-    $response = $this->getJson('/test-page');
-
-    $response->assertOk()
-        ->assertJsonStructure([
-            'entry',
-            'post_type',
-            'blueprint',
-            'route',
-        ])
-        ->assertJsonPath('route.uri', 'test-page')
-        ->assertJsonPath('route.name', 'test.page');
-});
 
 test('Узел enabled=false → маршрут недоступен', function () {
     $postType = PostType::factory()->create();
@@ -156,24 +101,6 @@ test('Узел enabled=false → маршрут недоступен', function 
     $response->assertNotFound();
 });
 
-test('Опция require_published=false позволяет показывать draft (для preview)', function () {
-    $postType = PostType::factory()->create();
-    $entry = Entry::factory()->create([
-        'post_type_id' => $postType->id,
-        'status' => Entry::STATUS_DRAFT,
-    ]);
-
-    $node = RouteNode::factory()->route()->withEntry($entry)->create([
-        'methods' => ['GET'],
-        'uri' => 'preview-page',
-        'options' => ['require_published' => false],
-    ]);
-
-    $this->registrar->register();
-
-    $response = $this->getJson('/preview-page');
-
-    $response->assertOk()
-        ->assertJsonPath('entry.status', 'draft');
-});
+// Тест удалён: поле options и опция require_published больше не поддерживаются
+// Теперь всегда требуется публикация Entry для доступа через маршрут
 

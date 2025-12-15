@@ -67,18 +67,13 @@ final class EntryPageController
             abort(404, 'Entry not found');
         }
 
-        // Проверяем публикацию (по умолчанию только published)
-        $requirePublished = $routeNode->options['require_published'] ?? true;
+        // Проверяем публикацию Entry
+        if ($entry->status !== Entry::STATUS_PUBLISHED) {
+            abort(404, 'Entry is not published');
+        }
 
-        if ($requirePublished) {
-            // Проверяем статус и дату публикации
-            if ($entry->status !== Entry::STATUS_PUBLISHED) {
-                abort(404, 'Entry is not published');
-            }
-
-            if (!$entry->published_at || $entry->published_at->isFuture()) {
-                abort(404, 'Entry is not published yet');
-            }
+        if (!$entry->published_at || $entry->published_at->isFuture()) {
+            abort(404, 'Entry is not published yet');
         }
 
         // Получаем имя шаблона через TemplateResolver

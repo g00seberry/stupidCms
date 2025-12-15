@@ -118,7 +118,6 @@ Eloquent модель для узлов маршрутов. Хранит всю 
 -   `middleware` - Массив middleware
 -   `where` - Ограничения параметров маршрута
 -   `defaults` - Значения по умолчанию
--   `options` - Дополнительные опции
 
 **Связи**:
 
@@ -169,7 +168,6 @@ Eloquent модель для узлов маршрутов. Хранит всю 
 
 -   Декларативные маршруты получают отрицательные ID (начинаются с -1)
 -   Все декларативные маршруты помечаются как `readonly = true`
--   Поддерживается фильтрация по environment через `options.environments`
 -   Обрабатывает иерархию (группы и вложенные маршруты)
 
 ### 4. DynamicRouteRegistrar
@@ -733,9 +731,6 @@ return [
     'methods' => ['GET'],
     'action_type' => RouteNodeActionType::CONTROLLER,
     'action' => 'App\Http\Controllers\AdminPingController@ping',
-    'options' => [
-        'environments' => ['testing'],  // Загружается только в testing окружении
-    ],
 ]
 ```
 
@@ -783,7 +778,6 @@ CREATE TABLE route_nodes (
     middleware JSON NULL,
     where JSON NULL,
     defaults JSON NULL,
-    options JSON NULL,
 
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,

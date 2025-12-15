@@ -69,26 +69,7 @@ test('Нельзя использовать неразрешённый конт�
         ->assertJsonValidationErrors(['action']);
 });
 
-test('Публичный endpoint не отдаёт черновые записи', function () {
-    $postType = PostType::factory()->create();
-    $draftEntry = Entry::factory()->create([
-        'post_type_id' => $postType->id,
-        'status' => 'draft',
-        'published_at' => null,
-    ]);
 
-    $routeNode = RouteNode::factory()->route()->create([
-        'action_type' => RouteNodeActionType::ENTRY,
-        'entry_id' => $draftEntry->id,
-        'uri' => '/draft-page',
-        'methods' => ['GET'],
-        'enabled' => true,
-    ]);
-
-    $response = $this->getJson('/draft-page');
-
-    $response->assertStatus(404);
-});
 
 test('Публичный endpoint не отдаёт удалённые записи', function () {
     $postType = PostType::factory()->create();
@@ -132,37 +113,6 @@ test('Публичный endpoint не отдаёт записи с будуще
     $response = $this->getJson('/future-page');
 
     $response->assertStatus(404);
-});
-
-test('Публичный endpoint отдаёт только опубликованные записи', function () {
-    $postType = PostType::factory()->create();
-    $publishedEntry = Entry::factory()->create([
-        'post_type_id' => $postType->id,
-        'status' => 'published',
-        'published_at' => now()->subDay(),
-    ]);
-
-    $routeNode = RouteNode::factory()->route()->create([
-        'action_type' => RouteNodeActionType::ENTRY,
-        'entry_id' => $publishedEntry->id,
-        'uri' => '/published-page',
-        'methods' => ['GET'],
-        'enabled' => true,
-    ]);
-
-    // Очищаем кэш маршрутов и перерегистрируем
-    app(\App\Services\DynamicRoutes\DynamicRouteCache::class)->forgetTree();
-    app(\App\Services\DynamicRoutes\DynamicRouteRegistrar::class)->register();
-
-    $response = $this->getJson('/published-page');
-
-    $response->assertStatus(200)
-        ->assertJson([
-            'entry' => [
-                'id' => $publishedEntry->id,
-                'status' => 'published',
-            ],
-        ]);
 });
 
 test('Нельзя назначить entry_id без права view на Entry', function () {

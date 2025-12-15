@@ -163,12 +163,6 @@ class DeclarativeRouteLoader
                 }
             }
 
-            // Метаданные
-            $node->options = array_merge(
-                $data['options'] ?? [],
-                ['source' => $source, 'declarative' => true]
-            );
-
             // Обработка дочерних узлов (для групп)
             if ($kind === RouteNodeKind::GROUP && isset($data['children']) && is_array($data['children'])) {
                 $children = new Collection();
@@ -201,21 +195,11 @@ class DeclarativeRouteLoader
     /**
      * Проверить, нужно ли загружать маршрут.
      *
-     * Проверяет условия загрузки (например, environment).
-     *
      * @param array<string, mixed> $data Данные конфигурации
      * @return bool true если маршрут нужно загрузить, false иначе
      */
     private function shouldLoadRoute(array $data): bool
     {
-        // Проверка условий environment
-        if (isset($data['options']['environments']) && is_array($data['options']['environments'])) {
-            $currentEnv = app()->environment();
-            if (!in_array($currentEnv, $data['options']['environments'], true)) {
-                return false;
-            }
-        }
-
         return true;
     }
 

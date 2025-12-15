@@ -55,7 +55,6 @@ return new class extends Migration {
             $table->json('middleware')->nullable(); // ['web', 'auth', ...]
             $table->json('where')->nullable(); // {"id": "[0-9]+", ...}
             $table->json('defaults')->nullable(); // {"key": "value", ...}
-            $table->json('options')->nullable(); // {"require_published": false, ...}
             
             $table->timestamps();
             $table->softDeletes();

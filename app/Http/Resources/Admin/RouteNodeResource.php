@@ -22,7 +22,7 @@ class RouteNodeResource extends AdminJsonResource
      * Возвращает массив с полями узла маршрута, включая:
      * - Основные поля (id, parent_id, sort_order, enabled, kind, name, domain, prefix, namespace)
      * - Поля маршрута (methods, uri, action_type, action, entry_id)
-     * - JSON поля (middleware, where, defaults, options) преобразованные в объекты
+     * - JSON поля (middleware, where, defaults) преобразованные в объекты
      * - Связанные сущности (entry, parent, children) при их загрузке
      * - Даты в ISO 8601 формате
      *
@@ -53,7 +53,6 @@ class RouteNodeResource extends AdminJsonResource
             'middleware' => $node->middleware,
             'where' => $node->where,
             'defaults' => $node->defaults,
-            'options' => $node->options,
             'entry' => $this->when($node->relationLoaded('entry'), function () use ($node) {
                 return $node->entry ? [
                     'id' => $node->entry->id,

@@ -32,15 +32,14 @@ return [
                 'name' => 'home',
             ],
             // Тестовые маршруты (только для testing окружения)
+            // Примечание: условная загрузка по окружению удалена вместе с полем options
+            // Если нужна условная загрузка, используйте прямой роутинг в RouteServiceProvider
             [
                 'kind' => RouteNodeKind::ROUTE,
                 'uri' => '/admin/ping',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
                 'action' => 'App\Http\Controllers\AdminPingController@ping',
-                'options' => [
-                    'environments' => ['testing'],
-                ],
             ],
             // Тестовый маршрут для проверки авторизации (только для testing)
             // Используется в тестах, оставлен в старом формате routes/web_core.php

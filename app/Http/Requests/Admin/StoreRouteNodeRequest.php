@@ -56,7 +56,6 @@ class StoreRouteNodeRequest extends FormRequest
      * - middleware: опциональный массив middleware
      * - where: опциональный массив ограничений параметров
      * - defaults: опциональный массив значений по умолчанию
-     * - options: опциональный массив опций
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -102,7 +101,6 @@ class StoreRouteNodeRequest extends FormRequest
             'middleware.*' => ['string'],
             'where' => ['nullable', 'array'],
             'defaults' => ['nullable', 'array'],
-            'options' => ['nullable', 'array'],
             'readonly' => ['prohibited'], // Запрещаем создание readonly маршрутов через API (только декларативные могут быть readonly)
         ];
     }

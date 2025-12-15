@@ -29,14 +29,12 @@ test('RouteNode::create() сохраняет JSON-поля корректно', 
         'middleware' => ['web', 'auth'],
         'where' => ['id' => '[0-9]+'],
         'defaults' => ['key' => 'value'],
-        'options' => ['require_published' => false],
     ]);
 
     expect($node->methods)->toBe(['GET', 'POST'])
         ->and($node->middleware)->toBe(['web', 'auth'])
         ->and($node->where)->toBe(['id' => '[0-9]+'])
-        ->and($node->defaults)->toBe(['key' => 'value'])
-        ->and($node->options)->toBe(['require_published' => false]);
+        ->and($node->defaults)->toBe(['key' => 'value']);
 });
 
 // test('$node->parent возвращает родителя или null', function () {

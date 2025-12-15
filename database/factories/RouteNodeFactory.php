@@ -43,7 +43,6 @@ class RouteNodeFactory extends Factory
             'middleware' => null,
             'where' => null,
             'defaults' => null,
-            'options' => null,
         ];
     }
 

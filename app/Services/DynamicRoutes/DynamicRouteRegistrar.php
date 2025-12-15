@@ -373,7 +373,6 @@ class DynamicRouteRegistrar
             'where' => $node->where,
             'defaults' => $node->defaults,
             'parent_id' => $node->parent_id,
-            'options' => $node->options,
         ];
 
         // Рекурсивно обрабатываем дочерние узлы
