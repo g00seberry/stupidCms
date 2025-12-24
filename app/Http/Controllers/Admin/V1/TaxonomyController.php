@@ -88,21 +88,24 @@ class TaxonomyController extends Controller
     public function index(IndexTaxonomiesRequest $request): TaxonomyCollection
     {
         $validated = $request->validated();
+        $filters = $validated['filters'] ?? [];
+        $pagination = $validated['pagination'] ?? [];
 
         $query = Taxonomy::query();
 
-        if (! empty($validated['q'])) {
-            $search = $validated['q'];
+        if (! empty($filters['q'])) {
+            $search = $filters['q'];
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        [$sortColumn, $sortDirection] = $this->resolveSort($validated['sort'] ?? 'created_at.desc');
+        [$sortColumn, $sortDirection] = $this->resolveSort($filters['sort'] ?? 'created_at.desc');
         $query->orderBy($sortColumn, $sortDirection);
 
-        $perPage = $validated['per_page'] ?? 15;
+        $perPage = $pagination['per_page'] ?? 15;
         $perPage = max(10, min(100, $perPage));
+        $page = $pagination['page'] ?? 1;
 
-        $collection = $query->paginate($perPage);
+        $collection = $query->paginate($perPage, ['*'], 'page', $page);
 
         return new TaxonomyCollection($collection);
     }

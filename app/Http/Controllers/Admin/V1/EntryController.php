@@ -125,17 +125,19 @@ class EntryController extends Controller
     public function index(IndexEntriesRequest $request): EntryCollection
     {
         $validated = $request->validated();
+        $filters = $validated['filters'] ?? [];
+        $pagination = $validated['pagination'] ?? [];
 
         $query = Entry::query()
             ->with(['postType', 'author', 'terms.taxonomy']);
 
         // Filter by post_type_id
-        if (! empty($validated['post_type_id'])) {
-            $query->where('post_type_id', $validated['post_type_id']);
+        if (! empty($filters['post_type_id'])) {
+            $query->where('post_type_id', $filters['post_type_id']);
         }
 
         // Filter by status
-        $status = $validated['status'] ?? 'all';
+        $status = $filters['status'] ?? 'all';
         match ($status) {
             'draft' => $query->where('status', 'draft')->whereNull('deleted_at'),
             'published' => $query->published(),
@@ -148,47 +150,48 @@ class EntryController extends Controller
         };
 
         // Search by title
-        if (! empty($validated['q'])) {
-            $search = $validated['q'];
+        if (! empty($filters['q'])) {
+            $search = $filters['q'];
             $query->where('title', 'like', "%{$search}%");
         }
 
         // Filter by author
-        if (! empty($validated['author_id'])) {
-            $query->where('author_id', $validated['author_id']);
+        if (! empty($filters['author_id'])) {
+            $query->where('author_id', $filters['author_id']);
         }
 
         // Filter by terms
-        if (! empty($validated['term']) && is_array($validated['term'])) {
-            $query->whereHas('terms', function ($q) use ($validated) {
-                $q->whereIn('terms.id', $validated['term']);
+        if (! empty($filters['term']) && is_array($filters['term'])) {
+            $query->whereHas('terms', function ($q) use ($filters) {
+                $q->whereIn('terms.id', $filters['term']);
             });
         }
 
         // Filter by date range
-        $dateField = match ($validated['date_field'] ?? 'updated') {
+        $dateField = match ($filters['date_field'] ?? 'updated') {
             'published' => 'published_at',
             default => 'updated_at',
         };
 
-        if (! empty($validated['date_from'])) {
-            $query->where($dateField, '>=', $validated['date_from']);
+        if (! empty($filters['date_from'])) {
+            $query->where($dateField, '>=', $filters['date_from']);
         }
 
-        if (! empty($validated['date_to'])) {
-            $query->where($dateField, '<=', $validated['date_to']);
+        if (! empty($filters['date_to'])) {
+            $query->where($dateField, '<=', $filters['date_to']);
         }
 
         // Sorting
-        $sort = $validated['sort'] ?? 'updated_at.desc';
+        $sort = $filters['sort'] ?? 'updated_at.desc';
         [$sortField, $sortDir] = explode('.', $sort);
         $query->orderBy($sortField, $sortDir);
 
         // Pagination
-        $perPage = $validated['per_page'] ?? 15;
+        $perPage = $pagination['per_page'] ?? 15;
         $perPage = max(10, min(100, $perPage));
+        $page = $pagination['page'] ?? 1;
 
-        $entries = $query->paginate($perPage);
+        $entries = $query->paginate($perPage, ['*'], 'page', $page);
 
         return new EntryCollection($entries);
     }

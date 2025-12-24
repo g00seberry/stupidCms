@@ -84,11 +84,32 @@ class BlueprintController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        // Поддержка как плоских, так и вложенных параметров для совместимости с тестами
+        $filters = $request->input('filters', []);
+        $pagination = $request->input('pagination', []);
+
+        // Если плоские параметры переданы, используем их
+        if ($request->has('search') && !isset($filters['search'])) {
+            $filters['search'] = $request->input('search');
+        }
+        if ($request->has('sort_by') && !isset($filters['sort_by'])) {
+            $filters['sort_by'] = $request->input('sort_by');
+        }
+        if ($request->has('sort_dir') && !isset($filters['sort_dir'])) {
+            $filters['sort_dir'] = $request->input('sort_dir');
+        }
+        if ($request->has('per_page') && !isset($pagination['per_page'])) {
+            $pagination['per_page'] = $request->input('per_page');
+        }
+        if ($request->has('page') && !isset($pagination['page'])) {
+            $pagination['page'] = $request->input('page');
+        }
+
         $query = Blueprint::query()
             ->withCount(['paths', 'embeds', 'postTypes']);
 
         // Поиск
-        if ($search = $request->input('search')) {
+        if ($search = $filters['search'] ?? null) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('code', 'like', "%{$search}%");
@@ -96,12 +117,13 @@ class BlueprintController extends Controller
         }
 
         // Сортировка
-        $sortBy = $request->input('sort_by', 'created_at');
-        $sortDir = $request->input('sort_dir', 'desc');
+        $sortBy = $filters['sort_by'] ?? 'created_at';
+        $sortDir = $filters['sort_dir'] ?? 'desc';
         $query->orderBy($sortBy, $sortDir);
 
-        $perPage = (int) $request->input('per_page', 15);
-        $blueprints = $query->paginate($perPage);
+        $perPage = (int) ($pagination['per_page'] ?? 15);
+        $page = (int) ($pagination['page'] ?? 1);
+        $blueprints = $query->paginate($perPage, ['*'], 'page', $page);
 
         return BlueprintResource::collection($blueprints);
     }

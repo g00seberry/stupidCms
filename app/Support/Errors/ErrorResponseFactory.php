@@ -20,7 +20,7 @@ final class ErrorResponseFactory
         }
 
         /** @var JsonResponse $response */
-        $response = response()->json($data, $payload->status);
+        $response = response()->json($data, $payload->status, [], JSON_INVALID_UTF8_SUBSTITUTE);
         $response->headers->set('Content-Type', 'application/problem+json');
 
         AdminResponseHeaders::apply($response);

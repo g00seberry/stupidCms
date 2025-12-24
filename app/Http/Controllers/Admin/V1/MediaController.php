@@ -277,23 +277,25 @@ class MediaController extends Controller
     {
         $this->authorize('viewAny', Media::class);
 
-        $v = $request->validated();
-        $deletedFilter = match ($v['deleted'] ?? null) {
+        $validated = $request->validated();
+        $filters = $validated['filters'] ?? [];
+        $pagination = $validated['pagination'] ?? [];
+
+        $deletedFilter = match ($filters['deleted'] ?? null) {
             'with' => MediaDeletedFilter::WithDeleted,
             'only' => MediaDeletedFilter::OnlyDeleted,
             default => MediaDeletedFilter::DefaultOnlyNotDeleted,
         };
 
-        $sort = $v['sort'] ?? 'created_at';
-        $order = $v['order'] ?? 'desc';
-        $perPage = (int) ($v['per_page'] ?? 15);
-        $perPage = max(1, min(100, $perPage));
-        $page = (int) ($v['page'] ?? (int) ($request->query('page', 1)));
-
+        $sort = $filters['sort'] ?? 'created_at';
+        $order = $filters['order'] ?? 'desc';
+        $perPage = (int) ($pagination['per_page'] ?? 15);
+        $page = (int) ($pagination['page'] ?? 1);
+        
         $mq = new MediaQuery(
-            search: $v['q'] ?? null,
-            kind: $v['kind'] ?? null,
-            mimePrefix: $v['mime'] ?? null,
+            search: $filters['q'] ?? null,
+            kind: $filters['kind'] ?? null,
+            mimePrefix: $filters['mime'] ?? null,
             deletedFilter: $deletedFilter,
             sort: $sort,
             order: $order,
@@ -301,7 +303,7 @@ class MediaController extends Controller
             perPage: $perPage,
         );
 
-        $paginator = $this->listAction->execute($mq)->appends($v);
+        $paginator = $this->listAction->execute($mq)->appends($validated);
         
         // Загружаем связи для избежания N+1 проблем
         $paginator->getCollection()->load(['image', 'avMetadata']);
@@ -1158,6 +1160,75 @@ class MediaController extends Controller
     {
         $ids = $request->validated()['ids'];
         $mediaItems = Media::withTrashed()->whereIn('id', $ids)->get();
+
+        foreach ($mediaItems as $media) {
+            $this->authorize('forceDelete', $media);
+            $this->forceDeleteAction->execute($media);
+        }
+
+        return AdminResponse::noContent();
+    }
+
+    /**
+     * Очистка корзины медиа-файлов.
+     *
+     * Выполняет окончательное удаление всех мягко удаленных (soft deleted) медиа-файлов.
+     * Удаляет физические файлы (основной файл и все варианты) с диска,
+     * затем удаляет записи из БД. Операция необратима.
+     *
+     * @group Admin ▸ Media
+     * @name Empty media trash
+     * @authenticated
+     * @response status=204 {}
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555580",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555580-1111111122223333-01"
+     * }
+     * @response status=403 {
+     *   "type": "https://stupidcms.dev/problems/forbidden",
+     *   "title": "Forbidden",
+     *   "status": 403,
+     *   "code": "FORBIDDEN",
+     *   "detail": "You do not have permission to force delete media.",
+     *   "meta": {
+     *     "request_id": "11111111-2222-3333-4444-555555555581"
+     *   },
+     *   "trace_id": "00-11111111222233334444555555555581-1111111122223333-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "66666666-7777-8888-9999-000000000008",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-66666666777788889999000000000008-6666666677778888-01"
+     * }
+     */
+    /**
+     * Очистка корзины медиа-файлов.
+     *
+     * Выполняет окончательное удаление всех мягко удаленных медиа-файлов.
+     * Для каждого файла проверяются права доступа через политику forceDelete.
+     * Физические файлы и варианты удаляются с диска, затем записи удаляются из БД.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP ответ 204 No Content
+     * @throws \Illuminate\Auth\Access\AuthorizationException Если нет прав на forceDelete
+     */
+    public function emptyTrash(): HttpResponse
+    {
+        $mediaItems = Media::onlyTrashed()->get();
 
         foreach ($mediaItems as $media) {
             $this->authorize('forceDelete', $media);

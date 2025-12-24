@@ -121,23 +121,26 @@ class TermController extends Controller
         }
 
         $validated = $request->validated();
+        $filters = $validated['filters'] ?? [];
+        $pagination = $validated['pagination'] ?? [];
 
         $query = Term::query()
             ->with('taxonomy')
             ->where('taxonomy_id', $taxonomyModel->id);
 
-        if (! empty($validated['q'])) {
-            $search = $validated['q'];
+        if (! empty($filters['q'])) {
+            $search = $filters['q'];
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        [$column, $direction] = $this->resolveSort($validated['sort'] ?? 'created_at.desc');
+        [$column, $direction] = $this->resolveSort($filters['sort'] ?? 'created_at.desc');
         $query->orderBy($column, $direction);
 
-        $perPage = $validated['per_page'] ?? 15;
+        $perPage = $pagination['per_page'] ?? 15;
         $perPage = max(10, min(100, $perPage));
+        $page = $pagination['page'] ?? 1;
 
-        $collection = new TermCollection($query->paginate($perPage));
+        $collection = new TermCollection($query->paginate($perPage, ['*'], 'page', $page));
 
         return $collection;
     }

@@ -446,6 +446,15 @@ return [
                 'name' => 'admin.v1.media.bulkForceDestroy',
                 'middleware' => ['throttle:20,1'],
             ],
+            [
+                'kind' => RouteNodeKind::ROUTE,
+                'uri' => '/media/trash/empty',
+                'methods' => ['DELETE'],
+                'action_type' => RouteNodeActionType::CONTROLLER,
+                'action' => 'App\Http\Controllers\Admin\V1\MediaController@emptyTrash',
+                'name' => 'admin.v1.media.emptyTrash',
+                'middleware' => ['throttle:10,1'],
+            ],
             // Blueprints (full CRUD + dependencies/embeddable)
             [
                 'kind' => RouteNodeKind::GROUP,

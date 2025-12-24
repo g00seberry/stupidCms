@@ -229,9 +229,17 @@ class MediaMetadataExtractor
             }
 
             foreach ($values as $key => $value) {
-                if (is_string($key) && is_scalar($value)) {
-                    $normalized[$section][$key] = $value;
+                if (! is_string($key) || ! is_scalar($value)) {
+                    continue;
                 }
+
+                // EXIF может содержать бинарные/не-UTF8 значения (например MakerNote/PrintIM),
+                // которые ломают json_encode() и database cache (MySQL "Incorrect string value").
+                if (is_string($value) && ! preg_match('//u', $value)) {
+                    continue;
+                }
+
+                $normalized[$section][$key] = $value;
             }
         }
 
