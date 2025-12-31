@@ -69,11 +69,12 @@ final class BlueprintDependencyGraphLoader implements BlueprintDependencyGraphLo
             $depth++;
         }
 
-        // Загрузить все paths одним запросом
+        // Загрузить все paths одним запросом с constraints
         $allBlueprintIds = array_keys($visited);
         $paths = Path::query()
             ->whereIn('blueprint_id', $allBlueprintIds)
             ->whereNull('source_blueprint_id')
+            ->with('refConstraints')
             ->select(['id', 'blueprint_id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'sort_order', 'validation_rules'])
             ->orderByRaw('LENGTH(full_path), full_path')
             ->get()

@@ -17,6 +17,7 @@ use App\Domain\Blueprint\Validation\Rules\RuleSet;
 use App\Domain\Blueprint\Validation\Rules\TypeRule;
 use App\Models\Blueprint;
 use App\Models\Path;
+use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,6 +28,7 @@ beforeEach(function () {
     $this->fieldPathBuilder = new FieldPathBuilder();
     $this->dataTypeMapper = new DataTypeMapper();
     $this->ruleFactory = Mockery::mock(RuleFactory::class);
+    $this->constraintsBuilderRegistry = Mockery::mock(PathConstraintsBuilderRegistry::class);
     
     // Настраиваем мок ruleFactory для автоматического создания TypeRule
     // По умолчанию возвращаем TypeRule для любого типа
@@ -36,11 +38,20 @@ beforeEach(function () {
             return new TypeRule($type);
         });
     
+    // Настраиваем мок регистра constraints: по умолчанию не возвращает билдеров
+    $this->constraintsBuilderRegistry->shouldReceive('getBuilder')
+        ->byDefault()
+        ->andReturn(null);
+    $this->constraintsBuilderRegistry->shouldReceive('getAllBuilders')
+        ->byDefault()
+        ->andReturn([]);
+    
     $this->service = new EntryValidationService(
         $this->converter,
         $this->fieldPathBuilder,
         $this->dataTypeMapper,
-        $this->ruleFactory
+        $this->ruleFactory,
+        $this->constraintsBuilderRegistry
     );
 });
 

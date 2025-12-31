@@ -11,8 +11,10 @@ use App\Http\Resources\Admin\PathResource;
 use App\Models\Blueprint;
 use App\Models\Path;
 use App\Services\Blueprint\BlueprintStructureService;
+use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Контроллер для управления Path (полями Blueprint).
@@ -27,9 +29,11 @@ class PathController extends Controller
 {
     /**
      * @param BlueprintStructureService $structureService
+     * @param PathConstraintsBuilderRegistry $constraintsBuilderRegistry
      */
     public function __construct(
-        private readonly BlueprintStructureService $structureService
+        private readonly BlueprintStructureService $structureService,
+        private readonly PathConstraintsBuilderRegistry $constraintsBuilderRegistry
     ) {}
 
     /**
@@ -69,6 +73,11 @@ class PathController extends Controller
             ->with(['parent', 'sourceBlueprint', 'blueprintEmbed'])
             ->orderBy('sort_order')
             ->get();
+
+        // Загрузить constraints для всех paths через билдеры
+        foreach ($paths as $path) {
+            $this->loadConstraintsRelations($path);
+        }
 
         // Построить дерево
         $tree = $this->buildTree($paths);
@@ -138,10 +147,25 @@ class PathController extends Controller
      */
     public function store(StorePathRequest $request, Blueprint $blueprint): PathResource
     {
+        $validated = $request->validated();
+        
+        // Извлечь constraints из данных перед передачей в сервис
+        $constraints = $validated['constraints'] ?? null;
+        unset($validated['constraints']);
+
         $path = $this->structureService->createPath(
             $blueprint,
-            $request->validated()
+            $validated
         );
+
+        // Обработать constraints после создания Path
+        if ($constraints !== null) {
+            $dataType = $validated['data_type'] ?? $path->data_type;
+            $this->syncConstraints($path, $constraints, $dataType);
+        }
+
+        // Загрузить constraints для ответа
+        $this->loadConstraintsRelations($path);
 
         return new PathResource($path);
     }
@@ -177,6 +201,9 @@ class PathController extends Controller
     public function show(Path $path): PathResource
     {
         $path->load(['blueprint', 'parent', 'children', 'sourceBlueprint', 'blueprintEmbed']);
+
+        // Загрузить constraints через билдер
+        $this->loadConstraintsRelations($path);
 
         return new PathResource($path);
     }
@@ -214,10 +241,24 @@ class PathController extends Controller
      */
     public function update(UpdatePathRequest $request, Path $path): PathResource
     {
+        $validated = $request->validated();
+        
+        // Извлечь constraints из данных перед передачей в сервис
+        $constraints = $validated['constraints'] ?? null;
+        unset($validated['constraints']);
+
         $updated = $this->structureService->updatePath(
             $path,
-            $request->validated()
+            $validated
         );
+
+        // Синхронизировать constraints, если они переданы в запросе
+        if ($constraints !== null) {
+            $this->syncConstraints($updated, $constraints, $updated->data_type);
+        }
+
+        // Загрузить constraints для ответа
+        $updated->load('refConstraints');
 
         return new PathResource($updated);
     }
@@ -270,6 +311,43 @@ class PathController extends Controller
         };
 
         return $buildChildren(null);
+    }
+
+    /**
+     * Синхронизировать constraints для Path на основе типа данных.
+     *
+     * Использует регистр билдеров для получения соответствующего билдера
+     * и делегирует синхронизацию ему.
+     *
+     * @param Path $path Path, для которого синхронизируются constraints
+     * @param array<string, mixed> $constraints Массив constraints в формате API
+     * @param string $dataType Тип данных поля
+     * @return void
+     */
+    private function syncConstraints(Path $path, array $constraints, string $dataType): void
+    {
+        $builder = $this->constraintsBuilderRegistry->getBuilder($dataType);
+
+        if ($builder !== null) {
+            $builder->sync($path, $constraints);
+        }
+    }
+
+    /**
+     * Загрузить необходимые связи для constraints всех типов.
+     *
+     * Использует регистр билдеров для загрузки связей в зависимости от типа данных Path.
+     *
+     * @param Path $path Path для загрузки связей
+     * @return void
+     */
+    private function loadConstraintsRelations(Path $path): void
+    {
+        $builder = $this->constraintsBuilderRegistry->getBuilder($path->data_type);
+
+        if ($builder !== null) {
+            $builder->loadRelations($path);
+        }
     }
 }
 

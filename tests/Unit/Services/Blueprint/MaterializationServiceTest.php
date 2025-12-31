@@ -7,6 +7,8 @@ use App\Exceptions\Blueprint\PathConflictException;
 use App\Models\Blueprint;
 use App\Models\BlueprintEmbed;
 use App\Models\Path;
+use App\Models\PathRefConstraint;
+use App\Models\PostType;
 use App\Services\Blueprint\BlueprintStructureService;
 use App\Services\Blueprint\MaterializationService;
 
@@ -287,5 +289,214 @@ test('удаление embed удаляет все копии', function () {
 
     $copiesCountAfter = Path::where('blueprint_embed_id', $embed->id)->count();
     expect($copiesCountAfter)->toBe(0);
+});
+
+// Тесты копирования constraints
+
+test('материализация копирует constraints для ref-полей', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    // Создаём PostType для constraints
+    $postType1 = PostType::factory()->create();
+    $postType2 = PostType::factory()->create();
+
+    // Создаём ref-поле с constraints
+    $refPath = Path::factory()->create([
+        'blueprint_id' => $embedded->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+    ]);
+
+    // Добавляем constraints
+    PathRefConstraint::factory()->create([
+        'path_id' => $refPath->id,
+        'allowed_post_type_id' => $postType1->id,
+    ]);
+    PathRefConstraint::factory()->create([
+        'path_id' => $refPath->id,
+        'allowed_post_type_id' => $postType2->id,
+    ]);
+
+    // Создаём embed
+    $embed = BlueprintEmbed::create([
+        'blueprint_id' => $host->id,
+        'embedded_blueprint_id' => $embedded->id,
+    ]);
+
+    // Материализуем
+    $this->service->materialize($embed);
+
+    // Проверяем, что constraints скопированы
+    $copiedPath = Path::where('blueprint_id', $host->id)
+        ->where('blueprint_embed_id', $embed->id)
+        ->where('name', 'author')
+        ->first();
+
+    expect($copiedPath)->not->toBeNull();
+
+    $copiedConstraints = PathRefConstraint::where('path_id', $copiedPath->id)->get();
+
+    expect($copiedConstraints)->toHaveCount(2)
+        ->and($copiedConstraints->pluck('allowed_post_type_id')->all())
+        ->toContain($postType1->id, $postType2->id);
+});
+
+test('материализация не копирует constraints для не ref-полей', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    // Создаём обычное поле (не ref)
+    Path::factory()->create([
+        'blueprint_id' => $embedded->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'data_type' => 'string',
+    ]);
+
+    $embed = BlueprintEmbed::create([
+        'blueprint_id' => $host->id,
+        'embedded_blueprint_id' => $embedded->id,
+    ]);
+
+    $this->service->materialize($embed);
+
+    // Проверяем, что constraints не созданы
+    $copiedPath = Path::where('blueprint_id', $host->id)
+        ->where('blueprint_embed_id', $embed->id)
+        ->where('name', 'title')
+        ->first();
+
+    expect($copiedPath)->not->toBeNull();
+
+    $constraints = PathRefConstraint::where('path_id', $copiedPath->id)->get();
+    expect($constraints)->toBeEmpty();
+});
+
+test('рематериализация удаляет старые constraints и создаёт новые', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+
+    $postType1 = PostType::factory()->create();
+    $postType2 = PostType::factory()->create();
+    $postType3 = PostType::factory()->create();
+
+    $refPath = Path::factory()->create([
+        'blueprint_id' => $embedded->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+    ]);
+
+    // Первая версия constraints
+    PathRefConstraint::factory()->create([
+        'path_id' => $refPath->id,
+        'allowed_post_type_id' => $postType1->id,
+    ]);
+    PathRefConstraint::factory()->create([
+        'path_id' => $refPath->id,
+        'allowed_post_type_id' => $postType2->id,
+    ]);
+
+    $embed = BlueprintEmbed::create([
+        'blueprint_id' => $host->id,
+        'embedded_blueprint_id' => $embedded->id,
+    ]);
+
+    // Первая материализация
+    $this->service->materialize($embed);
+
+    $copiedPath = Path::where('blueprint_id', $host->id)
+        ->where('blueprint_embed_id', $embed->id)
+        ->where('name', 'author')
+        ->first();
+
+    $constraintsBefore = PathRefConstraint::where('path_id', $copiedPath->id)->get();
+    expect($constraintsBefore)->toHaveCount(2);
+
+    // Обновляем constraints в source
+    PathRefConstraint::where('path_id', $refPath->id)->delete();
+    PathRefConstraint::factory()->create([
+        'path_id' => $refPath->id,
+        'allowed_post_type_id' => $postType2->id,
+    ]);
+    PathRefConstraint::factory()->create([
+        'path_id' => $refPath->id,
+        'allowed_post_type_id' => $postType3->id,
+    ]);
+
+    // Рематериализация
+    $this->service->materialize($embed);
+
+    // Проверяем, что constraints обновлены
+    $copiedPathAfter = Path::where('blueprint_id', $host->id)
+        ->where('blueprint_embed_id', $embed->id)
+        ->where('name', 'author')
+        ->first();
+
+    $constraintsAfter = PathRefConstraint::where('path_id', $copiedPathAfter->id)->get();
+
+    expect($constraintsAfter)->toHaveCount(2)
+        ->and($constraintsAfter->pluck('allowed_post_type_id')->all())
+        ->toContain($postType2->id, $postType3->id)
+        ->not->toContain($postType1->id);
+});
+
+test('транзитивное встраивание копирует constraints рекурсивно', function () {
+    $host = Blueprint::factory()->create(['code' => 'host']);
+    $embedded = Blueprint::factory()->create(['code' => 'embedded']);
+    $nested = Blueprint::factory()->create(['code' => 'nested']);
+
+    $postType = PostType::factory()->create();
+
+    // Nested blueprint с ref-полем
+    $nestedRefPath = Path::factory()->create([
+        'blueprint_id' => $nested->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $nestedRefPath->id,
+        'allowed_post_type_id' => $postType->id,
+    ]);
+
+    // Embedded blueprint с полем и embed nested
+    $group = Path::factory()->create([
+        'blueprint_id' => $embedded->id,
+        'name' => 'group',
+        'full_path' => 'group',
+    ]);
+
+    $nestedEmbed = BlueprintEmbed::create([
+        'blueprint_id' => $embedded->id,
+        'embedded_blueprint_id' => $nested->id,
+        'host_path_id' => $group->id,
+    ]);
+
+    // Материализуем nested в embedded
+    $this->service->materialize($nestedEmbed);
+
+    // Создаём embed embedded в host
+    $embed = BlueprintEmbed::create([
+        'blueprint_id' => $host->id,
+        'embedded_blueprint_id' => $embedded->id,
+    ]);
+
+    // Материализуем embedded в host
+    $this->service->materialize($embed);
+
+    // Проверяем, что constraints скопированы на всех уровнях
+    $copiedNestedPath = Path::where('blueprint_id', $host->id)
+        ->where('full_path', 'group.author')
+        ->first();
+
+    expect($copiedNestedPath)->not->toBeNull();
+
+    $constraints = PathRefConstraint::where('path_id', $copiedNestedPath->id)->get();
+    expect($constraints)->toHaveCount(1)
+        ->and($constraints->first()->allowed_post_type_id)->toBe($postType->id);
 });
 

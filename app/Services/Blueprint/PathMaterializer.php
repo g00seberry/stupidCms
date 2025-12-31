@@ -21,9 +21,11 @@ final class PathMaterializer implements PathMaterializerInterface
 {
     /**
      * @param int $batchInsertSize Размер batch для вставки путей
+     * @param \App\Services\Path\Constraints\PathConstraintsBuilderRegistry $constraintsBuilderRegistry Регистр билдеров constraints
      */
     public function __construct(
-        private readonly int $batchInsertSize = 500
+        private readonly int $batchInsertSize = 500,
+        private readonly \App\Services\Path\Constraints\PathConstraintsBuilderRegistry $constraintsBuilderRegistry
     ) {}
 
     /**
@@ -33,7 +35,8 @@ final class PathMaterializer implements PathMaterializerInterface
      * 1. Построение структуры путей с учётом baseParentPath
      * 2. Batch insert всех путей
      * 3. Batch update parent_id через CASE WHEN
-     * 4. Возврат карт соответствия (idMap, pathMap)
+     * 4. Копирование constraints для всех поддерживаемых типов полей
+     * 5. Возврат карт соответствия (idMap, pathMap)
      *
      * @param Blueprint $sourceBlueprint Исходный blueprint
      * @param Blueprint $hostBlueprint Целевой blueprint
@@ -98,6 +101,9 @@ final class PathMaterializer implements PathMaterializerInterface
         // Batch update parent_id через CASE WHEN
         $this->bulkUpdateParentIds($parentIdMap, $idMap, $insertedPaths);
 
+        // Копировать constraints для всех поддерживаемых типов полей
+        $this->copyAllConstraints($sourcePaths, $idMap);
+
         return ['idMap' => $idMap, 'pathMap' => $pathMap];
     }
 
@@ -121,10 +127,17 @@ final class PathMaterializer implements PathMaterializerInterface
         }
 
         // Fallback: загрузить через запрос
-        return $blueprint->paths()
+        $relationsToLoad = $this->getConstraintsRelationsToLoad();
+        
+        $query = $blueprint->paths()
             ->whereNull('source_blueprint_id')
-            ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'sort_order', 'validation_rules'])
-            ->orderByRaw('LENGTH(full_path), full_path')
+            ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'sort_order', 'validation_rules']);
+        
+        if (!empty($relationsToLoad)) {
+            $query->with($relationsToLoad);
+        }
+        
+        return $query->orderByRaw('LENGTH(full_path), full_path')
             ->get();
     }
 
@@ -321,6 +334,56 @@ final class PathMaterializer implements PathMaterializerInterface
             $insertedPath = $insertedPaths->firstWhere('id', $pathId);
             if ($insertedPath) {
                 $insertedPath->parent_id = $parentId;
+            }
+        }
+    }
+
+    /**
+     * Получить список имён связей для eager loading constraints.
+     *
+     * Собирает имена связей из всех зарегистрированных билдеров constraints
+     * для универсальной загрузки через with().
+     *
+     * @return array<string> Массив имён связей (например, ['refConstraints'])
+     */
+    private function getConstraintsRelationsToLoad(): array
+    {
+        $relationsToLoad = [];
+
+        foreach ($this->constraintsBuilderRegistry->getAllBuilders() as $builder) {
+            $relationName = $builder->getRelationName();
+            if ($relationName !== '') {
+                $relationsToLoad[] = $relationName;
+            }
+        }
+
+        return $relationsToLoad;
+    }
+
+    /**
+     * Скопировать все constraints из source paths в host paths.
+     *
+     * Использует регистр билдеров для копирования constraints всех поддерживаемых типов.
+     * Каждый билдер самостоятельно обрабатывает копирование constraints для своего типа данных.
+     *
+     * @param Collection<Path> $sourcePaths Исходные paths с загруженными constraints
+     * @param array<int, int> $idMap Карта соответствия source_path_id => copy_path_id
+     * @return void
+     */
+    private function copyAllConstraints(Collection $sourcePaths, array $idMap): void
+    {
+        foreach ($sourcePaths as $sourcePath) {
+            if (!isset($idMap[$sourcePath->id])) {
+                continue;
+            }
+
+            $builder = $this->constraintsBuilderRegistry->getBuilder($sourcePath->data_type);
+            if ($builder !== null) {
+                $builder->copyConstraints(
+                    $sourcePath,
+                    $idMap[$sourcePath->id],
+                    $this->batchInsertSize
+                );
             }
         }
     }

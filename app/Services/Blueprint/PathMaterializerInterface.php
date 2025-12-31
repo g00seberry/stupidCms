@@ -22,7 +22,8 @@ interface PathMaterializerInterface
      * 1. Построение структуры путей с учётом baseParentPath
      * 2. Batch insert всех путей
      * 3. Batch update parent_id через CASE WHEN
-     * 4. Возврат карт соответствия (idMap, pathMap)
+     * 4. Копирование constraints для ref-полей
+     * 5. Возврат карт соответствия (idMap, pathMap)
      *
      * @param Blueprint $sourceBlueprint Исходный blueprint
      * @param Blueprint $hostBlueprint Целевой blueprint

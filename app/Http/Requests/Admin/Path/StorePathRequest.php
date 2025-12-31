@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Path;
 
+use App\Http\Requests\Admin\Path\Concerns\PathConstraintsValidationRules;
 use App\Http\Requests\Admin\Path\Concerns\PathValidationRules;
 use App\Models\Blueprint;
-use App\Models\Path;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 
 /**
  * Request для создания Path.
@@ -30,12 +29,18 @@ use Illuminate\Validation\Validator;
  *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (расширенный формат: array с полями 'field', 'value', 'operator')
  *   - validation_rules.field_comparison: опциональное правило сравнения полей (array)
  *   - validation_rules.*: разрешены любые дополнительные ключи
+ * - constraints: опциональные ограничения для полей (массив)
+ *   Формат зависит от data_type:
+ *   - Для data_type='ref': constraints.allowed_post_type_ids (массив ID допустимых типов записей, обязателен для ref-полей)
+ *   - Для data_type='media': constraints.allowed_mimes (будущая поддержка)
+ *   - Для других типов данных: constraints запрещены
  *
  * @package App\Http\Requests\Admin\Path
  */
 class StorePathRequest extends FormRequest
 {
     use PathValidationRules;
+    use PathConstraintsValidationRules;
 
     /**
      * Определить, авторизован ли пользователь для выполнения запроса.
@@ -75,10 +80,18 @@ class StorePathRequest extends FormRequest
     {
         $commonRules = $this->getCommonPathRules();
         
+        // Получаем blueprint из route для правила валидации parent_id
+        $blueprint = $this->route('blueprint');
+        $blueprintId = ($blueprint instanceof Blueprint) ? $blueprint->id : 0;
+        
         return array_merge(
             [
                 'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
-                'parent_id' => ['nullable', 'integer', 'exists:paths,id'],
+                'parent_id' => [
+                    'nullable',
+                    'integer',
+                    Rule::exists('paths', 'id')->where('blueprint_id', $blueprintId),
+                ],
                 'data_type' => ['required', Rule::in(['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref'])],
             ],
             [
@@ -86,41 +99,11 @@ class StorePathRequest extends FormRequest
                 'is_indexed' => $commonRules['is_indexed'],
                 'sort_order' => $commonRules['sort_order'],
             ],
-            $this->getValidationRulesRules()
+            $this->getValidationRulesRules(),
+            $this->getConstraintsRulesForStore()
         );
     }
 
-    /**
-     * Настроить валидатор экземпляра.
-     *
-     * Добавляет проверку, что parent_id принадлежит тому же blueprint.
-     *
-     * @param \Illuminate\Validation\Validator $validator
-     * @return void
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator): void {
-            $blueprint = $this->route('blueprint');
-            $parentId = $this->input('parent_id');
-
-            if ($parentId === null || !($blueprint instanceof Blueprint)) {
-                return;
-            }
-
-            $parentPath = Path::find($parentId);
-            if ($parentPath === null) {
-                return; // Ошибка уже будет обработана правилом exists
-            }
-
-            if ($parentPath->blueprint_id !== $blueprint->id) {
-                $validator->errors()->add(
-                    'parent_id',
-                    "Родительское поле должно принадлежать тому же blueprint '{$blueprint->code}'."
-                );
-            }
-        });
-    }
 
     /**
      * Получить кастомные сообщения для ошибок валидации.
@@ -129,7 +112,10 @@ class StorePathRequest extends FormRequest
      */
     public function messages(): array
     {
-        return $this->getPathValidationMessages();
+        return array_merge(
+            $this->getPathValidationMessages(),
+            $this->getConstraintsValidationMessages()
+        );
     }
 }
 

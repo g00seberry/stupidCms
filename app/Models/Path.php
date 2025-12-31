@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \App\Models\BlueprintEmbed|null $blueprintEmbed
  * @property-read \App\Models\Path|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Path> $children
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PathRefConstraint> $refConstraints Ограничения на допустимые PostType для ref-полей
  */
 class Path extends Model
 {
@@ -121,6 +122,38 @@ class Path extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Path::class, 'parent_id');
+    }
+
+    /**
+     * Ограничения на допустимые PostType для ref-полей.
+     *
+     * @return HasMany<PathRefConstraint>
+     */
+    public function refConstraints(): HasMany
+    {
+        return $this->hasMany(PathRefConstraint::class);
+    }
+
+    /**
+     * Получить список ID допустимых PostType для этого ref-поля.
+     *
+     * @return array<int> Массив ID допустимых PostType
+     */
+    public function getAllowedPostTypeIds(): array
+    {
+        return $this->refConstraints()
+            ->pluck('allowed_post_type_id')
+            ->toArray();
+    }
+
+    /**
+     * Проверить, есть ли у этого path ограничения на ref-поля.
+     *
+     * @return bool true, если есть хотя бы одно ограничение
+     */
+    public function hasRefConstraints(): bool
+    {
+        return $this->refConstraints()->exists();
     }
 
     /**

@@ -11,6 +11,7 @@ use App\Http\Resources\Admin\BlueprintResource;
 use App\Models\Blueprint;
 use App\Models\Path;
 use App\Services\Blueprint\BlueprintStructureService;
+use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ErrorFactory;
 use App\Support\Errors\ErrorResponseFactory;
@@ -32,10 +33,12 @@ class BlueprintController extends Controller
     /**
      * @param BlueprintStructureService $structureService
      * @param ErrorFactory $errors
+     * @param PathConstraintsBuilderRegistry $constraintsBuilderRegistry
      */
     public function __construct(
         private readonly BlueprintStructureService $structureService,
-        private readonly ErrorFactory $errors
+        private readonly ErrorFactory $errors,
+        private readonly PathConstraintsBuilderRegistry $constraintsBuilderRegistry
     ) {}
 
     /**
@@ -404,6 +407,7 @@ class BlueprintController extends Controller
     public function schema(Blueprint $blueprint): JsonResponse
     {
         $paths = $blueprint->paths()
+            ->with('refConstraints')
             ->orderBy('sort_order')
             ->get();
 
@@ -462,6 +466,12 @@ class BlueprintController extends Controller
                 'validation' => $path->validation_rules ?? new \stdClass(),
             ];
 
+            // Добавляем constraints в новом плоском формате (в том же формате, что и в PathResource)
+            $constraints = $this->buildConstraintsForSchema($path);
+            if (!empty($constraints)) {
+                $fieldSchema['constraints'] = $constraints;
+            }
+
             // Если есть дочерние элементы, добавляем их в children
             if ($path->children && $path->children->isNotEmpty()) {
                 $fieldSchema['children'] = $this->buildSchema($path->children);
@@ -471,6 +481,26 @@ class BlueprintController extends Controller
         }
 
         return $schema;
+    }
+
+    /**
+     * Построить constraints для схемы blueprint.
+     *
+     * Использует регистр билдеров для получения соответствующего билдера
+     * и делегирует построение constraints ему.
+     *
+     * @param Path $path Path для построения constraints
+     * @return array<string, mixed> Массив constraints или пустой массив
+     */
+    private function buildConstraintsForSchema(Path $path): array
+    {
+        $builder = $this->constraintsBuilderRegistry->getBuilder($path->data_type);
+
+        if ($builder !== null) {
+            return $builder->buildForSchema($path);
+        }
+
+        return [];
     }
 }
 

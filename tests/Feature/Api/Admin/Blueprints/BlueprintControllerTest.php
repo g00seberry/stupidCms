@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Blueprint;
 use App\Models\Path;
+use App\Models\PathRefConstraint;
 use App\Models\PostType;
 use App\Models\User;
 
@@ -443,5 +444,158 @@ test('JSON схема blueprint правильно обрабатывает ул
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.type', 'float')
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.validation.required', true)
         ->assertJsonPath('schema.articles.children.author.children.contacts.children.coordinates.children.lng.cardinality', 'one');
+});
+
+// Тесты для constraints в JSON схеме
+
+test('JSON схема blueprint включает constraints для ref-полей', function () {
+    $blueprint = Blueprint::factory()->create(['code' => 'article']);
+
+    // Создаём PostType для constraints
+    $authorPostType = PostType::factory()->create(['name' => 'Author']);
+    $editorPostType = PostType::factory()->create(['name' => 'Editor']);
+
+    // Создаём ref-поле с constraints
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $authorPostType->id,
+    ]);
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $editorPostType->id,
+    ]);
+
+    $response = $this->getJson("/api/v1/admin/blueprints/{$blueprint->id}/schema");
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'schema' => [
+                'author' => ['type', 'indexed', 'cardinality', 'validation', 'constraints'],
+            ],
+        ])
+        ->assertJsonPath('schema.author.type', 'ref')
+        ->assertJsonPath('schema.author.constraints.allowed_post_type_ids', [$authorPostType->id, $editorPostType->id]);
+});
+
+test('JSON схема blueprint не включает constraints для не ref-полей', function () {
+    $blueprint = Blueprint::factory()->create(['code' => 'article']);
+
+    // Создаём обычное поле (не ref)
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'title',
+        'full_path' => 'title',
+        'data_type' => 'string',
+        'cardinality' => 'one',
+    ]);
+
+    $response = $this->getJson("/api/v1/admin/blueprints/{$blueprint->id}/schema");
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'schema' => [
+                'title' => ['type', 'indexed', 'cardinality', 'validation'],
+            ],
+        ])
+        ->assertJsonMissingPath('schema.title.constraints');
+});
+
+test('JSON схема blueprint не включает constraints для ref-полей без constraints', function () {
+    $blueprint = Blueprint::factory()->create(['code' => 'article']);
+
+    // Создаём ref-поле без constraints
+    Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+    ]);
+
+    $response = $this->getJson("/api/v1/admin/blueprints/{$blueprint->id}/schema");
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'schema' => [
+                'author' => ['type', 'indexed', 'cardinality', 'validation'],
+            ],
+        ])
+        ->assertJsonMissingPath('schema.author.constraints');
+});
+
+test('JSON схема blueprint включает constraints для вложенных ref-полей', function () {
+    $blueprint = Blueprint::factory()->create(['code' => 'article']);
+
+    $postType = PostType::factory()->create(['name' => 'Author']);
+
+    // Создаём вложенное ref-поле
+    $author = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'json',
+        'cardinality' => 'one',
+    ]);
+
+    $authorRef = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'parent_id' => $author->id,
+        'name' => 'ref',
+        'full_path' => 'author.ref',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorRef->id,
+        'allowed_post_type_id' => $postType->id,
+    ]);
+
+    $response = $this->getJson("/api/v1/admin/blueprints/{$blueprint->id}/schema");
+
+    $response->assertOk()
+        ->assertJsonPath('schema.author.children.ref.constraints.allowed_post_type_ids', [$postType->id]);
+});
+
+test('JSON схема blueprint формат constraints соответствует PathResource', function () {
+    $blueprint = Blueprint::factory()->create(['code' => 'article']);
+
+    $postType1 = PostType::factory()->create(['name' => 'Author']);
+    $postType2 = PostType::factory()->create(['name' => 'Editor']);
+
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $postType1->id,
+    ]);
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $postType2->id,
+    ]);
+
+    $response = $this->getJson("/api/v1/admin/blueprints/{$blueprint->id}/schema");
+
+    $response->assertOk()
+        ->assertJsonPath('schema.author.constraints.allowed_post_type_ids', function ($ids) use ($postType1, $postType2) {
+            return is_array($ids)
+                && count($ids) === 2
+                && in_array($postType1->id, $ids, true)
+                && in_array($postType2->id, $ids, true);
+        });
 });
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Admin;
 
+use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use Illuminate\Http\Request;
 
 /**
@@ -45,6 +46,11 @@ class PathResource extends AdminJsonResource
             'is_readonly' => (bool) $this->is_readonly,
             'sort_order' => $this->sort_order,
             'validation_rules' => $this->validation_rules,
+
+            // Constraints для полей
+            'constraints' => $this->when($this->hasConstraints(), function () {
+                return $this->getConstraintsArray();
+            }),
 
             // Источник копии (если копия)
             'source_blueprint_id' => $this->source_blueprint_id,
@@ -119,6 +125,54 @@ class PathResource extends AdminJsonResource
         // Если children не установлены (вернулось отношение), возвращаем пустую коллекцию
         // (этот случай не должен произойти, так как hasChildren() вернёт false)
         return PathResource::collection(collect());
+    }
+
+    /**
+     * Проверить, есть ли у path constraints.
+     *
+     * Использует регистр билдеров для проверки наличия constraints.
+     *
+     * @return bool true, если есть constraints
+     */
+    private function hasConstraints(): bool
+    {
+        $registry = $this->getConstraintsBuilderRegistry();
+        $builder = $registry->getBuilder($this->data_type);
+
+        if ($builder !== null) {
+            return $builder->hasConstraints($this->resource);
+        }
+
+        return false;
+    }
+
+    /**
+     * Получить массив constraints для ресурса.
+     *
+     * Использует регистр билдеров для построения constraints.
+     *
+     * @return array<string, mixed> Массив constraints
+     */
+    private function getConstraintsArray(): array
+    {
+        $registry = $this->getConstraintsBuilderRegistry();
+        $builder = $registry->getBuilder($this->data_type);
+
+        if ($builder !== null) {
+            return $builder->buildForResource($this->resource);
+        }
+
+        return [];
+    }
+
+    /**
+     * Получить регистр билдеров constraints.
+     *
+     * @return PathConstraintsBuilderRegistry
+     */
+    private function getConstraintsBuilderRegistry(): PathConstraintsBuilderRegistry
+    {
+        return app(PathConstraintsBuilderRegistry::class);
     }
 }
 

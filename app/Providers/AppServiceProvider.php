@@ -31,9 +31,16 @@ use App\Domain\Blueprint\Validation\Rules\Handlers\MaxRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\MinRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\NullableRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\PatternRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\RefPostTypeRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RequiredRuleHandler;
-use App\Domain\Blueprint\Validation\Rules\Handlers\TypeRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry;
+use App\Domain\Blueprint\Validation\Rules\Handlers\TypeRuleHandler;
+use App\Http\Requests\Admin\Path\Constraints\ConstraintsValidationBuilderRegistry;
+use App\Http\Requests\Admin\Path\Constraints\MediaConstraintsValidationBuilder;
+use App\Http\Requests\Admin\Path\Constraints\RefConstraintsValidationBuilder;
+use App\Services\Path\Constraints\MediaPathConstraintsBuilder;
+use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
+use App\Services\Path\Constraints\RefPathConstraintsBuilder;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
@@ -222,7 +229,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(BlueprintDependencyGraphLoaderInterface::class, BlueprintDependencyGraphLoader::class);
         $this->app->bind(PathMaterializerInterface::class, function ($app) {
             $batchInsertSize = (int) config('blueprint.batch_insert_size', 500);
-            return new PathMaterializer($batchInsertSize);
+            return new PathMaterializer(
+                $batchInsertSize,
+                $app->make(PathConstraintsBuilderRegistry::class)
+            );
         });
 
         $this->app->singleton(MaterializationService::class, function ($app) {
@@ -249,7 +259,29 @@ class AppServiceProvider extends ServiceProvider
             PathValidationRulesConverter::class
         );
         
-        // Entry validation service
+        // Path constraints validation builders registry
+        $this->app->singleton(ConstraintsValidationBuilderRegistry::class, function () {
+            $registry = new ConstraintsValidationBuilderRegistry();
+
+            // Регистрируем билдеры для различных типов данных
+            $registry->register('ref', new RefConstraintsValidationBuilder());
+            $registry->register('media', new MediaConstraintsValidationBuilder());
+
+            return $registry;
+        });
+
+        // Path constraints builders registry (для работы с constraints: сериализация, синхронизация, валидация, копирование)
+        $this->app->singleton(PathConstraintsBuilderRegistry::class, function () {
+            $registry = new PathConstraintsBuilderRegistry();
+
+            // Регистрируем билдеры для различных типов данных
+            $registry->register('ref', new RefPathConstraintsBuilder());
+            $registry->register('media', new MediaPathConstraintsBuilder());
+
+            return $registry;
+        });
+        
+        // Entry validation service (использует PathConstraintsBuilderRegistry)
         $this->app->singleton(
             \App\Domain\Blueprint\Validation\EntryValidationServiceInterface::class,
             \App\Domain\Blueprint\Validation\EntryValidationService::class
@@ -272,6 +304,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register('prohibited_if', new ConditionalRuleHandler());
             $registry->register('field_comparison', new FieldComparisonRuleHandler());
             $registry->register('type', new TypeRuleHandler());
+            $registry->register('ref_post_type', new RefPostTypeRuleHandler());
 
             return $registry;
         });

@@ -26,12 +26,14 @@ final class EntryValidationService implements EntryValidationServiceInterface
      * @param \App\Domain\Blueprint\Validation\FieldPathBuilder $fieldPathBuilder Построитель путей полей
      * @param \App\Domain\Blueprint\Validation\DataTypeMapper $dataTypeMapper Маппер типов данных
      * @param \App\Domain\Blueprint\Validation\Rules\RuleFactory $ruleFactory Фабрика правил
+     * @param \App\Services\Path\Constraints\PathConstraintsBuilderRegistry $constraintsBuilderRegistry Регистр билдеров constraints
      */
     public function __construct(
         private readonly PathValidationRulesConverterInterface $converter,
         private readonly FieldPathBuilder $fieldPathBuilder,
         private readonly DataTypeMapper $dataTypeMapper,
-        private readonly RuleFactory $ruleFactory
+        private readonly RuleFactory $ruleFactory,
+        private readonly \App\Services\Path\Constraints\PathConstraintsBuilderRegistry $constraintsBuilderRegistry
     ) {}
 
     /**
@@ -51,9 +53,17 @@ final class EntryValidationService implements EntryValidationServiceInterface
 
         // Загружаем все Path из blueprint (включая скопированные)
         // Теперь загружаем также data_type для автоматического создания правил типов
-        $paths = $blueprint->paths()
-            ->select(['id', 'name', 'full_path', 'cardinality', 'data_type', 'validation_rules'])
-            ->orderByRaw('LENGTH(full_path), full_path')
+        // И загружаем constraints для всех поддерживаемых типов данных через регистр
+        $relationsToLoad = $this->getConstraintsRelationsToLoad();
+        
+        $query = $blueprint->paths()
+            ->select(['id', 'name', 'full_path', 'cardinality', 'data_type', 'validation_rules']);
+        
+        if (!empty($relationsToLoad)) {
+            $query->with($relationsToLoad);
+        }
+        
+        $paths = $query->orderByRaw('LENGTH(full_path), full_path')
             ->get();
 
         if ($paths->isEmpty()) {
@@ -99,9 +109,53 @@ final class EntryValidationService implements EntryValidationServiceInterface
                     $ruleSet->addRule($fieldPath, $this->ruleFactory->createTypeRule($validationType));
                 }
             }
+
+            // Добавляем валидацию constraints через билдеры
+            $constraintsBuilder = $this->constraintsBuilderRegistry->getBuilder($path->data_type);
+            if ($constraintsBuilder !== null) {
+                $validationRule = $constraintsBuilder->buildValidationRule(
+                    $path,
+                    $this->ruleFactory,
+                    $fieldPath,
+                    $path->cardinality
+                );
+
+                if ($validationRule !== null) {
+                    // Для cardinality = 'many' правило применяется к элементам массива
+                    // Для cardinality = 'one' правило применяется к самому полю
+                    if ($path->cardinality === 'many') {
+                        $refFieldPath = $fieldPath . ValidationConstants::ARRAY_ELEMENT_WILDCARD;
+                        $ruleSet->addRule($refFieldPath, $validationRule);
+                    } else {
+                        $ruleSet->addRule($fieldPath, $validationRule);
+                    }
+                }
+            }
         }
 
         return $ruleSet;
+    }
+
+    /**
+     * Получить список имён связей для eager loading constraints.
+     *
+     * Собирает имена связей из всех зарегистрированных билдеров constraints
+     * для универсальной загрузки через with().
+     *
+     * @return array<string> Массив имён связей (например, ['refConstraints'])
+     */
+    private function getConstraintsRelationsToLoad(): array
+    {
+        $relationsToLoad = [];
+
+        foreach ($this->constraintsBuilderRegistry->getAllBuilders() as $builder) {
+            $relationName = $builder->getRelationName();
+            if ($relationName !== '') {
+                $relationsToLoad[] = $relationName;
+            }
+        }
+
+        return $relationsToLoad;
     }
 
     /**

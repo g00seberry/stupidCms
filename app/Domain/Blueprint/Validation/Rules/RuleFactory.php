@@ -90,5 +90,14 @@ interface RuleFactory
      * @return \App\Domain\Blueprint\Validation\Rules\TypeRule
      */
     public function createTypeRule(string $type): TypeRule;
+
+    /**
+     * Создать правило валидации post_type_id для ref-полей.
+     *
+     * @param array<int> $allowedPostTypeIds Список допустимых post_type_id
+     * @param string $pathFullPath Полный путь к ref-полю (для сообщений об ошибках)
+     * @return \App\Domain\Blueprint\Validation\Rules\RefPostTypeRule
+     */
+    public function createRefPostTypeRule(array $allowedPostTypeIds, string $pathFullPath): RefPostTypeRule;
 }
 

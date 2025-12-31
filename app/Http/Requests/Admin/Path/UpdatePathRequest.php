@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Path;
 
+use App\Http\Requests\Admin\Path\Concerns\PathConstraintsValidationRules;
 use App\Http\Requests\Admin\Path\Concerns\PathValidationRules;
+use App\Models\Path;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +16,7 @@ use Illuminate\Validation\Rule;
  * Валидирует данные для обновления поля blueprint:
  * - name: опциональное имя поля (regex: a-z0-9_)
  * - parent_id: опциональный ID родительского поля
- * - data_type: опциональный тип данных
+ * - data_type: запрещен (нельзя изменять после создания)
  * - cardinality: опциональная кардинальность (one/many)
  * - is_indexed: опциональный флаг индексации
  * - sort_order: опциональный порядок сортировки
@@ -27,12 +29,18 @@ use Illuminate\Validation\Rule;
  *   - validation_rules.required_if, validation_rules.prohibited_unless, validation_rules.required_unless, validation_rules.prohibited_if: опциональные условные правила (расширенный формат: array с полями 'field', 'value', 'operator')
  *   - validation_rules.field_comparison: опциональное правило сравнения полей (array)
  *   - validation_rules.*: разрешены любые дополнительные ключи
+ * - constraints: опциональные ограничения для полей (массив)
+ *   Формат зависит от текущего data_type поля (data_type нельзя изменять):
+ *   - Для data_type='ref': constraints.allowed_post_type_ids (массив ID допустимых типов записей, минимум 1 элемент)
+ *   - Для data_type='media': constraints.allowed_mimes (будущая поддержка)
+ *   - Для других типов данных: constraints запрещены
  *
  * @package App\Http\Requests\Admin\Path
  */
 class UpdatePathRequest extends FormRequest
 {
     use PathValidationRules;
+    use PathConstraintsValidationRules;
 
     /**
      * Определить, авторизован ли пользователь для выполнения запроса.
@@ -52,7 +60,7 @@ class UpdatePathRequest extends FormRequest
      * Валидирует:
      * - name: опциональное имя поля (regex: a-z0-9_)
      * - parent_id: опциональный ID родительского поля (существующий path)
-     * - data_type: опциональный тип данных (enum)
+     * - data_type: запрещен (нельзя изменять после создания)
      * - cardinality: опциональная кардинальность (one/many)
      * - is_indexed: опциональный флаг индексации
      * - sort_order: опциональный порядок сортировки (>= 0)
@@ -72,13 +80,24 @@ class UpdatePathRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Получаем текущий Path для определения data_type и blueprint_id
+        $path = $this->route('path');
+        $blueprintId = ($path instanceof Path) ? $path->blueprint_id : 0;
+
         return array_merge(
             [
                 'name' => ['sometimes', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
-                'parent_id' => ['sometimes', 'nullable', 'integer', 'exists:paths,id'],
+                'data_type' => ['prohibited'],
+                'parent_id' => [
+                    'sometimes',
+                    'nullable',
+                    'integer',
+                    Rule::exists('paths', 'id')->where('blueprint_id', $blueprintId),
+                ],
             ],
             $this->getCommonPathRules(),
-            $this->getValidationRulesRules()
+            $this->getValidationRulesRules(),
+            $this->getConstraintsRulesForUpdate($path)
         );
     }
 
@@ -89,7 +108,10 @@ class UpdatePathRequest extends FormRequest
      */
     public function messages(): array
     {
-        return $this->getPathValidationMessages();
+        return array_merge(
+            $this->getPathValidationMessages(),
+            $this->getConstraintsValidationMessages()
+        );
     }
 }
 

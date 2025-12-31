@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Blueprint;
 use App\Models\Entry;
 use App\Models\Path;
+use App\Models\PathRefConstraint;
 use App\Models\PostType;
 use App\Models\User;
 
@@ -294,5 +295,324 @@ test('entry creation with nested paths validates correctly', function () {
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors(['data_json.author.name']);
+});
+
+// Тесты валидации ref-полей с constraints
+
+test('entry creation validates ref field with valid post_type_id', function () {
+    // Создаём PostType для ref-поля
+    $authorPostType = PostType::factory()->create(['name' => 'Author']);
+
+    // Создаём ref-поле с constraints
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $this->blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+        'validation_rules' => null,
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $authorPostType->id,
+    ]);
+
+    // Создаём Entry с допустимым post_type_id
+    $authorEntry = Entry::factory()->create([
+        'post_type_id' => $authorPostType->id,
+        'title' => 'Author Entry',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $authorEntry->id,
+            ],
+        ]);
+
+    $response->assertCreated();
+});
+
+test('entry creation validates ref field with invalid post_type_id', function () {
+    // Создаём PostType для ref-поля
+    $authorPostType = PostType::factory()->create(['name' => 'Author']);
+    $otherPostType = PostType::factory()->create(['name' => 'Other']);
+
+    // Создаём ref-поле с constraints
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $this->blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+        'validation_rules' => null,
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $authorPostType->id,
+    ]);
+
+    // Создаём Entry с недопустимым post_type_id
+    $otherEntry = Entry::factory()->create([
+        'post_type_id' => $otherPostType->id,
+        'title' => 'Other Entry',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $otherEntry->id,
+            ],
+        ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['data_json.author']);
+});
+
+test('entry creation validates ref field with multiple allowed post_type_ids', function () {
+    // Создаём несколько PostType
+    $authorPostType = PostType::factory()->create(['name' => 'Author']);
+    $editorPostType = PostType::factory()->create(['name' => 'Editor']);
+    $otherPostType = PostType::factory()->create(['name' => 'Other']);
+
+    // Создаём ref-поле с несколькими constraints
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $this->blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+        'validation_rules' => null,
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $authorPostType->id,
+    ]);
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $editorPostType->id,
+    ]);
+
+    // Создаём Entry с допустимым post_type_id (Author)
+    $authorEntry = Entry::factory()->create([
+        'post_type_id' => $authorPostType->id,
+        'title' => 'Author Entry',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $authorEntry->id,
+            ],
+        ]);
+
+    $response->assertCreated();
+
+    // Проверяем с Editor
+    $editorEntry = Entry::factory()->create([
+        'post_type_id' => $editorPostType->id,
+        'title' => 'Editor Entry',
+    ]);
+
+    $response2 = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article 2',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $editorEntry->id,
+            ],
+        ]);
+
+    $response2->assertCreated();
+
+    // Проверяем с недопустимым Other
+    $otherEntry = Entry::factory()->create([
+        'post_type_id' => $otherPostType->id,
+        'title' => 'Other Entry',
+    ]);
+
+    $response3 = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article 3',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $otherEntry->id,
+            ],
+        ]);
+
+    $response3->assertStatus(422);
+    $response3->assertJsonValidationErrors(['data_json.author']);
+});
+
+test('entry creation validates ref field with cardinality many', function () {
+    // Создаём PostType для ref-поля
+    $authorPostType = PostType::factory()->create(['name' => 'Author']);
+    $otherPostType = PostType::factory()->create(['name' => 'Other']);
+
+    // Создаём ref-поле с constraints и cardinality=many
+    $authorsPath = Path::factory()->create([
+        'blueprint_id' => $this->blueprint->id,
+        'name' => 'authors',
+        'full_path' => 'authors',
+        'data_type' => 'ref',
+        'cardinality' => 'many',
+        'validation_rules' => null,
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorsPath->id,
+        'allowed_post_type_id' => $authorPostType->id,
+    ]);
+
+    // Создаём Entry с допустимым и недопустимым post_type_id
+    $authorEntry1 = Entry::factory()->create([
+        'post_type_id' => $authorPostType->id,
+        'title' => 'Author Entry 1',
+    ]);
+    $authorEntry2 = Entry::factory()->create([
+        'post_type_id' => $authorPostType->id,
+        'title' => 'Author Entry 2',
+    ]);
+    $otherEntry = Entry::factory()->create([
+        'post_type_id' => $otherPostType->id,
+        'title' => 'Other Entry',
+    ]);
+
+    // Валидный массив
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'authors' => [$authorEntry1->id, $authorEntry2->id],
+            ],
+        ]);
+
+    $response->assertCreated();
+
+    // Невалидный массив (содержит недопустимый post_type_id)
+    $response2 = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article 2',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'authors' => [$authorEntry1->id, $otherEntry->id],
+            ],
+        ]);
+
+    $response2->assertStatus(422);
+    $response2->assertJsonValidationErrors(['data_json.authors.1']);
+});
+
+test('entry creation validates ref field without constraints', function () {
+    // Создаём ref-поле без constraints
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $this->blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+        'validation_rules' => null,
+    ]);
+
+    // Создаём Entry с любым post_type_id
+    $anyEntry = Entry::factory()->create([
+        'title' => 'Any Entry',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->postJson('/api/v1/admin/entries', [
+            'post_type_id' => $this->postType->id,
+            'title' => 'Test Article',
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $anyEntry->id,
+            ],
+        ]);
+
+    // Валидация должна пройти, так как нет constraints
+    $response->assertCreated();
+});
+
+test('entry update validates ref field with constraints', function () {
+    // Создаём PostType для ref-поля
+    $authorPostType = PostType::factory()->create(['name' => 'Author']);
+    $otherPostType = PostType::factory()->create(['name' => 'Other']);
+
+    // Создаём ref-поле с constraints
+    $authorPath = Path::factory()->create([
+        'blueprint_id' => $this->blueprint->id,
+        'name' => 'author',
+        'full_path' => 'author',
+        'data_type' => 'ref',
+        'cardinality' => 'one',
+        'validation_rules' => null,
+    ]);
+
+    PathRefConstraint::factory()->create([
+        'path_id' => $authorPath->id,
+        'allowed_post_type_id' => $authorPostType->id,
+    ]);
+
+    // Создаём Entry
+    $entry = Entry::factory()->create([
+        'post_type_id' => $this->postType->id,
+        'title' => 'Test Article',
+        'data_json' => [
+            'title' => 'Valid Title',
+            'price' => 100,
+        ],
+    ]);
+
+    // Создаём Entry с недопустимым post_type_id
+    $otherEntry = Entry::factory()->create([
+        'post_type_id' => $otherPostType->id,
+        'title' => 'Other Entry',
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
+        ->putJson("/api/v1/admin/entries/{$entry->id}", [
+            'data_json' => [
+                'title' => 'Valid Title',
+                'price' => 100,
+                'author' => $otherEntry->id,
+            ],
+        ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['data_json.author']);
 });
 

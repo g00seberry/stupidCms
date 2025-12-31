@@ -74,12 +74,12 @@ trait PathValidationRules
     protected function getCommonPathRules(): array
     {
         return [
-            'data_type' => ['sometimes', Rule::in(['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref'])],
             'cardinality' => ['sometimes', Rule::in(['one', 'many'])],
             'is_indexed' => ['sometimes', 'boolean'],
             'sort_order' => ['sometimes', 'integer', 'min:0'],
         ];
     }
+
 
     /**
      * Получить кастомные сообщения для ошибок валидации.
@@ -90,6 +90,7 @@ trait PathValidationRules
     {
         return [
             'name.regex' => 'Имя поля может содержать только строчные буквы, цифры и подчёркивания.',
+            'parent_id.exists' => 'Родительское поле должно принадлежать тому же blueprint.',
         ];
     }
 }

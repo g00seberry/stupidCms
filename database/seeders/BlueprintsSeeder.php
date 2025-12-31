@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Blueprint;
+use App\Models\PathRefConstraint;
 use App\Models\PostType;
 use App\Models\User;
 use App\Services\Blueprint\BlueprintStructureService;
+use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use Illuminate\Database\Seeder;
 
 /**
@@ -23,9 +25,11 @@ class BlueprintsSeeder extends Seeder
 {
     /**
      * @param BlueprintStructureService $structureService
+     * @param PathConstraintsBuilderRegistry $constraintsBuilderRegistry
      */
     public function __construct(
-        private readonly BlueprintStructureService $structureService
+        private readonly BlueprintStructureService $structureService,
+        private readonly PathConstraintsBuilderRegistry $constraintsBuilderRegistry
     ) {
     }
 
@@ -507,7 +511,7 @@ class BlueprintsSeeder extends Seeder
         ]);
 
         // Массив связанных статей (ref)
-        $this->structureService->createPath($blueprint, [
+        $relatedArticlesPath = $this->structureService->createPath($blueprint, [
             'name' => 'related_articles',
             'data_type' => 'ref',
             'cardinality' => 'many',
@@ -515,7 +519,18 @@ class BlueprintsSeeder extends Seeder
             'sort_order' => 300,
         ]);
 
-        $this->command->info("  ✓ Created '{$blueprint->code}' with 6 fields + author group + SEO group + refs");
+        // Добавить constraints для ref-поля: разрешить только Article PostType
+        $articlePostType = PostType::where('name', 'Article')->first();
+        if ($articlePostType) {
+            $builder = $this->constraintsBuilderRegistry->getBuilder('ref');
+            if ($builder !== null) {
+                $builder->sync($relatedArticlesPath, [
+                    'allowed_post_type_ids' => [$articlePostType->id],
+                ]);
+            }
+        }
+
+        $this->command->info("  ✓ Created '{$blueprint->code}' with 6 fields + author group + SEO group + refs (with constraints)");
         return $blueprint;
     }
 
@@ -622,6 +637,7 @@ class BlueprintsSeeder extends Seeder
         $embedsCount = \App\Models\BlueprintEmbed::count();
         $ownPathsCount = \App\Models\Path::whereNull('source_blueprint_id')->count();
         $copiedPathsCount = \App\Models\Path::whereNotNull('source_blueprint_id')->count();
+        $refConstraintsCount = PathRefConstraint::count();
 
         $this->command->newLine();
         $this->command->info('📊 Summary:');
@@ -630,6 +646,7 @@ class BlueprintsSeeder extends Seeder
         $this->command->info("    - Own paths: {$ownPathsCount}");
         $this->command->info("    - Copied paths (materialized): {$copiedPathsCount}");
         $this->command->info("  • Embeds: {$embedsCount}");
+        $this->command->info("  • Ref Constraints: {$refConstraintsCount}");
     }
 }
 
