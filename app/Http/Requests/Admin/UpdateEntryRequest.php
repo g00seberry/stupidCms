@@ -43,7 +43,7 @@ class UpdateEntryRequest extends FormRequest
      * Валидирует (все поля опциональны):
      * - title: заголовок (максимум 500 символов)
      * - data_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
-     * - is_published: boolean
+     * - status: статус записи (draft или published)
      * - published_at: дата публикации
      * - template_override: шаблон
      * - term_ids: массив ID термов
@@ -67,7 +67,7 @@ class UpdateEntryRequest extends FormRequest
         return [
             'title' => 'sometimes|required|string|max:500',
             'data_json' => ['sometimes', 'nullable', 'array'],
-            'is_published' => 'sometimes|boolean',
+            'status' => 'sometimes|nullable|string|in:draft,published',
             'published_at' => 'sometimes|nullable|date',
             'template_override' => 'sometimes|nullable|string|max:255',
             'term_ids' => 'sometimes|nullable|array',

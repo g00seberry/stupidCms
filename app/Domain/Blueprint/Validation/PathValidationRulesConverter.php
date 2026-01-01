@@ -41,14 +41,13 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
      * @throws \App\Domain\Blueprint\Validation\Exceptions\InvalidValidationRuleException Если встречено неизвестное правило
      */
     public function convert(?array $validationRules): array {
+        $safeValidationRules = empty($validationRules)?[]:$validationRules;
         $rules = [];
-
-        // Если нет validation_rules, возвращаем пустой массив
-        if ($validationRules === null || $validationRules === []) {
-            return $rules;
+        $needNullable = empty($safeValidationRules['required']);
+        if ($needNullable) {
+            $rules[] = $this->ruleFactory->createNullableRule();
         }
-
-        foreach ($validationRules as $key => $value) {
+        foreach ($safeValidationRules as $key => $value) {
             match ($key) {
                 'required' => $value ? $rules[] = $this->ruleFactory->createRequiredRule() : null,
                 'min' => $rules[] = $this->ruleFactory->createMinRule($value),
@@ -60,13 +59,6 @@ final class PathValidationRulesConverter implements PathValidationRulesConverter
                 default => throw new InvalidValidationRuleException("Неизвестное правило валидации: {$key}"),
             };
         }
-
-        $hasRequiredRule = ($validationRules['required'] ?? false) === true;
-        // Если не было явного правила required/nullable, добавляем nullable по умолчанию
-        if (! $hasRequiredRule) {
-            $rules[] = $this->ruleFactory->createNullableRule();
-        }
-
         return $rules;
     }
 

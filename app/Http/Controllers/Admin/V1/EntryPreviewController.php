@@ -35,6 +35,10 @@ class EntryPreviewController extends Controller
      * @response status=200 {
      *   "entry": {
      *     "id": 42,
+     *     "post_type": {
+     *       "id": 1,
+     *       "name": "article"
+     *     },
      *     "title": "Draft article",
      *     "status": "draft",
      *     "published_at": null,
@@ -96,6 +100,10 @@ class EntryPreviewController extends Controller
         return response()->json([
             'entry' => [
                 'id' => $entryModel->id,
+                'post_type' => $entryModel->postType ? [
+                    'id' => $entryModel->postType->id,
+                    'name' => $entryModel->postType->name,
+                ] : null,
                 'title' => $entryModel->title,
                 'status' => $entryModel->status,
                 'published_at' => $entryModel->published_at?->toIso8601String(),

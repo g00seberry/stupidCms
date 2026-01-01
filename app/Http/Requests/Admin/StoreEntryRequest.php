@@ -13,7 +13,7 @@ use Illuminate\Validation\Validator;
  *
  * Валидирует данные для создания записи контента:
  * - Обязательные: post_type_id, title
- * - Опциональные: data_json, published_at
+ * - Опциональные: data_json, status, published_at
  *
  * @package App\Http\Requests\Admin
  */
@@ -39,7 +39,7 @@ class StoreEntryRequest extends FormRequest
      * - post_type_id: обязательный ID типа записи (должен существовать)
      * - title: обязательный заголовок (максимум 500 символов)
      * - data_json: опциональный JSON массив (валидируется по правилам Blueprint, если привязан)
-     * - is_published: опциональный boolean
+     * - status: опциональный статус записи (draft или published)
      * - published_at: опциональная дата публикации
      * - template_override: опциональный шаблон
      * - term_ids: опциональный массив ID термов
@@ -52,29 +52,12 @@ class StoreEntryRequest extends FormRequest
             'post_type_id' => 'required|integer|exists:post_types,id',
             'title' => 'required|string|max:500',
             'data_json' => ['nullable', 'array'],
-            'is_published' => 'boolean',
+            'status' => 'nullable|string|in:draft,published',
             'published_at' => 'nullable|date',
             'template_override' => 'nullable|string|max:255',
             'term_ids' => 'nullable|array',
             'term_ids.*' => 'integer|exists:terms,id',
         ];
-    }
-
-    /**
-     * Подготовить данные для валидации.
-     *
-     * Автоматически устанавливает published_at в текущее время,
-     * если is_published=true и published_at не указан.
-     *
-     * @return void
-     */
-    protected function prepareForValidation(): void
-    {
-        if ($this->boolean('is_published') && ! $this->has('published_at')) {
-            $this->merge([
-                'published_at' => now()->toDateTimeString(),
-            ]);
-        }
     }
 
     /**

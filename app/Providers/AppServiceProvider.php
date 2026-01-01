@@ -316,6 +316,19 @@ class AppServiceProvider extends ServiceProvider
 
         // Entry indexing service
         $this->app->singleton(EntryIndexer::class);
+
+        // Entry related data services
+        $this->app->singleton(\App\Services\Entry\RelatedDataProviderRegistry::class, function () {
+            $registry = new \App\Services\Entry\RelatedDataProviderRegistry();
+            
+            // Регистрируем провайдер для Entry данных
+            $registry->register(new \App\Services\Entry\Providers\EntryRelatedDataProvider());
+            
+            return $registry;
+        });
+
+        $this->app->singleton(\App\Services\Entry\EntryRefExtractor::class);
+        $this->app->singleton(\App\Services\Entry\EntryRelatedDataLoader::class);
     }
 
     /**

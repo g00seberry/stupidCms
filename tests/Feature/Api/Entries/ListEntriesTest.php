@@ -30,7 +30,7 @@ test('admin can list entries', function () {
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
-                '*' => ['id', 'post_type_id', 'title', 'status'],
+                '*' => ['id', 'post_type', 'title', 'status'],
             ],
             'links',
             'meta' => ['current_page', 'last_page', 'per_page', 'total'],
@@ -76,7 +76,7 @@ test('entries can be filtered by post type', function () {
     expect(count($response->json('data')))->toBeGreaterThanOrEqual(2);
     // Проверяем, что все записи принадлежат нужному post_type
     foreach ($response->json('data') as $entry) {
-        expect($entry['post_type_id'])->toBe($this->postType->id);
+        expect($entry['post_type']['id'])->toBe($this->postType->id);
     }
 });
 

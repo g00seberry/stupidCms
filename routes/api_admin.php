@@ -189,6 +189,15 @@ return [
             ],
             [
                 'kind' => RouteNodeKind::ROUTE,
+                'uri' => '/entries/search',
+                'methods' => ['GET'],
+                'action_type' => RouteNodeActionType::CONTROLLER,
+                'action' => 'App\Http\Controllers\Admin\V1\EntryController@search',
+                'name' => 'admin.v1.entries.search',
+                'middleware' => ['can:viewAny,App\Models\Entry'],
+            ],
+            [
+                'kind' => RouteNodeKind::ROUTE,
                 'uri' => '/entries',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,

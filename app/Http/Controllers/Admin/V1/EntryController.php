@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\IndexEntriesRequest;
+use App\Http\Requests\Admin\SearchEntriesRequest;
 use App\Http\Requests\Admin\StoreEntryRequest;
 use App\Http\Requests\Admin\UpdateEntryRequest;
 use App\Http\Resources\Admin\EntryCollection;
@@ -60,11 +61,13 @@ class EntryController extends Controller
      *   "data": [
      *     {
      *       "id": 42,
-     *       "post_type_id": 1,
+     *       "post_type": {
+     *         "id": 1,
+     *         "name": "Article"
+     *       },
      *       "title": "Headless CMS launch checklist",
      *       "status": "draft",
      *       "data_json": null,
-     *       "is_published": false,
      *       "published_at": null,
      *       "template_override": null,
      *       "created_at": "2025-01-10T12:00:00+00:00",
@@ -197,9 +200,146 @@ class EntryController extends Controller
     }
 
     /**
-     * Получение записи по ID (включая удалённые).
+     * Поиск записей по заголовку и фильтрация по типам записей.
      *
-     * Возвращает запись с blueprint, назначенным в родительском PostType.
+     * Упрощённый поиск записей с поддержкой пагинации.
+     * Исключает удалённые записи из результатов.
+     *
+     * @group Admin ▸ Entries
+     * @name Search entries
+     * @authenticated
+     * @queryParam filters[title] string Поиск по заголовку (<=500 символов). Example: landing
+     * @queryParam filters[post_type_ids][] int ID типов записей (множественный фильтр).
+     * @queryParam pagination[per_page] int Количество элементов на страницу (10-100). Default: 15.
+     * @queryParam pagination[page] int Номер страницы (>=1). Default: 1.
+     * @response status=200 {
+     *   "data": [
+     *     {
+     *       "id": 42,
+     *       "post_type": {
+     *         "id": 1,
+     *         "name": "Article"
+     *       },
+     *       "title": "Landing page",
+     *       "status": "published",
+     *       "data_json": null,
+     *       "published_at": "2025-01-10T12:00:00+00:00",
+     *       "template_override": null,
+     *       "author": {
+     *         "id": 7,
+     *         "name": "Admin User"
+     *       },
+     *       "terms": [],
+     *       "created_at": "2025-01-10T12:00:00+00:00",
+     *       "updated_at": "2025-01-10T12:00:00+00:00",
+     *       "deleted_at": null
+     *     }
+     *   ],
+     *   "links": {
+     *     "first": "https://api.stupidcms.dev/api/v1/admin/entries/search?page=1",
+     *     "last": "https://api.stupidcms.dev/api/v1/admin/entries/search?page=5",
+     *     "prev": null,
+     *     "next": "https://api.stupidcms.dev/api/v1/admin/entries/search?page=2"
+     *   },
+     *   "meta": {
+     *     "current_page": 1,
+     *     "last_page": 5,
+     *     "per_page": 15,
+     *     "total": 74
+     *   }
+     * }
+     * @response status=401 {
+     *   "type": "https://stupidcms.dev/problems/unauthorized",
+     *   "title": "Unauthorized",
+     *   "status": 401,
+     *   "code": "UNAUTHORIZED",
+     *   "detail": "Authentication is required to access this resource.",
+     *   "meta": {
+     *     "request_id": "f51ce7c9-eed5-43b8-b7cb-6c30033f3f5e",
+     *     "reason": "missing_token"
+     *   },
+     *   "trace_id": "00-f51ce7c9eed543b8b7cb6c30033f3f5e-f51ce7c9eed543b8-01"
+     * }
+     * @response status=403 {
+     *   "type": "https://stupidcms.dev/problems/forbidden",
+     *   "title": "Forbidden",
+     *   "status": 403,
+     *   "code": "FORBIDDEN",
+     *   "detail": "Admin privileges are required.",
+     *   "meta": {
+     *     "request_id": "0b6c3003-3f5e-9f51-ce7c-eed543b8b7cb",
+     *     "permission": "entries.view"
+     *   },
+     *   "trace_id": "00-0b6c30033f5e9f51ce7ceed543b8b7cb-0b6c30033f5e9f51-01"
+     * }
+     * @response status=422 {
+     *   "type": "https://stupidcms.dev/problems/validation-error",
+     *   "title": "Validation Error",
+     *   "status": 422,
+     *   "code": "VALIDATION_ERROR",
+     *   "detail": "The given data was invalid.",
+     *   "meta": {
+     *     "request_id": "7ceed543-b8b7-cb6c-3003-3f5ef51ce7c9",
+     *     "errors": {
+     *       "filters.post_type_ids.0": [
+     *         "One or more specified post types do not exist."
+     *       ],
+     *       "pagination.per_page": [
+     *         "Results per page must be at least 10."
+     *       ]
+     *     }
+     *   },
+     *   "trace_id": "00-7ceed543b8b7cb6c30033f5ef51ce7c9-7ceed543b8b7cb6c-01"
+     * }
+     * @response status=429 {
+     *   "type": "https://stupidcms.dev/problems/rate-limit-exceeded",
+     *   "title": "Too Many Requests",
+     *   "status": 429,
+     *   "code": "RATE_LIMIT_EXCEEDED",
+     *   "detail": "Too many attempts. Try again later.",
+     *   "meta": {
+     *     "request_id": "eed543b8-b7cb-6c30-033f-3f5ef51ce7c9",
+     *     "retry_after": 60
+     *   },
+     *   "trace_id": "00-eed543b8b7cb6c30033f3f5ef51ce7c9-eed543b8b7cb6c30-01"
+     * }
+     */
+    public function search(SearchEntriesRequest $request): EntryCollection
+    {
+        $validated = $request->validated();
+        $filters = $validated['filters'] ?? [];
+        $pagination = $validated['pagination'] ?? [];
+
+        $query = Entry::query()
+            ->with(['postType', 'author', 'terms.taxonomy'])
+            ->whereNull('deleted_at');
+
+        // Filter by title
+        if (! empty($filters['title'])) {
+            $search = $filters['title'];
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Filter by post_type_ids
+        if (! empty($filters['post_type_ids']) && is_array($filters['post_type_ids'])) {
+            $query->whereIn('post_type_id', $filters['post_type_ids']);
+        }
+
+        // Sorting
+        $query->orderBy('updated_at', 'desc');
+
+        // Pagination
+        $perPage = $pagination['per_page'] ?? 15;
+        $perPage = max(10, min(100, $perPage));
+        $page = $pagination['page'] ?? 1;
+
+        $entries = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return new EntryCollection($entries);
+    }
+
+    /**
+     * Получение записи по ID (включая удалённые).
      *
      * @group Admin ▸ Entries
      * @name Show entry
@@ -208,10 +348,12 @@ class EntryController extends Controller
      * @response status=200 {
      *   "data": {
      *     "id": 42,
-     *     "post_type_id": 1,
+     *     "post_type": {
+     *       "id": 1,
+     *       "name": "Article"
+     *     },
      *     "title": "Headless CMS launch checklist",
      *     "status": "published",
-     *     "is_published": true,
      *     "published_at": "2025-02-10T08:00:00+00:00",
      *     "data_json": {},
      *     "template_override": null,
@@ -271,7 +413,7 @@ class EntryController extends Controller
     public function show(int $id): EntryResource
     {
         $entry = Entry::query()
-            ->with(['postType.blueprint', 'author', 'terms.taxonomy'])
+            ->with(['postType', 'author', 'terms.taxonomy'])
             ->withTrashed()
             ->find($id);
 
@@ -293,17 +435,19 @@ class EntryController extends Controller
      * @bodyParam post_type_id int required Существующий ID PostType. Example: 1
      * @bodyParam title string required Заголовок (<=500 символов). Example: Headless CMS launch checklist
      * @bodyParam data_json object Произвольные структурированные данные. Example: {"hero":{"title":"Launch"}}
-     * @bodyParam is_published boolean Опубликовать сразу. Default: false.
+     * @bodyParam status string Статус записи. Values: draft,published. Default: draft.
      * @bodyParam published_at datetime Дата публикации (ISO 8601). Example: 2025-02-10T08:00:00Z
      * @bodyParam template_override string Кастомный blade/template ключ. Example: templates.landing
      * @bodyParam term_ids int[] Список ID термов для привязки. Example: [3,8]
      * @response status=201 {
      *   "data": {
      *     "id": 42,
-     *     "post_type_id": 1,
+     *     "post_type": {
+     *       "id": 1,
+     *       "name": "Article"
+     *     },
      *     "title": "Headless CMS launch checklist",
      *     "status": "published",
-     *     "is_published": true,
      *     "published_at": "2025-02-10T08:00:00+00:00",
      *     "data_json": {
      *       "hero": {
@@ -370,11 +514,10 @@ class EntryController extends Controller
         $postType = PostType::findOrFail($validated['post_type_id']);
 
         // Determine status and published_at
-        $isPublished = $validated['is_published'] ?? false;
-        $status = $isPublished ? 'published' : 'draft';
+        $status = $validated['status'] ?? 'draft';
         $publishedAt = null;
 
-        if ($isPublished) {
+        if ($status === 'published') {
             $publishedAt = $validated['published_at'] ?? Carbon::now('UTC');
         }
 
@@ -411,17 +554,19 @@ class EntryController extends Controller
      * @urlParam id int required ID записи. Example: 42
      * @bodyParam title string Заголовок (<=500 символов). Example: Updated checklist
      * @bodyParam data_json object Произвольные данные. Example: {"body":{"blocks":[]}}
-     * @bodyParam is_published boolean Переключение статуса публикации.
+     * @bodyParam status string Статус записи. Values: draft,published.
      * @bodyParam published_at datetime Дата публикации (ISO 8601).
      * @bodyParam template_override string Кастомный шаблон. Example: templates.landing
      * @bodyParam term_ids int[] Полный список термов (sync).
      * @response status=200 {
      *   "data": {
      *     "id": 42,
-     *     "post_type_id": 1,
+     *     "post_type": {
+     *       "id": 1,
+     *       "name": "Article"
+     *     },
      *     "title": "Updated checklist",
      *     "status": "draft",
-     *     "is_published": false,
      *     "published_at": null,
      *     "data_json": {},
      *     "template_override": null,
@@ -506,11 +651,10 @@ class EntryController extends Controller
             }
 
             // Handle publication status
-            if (isset($validated['is_published'])) {
-                $isPublished = $validated['is_published'];
-                $entry->status = $isPublished ? 'published' : 'draft';
+            if (isset($validated['status'])) {
+                $entry->status = $validated['status'];
 
-                if ($isPublished) {
+                if ($validated['status'] === 'published') {
                     if (isset($validated['published_at'])) {
                         $entry->published_at = $validated['published_at'];
                     } elseif (! $entry->published_at) {

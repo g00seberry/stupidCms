@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Resources\Admin;
 
 use App\Models\Entry;
+use App\Services\Entry\EntryRefExtractor;
+use App\Services\Entry\EntryRelatedDataLoader;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * API Resource для Entry в админ-панели.
  *
  * Форматирует Entry для ответа API, включая связанные сущности
- * (postType, author, terms, blueprint) при их загрузке.
+ * (postType, author, terms) при их загрузке.
  *
  * @package App\Http\Resources\Admin
  */
@@ -21,9 +23,10 @@ class EntryResource extends AdminJsonResource
      * Преобразовать ресурс в массив.
      *
      * Возвращает массив с полями записи, включая:
-     * - Основные поля (id, post_type_id, title, status)
+     * - Основные поля (id, post_type, title, status)
      * - JSON поля (data_json) преобразованные в объекты (null для пустых значений)
-     * - Связанные сущности (author, terms, blueprint) при их загрузке
+     * - Связанные сущности (post_type, author, terms) при их загрузке
+     * - Связанные данные (related) для ref-полей
      * - Даты в ISO 8601 формате
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
@@ -31,19 +34,19 @@ class EntryResource extends AdminJsonResource
      */
     public function toArray($request): array
     {
-        return [
+        $relatedData = $this->getRelatedData();
+
+        $result = [
             'id' => $this->id,
-            'post_type_id' => $this->post_type_id,
             'title' => $this->title,
             'status' => $this->status,
             'data_json' => $this->transformJson($this->data_json),
-            'is_published' => $this->status === 'published',
             'published_at' => $this->published_at?->toIso8601String(),
             'template_override' => $this->template_override,
-            'author' => $this->when($this->relationLoaded('author'), function () {
+            'post_type' => $this->when($this->relationLoaded('postType'), function () {
                 return [
-                    'id' => $this->author?->id,
-                    'name' => $this->author?->name,
+                    'id' => $this->postType?->id,
+                    'name' => $this->postType?->name,
                 ];
             }),
             'terms' => $this->when($this->relationLoaded('terms'), function () {
@@ -55,16 +58,81 @@ class EntryResource extends AdminJsonResource
                     ];
                 });
             }),
-            'blueprint' => $this->when(
-                $this->postType?->relationLoaded('blueprint') && $this->postType?->blueprint,
-                function () {
-                    return BlueprintResource::make($this->postType->blueprint);
-                }
-            ),
+            'author' => $this->when($this->relationLoaded('author'), function () {
+                return [
+                    'id' => $this->author?->id,
+                    'name' => $this->author?->name,
+                ];
+            }),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'deleted_at' => $this->deleted_at?->toIso8601String(),
         ];
+
+        // Добавляем related данные только если они не пустые
+        if (!empty($relatedData)) {
+            // Преобразуем related данные в объект для гарантированной сериализации как объект в JSON
+            $result['related'] = $this->transformRelatedToObject($relatedData);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Получить связанные данные для Entry.
+     *
+     * Извлекает ref-значения из data_json и загружает связанные данные.
+     *
+     * @return array<string, array<string, array<string, mixed>>> Структура related данных
+     */
+    private function getRelatedData(): array
+    {
+        if (!($this->resource instanceof Entry)) {
+            return [];
+        }
+
+        $entry = $this->resource;
+
+        // Извлечь ref-значения
+        $refExtractor = app(EntryRefExtractor::class);
+        $entryIds = $refExtractor->extractRefEntryIds($entry);
+
+        if (empty($entryIds)) {
+            return [];
+        }
+
+        // Загрузить связанные данные
+        $relatedDataLoader = app(EntryRelatedDataLoader::class);
+        return $relatedDataLoader->loadRelatedData($entryIds);
+    }
+
+    /**
+     * Преобразовать related данные в объект для гарантированной сериализации как объект в JSON.
+     *
+     * Преобразует структуру related данных в объект stdClass, чтобы гарантировать,
+     * что entryData будет объектом, а не массивом в JSON.
+     *
+     * @param array<string, array<string, array<string, mixed>>> $relatedData Related данные
+     * @return \stdClass Объект с related данными
+     */
+    private function transformRelatedToObject(array $relatedData): \stdClass
+    {
+        $object = new \stdClass();
+        
+        foreach ($relatedData as $key => $value) {
+            // Для entryData создаем объект с ключами-строками
+            if ($key === 'entryData' && is_array($value)) {
+                $entryDataObject = new \stdClass();
+                foreach ($value as $entryId => $entryData) {
+                    $entryDataObject->{$entryId} = (object) $entryData;
+                }
+                $object->{$key} = $entryDataObject;
+            } else {
+                $object->{$key} = is_array($value) ? (object) $value : $value;
+            }
+        }
+        
+        return $object;
     }
 
     /**

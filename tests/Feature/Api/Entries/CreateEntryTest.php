@@ -27,10 +27,11 @@ test('admin can create entry', function () {
 
     $response->assertCreated()
         ->assertJsonStructure([
-            'data' => ['id', 'post_type_id', 'title', 'status'],
+            'data' => ['id', 'post_type', 'title', 'status'],
         ])
         ->assertJsonPath('data.title', 'Test Article')
-        ->assertJsonPath('data.post_type_id', $this->postType->id);
+        ->assertJsonPath('data.post_type.id', $this->postType->id)
+        ->assertJsonPath('data.post_type.name', $this->postType->name);
 
     $this->assertDatabaseHas('entries', [
         'title' => 'Test Article',
@@ -61,8 +62,7 @@ test('entry is created as draft by default', function () {
         ]);
 
     $response->assertCreated()
-        ->assertJsonPath('data.status', 'draft')
-        ->assertJsonPath('data.is_published', false);
+        ->assertJsonPath('data.status', 'draft');
 });
 
 test('entry can be published immediately', function () {
@@ -71,12 +71,11 @@ test('entry can be published immediately', function () {
         ->postJson('/api/v1/admin/entries', [
             'post_type_id' => $this->postType->id,
             'title' => 'Test Article',
-            'is_published' => true,
+            'status' => 'published',
         ]);
 
     $response->assertCreated()
-        ->assertJsonPath('data.status', 'published')
-        ->assertJsonPath('data.is_published', true);
+        ->assertJsonPath('data.status', 'published');
     
     $entry = Entry::latest()->first();
     expect($entry->published_at)->not->toBeNull();

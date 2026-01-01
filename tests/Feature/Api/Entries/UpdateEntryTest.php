@@ -96,7 +96,7 @@ test('can publish draft entry', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'is_published' => true,
+            'status' => 'published',
         ]);
 
     $response->assertOk()
@@ -118,7 +118,7 @@ test('can unpublish entry', function () {
     $response = $this->actingAs($this->user)
         ->withoutMiddleware([\App\Http\Middleware\JwtAuth::class, \App\Http\Middleware\VerifyApiCsrf::class])
         ->putJson("/api/v1/admin/entries/{$entry->id}", [
-            'is_published' => false,
+            'status' => 'draft',
         ]);
 
     $response->assertOk()

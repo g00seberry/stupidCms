@@ -26,15 +26,27 @@ afterEach(function () {
 // 3.1. Базовые правила
 
 test('convert returns empty array for null validation_rules', function () {
+    $nullableRule = new NullableRule();
+    $this->ruleFactory->shouldReceive('createNullableRule')
+        ->once()
+        ->andReturn($nullableRule);
+
     $result = $this->converter->convert(null);
 
-    expect($result)->toBeArray()->toBeEmpty();
+    expect($result)->toHaveCount(1)
+        ->and($result[0])->toBeInstanceOf(NullableRule::class);
 });
 
 test('convert returns empty array for empty validation_rules', function () {
+    $nullableRule = new NullableRule();
+    $this->ruleFactory->shouldReceive('createNullableRule')
+        ->once()
+        ->andReturn($nullableRule);
+
     $result = $this->converter->convert([]);
 
-    expect($result)->toBeArray()->toBeEmpty();
+    expect($result)->toHaveCount(1)
+        ->and($result[0])->toBeInstanceOf(NullableRule::class);
 });
 
 test('convert creates RequiredRule for required true', function () {
@@ -75,8 +87,8 @@ test('convert automatically adds NullableRule when required key is missing', fun
     $result = $this->converter->convert(['min' => 3]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(MinRule::class)
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(MinRule::class);
 });
 
 test('convert creates MinRule for min value', function () {
@@ -93,9 +105,9 @@ test('convert creates MinRule for min value', function () {
     $result = $this->converter->convert(['min' => 5]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(MinRule::class)
-        ->and($result[0]->getValue())->toBe(5)
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(MinRule::class)
+        ->and($result[1]->getValue())->toBe(5);
 });
 
 test('convert creates MaxRule for max value', function () {
@@ -112,9 +124,9 @@ test('convert creates MaxRule for max value', function () {
     $result = $this->converter->convert(['max' => 100]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(MaxRule::class)
-        ->and($result[0]->getValue())->toBe(100)
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(MaxRule::class)
+        ->and($result[1]->getValue())->toBe(100);
 });
 
 test('convert creates PatternRule for pattern', function () {
@@ -131,9 +143,9 @@ test('convert creates PatternRule for pattern', function () {
     $result = $this->converter->convert(['pattern' => '/^test$/']);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(PatternRule::class)
-        ->and($result[0]->getPattern())->toBe('/^test$/')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(PatternRule::class)
+        ->and($result[1]->getPattern())->toBe('/^test$/');
 });
 
 test('convert creates DistinctRule for distinct', function () {
@@ -149,8 +161,8 @@ test('convert creates DistinctRule for distinct', function () {
     $result = $this->converter->convert(['distinct' => true]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(DistinctRule::class)
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(DistinctRule::class);
 });
 
 // 3.2. Условные правила
@@ -175,11 +187,11 @@ test('convert creates ConditionalRule for required_if with correct format', func
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(ConditionalRule::class)
-        ->and($result[0]->getType())->toBe('required_if')
-        ->and($result[0]->getField())->toBe('is_published')
-        ->and($result[0]->getValue())->toBe(true)
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(ConditionalRule::class)
+        ->and($result[1]->getType())->toBe('required_if')
+        ->and($result[1]->getField())->toBe('is_published')
+        ->and($result[1]->getValue())->toBe(true);
 });
 
 test('convert creates ConditionalRule for prohibited_unless', function () {
@@ -202,9 +214,9 @@ test('convert creates ConditionalRule for prohibited_unless', function () {
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(ConditionalRule::class)
-        ->and($result[0]->getType())->toBe('prohibited_unless')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(ConditionalRule::class)
+        ->and($result[1]->getType())->toBe('prohibited_unless');
 });
 
 test('convert creates ConditionalRule for required_unless', function () {
@@ -227,9 +239,9 @@ test('convert creates ConditionalRule for required_unless', function () {
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(ConditionalRule::class)
-        ->and($result[0]->getType())->toBe('required_unless')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(ConditionalRule::class)
+        ->and($result[1]->getType())->toBe('required_unless');
 });
 
 test('convert creates ConditionalRule for prohibited_if', function () {
@@ -252,12 +264,17 @@ test('convert creates ConditionalRule for prohibited_if', function () {
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(ConditionalRule::class)
-        ->and($result[0]->getType())->toBe('prohibited_if')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(ConditionalRule::class)
+        ->and($result[1]->getType())->toBe('prohibited_if');
 });
 
 test('convert throws exception for conditional rule without field', function () {
+    $nullableRule = new NullableRule();
+    $this->ruleFactory->shouldReceive('createNullableRule')
+        ->once()
+        ->andReturn($nullableRule);
+
     expect(fn () => $this->converter->convert([
         'required_if' => [
             'value' => true,
@@ -266,9 +283,14 @@ test('convert throws exception for conditional rule without field', function () 
 });
 
 test('convert throws exception for conditional rule with invalid format', function () {
+    $nullableRule = new NullableRule();
+    $this->ruleFactory->shouldReceive('createNullableRule')
+        ->once()
+        ->andReturn($nullableRule);
+
     expect(fn () => $this->converter->convert([
         'required_if' => 'not an array',
-    ]))->toThrow(InvalidValidationRuleException::class, "Условное правило 'required_if' должно быть массивом");
+    ]))->toThrow(InvalidValidationRuleException::class, "Условное правило 'required_if' должно быть массивом с ключами 'field', 'value' и опционально 'operator'.");
 });
 
 test('convert handles conditional rule with default operator', function () {
@@ -290,8 +312,8 @@ test('convert handles conditional rule with default operator', function () {
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0]->getOperator())->toBe('==')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1]->getOperator())->toBe('==');
 });
 
 // 3.3. Правило field_comparison
@@ -315,10 +337,10 @@ test('convert creates FieldComparisonRule for field comparison', function () {
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(FieldComparisonRule::class)
-        ->and($result[0]->getOperator())->toBe('>=')
-        ->and($result[0]->getOtherField())->toBe('data_json.start_date')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(FieldComparisonRule::class)
+        ->and($result[1]->getOperator())->toBe('>=')
+        ->and($result[1]->getOtherField())->toBe('data_json.start_date');
 });
 
 test('convert creates FieldComparisonRule for constant comparison', function () {
@@ -340,9 +362,9 @@ test('convert creates FieldComparisonRule for constant comparison', function () 
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0])->toBeInstanceOf(FieldComparisonRule::class)
-        ->and($result[0]->getConstantValue())->toBe('2024-01-01')
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1])->toBeInstanceOf(FieldComparisonRule::class)
+        ->and($result[1]->getConstantValue())->toBe('2024-01-01');
 });
 
 test('convert prioritizes field over constant in field_comparison', function () {
@@ -365,9 +387,9 @@ test('convert prioritizes field over constant in field_comparison', function () 
     ]);
 
     expect($result)->toHaveCount(2)
-        ->and($result[0]->getOtherField())->toBe('data_json.start_date')
-        ->and($result[0]->getConstantValue())->toBeNull()
-        ->and($result[1])->toBeInstanceOf(NullableRule::class);
+        ->and($result[0])->toBeInstanceOf(NullableRule::class)
+        ->and($result[1]->getOtherField())->toBe('data_json.start_date')
+        ->and($result[1]->getConstantValue())->toBeNull();
 });
 
 test('convert ignores invalid format for field_comparison', function () {
@@ -459,12 +481,22 @@ test('convert handles all rule types together', function () {
 // 3.5. Ошибки
 
 test('convert throws InvalidValidationRuleException for unknown rule', function () {
+    $nullableRule = new NullableRule();
+    $this->ruleFactory->shouldReceive('createNullableRule')
+        ->once()
+        ->andReturn($nullableRule);
+
     expect(fn () => $this->converter->convert([
         'unknown_rule' => 'value',
     ]))->toThrow(InvalidValidationRuleException::class, "Неизвестное правило валидации: unknown_rule");
 });
 
 test('convert throws InvalidValidationRuleException with correct message', function () {
+    $nullableRule = new NullableRule();
+    $this->ruleFactory->shouldReceive('createNullableRule')
+        ->once()
+        ->andReturn($nullableRule);
+
     expect(fn () => $this->converter->convert([
         'invalid_rule' => 'value',
     ]))->toThrow(InvalidValidationRuleException::class, "Неизвестное правило валидации: invalid_rule");
