@@ -9,7 +9,7 @@ use App\Domain\Blueprint\Validation\ValidationConstants;
 /**
  * Маппер типов данных Path в типы для валидации.
  *
- * Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref)
+ * Преобразует data_type из Path (string, text, int, float, bool, datetime, json, ref, media)
  * в типы для валидации (string, integer, numeric, boolean, date, array).
  *
  * @package App\Domain\Blueprint\Validation
@@ -30,6 +30,7 @@ final class DataTypeMapper
         'datetime' => 'date',
         'json' => 'array',
         'ref' => 'integer',
+        'media' => 'string',
     ];
 
     /**
@@ -38,7 +39,7 @@ final class DataTypeMapper
      * Для cardinality = 'many' возвращает тип элемента массива (не 'array', т.к. правило array добавляется отдельно).
      * Для cardinality = 'one' возвращает тип самого поля.
      *
-     * @param string $dataType data_type из Path (string, text, int, float, bool, datetime, json, ref)
+     * @param string $dataType data_type из Path (string, text, int, float, bool, datetime, json, ref, media)
      * @param string $cardinality Кардинальность поля ('one' или 'many')
      * @return string|null Тип для валидации или null, если тип неизвестен
      */

@@ -45,6 +45,7 @@ final class ValidationConstants
     public const DATA_TYPE_DATETIME = 'datetime';
     public const DATA_TYPE_JSON = 'json';
     public const DATA_TYPE_REF = 'ref';
+    public const DATA_TYPE_MEDIA = 'media';
     public const DATA_TYPE_ARRAY = 'array';
 
     /**

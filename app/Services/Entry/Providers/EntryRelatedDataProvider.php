@@ -33,7 +33,7 @@ class EntryRelatedDataProvider implements RelatedDataProviderInterface
      * Загружает Entry с eager loading для postType.
      * Исключает удаленные записи (deleted_at IS NULL).
      *
-     * @param array<int> $ids Массив ID Entry для загрузки
+     * @param array<int|string> $ids Массив ID Entry для загрузки
      * @return array<int, array<string, mixed>> Массив данных в формате [entryId => data]
      */
     public function loadData(array $ids): array
@@ -62,7 +62,9 @@ class EntryRelatedDataProvider implements RelatedDataProviderInterface
      * Форматировать данные одного Entry.
      *
      * @param Entry $entry Entry для форматирования
-     * @return array<string, mixed> Отформатированные данные
+     * @return array<string, mixed> Отформатированные данные:
+     *   - title: string - заголовок записи
+     *   - post_type: array{id: int, name: string} - тип записи с id и name
      */
     public function formatData(mixed $entry): array
     {
@@ -73,8 +75,11 @@ class EntryRelatedDataProvider implements RelatedDataProviderInterface
         }
 
         return [
-            'entryTitle' => $entry->title,
-            'entryPostType' => $entry->postType?->name ?? null,
+            'title' => $entry->title,
+            'post_type' => [
+                'id' => $entry->postType->id,
+                'name' => $entry->postType->name,
+            ],
         ];
     }
 }

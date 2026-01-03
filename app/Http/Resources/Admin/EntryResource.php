@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources\Admin;
 
 use App\Models\Entry;
-use App\Services\Entry\EntryRefExtractor;
-use App\Services\Entry\EntryRelatedDataLoader;
+use App\Services\Entry\EntryRelatedDataFormatter;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -26,7 +25,7 @@ class EntryResource extends AdminJsonResource
      * - Основные поля (id, post_type, title, status)
      * - JSON поля (data_json) преобразованные в объекты (null для пустых значений)
      * - Связанные сущности (post_type, author, terms) при их загрузке
-     * - Связанные данные (related) для ref-полей
+     * - Связанные данные (related) для ref-полей и media-полей
      * - Даты в ISO 8601 формате
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
@@ -71,8 +70,8 @@ class EntryResource extends AdminJsonResource
 
         // Добавляем related данные только если они не пустые
         if (!empty($relatedData)) {
-            // Преобразуем related данные в объект для гарантированной сериализации как объект в JSON
-            $result['related'] = $this->transformRelatedToObject($relatedData);
+            $formatter = app(EntryRelatedDataFormatter::class);
+            $result['related'] = $formatter->formatRelatedData($relatedData);
         }
 
         return $result;
@@ -80,8 +79,6 @@ class EntryResource extends AdminJsonResource
 
     /**
      * Получить связанные данные для Entry.
-     *
-     * Извлекает ref-значения из data_json и загружает связанные данные.
      *
      * @return array<string, array<string, array<string, mixed>>> Структура related данных
      */
@@ -91,48 +88,8 @@ class EntryResource extends AdminJsonResource
             return [];
         }
 
-        $entry = $this->resource;
-
-        // Извлечь ref-значения
-        $refExtractor = app(EntryRefExtractor::class);
-        $entryIds = $refExtractor->extractRefEntryIds($entry);
-
-        if (empty($entryIds)) {
-            return [];
-        }
-
-        // Загрузить связанные данные
-        $relatedDataLoader = app(EntryRelatedDataLoader::class);
-        return $relatedDataLoader->loadRelatedData($entryIds);
-    }
-
-    /**
-     * Преобразовать related данные в объект для гарантированной сериализации как объект в JSON.
-     *
-     * Преобразует структуру related данных в объект stdClass, чтобы гарантировать,
-     * что entryData будет объектом, а не массивом в JSON.
-     *
-     * @param array<string, array<string, array<string, mixed>>> $relatedData Related данные
-     * @return \stdClass Объект с related данными
-     */
-    private function transformRelatedToObject(array $relatedData): \stdClass
-    {
-        $object = new \stdClass();
-        
-        foreach ($relatedData as $key => $value) {
-            // Для entryData создаем объект с ключами-строками
-            if ($key === 'entryData' && is_array($value)) {
-                $entryDataObject = new \stdClass();
-                foreach ($value as $entryId => $entryData) {
-                    $entryDataObject->{$entryId} = (object) $entryData;
-                }
-                $object->{$key} = $entryDataObject;
-            } else {
-                $object->{$key} = is_array($value) ? (object) $value : $value;
-            }
-        }
-        
-        return $object;
+        $formatter = app(EntryRelatedDataFormatter::class);
+        return $formatter->loadRelatedDataForEntry($this->resource);
     }
 
     /**

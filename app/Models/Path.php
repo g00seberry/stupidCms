@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $parent_id Родительский path
  * @property string $name Локальное имя поля
  * @property string $full_path Материализованный путь (e.g., 'author.contacts.phone')
- * @property string $data_type string|text|int|float|bool|datetime|json|ref
+ * @property string $data_type string|text|int|float|bool|datetime|json|ref|media
  * @property string $cardinality one|many
  * @property bool $is_indexed
  * @property bool $is_readonly Нельзя редактировать (копия)
@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \App\Models\Path|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Path> $children
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PathRefConstraint> $refConstraints Ограничения на допустимые PostType для ref-полей
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PathMediaConstraint> $mediaConstraints Ограничения на допустимые MIME-типы для media-полей
  */
 class Path extends Model
 {
@@ -135,6 +136,16 @@ class Path extends Model
     }
 
     /**
+     * Ограничения на допустимые MIME-типы для media-полей.
+     *
+     * @return HasMany<PathMediaConstraint>
+     */
+    public function mediaConstraints(): HasMany
+    {
+        return $this->hasMany(PathMediaConstraint::class);
+    }
+
+    /**
      * Получить список ID допустимых PostType для этого ref-поля.
      *
      * @return array<int> Массив ID допустимых PostType
@@ -154,6 +165,28 @@ class Path extends Model
     public function hasRefConstraints(): bool
     {
         return $this->refConstraints()->exists();
+    }
+
+    /**
+     * Получить список допустимых MIME-типов для этого media-поля.
+     *
+     * @return array<string> Массив допустимых MIME-типов
+     */
+    public function getAllowedMimeTypes(): array
+    {
+        return $this->mediaConstraints()
+            ->pluck('allowed_mime')
+            ->toArray();
+    }
+
+    /**
+     * Проверить, есть ли у этого path ограничения на media-поля.
+     *
+     * @return bool true, если есть хотя бы одно ограничение
+     */
+    public function hasMediaConstraints(): bool
+    {
+        return $this->mediaConstraints()->exists();
     }
 
     /**

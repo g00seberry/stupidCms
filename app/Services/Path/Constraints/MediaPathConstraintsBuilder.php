@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Services\Path\Constraints;
 
 use App\Models\Path;
+use App\Models\PathMediaConstraint;
 
 /**
  * Билдер constraints для media-полей.
  *
- * Подготовлен для будущей реализации работы с constraints для полей с data_type='media':
+ * Реализует работу с constraints для полей с data_type='media':
  * - Построение constraints для API (Resource и Schema)
  * - Проверка наличия constraints
- * - Синхронизация constraints с базой данных (path_media_constraints - будущая таблица)
+ * - Синхронизация constraints с базой данных (path_media_constraints)
  * - Загрузка связей для media constraints
  * - Построение правил валидации для EntryValidationService
  * - Копирование constraints при материализации путей
- *
- * В текущей версии возвращает пустые значения, так как функционал ещё не реализован.
  *
  * @package App\Services\Path\Constraints
  */
@@ -36,22 +35,29 @@ final class MediaPathConstraintsBuilder extends AbstractPathConstraintsBuilder
     /**
      * Построить constraints для media-полей.
      *
-     * В будущем будет возвращать массив в формате:
+     * Возвращает массив в формате:
      * ['allowed_mimes' => ['image/jpeg', 'image/png', ...]]
+     *
+     * Используется как для Resource, так и для Schema.
      *
      * @param Path $path Path для построения constraints
      * @return array<string, mixed>
      */
     protected function buildForSupportedDataType(Path $path): array
     {
-        // Будущая реализация:
-        // if ($path->relationLoaded('mediaConstraints') && $path->mediaConstraints->isNotEmpty()) {
-        //     return ['allowed_mimes' => $path->mediaConstraints->pluck('allowed_mime')->toArray()];
-        // } elseif ($path->hasMediaConstraints()) {
-        //     return ['allowed_mimes' => $path->getAllowedMimeTypes()];
-        // }
+        $constraints = [];
 
-        return [];
+        // Если связи уже загружены, используем их
+        if ($path->relationLoaded('mediaConstraints') && $path->mediaConstraints->isNotEmpty()) {
+            $constraints['allowed_mimes'] = $path->mediaConstraints
+                ->pluck('allowed_mime')
+                ->toArray();
+        } elseif ($path->hasMediaConstraints()) {
+            // Если связи не загружены, загружаем их через метод модели
+            $constraints['allowed_mimes'] = $path->getAllowedMimeTypes();
+        }
+
+        return $constraints;
     }
 
     /**
@@ -62,21 +68,22 @@ final class MediaPathConstraintsBuilder extends AbstractPathConstraintsBuilder
      */
     protected function hasConstraintsForSupportedDataType(Path $path): bool
     {
-        // Будущая реализация:
-        // if ($path->relationLoaded('mediaConstraints')) {
-        //     return $path->mediaConstraints->isNotEmpty();
-        // }
-        // return $path->hasMediaConstraints();
+        // Если связи уже загружены, проверяем их
+        if ($path->relationLoaded('mediaConstraints')) {
+            return $path->mediaConstraints->isNotEmpty();
+        }
 
-        return false;
+        // Если связи не загружены, используем метод модели
+        return $path->hasMediaConstraints();
     }
 
     /**
      * Синхронизировать media constraints с базой данных.
      *
-     * В будущем будет обновлять constraints в таблице path_media_constraints:
-     * - Удалять существующие constraints
-     * - Создавать новые на основе массива allowed_mimes
+     * Обновляет constraints в таблице path_media_constraints:
+     * - Удаляет все существующие constraints для Path
+     * - Создаёт новые constraints на основе массива allowed_mimes
+     * - Использует batch insert для оптимизации
      *
      * @param Path $path Path, для которого синхронизируются constraints
      * @param array<string, mixed> $constraints Массив constraints в формате API (например, ['allowed_mimes' => [...]])
@@ -84,61 +91,65 @@ final class MediaPathConstraintsBuilder extends AbstractPathConstraintsBuilder
      */
     protected function syncForSupportedDataType(Path $path, array $constraints): void
     {
-        // Будущая реализация:
-        // $allowedMimes = $constraints['allowed_mimes'] ?? [];
-        // $path->mediaConstraints()->delete();
-        // if (!empty($allowedMimes) && is_array($allowedMimes)) {
-        //     // Batch insert media constraints
-        // }
+        // Извлечь allowed_mimes из массива constraints
+        $allowedMimes = $constraints['allowed_mimes'] ?? [];
 
-        // Пока ничего не делаем, так как функционал не реализован
+        // Удалить существующие constraints
+        $path->mediaConstraints()->delete();
+
+        // Создать новые constraints через batch insert
+        if (!empty($allowedMimes) && is_array($allowedMimes)) {
+            $constraintsData = array_map(function ($mime) use ($path) {
+                return [
+                    'path_id' => $path->id,
+                    'allowed_mime' => (string) $mime,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }, $allowedMimes);
+
+            PathMediaConstraint::insert($constraintsData);
+        }
     }
 
     /**
-     * Загрузить связи для media constraints.
+     * Загрузить связи mediaConstraints для Path.
      *
-     * В будущем будет загружать отношения mediaConstraints.
+     * Загружает отношения mediaConstraints, если они ещё не загружены.
+     * Используется для оптимизации запросов (eager loading).
      *
      * @param Path $path Path для загрузки связей
      * @return void
      */
     protected function loadRelationsForSupportedDataType(Path $path): void
     {
-        // Будущая реализация:
-        // if (!$path->relationLoaded('mediaConstraints')) {
-        //     $path->load('mediaConstraints');
-        // }
-
-        // Пока ничего не делаем, так как связи не существуют
+        // Загрузить связи, если они ещё не загружены
+        if (!$path->relationLoaded('mediaConstraints')) {
+            $path->load('mediaConstraints');
+        }
     }
 
     /**
      * Получить имя Eloquent связи для eager loading constraints.
      *
-     * В будущем вернёт 'mediaConstraints', когда связи будут созданы.
-     *
-     * @return string Пустая строка, так как связи ещё не существует
+     * @return string
      */
     public function getRelationName(): string
     {
-        // Будущая реализация:
-        // return 'mediaConstraints';
-
-        // Пока возвращаем пустую строку, так как связи не существует
-        return '';
+        return 'mediaConstraints';
     }
 
     /**
      * Построить правило валидации для media-полей.
      *
-     * В будущем будет создавать правило валидации MIME типов для EntryValidationService.
-     * Например, MediaMimeRule для проверки allowed_mimes.
+     * Создаёт MediaMimeRule для валидации MIME типов в EntryValidationService.
+     * Если у Path нет constraints, возвращает null.
      *
      * @param Path $path Path с загруженными constraints
      * @param \App\Domain\Blueprint\Validation\Rules\RuleFactory $ruleFactory Фабрика правил
      * @param string $fieldPath Путь к полю в Entry (например, 'data_json.avatar')
      * @param string $cardinality Кардинальность поля ('one' или 'many')
-     * @return \App\Domain\Blueprint\Validation\Rules\Rule|null null, так как функционал не реализован
+     * @return \App\Domain\Blueprint\Validation\Rules\Rule|null
      */
     protected function buildValidationRuleForSupportedDataType(
         Path $path,
@@ -146,29 +157,29 @@ final class MediaPathConstraintsBuilder extends AbstractPathConstraintsBuilder
         string $fieldPath,
         string $cardinality
     ): ?\App\Domain\Blueprint\Validation\Rules\Rule {
-        // Будущая реализация:
-        // if (!$this->hasConstraintsForSupportedDataType($path)) {
-        //     return null;
-        // }
-        //
-        // $allowedMimes = $this->buildForSupportedDataType($path)['allowed_mimes'] ?? [];
-        // if (empty($allowedMimes)) {
-        //     return null;
-        // }
-        //
-        // return $ruleFactory->createMediaMimeRule($allowedMimes, $path->full_path);
+        // Проверить наличие constraints
+        if (!$this->hasConstraintsForSupportedDataType($path)) {
+            return null;
+        }
 
-        // Пока возвращаем null, так как функционал не реализован
-        return null;
+        // Извлечь allowed_mimes
+        $allowedMimes = $this->buildForSupportedDataType($path)['allowed_mimes'] ?? [];
+
+        if (empty($allowedMimes)) {
+            return null;
+        }
+
+        // Создать правило валидации через фабрику
+        return $ruleFactory->createMediaMimeRule($allowedMimes, $path->full_path);
     }
 
     /**
      * Скопировать media constraints из source Path в target Path.
      *
-     * В будущем будет копировать constraints при материализации путей.
-     * Выполнит batch insert constraints в таблицу path_media_constraints.
+     * Выполняет batch insert constraints для всех media-полей, которые имеют constraints.
+     * Использует batch insert для оптимизации производительности.
      *
-     * @param Path $sourcePath Исходный Path с загруженными constraints
+     * @param Path $sourcePath Исходный Path с загруженными mediaConstraints
      * @param int $targetPathId ID целевого Path
      * @param int $batchInsertSize Размер batch для вставки
      * @return void
@@ -178,30 +189,31 @@ final class MediaPathConstraintsBuilder extends AbstractPathConstraintsBuilder
         int $targetPathId,
         int $batchInsertSize
     ): void {
-        // Будущая реализация:
-        // if (!$sourcePath->relationLoaded('mediaConstraints') || $sourcePath->mediaConstraints->isEmpty()) {
-        //     return;
-        // }
-        //
-        // $constraintsToInsert = [];
-        // $now = now();
-        //
-        // foreach ($sourcePath->mediaConstraints as $constraint) {
-        //     $constraintsToInsert[] = [
-        //         'path_id' => $targetPathId,
-        //         'allowed_mime' => $constraint->allowed_mime,
-        //         'created_at' => $now,
-        //         'updated_at' => $now,
-        //     ];
-        // }
-        //
-        // if (!empty($constraintsToInsert)) {
-        //     foreach (array_chunk($constraintsToInsert, $batchInsertSize) as $chunk) {
-        //         PathMediaConstraint::insert($chunk);
-        //     }
-        // }
+        // Убедиться, что связи загружены (должно быть проверено в родительском методе)
+        if (!$sourcePath->relationLoaded('mediaConstraints') || $sourcePath->mediaConstraints->isEmpty()) {
+            return;
+        }
 
-        // Пока ничего не делаем, так как функционал не реализован
+        $constraintsToInsert = [];
+        $now = now();
+
+        // Собрать constraints для batch insert
+        foreach ($sourcePath->mediaConstraints as $constraint) {
+            $constraintsToInsert[] = [
+                'path_id' => $targetPathId,
+                'allowed_mime' => $constraint->allowed_mime,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        // Batch insert всех constraints
+        if (!empty($constraintsToInsert)) {
+            // Разбить на chunks для защиты от max_allowed_packet в MySQL
+            foreach (array_chunk($constraintsToInsert, $batchInsertSize) as $chunk) {
+                PathMediaConstraint::insert($chunk);
+            }
+        }
     }
 }
 

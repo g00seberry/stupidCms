@@ -92,7 +92,7 @@ class StorePathRequest extends FormRequest
                     'integer',
                     Rule::exists('paths', 'id')->where('blueprint_id', $blueprintId),
                 ],
-                'data_type' => ['required', Rule::in(['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref'])],
+                'data_type' => ['required', Rule::in(['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref', 'media'])],
             ],
             [
                 'cardinality' => $commonRules['cardinality'],

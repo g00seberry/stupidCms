@@ -14,9 +14,12 @@ use App\Domain\Blueprint\Validation\Rules\PatternRule;
 use App\Domain\Blueprint\Validation\Rules\RequiredRule;
 use App\Domain\Blueprint\Validation\Rules\RuleFactory;
 use App\Domain\Blueprint\Validation\Rules\RuleSet;
+use App\Domain\Blueprint\Validation\Rules\MediaMimeRule;
 use App\Domain\Blueprint\Validation\Rules\TypeRule;
 use App\Models\Blueprint;
 use App\Models\Path;
+use App\Models\PathMediaConstraint;
+use App\Services\Path\Constraints\MediaPathConstraintsBuilder;
 use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -668,6 +671,7 @@ test('buildRulesFor creates type rule for all data types', function () {
         'datetime' => 'date',
         'json' => 'array',
         'ref' => 'integer',
+        'media' => 'string',
     ];
 
     foreach ($dataTypes as $dataType => $expectedValidationType) {

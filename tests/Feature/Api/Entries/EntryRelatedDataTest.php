@@ -82,13 +82,17 @@ test('entry resource includes related data for single ref field', function () {
                 'data_json',
                 'related' => [
                     'entryData' => [
-                        (string) $authorEntry->id => ['entryTitle', 'entryPostType'],
+                        (string) $authorEntry->id => [
+                            'title',
+                            'post_type' => ['id', 'name'],
+                        ],
                     ],
                 ],
             ],
         ])
-        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.entryTitle', 'John Doe')
-        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.entryPostType', 'Author');
+        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.title', 'John Doe')
+        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.post_type.name', 'Author')
+        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.post_type.id', $authorPostType->id);
 });
 
 test('entry resource includes related data for array ref field', function () {
@@ -121,14 +125,20 @@ test('entry resource includes related data for array ref field', function () {
             'data' => [
                 'related' => [
                     'entryData' => [
-                        (string) $related1->id => ['entryTitle', 'entryPostType'],
-                        (string) $related2->id => ['entryTitle', 'entryPostType'],
+                        (string) $related1->id => [
+                            'title',
+                            'post_type' => ['id', 'name'],
+                        ],
+                        (string) $related2->id => [
+                            'title',
+                            'post_type' => ['id', 'name'],
+                        ],
                     ],
                 ],
             ],
         ])
-        ->assertJsonPath('data.related.entryData.' . (string) $related1->id . '.entryTitle', 'Related Article 1')
-        ->assertJsonPath('data.related.entryData.' . (string) $related2->id . '.entryTitle', 'Related Article 2');
+        ->assertJsonPath('data.related.entryData.' . (string) $related1->id . '.title', 'Related Article 1')
+        ->assertJsonPath('data.related.entryData.' . (string) $related2->id . '.title', 'Related Article 2');
 });
 
 test('entry resource excludes deleted entries from related data', function () {
@@ -232,13 +242,19 @@ test('entry collection includes related data for all entries', function () {
             ],
             'related' => [
                 'entryData' => [
-                    (string) $author1->id => ['entryTitle', 'entryPostType'],
-                    (string) $author2->id => ['entryTitle', 'entryPostType'],
+                    (string) $author1->id => [
+                        'title',
+                        'post_type' => ['id', 'name'],
+                    ],
+                    (string) $author2->id => [
+                        'title',
+                        'post_type' => ['id', 'name'],
+                    ],
                 ],
             ],
         ])
-        ->assertJsonPath('related.entryData.' . (string) $author1->id . '.entryTitle', 'Author 1')
-        ->assertJsonPath('related.entryData.' . (string) $author2->id . '.entryTitle', 'Author 2');
+        ->assertJsonPath('related.entryData.' . (string) $author1->id . '.title', 'Author 1')
+        ->assertJsonPath('related.entryData.' . (string) $author2->id . '.title', 'Author 2');
     } else {
         // Если related отсутствует, это означает, что нет Entry с ref-полями в коллекции
         // Это не должно происходить в этом тесте, но проверим структуру данных
@@ -292,7 +308,7 @@ test('entry collection optimizes related data loading', function () {
         
         $authorIdString = (string) $author->id;
         expect($entryData)->toHaveKey($authorIdString)
-            ->and($entryData[$authorIdString]['entryTitle'])->toBe('Shared Author');
+            ->and($entryData[$authorIdString]['title'])->toBe('Shared Author');
         
         // Проверяем, что author присутствует только один раз (оптимизация)
         $authorCount = 0;
@@ -354,7 +370,7 @@ test('entry resource handles nested ref fields', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.related.entryData.' . (string) $profileEntry->id . '.entryTitle', 'User Profile');
+        ->assertJsonPath('data.related.entryData.' . (string) $profileEntry->id . '.title', 'User Profile');
 });
 
 test('entry resource handles numeric string ref values', function () {
@@ -379,6 +395,6 @@ test('entry resource handles numeric string ref values', function () {
         ->getJson("/api/v1/admin/entries/{$entry->id}");
 
     $response->assertOk()
-        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.entryTitle', 'John Doe');
+        ->assertJsonPath('data.related.entryData.' . (string) $authorEntry->id . '.title', 'John Doe');
 });
 

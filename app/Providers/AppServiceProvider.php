@@ -31,6 +31,7 @@ use App\Domain\Blueprint\Validation\Rules\Handlers\MaxRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\MinRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\NullableRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\PatternRuleHandler;
+use App\Domain\Blueprint\Validation\Rules\Handlers\MediaMimeRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RefPostTypeRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RequiredRuleHandler;
 use App\Domain\Blueprint\Validation\Rules\Handlers\RuleHandlerRegistry;
@@ -305,6 +306,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register('field_comparison', new FieldComparisonRuleHandler());
             $registry->register('type', new TypeRuleHandler());
             $registry->register('ref_post_type', new RefPostTypeRuleHandler());
+            $registry->register('media_mime', new MediaMimeRuleHandler());
 
             return $registry;
         });
@@ -324,11 +326,16 @@ class AppServiceProvider extends ServiceProvider
             // Регистрируем провайдер для Entry данных
             $registry->register(new \App\Services\Entry\Providers\EntryRelatedDataProvider());
             
+            // Регистрируем провайдер для Media данных
+            $registry->register(new \App\Services\Entry\Providers\MediaRelatedDataProvider());
+            
             return $registry;
         });
 
         $this->app->singleton(\App\Services\Entry\EntryRefExtractor::class);
+        $this->app->singleton(\App\Services\Entry\EntryMediaExtractor::class);
         $this->app->singleton(\App\Services\Entry\EntryRelatedDataLoader::class);
+        $this->app->singleton(\App\Services\Entry\EntryRelatedDataFormatter::class);
     }
 
     /**

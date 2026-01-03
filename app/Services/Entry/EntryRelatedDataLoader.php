@@ -26,14 +26,16 @@ class EntryRelatedDataLoader
      *
      * Использует все зарегистрированные провайдеры для загрузки данных
      * и объединяет их в структуру `related`.
+     * Каждый провайдер получает весь массив ID и сам фильтрует нужные ему типы
+     * через whereIn() (EntryRelatedDataProvider работает с int, MediaRelatedDataProvider - со string).
      * Преобразует числовые ключи в строки для гарантированной сериализации как объект в JSON.
      *
-     * @param array<int> $entryIds Массив ID Entry для загрузки связанных данных
+     * @param array<int|string> $ids Массив ID (может содержать int для Entry и/или string для Media)
      * @return array<string, array<string, array<string, mixed>>> Структура related данных
      */
-    public function loadRelatedData(array $entryIds): array
+    public function loadRelatedData(array $ids): array
     {
-        if (empty($entryIds)) {
+        if (empty($ids)) {
             return [];
         }
 
@@ -42,7 +44,7 @@ class EntryRelatedDataLoader
         // Загрузить данные через все зарегистрированные провайдеры
         foreach ($this->registry->getAllProviders() as $provider) {
             $key = $provider->getKey();
-            $data = $provider->loadData($entryIds);
+            $data = $provider->loadData($ids);
             
             // Добавляем данные только если они не пустые
             if (!empty($data)) {

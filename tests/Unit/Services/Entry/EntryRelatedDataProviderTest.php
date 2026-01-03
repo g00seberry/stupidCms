@@ -34,8 +34,11 @@ test('loadData loads entry data with postType', function () {
 
     expect($result)->toHaveKey($entry->id)
         ->and($result[$entry->id])->toBe([
-            'entryTitle' => 'Test Article',
-            'entryPostType' => 'Article',
+            'title' => 'Test Article',
+            'post_type' => [
+                'id' => $postType->id,
+                'name' => 'Article',
+            ],
         ]);
 });
 
@@ -71,10 +74,16 @@ test('loadData handles multiple entries', function () {
     $result = $this->provider->loadData([$entry1->id, $entry2->id]);
 
     expect($result)->toHaveKeys([$entry1->id, $entry2->id])
-        ->and($result[$entry1->id]['entryTitle'])->toBe('Article 1')
-        ->and($result[$entry1->id]['entryPostType'])->toBe('Article')
-        ->and($result[$entry2->id]['entryTitle'])->toBe('Page 1')
-        ->and($result[$entry2->id]['entryPostType'])->toBe('Page');
+        ->and($result[$entry1->id]['title'])->toBe('Article 1')
+        ->and($result[$entry1->id]['post_type'])->toBe([
+            'id' => $postType1->id,
+            'name' => 'Article',
+        ])
+        ->and($result[$entry2->id]['title'])->toBe('Page 1')
+        ->and($result[$entry2->id]['post_type'])->toBe([
+            'id' => $postType2->id,
+            'name' => 'Page',
+        ]);
 });
 
 test('loadData handles entry when postType is not loaded', function () {
@@ -97,8 +106,11 @@ test('loadData handles entry when postType is not loaded', function () {
     // Provider должен обработать это корректно, загрузив postType самостоятельно
     expect($result)->toHaveKey($entry->id)
         ->and($result[$entry->id])->toBe([
-            'entryTitle' => 'Test Entry',
-            'entryPostType' => 'Article',
+            'title' => 'Test Entry',
+            'post_type' => [
+                'id' => $postType->id,
+                'name' => 'Article',
+            ],
         ]);
 });
 
@@ -112,8 +124,11 @@ test('formatData formats entry correctly', function () {
     $result = $this->provider->formatData($entry);
 
     expect($result)->toBe([
-        'entryTitle' => 'Test Article',
-        'entryPostType' => 'Article',
+        'title' => 'Test Article',
+        'post_type' => [
+            'id' => $postType->id,
+            'name' => 'Article',
+        ],
     ]);
 });
 

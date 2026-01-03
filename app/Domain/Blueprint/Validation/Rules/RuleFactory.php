@@ -99,5 +99,14 @@ interface RuleFactory
      * @return \App\Domain\Blueprint\Validation\Rules\RefPostTypeRule
      */
     public function createRefPostTypeRule(array $allowedPostTypeIds, string $pathFullPath): RefPostTypeRule;
+
+    /**
+     * Создать правило валидации MIME-типа для media-полей.
+     *
+     * @param array<string> $allowedMimeTypes Список допустимых MIME-типов (например, ['image/jpeg', 'image/png'])
+     * @param string $pathFullPath Полный путь к media-полю (для сообщений об ошибках)
+     * @return \App\Domain\Blueprint\Validation\Rules\MediaMimeRule
+     */
+    public function createMediaMimeRule(array $allowedMimeTypes, string $pathFullPath): MediaMimeRule;
 }
 

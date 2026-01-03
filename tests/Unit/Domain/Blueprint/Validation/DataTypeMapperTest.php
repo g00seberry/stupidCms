@@ -57,6 +57,11 @@ final class DataTypeMapperTest extends TestCase
         $this->assertEquals('integer', $this->mapper->mapToValidationType('ref', 'one'));
     }
 
+    public function test_maps_media_to_string(): void
+    {
+        $this->assertEquals('string', $this->mapper->mapToValidationType('media', 'one'));
+    }
+
     public function test_returns_null_for_unknown_type(): void
     {
         $this->assertNull($this->mapper->mapToValidationType('unknown', 'one'));
@@ -64,7 +69,7 @@ final class DataTypeMapperTest extends TestCase
 
     public function test_is_supported_returns_true_for_known_types(): void
     {
-        $types = ['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref'];
+        $types = ['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref', 'media'];
         
         foreach ($types as $type) {
             $this->assertTrue($this->mapper->isSupported($type), "Type {$type} should be supported");
