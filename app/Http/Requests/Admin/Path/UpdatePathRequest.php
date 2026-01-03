@@ -19,7 +19,6 @@ use Illuminate\Validation\Rule;
  * - data_type: запрещен (нельзя изменять после создания)
  * - cardinality: опциональная кардинальность (one/many)
  * - is_indexed: опциональный флаг индексации
- * - sort_order: опциональный порядок сортировки
  * - validation_rules: опциональные правила валидации (массив)
  *   - validation_rules.required: опциональный флаг обязательности поля
  *   - validation_rules.min: опциональное минимальное значение (numeric)
@@ -63,7 +62,6 @@ class UpdatePathRequest extends FormRequest
      * - data_type: запрещен (нельзя изменять после создания)
      * - cardinality: опциональная кардинальность (one/many)
      * - is_indexed: опциональный флаг индексации
-     * - sort_order: опциональный порядок сортировки (>= 0)
      * - validation_rules: опциональные правила валидации (массив)
      *   - validation_rules.required: опциональный флаг обязательности поля
      *   - validation_rules.min: опциональное минимальное значение (numeric)

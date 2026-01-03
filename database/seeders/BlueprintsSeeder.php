@@ -96,7 +96,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -104,7 +103,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -112,20 +110,17 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'float',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 30,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'in_stock',
             'data_type' => 'bool',
             'is_indexed' => true,
-            'sort_order' => 40,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'description',
             'data_type' => 'text',
-            'sort_order' => 50,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with 5 fields");
@@ -148,7 +143,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -156,13 +150,11 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'bio',
             'data_type' => 'text',
-            'sort_order' => 30,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with 3 fields");
@@ -188,7 +180,6 @@ class BlueprintsSeeder extends Seeder
         $addressGroup = $this->structureService->createPath($blueprint, [
             'name' => 'location',
             'data_type' => 'json',
-            'sort_order' => 10,
         ]);
 
         // Вложенные поля адреса
@@ -197,7 +188,6 @@ class BlueprintsSeeder extends Seeder
             'parent_id' => $addressGroup->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -206,7 +196,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -214,7 +203,6 @@ class BlueprintsSeeder extends Seeder
             'parent_id' => $addressGroup->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 30,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -223,7 +211,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 40,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with nested fields (1 group + 4 fields)");
@@ -245,14 +232,12 @@ class BlueprintsSeeder extends Seeder
             'name' => 'phone',
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'mobile',
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -260,13 +245,11 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 30,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'website',
             'data_type' => 'string',
-            'sort_order' => 40,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with 4 fields");
@@ -288,31 +271,26 @@ class BlueprintsSeeder extends Seeder
             'name' => 'meta_title',
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'meta_description',
             'data_type' => 'text',
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'meta_keywords',
             'data_type' => 'string',
-            'sort_order' => 30,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'og_image',
             'data_type' => 'string',
-            'sort_order' => 40,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'canonical_url',
             'data_type' => 'string',
-            'sort_order' => 50,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with 5 fields");
@@ -339,7 +317,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -347,27 +324,23 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'birth_date',
             'data_type' => 'datetime',
             'is_indexed' => true,
-            'sort_order' => 30,
         ]);
 
         // Группы для встраивания
         $homeAddressGroup = $this->structureService->createPath($blueprint, [
             'name' => 'home_address',
             'data_type' => 'json',
-            'sort_order' => 100,
         ]);
 
         $contactsGroup = $this->structureService->createPath($blueprint, [
             'name' => 'contacts',
             'data_type' => 'json',
-            'sort_order' => 200,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with 3 fields + 2 groups for embeds");
@@ -390,7 +363,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -398,27 +370,23 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'founded_at',
             'data_type' => 'datetime',
             'is_indexed' => true,
-            'sort_order' => 30,
         ]);
 
         // Две группы для разных адресов
         $officeGroup = $this->structureService->createPath($blueprint, [
             'name' => 'office_address',
             'data_type' => 'json',
-            'sort_order' => 100,
         ]);
 
         $legalGroup = $this->structureService->createPath($blueprint, [
             'name' => 'legal_address',
             'data_type' => 'json',
-            'sort_order' => 200,
         ]);
 
         $this->command->info("  ✓ Created '{$blueprint->code}' with 3 fields + 2 groups for multiple embeds");
@@ -441,7 +409,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -449,41 +416,35 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'content',
             'data_type' => 'text',
             'validation_rules' => ['required' => true],
-            'sort_order' => 30,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'excerpt',
             'data_type' => 'text',
-            'sort_order' => 40,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'published_at',
             'data_type' => 'datetime',
             'is_indexed' => true,
-            'sort_order' => 50,
         ]);
 
         $this->structureService->createPath($blueprint, [
             'name' => 'reading_time_minutes',
             'data_type' => 'int',
             'is_indexed' => true,
-            'sort_order' => 60,
         ]);
 
         // Группа автора
         $authorGroup = $this->structureService->createPath($blueprint, [
             'name' => 'author',
             'data_type' => 'json',
-            'sort_order' => 100,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -492,7 +453,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -500,14 +460,12 @@ class BlueprintsSeeder extends Seeder
             'parent_id' => $authorGroup->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         // Группа для SEO (будет встроен blueprint)
         $seoGroup = $this->structureService->createPath($blueprint, [
             'name' => 'seo',
             'data_type' => 'json',
-            'sort_order' => 200,
         ]);
 
         // Массив связанных статей (ref)
@@ -516,7 +474,6 @@ class BlueprintsSeeder extends Seeder
             'data_type' => 'ref',
             'cardinality' => 'many',
             'is_indexed' => true,
-            'sort_order' => 300,
         ]);
 
         // Добавить constraints для ref-поля: разрешить только Article PostType

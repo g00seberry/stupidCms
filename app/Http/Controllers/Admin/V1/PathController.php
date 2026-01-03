@@ -56,8 +56,6 @@ class PathController extends Controller
      *       "data_type": "string",
      *       "cardinality": "one",
      *       "is_indexed": true,
-     *       "is_readonly": false,
-     *       "sort_order": 0,
      *       "validation_rules": {"required": true},
      *       "children": []
      *     }
@@ -71,7 +69,7 @@ class PathController extends Controller
     {
         $paths = $blueprint->paths()
             ->with(['parent', 'sourceBlueprint', 'blueprintEmbed'])
-            ->orderBy('sort_order')
+            ->orderBy('id')
             ->get();
 
         // Загрузить constraints для всех paths через билдеры
@@ -97,7 +95,6 @@ class PathController extends Controller
      * @bodyParam data_type string required Тип данных. Values: string,text,int,float,bool,datetime,json,ref. Example: string
      * @bodyParam cardinality string Кардинальность. Values: one,many. Default: one.
      * @bodyParam is_indexed boolean Индексировать поле. Default: false.
-     * @bodyParam sort_order integer Порядок сортировки. Default: 0.
      * @bodyParam validation_rules array Правила валидации (JSON). Example: {"required": true, "min": 1, "max": 100}
      * @bodyParam validation_rules.required boolean Обязательное поле. Example: true
      * @response status=201 {
@@ -110,8 +107,6 @@ class PathController extends Controller
      *     "data_type": "string",
      *     "cardinality": "one",
      *     "is_indexed": true,
-     *     "is_readonly": false,
-     *     "sort_order": 0,
      *     "validation_rules": {"required": true},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
@@ -187,8 +182,6 @@ class PathController extends Controller
      *     "data_type": "string",
      *     "cardinality": "one",
      *     "is_indexed": true,
-     *     "is_readonly": false,
-     *     "sort_order": 0,
      *     "validation_rules": {"required": true},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
@@ -220,7 +213,6 @@ class PathController extends Controller
      * @bodyParam data_type string Тип данных. Values: string,text,int,float,bool,datetime,json,ref.
      * @bodyParam cardinality string Кардинальность. Values: one,many.
      * @bodyParam is_indexed boolean Индексировать поле.
-     * @bodyParam sort_order integer Порядок сортировки.
      * @bodyParam validation_rules array Правила валидации (JSON).
      * @bodyParam validation_rules.required boolean Обязательное поле.
      * @response status=200 {

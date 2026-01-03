@@ -35,14 +35,12 @@ return new class extends Migration {
             $table->enum('data_type', ['string', 'text', 'int', 'float', 'bool', 'datetime', 'json', 'ref', 'media']);
             $table->enum('cardinality', ['one', 'many'])->default('one');
             $table->boolean('is_indexed')->default(false);
-            $table->boolean('is_readonly')->default(false);
-            $table->integer('sort_order')->default(0);
             $table->json('validation_rules')->nullable();
             $table->timestamps();
 
             $table->index('blueprint_id');
             $table->index('source_blueprint_id');
-            $table->index(['blueprint_id', 'parent_id', 'sort_order'], 'idx_paths_blueprint_parent');
+            $table->index(['blueprint_id', 'parent_id'], 'idx_paths_blueprint_parent');
         });
 
         // Индекс для загрузки собственных paths (->whereNull('source_blueprint_id'))
@@ -67,18 +65,9 @@ return new class extends Migration {
             });
         }
 
-        // CHECK constraint для readonly инварианта (только для MySQL)
-        // SQLite не поддерживает ALTER TABLE ... ADD CONSTRAINT
+        // Индекс для запроса после batch insert в MaterializationService
+        // Используем префикс 100 для full_path (достаточно для идентификации)
         if (DB::getDriverName() === 'mysql') {
-            DB::statement('
-                ALTER TABLE paths ADD CONSTRAINT chk_paths_readonly_consistency CHECK (
-                    (source_blueprint_id IS NULL AND blueprint_embed_id IS NULL)
-                    OR (source_blueprint_id IS NOT NULL AND blueprint_embed_id IS NOT NULL AND is_readonly = 1)
-                )
-            ');
-
-            // Индекс для запроса после batch insert в MaterializationService
-            // Используем префикс 100 для full_path (достаточно для идентификации)
             DB::statement('
                 CREATE INDEX idx_paths_materialization_lookup
                 ON paths (blueprint_id, blueprint_embed_id, source_blueprint_id, full_path(100))
@@ -130,20 +119,6 @@ return new class extends Migration {
         // Удаляем индексы и констрейнты перед удалением таблицы (для явности)
         // MySQL не поддерживает DROP INDEX IF EXISTS, проверяем существование через INFORMATION_SCHEMA
         if (DB::getDriverName() === 'mysql') {
-            // Удаляем CHECK-констрейнт
-            $constraints = DB::select("
-                SELECT CONSTRAINT_NAME
-                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-                WHERE TABLE_SCHEMA = DATABASE()
-                  AND TABLE_NAME = 'paths'
-                  AND CONSTRAINT_TYPE = 'CHECK'
-                  AND CONSTRAINT_NAME = 'chk_paths_readonly_consistency'
-            ");
-
-            if (!empty($constraints)) {
-                DB::statement('ALTER TABLE paths DROP CHECK chk_paths_readonly_consistency');
-            }
-
             // Удаляем уникальный индекс
             $indexes = DB::select("
                 SELECT INDEX_NAME

@@ -19,7 +19,6 @@ use Illuminate\Validation\Rule;
  * - data_type: обязательный тип данных
  * - cardinality: опциональная кардинальность (one/many)
  * - is_indexed: опциональный флаг индексации
- * - sort_order: опциональный порядок сортировки
  * - validation_rules: опциональные правила валидации (массив)
  *   - validation_rules.required: опциональный флаг обязательности поля
  *   - validation_rules.min: опциональное минимальное значение (numeric)
@@ -63,7 +62,6 @@ class StorePathRequest extends FormRequest
      * - data_type: обязательный тип данных (enum)
      * - cardinality: опциональная кардинальность (one/many)
      * - is_indexed: опциональный флаг индексации
-     * - sort_order: опциональный порядок сортировки (>= 0)
      * - validation_rules: опциональные правила валидации (массив)
      *   - validation_rules.required: опциональный флаг обязательности поля
      *   - validation_rules.min: опциональное минимальное значение (numeric)
@@ -97,7 +95,6 @@ class StorePathRequest extends FormRequest
             [
                 'cardinality' => $commonRules['cardinality'],
                 'is_indexed' => $commonRules['is_indexed'],
-                'sort_order' => $commonRules['sort_order'],
             ],
             $this->getValidationRulesRules(),
             $this->getConstraintsRulesForStore()

@@ -408,7 +408,7 @@ class BlueprintController extends Controller
     {
         $paths = $blueprint->paths()
             ->with('refConstraints')
-            ->orderBy('sort_order')
+            ->orderBy('id')
             ->get();
 
         // Построить дерево

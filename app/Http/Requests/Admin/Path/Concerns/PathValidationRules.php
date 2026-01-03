@@ -67,7 +67,6 @@ trait PathValidationRules
      * - data_type: тип данных
      * - cardinality: кардинальность
      * - is_indexed: флаг индексации
-     * - sort_order: порядок сортировки
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -76,7 +75,6 @@ trait PathValidationRules
         return [
             'cardinality' => ['sometimes', Rule::in(['one', 'many'])],
             'is_indexed' => ['sometimes', 'boolean'],
-            'sort_order' => ['sometimes', 'integer', 'min:0'],
         ];
     }
 

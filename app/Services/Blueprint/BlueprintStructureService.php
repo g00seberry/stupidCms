@@ -122,7 +122,6 @@ class BlueprintStructureService
      *     data_type: string,
      *     cardinality?: string,
      *     is_indexed?: bool,
-     *     sort_order?: int,
      *     validation_rules?: array
      * } $data
      * @return Path
@@ -179,7 +178,6 @@ class BlueprintStructureService
                     'data_type' => $data['data_type'],
                     'cardinality' => $data['cardinality'] ?? 'one',
                     'is_indexed' => $data['is_indexed'] ?? false,
-                    'sort_order' => $data['sort_order'] ?? 0,
                     'validation_rules' => $data['validation_rules'] ?? null,
                 ]);
                 $path->save();

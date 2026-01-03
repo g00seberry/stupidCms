@@ -80,11 +80,9 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'description' => 'Blueprint со всеми типами данных и кардинальностями на разных уровнях вложенности',
         ]);
 
-        $sortOrder = 10;
-
         // 1. Корневой уровень: все типы с cardinality=one и cardinality=many
         $this->command->info('  → Creating root level fields...');
-        $sortOrder = $this->createRootLevelFields($blueprint, $sortOrder);
+        $this->createRootLevelFields($blueprint);
 
         // 2. nested_object (json, one) - первый уровень вложенности
         $this->command->info('  → Creating nested_object structure...');
@@ -92,13 +90,10 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'name' => 'nested_object',
             'data_type' => 'json',
             'cardinality' => 'one',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // 2.1. Поля внутри nested_object: simple_* и arr_*
-        $nestedSortOrder = 10;
-        $nestedSortOrder = $this->createFieldsInObject($blueprint, $nestedObjectPath->id, $nestedSortOrder);
+        $this->createFieldsInObject($blueprint, $nestedObjectPath->id);
 
         // 2.2. deep_object (json, one) - второй уровень вложенности внутри nested_object
         $this->command->info('  → Creating deep_object structure inside nested_object...');
@@ -107,10 +102,8 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $nestedObjectPath->id,
             'data_type' => 'json',
             'cardinality' => 'one',
-            'sort_order' => $nestedSortOrder,
         ]);
-        $deepSortOrder = 10;
-        $this->createFieldsInObject($blueprint, $deepObjectPath->id, $deepSortOrder);
+        $this->createFieldsInObject($blueprint, $deepObjectPath->id);
 
         // 2.3. deep_array (json, many) - массив внутри nested_object
         $this->command->info('  → Creating deep_array structure inside nested_object...');
@@ -119,10 +112,8 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $nestedObjectPath->id,
             'data_type' => 'json',
             'cardinality' => 'many',
-            'sort_order' => $nestedSortOrder + 10,
         ]);
-        $deepArraySortOrder = 10;
-        $this->createFieldsInObject($blueprint, $deepArrayPath->id, $deepArraySortOrder);
+        $this->createFieldsInObject($blueprint, $deepArrayPath->id);
 
         $this->command->info('✅ Comprehensive types blueprint created successfully!');
         $this->printSummary($blueprint);
@@ -134,13 +125,9 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
      * Создает все типы данных с кардинальностями one и many.
      *
      * @param Blueprint $blueprint
-     * @param int $startSortOrder
-     * @return int Следующий sort_order
      */
-    private function createRootLevelFields(Blueprint $blueprint, int $startSortOrder): int
+    private function createRootLevelFields(Blueprint $blueprint): void
     {
-        $sortOrder = $startSortOrder;
-
         // Сначала все simple_* (cardinality=one)
         foreach (self::DATA_TYPES as $dataType) {
             $this->structureService->createPath($blueprint, [
@@ -148,9 +135,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'data_type' => $dataType,
                 'cardinality' => 'one',
                 'is_indexed' => $this->shouldIndexType($dataType),
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
 
         // Затем все arr_* (cardinality=many)
@@ -160,12 +145,8 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'data_type' => $dataType,
                 'cardinality' => 'many',
                 'is_indexed' => $this->shouldIndexType($dataType),
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
-
-        return $sortOrder;
     }
 
     /**
@@ -175,13 +156,9 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
      *
      * @param Blueprint $blueprint
      * @param int $parentId ID родительского path
-     * @param int $startSortOrder
-     * @return int Следующий sort_order
      */
-    private function createFieldsInObject(Blueprint $blueprint, int $parentId, int $startSortOrder): int
+    private function createFieldsInObject(Blueprint $blueprint, int $parentId): void
     {
-        $sortOrder = $startSortOrder;
-
         // Сначала все simple_* (cardinality=one)
         foreach (self::DATA_TYPES as $dataType) {
             $this->structureService->createPath($blueprint, [
@@ -190,9 +167,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'data_type' => $dataType,
                 'cardinality' => 'one',
                 'is_indexed' => $this->shouldIndexType($dataType),
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
 
         // Затем все arr_* (cardinality=many)
@@ -203,12 +178,8 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'data_type' => $dataType,
                 'cardinality' => 'many',
                 'is_indexed' => $this->shouldIndexType($dataType),
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
-
-        return $sortOrder;
     }
 
     /**
@@ -237,7 +208,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'description' => 'Blueprint для тестирования всех правил валидации',
         ]);
 
-        $sortOrder = 10;
 
         // Required правила
         $this->structureService->createPath($blueprint, [
@@ -245,18 +215,14 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'optional_string',
             'data_type' => 'string',
             'validation_rules' => ['required' => false],
             'is_indexed' => false,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Min/Max для строк
         $this->structureService->createPath($blueprint, [
@@ -264,9 +230,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['min' => 5, 'max' => 100],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Min/Max для чисел
         $this->structureService->createPath($blueprint, [
@@ -274,18 +238,14 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'int',
             'validation_rules' => ['min' => 0, 'max' => 100],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'float_with_range',
             'data_type' => 'float',
             'validation_rules' => ['min' => 0.0, 'max' => 999.99],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Min/Max для массивов
         $this->structureService->createPath($blueprint, [
@@ -294,9 +254,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'cardinality' => 'many',
             'validation_rules' => ['min' => 1, 'max' => 10, 'distinct' => true],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Pattern для строк
         $this->structureService->createPath($blueprint, [
@@ -304,9 +262,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['pattern' => '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Условные правила
         $this->structureService->createPath($blueprint, [
@@ -316,26 +272,20 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'required_if' => ['field' => 'data_json.is_published', 'value' => true, 'operator' => '=='],
             ],
             'is_indexed' => false,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'is_published',
             'data_type' => 'bool',
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Field comparison
         $this->structureService->createPath($blueprint, [
             'name' => 'start_date',
             'data_type' => 'datetime',
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'end_date',
@@ -344,7 +294,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'field_comparison' => ['operator' => '>=', 'field' => 'data_json.start_date'],
             ],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
 
         $this->command->info('✅ Validation comprehensive blueprint created!');
@@ -364,7 +313,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'description' => 'Blueprint для тестирования различных вариантов индексации',
         ]);
 
-        $sortOrder = 10;
 
         // Индексированные поля корневого уровня
         foreach (['string', 'text', 'int', 'float', 'bool', 'datetime', 'ref'] as $type) {
@@ -372,9 +320,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'name' => "indexed_{$type}",
                 'data_type' => $type,
                 'is_indexed' => true,
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
 
         // Неиндексированные поля
@@ -383,29 +329,22 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'name' => "non_indexed_{$type}",
                 'data_type' => $type,
                 'is_indexed' => false,
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
 
         // Вложенный объект с индексированными полями
         $nestedPath = $this->structureService->createPath($blueprint, [
             'name' => 'nested_indexed',
             'data_type' => 'json',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
-        $nestedSortOrder = 10;
         foreach (['string', 'int', 'bool'] as $type) {
             $this->structureService->createPath($blueprint, [
                 'name' => "indexed_{$type}",
                 'parent_id' => $nestedPath->id,
                 'data_type' => $type,
                 'is_indexed' => true,
-                'sort_order' => $nestedSortOrder,
             ]);
-            $nestedSortOrder += 10;
         }
 
         // Массивы с индексацией
@@ -415,9 +354,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
                 'data_type' => $type,
                 'cardinality' => 'many',
                 'is_indexed' => true,
-                'sort_order' => $sortOrder,
             ]);
-            $sortOrder += 10;
         }
 
         $this->command->info('✅ Indexing comprehensive blueprint created!');
@@ -437,49 +374,41 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'description' => 'Blueprint с максимальной глубиной вложенности (5+ уровней)',
         ]);
 
-        $sortOrder = 10;
 
         // Создаем вложенность: level0 -> level1 -> level2 -> level3 -> level4 -> level5
         $level0 = $this->structureService->createPath($blueprint, [
             'name' => 'config',
             'data_type' => 'json',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $level1 = $this->structureService->createPath($blueprint, [
             'name' => 'settings',
             'parent_id' => $level0->id,
             'data_type' => 'json',
-            'sort_order' => 10,
         ]);
 
         $level2 = $this->structureService->createPath($blueprint, [
             'name' => 'ui',
             'parent_id' => $level1->id,
             'data_type' => 'json',
-            'sort_order' => 10,
         ]);
 
         $level3 = $this->structureService->createPath($blueprint, [
             'name' => 'theme',
             'parent_id' => $level2->id,
             'data_type' => 'json',
-            'sort_order' => 10,
         ]);
 
         $level4 = $this->structureService->createPath($blueprint, [
             'name' => 'colors',
             'parent_id' => $level3->id,
             'data_type' => 'json',
-            'sort_order' => 10,
         ]);
 
         $level5 = $this->structureService->createPath($blueprint, [
             'name' => 'primary',
             'parent_id' => $level4->id,
             'data_type' => 'json',
-            'sort_order' => 10,
         ]);
 
         // Добавляем поля на последнем уровне
@@ -488,14 +417,12 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $level5->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $rgbPath = $this->structureService->createPath($blueprint, [
             'name' => 'rgb',
             'parent_id' => $level5->id,
             'data_type' => 'json',
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -503,7 +430,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $rgbPath->id,
             'data_type' => 'int',
             'is_indexed' => true,
-            'sort_order' => 10,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -511,7 +437,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $rgbPath->id,
             'data_type' => 'int',
             'is_indexed' => true,
-            'sort_order' => 20,
         ]);
 
         $this->structureService->createPath($blueprint, [
@@ -519,7 +444,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $rgbPath->id,
             'data_type' => 'int',
             'is_indexed' => true,
-            'sort_order' => 30,
         ]);
 
         $this->command->info('✅ Deep nesting blueprint created!');
@@ -539,26 +463,20 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'description' => 'Blueprint с сложными комбинациями кардинальностей',
         ]);
 
-        $sortOrder = 10;
 
         // Массив объектов, каждый содержит массив примитивов
         $articlesPath = $this->structureService->createPath($blueprint, [
             'name' => 'articles',
             'data_type' => 'json',
             'cardinality' => 'many',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
-        $articleSortOrder = 10;
         $this->structureService->createPath($blueprint, [
             'name' => 'title',
             'parent_id' => $articlesPath->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => $articleSortOrder,
         ]);
-        $articleSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'tags',
@@ -566,9 +484,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'cardinality' => 'many',
             'is_indexed' => true,
-            'sort_order' => $articleSortOrder,
         ]);
-        $articleSortOrder += 10;
 
         // Массив объектов, содержащих массив других объектов
         $authorsPath = $this->structureService->createPath($blueprint, [
@@ -576,19 +492,14 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'parent_id' => $articlesPath->id,
             'data_type' => 'json',
             'cardinality' => 'many',
-            'sort_order' => $articleSortOrder,
         ]);
-        $articleSortOrder += 10;
 
-        $authorSortOrder = 10;
         $this->structureService->createPath($blueprint, [
             'name' => 'name',
             'parent_id' => $authorsPath->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => $authorSortOrder,
         ]);
-        $authorSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'contacts',
@@ -596,34 +507,27 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'cardinality' => 'many',
             'is_indexed' => true,
-            'sort_order' => $authorSortOrder,
         ]);
 
         // Объект с массивом объектов, содержащим массив примитивов
         $productPath = $this->structureService->createPath($blueprint, [
             'name' => 'product',
             'data_type' => 'json',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $variationsPath = $this->structureService->createPath($blueprint, [
             'name' => 'variations',
             'parent_id' => $productPath->id,
             'data_type' => 'json',
             'cardinality' => 'many',
-            'sort_order' => 10,
         ]);
 
-        $variationSortOrder = 10;
         $this->structureService->createPath($blueprint, [
             'name' => 'size',
             'parent_id' => $variationsPath->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => $variationSortOrder,
         ]);
-        $variationSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'colors',
@@ -631,7 +535,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'cardinality' => 'many',
             'is_indexed' => true,
-            'sort_order' => $variationSortOrder,
         ]);
 
         $this->command->info('✅ Mixed cardinality blueprint created!');
@@ -651,7 +554,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'description' => 'Реалистичный пример: структура товара для интернет-магазина',
         ]);
 
-        $sortOrder = 10;
 
         // Базовая информация
         $this->structureService->createPath($blueprint, [
@@ -659,80 +561,62 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'validation_rules' => ['required' => true, 'min' => 3, 'max' => 200],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'description',
             'data_type' => 'text',
             'validation_rules' => ['required' => true],
             'is_indexed' => false,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'price',
             'data_type' => 'float',
             'validation_rules' => ['required' => true, 'min' => 0],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'sku',
             'data_type' => 'string',
             'validation_rules' => ['required' => true, 'pattern' => '^[A-Z0-9-]+$'],
             'is_indexed' => true,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // Вариации товара
         $variationsPath = $this->structureService->createPath($blueprint, [
             'name' => 'variations',
             'data_type' => 'json',
             'cardinality' => 'many',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
-        $variationSortOrder = 10;
         $this->structureService->createPath($blueprint, [
             'name' => 'size',
             'parent_id' => $variationsPath->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => $variationSortOrder,
         ]);
-        $variationSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'color',
             'parent_id' => $variationsPath->id,
             'data_type' => 'string',
             'is_indexed' => true,
-            'sort_order' => $variationSortOrder,
         ]);
-        $variationSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'price_modifier',
             'parent_id' => $variationsPath->id,
             'data_type' => 'float',
             'is_indexed' => false,
-            'sort_order' => $variationSortOrder,
         ]);
-        $variationSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'in_stock',
             'parent_id' => $variationsPath->id,
             'data_type' => 'bool',
             'is_indexed' => true,
-            'sort_order' => $variationSortOrder,
         ]);
 
         // Медиа
@@ -741,37 +625,28 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'cardinality' => 'many',
             'is_indexed' => false,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'video_url',
             'data_type' => 'string',
             'validation_rules' => ['pattern' => '^https?://'],
             'is_indexed' => false,
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
         // SEO
         $seoPath = $this->structureService->createPath($blueprint, [
             'name' => 'seo',
             'data_type' => 'json',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
-        $seoSortOrder = 10;
         $this->structureService->createPath($blueprint, [
             'name' => 'meta_title',
             'parent_id' => $seoPath->id,
             'data_type' => 'string',
             'validation_rules' => ['max' => 60],
             'is_indexed' => false,
-            'sort_order' => $seoSortOrder,
         ]);
-        $seoSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'meta_description',
@@ -779,9 +654,7 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'text',
             'validation_rules' => ['max' => 160],
             'is_indexed' => false,
-            'sort_order' => $seoSortOrder,
         ]);
-        $seoSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'keywords',
@@ -789,7 +662,6 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'string',
             'cardinality' => 'many',
             'is_indexed' => false,
-            'sort_order' => $seoSortOrder,
         ]);
 
         // Отзывы
@@ -797,20 +669,15 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'name' => 'reviews',
             'data_type' => 'json',
             'cardinality' => 'many',
-            'sort_order' => $sortOrder,
         ]);
-        $sortOrder += 10;
 
-        $reviewSortOrder = 10;
         $this->structureService->createPath($blueprint, [
             'name' => 'author_name',
             'parent_id' => $reviewsPath->id,
             'data_type' => 'string',
             'validation_rules' => ['required' => true],
             'is_indexed' => false,
-            'sort_order' => $reviewSortOrder,
         ]);
-        $reviewSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'rating',
@@ -818,25 +685,20 @@ class ComprehensiveTypesBlueprintSeeder extends Seeder
             'data_type' => 'int',
             'validation_rules' => ['required' => true, 'min' => 1, 'max' => 5],
             'is_indexed' => true,
-            'sort_order' => $reviewSortOrder,
         ]);
-        $reviewSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'comment',
             'parent_id' => $reviewsPath->id,
             'data_type' => 'text',
             'is_indexed' => false,
-            'sort_order' => $reviewSortOrder,
         ]);
-        $reviewSortOrder += 10;
 
         $this->structureService->createPath($blueprint, [
             'name' => 'created_at',
             'parent_id' => $reviewsPath->id,
             'data_type' => 'datetime',
             'is_indexed' => true,
-            'sort_order' => $reviewSortOrder,
         ]);
 
         $this->command->info('✅ Real-world example blueprint created!');

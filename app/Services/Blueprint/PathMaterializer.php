@@ -131,7 +131,7 @@ final class PathMaterializer implements PathMaterializerInterface
         
         $query = $blueprint->paths()
             ->whereNull('source_blueprint_id')
-            ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'sort_order', 'validation_rules']);
+            ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'validation_rules']);
         
         if (!empty($relationsToLoad)) {
             $query->with($relationsToLoad);
@@ -202,8 +202,6 @@ final class PathMaterializer implements PathMaterializerInterface
                 'data_type' => $source->data_type,
                 'cardinality' => $source->cardinality,
                 'is_indexed' => $source->is_indexed,
-                'is_readonly' => true,
-                'sort_order' => $source->sort_order,
                 'validation_rules' => $source->validation_rules !== null ? json_encode($source->validation_rules) : null,
                 'created_at' => $now,
                 'updated_at' => $now,

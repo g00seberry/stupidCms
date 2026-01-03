@@ -30,8 +30,6 @@ class PathFactory extends Factory
             'data_type' => 'string',
             'cardinality' => 'one',
             'is_indexed' => false,
-            'is_readonly' => false,
-            'sort_order' => 0,
             'validation_rules' => ['required' => false],
         ];
     }

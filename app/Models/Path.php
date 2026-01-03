@@ -22,8 +22,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $data_type string|text|int|float|bool|datetime|json|ref|media
  * @property string $cardinality one|many
  * @property bool $is_indexed
- * @property bool $is_readonly Нельзя редактировать (копия)
- * @property int $sort_order
  * @property array|null $validation_rules JSON-правила валидации
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
@@ -50,7 +48,6 @@ class Path extends Model
         'data_type',
         'cardinality',
         'is_indexed',
-        'sort_order',
         'validation_rules',
     ];
 
@@ -62,7 +59,6 @@ class Path extends Model
     protected $guarded = [
         'source_blueprint_id',
         'blueprint_embed_id',
-        'is_readonly',
         'full_path',
     ];
 
@@ -71,7 +67,6 @@ class Path extends Model
      */
     protected $casts = [
         'is_indexed' => 'boolean',
-        'is_readonly' => 'boolean',
         'validation_rules' => 'array',
     ];
 

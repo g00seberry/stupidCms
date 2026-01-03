@@ -41,7 +41,6 @@ class PathSchemasTest extends TestCase
             'data_type' => 'string',
             'cardinality' => 'one',
             'is_indexed' => true,
-            'sort_order' => 0,
             'validation_rules' => [
                 'required' => true,
                 'min' => 1,
@@ -55,7 +54,7 @@ class PathSchemasTest extends TestCase
         $this->assertEquals('one', $path->cardinality);
         $this->assertTrue($path->validation_rules['required'] ?? false);
         $this->assertTrue($path->is_indexed);
-        $this->assertFalse((bool) $path->is_readonly); // is_readonly может быть null, проверяем как bool
+        $this->assertFalse($path->isCopied()); // Собственное поле, не копия
         $this->assertNull($path->parent_id);
         $this->assertEquals(['required' => true, 'min' => 1, 'max' => 500], $path->validation_rules);
 
@@ -296,7 +295,7 @@ class PathSchemasTest extends TestCase
     }
 
     /**
-     * Схема 8: Скопированное поле (is_readonly: true).
+     * Схема 8: Скопированное поле (isCopied: true).
      */
     public function test_schema_8_copied_field_readonly(): void
     {
@@ -338,7 +337,7 @@ class PathSchemasTest extends TestCase
 
         $this->assertNotNull($copiedPhonePath);
         $this->assertEquals('author.contacts.phone', $copiedPhonePath->full_path);
-        $this->assertTrue($copiedPhonePath->is_readonly);
+        $this->assertTrue($copiedPhonePath->isCopied());
         $this->assertEquals($sourceBlueprint->id, $copiedPhonePath->source_blueprint_id);
     }
 

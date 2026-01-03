@@ -806,7 +806,7 @@ class UltraComplexBlueprintSystemTest extends TestCase
             ->first();
 
         $this->assertNotNull($venueAltitudePath, 'New field should cascade to Event.venue.coordinates');
-        $this->assertTrue($venueAltitudePath->is_readonly);
+        $this->assertTrue($venueAltitudePath->isCopied());
 
         // Путь: organizer.office_address.location.coordinates.altitude (6 уровней!)
         $officeAltitudePath = $event->paths()

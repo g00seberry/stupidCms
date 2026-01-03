@@ -17,6 +17,7 @@ use App\Models\PathMediaConstraint;
 use App\Services\Path\Constraints\MediaPathConstraintsBuilder;
 use App\Services\Path\Constraints\PathConstraintsBuilderRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);

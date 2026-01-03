@@ -52,7 +52,7 @@ test('простое встраивание создаёт копии полей
     expect($copies)->toHaveCount(2)
         ->and($copies->pluck('name')->all())->toContain('field1', 'field2')
         ->and($copies->pluck('full_path')->all())->toContain('field1', 'field2')
-        ->and($copies->every(fn($p) => $p->is_readonly))->toBeTrue()
+        ->and($copies->every(fn($p) => $p->isCopied()))->toBeTrue()
         ->and($copies->every(fn($p) => $p->source_blueprint_id === $embedded->id))->toBeTrue();
 });
 
