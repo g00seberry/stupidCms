@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\StorePostTypeRequest;
 use App\Http\Requests\Admin\UpdatePostTypeRequest;
 use App\Http\Resources\Admin\PostTypeResource;
 use App\Models\Entry;
+use App\Models\PathRefConstraint;
 use App\Models\PostType;
 use App\Support\Errors\ErrorCode;
 use App\Support\Errors\ThrowsErrors;
@@ -442,11 +443,50 @@ class PostTypeController extends Controller
             ->where('post_type_id', $type->id)
             ->count();
 
-        if ($entriesCount > 0 && ! $force) {
+        // Проверяем наличие связанных PathRefConstraint
+        $pathRefConstraints = PathRefConstraint::query()
+            ->where('allowed_post_type_id', $type->id)
+            ->with('path.blueprint')
+            ->get();
+
+        $pathRefConstraintsCount = $pathRefConstraints->count();
+
+        // Формируем список путей в формате blueprintCode.fullpath
+        $paths = $pathRefConstraints
+            ->map(function (PathRefConstraint $constraint): string {
+                $blueprintCode = $constraint->path->blueprint->code;
+                $fullPath = $constraint->path->full_path;
+                return "{$blueprintCode}.{$fullPath}";
+            })
+            ->unique()
+            ->values()
+            ->toArray();
+
+        // Проверяем, есть ли проблемы, которые блокируют удаление без force
+        if (($entriesCount > 0 || $pathRefConstraintsCount > 0) && ! $force) {
+            // Формируем детали ошибки
+            $issues = ['reasons' => []];
+            $detailParts = [];
+
+            if ($entriesCount > 0) {
+                $issues['entries_count'] = $entriesCount;
+                $issues['reasons'][] = "has {$entriesCount} " . ($entriesCount === 1 ? 'entry' : 'entries');
+                $detailParts[] = "{$entriesCount} " . ($entriesCount === 1 ? 'entry' : 'entries');
+            }
+
+            if ($pathRefConstraintsCount > 0) {
+                $issues['path_ref_constraints_count'] = $pathRefConstraintsCount;
+                $issues['paths'] = $paths;
+                $issues['reasons'][] = "is used in {$pathRefConstraintsCount} path ref " . ($pathRefConstraintsCount === 1 ? 'constraint' : 'constraints');
+                $detailParts[] = "{$pathRefConstraintsCount} path ref " . ($pathRefConstraintsCount === 1 ? 'constraint' : 'constraints');
+            }
+
+            $detail = 'Cannot delete post type while ' . implode(' and ', $detailParts) . ' exist. Use force=1 to cascade delete.';
+
             $this->throwError(
                 ErrorCode::CONFLICT,
-                'Cannot delete post type while entries exist. Use force=1 to cascade delete.',
-                ['entries_count' => $entriesCount],
+                $detail,
+                $issues,
             );
         }
 
@@ -460,6 +500,12 @@ class PostTypeController extends Controller
                     ->each(function (Entry $entry): void {
                         $entry->forceDelete();
                     });
+
+                // Удаляем все PathRefConstraint, которые ссылаются на этот PostType
+                // (т.к. foreign key constraint использует restrictOnDelete, нужно удалить вручную)
+                PathRefConstraint::query()
+                    ->where('allowed_post_type_id', $type->id)
+                    ->delete();
             }
 
             $type->delete();
