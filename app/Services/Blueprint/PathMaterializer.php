@@ -56,7 +56,7 @@ final class PathMaterializer implements PathMaterializerInterface
         BlueprintEmbed $rootEmbed,
         ?DependencyGraph $graphCache = null
     ): array {
-        // Получить собственные поля blueprint (без source_blueprint_id)
+        // Получить собственные поля blueprint (не копии)
         $sourcePaths = $this->getSourcePaths($sourceBlueprint, $graphCache);
 
         // Инициализировать карты
@@ -130,7 +130,7 @@ final class PathMaterializer implements PathMaterializerInterface
         $relationsToLoad = $this->getConstraintsRelationsToLoad();
         
         $query = $blueprint->paths()
-            ->whereNull('source_blueprint_id')
+            ->whereNull('blueprint_embed_id') // Только собственные пути (не копии)
             ->select(['id', 'name', 'full_path', 'parent_id', 'data_type', 'cardinality', 'is_indexed', 'validation_rules']);
         
         if (!empty($relationsToLoad)) {
@@ -194,7 +194,6 @@ final class PathMaterializer implements PathMaterializerInterface
             // Сериализуем validation_rules в JSON для batch insert
             $pathsToInsert[] = [
                 'blueprint_id' => $hostBlueprint->id,
-                'source_blueprint_id' => $sourceBlueprint->id,
                 'blueprint_embed_id' => $rootEmbed->id,
                 'parent_id' => $parentId,
                 'name' => $source->name,
@@ -250,7 +249,6 @@ final class PathMaterializer implements PathMaterializerInterface
                 $chunkPaths = Path::query()
                     ->where('blueprint_id', $hostBlueprint->id)
                     ->where('blueprint_embed_id', $rootEmbed->id)
-                    ->where('source_blueprint_id', $sourceBlueprint->id)
                     ->whereIn('full_path', array_column($chunk, 'full_path'))
                     ->where('id', '>', $maxIdBefore)
                     ->whereBetween('created_at', [
@@ -273,7 +271,6 @@ final class PathMaterializer implements PathMaterializerInterface
             return Path::query()
                 ->where('blueprint_id', $hostBlueprint->id)
                 ->where('blueprint_embed_id', $rootEmbed->id)
-                ->where('source_blueprint_id', $sourceBlueprint->id)
                 ->whereIn('full_path', array_column($pathsToInsert, 'full_path'))
                 ->where('id', '>', $maxIdBefore)
                 ->whereBetween('created_at', [

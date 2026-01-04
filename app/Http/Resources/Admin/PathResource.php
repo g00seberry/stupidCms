@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
  * API Resource для Path в админ-панели.
  *
  * Форматирует Path для ответа API, включая связанные сущности
- * (blueprint, parent, children, sourceBlueprint, blueprintEmbed) при их загрузке.
+ * (blueprint, parent, children, blueprintEmbed) при их загрузке.
  *
  * @mixin \App\Models\Path
  * @package App\Http\Resources\Admin
@@ -25,7 +25,7 @@ class PathResource extends AdminJsonResource
      * - Основные поля (id, blueprint_id, parent_id, name, full_path)
      * - Метаданные (data_type, cardinality, is_indexed)
      * - Правила валидации (validation_rules, содержащий required)
-     * - Источник копии (source_blueprint_id, source_blueprint, blueprint_embed_id)
+     * - Источник копии (source_blueprint через blueprintEmbed->embeddedBlueprint, blueprint_embed_id)
      * - Дочерние поля (children) - присутствует только если есть дочерние элементы
      * - Даты в ISO 8601 формате
      *
@@ -51,12 +51,11 @@ class PathResource extends AdminJsonResource
             }),
 
             // Источник копии (если копия)
-            'source_blueprint_id' => $this->source_blueprint_id,
-            'source_blueprint' => $this->whenLoaded('sourceBlueprint', function () {
+            'source_blueprint' => $this->whenLoaded('blueprintEmbed.embeddedBlueprint', function () {
                 return [
-                    'id' => $this->sourceBlueprint->id,
-                    'code' => $this->sourceBlueprint->code,
-                    'name' => $this->sourceBlueprint->name,
+                    'id' => $this->blueprintEmbed->embeddedBlueprint->id,
+                    'code' => $this->blueprintEmbed->embeddedBlueprint->code,
+                    'name' => $this->blueprintEmbed->embeddedBlueprint->name,
                 ];
             }),
 

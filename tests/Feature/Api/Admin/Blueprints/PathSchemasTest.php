@@ -338,7 +338,10 @@ class PathSchemasTest extends TestCase
         $this->assertNotNull($copiedPhonePath);
         $this->assertEquals('author.contacts.phone', $copiedPhonePath->full_path);
         $this->assertTrue($copiedPhonePath->isCopied());
-        $this->assertEquals($sourceBlueprint->id, $copiedPhonePath->source_blueprint_id);
+        
+        // Проверяем, что копия связана с правильным embed
+        $copiedPhonePath->load('blueprintEmbed.embeddedBlueprint');
+        $this->assertEquals($sourceBlueprint->id, $copiedPhonePath->blueprintEmbed->embeddedBlueprint->id);
     }
 
     /**

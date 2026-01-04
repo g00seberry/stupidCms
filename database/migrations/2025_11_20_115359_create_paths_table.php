@@ -24,8 +24,6 @@ return new class extends Migration {
         Schema::create('paths', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blueprint_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('source_blueprint_id')->nullable()
-                ->constrained('blueprints')->restrictOnDelete();
             $table->unsignedBigInteger('blueprint_embed_id')->nullable();
             $table->foreignId('parent_id')->nullable()
                 ->constrained('paths')->cascadeOnDelete();
@@ -39,16 +37,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->index('blueprint_id');
-            $table->index('source_blueprint_id');
             $table->index(['blueprint_id', 'parent_id'], 'idx_paths_blueprint_parent');
-        });
-
-        // Индекс для загрузки собственных paths (->whereNull('source_blueprint_id'))
-        Schema::table('paths', function (Blueprint $table): void {
-            $table->index(
-                ['blueprint_id', 'source_blueprint_id'],
-                'idx_paths_own_paths'
-            );
         });
 
         // Уникальный индекс с префиксом для full_path (из-за лимита MySQL на длину ключа)
@@ -70,7 +59,7 @@ return new class extends Migration {
         if (DB::getDriverName() === 'mysql') {
             DB::statement('
                 CREATE INDEX idx_paths_materialization_lookup
-                ON paths (blueprint_id, blueprint_embed_id, source_blueprint_id, full_path(100))
+                ON paths (blueprint_id, blueprint_embed_id, full_path(100))
             ');
 
             // Составной индекс для оптимизации проверки конфликтов в PathConflictValidator
@@ -83,7 +72,7 @@ return new class extends Migration {
             // Для других СУБД используем обычные индексы
             Schema::table('paths', function (Blueprint $table): void {
                 $table->index(
-                    ['blueprint_id', 'blueprint_embed_id', 'source_blueprint_id', 'full_path'],
+                    ['blueprint_id', 'blueprint_embed_id', 'full_path'],
                     'idx_paths_materialization_lookup'
                 );
                 $table->index(['blueprint_id', 'full_path'], 'idx_paths_conflict_check');

@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property int $id
  * @property int $blueprint_id Владелец поля
- * @property int|null $source_blueprint_id Откуда скопировано (если копия)
  * @property int|null $blueprint_embed_id К какому embed привязано (если копия)
  * @property int|null $parent_id Родительский path
  * @property string $name Локальное имя поля
@@ -27,7 +26,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon $updated_at
  *
  * @property-read \App\Models\Blueprint $blueprint
- * @property-read \App\Models\Blueprint|null $sourceBlueprint
  * @property-read \App\Models\BlueprintEmbed|null $blueprintEmbed
  * @property-read \App\Models\Path|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Path> $children
@@ -57,7 +55,6 @@ class Path extends Model
      * @var array<int, string>
      */
     protected $guarded = [
-        'source_blueprint_id',
         'blueprint_embed_id',
         'full_path',
     ];
@@ -78,16 +75,6 @@ class Path extends Model
     public function blueprint(): BelongsTo
     {
         return $this->belongsTo(Blueprint::class);
-    }
-
-    /**
-     * Откуда скопировано (если копия).
-     *
-     * @return BelongsTo<Blueprint, Path>
-     */
-    public function sourceBlueprint(): BelongsTo
-    {
-        return $this->belongsTo(Blueprint::class, 'source_blueprint_id');
     }
 
     /**
@@ -191,7 +178,7 @@ class Path extends Model
      */
     public function isOwn(): bool
     {
-        return $this->source_blueprint_id === null;
+        return $this->blueprint_embed_id === null;
     }
 
     /**
@@ -201,6 +188,6 @@ class Path extends Model
      */
     public function isCopied(): bool
     {
-        return $this->source_blueprint_id !== null;
+        return $this->blueprint_embed_id !== null;
     }
 }

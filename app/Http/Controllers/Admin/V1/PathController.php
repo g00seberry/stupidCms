@@ -68,7 +68,7 @@ class PathController extends Controller
     public function index(Blueprint $blueprint): AnonymousResourceCollection
     {
         $paths = $blueprint->paths()
-            ->with(['parent', 'sourceBlueprint', 'blueprintEmbed'])
+            ->with(['parent', 'blueprintEmbed.embeddedBlueprint'])
             ->orderBy('id')
             ->get();
 
@@ -193,7 +193,7 @@ class PathController extends Controller
      */
     public function show(Path $path): PathResource
     {
-        $path->load(['blueprint', 'parent', 'children', 'sourceBlueprint', 'blueprintEmbed']);
+        $path->load(['blueprint', 'parent', 'children', 'blueprintEmbed.embeddedBlueprint']);
 
         // Загрузить constraints через билдер
         $this->loadConstraintsRelations($path);

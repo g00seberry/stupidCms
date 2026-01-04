@@ -53,7 +53,7 @@ test('простое встраивание создаёт копии полей
         ->and($copies->pluck('name')->all())->toContain('field1', 'field2')
         ->and($copies->pluck('full_path')->all())->toContain('field1', 'field2')
         ->and($copies->every(fn($p) => $p->isCopied()))->toBeTrue()
-        ->and($copies->every(fn($p) => $p->source_blueprint_id === $embedded->id))->toBeTrue();
+        ->and($copies->every(fn($p) => $p->blueprint_embed_id === $embed->id))->toBeTrue();
 });
 
 test('встраивание под host_path создаёт вложенные пути', function () {
@@ -143,7 +143,6 @@ test('транзитивное встраивание D → C → A → B', func
         ->first();
 
     expect($transitiveField)->not->toBeNull()
-        ->and($transitiveField->source_blueprint_id)->toBe($d->id)
         ->and($transitiveField->blueprint_embed_id)->toBe($embedBA->id); // корневой embed B→A
 });
 

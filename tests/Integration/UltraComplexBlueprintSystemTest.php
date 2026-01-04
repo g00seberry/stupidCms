@@ -495,8 +495,8 @@ class UltraComplexBlueprintSystemTest extends TestCase
         $this->info("✓ Materialization verified (max depth: {$maxDepth} levels)");
 
         // Проверить количество материализованных путей
-        $ownPaths = Path::whereNull('source_blueprint_id')->count();
-        $copiedPaths = Path::whereNotNull('source_blueprint_id')->count();
+        $ownPaths = Path::whereNull('blueprint_embed_id')->count();
+        $copiedPaths = Path::whereNotNull('blueprint_embed_id')->count();
 
         $this->info("  • Own paths: {$ownPaths}");
         $this->info("  • Materialized paths: {$copiedPaths}");
@@ -859,8 +859,8 @@ class UltraComplexBlueprintSystemTest extends TestCase
 
         $totalBlueprints = Blueprint::count();
         $totalPaths = Path::count();
-        $ownPathsCount = Path::whereNull('source_blueprint_id')->count();
-        $copiedPathsCount = Path::whereNotNull('source_blueprint_id')->count();
+        $ownPathsCount = Path::whereNull('blueprint_embed_id')->count();
+        $copiedPathsCount = Path::whereNotNull('blueprint_embed_id')->count();
         $totalEmbeds = BlueprintEmbed::count();
         $totalDocValues = DocValue::count();
         $totalDocRefs = DocRef::count();

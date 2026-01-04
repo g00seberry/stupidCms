@@ -183,7 +183,7 @@ class BlueprintLoadTest extends TestCase
             $brandBlueprint->id,
             $specsBlueprint->id,
         ])
-            ->whereNull('source_blueprint_id')
+            ->whereNull('blueprint_embed_id')
             ->count();
 
         dump([
@@ -386,7 +386,7 @@ class BlueprintLoadTest extends TestCase
         $queries = count(DB::getQueryLog());
 
         $totalPaths = Path::whereIn('blueprint_id', collect($blueprints)->pluck('id')->all())
-            ->whereNull('source_blueprint_id')
+            ->whereNull('blueprint_embed_id')
             ->count();
 
         dump([

@@ -208,8 +208,8 @@ class BlueprintStructureService
     {
         // Валидация: нельзя редактировать скопированные поля
         if ($path->isCopied()) {
-            $path->load('sourceBlueprint');
-            $sourceBlueprintCode = $path->sourceBlueprint?->code ?? 'unknown';
+            $path->load('blueprintEmbed.embeddedBlueprint');
+            $sourceBlueprintCode = $path->blueprintEmbed?->embeddedBlueprint?->code ?? 'unknown';
             
             throw CannotEditCopiedPathException::create($path->full_path, $sourceBlueprintCode);
         }

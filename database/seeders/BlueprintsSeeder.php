@@ -514,7 +514,7 @@ class BlueprintsSeeder extends Seeder
     {
         $contactsPath = $person->paths()
             ->where('name', 'contacts')
-            ->where('source_blueprint_id', null) // только собственные
+            ->whereNull('blueprint_embed_id') // только собственные
             ->first();
 
         $this->structureService->createEmbed($person, $contacts, $contactsPath);
@@ -544,7 +544,7 @@ class BlueprintsSeeder extends Seeder
     {
         $seoPath = $article->paths()
             ->where('name', 'seo')
-            ->where('source_blueprint_id', null) // только собственные
+            ->whereNull('blueprint_embed_id') // только собственные
             ->first();
 
         $this->structureService->createEmbed($article, $seo, $seoPath);
@@ -592,8 +592,8 @@ class BlueprintsSeeder extends Seeder
         $blueprintsCount = Blueprint::count();
         $pathsCount = \App\Models\Path::count();
         $embedsCount = \App\Models\BlueprintEmbed::count();
-        $ownPathsCount = \App\Models\Path::whereNull('source_blueprint_id')->count();
-        $copiedPathsCount = \App\Models\Path::whereNotNull('source_blueprint_id')->count();
+        $ownPathsCount = \App\Models\Path::whereNull('blueprint_embed_id')->count();
+        $copiedPathsCount = \App\Models\Path::whereNotNull('blueprint_embed_id')->count();
         $refConstraintsCount = PathRefConstraint::count();
 
         $this->command->newLine();

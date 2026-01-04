@@ -190,7 +190,7 @@ class PathConflictValidator
         $allBlueprintIds = array_keys($visited);
         $paths = Path::query()
             ->whereIn('blueprint_id', $allBlueprintIds)
-            ->whereNull('source_blueprint_id') // Только собственные пути
+            ->whereNull('blueprint_embed_id') // Только собственные пути (не копии)
             ->get(['id', 'blueprint_id', 'name', 'full_path', 'parent_id']);
 
         // Сгруппировать paths по blueprint_id для быстрого доступа

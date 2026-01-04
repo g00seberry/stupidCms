@@ -268,7 +268,7 @@ test('большой граф: сравнение до/после оптимиз
             ->merge($level1->pluck('id'))
             ->merge($level2->pluck('id'))
             ->all())
-            ->whereNull('source_blueprint_id')
+            ->whereNull('blueprint_embed_id')
             ->count(),
         'total_embeds' => 15 + 30, // 45
         'validation_time_ms' => round($time * 1000, 2),

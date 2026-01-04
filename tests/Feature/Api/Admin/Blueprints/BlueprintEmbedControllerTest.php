@@ -27,8 +27,12 @@ test('можно создать встраивание', function () {
         ->assertJsonPath('data.embedded_blueprint_id', $embedded->id);
 
     // Проверить материализацию
+    $embed = \App\Models\BlueprintEmbed::where('blueprint_id', $host->id)
+        ->where('embedded_blueprint_id', $embedded->id)
+        ->first();
+    
     $copiedPaths = Path::where('blueprint_id', $host->id)
-        ->where('source_blueprint_id', $embedded->id)
+        ->where('blueprint_embed_id', $embed->id)
         ->get();
 
     expect($copiedPaths)->toHaveCount(1)
@@ -104,7 +108,7 @@ test('можно удалить встраивание', function () {
 
     // Проверить, что копии удалены
     $copiesCount = Path::where('blueprint_id', $host->id)
-        ->where('source_blueprint_id', $embedded->id)
+        ->where('blueprint_embed_id', $embedId)
         ->count();
 
     expect($copiesCount)->toBe(0);
