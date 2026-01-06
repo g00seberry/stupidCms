@@ -30,7 +30,12 @@ test('Маршрут из БД регистрируется через DynamicRo
     $cache = app(DynamicRouteCache::class);
     $repository = new RouteNodeRepository($cache);
     $guard = new DynamicRouteGuard();
-    $registrar = new DynamicRouteRegistrar($repository, $guard);
+    
+    // Создаём фабрики для регистраторов и резолверов
+    $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($guard);
+    $registrarFactory = \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory::createDefault($guard, $actionResolverFactory);
+    
+    $registrar = new DynamicRouteRegistrar($repository, $guard, $registrarFactory);
     $registrar->register();
 
     // Проверяем, что маршрут зарегистрирован
@@ -67,7 +72,12 @@ test('При отсутствии таблицы регистрация не в�
         $cache = app(DynamicRouteCache::class);
         $repository = new RouteNodeRepository($cache);
         $guard = new DynamicRouteGuard();
-        $registrar = new DynamicRouteRegistrar($repository, $guard);
+        
+        // Создаём фабрики для регистраторов и резолверов
+        $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($guard);
+        $registrarFactory = \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory::createDefault($guard, $actionResolverFactory);
+        
+        $registrar = new DynamicRouteRegistrar($repository, $guard, $registrarFactory);
 
         // Регистрация не должна падать
         $registrar->register();
@@ -93,7 +103,12 @@ test('Динамические маршруты регистрируются к�
     $cache = app(DynamicRouteCache::class);
     $repository = new RouteNodeRepository($cache);
     $guard = new DynamicRouteGuard();
-    $registrar = new DynamicRouteRegistrar($repository, $guard);
+    
+    // Создаём фабрики для регистраторов и резолверов
+    $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($guard);
+    $registrarFactory = \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory::createDefault($guard, $actionResolverFactory);
+    
+    $registrar = new DynamicRouteRegistrar($repository, $guard, $registrarFactory);
     $registrar->register();
 
     // Проверяем, что оба маршрута зарегистрированы

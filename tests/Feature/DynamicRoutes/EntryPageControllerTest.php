@@ -21,7 +21,12 @@ beforeEach(function () {
     $this->cache = new DynamicRouteCache();
     $this->repository = new RouteNodeRepository($this->cache);
     $this->guard = new DynamicRouteGuard();
-    $this->registrar = new DynamicRouteRegistrar($this->repository, $this->guard);
+    
+    // Создаём фабрики для регистраторов и резолверов
+    $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($this->guard);
+    $registrarFactory = \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory::createDefault($this->guard, $actionResolverFactory);
+    
+    $this->registrar = new DynamicRouteRegistrar($this->repository, $this->guard, $registrarFactory);
     
     // Очищаем роуты перед каждым тестом
     Route::getRoutes()->refreshNameLookups();

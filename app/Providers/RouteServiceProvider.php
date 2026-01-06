@@ -112,7 +112,12 @@ class RouteServiceProvider extends ServiceProvider
             $cache = app(DynamicRouteCache::class);
             $repository = new RouteNodeRepository($cache, $loader);
             $guard = new DynamicRouteGuard($repository, $loader);
-            $registrar = new DynamicRouteRegistrar($repository, $guard);
+            
+            // Создаём фабрики для регистраторов и резолверов
+            $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($guard);
+            $registrarFactory = \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory::createDefault($guard, $actionResolverFactory);
+            
+            $registrar = new DynamicRouteRegistrar($repository, $guard, $registrarFactory);
 
             // Регистрируем все маршруты (декларативные и динамические)
             // Декларативные и динамические маршруты объединены в общее дерево через RouteNodeRepository::getEnabledTree()
