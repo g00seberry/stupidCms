@@ -43,8 +43,7 @@ class RouteGroupRegistrar extends AbstractRouteNodeRegistrar
     /**
      * Построить атрибуты для группы маршрутов.
      *
-     * Собирает все атрибуты группы из RouteNode и применяет
-     * санитизацию middleware через DynamicRouteGuard.
+     * Собирает все атрибуты группы из RouteNode.
      *
      * @param \App\Models\RouteNode $node Узел группы
      * @return array<string, mixed> Атрибуты для Route::group()
@@ -65,11 +64,8 @@ class RouteGroupRegistrar extends AbstractRouteNodeRegistrar
             $attributes['namespace'] = $node->namespace;
         }
 
-        if ($node->middleware) {
-            $sanitized = $this->guard->sanitizeMiddleware($node->middleware);
-            if (!empty($sanitized)) {
-                $attributes['middleware'] = $sanitized;
-            }
+        if (!empty($node->middleware)) {
+            $attributes['middleware'] = $node->middleware;
         }
 
         if ($node->where) {

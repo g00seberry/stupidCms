@@ -6,8 +6,8 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReorderRouteNodesRequest;
-use App\Http\Requests\Admin\StoreRouteNodeRequest;
-use App\Http\Requests\Admin\UpdateRouteNodeRequest;
+use App\Http\Requests\Admin\RouteNode\StoreRouteNodeRequest;
+use App\Http\Requests\Admin\RouteNode\UpdateRouteNodeRequest;
 use App\Http\Resources\Admin\RouteNodeResource;
 use App\Models\RouteNode;
 use App\Repositories\RouteNodeRepository;

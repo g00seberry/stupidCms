@@ -45,29 +45,6 @@ test('Нельзя создать маршрут с запрещённым пр�
         ->assertJsonValidationErrors(['uri']);
 });
 
-test('Нельзя использовать неразрешённый middleware', function () {
-    $guard = app(DynamicRouteGuard::class);
-
-    expect($guard->isMiddlewareAllowed('web'))->toBeTrue()
-        ->and($guard->isMiddlewareAllowed('auth'))->toBeTrue()
-        ->and($guard->isMiddlewareAllowed('can:view,Entry'))->toBeTrue()
-        ->and($guard->isMiddlewareAllowed('throttle:60,1'))->toBeTrue()
-        ->and($guard->isMiddlewareAllowed('dangerous:middleware'))->toBeFalse();
-});
-
-test('Нельзя использовать неразрешённый контроллер', function () {
-    // Используем контроллер из другого namespace, не разрешённого в конфиге
-    $response = $this->postJson('/api/v1/admin/routes', [
-        'kind' => 'route',
-        'action_type' => 'controller',
-        'uri' => '/test',
-        'methods' => ['GET'],
-        'action' => 'Vendor\\Dangerous\\Controller@hack',
-    ]);
-
-    $response->assertStatus(422)
-        ->assertJsonValidationErrors(['action']);
-});
 
 
 
@@ -155,23 +132,4 @@ test('Нельзя использовать неразрешённый action_ty
         ->toThrow(ValueError::class);
 });
 
-test('SanitizeMiddleware фильтрует неразрешённые middleware', function () {
-    $guard = app(DynamicRouteGuard::class);
-
-    $middleware = [
-        'web',
-        'auth',
-        'dangerous:middleware',
-        'can:view,Entry',
-        'throttle:60,1',
-    ];
-
-    $sanitized = $guard->sanitizeMiddleware($middleware);
-
-    expect($sanitized)->toContain('web')
-        ->toContain('auth')
-        ->toContain('can:view,Entry')
-        ->toContain('throttle:60,1')
-        ->not->toContain('dangerous:middleware');
-});
 

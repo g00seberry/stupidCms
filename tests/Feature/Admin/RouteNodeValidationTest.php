@@ -79,6 +79,48 @@ test('POST /api/v1/admin/routes с запрещённым префиксом pre
         ->assertJsonValidationErrors(['prefix']);
 });
 
+test('POST /api/v1/admin/routes kind=group: запрещены поля route (uri, methods, name, action)', function () {
+    $response = $this->postJson('/api/v1/admin/routes', [
+        'kind' => 'group',
+        'action_type' => 'controller',
+        'uri' => '/test', // Запрещено для group
+        'methods' => ['GET'], // Запрещено для group
+        'name' => 'test-route', // Запрещено для group
+        'action' => 'App\\Http\\Controllers\\TestController@show', // Запрещено для group
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['uri', 'methods', 'name', 'action']);
+});
+
+test('POST /api/v1/admin/routes kind=route: запрещены поля group (prefix, namespace)', function () {
+    $response = $this->postJson('/api/v1/admin/routes', [
+        'kind' => 'route',
+        'action_type' => 'controller',
+        'uri' => '/test',
+        'methods' => ['GET'],
+        'action' => 'App\\Http\\Controllers\\TestController@show',
+        'prefix' => 'test', // Запрещено для route
+        'namespace' => 'App\\Http\\Controllers', // Запрещено для route
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['prefix', 'namespace']);
+});
+
+test('POST /api/v1/admin/routes kind=route: uri и methods обязательны', function () {
+    $response = $this->postJson('/api/v1/admin/routes', [
+        'kind' => 'route',
+        'action_type' => 'controller',
+        // uri отсутствует
+        // methods отсутствует
+        'action' => 'App\\Http\\Controllers\\TestController@show',
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['uri', 'methods']);
+});
+
 test('POST /api/v1/admin/routes с невалидным HTTP методом → 422', function () {
     $response = $this->postJson('/api/v1/admin/routes', [
         'kind' => 'route',

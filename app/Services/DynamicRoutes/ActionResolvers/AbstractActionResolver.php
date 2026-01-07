@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Log;
 abstract class AbstractActionResolver implements ActionResolverInterface
 {
     /**
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки безопасности
+     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки конфликтов и префиксов (опционально)
      */
     public function __construct(
         protected DynamicRouteGuard $guard,

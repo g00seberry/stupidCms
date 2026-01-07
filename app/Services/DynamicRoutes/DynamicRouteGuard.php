@@ -13,104 +13,32 @@ use Illuminate\Support\Facades\Log;
 /**
  * Сервис для проверки безопасности динамических маршрутов.
  *
- * Проверяет разрешённость middleware, контроллеров и префиксов URI
+ * Проверяет зарезервированные префиксы URI и конфликты маршрутов
  * согласно конфигурации dynamic-routes.
+ * Использует RoutePatternNormalizer для проверки конфликтов по паттернам.
  *
  * @package App\Services\DynamicRoutes
  */
 class DynamicRouteGuard
 {
     /**
+     * Нормализатор паттернов маршрутов.
+     *
+     * @var \App\Services\DynamicRoutes\RoutePatternNormalizer
+     */
+    private RoutePatternNormalizer $patternNormalizer;
+
+    /**
      * @param \App\Repositories\RouteNodeRepository|null $repository Репозиторий для загрузки маршрутов из БД
      * @param \App\Services\DynamicRoutes\DeclarativeRouteLoader|null $declarativeLoader Загрузчик декларативных маршрутов
+     * @param \App\Services\DynamicRoutes\RoutePatternNormalizer|null $patternNormalizer Нормализатор паттернов маршрутов
      */
     public function __construct(
         private ?RouteNodeRepository $repository = null,
         private ?DeclarativeRouteLoader $declarativeLoader = null,
-    ) {}
-    /**
-     * Проверить, разрешён ли middleware.
-     *
-     * Поддерживает параметризованные middleware через паттерны:
-     * - 'can:*' разрешает все middleware вида can:action,Model
-     * - 'throttle:*' разрешает все middleware вида throttle:60,1
-     * - 'App\Http\Middleware\*' разрешает все middleware из этого namespace
-     *
-     * @param string $middleware Имя middleware для проверки
-     * @return bool true если разрешён, false иначе
-     */
-    public function isMiddlewareAllowed(string $middleware): bool
-    {
-        $allowed = config('dynamic-routes.allowed_middleware', []);
-
-        // Точное совпадение
-        if (in_array($middleware, $allowed, true)) {
-            return true;
-        }
-
-        // Проверка параметризованных middleware и wildcard паттернов
-        foreach ($allowed as $pattern) {
-            // Параметризованные middleware (can:*, throttle:*)
-            if (str_ends_with($pattern, ':*')) {
-                $prefix = substr($pattern, 0, -2); // Убираем ':*'
-                if (str_starts_with($middleware, $prefix . ':')) {
-                    return true;
-                }
-            }
-            
-            // Wildcard для классов middleware (App\Http\Middleware\*)
-            if (str_ends_with($pattern, '*')) {
-                $prefix = substr($pattern, 0, -1); // Убираем '*'
-                if (str_starts_with($middleware, $prefix)) {
-                    return true;
-                }
-            }
-        }
-
-        // Неразрешённый middleware
-        Log::warning('Dynamic route: неразрешённый middleware', [
-            'middleware' => $middleware,
-            'allowed' => $allowed,
-        ]);
-
-        return false;
-    }
-
-    /**
-     * Проверить, разрешён ли контроллер.
-     *
-     * Поддерживает wildcard паттерны:
-     * - 'App\Http\Controllers\*' разрешает все контроллеры из этого namespace
-     *
-     * @param string $controller Полное имя контроллера (namespace + класс)
-     * @return bool true если разрешён, false иначе
-     */
-    public function isControllerAllowed(string $controller): bool
-    {
-        $allowed = config('dynamic-routes.allowed_controllers', []);
-
-        foreach ($allowed as $pattern) {
-            // Точное совпадение
-            if ($pattern === $controller) {
-                return true;
-            }
-
-            // Wildcard паттерн (например, 'App\Http\Controllers\*')
-            if (str_ends_with($pattern, '*')) {
-                $prefix = substr($pattern, 0, -1); // Убираем '*'
-                if (str_starts_with($controller, $prefix)) {
-                    return true;
-                }
-            }
-        }
-
-        // Неразрешённый контроллер
-        Log::warning('Dynamic route: неразрешённый контроллер', [
-            'controller' => $controller,
-            'allowed' => $allowed,
-        ]);
-
-        return false;
+        ?RoutePatternNormalizer $patternNormalizer = null,
+    ) {
+        $this->patternNormalizer = $patternNormalizer ?? new RoutePatternNormalizer();
     }
 
     /**
@@ -139,29 +67,11 @@ class DynamicRouteGuard
     }
 
     /**
-     * Отфильтровать неразрешённые middleware из массива.
-     *
-     * Возвращает только разрешённые middleware, логируя неразрешённые.
-     *
-     * @param array<string> $middleware Массив middleware для фильтрации
-     * @return array<string> Массив только разрешённых middleware
-     */
-    public function sanitizeMiddleware(array $middleware): array
-    {
-        $filtered = array_filter($middleware, function (string $mw) {
-            return $this->isMiddlewareAllowed($mw);
-        });
-        
-        // Переиндексируем массив, чтобы избежать пропусков в ключах
-        // Это предотвращает превращение массива в объект при JSON сериализации
-        return array_values($filtered);
-    }
-
-    /**
      * Проверить конфликт маршрута с существующими маршрутами.
      *
-     * Проверяет, существует ли уже маршрут с таким же URI и методами
+     * Проверяет, существует ли уже маршрут с конфликтующим паттерном URI и методами
      * в декларативных маршрутах или в БД.
+     * Использует RoutePatternNormalizer для сравнения паттернов вместо точного совпадения строк.
      *
      * @param string $uri URI маршрута
      * @param array<string> $methods HTTP методы
@@ -199,6 +109,7 @@ class DynamicRouteGuard
      * Найти конфликт в коллекции маршрутов.
      *
      * Рекурсивно проверяет все маршруты в коллекции (включая вложенные в группы).
+     * Использует RoutePatternNormalizer для сравнения паттернов маршрутов.
      *
      * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\RouteNode> $nodes Коллекция узлов
      * @param string $normalizedUri Нормализованный URI (без ведущего слэша)
@@ -236,8 +147,9 @@ class DynamicRouteGuard
                 if ($node->uri && $node->methods) {
                     $nodeUri = ltrim($node->uri, '/');
                     
-                    // Проверяем совпадение URI
-                    if ($nodeUri === $normalizedUri) {
+                    // Используем RoutePatternNormalizer для проверки конфликта паттернов
+                    // Вместо точного сравнения строк сравниваем нормализованные паттерны
+                    if ($this->patternNormalizer->patternsConflict($nodeUri, $normalizedUri)) {
                         // Проверяем пересечение методов
                         $intersection = array_intersect(
                             array_map('strtoupper', $node->methods),

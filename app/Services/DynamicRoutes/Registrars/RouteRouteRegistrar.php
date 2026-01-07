@@ -158,11 +158,8 @@ class RouteRouteRegistrar extends AbstractRouteNodeRegistrar
             $route->domain($node->domain);
         }
 
-        if ($node->middleware) {
-            $sanitized = $this->guard->sanitizeMiddleware($node->middleware);
-            if (!empty($sanitized)) {
-                $route->middleware($sanitized);
-            }
+        if (!empty($node->middleware)) {
+            $route->middleware($node->middleware);
         }
 
         if ($node->where) {

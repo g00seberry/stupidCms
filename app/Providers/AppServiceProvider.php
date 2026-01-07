@@ -271,6 +271,20 @@ class AppServiceProvider extends ServiceProvider
             return $registry;
         });
 
+        // RouteNode kind validation builders registry
+        $this->app->singleton(
+            \App\Http\Requests\Admin\RouteNode\Kinds\RouteNodeKindValidationBuilderRegistry::class,
+            function () {
+                $registry = new \App\Http\Requests\Admin\RouteNode\Kinds\RouteNodeKindValidationBuilderRegistry();
+
+                // Регистрируем билдеры для различных kind
+                $registry->register('group', new \App\Http\Requests\Admin\RouteNode\Kinds\GroupKindValidationBuilder());
+                $registry->register('route', new \App\Http\Requests\Admin\RouteNode\Kinds\RouteKindValidationBuilder());
+
+                return $registry;
+            }
+        );
+
         // Path constraints builders registry (для работы с constraints: сериализация, синхронизация, валидация, копирование)
         $this->app->singleton(PathConstraintsBuilderRegistry::class, function () {
             $registry = new PathConstraintsBuilderRegistry();

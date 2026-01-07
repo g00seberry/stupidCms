@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
  * - Controller@method: App\Http\Controllers\BlogController@show
  * - Invokable controller: App\Http\Controllers\HomeController
  *
- * Выполняет проверку через DynamicRouteGuard и валидацию существования класса и метода.
+ * Выполняет валидацию существования класса и метода.
  *
  * @package App\Services\DynamicRoutes\ActionResolvers
  */
@@ -100,7 +100,7 @@ class ControllerActionResolver extends AbstractActionResolver
     /**
      * Валидировать и разрешить контроллер.
      *
-     * Выполняет все проверки контроллера: разрешённость, существование класса и метода (если указан).
+     * Выполняет проверки контроллера: существование класса и метода (если указан).
      *
      * @param string $controller Полное имя контроллера
      * @param int $routeNodeId ID узла маршрута (для логирования)
@@ -109,10 +109,6 @@ class ControllerActionResolver extends AbstractActionResolver
      */
     private function validateAndResolveController(string $controller, int $routeNodeId, ?string $method = null): bool
     {
-        if (!$this->validateControllerAllowed($controller, $routeNodeId)) {
-            return false;
-        }
-
         if (!$this->validateController($controller)) {
             return false;
         }
@@ -155,26 +151,6 @@ class ControllerActionResolver extends AbstractActionResolver
             Log::error('Dynamic route: метод не существует в контроллере', [
                 'controller' => $controller,
                 'method' => $method,
-            ]);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Проверить, разрешён ли контроллер через guard.
-     *
-     * @param string $controller Полное имя контроллера
-     * @param int|null $routeNodeId ID узла маршрута (для логирования)
-     * @return bool true если контроллер разрешён, false иначе
-     */
-    private function validateControllerAllowed(string $controller, ?int $routeNodeId = null): bool
-    {
-        if (!$this->guard->isControllerAllowed($controller)) {
-            Log::error('Dynamic route: неразрешённый контроллер', [
-                'route_node_id' => $routeNodeId,
-                'controller' => $controller,
             ]);
             return false;
         }
