@@ -18,7 +18,7 @@ use Illuminate\Validation\Rule;
  *
  * @package App\Http\Requests\Admin\RouteNode\Kinds
  */
-final class GroupKindValidationBuilder implements RouteNodeKindValidationBuilderInterface
+final class GroupNodeValidationBuilder implements RouteNodeKindValidationBuilderInterface
 {
     /**
      * Получить kind, который поддерживает этот билдер.
@@ -56,16 +56,6 @@ final class GroupKindValidationBuilder implements RouteNodeKindValidationBuilder
                 'where' => ['nullable', 'array'],
                 'children' => ['nullable', 'array'], // Для будущей поддержки
             ],
-            // Запрещаем поля, специфичные для route
-            [
-                'uri' => ['prohibited'],
-                'methods' => ['prohibited'],
-                'name' => ['prohibited'],
-                'action' => ['prohibited'],
-                'action_type' => ['prohibited'],
-                'entry_id' => ['prohibited'],
-                'defaults' => ['prohibited'],
-            ]
         );
     }
 
@@ -96,16 +86,6 @@ final class GroupKindValidationBuilder implements RouteNodeKindValidationBuilder
                 'where' => ['sometimes', 'nullable', 'array'],
                 'children' => ['sometimes', 'nullable', 'array'],
             ],
-            // Запрещаем поля, специфичные для route
-            [
-                'uri' => ['prohibited'],
-                'methods' => ['prohibited'],
-                'name' => ['prohibited'],
-                'action' => ['prohibited'],
-                'action_type' => ['prohibited'],
-                'entry_id' => ['prohibited'],
-                'defaults' => ['prohibited'],
-            ]
         );
     }
 
@@ -126,13 +106,6 @@ final class GroupKindValidationBuilder implements RouteNodeKindValidationBuilder
             'middleware.array' => 'Поле middleware должно быть массивом.',
             'where.array' => 'Поле where должно быть массивом.',
             'children.array' => 'Поле children должно быть массивом.',
-            'uri.prohibited' => 'Поле uri не может быть использовано для узлов типа group.',
-            'methods.prohibited' => 'Поле methods не может быть использовано для узлов типа group.',
-            'name.prohibited' => 'Поле name не может быть использовано для узлов типа group.',
-            'action.prohibited' => 'Поле action не может быть использовано для узлов типа group.',
-            'action_type.prohibited' => 'Поле action_type не может быть использовано для узлов типа group.',
-            'entry_id.prohibited' => 'Поле entry_id не может быть использовано для узлов типа group.',
-            'defaults.prohibited' => 'Поле defaults не может быть использовано для узлов типа group.',
         ];
     }
 }

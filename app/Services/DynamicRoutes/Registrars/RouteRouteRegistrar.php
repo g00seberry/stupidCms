@@ -7,7 +7,7 @@ namespace App\Services\DynamicRoutes\Registrars;
 use App\Enums\RouteNodeActionType;
 use App\Models\RouteNode;
 use App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -23,12 +23,12 @@ use Illuminate\Support\Facades\Route;
 class RouteRouteRegistrar extends AbstractRouteNodeRegistrar
 {
     /**
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки безопасности
+     * @param \App\Services\DynamicRoutes\Validators\DynamicRouteValidator $guard Guard для проверки безопасности
      * @param \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory|null $registrarFactory Фабрика для создания регистраторов дочерних узлов
      * @param \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory|null $actionResolverFactory Фабрика для разрешения действий
      */
     public function __construct(
-        DynamicRouteGuard $guard,
+        DynamicRouteValidator $guard,
         ?RouteNodeRegistrarFactory $registrarFactory = null,
         private ?ActionResolverFactory $actionResolverFactory = null,
     ) {
@@ -142,7 +142,6 @@ class RouteRouteRegistrar extends AbstractRouteNodeRegistrar
      *
      * Применяет все дополнительные настройки маршрута:
      * name, domain, middleware, where, defaults.
-     * Для action_type=ENTRY добавляет route_node_id в defaults.
      *
      * @param \Illuminate\Routing\Route $route Объект маршрута Laravel
      * @param \App\Models\RouteNode $node Узел маршрута
@@ -172,11 +171,6 @@ class RouteRouteRegistrar extends AbstractRouteNodeRegistrar
             foreach ($node->defaults as $key => $value) {
                 $route->defaults($key, $value);
             }
-        }
-
-        // Для action_type=ENTRY добавляем route_node_id в defaults
-        if ($node->action_type === RouteNodeActionType::ENTRY) {
-            $route->defaults('route_node_id', $node->id);
         }
     }
 }

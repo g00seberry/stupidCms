@@ -10,7 +10,7 @@ use App\Models\RouteNode;
  * API Resource для RouteNode в админ-панели.
  *
  * Форматирует RouteNode для ответа API, включая связанные сущности
- * (entry, parent, children) при их загрузке.
+ * (parent, children) при их загрузке.
  *
  * @package App\Http\Resources\Admin
  */
@@ -21,9 +21,9 @@ class RouteNodeResource extends AdminJsonResource
      *
      * Возвращает массив с полями узла маршрута, включая:
      * - Основные поля (id, parent_id, sort_order, enabled, kind, name, domain, prefix, namespace)
-     * - Поля маршрута (methods, uri, action_type, action, entry_id)
+     * - Поля маршрута (methods, uri, action_type, action_meta)
      * - JSON поля (middleware, where, defaults) преобразованные в объекты
-     * - Связанные сущности (entry, parent, children) при их загрузке
+     * - Связанные сущности (parent, children) при их загрузке
      * - Даты в ISO 8601 формате
      *
      * @param \Illuminate\Http\Request $request HTTP запрос
@@ -48,18 +48,10 @@ class RouteNodeResource extends AdminJsonResource
             'methods' => $node->methods,
             'uri' => $node->uri,
             'action_type' => $node->action_type?->value ?? $node->getRawOriginal('action_type'),
-            'action' => $node->action,
-            'entry_id' => $node->entry_id,
+            'action_meta' => $node->action_meta,
             'middleware' => $node->middleware,
             'where' => $node->where,
             'defaults' => $node->defaults,
-            'entry' => $this->when($node->relationLoaded('entry'), function () use ($node) {
-                return $node->entry ? [
-                    'id' => $node->entry->id,
-                    'title' => $node->entry->title,
-                    'status' => $node->entry->status,
-                ] : null;
-            }),
             'parent' => $this->when($node->relationLoaded('parent'), function () use ($node) {
                 return $node->parent ? [
                     'id' => $node->parent->id,

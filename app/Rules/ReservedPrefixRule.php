@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -12,7 +12,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  * Правило валидации: URI/префикс не должен быть в списке зарезервированных.
  *
  * Проверяет, что URI или префикс не начинается с зарезервированных префиксов
- * из конфигурации dynamic-routes через DynamicRouteGuard.
+ * из конфигурации dynamic-routes через DynamicRouteValidator.
  *
  * @package App\Rules
  */
@@ -34,7 +34,7 @@ final class ReservedPrefixRule implements ValidationRule
             return; // Пропускаем пустые значения (валидируется отдельно через nullable/required)
         }
 
-        $guard = new DynamicRouteGuard();
+        $guard = new DynamicRouteValidator();
 
         // Убираем начальный и конечный слэш для нормализации
         $normalized = trim($value, '/');

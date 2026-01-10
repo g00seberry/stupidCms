@@ -30,7 +30,9 @@ return [
                 'uri' => '/auth/login',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Auth\LoginController@login',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Auth\LoginController@login',
+                ],
                 'name' => 'api.auth.login',
                 'middleware' => ['throttle:login', 'no-cache-auth'],
             ],
@@ -39,7 +41,9 @@ return [
                 'uri' => '/auth/refresh',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Auth\RefreshController@refresh',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Auth\RefreshController@refresh',
+                ],
                 'name' => 'api.auth.refresh',
                 'middleware' => ['throttle:refresh', 'no-cache-auth'],
             ],
@@ -48,7 +52,9 @@ return [
                 'uri' => '/auth/logout',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Auth\LogoutController@logout',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Auth\LogoutController@logout',
+                ],
                 'name' => 'api.auth.logout',
                 'middleware' => ['jwt.auth', 'throttle:login', 'no-cache-auth'],
             ],
@@ -58,7 +64,9 @@ return [
                 'uri' => '/media/{id}',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\MediaPreviewController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\MediaPreviewController@show',
+                ],
                 'name' => 'api.v1.media.show',
                 'middleware' => ['jwt.auth.optional', 'throttle:api'],
             ],

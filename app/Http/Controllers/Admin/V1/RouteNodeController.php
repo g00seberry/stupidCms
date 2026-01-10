@@ -112,16 +112,20 @@ class RouteNodeController extends Controller
      * @bodyParam name string Имя маршрута. Example: home
      * @bodyParam uri string URI паттерн (для kind=route). Example: /
      * @bodyParam methods array HTTP методы (для kind=route). Example: ["GET"]
-     * @bodyParam action_type string Тип действия. Values: controller,entry. Example: controller
-     * @bodyParam action string Действие. Example: App\\Http\\Controllers\\HomeController
-     * @bodyParam entry_id int ID Entry (для action_type=entry). Example: 1
+     * @bodyParam action_type string Тип действия. Values: controller,view,redirect. Example: controller
+     * @bodyParam action_meta object Метаданные действия. Example: {"action": "App\\Http\\Controllers\\HomeController"}
+     * @bodyParam action_meta.action string Действие для CONTROLLER. Example: App\\Http\\Controllers\\HomeController
+     * @bodyParam action_meta.view string Имя view для VIEW. Example: pages.about
+     * @bodyParam action_meta.data object Опциональные данные для VIEW. Example: {"key": "value"}
+     * @bodyParam action_meta.to string URL для REDIRECT. Example: /new-page
+     * @bodyParam action_meta.status int Статус редиректа для REDIRECT. Values: 301,302,307,308. Example: 301
      * @response status=201 {
      *   "data": {
      *     "id": 1,
      *     "kind": "route",
      *     "uri": "/",
      *     "action_type": "controller",
-     *     "action": "App\\Http\\Controllers\\HomeController",
+     *     "action_meta": {"action": "App\\Http\\Controllers\\HomeController"},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
      *   }
@@ -148,7 +152,7 @@ class RouteNodeController extends Controller
             'route_node_id' => $node->id,
         ]);
 
-        return new RouteNodeResource($node->load(['parent', 'children', 'entry']));
+        return new RouteNodeResource($node->load(['parent', 'children']));
     }
 
     /**
@@ -164,7 +168,7 @@ class RouteNodeController extends Controller
      *     "kind": "route",
      *     "uri": "/",
      *     "action_type": "controller",
-     *     "action": "App\\Http\\Controllers\\HomeController",
+     *     "action_meta": {"action": "App\\Http\\Controllers\\HomeController"},
      *     "created_at": "2025-01-10T12:00:00+00:00",
      *     "updated_at": "2025-01-10T12:00:00+00:00"
      *   }
@@ -194,7 +198,7 @@ class RouteNodeController extends Controller
             );
         }
 
-        $routeNode->load(['parent', 'children', 'entry']);
+        $routeNode->load(['parent', 'children']);
 
         return new RouteNodeResource($routeNode);
     }
@@ -213,9 +217,13 @@ class RouteNodeController extends Controller
      * @bodyParam name string Имя маршрута.
      * @bodyParam uri string URI паттерн.
      * @bodyParam methods array HTTP методы.
-     * @bodyParam action_type string Тип действия. Values: controller,entry.
-     * @bodyParam action string Действие.
-     * @bodyParam entry_id int ID Entry.
+     * @bodyParam action_type string Тип действия. Values: controller,view,redirect.
+     * @bodyParam action_meta object Метаданные действия.
+     * @bodyParam action_meta.action string Действие для CONTROLLER.
+     * @bodyParam action_meta.view string Имя view для VIEW.
+     * @bodyParam action_meta.data object Опциональные данные для VIEW.
+     * @bodyParam action_meta.to string URL для REDIRECT.
+     * @bodyParam action_meta.status int Статус редиректа для REDIRECT. Values: 301,302,307,308.
      * @response status=200 {
      *   "data": {
      *     "id": 1,
@@ -268,7 +276,7 @@ class RouteNodeController extends Controller
         ]);
 
         $routeNode->refresh();
-        $routeNode->load(['parent', 'children', 'entry']);
+        $routeNode->load(['parent', 'children']);
 
         return new RouteNodeResource($routeNode);
     }

@@ -23,7 +23,6 @@ uses(TestCase::class)
     ->in('Unit/Media')
     ->in('Unit/Models')
     ->in('Unit/PostTypes')
-    ->in('Unit/Routing')
     ->in('Unit/Rules')
     ->in('Unit/Support');
 

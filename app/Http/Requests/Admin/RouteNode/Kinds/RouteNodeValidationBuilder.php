@@ -7,7 +7,6 @@ namespace App\Http\Requests\Admin\RouteNode\Kinds;
 use App\Enums\RouteNodeActionType;
 use App\Enums\RouteNodeKind;
 use App\Models\RouteNode;
-use App\Rules\ControllerActionFormatRule;
 use App\Rules\ReservedPrefixRule;
 use App\Rules\RouteConflictRule;
 use Illuminate\Validation\Rule;
@@ -16,13 +15,27 @@ use Illuminate\Validation\Rule;
  * Билдер правил валидации для узлов типа ROUTE.
  *
  * Строит правила валидации для узлов с kind='route'.
- * Маршруты могут иметь: uri, methods, name, domain, middleware, where, defaults, action, action_type, entry_id.
+ * Маршруты могут иметь: uri, methods, name, domain, middleware, where, defaults, action_meta, action_type.
  * Маршруты НЕ могут иметь: prefix, namespace, children.
  *
  * @package App\Http\Requests\Admin\RouteNode\Kinds
  */
-final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilderInterface
+final class RouteNodeValidationBuilder implements RouteNodeKindValidationBuilderInterface
 {
+    /**
+     * Список валидных HTTP методов для маршрутов.
+     *
+     * @var array<string>
+     */
+    private const VALID_HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
+
+    /**
+     * Список валидных HTTP статусов для редиректов.
+     *
+     * @var array<int>
+     */
+    private const VALID_REDIRECT_STATUSES = [301, 302, 307, 308];
+
     /**
      * Получить kind, который поддерживает этот билдер.
      *
@@ -31,16 +44,6 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
     public function getSupportedKind(): string
     {
         return RouteNodeKind::ROUTE->value;
-    }
-
-    /**
-     * Получить список валидных HTTP методов.
-     *
-     * @return array<string>
-     */
-    private function getValidHttpMethods(): array
-    {
-        return ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
     }
 
     /**
@@ -56,11 +59,11 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
      * - middleware.*: string
      * - where: nullable, array
      * - defaults: nullable, array
-     * - action_type: required, Rule::in([controller, entry])
-     * - action: nullable (с условиями), string, max:255, ControllerActionFormatRule
-     *   - prohibitedIf(action_type === 'entry')
-     * - entry_id: nullable (с условиями), integer, exists:entries,id
-     *   - requiredIf(action_type === 'entry')
+     * - action_type: required, Rule::in([controller, view, redirect])
+     * - action_meta: required, array (с условной валидацией в зависимости от action_type)
+     *   - Для CONTROLLER: action_meta.action обязателен, string
+     *   - Для VIEW: action_meta.view обязателен, string; action_meta.data опционален, array
+     *   - Для REDIRECT: action_meta.to обязателен, string; action_meta.status опционален, integer, in:301,302,307,308
      * - Запретить: prefix, namespace, children
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -68,7 +71,7 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
     public function buildRulesForStore(): array
     {
         $actionTypeValues = RouteNodeActionType::values();
-        $httpMethods = $this->getValidHttpMethods();
+        $httpMethods = self::VALID_HTTP_METHODS;
 
         return array_merge(
             [
@@ -88,26 +91,40 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
                 'where' => ['nullable', 'array'],
                 'defaults' => ['nullable', 'array'],
                 'action_type' => ['required', Rule::in($actionTypeValues)],
-                'action' => [
+                'action_meta' => ['required', 'array'],
+                // для CONTROLLER
+                'action_meta.action' => [
+                    'required_if:action_type,controller',
+                    'prohibited_unless:action_type,controller',
+                    'string',
+                    'max:512',
+                ],
+                // для VIEW
+                'action_meta.view' => [
+                    'required_if:action_type,view',
+                    'prohibited_unless:action_type,view',
+                    'string',
+                    'max:512',
+                ],
+                'action_meta.data' => [
                     'nullable',
+                    'prohibited_unless:action_type,view',
+                    'array',
+                ],
+                // для REDIRECT
+                'action_meta.to' => [
+                    'required_if:action_type,redirect',
+                    'prohibited_unless:action_type,redirect',
                     'string',
                     'max:255',
-                    Rule::prohibitedIf(fn () => request()->input('action_type') === 'entry'),
-                    new ControllerActionFormatRule(),
                 ],
-                'entry_id' => [
+                'action_meta.status' => [
                     'nullable',
+                    'prohibited_unless:action_type,redirect',
                     'integer',
-                    'exists:entries,id',
-                    Rule::requiredIf(fn () => request()->input('action_type') === 'entry'),
+                    Rule::in(self::VALID_REDIRECT_STATUSES),
                 ],
             ],
-            // Запрещаем поля, специфичные для group
-            [
-                'prefix' => ['prohibited'],
-                'namespace' => ['prohibited'],
-                'children' => ['prohibited'],
-            ]
         );
     }
 
@@ -124,9 +141,11 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
      * - middleware.*: string
      * - where: sometimes, nullable, array
      * - defaults: sometimes, nullable, array
-     * - action_type: sometimes, Rule::in([controller, entry])
-     * - action: sometimes, nullable, string, max:255, ControllerActionFormatRule
-     * - entry_id: sometimes, nullable, integer, exists:entries,id
+     * - action_type: sometimes, Rule::in([controller, view, redirect])
+     * - action_meta: sometimes, nullable, array (с условной валидацией в зависимости от action_type)
+     *   - Для CONTROLLER: action_meta.action обязателен, string
+     *   - Для VIEW: action_meta.view обязателен, string; action_meta.data опционален, array
+     *   - Для REDIRECT: action_meta.to обязателен, string; action_meta.status опционален, integer, in:301,302,307,308
      * - Запретить: prefix, namespace, children
      *
      * @param \App\Models\RouteNode|null $routeNode Текущий RouteNode из route
@@ -135,7 +154,7 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
     public function buildRulesForUpdate(?RouteNode $routeNode): array
     {
         $actionTypeValues = RouteNodeActionType::values();
-        $httpMethods = $this->getValidHttpMethods();
+        $httpMethods = self::VALID_HTTP_METHODS;
         
         // Получаем ID маршрута для исключения из проверки конфликтов
         $routeId = ($routeNode instanceof RouteNode) ? $routeNode->id : null;
@@ -159,26 +178,40 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
                 'where' => ['sometimes', 'nullable', 'array'],
                 'defaults' => ['sometimes', 'nullable', 'array'],
                 'action_type' => ['sometimes', Rule::in($actionTypeValues)],
-                'action' => [
-                    'sometimes',
+                'action_meta' => ['sometimes', 'nullable', 'array'],
+                // для CONTROLLER
+                'action_meta.action' => [
+                    'required_if:action_type,controller',
+                    'prohibited_unless:action_type,controller',
+                    'string',
+                    'max:512',
+                ],
+                // для VIEW
+                'action_meta.view' => [
+                    'required_if:action_type,view',
+                    'prohibited_unless:action_type,view',
+                    'string',
+                    'max:512',
+                ],
+                'action_meta.data' => [
                     'nullable',
+                    'prohibited_unless:action_type,view',
+                    'array',
+                ],
+                // для REDIRECT
+                'action_meta.to' => [
+                    'required_if:action_type,redirect',
+                    'prohibited_unless:action_type,redirect',
                     'string',
                     'max:255',
-                    new ControllerActionFormatRule(),
                 ],
-                'entry_id' => [
-                    'sometimes',
+                'action_meta.status' => [
                     'nullable',
+                    'prohibited_unless:action_type,redirect',
                     'integer',
-                    'exists:entries,id',
+                    Rule::in(self::VALID_REDIRECT_STATUSES),
                 ],
             ],
-            // Запрещаем поля, специфичные для group
-            [
-                'prefix' => ['prohibited'],
-                'namespace' => ['prohibited'],
-                'children' => ['prohibited'],
-            ]
         );
     }
 
@@ -196,7 +229,7 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
             'methods.required' => 'Поле methods обязательно для узлов типа route.',
             'methods.array' => 'Поле methods должно быть массивом.',
             'methods.min' => 'Поле methods должно содержать хотя бы один метод.',
-            'methods.*.in' => 'HTTP метод должен быть одним из: GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD.',
+            'methods.*.in' => 'HTTP метод должен быть одним из: ' . implode(', ', self::VALID_HTTP_METHODS) . '.',
             'name.string' => 'Поле name должно быть строкой.',
             'name.max' => 'Поле name не может быть длиннее 255 символов.',
             'domain.string' => 'Поле domain должно быть строкой.',
@@ -207,13 +240,20 @@ final class RouteKindValidationBuilder implements RouteNodeKindValidationBuilder
             'defaults.array' => 'Поле defaults должно быть массивом.',
             'action_type.required' => 'Поле action_type обязательно для узлов типа route.',
             'action_type.in' => 'Поле action_type должно быть одним из: ' . implode(', ', RouteNodeActionType::values()) . '.',
-            'action.string' => 'Поле action должно быть строкой.',
-            'action.max' => 'Поле action не может быть длиннее 255 символов.',
-            'entry_id.integer' => 'Поле entry_id должно быть целым числом.',
-            'entry_id.exists' => 'Указанная Entry не существует.',
-            'prefix.prohibited' => 'Поле prefix не может быть использовано для узлов типа route.',
-            'namespace.prohibited' => 'Поле namespace не может быть использовано для узлов типа route.',
-            'children.prohibited' => 'Поле children не может быть использовано для узлов типа route.',
+            'action_meta.required' => 'Поле action_meta обязательно для узлов типа route.',
+            'action_meta.array' => 'Поле action_meta должно быть массивом.',
+            'action_meta.action.required_if' => 'Поле action_meta.action обязательно для action_type=controller.',
+            'action_meta.action.string' => 'Поле action_meta.action должно быть строкой.',
+            'action_meta.action.max' => 'Поле action_meta.action не может быть длиннее 512 символов.',
+            'action_meta.view.required_if' => 'Поле action_meta.view обязательно для action_type=view.',
+            'action_meta.view.string' => 'Поле action_meta.view должно быть строкой.',
+            'action_meta.view.max' => 'Поле action_meta.view не может быть длиннее 512 символов.',
+            'action_meta.data.array' => 'Поле action_meta.data должно быть массивом.',
+            'action_meta.to.required_if' => 'Поле action_meta.to обязательно для action_type=redirect.',
+            'action_meta.to.string' => 'Поле action_meta.to должно быть строкой.',
+            'action_meta.to.max' => 'Поле action_meta.to не может быть длиннее 255 символов.',
+            'action_meta.status.integer' => 'Поле action_meta.status должно быть целым числом.',
+            'action_meta.status.in' => 'Поле action_meta.status должно быть одним из: ' . implode(', ', self::VALID_REDIRECT_STATUSES) . '.'
         ];
     }
 }

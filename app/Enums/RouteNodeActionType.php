@@ -7,60 +7,64 @@ namespace App\Enums;
 /**
  * Enum для типов действий маршрутов (RouteNode).
  *
- * Определяет два типа действий:
- * - CONTROLLER: универсальный тип для контроллеров, view и redirect
- * - ENTRY: жёсткое назначение конкретной Entry на URL
+ * Определяет три типа действий:
+ * - CONTROLLER: для контроллеров (Controller@method или invokable)
+ * - VIEW: для статических страниц (view с опциональными данными)
+ * - REDIRECT: для редиректов (URL с опциональным статусом)
  *
  * @package App\Enums
  */
 enum RouteNodeActionType: string
 {
     /**
-     * Универсальный тип для контроллеров, view и redirect.
+     * Тип для контроллеров.
      *
-     * Поддерживает следующие форматы в поле `action`:
+     * Поддерживает следующие форматы в `action_meta['action']`:
      * - Controller@method: `App\Http\Controllers\BlogController@show`
      * - Invokable controller: `App\Http\Controllers\HomeController`
-     * - View: `view:pages.about`
-     * - Redirect: `redirect:/new-page:301` или `redirect:/new-page` (по умолчанию 302)
      *
      * Использование:
      * - Кастомная логика, API endpoints, сложная обработка запросов
-     * - Статические страницы без логики (view)
-     * - Редиректы старых URL (redirect)
+     *
+     * Формат action_meta:
+     * ```php
+     * ['action' => 'App\Http\Controllers\BlogController@show']
+     * ```
      */
     case CONTROLLER = 'controller';
 
     /**
-     * Жёсткое назначение конкретной Entry на URL.
+     * Тип для статических страниц (view).
      *
-     * Требует `entry_id` в узле.
-     * Использование: статические страницы контента (О компании, Политика конфиденциальности, лендинги).
-     * Контроллер: `EntryPageController@show` (автоматически назначается регистратором).
+     * Использование: статические страницы без логики.
      *
-     * Примечание: Динамическое разрешение Entry по slug (например, для блогов)
-     * реализуется через `CONTROLLER` с кастомным контроллером, использующим `Entry::wherePath()`.
+     * Формат action_meta:
+     * ```php
+     * ['view' => 'pages.about', 'data' => ['key' => 'value']] // data опционально
+     * ```
      */
-    case ENTRY = 'entry';
+    case VIEW = 'view';
+
+    /**
+     * Тип для редиректов.
+     *
+     * Использование: редиректы старых URL на новые.
+     *
+     * Формат action_meta:
+     * ```php
+     * ['to' => '/new-page', 'status' => 301] // status опционально, по умолчанию 302
+     * ```
+     */
+    case REDIRECT = 'redirect';
 
     /**
      * Получить все возможные значения enum.
      *
-     * @return array<string> Массив строковых значений: ['controller', 'entry']
+     * @return array<string> Массив строковых значений: ['controller', 'view', 'redirect']
      */
     public static function values(): array
     {
         return array_column(self::cases(), 'value');
-    }
-
-    /**
-     * Проверить, требует ли тип действия наличие Entry.
-     *
-     * @return bool true если требуется entry_id, false иначе
-     */
-    public function requiresEntry(): bool
-    {
-        return $this === self::ENTRY;
     }
 }
 

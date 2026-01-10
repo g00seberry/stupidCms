@@ -7,7 +7,7 @@ namespace App\Providers;
 use App\Repositories\RouteNodeRepository;
 use App\Services\DynamicRoutes\DeclarativeRouteLoader;
 use App\Services\DynamicRoutes\DynamicRouteCache;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use App\Services\DynamicRoutes\DynamicRouteRegistrar;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -111,7 +111,7 @@ class RouteServiceProvider extends ServiceProvider
             $loader = new DeclarativeRouteLoader();
             $cache = app(DynamicRouteCache::class);
             $repository = new RouteNodeRepository($cache, $loader);
-            $guard = new DynamicRouteGuard($repository, $loader);
+            $guard = new DynamicRouteValidator($repository, $loader);
             
             // Создаём фабрики для регистраторов и резолверов
             $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($guard);

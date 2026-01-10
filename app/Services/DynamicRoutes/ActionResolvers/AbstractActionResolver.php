@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\DynamicRoutes\ActionResolvers;
 
 use App\Models\RouteNode;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -24,10 +24,10 @@ use Illuminate\Support\Facades\Log;
 abstract class AbstractActionResolver implements ActionResolverInterface
 {
     /**
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки конфликтов и префиксов (опционально)
+     * @param \App\Services\DynamicRoutes\Validators\DynamicRouteValidator $guard Guard для проверки конфликтов и префиксов (опционально)
      */
     public function __construct(
-        protected DynamicRouteGuard $guard,
+        protected DynamicRouteValidator $guard,
     ) {}
 
     /**
@@ -47,7 +47,7 @@ abstract class AbstractActionResolver implements ActionResolverInterface
             Log::error('Dynamic route: ошибка при разрешении действия', [
                 'route_node_id' => $node->id,
                 'action_type' => $node->action_type?->value,
-                'action' => $node->action,
+                'action_meta' => $node->action_meta,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

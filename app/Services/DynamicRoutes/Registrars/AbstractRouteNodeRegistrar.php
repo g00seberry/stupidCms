@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\DynamicRoutes\Registrars;
 
 use App\Models\RouteNode;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
  * Содержит общую логику регистрации:
  * - Проверка enabled
  * - Логирование ошибок
- * - Доступ к DynamicRouteGuard
+ * - Доступ к DynamicRouteValidator
  * - Рекурсивная регистрация дочерних узлов через фабрику
  *
  * @package App\Services\DynamicRoutes\Registrars
@@ -22,11 +22,11 @@ use Illuminate\Support\Facades\Log;
 abstract class AbstractRouteNodeRegistrar implements RouteNodeRegistrarInterface
 {
     /**
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки безопасности
+     * @param \App\Services\DynamicRoutes\Validators\DynamicRouteValidator $guard Guard для проверки безопасности
      * @param \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory|null $registrarFactory Фабрика для создания регистраторов дочерних узлов
      */
     public function __construct(
-        protected DynamicRouteGuard $guard,
+        protected DynamicRouteValidator $guard,
         protected ?RouteNodeRegistrarFactory $registrarFactory = null,
     ) {}
 

@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Enums\RouteNodeActionType;
 use App\Enums\RouteNodeKind;
-use App\Models\Entry;
 use App\Models\RouteNode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -38,8 +37,9 @@ class RouteNodeFactory extends Factory
             'methods' => ['GET'],
             'uri' => fake()->slug(),
             'action_type' => RouteNodeActionType::CONTROLLER,
-            'action' => 'App\\Http\\Controllers\\TestController@show',
-            'entry_id' => null,
+            'action_meta' => [
+                'action' => 'App\\Http\\Controllers\\TestController@show',
+            ],
             'middleware' => null,
             'where' => null,
             'defaults' => null,
@@ -57,7 +57,7 @@ class RouteNodeFactory extends Factory
             'kind' => RouteNodeKind::GROUP,
             'methods' => null,
             'uri' => null,
-            'action' => null,
+            'action_meta' => null,
             'prefix' => fake()->slug(),
         ]);
     }
@@ -73,7 +73,9 @@ class RouteNodeFactory extends Factory
             'kind' => RouteNodeKind::ROUTE,
             'methods' => ['GET'],
             'uri' => fake()->slug(),
-            'action' => 'App\\Http\\Controllers\\TestController@show',
+            'action_meta' => [
+                'action' => 'App\\Http\\Controllers\\TestController@show',
+            ],
         ]);
     }
 
@@ -87,21 +89,6 @@ class RouteNodeFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Указать связанную Entry.
-     *
-     * @param \App\Models\Entry $entry Entry для связи
-     * @return static
-     */
-    public function withEntry(Entry $entry): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'action_type' => RouteNodeActionType::ENTRY,
-            'entry_id' => $entry->id,
-            'action' => null,
         ]);
     }
 

@@ -6,7 +6,7 @@ namespace App\Services\DynamicRoutes\Registrars;
 
 use App\Enums\RouteNodeKind;
 use App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -35,12 +35,12 @@ class RouteNodeRegistrarFactory
      * - RouteNodeKind::GROUP → RouteGroupRegistrar
      * - RouteNodeKind::ROUTE → RouteRouteRegistrar
      *
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки безопасности
+     * @param \App\Services\DynamicRoutes\Validators\DynamicRouteValidator $guard Guard для проверки безопасности
      * @param \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory|null $actionResolverFactory Фабрика для разрешения действий
      * @return self
      */
     public static function createDefault(
-        DynamicRouteGuard $guard,
+        DynamicRouteValidator $guard,
         ?ActionResolverFactory $actionResolverFactory = null
     ): self {
         $factory = new self();

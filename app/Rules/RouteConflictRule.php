@@ -7,7 +7,7 @@ namespace App\Rules;
 use App\Enums\RouteNodeKind;
 use App\Repositories\RouteNodeRepository;
 use App\Services\DynamicRoutes\DeclarativeRouteLoader;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Contracts\Validation\Rule;
 
 /**
@@ -56,7 +56,7 @@ class RouteConflictRule implements Rule
 
         $repository = app(RouteNodeRepository::class);
         $loader = new DeclarativeRouteLoader();
-        $guard = new DynamicRouteGuard($repository, $loader);
+        $guard = new DynamicRouteValidator($repository, $loader);
 
         $result = $guard->canCreateRoute($uri, $methods, $this->excludeId);
 
@@ -81,7 +81,7 @@ class RouteConflictRule implements Rule
 
         $repository = app(RouteNodeRepository::class);
         $loader = new DeclarativeRouteLoader();
-        $guard = new DynamicRouteGuard($repository, $loader);
+        $guard = new DynamicRouteValidator($repository, $loader);
 
         $result = $guard->canCreateRoute($uri, $methods, $this->excludeId);
 

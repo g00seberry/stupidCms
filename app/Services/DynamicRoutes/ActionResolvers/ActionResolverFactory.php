@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\DynamicRoutes\ActionResolvers;
 
 use App\Models\RouteNode;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -15,10 +15,9 @@ use Illuminate\Support\Facades\Log;
  * Проверяет каждый резолвер через метод supports() и использует первый подходящий.
  *
  * Порядок проверки резолверов:
- * 1. ENTRY
- * 2. View
- * 3. Redirect
- * 4. Controller
+ * 1. VIEW
+ * 2. REDIRECT
+ * 3. CONTROLLER
  *
  * @package App\Services\DynamicRoutes\ActionResolvers
  */
@@ -35,27 +34,20 @@ class ActionResolverFactory
      * Создать фабрику с предустановленными резолверами.
      *
      * Регистрирует резолверы по умолчанию в правильном порядке:
-     * 1. ENTRY (самый специфичный)
-     * 2. View
-     * 3. Redirect
-     * 4. Controller (самый общий)
+     * 1. VIEW
+     * 2. REDIRECT
+     * 3. CONTROLLER
      *
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки безопасности
+     * @param \App\Services\DynamicRoutes\Validators\DynamicRouteValidator $guard Guard для проверки безопасности
      * @return self
      */
-    public static function createDefault(DynamicRouteGuard $guard): self
+    public static function createDefault(DynamicRouteValidator $guard): self
     {
         $factory = new self();
         
-        // Порядок важен: сначала специфичные, потом общие
-        // ENTRY должен проверяться первым, так как он самый специфичный
-        $factory->register(new EntryActionResolver($guard));
-        
-        // View и Redirect проверяются перед Controller, так как они более специфичные
+        // Порядок: VIEW → REDIRECT → CONTROLLER
         $factory->register(new ViewActionResolver($guard));
         $factory->register(new RedirectActionResolver($guard));
-        
-        // Controller проверяется последним, так как он самый общий
         $factory->register(new ControllerActionResolver($guard));
         
         return $factory;
@@ -92,7 +84,7 @@ class ActionResolverFactory
         Log::warning('Dynamic route: резолвер действий не найден', [
             'route_node_id' => $node->id,
             'action_type' => $node->action_type?->value,
-            'action' => $node->action,
+            'action_meta' => $node->action_meta,
         ]);
 
         return null;

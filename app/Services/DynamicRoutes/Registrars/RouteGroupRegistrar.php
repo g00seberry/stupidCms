@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\DynamicRoutes\Registrars;
 
 use App\Models\RouteNode;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 

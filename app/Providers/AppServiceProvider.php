@@ -278,8 +278,8 @@ class AppServiceProvider extends ServiceProvider
                 $registry = new \App\Http\Requests\Admin\RouteNode\Kinds\RouteNodeKindValidationBuilderRegistry();
 
                 // Регистрируем билдеры для различных kind
-                $registry->register('group', new \App\Http\Requests\Admin\RouteNode\Kinds\GroupKindValidationBuilder());
-                $registry->register('route', new \App\Http\Requests\Admin\RouteNode\Kinds\RouteKindValidationBuilder());
+                $registry->register('group', new \App\Http\Requests\Admin\RouteNode\Kinds\GroupNodeValidationBuilder());
+                $registry->register('route', new \App\Http\Requests\Admin\RouteNode\Kinds\RouteNodeValidationBuilder());
 
                 return $registry;
             }

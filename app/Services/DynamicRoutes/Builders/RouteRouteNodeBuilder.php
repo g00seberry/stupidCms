@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
  *
  * Отвечает за создание и настройку конкретных маршрутов:
  * - Установка полей маршрута (uri, methods, name, domain, middleware, where, defaults)
- * - Обработка action_type и action
+ * - Обработка action_type и action_meta
  *
  * @package App\Services\DynamicRoutes\Builders
  */
@@ -42,7 +42,7 @@ class RouteRouteNodeBuilder extends AbstractRouteNodeBuilder
      * - middleware
      * - where
      * - defaults
-     * - action_type и action
+     * - action_type и action_meta
      *
      * @param \App\Models\RouteNode $node Узел для настройки
      * @param array<string, mixed> $data Данные конфигурации
@@ -54,7 +54,7 @@ class RouteRouteNodeBuilder extends AbstractRouteNodeBuilder
         // Устанавливаем поля маршрута
         $this->buildRouteFields($node, $data);
 
-        // Обрабатываем action_type и action
+        // Обрабатываем action_type и action_meta
         $this->buildAction($node, $data);
     }
 
@@ -88,9 +88,9 @@ class RouteRouteNodeBuilder extends AbstractRouteNodeBuilder
     /**
      * Построить action для маршрута.
      *
-     * Обрабатывает action_type и action:
+     * Обрабатывает action_type и action_meta:
      * - Нормализует action_type в enum
-     * - Устанавливает action и entry_id в зависимости от типа
+     * - Устанавливает action_meta в зависимости от типа
      * - По умолчанию использует CONTROLLER, если action_type не указан
      *
      * @param \App\Models\RouteNode $node Узел для настройки
@@ -103,8 +103,7 @@ class RouteRouteNodeBuilder extends AbstractRouteNodeBuilder
             $actionType = $this->normalizeActionType($data['action_type']);
             if ($actionType !== null) {
                 $node->action_type = $actionType;
-                $node->action = $data['action'] ?? null;
-                $node->entry_id = $data['entry_id'] ?? null;
+                $node->action_meta = $data['action_meta'] ?? null;
             } else {
                 // Если action_type указан, но невалиден, логируем и используем CONTROLLER по умолчанию
                 Log::warning('Declarative route: invalid action_type, using CONTROLLER', [
@@ -112,12 +111,12 @@ class RouteRouteNodeBuilder extends AbstractRouteNodeBuilder
                     'node_id' => $node->id,
                 ]);
                 $node->action_type = RouteNodeActionType::CONTROLLER;
-                $node->action = $data['action'] ?? null;
+                $node->action_meta = $data['action_meta'] ?? null;
             }
         } else {
             // По умолчанию CONTROLLER
             $node->action_type = RouteNodeActionType::CONTROLLER;
-            $node->action = $data['action'] ?? null;
+            $node->action_meta = $data['action_meta'] ?? null;
         }
     }
 

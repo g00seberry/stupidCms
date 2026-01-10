@@ -28,7 +28,9 @@ return [
                 'uri' => '/',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\HomeController',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\HomeController',
+                ],
                 'name' => 'home',
             ],
             // Тестовые маршруты (только для testing окружения)
@@ -39,7 +41,9 @@ return [
                 'uri' => '/admin/ping',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\AdminPingController@ping',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\AdminPingController@ping',
+                ],
             ],
             // Тестовый маршрут для проверки авторизации (только для testing)
             // Используется в тестах, оставлен в старом формате routes/web_core.php

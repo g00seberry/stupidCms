@@ -8,12 +8,10 @@ use App\Enums\RouteNodeActionType;
 use App\Models\RouteNode;
 
 /**
- * Резолвер для redirect: действий.
+ * Резолвер для REDIRECT действий.
  *
- * Обрабатывает форматы action:
- * - redirect:/new-page:301
- * - redirect:/new-page (по умолчанию статус 302)
- *
+ * Обрабатывает узлы с action_type=REDIRECT.
+ * Читает данные из action_meta['to'] и action_meta['status'].
  * Создаёт closure для redirect().
  *
  * @package App\Services\DynamicRoutes\ActionResolvers
@@ -23,52 +21,35 @@ class RedirectActionResolver extends AbstractActionResolver
     /**
      * Проверить, поддерживает ли резолвер указанный узел.
      *
-     * Поддерживает узлы с action_type=CONTROLLER и action, начинающимся с 'redirect:'.
+     * Поддерживает узлы с action_type=REDIRECT.
      *
      * @param \App\Models\RouteNode $node Узел маршрута
      * @return bool true если резолвер поддерживает узел, false иначе
      */
     public function supports(RouteNode $node): bool
     {
-        if ($node->action_type !== RouteNodeActionType::CONTROLLER) {
-            return false;
-        }
-
-        if (!$node->action) {
-            return false;
-        }
-
-        return str_starts_with($node->action, 'redirect:');
+        return $node->action_type === RouteNodeActionType::REDIRECT;
     }
 
     /**
      * Выполнить разрешение действия.
      *
-     * Парсит action и создаёт closure для redirect() с указанным URL и статусом.
+     * Читает URL и опциональный статус из action_meta и создаёт closure для redirect().
      *
      * @param \App\Models\RouteNode $node Узел маршрута
      * @return callable Closure для redirect()
      */
     protected function doResolve(RouteNode $node): callable
     {
-        [$url, $status] = $this->parseRedirectAction($node->action);
-        return fn() => redirect($url, $status);
-    }
+        $actionMeta = $node->action_meta ?? [];
+        $url = $actionMeta['to'] ?? null;
+        $status = $actionMeta['status'] ?? 302;
 
-    /**
-     * Распарсить action в формате redirect:url:status или redirect:url.
-     *
-     * @param string $action Действие в формате redirect:/new-page:301 или redirect:/new-page
-     * @return array{0: string, 1: int} Массив [url, status]
-     */
-    private function parseRedirectAction(string $action): array
-    {
-        $redirectPart = substr($action, 9); // Убираем 'redirect:'
-        $parts = explode(':', $redirectPart, 2);
-        $url = $parts[0];
-        $status = isset($parts[1]) ? (int) $parts[1] : 302;
-        
-        return [$url, $status];
+        if (!$url) {
+            return $this->createFallbackAction();
+        }
+
+        return fn() => redirect($url, $status);
     }
 }
 

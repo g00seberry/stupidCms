@@ -32,9 +32,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $namespace Namespace контроллеров для группы
  * @property array|null $methods HTTP методы для маршрута (только для kind='route')
  * @property string|null $uri URI паттерн маршрута (только для kind='route')
- * @property \App\Enums\RouteNodeActionType $action_type Тип действия: CONTROLLER или ENTRY
- * @property string|null $action Действие (Controller@method, view:..., redirect:...)
- * @property int|null $entry_id ID связанной Entry (для action_type='entry')
+ * @property \App\Enums\RouteNodeActionType $action_type Тип действия: CONTROLLER, VIEW или REDIRECT
+ * @property array|null $action_meta Метаданные действия в зависимости от action_type
  * @property array|null $middleware Массив middleware
  * @property array|null $where Ограничения параметров маршрута
  * @property array|null $defaults Значения по умолчанию для параметров
@@ -44,7 +43,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property-read \App\Models\RouteNode|null $parent Родительский узел
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RouteNode> $children Дочерние узлы
- * @property-read \App\Models\Entry|null $entry Связанная Entry (для action_type='entry')
  */
 class RouteNode extends Model
 {
@@ -68,8 +66,7 @@ class RouteNode extends Model
         'methods',
         'uri',
         'action_type',
-        'action',
-        'entry_id',
+        'action_meta',
         'middleware',
         'where',
         'defaults',
@@ -85,6 +82,7 @@ class RouteNode extends Model
         'readonly' => 'boolean',
         'kind' => RouteNodeKind::class,
         'action_type' => RouteNodeActionType::class,
+        'action_meta' => 'array',
         'methods' => 'array',
         'middleware' => 'array',
         'where' => 'array',
@@ -113,16 +111,6 @@ class RouteNode extends Model
         return $this->hasMany(RouteNode::class, 'parent_id')
             ->orderBy('sort_order')
             ->orderBy('id');
-    }
-
-    /**
-     * Связь с Entry (для action_type='entry').
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Entry, \App\Models\RouteNode>
-     */
-    public function entry(): BelongsTo
-    {
-        return $this->belongsTo(Entry::class, 'entry_id');
     }
 
     /**

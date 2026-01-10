@@ -7,6 +7,7 @@ namespace App\Services\DynamicRoutes;
 use App\Models\RouteNode;
 use App\Repositories\RouteNodeRepository;
 use App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Log;
  * и динамические маршруты из route_nodes, регистрирует их в Laravel Router.
  * Декларативные маршруты идут первыми в дереве (имеют приоритет).
  * Поддерживает группы маршрутов, различные типы действий (Controller, View, Redirect),
- * проверку безопасности через DynamicRouteGuard.
+ * проверку безопасности через DynamicRouteValidator.
  * Декларативные и динамические маршруты объединены в общее дерево через RouteNodeRepository::getEnabledTree().
  *
  * Использует паттерн Strategy для разделения логики регистрации разных типов узлов
@@ -28,12 +29,12 @@ class DynamicRouteRegistrar
 {
     /**
      * @param \App\Repositories\RouteNodeRepository $repository Репозиторий для загрузки дерева маршрутов
-     * @param \App\Services\DynamicRoutes\DynamicRouteGuard $guard Guard для проверки безопасности
+     * @param \App\Services\DynamicRoutes\Validators\DynamicRouteValidator $guard Guard для проверки безопасности
      * @param \App\Services\DynamicRoutes\Registrars\RouteNodeRegistrarFactory $registrarFactory Фабрика для создания регистраторов
      */
     public function __construct(
         private RouteNodeRepository $repository,
-        private DynamicRouteGuard $guard,
+        private DynamicRouteValidator $guard,
         private RouteNodeRegistrarFactory $registrarFactory,
     ) {}
 

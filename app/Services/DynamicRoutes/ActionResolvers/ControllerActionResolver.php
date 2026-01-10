@@ -6,7 +6,7 @@ namespace App\Services\DynamicRoutes\ActionResolvers;
 
 use App\Enums\RouteNodeActionType;
 use App\Models\RouteNode;
-use App\Services\DynamicRoutes\DynamicRouteGuard;
+use App\Services\DynamicRoutes\Validators\DynamicRouteValidator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -41,7 +41,7 @@ class ControllerActionResolver extends AbstractActionResolver
     /**
      * Выполнить разрешение действия.
      *
-     * Парсит action и возвращает контроллер в формате [Controller::class, 'method'] или string для invokable.
+     * Парсит action_meta['action'] и возвращает контроллер в формате [Controller::class, 'method'] или string для invokable.
      * Если action отсутствует, возвращает fallback (abort(404)).
      *
      * @param \App\Models\RouteNode $node Узел маршрута
@@ -49,18 +49,21 @@ class ControllerActionResolver extends AbstractActionResolver
      */
     protected function doResolve(RouteNode $node): callable|string|array|null
     {
-        if (!$node->action) {
-            Log::warning('Dynamic route: отсутствует action для CONTROLLER', [
+        $actionMeta = $node->action_meta ?? [];
+        $action = $actionMeta['action'] ?? null;
+
+        if (!$action) {
+            Log::warning('Dynamic route: отсутствует action_meta[action] для CONTROLLER', [
                 'route_node_id' => $node->id,
             ]);
             return $this->createFallbackAction();
         }
 
-        if (str_contains($node->action, '@')) {
-            return $this->resolveControllerMethod($node->action, $node->id);
+        if (str_contains($action, '@')) {
+            return $this->resolveControllerMethod($action, $node->id);
         }
 
-        return $this->resolveInvokableController($node->action, $node->id);
+        return $this->resolveInvokableController($action, $node->id);
     }
 
     /**

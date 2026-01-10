@@ -31,7 +31,9 @@ return [
                 'uri' => '/auth/current',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Auth\CurrentUserController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Auth\CurrentUserController@show',
+                ],
                 'name' => 'admin.v1.auth.current',
                 'middleware' => ['no-cache-auth'],
             ],
@@ -40,7 +42,9 @@ return [
                 'uri' => '/utils/slugify',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\UtilsController@slugify',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\UtilsController@slugify',
+                ],
                 'name' => 'admin.v1.utils.slugify',
             ],
             // Templates (full CRUD)
@@ -49,7 +53,9 @@ return [
                 'uri' => '/templates',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\TemplateController@index',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\TemplateController@index',
+                ],
                 'name' => 'admin.v1.templates.index',
             ],
             [
@@ -57,7 +63,9 @@ return [
                 'uri' => '/templates/{name}',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\TemplateController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\TemplateController@show',
+                ],
                 'name' => 'admin.v1.templates.show',
                 'where' => ['name' => '.*'],
             ],
@@ -66,7 +74,9 @@ return [
                 'uri' => '/templates',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\TemplateController@store',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\TemplateController@store',
+                ],
                 'name' => 'admin.v1.templates.store',
             ],
             [
@@ -74,7 +84,9 @@ return [
                 'uri' => '/templates/{name}',
                 'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\TemplateController@update',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\TemplateController@update',
+                ],
                 'name' => 'admin.v1.templates.update',
                 'where' => ['name' => '.*'],
             ],
@@ -84,7 +96,9 @@ return [
                 'uri' => '/post-types',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@store',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@store',
+                ],
                 'name' => 'admin.v1.post-types.store',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
             ],
@@ -93,7 +107,9 @@ return [
                 'uri' => '/post-types',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@index',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@index',
+                ],
                 'name' => 'admin.v1.post-types.index',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
             ],
@@ -102,7 +118,9 @@ return [
                 'uri' => '/post-types/{id}',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@show',
+                ],
                 'name' => 'admin.v1.post-types.show',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['id' => '[0-9]+'],
@@ -112,7 +130,9 @@ return [
                 'uri' => '/post-types/{id}',
                 'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@update',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@update',
+                ],
                 'name' => 'admin.v1.post-types.update',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['id' => '[0-9]+'],
@@ -122,7 +142,9 @@ return [
                 'uri' => '/post-types/{id}',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@destroy',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\PostTypeController@destroy',
+                ],
                 'name' => 'admin.v1.post-types.destroy',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['id' => '[0-9]+'],
@@ -133,7 +155,9 @@ return [
                 'uri' => '/post-types/{post_type_id}/form-config/{blueprint}',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@show',
+                ],
                 'name' => 'admin.v1.post-types.form-config.show',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['post_type_id' => '[0-9]+'],
@@ -143,7 +167,9 @@ return [
                 'uri' => '/post-types/{post_type_id}/form-config/{blueprint}',
                 'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@update',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@update',
+                ],
                 'name' => 'admin.v1.post-types.form-config.update',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['post_type_id' => '[0-9]+'],
@@ -153,7 +179,9 @@ return [
                 'uri' => '/post-types/{post_type_id}/form-config/{blueprint}',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@destroy',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@destroy',
+                ],
                 'name' => 'admin.v1.post-types.form-config.destroy',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['post_type_id' => '[0-9]+'],
@@ -163,7 +191,9 @@ return [
                 'uri' => '/post-types/{post_type_id}/form-configs',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@indexByPostType',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\FormConfigController@indexByPostType',
+                ],
                 'name' => 'admin.v1.post-types.form-configs.index',
                 'middleware' => ['App\Http\Middleware\EnsureCanManagePostTypes'],
                 'where' => ['post_type_id' => '[0-9]+'],
@@ -174,7 +204,9 @@ return [
                 'uri' => '/entries/statuses',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@statuses',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@statuses',
+                ],
                 'name' => 'admin.v1.entries.statuses',
                 'middleware' => ['can:viewAny,App\Models\Entry'],
             ],
@@ -183,7 +215,9 @@ return [
                 'uri' => '/entries',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@index',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@index',
+                ],
                 'name' => 'admin.v1.entries.index',
                 'middleware' => ['can:viewAny,App\Models\Entry'],
             ],
@@ -192,7 +226,9 @@ return [
                 'uri' => '/entries/search',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@search',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@search',
+                ],
                 'name' => 'admin.v1.entries.search',
                 'middleware' => ['can:viewAny,App\Models\Entry'],
             ],
@@ -201,7 +237,9 @@ return [
                 'uri' => '/entries',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@store',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@store',
+                ],
                 'name' => 'admin.v1.entries.store',
                 'middleware' => ['can:create,App\Models\Entry'],
             ],
@@ -210,7 +248,9 @@ return [
                 'uri' => '/entries/{id}',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@show',
+                ],
                 'name' => 'admin.v1.entries.show',
             ],
             [
@@ -218,7 +258,9 @@ return [
                 'uri' => '/entries/{entry}/preview',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryPreviewController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryPreviewController@show',
+                ],
                 'name' => 'admin.v1.entries.preview',
                 'where' => ['entry' => '[0-9]+'],
             ],
@@ -227,7 +269,9 @@ return [
                 'uri' => '/entries/{id}',
                 'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@update',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@update',
+                ],
                 'name' => 'admin.v1.entries.update',
             ],
             [
@@ -235,7 +279,9 @@ return [
                 'uri' => '/entries/{id}',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@destroy',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@destroy',
+                ],
                 'name' => 'admin.v1.entries.destroy',
             ],
             [
@@ -243,7 +289,9 @@ return [
                 'uri' => '/entries/{id}/restore',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\EntryController@restore',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\EntryController@restore',
+                ],
                 'name' => 'admin.v1.entries.restore',
             ],
             // Taxonomies (with middleware group)
@@ -256,7 +304,9 @@ return [
                         'uri' => '/taxonomies',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@index',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@index',
+                        ],
                         'name' => 'admin.v1.taxonomies.index',
                     ],
                     [
@@ -264,7 +314,9 @@ return [
                         'uri' => '/taxonomies',
                         'methods' => ['POST'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@store',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@store',
+                        ],
                         'name' => 'admin.v1.taxonomies.store',
                     ],
                     [
@@ -272,7 +324,9 @@ return [
                         'uri' => '/taxonomies/{id}',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@show',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@show',
+                        ],
                         'name' => 'admin.v1.taxonomies.show',
                     ],
                     [
@@ -280,7 +334,9 @@ return [
                         'uri' => '/taxonomies/{id}',
                         'methods' => ['PUT'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@update',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@update',
+                        ],
                         'name' => 'admin.v1.taxonomies.update',
                     ],
                     [
@@ -288,7 +344,9 @@ return [
                         'uri' => '/taxonomies/{id}',
                         'methods' => ['DELETE'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@destroy',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TaxonomyController@destroy',
+                        ],
                         'name' => 'admin.v1.taxonomies.destroy',
                     ],
                 ],
@@ -303,7 +361,9 @@ return [
                         'uri' => '/taxonomies/{taxonomy}/terms/tree',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TermController@tree',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TermController@tree',
+                        ],
                         'name' => 'admin.v1.taxonomies.terms.tree',
                         'where' => ['taxonomy' => '[0-9]+'],
                     ],
@@ -312,7 +372,9 @@ return [
                         'uri' => '/taxonomies/{taxonomy}/terms',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TermController@indexByTaxonomy',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TermController@indexByTaxonomy',
+                        ],
                         'name' => 'admin.v1.taxonomies.terms.index',
                         'where' => ['taxonomy' => '[0-9]+'],
                     ],
@@ -321,7 +383,9 @@ return [
                         'uri' => '/taxonomies/{taxonomy}/terms',
                         'methods' => ['POST'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TermController@store',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TermController@store',
+                        ],
                         'name' => 'admin.v1.taxonomies.terms.store',
                         'where' => ['taxonomy' => '[0-9]+'],
                     ],
@@ -330,7 +394,9 @@ return [
                         'uri' => '/terms/{term}',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TermController@show',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TermController@show',
+                        ],
                         'name' => 'admin.v1.terms.show',
                     ],
                     [
@@ -338,7 +404,9 @@ return [
                         'uri' => '/terms/{term}',
                         'methods' => ['PUT'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TermController@update',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TermController@update',
+                        ],
                         'name' => 'admin.v1.terms.update',
                     ],
                     [
@@ -346,7 +414,9 @@ return [
                         'uri' => '/terms/{term}',
                         'methods' => ['DELETE'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\TermController@destroy',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\TermController@destroy',
+                        ],
                         'name' => 'admin.v1.terms.destroy',
                     ],
                     [
@@ -354,7 +424,9 @@ return [
                         'uri' => '/entries/{entry}/terms',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\EntryTermsController@index',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\EntryTermsController@index',
+                        ],
                         'name' => 'admin.v1.entries.terms.index',
                     ],
                     [
@@ -362,7 +434,9 @@ return [
                         'uri' => '/entries/{entry}/terms/sync',
                         'methods' => ['PUT'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\EntryTermsController@sync',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\EntryTermsController@sync',
+                        ],
                         'name' => 'admin.v1.entries.terms.sync',
                     ],
                 ],
@@ -377,7 +451,9 @@ return [
                         'uri' => '/media/config',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\MediaController@config',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\MediaController@config',
+                        ],
                         'name' => 'admin.v1.media.config',
                         'middleware' => ['throttle:60,1'],
                     ],
@@ -386,7 +462,9 @@ return [
                         'uri' => '/media',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\MediaController@index',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\MediaController@index',
+                        ],
                         'name' => 'admin.v1.media.index',
                         'middleware' => ['throttle:60,1'],
                     ],
@@ -395,7 +473,9 @@ return [
                         'uri' => '/media/{media}',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\MediaController@show',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\MediaController@show',
+                        ],
                         'name' => 'admin.v1.media.show',
                         'middleware' => ['throttle:60,1'],
                     ],
@@ -406,7 +486,9 @@ return [
                 'uri' => '/media',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@store',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@store',
+                ],
                 'name' => 'admin.v1.media.store',
                 'middleware' => ['can:create,App\Models\Media', 'throttle:20,1'],
             ],
@@ -415,7 +497,9 @@ return [
                 'uri' => '/media/bulk',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkStore',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkStore',
+                ],
                 'name' => 'admin.v1.media.bulkStore',
                 'middleware' => ['can:create,App\Models\Media', 'throttle:20,1'],
             ],
@@ -424,7 +508,9 @@ return [
                 'uri' => '/media/{media}',
                 'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@update',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@update',
+                ],
                 'name' => 'admin.v1.media.update',
                 'middleware' => ['throttle:20,1'],
             ],
@@ -433,7 +519,9 @@ return [
                 'uri' => '/media/bulk',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkDestroy',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkDestroy',
+                ],
                 'name' => 'admin.v1.media.bulkDestroy',
                 'middleware' => ['throttle:20,1'],
             ],
@@ -442,7 +530,9 @@ return [
                 'uri' => '/media/bulk/restore',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkRestore',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkRestore',
+                ],
                 'name' => 'admin.v1.media.bulkRestore',
                 'middleware' => ['throttle:20,1'],
             ],
@@ -451,7 +541,9 @@ return [
                 'uri' => '/media/bulk/force',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkForceDestroy',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@bulkForceDestroy',
+                ],
                 'name' => 'admin.v1.media.bulkForceDestroy',
                 'middleware' => ['throttle:20,1'],
             ],
@@ -460,7 +552,9 @@ return [
                 'uri' => '/media/trash/empty',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\MediaController@emptyTrash',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\MediaController@emptyTrash',
+                ],
                 'name' => 'admin.v1.media.emptyTrash',
                 'middleware' => ['throttle:10,1'],
             ],
@@ -475,7 +569,9 @@ return [
                         'uri' => '/',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@index',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@index',
+                        ],
                         'name' => 'admin.v1.blueprints.index',
                     ],
                     [
@@ -483,7 +579,9 @@ return [
                         'uri' => '/',
                         'methods' => ['POST'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@store',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@store',
+                        ],
                         'name' => 'admin.v1.blueprints.store',
                     ],
                     [
@@ -491,7 +589,9 @@ return [
                         'uri' => '/{blueprint}',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@show',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@show',
+                        ],
                         'name' => 'admin.v1.blueprints.show',
                     ],
                     [
@@ -499,7 +599,9 @@ return [
                         'uri' => '/{blueprint}',
                         'methods' => ['PUT'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@update',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@update',
+                        ],
                         'name' => 'admin.v1.blueprints.update',
                     ],
                     [
@@ -507,7 +609,9 @@ return [
                         'uri' => '/{blueprint}',
                         'methods' => ['DELETE'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@destroy',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@destroy',
+                        ],
                         'name' => 'admin.v1.blueprints.destroy',
                     ],
                     // Вспомогательные endpoints
@@ -516,7 +620,9 @@ return [
                         'uri' => '/{blueprint}/can-delete',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@canDelete',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@canDelete',
+                        ],
                         'name' => 'admin.v1.blueprints.can-delete',
                     ],
                     [
@@ -524,7 +630,9 @@ return [
                         'uri' => '/{blueprint}/dependencies',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@dependencies',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@dependencies',
+                        ],
                         'name' => 'admin.v1.blueprints.dependencies',
                     ],
                     [
@@ -532,7 +640,9 @@ return [
                         'uri' => '/{blueprint}/embeddable',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@embeddable',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@embeddable',
+                        ],
                         'name' => 'admin.v1.blueprints.embeddable',
                     ],
                     [
@@ -540,7 +650,9 @@ return [
                         'uri' => '/{blueprint}/schema',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@schema',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintController@schema',
+                        ],
                         'name' => 'admin.v1.blueprints.schema',
                     ],
                     // CRUD Path
@@ -549,7 +661,9 @@ return [
                         'uri' => '/{blueprint}/paths',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\PathController@index',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\PathController@index',
+                        ],
                         'name' => 'admin.v1.blueprints.paths.index',
                     ],
                     [
@@ -557,7 +671,9 @@ return [
                         'uri' => '/{blueprint}/paths',
                         'methods' => ['POST'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\PathController@store',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\PathController@store',
+                        ],
                         'name' => 'admin.v1.blueprints.paths.store',
                     ],
                     // CRUD BlueprintEmbed
@@ -566,7 +682,9 @@ return [
                         'uri' => '/{blueprint}/embeds',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@index',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@index',
+                        ],
                         'name' => 'admin.v1.blueprints.embeds.index',
                     ],
                     [
@@ -574,7 +692,9 @@ return [
                         'uri' => '/{blueprint}/embeds',
                         'methods' => ['POST'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@store',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@store',
+                        ],
                         'name' => 'admin.v1.blueprints.embeds.store',
                     ],
                 ],
@@ -589,7 +709,9 @@ return [
                         'uri' => '/{path}',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\PathController@show',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\PathController@show',
+                        ],
                         'name' => 'admin.v1.paths.show',
                     ],
                     [
@@ -597,7 +719,9 @@ return [
                         'uri' => '/{path}',
                         'methods' => ['PUT'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\PathController@update',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\PathController@update',
+                        ],
                         'name' => 'admin.v1.paths.update',
                     ],
                     [
@@ -605,7 +729,9 @@ return [
                         'uri' => '/{path}',
                         'methods' => ['DELETE'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\PathController@destroy',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\PathController@destroy',
+                        ],
                         'name' => 'admin.v1.paths.destroy',
                     ],
                 ],
@@ -620,7 +746,9 @@ return [
                         'uri' => '/{embed}',
                         'methods' => ['GET'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@show',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@show',
+                        ],
                         'name' => 'admin.v1.embeds.show',
                     ],
                     [
@@ -628,7 +756,9 @@ return [
                         'uri' => '/{embed}',
                         'methods' => ['DELETE'],
                         'action_type' => RouteNodeActionType::CONTROLLER,
-                        'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@destroy',
+                        'action_meta' => [
+                            'action' => 'App\Http\Controllers\Admin\V1\BlueprintEmbedController@destroy',
+                        ],
                         'name' => 'admin.v1.embeds.destroy',
                     ],
                 ],
@@ -639,7 +769,9 @@ return [
                 'uri' => '/routes',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@index',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@index',
+                ],
                 'name' => 'admin.v1.routes.index',
             ],
             [
@@ -647,7 +779,9 @@ return [
                 'uri' => '/routes',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@store',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@store',
+                ],
                 'name' => 'admin.v1.routes.store',
             ],
             [
@@ -655,7 +789,9 @@ return [
                 'uri' => '/routes/reorder',
                 'methods' => ['POST'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@reorder',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@reorder',
+                ],
                 'name' => 'admin.v1.routes.reorder',
             ],
             [
@@ -663,7 +799,9 @@ return [
                 'uri' => '/routes/{id}',
                 'methods' => ['GET'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@show',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@show',
+                ],
                 'name' => 'admin.v1.routes.show',
                 'where' => ['id' => '[0-9]+'],
             ],
@@ -672,7 +810,9 @@ return [
                 'uri' => '/routes/{id}',
                 'methods' => ['PUT'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@update',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@update',
+                ],
                 'name' => 'admin.v1.routes.update',
                 'where' => ['id' => '[0-9]+'],
             ],
@@ -681,7 +821,9 @@ return [
                 'uri' => '/routes/{id}',
                 'methods' => ['DELETE'],
                 'action_type' => RouteNodeActionType::CONTROLLER,
-                'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@destroy',
+                'action_meta' => [
+                    'action' => 'App\Http\Controllers\Admin\V1\RouteNodeController@destroy',
+                ],
                 'name' => 'admin.v1.routes.destroy',
                 'where' => ['id' => '[0-9]+'],
             ],

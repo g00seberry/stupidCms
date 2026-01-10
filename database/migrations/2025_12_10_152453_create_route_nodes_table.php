@@ -43,13 +43,9 @@ return new class extends Migration {
             $table->json('methods')->nullable(); // ['GET', 'POST', ...]
             $table->string('uri')->nullable(); // URI паттерн маршрута
             
-            // Тип действия и само действие
-            $table->enum('action_type', ['controller', 'entry'])->index();
-            $table->string('action')->nullable(); // Controller@method, view:..., redirect:...
-            
-            // Связь с Entry (для action_type='entry')
-            $table->foreignId('entry_id')->nullable()
-                ->constrained('entries')->nullOnDelete()->index();
+            // Тип действия и метаданные действия
+            $table->enum('action_type', ['controller', 'view', 'redirect'])->index();
+            $table->json('action_meta')->nullable(); // Метаданные действия в зависимости от action_type
             
             // Дополнительные настройки
             $table->json('middleware')->nullable(); // ['web', 'auth', ...]
