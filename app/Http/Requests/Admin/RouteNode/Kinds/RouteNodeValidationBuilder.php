@@ -8,7 +8,6 @@ use App\Enums\RouteNodeActionType;
 use App\Enums\RouteNodeKind;
 use App\Models\RouteNode;
 use App\Rules\ReservedPrefixRule;
-use App\Rules\RouteConflictRule;
 use Illuminate\Validation\Rule;
 
 /**
@@ -50,7 +49,7 @@ final class RouteNodeValidationBuilder implements RouteNodeKindValidationBuilder
      * Построить правила валидации для route-узлов при создании.
      *
      * Правила для StoreRouteNodeRequest:
-     * - uri: required, string, max:255, ReservedPrefixRule, RouteConflictRule
+     * - uri: required, string, max:255, ReservedPrefixRule
      * - methods: required, array, min:1
      * - methods.*: Rule::in([GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD])
      * - name: nullable, string, max:255
@@ -80,7 +79,6 @@ final class RouteNodeValidationBuilder implements RouteNodeKindValidationBuilder
                     'string',
                     'max:255',
                     new ReservedPrefixRule(),
-                    new RouteConflictRule(),
                 ],
                 'methods' => ['required', 'array', 'min:1'],
                 'methods.*' => [Rule::in($httpMethods)],
@@ -132,7 +130,7 @@ final class RouteNodeValidationBuilder implements RouteNodeKindValidationBuilder
      * Построить правила валидации для route-узлов при обновлении.
      *
      * Правила для UpdateRouteNodeRequest (аналогично Store, но с sometimes и nullable):
-     * - uri: sometimes, nullable, string, max:255, ReservedPrefixRule, RouteConflictRule
+     * - uri: sometimes, nullable, string, max:255, ReservedPrefixRule
      * - methods: sometimes, nullable, array, min:1
      * - methods.*: Rule::in([GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD])
      * - name: sometimes, nullable, string, max:255
@@ -155,9 +153,6 @@ final class RouteNodeValidationBuilder implements RouteNodeKindValidationBuilder
     {
         $actionTypeValues = RouteNodeActionType::values();
         $httpMethods = self::VALID_HTTP_METHODS;
-        
-        // Получаем ID маршрута для исключения из проверки конфликтов
-        $routeId = ($routeNode instanceof RouteNode) ? $routeNode->id : null;
 
         return array_merge(
             [
@@ -167,7 +162,6 @@ final class RouteNodeValidationBuilder implements RouteNodeKindValidationBuilder
                     'string',
                     'max:255',
                     new ReservedPrefixRule(),
-                    new RouteConflictRule($routeId),
                 ],
                 'methods' => ['sometimes', 'nullable', 'array', 'min:1'],
                 'methods.*' => [Rule::in($httpMethods)],

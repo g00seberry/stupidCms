@@ -111,7 +111,7 @@ class RouteServiceProvider extends ServiceProvider
             $loader = new DeclarativeRouteLoader();
             $cache = app(DynamicRouteCache::class);
             $repository = new RouteNodeRepository($cache, $loader);
-            $guard = new DynamicRouteValidator($repository, $loader);
+            $guard = new DynamicRouteValidator();
             
             // Создаём фабрики для регистраторов и резолверов
             $actionResolverFactory = \App\Services\DynamicRoutes\ActionResolvers\ActionResolverFactory::createDefault($guard);
